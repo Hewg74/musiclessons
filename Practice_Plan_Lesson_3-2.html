@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Practice Plan — Lesson 3/2 — Sarah Glass</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --surface: #fafaf9;
+    --surface2: #f5f5f4;
+    --border: #e7e5e4;
+    --text: #1c1917;
+    --text-dim: #a8a29e;
+    --accent: #c5a028;
+    --accent2: #d4af37;
+    --blue: #a8a29e;
+    --green: #c5a028;
+    --red: #d4af37;
+    --purple: #d4af37;
+    --pink: #c5a028;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 0;
+    font-weight: 300;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+  }
+
+  .hero {
+    background: var(--surface);
+    padding: 80px 40px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  .hero .sub {
+    color: var(--text-dim);
+    font-size: 1rem;
+    font-family: 'Lato', sans-serif;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px 24px;
+  }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    border-bottom: 2px solid var(--border);
+    margin-bottom: 30px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tab {
+    padding: 10px 18px;
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+
+  .tab:hover { color: var(--text); }
+  .tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* Section styling */
+  .section-header {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--accent);
+  }
+
+  .context-block {
+    background: var(--surface);
+    border-left: 3px solid var(--accent);
+    padding: 20px 24px;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 24px;
+  }
+
+  .context-block p {
+    margin-bottom: 10px;
+    line-height: 1.7;
+  }
+
+  .context-block p:last-child { margin-bottom: 0; }
+
+  /* Day cards */
+  .day-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+
+  .day-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+  }
+
+  .day-header:hover { background: var(--surface2); }
+
+  .day-header h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  .day-tag {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: rgba(197, 160, 40, 0.15);
+    color: var(--accent);
+  }
+
+  .day-meta {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  .day-body {
+    padding: 0 20px 20px;
+    display: none;
+  }
+
+  .day-card.open .day-body { display: block; }
+  .day-card.open .day-header { border-bottom: 1px solid var(--border); }
+
+  .exercise-block {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 14px;
+  }
+
+  .exercise-block h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--blue);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .exercise-block h4 .time-badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: rgba(168, 162, 158, 0.15);
+    color: var(--blue);
+  }
+
+  .exercise-block ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .exercise-block li {
+    padding: 3px 0 3px 16px;
+    position: relative;
+    font-size: 0.88rem;
+    color: var(--text);
+  }
+
+  .exercise-block li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    color: var(--text-dim);
+  }
+
+  .cue-box {
+    background: rgba(197, 160, 40, 0.08);
+    border: 1px solid rgba(197, 160, 40, 0.25);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-top: 10px;
+    font-size: 0.82rem;
+    color: var(--accent2);
+  }
+
+  .cue-box strong { color: var(--accent); }
+
+  .level-up {
+    background: rgba(197, 160, 40, 0.08);
+    border: 1px solid rgba(197, 160, 40, 0.25);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-top: 10px;
+    font-size: 0.82rem;
+    color: var(--green);
+  }
+
+  /* Vocal section */
+  .vocal-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+
+  .vocal-card h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--purple);
+    margin-bottom: 4px;
+  }
+
+  .vocal-card .purpose {
+    font-size: 0.85rem;
+    color: var(--pink);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  .vocal-card p {
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    line-height: 1.65;
+  }
+
+  .vocal-card .note {
+    font-size: 0.82rem;
+    font-style: italic;
+    color: var(--text-dim);
+    border-left: 2px solid var(--purple);
+    padding-left: 12px;
+    margin-top: 8px;
+  }
+
+  .pitch-diagram {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.8rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px;
+    margin: 10px 0;
+    color: var(--text);
+    line-height: 1.8;
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  /* Schedule table */
+  .schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 0.85rem;
+  }
+
+  .schedule-table th {
+    background: var(--surface2);
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 700;
+    border-bottom: 2px solid var(--accent);
+    color: var(--accent);
+  }
+
+  .schedule-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .schedule-table tr:hover td { background: var(--surface); }
+
+  /* Non-negotiables */
+  .rule {
+    display: flex;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .rule:last-child { border-bottom: none; }
+
+  .rule-num {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--accent);
+    min-width: 30px;
+  }
+
+  .rule p { font-size: 0.9rem; }
+  .rule strong { color: var(--text); }
+
+  /* Links section */
+  .link-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .link-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color 0.2s;
+  }
+
+  .link-card:hover { border-color: var(--accent); }
+  .link-card .link-title { font-weight: 700; font-size: 0.85rem; margin-bottom: 2px; }
+  .link-card .link-desc { font-size: 0.75rem; color: var(--text-dim); }
+
+  /* Warmup section */
+  .warmup-step {
+    display: flex;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+
+  .warmup-step:last-child { border-bottom: none; }
+
+  .warmup-num {
+    background: var(--accent);
+    color: var(--bg);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .warmup-content h4 { font-size: 0.9rem; margin-bottom: 2px; }
+  .warmup-content p { font-size: 0.82rem; color: var(--text-dim); }
+
+  .checkbox-item {
+    display: flex;
+    gap: 10px;
+    padding: 6px 0;
+    font-size: 0.88rem;
+    cursor: pointer;
+  }
+
+  .checkbox-item input[type="checkbox"] {
+    accent-color: var(--accent);
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+  }
+
+  .checkbox-item.checked span { text-decoration: line-through; color: var(--text-dim); }
+
+  @media (max-width: 640px) {
+    .hero { padding: 40px 20px; }
+    .hero h1 { font-size: 1.6rem; }
+    .link-grid { grid-template-columns: 1fr; }
+    .tabs { gap: 0; }
+    .tab { padding: 8px 12px; font-size: 0.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>PRACTICE EXECUTION PLAN</h1>
+  <div class="sub">Lesson 3/2 — Sarah Glass &nbsp;|&nbsp; 7-Day Cycle &nbsp;|&nbsp; Baritone, Break ≈ A3</div>
+</div>
+
+<div class="container">
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-tab="overview">Overview</button>
+    <button class="tab" data-tab="warmup">Pre-Practice</button>
+    <button class="tab" data-tab="days">7-Day Plan</button>
+    <button class="tab" data-tab="vocal">Vocal Exercises</button>
+    <button class="tab" data-tab="rules">Non-Negotiables</button>
+    <button class="tab" data-tab="links">Links & Resources</button>
+  </div>
+
+  <!-- ========== OVERVIEW ========== -->
+  <div class="tab-content active" id="overview">
+    <div class="section-header">What This Lesson Is Actually About</div>
+    <div class="context-block">
+      <p>Sarah is building your <strong>internal clock</strong> — the ability to feel subdivisions in your body, not just your head. The nod exercise isn't a warm-up gimmick: it's training proprioceptive rhythm, where downbeat lives in your neck/torso and upbeat lives in the lift. This is how session musicians internalize groove without thinking.</p>
+      <p>Every exercise in this lesson connects back to this: the metronome drills build the clock, the song work tests whether it holds under cognitive load (lyrics, chord changes, syncopation).</p>
+      <p>The vocal AI work is about <strong>passaggio control</strong> — specifically navigating your mix/head flip around A3–B♭3 with enough control that you can use it musically rather than just surviving it.</p>
+    </div>
+
+    <div class="section-header">4-Month Progression Arc</div>
+    <div class="context-block">
+      <p><strong>Aug–Sep 2025:</strong> Island strum fundamentals. Rhythm counting on A chord. "I Like The Way You Walk" melody note identification. Vocal app work for pitch accuracy. Piano keys: Northside at 69 BPM, F#m pentatonic.</p>
+      <p><strong>Jan 2026:</strong> Applied rhythm: surf rock beats at 120 & 165 BPM, fingerpicking with counting out loud. Self-recording for drift detection. Meditation-while-playing as the ultimate timing test. Head voice → chest → mixed around A3.</p>
+      <p><strong>Feb 2026:</strong> Groove beat work at 90 BPM. AI vocal exercises. "I Like The Way You Walk" timing analysis — syncopation on last word of each line.</p>
+      <p><strong>Mar 2026 (NOW):</strong> Metronome internalization with physical nod. Subdivision stripping (full count → &'s only → 16ths). Singing with metronome for rhythmic lyric placement. Sol Del Sur lead + strum. Passaggio flip control.</p>
+      <p style="color: var(--accent); font-weight: 600;">The through-line: rhythm → embodied rhythm → rhythm under cognitive load → rhythm as the vehicle for musical expression.</p>
+    </div>
+  </div>
+
+  <!-- ========== PRE-PRACTICE ========== -->
+  <div class="tab-content" id="warmup">
+    <div class="section-header">Pre-Practice Protocol (Do This Every Day)</div>
+    <div class="context-block">
+      <p>Sarah has mentioned these across multiple lessons. This isn't optional — it protects your voice and primes your body for the work.</p>
+    </div>
+
+    <div class="vocal-card">
+      <h3 style="color: var(--accent);">Before You Touch the Guitar (~8 min)</h3>
+      <div class="warmup-step">
+        <div class="warmup-num">1</div>
+        <div class="warmup-content">
+          <h4>Hydration Check</h4>
+          <p>16oz water minimum 30 min before practice. Avoid dairy before singing (Sarah, Lesson 8/27: "Avoid dairy, octave slides with lip roll or tongue roll"). Dairy thickens mucus on the vocal folds.</p>
+        </div>
+      </div>
+      <div class="warmup-step">
+        <div class="warmup-num">2</div>
+        <div class="warmup-content">
+          <h4>Lip Trills / Tongue Trills (2 min)</h4>
+          <p>Start with a comfortable pitch (around D3), do a slow siren up to D4 and back down. 4–5 rounds. This is a semi-occluded vocal tract (SOVT) exercise — it creates backpressure that gently stretches and warms the vocal folds without strain. If lip trills are hard, use "vvv" on the same pattern.</p>
+        </div>
+      </div>
+      <div class="warmup-step">
+        <div class="warmup-num">3</div>
+        <div class="warmup-content">
+          <h4>Octave Slides on Lip Roll (2 min)</h4>
+          <p>Starting on G2, slide up a full octave to G3 on a lip roll, then back down. Move up chromatically: A♭2→A♭3, A2→A3, B♭2→B♭3. When you hit the A2→A3 slide, notice if the trill gets harder or uneven near the top — that's your passaggio. Don't push through it; just observe.</p>
+        </div>
+      </div>
+      <div class="warmup-step">
+        <div class="warmup-num">4</div>
+        <div class="warmup-content">
+          <h4>Straw Phonation (2 min)</h4>
+          <p>Sing through a cocktail straw (or coffee stirrer) on a sustained "oo." Start at F3, hold 5 sec, move to G3, A♭3, A3. The straw creates even more backpressure than lip trills — it's the best diagnostic for whether your vocal folds are warmed up. If A3 feels strained through the straw, you need more warm-up time before working the break.</p>
+        </div>
+      </div>
+      <div class="warmup-step">
+        <div class="warmup-num">5</div>
+        <div class="warmup-content">
+          <h4>Gentle Humming (1 min)</h4>
+          <p>Hum a simple melody (the first line of "I Like The Way You Walk" works) in your comfortable mid-range. Feel the vibration in your face/mask. This primes forward placement for the singing work ahead.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-header" style="margin-top: 30px;">Vowel Modification Cheat Sheet</div>
+    <div class="context-block">
+      <p>This is the missing piece for your passaggio work. As you approach A3 from below, your vowels need to <strong>gradually close/cover</strong> to allow mixed voice to engage:</p>
+    </div>
+    <div class="pitch-diagram">
+VOWEL MODIFICATION MAP (Baritone, break ≈ A3)
+
+  E3    F3    F#3   G3    A♭3   A3    B♭3   B3    C4
+  │     │     │     │     │     │     │     │     │
+  ├─────┴─────┴─────┘     │     │     │     │     │
+  "ah" stays open         │     │     │     │     │
+                    ┌─────┘     │     │     │     │
+                 "ah" → "uh"    │     │     │     │
+                          ┌─────┘     │     │     │
+                       "uh" → "oh"    │     │     │
+                                ┌─────┴─────┘     │
+                             "oh" stays             │
+                             (full head voice zone) │
+
+PRACTICAL:
+  Singing "ah" on G3?  Start adding a hint of "uh" roundness.
+  Singing "ah" on A3?  It should sound more like "aw" or "uh."
+  Singing "ee" on A3?  Let it drift toward "ih."
+
+WHY: Closing the vowel lowers the first formant, which lets
+your vocal folds thin out for mixed/head voice instead of
+slamming into chest voice ceiling.</div>
+  </div>
+
+  <!-- ========== 7-DAY PLAN ========== -->
+  <div class="tab-content" id="days">
+    <div class="section-header">7-Day Execution Plan</div>
+
+    <!-- DAY 1 -->
+    <div class="day-card open">
+      <div class="day-header" onclick="toggleDay(this)">
+        <div>
+          <h3>Day 1: Foundation</h3>
+          <div class="day-meta">Metronome Internalization &nbsp;|&nbsp; 50–55 min</div>
+        </div>
+        <span class="day-tag">START HERE</span>
+      </div>
+      <div class="day-body">
+        <div class="exercise-block">
+          <h4><span class="time-badge">10 min</span> Metronome Drill #1: Full Count</h4>
+          <ul>
+            <li>Metronome at 200 BPM (building to 244 by mid-week)</li>
+            <li>Say: <strong>1 & 2 & 3 & 4 &</strong> — every click = one syllable</li>
+            <li>Tap tempo at HALF speed (100–122) — tap only on numbers</li>
+            <li><strong>NOD down on numbers, up-nod on &'s</strong></li>
+            <li>Do 4–8 bars, rest 10 sec, repeat 3–4 sets</li>
+          </ul>
+          <div class="cue-box">
+            <strong>Sarah says:</strong> This is the most important exercise. Always start here. The nod is non-negotiable — it's proprioceptive anchoring. If the nod drifts, slow the metronome by 20 BPM. Feel it in your neck, not just your hand.
+          </div>
+        </div>
+
+        <div class="exercise-block">
+          <h4><span class="time-badge">8 min</span> Metronome Drill #2: &'s Only</h4>
+          <ul>
+            <li>Same setup: metronome at 200–244, tap at 100–122</li>
+            <li><strong>Only say the &'s out loud</strong> (silent on numbers)</li>
+            <li>Keep the nod on the numbers!</li>
+            <li>Your body holds the downbeat while your voice speaks the offbeat</li>
+          </ul>
+          <div class="cue-box">
+            This is the hardest drill. The nod IS your downbeat anchor. If you lose the nod, you've lost the exercise. This is training <strong>internal pulse independence</strong>.
+          </div>
+        </div>
+
+        <div class="exercise-block">
+          <h4><span class="time-badge">8 min</span> Metronome Drill #3: 16th Note Feel</h4>
+          <ul>
+            <li>Metronome at 78 BPM, tap at 78</li>
+            <li>Say: <strong>1 e and a 2 e and a 3 e and a 4 e and a</strong></li>
+            <li>Then strip to only saying "e and a" (silent on numbers)</li>
+            <li>4 even syllables per beat</li>
+          </ul>
+          <div class="cue-box">
+            Don't rush the "e and a" — space them perfectly evenly. This feeds directly into syncopation awareness for the songs.
+          </div>
+        </div>
+
+        <div class="exercise-block">
+          <h4><span class="time-badge">12 min</span> Surf Rock Fingerpicking (120 BPM)</h4>
+          <ul>
+            <li>Am → C → G → D, fingerpick pattern</li>
+            <li>Count <strong>1 & 2 & 3 & 4 &</strong> out loud while playing</li>
+            <li>Alternate thumb/pointer on two strings — count is on the thumb</li>
+            <li>4 thumb-pointer cycles per chord</li>
+            <li><strong>WITH THE NOD</strong> the entire time</li>
+          </ul>
+          <div class="cue-box">
+            Counting out loud while fingerpicking = cognitive load test. If the count drops, simplify the picking until the count is solid. Priority: <strong>count > nod > picking accuracy</strong>.
+          </div>
+        </div>
+
+        <div class="exercise-block">
+          <h4><span class="time-badge">12 min</span> Vocal Work: Passaggio Warm-Up</h4>
+          <ul>
+            <li>Exercise 1: Descending 5-note scales through A3 (see Vocal tab)</li>
+            <li>Exercise 2: Messa di voce on G3–A3–B♭3</li>
+            <li>Keep volume conversational — don't push</li>
+          </ul>
+        </div>
+
+        <div class="exercise-block">
+          <h4><span class="time-badge">5 min</span> Listening Homework</h4>
+          <ul>
+            <li>Listen to "I Like The Way You Walk" by The Donkeys — no guitar, just listen</li>
+            <li>Focus on where his last word of each line falls relative to the beat</li>
+            <li>Is it on a beat? Between beats? Late?</li>
+          </ul>
+          <div class="cue-box">
+            Sarah has flagged this timing issue <strong>three lessons in a row</strong>. Analytical listening without playing is how you internalize it.
+          </div>
+        </div>
+
+        <div class="level-up">
+          <strong>✓ Level-up marker:</strong> You can hold 4 consecutive bars of Drill #1 at 220+ BPM with a clean nod without losing count.
+        </div>
+      </div>
+    </div>
+
+    <!-- DAY 2 -->
+    <div class="day-card">
+      <div class="day-header" onclick="toggleDay(this)">
+        <div>
+          <h3>Day 2: Syncopation + Song</h3>
+          <div class="day-meta">Rhythmic Singing + Sol Del Sur &nbsp;|&nbsp; 50–55 min</div>
+        </div>
+        <span class="day-tag">SYNCOPATION</span>
+      </div>
+      <div class="day-body">
+        <div class="exercise-block">
+          <h4><span class="time-badge">10 min</span> Metronome Drills #1 & #2</h4>
+          <ul>
+            <li>Push tempo 10–20 BPM closer to 244 than Day 1</li>
+            <li>If Day 1 was 200, try 220 today</li>
+            <li>Always: full count first, then strip to &'s only</li>
+          </ul>
+          <div class="cue-box">Speed increase should feel like a stretch, not a scramble. <strong>Nod quality > tempo number.</strong></div>
+        </div>
+
+        <div class="exercise-block">
+          <h4><span class="time-badge">12 min</span> Singing with Metronome: Lyric Placement</h4>
+          <ul>
+            <li>Metronome at 122, tap at 122</li>
+            <li>Sing the 4 lines Sarah notated (words landing between clicks):</li>
+          </ul>
+          <div class="pitch-diagram" style="color: var(--blue); font-size: 0.85rem;">
+  click  word  click  word  click  word  click click click click
+   __     I     __   once    __   heard   __    __    __    __
+   __   bout    __     a     __   place   __    __    __    __
+   __   some    __   where   __   south   __    __    __    __
+   __    far    __     a     __    way    __    __    __    __
+
+  ↑ The words land BETWEEN the clicks. That's the point.
+  ↑ Incorporate the nod: nod on clicks, voice on offbeats.</div>
+          <div class="cue-box">
+            Record yourself and check if words land correctly between the clicks. This trains <strong>syncopated vocal placement</strong> — exactly what the songs require.
+          </div>
+        </div>
+
+        <div class="exercise-block">
+          <h4><span class="time-badge">15 min</span> Sol Del Sur — Lead Part</h4>
+          <ul>
+            <li>Pull up tab on Ultimate Guitar</li>
+            <li>Fast DUDUD for the 9's (quick arpeggiated figures)</li>
+            <li>Slow YouTube to 75% speed, play along</li>
+            <li>Once clean at 75%: try 85%, then full speed</li>
+          </ul>
+          <div class="cue-box">
+            Play along WITH the song, not just the tab. The 9's need to be <strong>rhythmically tight</strong>, not just note-correct. Every note at the right time > all notes roughly.
+          </div>
+        </div>
+
+        <div class="exercise-block">
+          <h4><span class="time-badge">10 min</span> Vocal: Sirens + Rhythmic Pitch Matching</h4>
+          <ul>
+            <li>Exercise 3: Siren glides through passaggio (lip trill)</li>
+            <li>Exercise 4: Chord-tone singing over Am C G D at 90 BPM</li>
+          </ul>
+        </div>
+
+        <div class="exercise-block">
+          <h4><span class="time-badge">5 min</span> Listening: Sol Del Sur</h4>
+          <ul>
+            <li>Listen to the original — no guitar, just ears</li>
+            <li>Focus on the strum part: where does the first pluck land?</li>
+            <li>Sarah's note: "first note = individual string pluck, no extra strum after first down"</li>
+          </ul>
+        </div>
+
+        <div class="level-up">
+          <strong>✓ Level-up marker:</strong> You can sing the 4-line lyric exercise with words landing cleanly between clicks for 2 consecutive passes.
+        </div>
+      </div>
+    </div>
+
+    <!-- DAY 3 -->
+    <div class="day-card">
+      <div class="day-header" onclick="toggleDay(this)">
+        <div>
+          <h3>Day 3: Application</h3>
+          <div class="day-meta">I Like The Way You Walk deep work &nbsp;|&nbsp; 50 min</div>
+        </div>
+        <span class="day-tag">SONG WORK</span>
+      </div>
+      <div class="day-body">
+        <div class="exercise-block">
+          <h4><span class="time-badge">8 min</span> Metronome Maintenance</h4>
+          <ul>
+            <li>Drills #1 and #2 — push toward 244</li>
+            <li>Minimum 3 clean sets of each</li>
+          </ul>
+          <div class="cue-box">By Day 3 the nod should feel natural, not forced.</div>
+        </div>
+
+        <div class="exercise-block">
+          <h4><span class="time-badge">7 min</span> 16th Note Drill (#3)</h4>
+          <ul>
+            <li>78 BPM: full count, then "e and a" only</li>
+            <li>Try bumping to 82–85 BPM if 78 is comfortable</li>
+          </ul>
+        </div>
+
+        <div class="exercise-block">
+          <h4><span class="time-badge">20 min</span> I Like The Way You Walk — Full Work</h4>
+          <ul>
+            <li>Groove Beat at 90 BPM</li>
+            <li>Strum pattern over the beat — get it automatic first</li>
+            <li>Add vocals line by line</li>
+            <li><strong>CRITICAL:</strong> Last word of each line has specific off-beat timing</li>
+            <li>Compare to the original recording — where do his words actually fall?</li>
+            <li>Don't simplify the syncopation by snapping words to the grid</li>
+          </ul>
+          <div class="cue-box">
+            <strong>Flagged 3 lessons running.</strong> The metronome drills directly serve this — can you feel the & while singing over the groove beat? Record yourself. Compare to the original. The gap between your version and his version IS your practice target.
+          </div>
+        </div>
+
+        <div class="exercise-block">
+          <h4><span class="time-badge">10 min</span> Vocal: Improvised Ooh's + Messa di Voce</h4>
+          <ul>
+            <li>Exercise 5: Ooh climbing over Am C G D at 120 BPM</li>
+            <li>4 notes per chord, explore range including A3 zone</li>
+            <li>COMMIT to each note — more air = more pitch accuracy</li>
+            <li>Don't repeat the same 4 notes every chord</li>
+          </ul>
+        </div>
+
+        <div class="level-up">
+          <strong>✓ Level-up marker:</strong> You can hear the difference between your syncopation and the original recording's. Awareness is the milestone today — accuracy comes from repetition.
+        </div>
+      </div>
+    </div>
+
+    <!-- DAY 4 -->
+    <div class="day-card">
+      <div class="day-header" onclick="toggleDay(this)">
+        <div>
+          <h3>Day 4: Deep Practice</h3>
+          <div class="day-meta">Stacking Skills &nbsp;|&nbsp; 55 min</div>
+        </div>
+        <span class="day-tag">STACK</span>
+      </div>
+      <div class="day-body">
+        <div class="exercise-block">
+          <h4><span class="time-badge">10 min</span> Metronome Speed Push</h4>
+          <ul>
+            <li>Drill #1 at 244 (or highest clean tempo)</li>
+            <li>Drill #2 at matching tempo</li>
+            <li>Goal: 4 consecutive clean bars with nod at 244</li>
+          </ul>
+          <div class="cue-box">If you can't hold 4 bars clean, drop 10 BPM and rebuild.</div>
+        </div>
+
+        <div class="exercise-block">
+          <h4><span class="time-badge">12 min</span> Fingerpick + Singing</h4>
+          <ul>
+            <li>120 BPM surf rock beat, Am C G D fingerpick</li>
+            <li>Add "ooh": 1 note per chord, different note each time</li>
+            <li>This is improvisation — explore chest voice range</li>
+            <li>COMMIT: push air, don't whisper the note</li>
+          </ul>
+          <div class="cue-box">
+            This exercise has been running since Jan 27. Your picking should be automatic enough to layer voice now. If picking falls apart with singing, go back to picking + count only.
+          </div>
+        </div>
+
+        <div class="exercise-block">
+          <h4><span class="time-badge">15 min</span> Sol Del Sur — Strum + Lead</h4>
+          <ul>
+            <li>Strum: first note = individual string pluck (no extra strum after first down)</li>
+            <li>For C#m: pluck A string at chord start</li>
+            <li>Play along with the song at 85–100% speed</li>
+            <li><strong>RECORD the strum part — Sarah wants a video</strong></li>
+          </ul>
+        </div>
+
+        <div class="exercise-block">
+          <h4><span class="time-badge">15 min</span> Full Passaggio Workout</h4>
+          <ul>
+            <li>Exercise 1: Descending scales</li>
+            <li>Exercise 3: Sirens with slow-down through A3 zone</li>
+            <li>Exercise 6: Scat improvisation over groove beat</li>
+          </ul>
+        </div>
+
+        <div class="level-up">
+          <strong>✓ Level-up marker:</strong> You can fingerpick + sing an ooh pattern for a full 4-chord cycle without the picking falling apart.
+        </div>
+      </div>
+    </div>
+
+    <!-- DAY 5 -->
+    <div class="day-card">
+      <div class="day-header" onclick="toggleDay(this)">
+        <div>
+          <h3>Day 5: Recording Day</h3>
+          <div class="day-meta">Record Everything, Listen Back &nbsp;|&nbsp; 45 min</div>
+        </div>
+        <span class="day-tag">RECORD</span>
+      </div>
+      <div class="day-body">
+        <div class="exercise-block">
+          <h4><span class="time-badge">8 min</span> Metronome Maintenance</h4>
+          <ul>
+            <li>Drills #1 and #2 at target tempo</li>
+            <li>Quick check: is the nod fully automatic yet?</li>
+          </ul>
+        </div>
+
+        <div class="exercise-block">
+          <h4><span class="time-badge">25 min</span> Record & Review (MOST IMPORTANT DAY)</h4>
+          <ul>
+            <li>📱 Record: I Like The Way You Walk with groove beat at 90 BPM</li>
+            <li>📱 Record: Sol Del Sur strum (SEND TO SARAH)</li>
+            <li>📱 Record: Fingerpick + ooh improvisation</li>
+            <li>Listen back to each recording IMMEDIATELY</li>
+            <li>Note specific moments where timing slips</li>
+            <li>Ask someone to listen and stop you when you go off beat (Sarah, Lesson 1/13)</li>
+          </ul>
+          <div class="cue-box">
+            <strong>From Sarah (1/13):</strong> "Record yourself and listen back to see how long it takes you to realize you've gone off beat." The goal isn't perfection — it's <strong>shrinking the time between drift and awareness</strong>.
+          </div>
+        </div>
+
+        <div class="exercise-block">
+          <h4><span class="time-badge">12 min</span> Vocal: Messa di Voce + Passaggio Glides</h4>
+          <ul>
+            <li>Focus on smoothness of the flip today, not range</li>
+            <li>Exercise 2: Dynamic swells on G3, A♭3, A3, B♭3</li>
+            <li>Exercise 3: Sirens, extra slow through the break zone</li>
+            <li>📱 Record a siren pass — listen for where timbre changes</li>
+          </ul>
+        </div>
+
+        <div class="level-up">
+          <strong>✓ Level-up marker:</strong> You can identify within 2–3 beats when you've drifted off the groove beat. You've sent Sarah the Sol Del Sur video.
+        </div>
+      </div>
+    </div>
+
+    <!-- DAY 6 -->
+    <div class="day-card">
+      <div class="day-header" onclick="toggleDay(this)">
+        <div>
+          <h3>Day 6: Integration</h3>
+          <div class="day-meta">Full Run-Throughs &nbsp;|&nbsp; 50 min</div>
+        </div>
+        <span class="day-tag">PERFORM</span>
+      </div>
+      <div class="day-body">
+        <div class="exercise-block">
+          <h4><span class="time-badge">8 min</span> Metronome — &'s Only (Drill #2)</h4>
+          <ul>
+            <li>At 244 BPM / tapping 122</li>
+            <li>Can you do <strong>8 clean bars</strong>? This is the graduation test.</li>
+          </ul>
+        </div>
+
+        <div class="exercise-block">
+          <h4><span class="time-badge">10 min</span> Lyric Singing + Improvised Words</h4>
+          <ul>
+            <li>The 4-line exercise at 122</li>
+            <li>Then: improvise your own words with the same rhythmic placement</li>
+            <li>Can you FEEL where off-beat words go without counting?</li>
+          </ul>
+        </div>
+
+        <div class="exercise-block">
+          <h4><span class="time-badge">15 min</span> I Like The Way You Walk — Performance Run</h4>
+          <ul>
+            <li>90 BPM groove beat, full song, strum + vocals</li>
+            <li><strong>No stopping</strong> — if you drift, re-enter on beat (don't restart)</li>
+            <li>This trains recovery, which is what playing live requires</li>
+          </ul>
+          <div class="cue-box">
+            <strong>Sarah (1/13):</strong> "Stop as soon as you realize you're off beat, and enter back in on beat." The goal is shorter time to notice drift, and cleaner re-entry.
+          </div>
+        </div>
+
+        <div class="exercise-block">
+          <h4><span class="time-badge">12 min</span> Sol Del Sur Full Pass</h4>
+          <ul>
+            <li>Lead part at full speed</li>
+            <li>Strum part with clean entries</li>
+            <li>If ready: alternate between lead and strum sections</li>
+          </ul>
+        </div>
+
+        <div class="exercise-block">
+          <h4><span class="time-badge">5 min</span> Vocal: Scat Improv Over Groove</h4>
+          <ul>
+            <li>Exercise 6 over 90 BPM groove beat</li>
+            <li>Push into syncopation — syllables on the &'s and "e and a"'s</li>
+          </ul>
+        </div>
+
+        <div class="level-up">
+          <strong>✓ Level-up marker:</strong> You can complete a full performance run of ILTWYW without restarting, and your re-entries after drift are within 1 beat.
+        </div>
+      </div>
+    </div>
+
+    <!-- DAY 7 -->
+    <div class="day-card">
+      <div class="day-header" onclick="toggleDay(this)">
+        <div>
+          <h3>Day 7: Active Rest + Exploration</h3>
+          <div class="day-meta">Musical Play &nbsp;|&nbsp; 30–40 min</div>
+        </div>
+        <span class="day-tag">REST</span>
+      </div>
+      <div class="day-body">
+        <div class="exercise-block">
+          <h4><span class="time-badge">5 min</span> Light Metronome Check-in</h4>
+          <ul>
+            <li>Drill #1 at 244, just 2–3 sets</li>
+            <li>Maintaining what you've built</li>
+          </ul>
+        </div>
+
+        <div class="exercise-block">
+          <h4><span class="time-badge">20 min</span> Free Improvisation</h4>
+          <ul>
+            <li>Surf Rock 120 BPM or Groove Beat 90 BPM</li>
+            <li>Fingerpick Am C G D, sing whatever comes to mind</li>
+            <li>Explore: climb through your break, play with dynamics</li>
+            <li><strong>Meditate while playing</strong> — let your mind wander, but stay on beat</li>
+          </ul>
+          <div class="cue-box">
+            <strong>Sarah (1/13):</strong> "Once you're locked in, meditate! Let your mind wander. It will likely make you go off beat — make sure to stay on!" This is the ultimate test of internalized time.
+          </div>
+        </div>
+
+        <div class="exercise-block">
+          <h4><span class="time-badge">10 min</span> Vocal Exploration</h4>
+          <ul>
+            <li>Free singing through passaggio with different vowels</li>
+            <li>Play with dynamics: loud chest → soft head → crescendo back</li>
+            <li>Siren glides only — keep it gentle</li>
+          </ul>
+          <div class="cue-box">Musical play, not drilling. Enjoy the instrument.</div>
+        </div>
+
+        <div class="level-up">
+          <strong>✓ End-of-week check:</strong> Can you stay on beat while your mind is elsewhere? That's the real graduation.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== VOCAL EXERCISES ========== -->
+  <div class="tab-content" id="vocal">
+    <div class="section-header">Vocal Exercises for Baritone Passaggio</div>
+    <div class="context-block">
+      <p>Designed for a baritone with a primary break around A3 (A3–B♭3). These integrate with Sarah's lesson themes: rhythm internalization, pitch matching, dynamic improvisation, and mixed/head voice flip control.</p>
+      <p>Your passaggio means chest voice tops out around G3–A3, and head voice begins to engage around A3–B♭3. The goal isn't to eliminate the break — it's to build a <strong>functional mixed voice</strong> that lets you transition smoothly. Think of it as a manual transmission with a sticky clutch. We're making it an automatic.</p>
+    </div>
+
+    <div class="vocal-card">
+      <h3>Exercise 1: Descending 5-Note Scale Through the Break</h3>
+      <div class="purpose">Approach the break from ABOVE (easier than ascending through it)</div>
+      <p>Starting note: C4. Sing a descending 5-note scale (C4–B3–A3–G3–F3) on "nee" or "nay." The nasal consonant maintains forward placement through the flip.</p>
+      <p>Descend chromatically each round: start on C4, then B3, then B♭3, then A3, then A♭3. You'll feel the flip happen in the B♭3–A3 zone on the way down.</p>
+      <div class="pitch-diagram">
+Round 1:  C4 → B3 → A3 → G3 → F3     (on "nee")
+Round 2:  B3 → A#3 → G#3 → F#3 → E3
+Round 3:  Bb3 → A3 → Ab3 → G3 → Gb3   ← flip zone
+Round 4:  A3 → Ab3 → G3 → Gb3 → F3    ← deep in it
+Round 5:  Ab3 → G3 → Gb3 → F3 → E3
+
+Metronome: 80 BPM, one note per beat.
+Volume: conversational 6/10. Don't push.</div>
+      <div class="note">Do 5–6 rounds. Don't force chest up or pull head down — let the voice do what it wants and observe where it flips. The observation IS the exercise.</div>
+    </div>
+
+    <div class="vocal-card">
+      <h3>Exercise 2: Messa di Voce on Break Notes</h3>
+      <div class="purpose">Dynamic control right at the passaggio — the #1 exercise for building mixed voice</div>
+      <p>Pick a single note in your break zone: start with G3. Sing on "ah." Start quiet (pp), swell to medium-loud (mf), then back to quiet. One cycle ≈ 8 seconds.</p>
+      <p>Do 3 cycles on G3, then move to A♭3, A3, B♭3.</p>
+      <div class="pitch-diagram">
+  pp ──────── mf ──────── pp     (8 sec total)
+  │                        │
+  quiet → swell → quiet
+
+  G3:   3 cycles (this should feel easy)
+  A♭3:  3 cycles (getting interesting)
+  A3:   3 cycles (the flip zone — the crescendo will try to flip you)
+  B♭3:  3 cycles (let it flip if it wants to)</div>
+      <p><strong>Vowel modification applies here:</strong> As you crescendo on A3, let "ah" drift toward "uh." The closing vowel enables the mixed voice mechanism.</p>
+      <p><strong>Breath:</strong> Use appoggio — maintain outward expansion of the lower ribs even as you exhale. Think of "leaning into" the air column, not squeezing. The diaphragm stays engaged throughout the swell. This is what gives you dynamic control without strain.</p>
+      <div class="note">By the time you reach B♭3, you'll likely notice the voice wants to flip on the crescendo. Let it. The goal is to make that flip smaller and more controlled over time — not to eliminate it.</div>
+    </div>
+
+    <div class="vocal-card">
+      <h3>Exercise 3: Siren Glides (Pitch Mapping)</h3>
+      <div class="purpose">Map your entire range and find exact flip points</div>
+      <p>On a lip trill (or "vvv"), glide from your lowest comfortable note (~C2–D2) all the way to your highest comfortable head voice (~E4–G4), then back down. Smooth, no jumps.</p>
+      <p>Speed: 4–5 seconds up, 4–5 seconds down. Do 5 rounds.</p>
+      <p>On rounds 3–5, <strong>slow down through the A3 zone</strong>. Really feel what's happening at the flip. Is it a sudden crack or a gradual shift? The lip trill reduces subglottic pressure, making the flip gentler and easier to observe.</p>
+      <div class="note">Record yourself. Listen for where the timbre changes. That's your passaggio. Over weeks, the crack should become a gradual shift.</div>
+    </div>
+
+    <div class="vocal-card">
+      <h3>Exercise 4: Rhythmic Pitch Matching</h3>
+      <div class="purpose">Pitch accuracy + rhythmic internalization — ties directly to the lesson</div>
+      <p>Use the Groove Beat at 90 BPM. Play Am on guitar. Sing:</p>
+      <div class="pitch-diagram">
+Bar 1:  Root (A2) on beat 1  →  3rd (C3) on beat 3
+Bar 2:  5th (E3) on beat 1   →  Octave (A3) on beat 3
+Bar 3:  5th (E3) on beat 1   →  3rd (C3) on beat 3
+Bar 4:  Root (A2) on beat 1  →  rest
+
+Then change chord (C):
+Bar 5:  C3 on beat 1  →  E3 on beat 3
+Bar 6:  G3 on beat 1  →  C4 on beat 3
+...and so on for G and D.</div>
+      <p>The intervals train pitch matching to specific chord tones while maintaining rhythmic placement. You're never just "hitting notes" — you're placing them inside the beat.</p>
+      <div class="note">Once comfortable: try placing notes on the &'s instead of the beats. Same pitches, but now they're syncopated. This directly trains what ILTWYW requires.</div>
+    </div>
+
+    <div class="vocal-card">
+      <h3>Exercise 5: Improvised "Ooh" Climbing</h3>
+      <div class="purpose">Dynamic improvisation + passaggio navigation — from Lesson 1/27</div>
+      <p>Surf Rock Beat at 120 BPM. Am C G D, island strum or fingerpick. On each chord, sing 4 "ooh" notes that climb. Different pattern every chord. Start in chest voice; as you cycle through repetitions, let the climbing notes push into and through your break.</p>
+      <p><strong>Rules from Sarah:</strong> (1) Not the same 4 notes every chord. (2) COMMIT — more air pressure = better pitch accuracy. (3) If a note cracks, that's data, not failure.</p>
+      <p><strong>Vowel trick:</strong> As you climb past G3, shift "ooh" toward a slightly more open "uh." This is the same vowel modification principle — it lets your voice navigate the passaggio instead of slamming into it.</p>
+      <div class="note">Variation: Try "mah" or "nah" instead of "ooh." The consonant onset helps with pitch accuracy and forward placement. The nasal consonants (m, n) are particularly good for passaggio work because they naturally encourage mixed resonance.</div>
+    </div>
+
+    <div class="vocal-card">
+      <h3>Exercise 6: Rhythmic Scat Improvisation</h3>
+      <div class="purpose">Fuse rhythm + pitch + improvisation — the endgame</div>
+      <p>Groove Beat at 90 BPM. No guitar. Using syllables like "doo" "bah" "dee" "dah," improvise melodic lines that follow the chord tones of Am C G D.</p>
+      <p>Progression: (1) One syllable per beat — simple, locked in. (2) Syncopate — put syllables on the &'s. (3) 16th note bursts — use the "e and a" from Drill #3.</p>
+      <p>This directly connects the metronome subdivision work to vocal improvisation. You're not just keeping time — you're playing with where your voice sits INSIDE the beat.</p>
+      <div class="note">Record a 2-minute improvisation. Listen back. Are your syncopations intentional or accidental? That's the diagnostic. The last word of each line in ILTWYW does exactly this kind of rhythmic play.</div>
+    </div>
+
+    <div class="section-header" style="margin-top: 30px;">AI Vocal Exercise Prompts</div>
+    <div class="context-block">
+      <p>Sarah keeps assigning "AI vocal exercises." Here are specific prompts you can use with vocal training apps (like Vanido, SingTrue, or Vocaberry) or with AI tools:</p>
+      <p><strong>For passaggio work:</strong> "Generate a vocal exercise for a male baritone with a passaggio around A3. I need descending scales from C4 through A3 to F3 on 'nee' syllable, with a metronome click at 80 BPM. Include vowel modification cues approaching the break."</p>
+      <p><strong>For rhythm + pitch:</strong> "Create a call-and-response pitch matching exercise at 90 BPM. Play chord tones from Am, C, G, D progression. I sing back each tone on beat 3. Include syncopated variations."</p>
+      <p><strong>For mixed voice flip control (from Lesson 1/27):</strong> "I'm a male baritone. Generate an exercise that practices the flip from head voice into chest voice into mixed voice around A3. Start in head voice on C4, descend through the break, then ascend back up. Use 'mah' syllable."</p>
+    </div>
+
+    <div class="section-header" style="margin-top: 30px;">Weekly Vocal Schedule</div>
+    <table class="schedule-table">
+      <thead>
+        <tr><th>Day</th><th>Exercises</th><th>Focus</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Day 1</td><td>Ex 1 (Descending) + Ex 2 (Messa di Voce)</td><td>Finding the flip, gentle exploration</td></tr>
+        <tr><td>Day 2</td><td>Ex 3 (Sirens) + Ex 4 (Rhythmic Pitch Match)</td><td>Mapping range + pitch/rhythm fusion</td></tr>
+        <tr><td>Day 3</td><td>Ex 5 (Ooh Climbing) + Ex 2 (Messa di Voce)</td><td>Improvisation + dynamic control</td></tr>
+        <tr><td>Day 4</td><td>Ex 1 + Ex 3 + Ex 6 (Scat Improv)</td><td>Full passaggio workout + improv</td></tr>
+        <tr><td>Day 5</td><td>Ex 2 + Ex 4 (Record everything)</td><td>Refinement + self-assessment</td></tr>
+        <tr><td>Day 6</td><td>Ex 5 + Ex 6 (Over groove beat)</td><td>Integration — real musical context</td></tr>
+        <tr><td>Day 7</td><td>Free singing + Ex 3 sirens only</td><td>Rest + play</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ========== NON-NEGOTIABLES ========== -->
+  <div class="tab-content" id="rules">
+    <div class="section-header">The Non-Negotiables</div>
+
+    <div class="rule">
+      <div class="rule-num">1</div>
+      <div><p><strong>Always start with Metronome Drill #1.</strong> Sarah called this the most important exercise. It's the warm-up AND the foundation. Never skip it, even on rest day.</p></div>
+    </div>
+    <div class="rule">
+      <div class="rule-num">2</div>
+      <div><p><strong>The nod is not optional.</strong> It's embodied rhythm. Your body needs to feel the downbeat physically. Down-nod on numbers, up-nod on &'s. Every. Single. Time.</p></div>
+    </div>
+    <div class="rule">
+      <div class="rule-num">3</div>
+      <div><p><strong>Record yourself at least twice this week.</strong> Especially "I Like The Way You Walk" and the Sol Del Sur strum. Sarah wants a video of the strum. The recording is the mirror — you can't fix what you can't hear.</p></div>
+    </div>
+    <div class="rule">
+      <div class="rule-num">4</div>
+      <div><p><strong>Don't simplify syncopation.</strong> If a word is supposed to land between beats, it needs to land between beats. The entire metronome apparatus serves this one outcome. Snapping to the grid is the easy path that leads nowhere.</p></div>
+    </div>
+    <div class="rule">
+      <div class="rule-num">5</div>
+      <div><p><strong>COMMIT to notes.</strong> More air = better pitch. Tentative singing is the enemy of accurate singing. Sarah has said this across multiple lessons. Push air, even if it cracks. A committed crack is more useful than a safe whisper.</p></div>
+    </div>
+    <div class="rule">
+      <div class="rule-num">6</div>
+      <div><p><strong>Pre-practice vocal warm-up is not optional.</strong> Lip trills → octave slides → straw phonation → humming. 8 minutes. Protects your voice and primes the passaggio for work. Avoid dairy before singing.</p></div>
+    </div>
+    <div class="rule">
+      <div class="rule-num">7</div>
+      <div><p><strong>Listening homework counts as practice.</strong> 5 minutes of analytical listening (where do his words fall relative to the beat?) is worth more than 20 minutes of unfocused playing. Do it on the bus, in the shower, whenever.</p></div>
+    </div>
+    <div class="rule">
+      <div class="rule-num">8</div>
+      <div><p><strong>Vowel modification through the break.</strong> "Ah" → "uh" approaching A3. "Ee" → "ih." This is the mechanical mechanism that enables mixed voice. Without it, you're just pushing chest voice until it breaks.</p></div>
+    </div>
+  </div>
+
+  <!-- ========== LINKS ========== -->
+  <div class="tab-content" id="links">
+    <div class="section-header">Links & Resources</div>
+
+    <div class="link-grid">
+      <a href="https://www.youtube.com/watch?v=AEf8LF4Xu18" class="link-card" target="_blank">
+        <div class="link-title">Surf Rock Beat 120 BPM</div>
+        <div class="link-desc">Fingerpicking + counting drill</div>
+      </a>
+      <a href="https://www.youtube.com/watch?v=n0nEhFAiorg" class="link-card" target="_blank">
+        <div class="link-title">Groove Beat 90 BPM</div>
+        <div class="link-desc">ILTWYW + vocal improv backing</div>
+      </a>
+      <a href="https://www.youtube.com/watch?v=gBNY43Xlp1Y" class="link-card" target="_blank">
+        <div class="link-title">Surf Rock Drum Beat 165 BPM</div>
+        <div class="link-desc">Island strum drill (Am C G D)</div>
+      </a>
+      <a href="https://www.youtube.com/watch?v=0vgOdlxSTW0" class="link-card" target="_blank">
+        <div class="link-title">Groove Beat 80 BPM</div>
+        <div class="link-desc">ILTWYW strum pattern practice</div>
+      </a>
+    </div>
+
+    <div style="margin-top: 24px;">
+      <div class="section-header">Tempo Progression Tracker</div>
+      <div class="context-block">
+        <p>Track your metronome progress across the week. Write in your highest clean tempo for each drill:</p>
+      </div>
+      <table class="schedule-table">
+        <thead>
+          <tr><th>Drill</th><th>Day 1</th><th>Day 2</th><th>Day 3</th><th>Day 4</th><th>Day 5</th><th>Day 6</th><th>Day 7</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>#1 Full Count</td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td></tr>
+          <tr><td>#2 &'s Only</td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td></tr>
+          <tr><td>#3 16th Notes</td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Tab switching
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.tab).classList.add('active');
+    });
+  });
+
+  // Day card accordion
+  function toggleDay(header) {
+    header.closest('.day-card').classList.toggle('open');
+  }
+</script>
+</body>
+</html>
