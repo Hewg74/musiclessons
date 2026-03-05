@@ -655,7 +655,7 @@ function triggerSynth(synth, kit, pitchNote, volDb, time) {
 function useMetronome() {
   const [bpm, setBpm] = useState(120);
   const [playing, setPlaying] = useState(false);
-  const [beat, setBeat] = useState(0);
+  const beat = 0; // Dummy beat to satisfy return signature; actual beat is managed via events to prevent App re-renders
   const [beatsPerBar, setBeatsPerBar] = useState(4);
   const [soundKit, setSoundKit] = useState("classic");
   // Per-beat config: accent level + optional per-beat sound override
@@ -718,7 +718,9 @@ function useMetronome() {
         }
       }
 
-      Tone.Draw.schedule(() => setBeat(b), time);
+      Tone.Draw.schedule(() => {
+        window.dispatchEvent(new CustomEvent('metroBeat', { detail: { beat: b } }));
+      }, time);
       count++;
     }, "4n").start(0);
     Tone.Transport.start();
@@ -728,7 +730,8 @@ function useMetronome() {
   const stop = useCallback(() => {
     loopRef.current?.stop(); loopRef.current?.dispose();
     Tone.Transport.stop(); Tone.Transport.position = 0;
-    setPlaying(false); setBeat(0);
+    setPlaying(false);
+    window.dispatchEvent(new CustomEvent('metroBeat', { detail: { beat: 0 } }));
   }, []);
 
   const changeBpm = useCallback((v) => {
@@ -802,7 +805,20 @@ function TypeBadge({ type }) {
   );
 }
 
-function BeatDots({ beat, playing, compact, beatConfig, beatsPerBar }) {
+function BeatDots({ beat: externalBeat, playing, compact, beatConfig, beatsPerBar }) {
+  const [internalBeat, setInternalBeat] = useState(0);
+
+  useEffect(() => {
+    const handleBeat = (e) => setInternalBeat(e.detail.beat);
+    window.addEventListener('metroBeat', handleBeat);
+    return () => window.removeEventListener('metroBeat', handleBeat);
+  }, []);
+
+  useEffect(() => {
+    if (!playing) setInternalBeat(0);
+  }, [playing]);
+
+  const beat = internalBeat; // Override external beat to prevent full app re-renders
   const n = beatsPerBar || 4;
   const cfg = beatConfig || Array.from({length:n}, (_,i) => ({accent:i===0?"accent":"normal"}));
   const s = compact ? 7 : 12, ds = compact ? 9 : 16;
@@ -1220,15 +1236,32 @@ function VowelMap() {
   );
 }
 
-function MetronomePanel({ metro }) {
+function MetronomePanel({ metro, onOpenTapMatch }) {
   const [editingBeat, setEditingBeat] = useState(null);
+  const [taps, setTaps] = useState([]);
+
+  const handleTapTempo = () => {
+    const now = Date.now();
+    setTaps(prev => {
+      const recent = prev.filter(t => now - t < 3000);
+      const newTaps = [...recent, now];
+      if (newTaps.length > 1) {
+        let durs = [];
+        for (let i = 1; i < newTaps.length; i++) durs.push(newTaps[i] - newTaps[i-1]);
+        const avg = durs.reduce((a, b) => a + b, 0) / durs.length;
+        const bpm = Math.round(60000 / avg);
+        if (bpm >= 40 && bpm <= 280) metro.changeBpm(bpm);
+      }
+      return newTaps;
+    });
+  };
 
   return (
     <div>
       {/* Main metronome card */}
       <div style={{
         background:T.bgCard, border:`1px solid ${T.border}`,
-        padding:32, textAlign:"center", boxShadow:T.md
+        padding:32, textAlign:"center", boxShadow:T.md, borderRadius: T.radiusMd
       }}>
         <div style={{ fontSize:11, color:T.textMuted, fontWeight:600, letterSpacing:2, fontFamily:T.sans, textTransform:"uppercase", marginBottom:12 }}>
           Metronome
@@ -1249,20 +1282,29 @@ function MetronomePanel({ metro }) {
           {[78,120,122,165,200,244].map(v => (
             <button key={v} onClick={()=>metro.changeBpm(v)} style={{
               background:metro.bpm===v?T.gold:"transparent", border:`1px solid ${metro.bpm===v?T.gold:T.borderSoft}`,
-              color:metro.bpm===v?"#fff":T.textMed, padding:"8px 20px",
+              color:metro.bpm===v?"#fff":T.textMed, padding:"8px 20px", borderRadius: T.radius,
               fontSize:12, fontWeight:400, cursor:"pointer", fontFamily:T.sans, letterSpacing:1
             }}>{v}</button>
           ))}
         </div>
 
-        {/* Start/Stop */}
-        <button onClick={metro.playing?metro.stop:metro.start} style={{
-          background:metro.playing?T.coral:T.gold, border:"none", color:"#fff",
-          padding:"14px 32px", fontSize:15, fontWeight:600, cursor:"pointer",
-          width:"100%", fontFamily:T.sans, letterSpacing:1.5, textTransform: "uppercase"
-        }}>
-          {metro.playing?"Stop":"Start"}
-        </button>
+        {/* Start/Stop & Tap Tempo */}
+        <div style={{ display:"flex", gap:12 }}>
+          <button onClick={handleTapTempo} style={{
+            flex: 1, background:"transparent", border:`1px dashed ${T.border}`, color:T.textMed,
+            padding:"14px", fontSize:13, fontWeight:600, cursor:"pointer", borderRadius: T.radius,
+            fontFamily:T.sans, letterSpacing:1, textTransform: "uppercase"
+          }}>
+            ✋ Tap Tempo
+          </button>
+          <button onClick={metro.playing?metro.stop:metro.start} style={{
+            flex: 2, background:metro.playing?T.coral:T.gold, border:"none", color:"#fff",
+            padding:"14px", fontSize:15, fontWeight:600, cursor:"pointer", borderRadius: T.radius,
+            fontFamily:T.sans, letterSpacing:1.5, textTransform: "uppercase"
+          }}>
+            {metro.playing?"Stop":"Start"}
+          </button>
+        </div>
       </div>
 
       {/* Sound Kit selector */}
@@ -1418,6 +1460,7 @@ function MetronomePanel({ metro }) {
 function TapMatchModal({ targetBpm, onClose, metro }) {
   const [taps, setTaps] = useState([]);
   const [flash, setFlash] = useState(false);
+  const [tapMultiplier, setTapMultiplier] = useState(1); // 1 = 1 tap/beat, 0.5 = 1 tap/2 beats, 2 = 2 taps/beat
   
   // Start metronome on mount, restore on unmount
   useEffect(() => {
@@ -1433,7 +1476,14 @@ function TapMatchModal({ targetBpm, onClose, metro }) {
     };
   }, []);
 
-  const handleTap = useCallback(() => {
+  const handleTap = useCallback((e) => {
+    if (e) {
+      if (e.type === "pointerdown") {
+        // Only trigger on primary button (e.g. left click) to avoid context menus
+        if (e.button !== 0 && e.button !== undefined) return;
+        e.preventDefault();
+      }
+    }
     const now = performance.now();
     setTaps(prev => {
       // If it's been more than 2.5 seconds since the last tap, reset
@@ -1480,19 +1530,21 @@ function TapMatchModal({ targetBpm, onClose, metro }) {
     currentBpm = Math.round(60000 / avgDuration);
   }
 
-  const diff = currentBpm !== "--" ? currentBpm - targetBpm : 0;
+  const expectedBpm = Math.round(metro.bpm * tapMultiplier);
+  const diff = currentBpm !== "--" ? currentBpm - expectedBpm : 0;
   const isClose = Math.abs(diff) <= 3;
 
   return (
     <div 
-      onClick={handleTap}
+      onPointerDown={handleTap}
       style={{
         position: "fixed", inset: 0, zIndex: 1000,
         background: flash ? T.successSoft : T.bg,
         transition: flash ? "none" : "background 0.4s cubic-bezier(0.2, 0, 0, 1)",
         display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
         color: T.textDark,
-        animation: flash ? "flashAnim 0.4s ease-out" : "none"
+        animation: flash ? "flashAnim 0.4s ease-out" : "none",
+        touchAction: "none" // Prevents zooming/scrolling on mobile to avoid missed taps
       }}
     >
       <style>{`
@@ -1501,20 +1553,38 @@ function TapMatchModal({ targetBpm, onClose, metro }) {
           100% { background: ${T.bg}; }
         }
       `}</style>
-      <button onClick={(e) => { e.stopPropagation(); onClose(); }} style={{
+      <button onPointerDown={(e) => { e.stopPropagation(); onClose(); }} style={{
         position: "absolute", top: 30, right: 30,
         background: "transparent", border: `1px solid ${T.border}`, padding: "10px 20px",
-        borderRadius: T.radius, cursor: "pointer", color: T.textMed, fontSize: 14, textTransform:"uppercase", letterSpacing:2
+        borderRadius: T.radius, cursor: "pointer", color: T.textMed, fontSize: 14, textTransform:"uppercase", letterSpacing:2,
+        zIndex: 10
       }}>Close</button>
       
-      <div style={{ fontSize: 18, color: T.textMuted, textTransform:"uppercase", letterSpacing:4, marginBottom: 40, fontFamily:T.sans }}>
+      <div style={{ fontSize: 18, color: T.textMuted, textTransform:"uppercase", letterSpacing:4, marginBottom: 20, fontFamily:T.sans }}>
         Tap Practice
       </div>
+
+      {/* BPM Controls */}
+      <div onPointerDown={e => e.stopPropagation()} style={{ 
+        display:"flex", gap: 10, marginBottom: 30, alignItems:"center", 
+        background:T.bgCard, padding:"8px 16px", borderRadius:20, border:`1px solid ${T.border}`, zIndex: 10 
+      }}>
+        <button onPointerDown={() => metro.changeBpm(Math.max(40, metro.bpm - 1))} style={{ background:"transparent", border:"none", fontSize:24, cursor:"pointer", color:T.textMed, padding:"0 10px" }}>-</button>
+        <div style={{ fontSize: 16, fontFamily:T.sans, color:T.textDark, fontWeight:600, minWidth:80, textAlign:"center" }}>{metro.bpm} BPM</div>
+        <button onPointerDown={() => metro.changeBpm(Math.min(280, metro.bpm + 1))} style={{ background:"transparent", border:"none", fontSize:24, cursor:"pointer", color:T.textMed, padding:"0 10px" }}>+</button>
+      </div>
+
+      {/* Subdivision Controls */}
+      <div onPointerDown={e => e.stopPropagation()} style={{ display:"flex", gap: 8, marginBottom: 40, zIndex: 10 }}>
+        <button onPointerDown={() => setTapMultiplier(1)} style={{ padding:"8px 16px", borderRadius:16, border:`1px solid ${tapMultiplier===1?T.gold:T.border}`, background:tapMultiplier===1?T.gold:"transparent", color:tapMultiplier===1?"#fff":T.textMed, fontSize:12, cursor:"pointer", fontFamily:T.sans, fontWeight:600 }}>On Beat</button>
+        <button onPointerDown={() => setTapMultiplier(0.5)} style={{ padding:"8px 16px", borderRadius:16, border:`1px solid ${tapMultiplier===0.5?T.gold:T.border}`, background:tapMultiplier===0.5?T.gold:"transparent", color:tapMultiplier===0.5?"#fff":T.textMed, fontSize:12, cursor:"pointer", fontFamily:T.sans, fontWeight:600 }}>1 per 2 Beats</button>
+        <button onPointerDown={() => setTapMultiplier(2)} style={{ padding:"8px 16px", borderRadius:16, border:`1px solid ${tapMultiplier===2?T.gold:T.border}`, background:tapMultiplier===2?T.gold:"transparent", color:tapMultiplier===2?"#fff":T.textMed, fontSize:12, cursor:"pointer", fontFamily:T.sans, fontWeight:600 }}>2 per Beat</button>
+      </div>
       
-      <div style={{ display:"flex", alignItems:"center", gap: 60 }}>
+      <div style={{ display:"flex", alignItems:"center", gap: 60, pointerEvents:"none" }}>
         <div style={{ textAlign:"center" }}>
           <div style={{ fontSize: 14, color: T.textLight, textTransform:"uppercase", letterSpacing:2, marginBottom: 8, fontFamily:T.sans }}>Target</div>
-          <div style={{ fontSize: 64, fontFamily: T.serif, color: T.textMed }}>{targetBpm}</div>
+          <div style={{ fontSize: 64, fontFamily: T.serif, color: T.textMed }}>{expectedBpm}</div>
         </div>
         
         <div style={{ height: 80, width: 1, background: T.border }} />
@@ -1526,10 +1596,39 @@ function TapMatchModal({ targetBpm, onClose, metro }) {
           </div>
         </div>
       </div>
-      
-      <div style={{ marginTop: 60, fontSize: 16, color: T.textMuted, fontFamily: T.sans, background: T.bgSoft, padding: "16px 24px", borderRadius: T.radiusMd, border: `1px solid ${T.border}` }}>
-        Tap the <strong>Spacebar</strong> or click anywhere to the beat.
+
+      <div style={{ height: 30, marginTop: 10, fontSize: 14, color: isClose ? T.success : T.coral, fontFamily: T.sans, fontWeight: 600, letterSpacing: 1, textTransform:"uppercase", pointerEvents:"none" }}>
+        {currentBpm !== "--" && (isClose ? "Perfect!" : diff > 0 ? "Too Fast" : "Too Slow")}
       </div>
+      
+      <div style={{ marginTop: 50, fontSize: 16, color: T.textMuted, fontFamily: T.sans, background: T.bgSoft, padding: "16px 24px", borderRadius: T.radiusMd, border: `1px solid ${T.border}`, pointerEvents:"none" }}>
+        Tap the <strong>Spacebar</strong> or tap anywhere to the beat.
+      </div>
+    </div>
+  );
+}
+
+function ToolCard({ title, icon, defaultOpen = false, children }) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div style={{
+      background:T.bgCard, border:`1px solid ${T.border}`, borderRadius: T.radiusMd,
+      marginBottom:12, overflow:"hidden", boxShadow:open?T.md:T.sm, transition:"all 0.2s"
+    }}>
+      <div onClick={()=>setOpen(!open)} style={{
+        display:"flex", alignItems:"center", gap:14, padding:"18px 20px", cursor:"pointer"
+      }}>
+        <div style={{ fontSize:20, flexShrink:0 }}>{icon}</div>
+        <div style={{ flex:1 }}>
+          <div style={{ fontWeight:400, fontSize:18, color:T.textDark, fontFamily:T.serif }}>{title}</div>
+        </div>
+        <div style={{ color:T.textMuted, fontSize:14, transition:"transform 0.2s", transform:open?"rotate(180deg)":"" }}>▾</div>
+      </div>
+      {open && (
+        <div style={{ padding:"0 20px 20px", borderTop: `1px solid ${T.borderSoft}`, paddingTop: 20 }}>
+          {children}
+        </div>
+      )}
     </div>
   );
 }
@@ -1755,11 +1854,20 @@ export default function App() {
             <div style={{ textAlign:"center", marginBottom:24 }}>
               <div style={{ fontSize:32, fontWeight:400, fontFamily:T.serif, color:T.textDark }}>Metronome</div>
             </div>
-            <MetronomePanel metro={metro} />
-            <div style={{ background:T.bgCard, border:`1px solid ${T.border}`, padding:22, marginTop:20, boxShadow:T.sm }}>
-              <div style={{ fontSize:11, fontWeight:600, letterSpacing:2, textTransform:"uppercase", color:T.textMuted, fontFamily:T.sans, marginBottom:14 }}>
-                Quick Reference
-              </div>
+            <MetronomePanel metro={metro} onOpenTapMatch={setTapMatchBpm} />
+      {/* Quick Reference */}
+      <div style={{ background:T.bgCard, border:`1px solid ${T.border}`, padding:22, marginTop:20, boxShadow:T.sm, borderRadius: T.radiusMd }}>
+        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
+          <div style={{ fontSize:11, fontWeight:600, letterSpacing:2, textTransform:"uppercase", color:T.textMuted, fontFamily:T.sans }}>
+            Quick Reference
+          </div>
+          <button onClick={() => onOpenTapMatch(metro.bpm)} style={{
+            background: "transparent", border: "none", color: T.gold, fontSize: 11, fontWeight: 600, cursor: "pointer",
+            fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1, padding: 0
+          }}>
+            ✋ Tap Minigame
+          </button>
+        </div>
               {[
                 { bpm:"78", use:"16th note subdivision (Drill #3)" },
                 { bpm:"120", use:"Surf Rock — fingerpick + count + ooh climbing" },
@@ -1801,11 +1909,42 @@ export default function App() {
               </div>
               <div style={{ fontSize:32, fontWeight:400, fontFamily:T.serif, color:T.textDark }}>Offline Tools</div>
             </div>
-            <FlightCheck theme={T} />
-            <PitchPipe theme={T} />
-            <AudioRecorder theme={T} />
-            <AudioPlayer theme={T} />
-            <OfflineTabs theme={T} />
+
+            <ToolCard icon="✅" title="Jungle Flight Check" defaultOpen={true}>
+              <FlightCheck theme={T} />
+            </ToolCard>
+
+            <ToolCard icon="✋" title="Tap Practice Minigame">
+              <div style={{ textAlign: "center", padding: "10px 0" }}>
+                <p style={{ fontSize: 14, color: T.textMed, marginBottom: 20 }}>
+                  Practice tapping steadily at any BPM. Helps internalize the groove.
+                </p>
+                <button onClick={() => setTapMatchBpm(metro.bpm)} style={{
+                  background: T.gold, color: "#fff", border: "none", padding: "12px 24px",
+                  borderRadius: T.radius, cursor: "pointer", fontFamily: T.sans, fontWeight: 600,
+                  textTransform: "uppercase", letterSpacing: 1
+                }}>
+                  Launch Game
+                </button>
+              </div>
+            </ToolCard>
+
+            <ToolCard icon="🎵" title="Pitch Pipe">
+              <PitchPipe theme={T} />
+            </ToolCard>
+
+            <ToolCard icon="🎙️" title="Quick Recorder">
+              <AudioRecorder theme={T} />
+            </ToolCard>
+
+            <ToolCard icon="📻" title="Backing Tracks">
+              <AudioPlayer theme={T} />
+            </ToolCard>
+
+            <ToolCard icon="🎸" title="Tabs & Lyrics">
+              <OfflineTabs theme={T} />
+            </ToolCard>
+
           </div>
         )}
       </div>

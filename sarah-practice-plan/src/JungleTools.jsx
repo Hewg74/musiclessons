@@ -14,8 +14,7 @@ export function AudioPlayer({ theme: T }) {
   ];
 
   return (
-    <div style={{ marginBottom: 40 }}>
-      <div style={{ fontSize: 24, fontFamily: T.serif, marginBottom: 16 }}>Backing Tracks</div>
+    <div>
       <p style={{ fontSize: 13, color: T.textMuted, marginBottom: 16 }}>
         Place these MP3 files in the <code>public/</code> folder. The PWA will cache them automatically for offline use.
       </p>
@@ -79,8 +78,7 @@ export function FlightCheck({ theme: T }) {
   };
 
   return (
-    <div style={{ marginBottom: 40, padding: 20, background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: T.radiusMd }}>
-      <div style={{ fontSize: 20, fontFamily: T.serif, marginBottom: 12 }}>Jungle Flight Check</div>
+    <div>
       <p style={{ fontSize: 14, color: T.textMed, marginBottom: 16 }}>
         Verify that all media is successfully cached by the Service Worker before going off-grid.
       </p>
@@ -193,13 +191,13 @@ Love you with all my... [heart]
 Love you with all my... [heart]
 
 [Verse 2]
-And I like the way that you... [are]
+Well I like the way you... [are]
 In all the things that you... [do]
-You like honey, those bees are all around... [you]
+You're like honey, all the bees are around... [you]
 There's a house on the... [hill]
-I bought a coupe to fill... [with you]
-We'll get out on the road... [with you]
-I'm always... [home]
+I got a room to fill, with... [you]
+We'll get out on the... [road]
+No more being... [alone]
 Ooh...
 
 [Chorus]
@@ -212,8 +210,7 @@ Love you with all my... [heart]
   `;
 
   return (
-    <div style={{ marginBottom: 40 }}>
-      <div style={{ fontSize: 24, fontFamily: T.serif, marginBottom: 16 }}>Tabs & Lyrics</div>
+    <div>
       <div style={{ display: 'flex', gap: 10, marginBottom: 16 }}>
         <button onClick={() => setActiveTab('sol')} style={{
           background: activeTab === 'sol' ? T.gold : T.bgCard,
@@ -278,8 +275,7 @@ export function AudioRecorder({ theme: T }) {
   };
 
   return (
-    <div style={{ marginBottom: 40, padding: 20, background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radiusMd }}>
-      <div style={{ fontSize: 20, fontFamily: T.serif, marginBottom: 12 }}>Quick Recorder</div>
+    <div>
       <p style={{ fontSize: 14, color: T.textMed, marginBottom: 16 }}>
         Record yourself and listen back immediately. (Saved temporarily in memory).
       </p>
@@ -368,8 +364,7 @@ export function PitchPipe({ theme: T }) {
   }, []);
 
   return (
-    <div style={{ marginBottom: 40 }}>
-      <div style={{ fontSize: 24, fontFamily: T.serif, marginBottom: 16 }}>Pitch Pipe</div>
+    <div>
       <p style={{ fontSize: 14, color: T.textMed, marginBottom: 16 }}>Standard Tuning (E A D G B E)</p>
       
       <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>

@@ -610,7 +610,7 @@ function triggerSynth(synth, kit, pitchNote, volDb, time) {
 function useMetronome() {
   const [bpm, setBpm] = useState(120);
   const [playing, setPlaying] = useState(false);
-  const [beat, setBeat] = useState(0);
+  const beat = 0; // Dummy beat to satisfy return signature; actual beat is managed via events to prevent App re-renders
   const [beatsPerBar, setBeatsPerBar] = useState(4);
   const [soundKit, setSoundKit] = useState("click");
   // Per-beat config: accent level + optional per-beat sound override
@@ -671,7 +671,9 @@ function useMetronome() {
         }
       }
 
-      Tone.Draw.schedule(() => setBeat(b), time);
+      Tone.Draw.schedule(() => {
+        window.dispatchEvent(new CustomEvent('metroBeat', { detail: { beat: b } }));
+      }, time);
       count++;
     }, "4n").start(0);
     Tone.Transport.start();
@@ -681,7 +683,8 @@ function useMetronome() {
   const stop = useCallback(() => {
     loopRef.current?.stop(); loopRef.current?.dispose();
     Tone.Transport.stop(); Tone.Transport.position = 0;
-    setPlaying(false); setBeat(0);
+    setPlaying(false);
+    window.dispatchEvent(new CustomEvent('metroBeat', { detail: { beat: 0 } }));
   }, []);
 
   const changeBpm = useCallback((v) => {
@@ -754,7 +757,20 @@ function TypeBadge({ type }) {
   );
 }
 
-function BeatDots({ beat, playing, compact, beatConfig, beatsPerBar }) {
+function BeatDots({ beat: externalBeat, playing, compact, beatConfig, beatsPerBar }) {
+  const [internalBeat, setInternalBeat] = useState(0);
+
+  useEffect(() => {
+    const handleBeat = (e) => setInternalBeat(e.detail.beat);
+    window.addEventListener('metroBeat', handleBeat);
+    return () => window.removeEventListener('metroBeat', handleBeat);
+  }, []);
+
+  useEffect(() => {
+    if (!playing) setInternalBeat(0);
+  }, [playing]);
+
+  const beat = internalBeat; // Override external beat to prevent full app re-renders
   const n = beatsPerBar || 4;
   const cfg = beatConfig || Array.from({length:n}, (_,i) => ({accent:i===0?"accent":"normal"}));
   const s = compact ? 7 : 12, ds = compact ? 9 : 16;
