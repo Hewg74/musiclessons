@@ -179,25 +179,28 @@ I Like The Way You Walk - The Donkeys
 Key syncopation note: The last word of each line falls BETWEEN beats.
 
 [Verse 1]
-Well I like the way you... [walk]
-And I like the way you... [talk]
-And I like the way you... [smile]
-When you're walking down the... [aisle]
-
-[Chorus]
-'Cause I love you with all my... [heart]
-Love you with all my... [heart]
-Love you with all my... [heart]
-Love you with all my... [heart]
+I like the way that you... [walk]
+And all the things that you... [do]
+You like honey... [dew]
+Those bees are all around... [you]
 
 [Verse 2]
-Well I like the way you... [are]
-In all the things that you... [do]
-You're like honey, all the bees are around... [you]
+You wrote a Brautigan... [letter]
+Taped it on the... [mirror]
+You cannot drive a... [shifter]
+But you can always... [steer]
+
+[Verse 3]
+I like the way that you... [talk]
+And all the things that you... [do]
+You do like honey... [do]
+Those bees are all around... [you]
+
+[Outro]
 There's a house on the... [hill]
-I got a room to fill, with... [you]
-We'll get out on the... [road]
-No more being... [alone]
+I bought a Coupe de... [Ville]
+We'll get out on that... [road]
+With you I'm always... [home]
 Ooh...
 
 [Chorus]

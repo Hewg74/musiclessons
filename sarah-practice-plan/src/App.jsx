@@ -658,6 +658,9 @@ function useMetronome() {
   const beat = 0; // Dummy beat to satisfy return signature; actual beat is managed via events to prevent App re-renders
   const [beatsPerBar, setBeatsPerBar] = useState(4);
   const [soundKit, setSoundKit] = useState("classic");
+  const [gapClick, setGapClick] = useState(0); // 0=off, 4=mute 4th bar
+  const [speedBuilder, setSpeedBuilder] = useState(false); // true = +5 bpm every 4 bars
+
   // Per-beat config: accent level + optional per-beat sound override
   const [beatConfig, setBeatConfig] = useState([
     { accent:"accent", kit:null },
@@ -671,12 +674,16 @@ function useMetronome() {
   const soundKitRef = useRef(soundKit);
   const beatsRef = useRef(beatsPerBar);
   const bpmRef = useRef(bpm);
+  const gapClickRef = useRef(gapClick);
+  const speedBuilderRef = useRef(speedBuilder);
 
   // Keep refs in sync
   useEffect(() => { beatConfigRef.current = beatConfig; }, [beatConfig]);
   useEffect(() => { soundKitRef.current = soundKit; }, [soundKit]);
   useEffect(() => { beatsRef.current = beatsPerBar; }, [beatsPerBar]);
   useEffect(() => { bpmRef.current = bpm; }, [bpm]);
+  useEffect(() => { gapClickRef.current = gapClick; }, [gapClick]);
+  useEffect(() => { speedBuilderRef.current = speedBuilder; }, [speedBuilder]);
 
   // Create/dispose synths when kits change
   useEffect(() => {
@@ -708,7 +715,20 @@ function useMetronome() {
       const bc = cfg[b] || { accent:"normal", kit:null };
       const acc = ACCENT_CONFIG[bc.accent];
 
-      if (bc.accent !== "mute") {
+      const bar = Math.floor(count / numBeats);
+      
+      if (speedBuilderRef.current && b === 0 && bar > 0 && bar % 4 === 0) {
+        const nextBpm = Math.min(280, bpmRef.current + 5);
+        bpmRef.current = nextBpm;
+        Tone.Transport.bpm.value = nextBpm;
+        Tone.Draw.schedule(() => setBpm(nextBpm), time);
+      }
+
+      const gc = gapClickRef.current;
+      let isMute = bc.accent === "mute";
+      if (gc > 0 && bar % gc === (gc - 1)) isMute = true;
+
+      if (!isMute) {
         const kit = bc.kit || soundKitRef.current;
         const synth = synthsRef.current[kit];
         if (synth) {
@@ -719,7 +739,7 @@ function useMetronome() {
       }
 
       Tone.Draw.schedule(() => {
-        window.dispatchEvent(new CustomEvent('metroBeat', { detail: { beat: b } }));
+        window.dispatchEvent(new CustomEvent('metroBeat', { detail: { beat: b, isMute } }));
       }, time);
       count++;
     }, "4n").start(0);
@@ -769,8 +789,8 @@ function useMetronome() {
   }, [soundKit]);
 
   return {
-    bpm, playing, beat, beatsPerBar, soundKit, beatConfig,
-    start, stop, changeBpm, changeBeats, setSoundKit, cycleAccent, setBeatKit
+    bpm, playing, beat, beatsPerBar, soundKit, beatConfig, gapClick, speedBuilder,
+    start, stop, changeBpm, changeBeats, setSoundKit, cycleAccent, setBeatKit, setGapClick, setSpeedBuilder
   };
 }
 
@@ -1347,6 +1367,31 @@ function MetronomePanel({ metro, onOpenTapMatch }) {
         </div>
       </div>
 
+      {/* Practice Features */}
+      <div style={{
+        background:T.bgCard, border:`1px solid ${T.border}`,
+        padding:20, marginTop:16, boxShadow:T.sm
+      }}>
+        <div style={{ fontSize:11, fontWeight:600, letterSpacing:2, textTransform:"uppercase", color:T.textMuted, fontFamily:T.sans, marginBottom:12 }}>
+          Practice Features
+        </div>
+        <div style={{ display:"flex", gap:12, flexWrap:"wrap" }}>
+          <button onClick={() => metro.setGapClick(metro.gapClick ? 0 : 4)} style={{
+            flex:1, background:metro.gapClick?T.gold:"transparent",
+            border:`1px solid ${metro.gapClick?T.gold:T.borderSoft}`,
+            color:metro.gapClick?"#fff":T.textMed, borderRadius: T.radius,
+            padding:"10px 16px", fontSize:12, fontWeight:600, cursor:"pointer", fontFamily:T.sans
+          }}>Gap Click (Mute 1/4)</button>
+          
+          <button onClick={() => metro.setSpeedBuilder(!metro.speedBuilder)} style={{
+            flex:1, background:metro.speedBuilder?T.gold:"transparent",
+            border:`1px solid ${metro.speedBuilder?T.gold:T.borderSoft}`,
+            color:metro.speedBuilder?"#fff":T.textMed, borderRadius: T.radius,
+            padding:"10px 16px", fontSize:12, fontWeight:600, cursor:"pointer", fontFamily:T.sans
+          }}>Speed Builder (+5/4 bars)</button>
+        </div>
+      </div>
+
       {/* Per-beat editor */}
       <div style={{
         background:T.bgCard, border:`1px solid ${T.border}`,
@@ -1461,6 +1506,8 @@ function TapMatchModal({ targetBpm, onClose, metro }) {
   const [taps, setTaps] = useState([]);
   const [flash, setFlash] = useState(false);
   const [tapMultiplier, setTapMultiplier] = useState(1); // 1 = 1 tap/beat, 0.5 = 1 tap/2 beats, 2 = 2 taps/beat
+  const [isCountingIn, setIsCountingIn] = useState(true);
+  const [countDown, setCountDown] = useState(4);
   
   // Start metronome on mount, restore on unmount
   useEffect(() => {
@@ -1470,11 +1517,26 @@ function TapMatchModal({ targetBpm, onClose, metro }) {
     metro.changeBpm(targetBpm);
     if (!metro.playing) metro.start();
     
+    // Count-in logic
+    let beats = 4;
+    setCountDown(beats);
+    const interval = (60000 / targetBpm);
+    const timer = setInterval(() => {
+      beats -= 1;
+      if (beats <= 0) {
+        setIsCountingIn(false);
+        clearInterval(timer);
+      } else {
+        setCountDown(beats);
+      }
+    }, interval);
+
     return () => {
+      clearInterval(timer);
       metro.changeBpm(prevBpm);
       if (!prevPlaying) metro.stop();
     };
-  }, []);
+  }, [targetBpm]);
 
   const handleTap = useCallback((e) => {
     if (e) {
@@ -1484,6 +1546,8 @@ function TapMatchModal({ targetBpm, onClose, metro }) {
         e.preventDefault();
       }
     }
+    if (isCountingIn) return;
+
     const now = performance.now();
     setTaps(prev => {
       // If it's been more than 2.5 seconds since the last tap, reset
@@ -1499,7 +1563,7 @@ function TapMatchModal({ targetBpm, onClose, metro }) {
     // Force a re-render of the flash animation by toggling it off and on quickly
     setFlash(false);
     setTimeout(() => setFlash(true), 10);
-  }, []);
+  }, [isCountingIn]);
 
   useEffect(() => {
     const onKeyDown = (e) => {
@@ -1512,14 +1576,23 @@ function TapMatchModal({ targetBpm, onClose, metro }) {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [handleTap]);
 
-  // Calculate current BPM
+  const expectedBpm = Math.round(metro.bpm * tapMultiplier);
+
+  // Calculate current BPM & Accuracy
   let currentBpm = "--";
+  let lastTapDiff = null;
+
   if (taps.length > 1) {
     let durations = [];
     for (let i = 1; i < taps.length; i++) {
       durations.push(taps[i] - taps[i-1]);
     }
     
+    // Calculate last tap accuracy against expected interval
+    const lastInterval = durations[durations.length - 1];
+    const expectedInterval = 60000 / expectedBpm;
+    lastTapDiff = Math.round(lastInterval - expectedInterval);
+
     // Smooth the curve: discard the highest and lowest durations if we have enough data
     if (durations.length >= 4) {
       durations.sort((a, b) => a - b);
@@ -1530,7 +1603,6 @@ function TapMatchModal({ targetBpm, onClose, metro }) {
     currentBpm = Math.round(60000 / avgDuration);
   }
 
-  const expectedBpm = Math.round(metro.bpm * tapMultiplier);
   const diff = currentBpm !== "--" ? currentBpm - expectedBpm : 0;
   const isClose = Math.abs(diff) <= 3;
 
@@ -1589,16 +1661,31 @@ function TapMatchModal({ targetBpm, onClose, metro }) {
         
         <div style={{ height: 80, width: 1, background: T.border }} />
         
-        <div style={{ textAlign:"center" }}>
-          <div style={{ fontSize: 14, color: T.textLight, textTransform:"uppercase", letterSpacing:2, marginBottom: 8, fontFamily:T.sans }}>Your Tap</div>
-          <div style={{ fontSize: 80, fontFamily: T.serif, color: currentBpm === "--" ? T.textMuted : (isClose ? T.success : T.coral) }}>
-            {currentBpm}
+        <div style={{ textAlign:"center", minWidth: 120 }}>
+          <div style={{ fontSize: 14, color: T.textLight, textTransform:"uppercase", letterSpacing:2, marginBottom: 8, fontFamily:T.sans }}>
+            {isCountingIn ? "Listen..." : "Your Tap"}
+          </div>
+          <div style={{ fontSize: 80, fontFamily: T.serif, color: isCountingIn ? T.gold : currentBpm === "--" ? T.textMuted : (isClose ? T.success : T.coral) }}>
+            {isCountingIn ? countDown : currentBpm}
           </div>
         </div>
       </div>
 
-      <div style={{ height: 30, marginTop: 10, fontSize: 14, color: isClose ? T.success : T.coral, fontFamily: T.sans, fontWeight: 600, letterSpacing: 1, textTransform:"uppercase", pointerEvents:"none" }}>
-        {currentBpm !== "--" && (isClose ? "Perfect!" : diff > 0 ? "Too Fast" : "Too Slow")}
+      <div style={{ height: 60, marginTop: 10, textAlign: "center", pointerEvents:"none", display:"flex", flexDirection:"column", justifyContent:"center" }}>
+        {!isCountingIn && currentBpm !== "--" && (
+          <>
+            <div style={{ fontSize: 14, color: isClose ? T.success : T.coral, fontFamily: T.sans, fontWeight: 600, letterSpacing: 1, textTransform:"uppercase" }}>
+              {isClose ? "Perfect!" : diff > 0 ? "Too Fast" : "Too Slow"}
+            </div>
+            {lastTapDiff !== null && (
+              <div style={{ marginTop: 8, fontSize: 13, color: T.textMed, fontFamily: T.sans }}>
+                Last tap: <span style={{ color: Math.abs(lastTapDiff) < 20 ? T.success : lastTapDiff < 0 ? T.coral : T.warm, fontWeight: 600 }}>
+                  {lastTapDiff > 0 ? "+" : ""}{lastTapDiff}ms {lastTapDiff < 0 ? "(Rushing)" : lastTapDiff > 0 ? "(Dragging)" : "(Perfect)"}
+                </span>
+              </div>
+            )}
+          </>
+        )}
       </div>
       
       <div style={{ marginTop: 50, fontSize: 16, color: T.textMuted, fontFamily: T.sans, background: T.bgSoft, padding: "16px 24px", borderRadius: T.radiusMd, border: `1px solid ${T.border}`, pointerEvents:"none" }}>

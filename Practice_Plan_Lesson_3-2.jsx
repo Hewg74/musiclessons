@@ -613,6 +613,9 @@ function useMetronome() {
   const beat = 0; // Dummy beat to satisfy return signature; actual beat is managed via events to prevent App re-renders
   const [beatsPerBar, setBeatsPerBar] = useState(4);
   const [soundKit, setSoundKit] = useState("click");
+  const [gapClick, setGapClick] = useState(0);
+  const [speedBuilder, setSpeedBuilder] = useState(false);
+
   // Per-beat config: accent level + optional per-beat sound override
   const [beatConfig, setBeatConfig] = useState([
     { accent:"accent", kit:null },
@@ -625,11 +628,17 @@ function useMetronome() {
   const beatConfigRef = useRef(beatConfig);
   const soundKitRef = useRef(soundKit);
   const beatsRef = useRef(beatsPerBar);
+  const bpmRef = useRef(bpm);
+  const gapClickRef = useRef(gapClick);
+  const speedBuilderRef = useRef(speedBuilder);
 
   // Keep refs in sync
   useEffect(() => { beatConfigRef.current = beatConfig; }, [beatConfig]);
   useEffect(() => { soundKitRef.current = soundKit; }, [soundKit]);
   useEffect(() => { beatsRef.current = beatsPerBar; }, [beatsPerBar]);
+  useEffect(() => { bpmRef.current = bpm; }, [bpm]);
+  useEffect(() => { gapClickRef.current = gapClick; }, [gapClick]);
+  useEffect(() => { speedBuilderRef.current = speedBuilder; }, [speedBuilder]);
 
   // Create/dispose synths when kits change
   useEffect(() => {
@@ -652,7 +661,7 @@ function useMetronome() {
 
   const start = useCallback(async () => {
     await Tone.start();
-    Tone.Transport.bpm.value = bpm;
+    Tone.Transport.bpm.value = bpmRef.current;
     let count = 0;
     loopRef.current = new Tone.Loop((time) => {
       const cfg = beatConfigRef.current;
@@ -661,7 +670,20 @@ function useMetronome() {
       const bc = cfg[b] || { accent:"normal", kit:null };
       const acc = ACCENT_CONFIG[bc.accent];
 
-      if (bc.accent !== "mute") {
+      const bar = Math.floor(count / numBeats);
+      
+      if (speedBuilderRef.current && b === 0 && bar > 0 && bar % 4 === 0) {
+        const nextBpm = Math.min(280, bpmRef.current + 5);
+        bpmRef.current = nextBpm;
+        Tone.Transport.bpm.value = nextBpm;
+        Tone.Draw.schedule(() => setBpm(nextBpm), time);
+      }
+
+      const gc = gapClickRef.current;
+      let isMute = bc.accent === "mute";
+      if (gc > 0 && bar % gc === (gc - 1)) isMute = true;
+
+      if (!isMute) {
         const kit = bc.kit || soundKitRef.current;
         const synth = synthsRef.current[kit];
         if (synth) {
@@ -672,13 +694,13 @@ function useMetronome() {
       }
 
       Tone.Draw.schedule(() => {
-        window.dispatchEvent(new CustomEvent('metroBeat', { detail: { beat: b } }));
+        window.dispatchEvent(new CustomEvent('metroBeat', { detail: { beat: b, isMute } }));
       }, time);
       count++;
     }, "4n").start(0);
     Tone.Transport.start();
     setPlaying(true);
-  }, [bpm]);
+  }, []);
 
   const stop = useCallback(() => {
     loopRef.current?.stop(); loopRef.current?.dispose();
@@ -689,6 +711,7 @@ function useMetronome() {
 
   const changeBpm = useCallback((v) => {
     setBpm(v);
+    bpmRef.current = v;
     if (Tone.Transport.state === "started") Tone.Transport.bpm.value = v;
   }, []);
 
@@ -721,8 +744,8 @@ function useMetronome() {
   }, [soundKit]);
 
   return {
-    bpm, playing, beat, beatsPerBar, soundKit, beatConfig,
-    start, stop, changeBpm, changeBeats, setSoundKit, cycleAccent, setBeatKit
+    bpm, playing, beat, beatsPerBar, soundKit, beatConfig, gapClick, speedBuilder,
+    start, stop, changeBpm, changeBeats, setSoundKit, cycleAccent, setBeatKit, setGapClick, setSpeedBuilder
   };
 }
 
@@ -1263,6 +1286,31 @@ function MetronomePanel({ metro }) {
         </div>
       </div>
 
+      {/* Practice Features */}
+      <div style={{
+        background:T.bgCard, border:`1px solid ${T.border}`, borderRadius:14,
+        padding:20, marginTop:16, boxShadow:T.sm
+      }}>
+        <div style={{ fontSize:11, fontWeight:600, letterSpacing:2, textTransform:"uppercase", color:T.textMuted, fontFamily:T.sans, marginBottom:12 }}>
+          Practice Features
+        </div>
+        <div style={{ display:"flex", gap:12, flexWrap:"wrap" }}>
+          <button onClick={() => metro.setGapClick(metro.gapClick ? 0 : 4)} style={{
+            flex:1, background:metro.gapClick?T.gold:"transparent",
+            border:`1px solid ${metro.gapClick?T.gold:T.borderSoft}`,
+            color:metro.gapClick?"#fff":T.textMed, borderRadius: 14,
+            padding:"10px 16px", fontSize:12, fontWeight:600, cursor:"pointer", fontFamily:T.sans
+          }}>Gap Click (Mute 1/4)</button>
+          
+          <button onClick={() => metro.setSpeedBuilder(!metro.speedBuilder)} style={{
+            flex:1, background:metro.speedBuilder?T.gold:"transparent",
+            border:`1px solid ${metro.speedBuilder?T.gold:T.borderSoft}`,
+            color:metro.speedBuilder?"#fff":T.textMed, borderRadius: 14,
+            padding:"10px 16px", fontSize:12, fontWeight:600, cursor:"pointer", fontFamily:T.sans
+          }}>Speed Builder (+5/4 bars)</button>
+        </div>
+      </div>
+
       {/* Per-beat editor */}
       <div style={{
         background:T.bgCard, border:`1px solid ${T.border}`, borderRadius:14,
@@ -1511,8 +1559,10 @@ export default function App() {
             </div>
             <MetronomePanel metro={metro} />
             <div style={{ background:T.bgCard, border:`1px solid ${T.border}`, borderRadius:14, padding:22, marginTop:20, boxShadow:T.sm }}>
-              <div style={{ fontSize:11, fontWeight:600, letterSpacing:2, textTransform:"uppercase", color:T.textMuted, fontFamily:T.sans, marginBottom:14 }}>
-                Quick Reference
+              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
+                <div style={{ fontSize:11, fontWeight:600, letterSpacing:2, textTransform:"uppercase", color:T.textMuted, fontFamily:T.sans }}>
+                  Quick Reference
+                </div>
               </div>
               {[
                 { bpm:"78", use:"16th note subdivision (Drill #3)" },
