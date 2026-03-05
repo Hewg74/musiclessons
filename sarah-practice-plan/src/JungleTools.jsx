@@ -138,37 +138,57 @@ C#m  ->  B  ->  F#  ->  E
 
 [Verse 1]
 C#m                  B
-Somewhere south, far away
+I once heard
 F#                   E
-Down the coast is where I'll stay
+'Bout a place
 C#m                  B
-Sun baked skin and salty hair
+I want to go but there ain't steps you can retrace
 F#                   E
-I don't have a single care
+
+[Verse 2]
+C#m                  B
+Somewhere south
+F#                   E
+Far away
+C#m                  B
+I heard the sun don't leave
+F#                   E
 
 [Chorus]
 C#m    B     F#    E
-Sol del Sur
-C#m    B     F#    E
+It stays
+And it shines
+All day
+All the time
 Sol del Sur
 
 [Bridge/Lead Section]
 (Play the main lead riff while rhythm plays C#m B F# E)
 
+[Verse 3]
+C#m                  B
+Miles from here
+F#                   E
+The waters blue
+C#m                  B
+I want to go there but the way I never knew
+F#                   E
+
 [Verse 2]
 C#m                  B
-Wake up early, catch the tide
+Somewhere south
 F#                   E
-Ain't got nowhere to hide
+Far away
 C#m                  B
-Living easy, living free
+I heard the sun don't leave
 F#                   E
-Just the ocean, you, and me
 
 [Chorus]
 C#m    B     F#    E
-Sol del Sur
-C#m    B     F#    E
+It stays
+And it shines
+All day
+All the time
 Sol del Sur
 
 (Play slow and precise. Accuracy over speed. Rhythm is syncopated.)
