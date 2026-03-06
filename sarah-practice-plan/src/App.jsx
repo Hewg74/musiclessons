@@ -127,6 +127,7 @@ const DAYS = [
       { id:"d1e5", time:12, title:"Passaggio Warm-Up", type:"vocal",
         what:"Gently explore your vocal break around A3. Today is observation — not pushing. You're mapping where the flip happens.",
         setup:"No guitar. Standing is ideal. Glass of water nearby. No dairy for 30+ min before.",
+        referencePitches:["C4", "B3", "A3", "G3", "F3", "A♭3", "B♭3"],
         steps:[
           {text:"Descending 5-note scale on 'nee': Start on C4, descend C4→B3→A3→G3→F3.", why:"Approaching the break from ABOVE lets you 'slide' into it rather than crashing up into it."},
           {text:"Each round, start a half step lower: B3→A#3→G#3→F#3→E3, then B♭3→A3→A♭3→G3→G♭3.", why:"You'll cross through the A3 break zone around round 3. Notice where the voice wants to flip."},
@@ -200,6 +201,7 @@ const DAYS = [
       { id:"d2e4", time:10, title:"Sirens + Pitch Match", type:"vocal",
         what:"Map your range with sirens, then practice singing specific pitches on beat over a chord progression.",
         setup:"No guitar for sirens. Then guitar for pitch matching with Groove Beat 90 BPM.",
+        referencePitches:["C2", "G3", "A♭3", "A3", "B♭3", "G4", "A2", "C3", "E3"],
         steps:[
           {text:"Siren glides: lip trill (or 'vvv') from lowest (~C2) up to highest head voice (~G4) and back. 4–5 sec each way.", why:"Maps your whole range. Identify where it cracks or shifts."},
           {text:"Rounds 3–5: SLOW DOWN through A♭3–A3–B♭3 zone.", why:"This is your passaggio. Slow movement reveals the exact flip point."},
@@ -257,6 +259,7 @@ const DAYS = [
       { id:"d3e4", time:10, title:"Ooh Climbing + Messa di Voce", type:"vocal",
         what:"Improvise ascending 'ooh' patterns over the chord progression while exploring your break zone.",
         setup:"Guitar. Surf Rock Beat 120 BPM.",
+        referencePitches:["A2", "C3", "E3", "G3", "A3", "C4"],
         steps:[
           {text:"Am → C → G → D at 120 BPM. 4 'ooh' notes per chord that CLIMB.", why:"Sarah (1/27): 'On each 1 2 3 4, sing ooh and climb up (4 notes per chord).'"},
           {text:"Each chord gets a DIFFERENT pattern. Don't repeat the same 4 notes.", why:"Sarah (1/27): 'It shouldn't be the same 4 notes per chord — explore!'"},
@@ -317,6 +320,7 @@ const DAYS = [
       { id:"d4e4", time:15, title:"Full Passaggio Workout", type:"vocal",
         what:"Extended vocal work through the break zone. Pair exercises with a groove beat for real-world feel.",
         setup:"Standing. Water nearby. Groove Beat 90 BPM for the scat section.",
+        referencePitches:["C4", "A3", "A♭3", "B♭3", "A2", "C3", "E3", "G3"],
         steps:[
           {text:"Descending 5-note scales on 'nee' (from Day 1 vocal). 3–4 rounds descending through A3.", why:"Warm-up for the break zone."},
           {text:"Sirens: lip trill, SLOW through A♭3→A3→B♭3.", why:"Map today's flip point — it can vary from yesterday."},
@@ -363,6 +367,7 @@ const DAYS = [
       { id:"d5e3", time:12, title:"Vocal: Record + Review", type:"vocal",
         what:"Record vocal exercises to track your passaggio progress over time.",
         setup:"Standing. Phone recording audio. Water.",
+        referencePitches:["G3", "A♭3", "A3", "B♭3"],
         steps:[
           {text:"Messa di voce on G3, A♭3, A3, B♭3. Record all of it.", why:"Listening back reveals whether the swell is smooth or jerky through the break."},
           {text:"Siren: slow through break. Record a full up-and-down pass.", why:"You're listening for the timbre change — where chest becomes mixed becomes head."},
@@ -974,6 +979,18 @@ function DetailSection({ label, color, children }) {
 function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMatch }) {
   const [open, setOpen] = useState(false);
 
+  const playNote = async (note) => {
+    if (Tone.context.state !== 'running') {
+      await Tone.context.resume();
+    }
+    const synth = new Tone.Synth({
+      oscillator: { type: 'triangle' },
+      envelope: { attack: 0.1, decay: 0.2, sustain: 1, release: 1 }
+    }).toDestination();
+    synth.volume.value = -8;
+    synth.triggerAttackRelease(note.replace('♭', 'b'), "2n");
+  };
+
   // Auto-detect audio tracks based on text
   const textContent = (ex.setup || "") + " " + ex.steps.map(s => s.text).join(" ");
   const tracks = [];
@@ -1004,6 +1021,36 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
 
       {open && (
         <div style={{ padding:"0 18px 18px" }}>
+          {/* Reference Pitches */}
+          {ex.referencePitches && (
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ fontSize:10, fontWeight:700, color:T.textMuted, letterSpacing:1.5, marginBottom:10, fontFamily:T.sans }}>REFERENCE PITCHES</div>
+              <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 4 }}>
+                {ex.referencePitches.map((note, i) => (
+                  <button
+                    key={i}
+                    onClick={() => playNote(note)}
+                    onPointerDown={e => e.currentTarget.style.transform = "scale(0.95)"}
+                    onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
+                    onPointerLeave={e => e.currentTarget.style.transform = "scale(1)"}
+                    style={{
+                      flexShrink: 0,
+                      minWidth: 64, height: 64,
+                      borderRadius: T.radiusMd,
+                      background: T.goldSoft, border: `1px solid ${T.border}`,
+                      color: T.goldDark, cursor: "pointer",
+                      display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+                      transition: "transform 0.1s", fontFamily: T.sans
+                    }}
+                  >
+                    <span style={{ fontSize: 20, fontWeight: 700 }}>{note}</span>
+                    <span style={{ fontSize: 10, opacity: 0.7, marginTop: 2 }}>TAP</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* What & Why */}
             <div style={{
               fontSize:14, color:T.textMed, fontFamily:T.sans, lineHeight:1.7,
