@@ -63,6 +63,26 @@ const TYPE = {
 
 const DAY_COLORS = ["#d68383","#d97d54","#d4a373","#7f9e88","#72a8a8","#6b8e9f","#9e829c"];
 
+const ALL_NOTES = [
+  "C2", "C#2", "D2", "E♭2", "E2", "F2", "F#2", "G2", "A♭2", "A2", "B♭2", "B2",
+  "C3", "C#3", "D3", "E♭3", "E3", "F3", "F#3", "G3", "A♭3", "A3", "B♭3", "B3",
+  "C4", "C#4", "D4", "E♭4", "E4", "F4", "F#4", "G4", "A♭4", "A4", "B♭4", "B4", "C5"
+];
+
+function getPitchRange(startNote, endNote) {
+  const start = ALL_NOTES.indexOf(startNote);
+  const end = ALL_NOTES.indexOf(endNote);
+  if (start === -1 || end === -1) return [startNote, endNote];
+  
+  const range = [];
+  if (start <= end) {
+    for (let i = start; i <= end; i++) range.push(ALL_NOTES[i]);
+  } else {
+    for (let i = start; i >= end; i--) range.push(ALL_NOTES[i]);
+  }
+  return range;
+}
+
 // ─── DATA ───────────────────────────────────────────────────────────
 const DAYS = [
   {
@@ -127,7 +147,7 @@ const DAYS = [
       { id:"d1e5", time:12, title:"Passaggio Warm-Up", type:"vocal",
         what:"Gently explore your vocal break around A3. Today is observation — not pushing. You're mapping where the flip happens.",
         setup:"No guitar. Standing is ideal. Glass of water nearby. No dairy for 30+ min before.",
-        referencePitches:["C4", "B3", "A3", "G3", "F3", "A♭3", "B♭3"],
+        referencePitches: getPitchRange("C4", "E3"),
         steps:[
           {text:"Descending 5-note scale on 'nee': Start on C4, descend C4→B3→A3→G3→F3.", why:"Approaching the break from ABOVE lets you 'slide' into it rather than crashing up into it."},
           {text:"Each round, start a half step lower: B3→A#3→G#3→F#3→E3, then B♭3→A3→A♭3→G3→G♭3.", why:"You'll cross through the A3 break zone around round 3. Notice where the voice wants to flip."},
@@ -201,7 +221,7 @@ const DAYS = [
       { id:"d2e4", time:10, title:"Sirens + Pitch Match", type:"vocal",
         what:"Map your range with sirens, then practice singing specific pitches on beat over a chord progression.",
         setup:"No guitar for sirens. Then guitar for pitch matching with Groove Beat 90 BPM.",
-        referencePitches:["C2", "G3", "A♭3", "A3", "B♭3", "G4", "A2", "C3", "E3"],
+        referencePitches: getPitchRange("C2", "G4"),
         steps:[
           {text:"Siren glides: lip trill (or 'vvv') from lowest (~C2) up to highest head voice (~G4) and back. 4–5 sec each way.", why:"Maps your whole range. Identify where it cracks or shifts."},
           {text:"Rounds 3–5: SLOW DOWN through A♭3–A3–B♭3 zone.", why:"This is your passaggio. Slow movement reveals the exact flip point."},
@@ -259,7 +279,7 @@ const DAYS = [
       { id:"d3e4", time:10, title:"Ooh Climbing + Messa di Voce", type:"vocal",
         what:"Improvise ascending 'ooh' patterns over the chord progression while exploring your break zone.",
         setup:"Guitar. Surf Rock Beat 120 BPM.",
-        referencePitches:["A2", "C3", "E3", "G3", "A3", "C4"],
+        referencePitches: getPitchRange("A2", "C4"),
         steps:[
           {text:"Am → C → G → D at 120 BPM. 4 'ooh' notes per chord that CLIMB.", why:"Sarah (1/27): 'On each 1 2 3 4, sing ooh and climb up (4 notes per chord).'"},
           {text:"Each chord gets a DIFFERENT pattern. Don't repeat the same 4 notes.", why:"Sarah (1/27): 'It shouldn't be the same 4 notes per chord — explore!'"},
@@ -320,7 +340,7 @@ const DAYS = [
       { id:"d4e4", time:15, title:"Full Passaggio Workout", type:"vocal",
         what:"Extended vocal work through the break zone. Pair exercises with a groove beat for real-world feel.",
         setup:"Standing. Water nearby. Groove Beat 90 BPM for the scat section.",
-        referencePitches:["C4", "A3", "A♭3", "B♭3", "A2", "C3", "E3", "G3"],
+        referencePitches: getPitchRange("A2", "C4"),
         steps:[
           {text:"Descending 5-note scales on 'nee' (from Day 1 vocal). 3–4 rounds descending through A3.", why:"Warm-up for the break zone."},
           {text:"Sirens: lip trill, SLOW through A♭3→A3→B♭3.", why:"Map today's flip point — it can vary from yesterday."},
@@ -367,7 +387,7 @@ const DAYS = [
       { id:"d5e3", time:12, title:"Vocal: Record + Review", type:"vocal",
         what:"Record vocal exercises to track your passaggio progress over time.",
         setup:"Standing. Phone recording audio. Water.",
-        referencePitches:["G3", "A♭3", "A3", "B♭3"],
+        referencePitches: getPitchRange("G3", "C4"),
         steps:[
           {text:"Messa di voce on G3, A♭3, A3, B♭3. Record all of it.", why:"Listening back reveals whether the swell is smooth or jerky through the break."},
           {text:"Siren: slow through break. Record a full up-and-down pass.", why:"You're listening for the timbre change — where chest becomes mixed becomes head."},
@@ -484,7 +504,7 @@ const VOCAL_EXERCISES = [
   { id:"v1", num:1, title:"Descending 5-Note Scale", purpose:"Approach break from above — where the real mapping happens",
     when:"Days 1, 4. Also good as first vocal exercise of any session.",
     what:"Start above your break on a comfortable note, descend through A3 on a single vowel. The voice naturally transitions from head/mix into chest. You're observing where that happens, not forcing it.",
-    referencePitches: ["C4", "B3", "Bb3", "A3", "Ab3", "G3", "Gb3", "F3", "E3"],
+    referencePitches: getPitchRange("C4", "E3"),
     howTo:[
       "Stand upright, shoulders relaxed, jaw loose.",
       "Start on C4. Sing: C4→B3→A3→G3→F3 on 'nee'. One note per beat at 80 BPM.",
@@ -500,7 +520,7 @@ const VOCAL_EXERCISES = [
   { id:"v2", num:2, title:"Messa di Voce", purpose:"The #1 exercise for building a seamless mix — quiet→loud→quiet on one note",
     when:"Days 1, 5. Critical for passaggio control.",
     what:"Sing a single note in your break zone. Start as quiet as possible, swell to medium volume, back to quiet. The crescendo tries to pull you into chest voice. The goal: stay in mix through the entire swell.",
-    referencePitches: ["G3", "A♭3", "A3", "B♭3"],
+    referencePitches: getPitchRange("G3", "C4"),
     howTo:[
       "Stand. Breathe into your ribs (not your shoulders). Feel your ribcage expand sideways.",
       "Sing 'ah' on G3 at piano (pp). Hold for 2 seconds.",
@@ -517,7 +537,7 @@ const VOCAL_EXERCISES = [
   { id:"v3", num:3, title:"Siren Glides", purpose:"Map your entire range, find the exact flip points, and train smooth transitions",
     when:"Days 2, 4, 5. Good warm-up. Good diagnostic.",
     what:"Lip trill (or sustained 'vvv') gliding from your lowest note up to your highest and back. The lip trill adds SOVT backpressure which makes the transition through the break easier.",
-    referencePitches: ["C2", "G3", "A♭3", "A3", "B♭3", "G4"],
+    referencePitches: getPitchRange("C2", "G4"),
     howTo:[
       "Lips together, loose. Start a lip trill (like a horse noise).",
       "If lip trills are hard, use 'vvv' or hum through a straw instead.",
@@ -534,7 +554,7 @@ const VOCAL_EXERCISES = [
   { id:"v4", num:4, title:"Rhythmic Pitch Matching", purpose:"Connect pitch accuracy to rhythmic placement — you need both for real singing",
     when:"Days 2, 3. Builds toward syncopated vocal placement.",
     what:"Over a groove beat with Am on guitar, sing specific chord tones on specific beats. Then move them to off-beats. This fuses pitch training with rhythm training.",
-    referencePitches: ["A2", "C3", "E3", "A3"],
+    referencePitches: getPitchRange("A2", "C4"),
     howTo:[
       "Guitar: Am chord. Groove Beat 90 BPM playing.",
       "Sing Am chord tones: Root (A2) on beat 1, 3rd (C3) on beat 3.",
@@ -552,7 +572,7 @@ const VOCAL_EXERCISES = [
   { id:"v5", num:5, title:"Ooh Climbing", purpose:"Improvised ascending patterns — the bridge between exercises and real singing",
     when:"Days 3, 4. Originated from Lesson 1/27.",
     what:"Over a chord progression, sing 4 ascending 'ooh' notes per chord. Each chord gets different notes. Push through the break zone as you repeat.",
-    referencePitches: ["A2", "C3", "E3", "G3", "A3", "C4"],
+    referencePitches: getPitchRange("A2", "C4"),
     howTo:[
       "Guitar: Am → C → G → D. Island strum or fingerpick at 120 BPM (Surf Rock Beat).",
       "On Am: sing 4 'ooh' notes that CLIMB. Example: A2→C3→E3→A3.",
@@ -570,7 +590,7 @@ const VOCAL_EXERCISES = [
   { id:"v6", num:6, title:"Rhythmic Scat Improvisation", purpose:"The endgame — rhythm + pitch + improv in real time",
     when:"Day 4. Advanced exercise — do this only after the others feel comfortable.",
     what:"Over a groove beat, improvise scat syllables following chord tones. Start simple, increase rhythmic complexity. This is the closest thing to actual improvised singing.",
-    referencePitches: ["A2", "C3", "E3", "A3"],
+    referencePitches: getPitchRange("A2", "C4"),
     howTo:[
       "No guitar. Groove Beat 90 BPM.",
       "Use syllables: 'doo' 'bah' 'dee' 'dah'.",
@@ -976,6 +996,77 @@ function DetailSection({ label, color, children }) {
   );
 }
 
+function PitchRibbon({ pitches, playNote }) {
+  if (!pitches || pitches.length === 0) return null;
+  return (
+    <div style={{ marginBottom: 24 }}>
+      <div style={{ fontSize:10, fontWeight:700, color:T.textMuted, letterSpacing:1.5, marginBottom:12, fontFamily:T.sans }}>REFERENCE PITCHES</div>
+      
+      {/* Scroll container */}
+      <div style={{ 
+        display: "flex", 
+        overflowX: "auto", 
+        paddingBottom: 8,
+        WebkitOverflowScrolling: "touch",
+        scrollbarWidth: "none", // Firefox
+        msOverflowStyle: "none", // IE
+        scrollSnapType: "x proximity"
+      }}
+      className="hide-scrollbar"
+      >
+        <div style={{ display: "flex", gap: 4, padding: "0 4px" }}>
+          {pitches.map((note, i) => {
+            const isAccidental = note.includes("♭") || note.includes("#");
+            const bg = isAccidental ? T.textDark : T.goldSoft;
+            const fg = isAccidental ? "#fff" : T.goldDark;
+            const border = isAccidental ? `1px solid ${T.textDark}` : `1px solid ${T.border}`;
+
+            return (
+              <button
+                key={i}
+                onClick={() => playNote(note)}
+                onPointerDown={e => {
+                  e.currentTarget.style.transform = "scale(0.92) translateY(2px)";
+                  e.currentTarget.style.opacity = "0.8";
+                }}
+                onPointerUp={e => {
+                  e.currentTarget.style.transform = "scale(1) translateY(0)";
+                  e.currentTarget.style.opacity = "1";
+                }}
+                onPointerLeave={e => {
+                  e.currentTarget.style.transform = "scale(1) translateY(0)";
+                  e.currentTarget.style.opacity = "1";
+                }}
+                style={{
+                  flexShrink: 0,
+                  scrollSnapAlign: "center",
+                  minWidth: isAccidental ? 54 : 64, 
+                  height: isAccidental ? 70 : 80,
+                  marginTop: isAccidental ? 0 : 0,
+                  borderRadius: T.radiusMd,
+                  background: bg, border: border,
+                  color: fg, cursor: "pointer",
+                  display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end",
+                  paddingBottom: 12,
+                  transition: "all 0.15s cubic-bezier(0.4, 0, 0.2, 1)", fontFamily: T.sans,
+                  boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
+                }}
+              >
+                <span style={{ fontSize: 18, fontWeight: 700, letterSpacing: -0.5 }}>{note}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+      <style>{`
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
+    </div>
+  );
+}
+
 function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMatch }) {
   const [open, setOpen] = useState(false);
 
@@ -1022,34 +1113,7 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
       {open && (
         <div style={{ padding:"0 18px 18px" }}>
           {/* Reference Pitches */}
-          {ex.referencePitches && (
-            <div style={{ marginBottom: 16 }}>
-              <div style={{ fontSize:10, fontWeight:700, color:T.textMuted, letterSpacing:1.5, marginBottom:10, fontFamily:T.sans }}>REFERENCE PITCHES</div>
-              <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 4 }}>
-                {ex.referencePitches.map((note, i) => (
-                  <button
-                    key={i}
-                    onClick={() => playNote(note)}
-                    onPointerDown={e => e.currentTarget.style.transform = "scale(0.95)"}
-                    onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
-                    onPointerLeave={e => e.currentTarget.style.transform = "scale(1)"}
-                    style={{
-                      flexShrink: 0,
-                      minWidth: 64, height: 64,
-                      borderRadius: T.radiusMd,
-                      background: T.goldSoft, border: `1px solid ${T.border}`,
-                      color: T.goldDark, cursor: "pointer",
-                      display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-                      transition: "transform 0.1s", fontFamily: T.sans
-                    }}
-                  >
-                    <span style={{ fontSize: 20, fontWeight: 700 }}>{note}</span>
-                    <span style={{ fontSize: 10, opacity: 0.7, marginTop: 2 }}>TAP</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
+          <PitchRibbon pitches={ex.referencePitches} playNote={playNote} />
 
           {/* What & Why */}
             <div style={{
@@ -1247,34 +1311,7 @@ function VocalCard({ ex }) {
       {open && (
         <div style={{ padding:"0 20px 20px" }}>
           {/* Reference Pitches */}
-          {ex.referencePitches && (
-            <div style={{ marginBottom: 20 }}>
-              <div style={{ fontSize:10, fontWeight:700, color:T.textMuted, letterSpacing:1.5, marginBottom:10, fontFamily:T.sans }}>REFERENCE PITCHES</div>
-              <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 4 }}>
-                {ex.referencePitches.map((note, i) => (
-                  <button
-                    key={i}
-                    onClick={() => playNote(note)}
-                    onPointerDown={e => e.currentTarget.style.transform = "scale(0.95)"}
-                    onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
-                    onPointerLeave={e => e.currentTarget.style.transform = "scale(1)"}
-                    style={{
-                      flexShrink: 0,
-                      minWidth: 64, height: 64,
-                      borderRadius: T.radiusMd,
-                      background: T.goldSoft, border: `1px solid ${T.border}`,
-                      color: T.goldDark, cursor: "pointer",
-                      display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-                      transition: "transform 0.1s", fontFamily: T.sans
-                    }}
-                  >
-                    <span style={{ fontSize: 20, fontWeight: 700 }}>{note}</span>
-                    <span style={{ fontSize: 10, opacity: 0.7, marginTop: 2 }}>TAP</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
+          <PitchRibbon pitches={ex.referencePitches} playNote={playNote} />
 
           {/* What */}
           <div style={{
