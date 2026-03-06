@@ -1154,6 +1154,67 @@ function DayView({ day, completed, onComplete, metro, onOpenTapMatch }) {
   );
 }
 
+function PlayableNote({ note, displayNote }) {
+  const playNote = async (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (Tone.context.state !== 'running') {
+      await Tone.context.resume();
+    }
+    const synth = new Tone.Synth({
+      oscillator: { type: 'triangle' },
+      envelope: { attack: 0.1, decay: 0.2, sustain: 1, release: 1 }
+    }).toDestination();
+    synth.volume.value = -8;
+    synth.triggerAttackRelease(note, "2n");
+    
+    // Visual feedback
+    const btn = e.currentTarget;
+    const oldBg = btn.style.background;
+    const oldColor = btn.style.color;
+    btn.style.background = T.gold;
+    btn.style.color = "#fff";
+    btn.style.transform = "scale(0.95)";
+    setTimeout(() => {
+      btn.style.background = oldBg;
+      btn.style.color = oldColor;
+      btn.style.transform = "scale(1)";
+    }, 200);
+  };
+
+  return (
+    <span 
+      onClick={playNote}
+      title={`Play ${displayNote}`}
+      style={{
+        display: "inline-flex", alignItems: "center", gap: 2,
+        padding: "0px 4px", margin: "0 2px",
+        background: T.goldSoft, border: `1px solid ${T.border}`,
+        borderRadius: 4, color: T.goldDark, cursor: "pointer",
+        fontWeight: 700, fontSize: "0.95em", fontFamily: T.sans,
+        transition: "all 0.15s ease", userSelect: "none",
+        verticalAlign: "baseline", lineHeight: 1.2
+      }}
+    >
+      {displayNote} <span style={{fontSize:"0.8em", opacity: 0.7}}>🔊</span>
+    </span>
+  );
+}
+
+function parseNotes(text) {
+  if (typeof text !== 'string') return text;
+  // Regex to match notes like C4, B3, A#3, Bb3, Gb3, A♭3, etc.
+  const regex = /([A-G][b#♭]?\d)/g;
+  const parts = text.split(regex);
+  return parts.map((part, i) => {
+    if (regex.test(part) || /^[A-G][b#♭]?\d$/.test(part)) {
+      const toneNote = part.replace('♭', 'b');
+      return <PlayableNote key={i} note={toneNote} displayNote={part} />;
+    }
+    return part;
+  });
+}
+
 function VocalCard({ ex }) {
   const [open, setOpen] = useState(false);
   const colors = [T.plum,T.coral,T.slate,T.success,T.warm,T.coral];
@@ -1186,7 +1247,7 @@ function VocalCard({ ex }) {
             fontSize:14, color:T.textMed, fontFamily:T.sans, lineHeight:1.7,
             marginBottom:20, padding:"16px 20px", background:T.bgSoft, borderRadius:T.radius,
             borderLeft: `3px solid ${T.gold}`
-          }}>{ex.what}</div>
+          }}>{parseNotes(ex.what)}</div>
 
           {/* How to */}
           <div style={{ marginBottom:16 }}>
@@ -1198,7 +1259,7 @@ function VocalCard({ ex }) {
           display:"flex", alignItems:"center", justifyContent:"center",
           fontSize:12, fontWeight:400, color:c, flexShrink:0, fontFamily:T.sans
         }}>{i+1}</div>
-                <div style={{ fontSize:13, color:T.textMed, fontFamily:T.sans, lineHeight:1.6 }}>{step}</div>
+                <div style={{ fontSize:13, color:T.textMed, fontFamily:T.sans, lineHeight:1.6 }}>{parseNotes(step)}</div>
               </div>
             ))}
           </div>
@@ -1209,14 +1270,14 @@ function VocalCard({ ex }) {
             padding:20, fontSize:13, color:T.textDark, lineHeight:1.8,
             overflowX:"auto", whiteSpace:"pre", fontFamily:"'SF Mono','Fira Code',monospace",
             marginBottom:20, borderLeft: `3px solid ${T.gold}`
-          }}>{ex.diagram}</pre>
+          }}>{parseNotes(ex.diagram)}</pre>
 
           {/* Feel / Wrong */}
-          <DetailSection label="What correct feels like" color={T.success}>{ex.feel}</DetailSection>
-          <DetailSection label="What's going wrong if" color={T.coral}>{ex.wrong}</DetailSection>
+          <DetailSection label="What correct feels like" color={T.success}>{parseNotes(ex.feel)}</DetailSection>
+          <DetailSection label="What's going wrong if" color={T.coral}>{parseNotes(ex.wrong)}</DetailSection>
 
           {/* Tip */}
-          <DetailSection label="Why this works" color={T.slate}>{ex.tip}</DetailSection>
+          <DetailSection label="Why this works" color={T.slate}>{parseNotes(ex.tip)}</DetailSection>
 
           {/* Progression */}
           <div style={{
@@ -1239,24 +1300,39 @@ function VowelMap() {
     { range:[4,5], label:"'uh'→'oh'", color:T.coral },
     { range:[5,8], label:"'oh' (head)", color:T.plum }
   ];
+
+  const playNote = async (n) => {
+    if (Tone.context.state !== 'running') await Tone.context.resume();
+    const synth = new Tone.Synth({ 
+      oscillator: { type: 'triangle' }, 
+      envelope: { attack: 0.1, decay: 0.2, sustain: 1, release: 1 } 
+    }).toDestination();
+    synth.volume.value = -8;
+    synth.triggerAttackRelease(n.replace('♭', 'b'), "2n");
+  };
+
   return (
     <div style={{
-      background:T.bgCard, border:`1px solid ${T.border}`,
+      background:T.bgCard, border:`1px solid ${T.border}`, borderRadius: T.radiusMd,
       padding:24, marginBottom:20, boxShadow:T.sm
     }}>
       <div style={{ fontSize:10, fontWeight:600, color:T.textMuted, marginBottom:14, letterSpacing:2, fontFamily:T.sans, textTransform:"uppercase" }}>
-        Vowel Modification Map — How vowels shift through your break
+        Vowel Modification Map — Tap notes to play 🔊
       </div>
-      <div style={{ display:"flex", gap:2, marginBottom:16 }}>
+      <div style={{ display:"flex", gap:2, marginBottom:16, overflowX: "auto", paddingBottom: 4 }}>
         {notes.map((n,i) => {
           const zone = zones.find(z => i>=z.range[0] && i<z.range[1]);
           return (
-            <div key={n} style={{
-              flex:1, textAlign:"center", padding:"14px 0",
-              background:zone?`${zone.color}08`:T.bgSoft,
+            <div key={n} onClick={() => playNote(n)} style={{
+              flex:1, minWidth: 40, textAlign:"center", padding:"14px 0",
+              background:zone?`${zone.color}08`:T.bgSoft, cursor: "pointer",
               borderRadius:i===0?`${T.radius} 0 0 ${T.radius}`:i===notes.length-1?`0 ${T.radius} ${T.radius} 0`:0,
-              borderBottom:`2px solid ${zone?.color||T.border}`
-            }}>
+              borderBottom:`2px solid ${zone?.color||T.border}`,
+              transition: "transform 0.1s"
+            }}
+            onPointerDown={e => e.currentTarget.style.transform = "scale(0.95)"}
+            onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
+            onPointerLeave={e => e.currentTarget.style.transform = "scale(1)"}>
               <div style={{ fontSize:12, fontWeight:400, color:T.textDark, fontFamily:T.serif }}>{n}</div>
             </div>
           );
