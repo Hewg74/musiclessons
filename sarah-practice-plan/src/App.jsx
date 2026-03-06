@@ -967,7 +967,14 @@ function DetailSection({ label, color, children }) {
 
 function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMatch }) {
   const [open, setOpen] = useState(false);
-  const timer = useTimer(ex.time);
+
+  // Auto-detect audio tracks based on text
+  const textContent = (ex.setup || "") + " " + ex.steps.map(s => s.text).join(" ");
+  const tracks = [];
+  if (textContent.includes("Surf Rock Beat 120")) tracks.push({ name: "Surf Rock 120 BPM", src: "/surf-rock-120.mp3" });
+  if (textContent.includes("Groove Beat 90")) tracks.push({ name: "Groove Beat 90 BPM", src: "/groove-beat-90.mp3" });
+  if (textContent.includes("Sol Del Sur")) tracks.push({ name: "Sol Del Sur", src: "/sol-del-sur.mp3" });
+  if (textContent.includes("I Like The Way You Walk") || textContent.includes("ILTWYW")) tracks.push({ name: "I Like The Way You Walk", src: "/iltwyw.mp3" });
 
   return (
     <div className="exercise-card" style={{
@@ -986,7 +993,6 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
           <div style={{ fontWeight:400, fontSize:18, color:T.textDark, fontFamily:T.serif }}>{ex.title}</div>
           <div style={{ fontSize:12, color:T.textMuted, fontFamily:T.sans, marginTop:1, textTransform: "uppercase", letterSpacing: "0.05em" }}>{ex.time} min</div>
         </div>
-        <TimerRing pct={timer.pct} fmt={timer.fmt} size={42} />
         <div style={{ color:T.textMuted, fontSize:13, transition:"transform 0.2s", transform:open?"rotate(180deg)":"" }}>▾</div>
       </div>
 
@@ -1006,29 +1012,44 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
             </div>
           )}
 
-          {/* Timer + metronome controls */}
-          <div style={{ display:"flex", gap:8, marginBottom:14, flexWrap:"wrap" }}>
-            <button className="interactive-btn" onClick={timer.toggle} style={{
-              background:timer.on?T.warm:T.textDark, border:"none", color:"#fff",
-              padding:"8px 18px", fontSize:12, fontWeight:400, cursor:"pointer", fontFamily:T.sans, letterSpacing:1, textTransform: "uppercase"
-            }}>{timer.on?"Pause":"Start Timer"}</button>
-            <button className="interactive-btn" onClick={timer.reset} style={{
-              background:"transparent", border:`1px solid ${T.border}`,
-              color:T.textLight, padding:"8px 14px", fontSize:12, cursor:"pointer", fontFamily:T.sans, letterSpacing:1, textTransform: "uppercase"
-            }}>Reset</button>
-            {ex.metronome && (
-              <>
-                <button onClick={() => { metro.changeBpm(ex.metronome); if (!metro.playing) metro.start(); }} style={{
-                  background:"transparent", border:`1px solid ${T.gold}40`,
-                  color:T.gold, padding:"8px 14px", fontSize:12, cursor:"pointer", fontWeight:400, fontFamily:T.sans, letterSpacing:1, textTransform: "uppercase"
-                }}>♩ {ex.metronome} BPM</button>
+          {/* Audio Tracks */}
+          {tracks.length > 0 && (
+            <div style={{ marginBottom: 16 }}>
+              {tracks.map((t, i) => (
+                <div key={i} style={{ marginBottom: 8, background: T.bgSoft, border: `1px solid ${T.border}`, padding: 12, borderRadius: T.radiusMd }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: T.textDark, letterSpacing: 1.5, marginBottom: 8, fontFamily: T.sans, textTransform: "uppercase" }}>{t.name}</div>
+                  <audio controls src={t.src} style={{ width: "100%", height: 36, borderRadius: T.radius }} />
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Metronome controls */}
+          {ex.metronome && (
+            <div style={{ display:"flex", gap:10, marginBottom:16, alignItems:"center", background:T.bgSoft, padding:"10px 16px", borderRadius:T.radiusMd, border:`1px solid ${T.border}`, flexWrap: "wrap" }}>
+              <div style={{ flex: 1, display: "flex", alignItems: "center", gap: 8 }}>
+                <button onClick={() => metro.changeBpm(Math.max(40, metro.bpm - 5))} style={{ background:"transparent", border:"none", fontSize:18, cursor:"pointer", color:T.textMed }}>-</button>
+                <div style={{ fontSize: 16, fontFamily:T.sans, color:T.textDark, fontWeight:600, minWidth:40, textAlign:"center" }}>{metro.bpm}</div>
+                <button onClick={() => metro.changeBpm(Math.min(280, metro.bpm + 5))} style={{ background:"transparent", border:"none", fontSize:18, cursor:"pointer", color:T.textMed }}>+</button>
+                <button onClick={() => metro.changeBpm(ex.metronome)} style={{ marginLeft: 6, fontSize: 10, background: T.goldSoft, border: "none", padding: "4px 8px", borderRadius: T.radius, color: T.goldDark, cursor: "pointer", fontWeight: 600, textTransform: "uppercase" }}>Target: {ex.metronome}</button>
+              </div>
+              
+              <div style={{ display: "flex", gap: 8 }}>
+                <button onClick={() => metro.playing ? metro.stop() : metro.start()} style={{
+                  background: metro.playing ? T.coral : T.gold, border:"none", color:"#fff",
+                  padding:"8px 16px", fontSize:11, fontWeight:600, cursor:"pointer", borderRadius: T.radius,
+                  fontFamily:T.sans, letterSpacing:1, textTransform: "uppercase"
+                }}>
+                  {metro.playing ? "Stop" : "Start"}
+                </button>
+                
                 <button onClick={() => onOpenTapMatch && onOpenTapMatch(ex.metronome)} style={{
-                  background:"transparent", border:`1px solid ${T.slate}40`,
-                  color:T.slate, padding:"8px 14px", fontSize:12, cursor:"pointer", fontWeight:400, fontFamily:T.sans, letterSpacing:1, textTransform: "uppercase"
-                }}>✋ Tap Practice</button>
-              </>
-            )}
-          </div>
+                  background:"transparent", border:`1px solid ${T.slate}40`, color:T.slate, padding:"8px 12px", borderRadius: T.radius,
+                  fontSize:11, cursor:"pointer", fontWeight:600, fontFamily:T.sans, letterSpacing:1, textTransform: "uppercase"
+                }}>✋ Tap</button>
+              </div>
+            </div>
+          )}
 
           {/* Steps */}
           <div style={{ marginBottom:14 }}>
