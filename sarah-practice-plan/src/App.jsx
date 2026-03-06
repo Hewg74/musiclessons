@@ -479,6 +479,7 @@ const VOCAL_EXERCISES = [
   { id:"v1", num:1, title:"Descending 5-Note Scale", purpose:"Approach break from above — where the real mapping happens",
     when:"Days 1, 4. Also good as first vocal exercise of any session.",
     what:"Start above your break on a comfortable note, descend through A3 on a single vowel. The voice naturally transitions from head/mix into chest. You're observing where that happens, not forcing it.",
+    referencePitches: ["C4", "B3", "Bb3", "A3", "Ab3", "G3", "Gb3", "F3", "E3"],
     howTo:[
       "Stand upright, shoulders relaxed, jaw loose.",
       "Start on C4. Sing: C4→B3→A3→G3→F3 on 'nee'. One note per beat at 80 BPM.",
@@ -494,6 +495,7 @@ const VOCAL_EXERCISES = [
   { id:"v2", num:2, title:"Messa di Voce", purpose:"The #1 exercise for building a seamless mix — quiet→loud→quiet on one note",
     when:"Days 1, 5. Critical for passaggio control.",
     what:"Sing a single note in your break zone. Start as quiet as possible, swell to medium volume, back to quiet. The crescendo tries to pull you into chest voice. The goal: stay in mix through the entire swell.",
+    referencePitches: ["G3", "A♭3", "A3", "B♭3"],
     howTo:[
       "Stand. Breathe into your ribs (not your shoulders). Feel your ribcage expand sideways.",
       "Sing 'ah' on G3 at piano (pp). Hold for 2 seconds.",
@@ -510,6 +512,7 @@ const VOCAL_EXERCISES = [
   { id:"v3", num:3, title:"Siren Glides", purpose:"Map your entire range, find the exact flip points, and train smooth transitions",
     when:"Days 2, 4, 5. Good warm-up. Good diagnostic.",
     what:"Lip trill (or sustained 'vvv') gliding from your lowest note up to your highest and back. The lip trill adds SOVT backpressure which makes the transition through the break easier.",
+    referencePitches: ["C2", "G3", "A♭3", "A3", "B♭3", "G4"],
     howTo:[
       "Lips together, loose. Start a lip trill (like a horse noise).",
       "If lip trills are hard, use 'vvv' or hum through a straw instead.",
@@ -526,6 +529,7 @@ const VOCAL_EXERCISES = [
   { id:"v4", num:4, title:"Rhythmic Pitch Matching", purpose:"Connect pitch accuracy to rhythmic placement — you need both for real singing",
     when:"Days 2, 3. Builds toward syncopated vocal placement.",
     what:"Over a groove beat with Am on guitar, sing specific chord tones on specific beats. Then move them to off-beats. This fuses pitch training with rhythm training.",
+    referencePitches: ["A2", "C3", "E3", "A3"],
     howTo:[
       "Guitar: Am chord. Groove Beat 90 BPM playing.",
       "Sing Am chord tones: Root (A2) on beat 1, 3rd (C3) on beat 3.",
@@ -543,6 +547,7 @@ const VOCAL_EXERCISES = [
   { id:"v5", num:5, title:"Ooh Climbing", purpose:"Improvised ascending patterns — the bridge between exercises and real singing",
     when:"Days 3, 4. Originated from Lesson 1/27.",
     what:"Over a chord progression, sing 4 ascending 'ooh' notes per chord. Each chord gets different notes. Push through the break zone as you repeat.",
+    referencePitches: ["A2", "C3", "E3", "G3", "A3", "C4"],
     howTo:[
       "Guitar: Am → C → G → D. Island strum or fingerpick at 120 BPM (Surf Rock Beat).",
       "On Am: sing 4 'ooh' notes that CLIMB. Example: A2→C3→E3→A3.",
@@ -560,6 +565,7 @@ const VOCAL_EXERCISES = [
   { id:"v6", num:6, title:"Rhythmic Scat Improvisation", purpose:"The endgame — rhythm + pitch + improv in real time",
     when:"Day 4. Advanced exercise — do this only after the others feel comfortable.",
     what:"Over a groove beat, improvise scat syllables following chord tones. Start simple, increase rhythmic complexity. This is the closest thing to actual improvised singing.",
+    referencePitches: ["A2", "C3", "E3", "A3"],
     howTo:[
       "No guitar. Groove Beat 90 BPM.",
       "Use syllables: 'doo' 'bah' 'dee' 'dah'.",
@@ -1154,10 +1160,12 @@ function DayView({ day, completed, onComplete, metro, onOpenTapMatch }) {
   );
 }
 
-function PlayableNote({ note, displayNote }) {
-  const playNote = async (e) => {
-    e.stopPropagation();
-    e.preventDefault();
+function VocalCard({ ex }) {
+  const [open, setOpen] = useState(false);
+  const colors = [T.plum,T.coral,T.slate,T.success,T.warm,T.coral];
+  const c = colors[(ex.num-1)%colors.length];
+
+  const playNote = async (note) => {
     if (Tone.context.state !== 'running') {
       await Tone.context.resume();
     }
@@ -1166,59 +1174,8 @@ function PlayableNote({ note, displayNote }) {
       envelope: { attack: 0.1, decay: 0.2, sustain: 1, release: 1 }
     }).toDestination();
     synth.volume.value = -8;
-    synth.triggerAttackRelease(note, "2n");
-    
-    // Visual feedback
-    const btn = e.currentTarget;
-    const oldBg = btn.style.background;
-    const oldColor = btn.style.color;
-    btn.style.background = T.gold;
-    btn.style.color = "#fff";
-    btn.style.transform = "scale(0.95)";
-    setTimeout(() => {
-      btn.style.background = oldBg;
-      btn.style.color = oldColor;
-      btn.style.transform = "scale(1)";
-    }, 200);
+    synth.triggerAttackRelease(note.replace('♭', 'b'), "2n");
   };
-
-  return (
-    <span 
-      onClick={playNote}
-      title={`Play ${displayNote}`}
-      style={{
-        display: "inline-flex", alignItems: "center", gap: 2,
-        padding: "0px 4px", margin: "0 2px",
-        background: T.goldSoft, border: `1px solid ${T.border}`,
-        borderRadius: 4, color: T.goldDark, cursor: "pointer",
-        fontWeight: 700, fontSize: "0.95em", fontFamily: T.sans,
-        transition: "all 0.15s ease", userSelect: "none",
-        verticalAlign: "baseline", lineHeight: 1.2
-      }}
-    >
-      {displayNote} <span style={{fontSize:"0.8em", opacity: 0.7}}>🔊</span>
-    </span>
-  );
-}
-
-function parseNotes(text) {
-  if (typeof text !== 'string') return text;
-  // Regex to match notes like C4, B3, A#3, Bb3, Gb3, A♭3, etc.
-  const regex = /([A-G][b#♭]?\d)/g;
-  const parts = text.split(regex);
-  return parts.map((part, i) => {
-    if (regex.test(part) || /^[A-G][b#♭]?\d$/.test(part)) {
-      const toneNote = part.replace('♭', 'b');
-      return <PlayableNote key={i} note={toneNote} displayNote={part} />;
-    }
-    return part;
-  });
-}
-
-function VocalCard({ ex }) {
-  const [open, setOpen] = useState(false);
-  const colors = [T.plum,T.coral,T.slate,T.success,T.warm,T.coral];
-  const c = colors[(ex.num-1)%colors.length];
 
   return (
     <div style={{
@@ -1242,12 +1199,42 @@ function VocalCard({ ex }) {
       </div>
       {open && (
         <div style={{ padding:"0 20px 20px" }}>
+          {/* Reference Pitches */}
+          {ex.referencePitches && (
+            <div style={{ marginBottom: 20 }}>
+              <div style={{ fontSize:10, fontWeight:700, color:T.textMuted, letterSpacing:1.5, marginBottom:10, fontFamily:T.sans }}>REFERENCE PITCHES</div>
+              <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 4 }}>
+                {ex.referencePitches.map((note, i) => (
+                  <button
+                    key={i}
+                    onClick={() => playNote(note)}
+                    onPointerDown={e => e.currentTarget.style.transform = "scale(0.95)"}
+                    onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
+                    onPointerLeave={e => e.currentTarget.style.transform = "scale(1)"}
+                    style={{
+                      flexShrink: 0,
+                      minWidth: 64, height: 64,
+                      borderRadius: T.radiusMd,
+                      background: T.goldSoft, border: `1px solid ${T.border}`,
+                      color: T.goldDark, cursor: "pointer",
+                      display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+                      transition: "transform 0.1s", fontFamily: T.sans
+                    }}
+                  >
+                    <span style={{ fontSize: 20, fontWeight: 700 }}>{note}</span>
+                    <span style={{ fontSize: 10, opacity: 0.7, marginTop: 2 }}>TAP</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* What */}
           <div style={{
             fontSize:14, color:T.textMed, fontFamily:T.sans, lineHeight:1.7,
             marginBottom:20, padding:"16px 20px", background:T.bgSoft, borderRadius:T.radius,
             borderLeft: `3px solid ${T.gold}`
-          }}>{parseNotes(ex.what)}</div>
+          }}>{ex.what}</div>
 
           {/* How to */}
           <div style={{ marginBottom:16 }}>
@@ -1259,7 +1246,7 @@ function VocalCard({ ex }) {
           display:"flex", alignItems:"center", justifyContent:"center",
           fontSize:12, fontWeight:400, color:c, flexShrink:0, fontFamily:T.sans
         }}>{i+1}</div>
-                <div style={{ fontSize:13, color:T.textMed, fontFamily:T.sans, lineHeight:1.6 }}>{parseNotes(step)}</div>
+                <div style={{ fontSize:13, color:T.textMed, fontFamily:T.sans, lineHeight:1.6 }}>{step}</div>
               </div>
             ))}
           </div>
@@ -1270,14 +1257,14 @@ function VocalCard({ ex }) {
             padding:20, fontSize:13, color:T.textDark, lineHeight:1.8,
             overflowX:"auto", whiteSpace:"pre", fontFamily:"'SF Mono','Fira Code',monospace",
             marginBottom:20, borderLeft: `3px solid ${T.gold}`
-          }}>{parseNotes(ex.diagram)}</pre>
+          }}>{ex.diagram}</pre>
 
           {/* Feel / Wrong */}
-          <DetailSection label="What correct feels like" color={T.success}>{parseNotes(ex.feel)}</DetailSection>
-          <DetailSection label="What's going wrong if" color={T.coral}>{parseNotes(ex.wrong)}</DetailSection>
+          <DetailSection label="What correct feels like" color={T.success}>{ex.feel}</DetailSection>
+          <DetailSection label="What's going wrong if" color={T.coral}>{ex.wrong}</DetailSection>
 
           {/* Tip */}
-          <DetailSection label="Why this works" color={T.slate}>{parseNotes(ex.tip)}</DetailSection>
+          <DetailSection label="Why this works" color={T.slate}>{ex.tip}</DetailSection>
 
           {/* Progression */}
           <div style={{
