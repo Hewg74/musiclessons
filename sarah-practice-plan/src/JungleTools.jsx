@@ -9,7 +9,8 @@ export function AudioPlayer({ theme: T }) {
   const tracks = [
     { id: 'surf', name: 'Surf Rock Beat 120 BPM', src: '/surf-rock-120.mp3' },
     { id: 'groove', name: 'Groove Beat 90 BPM', src: '/groove-beat-90.mp3' },
-    { id: 'iltwyw', name: 'I Like The Way You Walk', src: '/iltwyw.mp3' }
+    { id: 'soldelsur', name: 'Sol Del Sur (Original)', src: '/iltwyw.mp3' },
+    { id: 'iltwyw', name: 'I Like The Way You Walk', src: '/sol-del-sur.mp3' }
   ];
 
   return (
@@ -36,6 +37,7 @@ export function FlightCheck({ theme: T }) {
     '/index.html',
     '/surf-rock-120.mp3',
     '/groove-beat-90.mp3',
+    '/sol-del-sur.mp3',
     '/iltwyw.mp3'
   ];
 
@@ -479,6 +481,7 @@ function getCentsOffset(freq, midi) {
 
 export function LivePitchDetector({ theme: T, referencePitches = [], inline = false }) {
   const [isActive, setIsActive] = useState(false);
+  const [audioPaused, setAudioPaused] = useState(false);
   const [pitchState, setPitchState] = useState({
     note: '—',
     cents: 0,
@@ -497,6 +500,40 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
   const emaFreqRef = useRef(null);
   const lastNoteUpdateRef = useRef(Date.now());
   const stableMidiRef = useRef(null);
+
+  // Auto-pause when any <audio> element plays
+  useEffect(() => {
+    if (!isActive) return;
+
+    const onPlay = () => {
+      setAudioPaused(true);
+      if (requestRef.current) cancelAnimationFrame(requestRef.current);
+    };
+    const onStop = () => {
+      // Only resume if no other audio is still playing
+      const audios = document.querySelectorAll('audio');
+      const anyPlaying = Array.from(audios).some(a => !a.paused);
+      if (!anyPlaying) {
+        setAudioPaused(false);
+      }
+    };
+
+    document.addEventListener('play', onPlay, true);
+    document.addEventListener('pause', onStop, true);
+    document.addEventListener('ended', onStop, true);
+    return () => {
+      document.removeEventListener('play', onPlay, true);
+      document.removeEventListener('pause', onStop, true);
+      document.removeEventListener('ended', onStop, true);
+    };
+  }, [isActive]);
+
+  // Resume pitch detection when audio stops
+  useEffect(() => {
+    if (isActive && !audioPaused && analyserRef.current) {
+      detectPitch();
+    }
+  }, [audioPaused]);
 
   const startDetection = async () => {
     try {
@@ -550,16 +587,6 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
   useEffect(() => {
     return stopDetection; // Cleanup on unmount
   }, []);
-
-  // Auto-stop tuner when any audio/video starts playing
-  useEffect(() => {
-    if (!isActive) return;
-    const handleAudioPlay = () => {
-      stopDetection();
-    };
-    document.addEventListener('play', handleAudioPlay, true);
-    return () => document.removeEventListener('play', handleAudioPlay, true);
-  }, [isActive]);
 
   const detectPitch = () => {
     if (!analyserRef.current) return;
@@ -730,7 +757,7 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
             animation: pitchState.active ? "pulse-ring 2s infinite" : "none"
           }} />
           <span style={{ fontSize: 11, fontWeight: 700, color: T.textMuted, letterSpacing: 1.5, fontFamily: T.sans, textTransform: "uppercase" }}>
-            Live Pitch
+            {audioPaused ? 'Paused — Audio Playing' : 'Live Pitch'}
           </span>
         </div>
 
