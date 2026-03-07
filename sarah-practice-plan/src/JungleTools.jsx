@@ -9,7 +9,6 @@ export function AudioPlayer({ theme: T }) {
   const tracks = [
     { id: 'surf', name: 'Surf Rock Beat 120 BPM', src: '/surf-rock-120.mp3' },
     { id: 'groove', name: 'Groove Beat 90 BPM', src: '/groove-beat-90.mp3' },
-    { id: 'soldelsur', name: 'Sol Del Sur (Original)', src: '/sol-del-sur.mp3' },
     { id: 'iltwyw', name: 'I Like The Way You Walk', src: '/iltwyw.mp3' }
   ];
 
@@ -37,7 +36,6 @@ export function FlightCheck({ theme: T }) {
     '/index.html',
     '/surf-rock-120.mp3',
     '/groove-beat-90.mp3',
-    '/sol-del-sur.mp3',
     '/iltwyw.mp3'
   ];
 
@@ -552,6 +550,16 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
   useEffect(() => {
     return stopDetection; // Cleanup on unmount
   }, []);
+
+  // Auto-stop tuner when any audio/video starts playing
+  useEffect(() => {
+    if (!isActive) return;
+    const handleAudioPlay = () => {
+      stopDetection();
+    };
+    document.addEventListener('play', handleAudioPlay, true);
+    return () => document.removeEventListener('play', handleAudioPlay, true);
+  }, [isActive]);
 
   const detectPitch = () => {
     if (!analyserRef.current) return;

@@ -181,8 +181,8 @@ const DAYS = [
     ],
   },
   {
-    num: 2, name: "Syncopation", focus: "Rhythmic Singing + Sol Del Sur", duration: "50–55 min",
-    setup: "Guitar, metronome, Sol Del Sur tab on Ultimate Guitar pulled up, speaker for backing tracks.",
+    num: 2, name: "Syncopation", focus: "Rhythmic Singing + ILTWYW", duration: "50–55 min",
+    setup: "Guitar, metronome, I Like The Way You Walk tab/chords pulled up, speaker for backing tracks.",
     exercises: [
       {
         id: "d2e1", time: 10, title: "Metronome Drills #1 & #2", type: "rhythm",
@@ -213,18 +213,18 @@ const DAYS = [
         metronome: 122, levelUp: "Sing all 4 lines cleanly for 2 consecutive passes."
       },
       {
-        id: "d2e3", time: 15, title: "Sol Del Sur — Lead", type: "guitar",
-        what: "Learn the lead guitar part. Accuracy at slow speed first, then build up.",
-        setup: "Electric guitar. Sol Del Sur tab on Ultimate Guitar. YouTube video of the song.",
+        id: "d2e3", time: 15, title: "ILTWYW — Guitar Part", type: "guitar",
+        what: "Learn the guitar part for I Like The Way You Walk. Accuracy at slow speed first, then build up.",
+        setup: "Guitar. ILTWYW chords pulled up. YouTube video of the song.",
         steps: [
-          { text: "Pull up the chords/tab on Ultimate Guitar.", why: "Reference for the lead part notes." },
-          { text: "The 9's (arpeggiated figures): fast DUDUD pattern.", why: "Sarah (2/16): 'Learn the lead on your own on electric.'" },
+          { text: "Pull up the chords/tab.", why: "Reference for the guitar part." },
+          { text: "Work through the chord progression slowly.", why: "Sarah: 'Learn it on your own.'" },
           { text: "Slow YouTube to 75% speed → play along.", why: "Speed comes from accuracy, not practice at full speed." },
           { text: "Clean at 75%? → try 85% → then full speed.", why: "Progressive speed building. Don't skip to full speed." },
         ],
-        feel: "At 75% speed, every note should ring clean. If you're buzzing strings or missing notes, stay at 75% longer.",
-        wrong: "If you're playing all the notes but they're not at the right time, that's worse than playing fewer notes at the right time. Rhythmically tight > note-correct.",
-        sarah: "Play along with the song, slow the song down on YouTube, make sure you're playing all the notes and playing them at the right time.",
+        feel: "At 75% speed, every chord change should be clean. If you're fumbling transitions, stay at 75% longer.",
+        wrong: "If you're playing all the chords but they're not at the right time, that's worse than playing fewer chords at the right time. Rhythmically tight > note-correct.",
+        sarah: "Play along with the song, slow the song down on YouTube, make sure you're playing all the chords and playing them at the right time.",
         levelUp: "Clean play-through at 85% speed."
       },
       {
@@ -309,7 +309,7 @@ const DAYS = [
   },
   {
     num: 4, name: "Deep Practice", focus: "Stacking Skills", duration: "55 min",
-    setup: "Guitar (electric for Sol Del Sur, acoustic for fingerpick), metronome, backing tracks, phone to record.",
+    setup: "Guitar, metronome, backing tracks, phone to record.",
     exercises: [
       {
         id: "d4e1", time: 10, title: "Metronome Speed Push", type: "rhythm",
@@ -340,19 +340,18 @@ const DAYS = [
         metronome: 120, levelUp: "Full 4-chord cycle with voice without picking falling apart."
       },
       {
-        id: "d4e3", time: 15, title: "Sol Del Sur — Strum + Lead", type: "guitar",
-        what: "Work the strum pattern. Sarah wants a video of this one.",
-        setup: "Electric guitar. YouTube: Sol Del Sur.",
+        id: "d4e3", time: 15, title: "ILTWYW — Strum + Vocals", type: "guitar",
+        what: "Work the strum pattern with vocals. Sarah wants a video of this one.",
+        setup: "Guitar. YouTube: I Like The Way You Walk.",
         steps: [
-          { text: "Strum pattern: first note = individual string pluck, then the strum.", why: "Sarah (3/2): 'Make sure the very first note is an individual string pluck.'" },
-          { text: "No extra strum after the first down strum.", why: "Sarah (3/2): 'Make sure there's no extra strum after the first down strum.'" },
-          { text: "On C#m: pluck the A string at the start of the chord.", why: "Sarah (2/16): 'For the C#m, they pluck the A string at the start of the chord.'" },
-          { text: "📹 RECORD the strum and send to Sarah.", why: "Sarah (2/16): 'As soon as you have it, send me a video so I can check to make sure it's correct!'" },
+          { text: "Strum pattern with the Groove Beat 90 BPM backing track.", why: "Lock in the rhythmic feel before adding vocals." },
+          { text: "Add vocals over the strum. Focus on syncopated word placement.", why: "Sarah has flagged timing of last words across multiple lessons." },
+          { text: "📹 RECORD the strum + vocals and send to Sarah.", why: "Sarah: 'As soon as you have it, send me a video so I can check to make sure it's correct!'" },
         ],
-        feel: "The pluck before the strum should create a distinct 'pick → strum' two-part attack on each chord. It's not strum-strum, it's pluck-strum.",
-        wrong: "If the pluck and strum blur together into one sound, you're starting the strum too early. Pause between the pluck and the strum.",
-        sarah: "Try to figure out the strum on your own — as soon as you have it, send me a video so I can check!",
-        levelUp: "Clean video of strum sent to Sarah."
+        feel: "The strum should feel locked to the groove. Vocals float between the beats — don't simplify the syncopation.",
+        wrong: "If you're putting every word on the beat, you're simplifying. The last word of each line should land between beats.",
+        sarah: "As soon as you have it, send me a video so I can check!",
+        levelUp: "Clean video of strum + vocals sent to Sarah."
       },
       {
         id: "d4e4", time: 15, title: "Full Passaggio Workout", type: "vocal",
@@ -394,7 +393,7 @@ const DAYS = [
         setup: "Phone propped for video. All backing tracks queued.",
         steps: [
           { text: "Record #1: ILTWYW with Groove Beat 90 BPM. Full song, strum + vocals.", why: "This is your main performance piece. The recording reveals timing slips you can't hear while playing." },
-          { text: "Record #2: Sol Del Sur strum pattern. → SEND THIS TO SARAH.", why: "She specifically asked for this video." },
+          { text: "Record #2: ILTWYW strum + vocals. → SEND THIS TO SARAH.", why: "She specifically asked for this video." },
           { text: "Record #3: Fingerpick Am C G D + ooh improvisation at 120 BPM.", why: "Captures your progress on the dual-skill exercise." },
           { text: "Listen back to each recording IMMEDIATELY after.", why: "Sarah (1/13): 'Record yourself and listen back to see how long it takes you to realize you've gone off beat.' Your goal: shrink that time." },
           { text: "Note specific timing slips. Which word? Which beat? Where did you drift?", why: "Specific notes let you target the exact problem spots tomorrow." },
@@ -402,7 +401,7 @@ const DAYS = [
         feel: "Listening to yourself is uncomfortable. That discomfort is the gap between what you hear in your head and what's actually coming out. The gap shrinks with practice.",
         wrong: "If you listen back and think 'that sounded fine,' listen again more carefully. Compare directly to the original. There's always a gap to close.",
         sarah: "Record yourself and listen back to see how long it takes you to realize you've gone off beat.",
-        levelUp: "Identify drift within 2–3 beats. Sol Del Sur video sent to Sarah."
+        levelUp: "Identify drift within 2–3 beats. ILTWYW video sent to Sarah."
       },
       {
         id: "d5e3", time: 12, title: "Vocal: Record + Review", type: "vocal",
@@ -466,17 +465,17 @@ const DAYS = [
         levelUp: "Complete ILTWYW run without restart. Re-entries within 1 beat."
       },
       {
-        id: "d6e4", time: 12, title: "Sol Del Sur — Full Pass", type: "guitar",
-        what: "Play along with the actual recording. Alternate lead and strum sections.",
-        setup: "Electric guitar. YouTube: Sol Del Sur at full speed.",
+        id: "d6e4", time: 12, title: "ILTWYW — Full Pass", type: "guitar",
+        what: "Play along with the actual recording. Full strum + vocals.",
+        setup: "Guitar. YouTube: I Like The Way You Walk at full speed. Groove Beat 90 BPM.",
         steps: [
-          { text: "Lead at full speed.", why: "You've built up from 75%." },
-          { text: "Strum with clean entries (pluck → strum pattern).", why: "This is what you recorded on Day 5." },
-          { text: "Alternate lead/strum sections along with the song.", why: "Full song integration." },
+          { text: "Full song play-through at full speed with vocals.", why: "You've built up from 75%." },
+          { text: "Focus on syncopated word placement — last words between beats.", why: "This is what Sarah has flagged across multiple lessons." },
+          { text: "If you drift, re-enter on the next beat. Don't stop.", why: "Recovery is a skill." },
         ],
         feel: "Playing along with the original should feel like playing WITH the band. You're fitting into their groove, not fighting it.",
         wrong: "If you're always behind the recording, your tempo perception may be off. Use the metronome drills to recalibrate.",
-        sarah: "Play along with the song, make sure you're playing all the notes at the right time.",
+        sarah: "Play along with the song, make sure you're playing everything at the right time.",
         levelUp: "Full play-through matching the recording's timing."
       }
     ],
@@ -1036,19 +1035,20 @@ function PitchRibbon({ pitches, playNote }) {
     <div style={{ marginBottom: 24 }}>
       <div style={{ fontSize: 10, fontWeight: 700, color: T.textMuted, letterSpacing: 1.5, marginBottom: 12, fontFamily: T.sans }}>REFERENCE PITCHES</div>
 
-      {/* Scroll container */}
+      {/* Scroll container — full-width horizontal strip */}
       <div style={{
         display: "flex",
         overflowX: "auto",
         paddingBottom: 8,
+        margin: "0 -18px",
         WebkitOverflowScrolling: "touch",
-        scrollbarWidth: "none", // Firefox
-        msOverflowStyle: "none", // IE
+        scrollbarWidth: "none",
+        msOverflowStyle: "none",
         scrollSnapType: "x proximity"
       }}
         className="hide-scrollbar"
       >
-        <div style={{ display: "flex", gap: 4, padding: "0 4px" }}>
+        <div style={{ display: "flex", gap: 3, padding: "0 18px", width: "max-content" }}>
           {pitches.map((note, i) => {
             const isAccidental = note.includes("♭") || note.includes("#");
             const bg = isAccidental ? T.textDark : T.goldSoft;
@@ -1074,19 +1074,18 @@ function PitchRibbon({ pitches, playNote }) {
                 style={{
                   flexShrink: 0,
                   scrollSnapAlign: "center",
-                  minWidth: isAccidental ? 54 : 64,
-                  height: isAccidental ? 70 : 80,
-                  marginTop: isAccidental ? 0 : 0,
+                  minWidth: 44,
+                  height: isAccidental ? 56 : 64,
                   borderRadius: T.radiusMd,
                   background: bg, border: border,
                   color: fg, cursor: "pointer",
                   display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end",
-                  paddingBottom: 12,
+                  paddingBottom: 10,
                   transition: "all 0.15s cubic-bezier(0.4, 0, 0.2, 1)", fontFamily: T.sans,
                   boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
                 }}
               >
-                <span style={{ fontSize: 18, fontWeight: 700, letterSpacing: -0.5 }}>{note}</span>
+                <span style={{ fontSize: 15, fontWeight: 700, letterSpacing: -0.5 }}>{note}</span>
               </button>
             );
           })}
@@ -1121,7 +1120,6 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
   const tracks = [];
   if (textContent.includes("Surf Rock Beat 120")) tracks.push({ name: "Surf Rock 120 BPM", src: "/surf-rock-120.mp3" });
   if (textContent.includes("Groove Beat 90")) tracks.push({ name: "Groove Beat 90 BPM", src: "/groove-beat-90.mp3" });
-  if (textContent.includes("Sol Del Sur")) tracks.push({ name: "Sol Del Sur", src: "/sol-del-sur.mp3" });
   if (textContent.includes("I Like The Way You Walk") || textContent.includes("ILTWYW")) tracks.push({ name: "I Like The Way You Walk", src: "/iltwyw.mp3" });
 
   return (
@@ -2174,7 +2172,7 @@ export default function App() {
               {[
                 { bpm: "78", use: "16th note subdivision (Drill #3)" },
                 { bpm: "120", use: "Surf Rock — fingerpick + count + ooh climbing" },
-                { bpm: "122", use: "Lyric placement + Sol Del Sur tap-along" },
+                { bpm: "122", use: "Lyric placement + ILTWYW tap-along" },
                 { bpm: "165", use: "Island strum (Surf Rock Drum)" },
                 { bpm: "200–244", use: "Main metronome work (Drills #1 & #2)" },
               ].map((r, i) => (
