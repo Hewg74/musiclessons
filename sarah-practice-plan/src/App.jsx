@@ -102,7 +102,7 @@ const DAYS = [
         ],
         feel: "Your neck should feel the rhythm. The nod should feel like a slow-motion headbang — deliberate, not frantic. If the nod feels rushed or out of sync, you're going too fast.",
         wrong: "If your nod starts matching your voice (nodding on every click), slow down 20 BPM. The nod is HALF speed — only on numbers.",
-        sarah: "This is the most important exercise! Always start your practice with this one.",
+        sarah: "Incorporate the metronome into every single thing that you do. Doing things slowly and right 100% of the time is way better for your brain than doing them fast and right 80% of the time.",
         metronome: 200, levelUp: "Hold 4 bars at 220+ BPM with clean nod."
       },
       {
@@ -130,7 +130,7 @@ const DAYS = [
         ],
         feel: "The 4 syllables should feel like a drumroll — perfectly even spacing. No syllable should be louder or faster than the others. When you strip to 'e and a' only, it should feel like a triplet between each beat.",
         wrong: "If 'e and a' sound rushed (bunched together near the number), you're not distributing them evenly. Say all 4 at first, then gradually make the '1' silent while keeping the spacing.",
-        sarah: "This feeds directly into syncopation awareness.",
+        sarah: "Really prioritize getting the highest percentage right over anything else — over speed, over dynamics, over anything.",
         metronome: 78, levelUp: "Clean 'e and a' only at 82–85 BPM."
       },
       {
@@ -139,13 +139,13 @@ const DAYS = [
         setup: "Guitar in lap. Surf Rock Beat 120 BPM on speaker/headphones. Am → C → G → D chord shapes ready.",
         steps: [
           { text: "Play Surf Rock Beat at 120 BPM.", why: "This is the backing track you've been using since January." },
-          { text: "Fingerpick Am → C → G → D: alternate thumb and pointer finger on two different strings.", why: "Sarah (1/13): 'Alternate thumb and pointer on two strings. Count is on the thumb, so 4 thumb/pointer back-and-forth on each chord.'" },
+          { text: "Fingerpick Am → C → G → D: alternate thumb (A string) and pointer finger (B string).", why: "Sarah (1/13): 'You're finger picking the same chord progression — do your A string and your B string.' Count is on the thumb, 4 back-and-forth per chord." },
           { text: "Count '1 & 2 & 3 & 4 &' out loud while picking.", why: "This connects the counting drill to actual music. Your count should line up with your thumb hits." },
           { text: "NOD the entire time. Down on numbers, up on &'s.", why: "Same nod as the drills. Now it carries into real playing." },
         ],
         feel: "The picking should feel mechanical and easy — like breathing. If you can count and nod without the picking falling apart, the pattern is internalized. The count should feel like narrating what your hands already know.",
         wrong: "If counting makes your picking stutter, simplify: just hit the thumb on beats 1–4 (skip the pointer). Add pointer back once counting is stable.",
-        sarah: "Count > nod > picking accuracy. If count drops, simplify the picking.",
+        sarah: "You're finger picking the same chord progression — do your A string and your B string. Make sure you are on beat. As soon as you hear that you're off, you gotta stop.",
         metronome: 120, levelUp: "Count + nod + fingerpick for a full chord cycle without dropping count."
       },
       {
@@ -154,6 +154,7 @@ const DAYS = [
         setup: "No guitar. Standing is ideal. Glass of water nearby. No dairy for 30+ min before.",
         referencePitches: getPitchRange("C4", "E3"),
         steps: [
+          { text: "Chest voice warm-up: Put hand on belly. Say 'Hey, stop it!' like you mean it. Feel the belly push? That's your diaphragm — that's chest voice. Now say it softly from your head — no belly push. Alternate loud/soft 4 times.", why: "Sarah (1/27): 'It's not even just a volume thing — it's an engagement of that diaphragm muscle down there. Like you're getting hit in the stomach.'" },
           { text: "Descending 5-note scale on 'nee': Start on C4, descend C4→B3→A3→G3→F3.", why: "Approaching the break from ABOVE lets you 'slide' into it rather than crashing up into it." },
           { text: "Each round, start a half step lower: B3→A#3→G#3→F#3→E3, then B♭3→A3→A♭3→G3→G♭3.", why: "You'll cross through the A3 break zone around round 3. Notice where the voice wants to flip." },
           { text: "Messa di voce on G3, A♭3, A3, B♭3: Sing 'ah', start quiet → swell to medium → back to quiet. 8 seconds per cycle, 3 cycles per note.", why: "The swell tests your break — the crescendo tries to pull you into chest voice. The goal is staying in mix through the swell." },
@@ -161,7 +162,7 @@ const DAYS = [
         ],
         feel: "On the descending scale, you'll feel the voice 'settle' as you cross A3. There might be a slight thinning or color change in the tone around B♭3–A3. That's the passaggio. On the messa di voce, G3 should feel easy and warm. A♭3 gets 'interesting' — you might feel the voice wanting to shift. A3 is the zone — the crescendo may cause a flip. B♭3 may flip into head voice, and that's fine.",
         wrong: "If you're straining or pushing to stay in chest voice through A3, you're forcing it. Let the flip happen. Over weeks, the flip becomes a shift, then a blend. Forcing it delays this process.",
-        sarah: "Continue using AI to find exercises going from your mixed voice into your head voice — working out where it flips and harnessing control over that range of notes.",
+        sarah: "I think for you, a great exercise is one that flips you from your chest voice into your head voice — back and forth, back and forth. If you're going to find exercises using AI, make sure to tell them that you have a man voice because the notes that you flip on are going to be different.",
         levelUp: "Notice the exact note where your voice wants to flip. It might be A3, A♭3, or B♭3 — it varies day to day."
       },
       {
@@ -240,7 +241,7 @@ const DAYS = [
         ],
         feel: "Sirens should feel like a smooth elevator ride through your range. The A3 zone might feel like hitting a speed bump — the trill may get uneven or the pitch wobbles. That's data, not failure. On pitch matching, the notes should 'lock in' to the chord you're playing on guitar.",
         wrong: "If your siren has a hard crack (not a gradual shift), you may be pushing too much air. Back off to 50% volume and try again.",
-        sarah: "See if you can find exercises to practice flip from head voice into chest into mixed voice around A3 — remember to tell the AI that you're a man!",
+        sarah: "If you could find exercises where you are forced to flip from your head into your chest into your mixed — and make sure to tell them that you have a man voice because the notes that you flip on are going to be different.",
         levelUp: "Siren through A3 with gradual thinning instead of crack."
       }
     ],
@@ -274,6 +275,22 @@ const DAYS = [
         metronome: 78, levelUp: "Clean 'e and a' only at 85 BPM."
       },
       {
+        id: "d3e2b", time: 5, title: "Ear Training — Chord Tone Singing", type: "vocal",
+        what: "Strum a chord and sing the notes you hear — without plucking individual strings first. Your ear naturally finds notes, even beautiful ones outside the scale.",
+        setup: "Guitar. Quiet room. No backing track — just you and the guitar.",
+        referencePitches: getPitchRange("C3", "C4"),
+        steps: [
+          { text: "Strum a C chord once, full and open. Let it ring.", why: "Sarah (1/27): 'Don't individually pluck those notes — we're trying to train our brain to find it.'" },
+          { text: "Sing the first note you hear. Commit to it — even if it feels wrong.", why: "Sarah (1/27): 'You should follow through and make that mistake so that you kind of learn from it.'" },
+          { text: "Sing 3–4 notes you hear in the chord. Now strum again and sing them together.", why: "In the Jan 27 lesson, Gene found F# over a C chord — which worked beautifully because they were coming from Am." },
+          { text: "Repeat with Am, G, D. Notice how your ear finds different notes over different chords.", why: "Sarah (1/27): 'It's actually a great thing that you didn't pluck your guitar — you found an F sharp, and that's a good thing. Our brains naturally find these notes outside of the scale.'" },
+        ],
+        feel: "This should feel exploratory, not like a test. When a note 'clicks' with the chord, you'll feel it resonate. 'Wrong' notes often turn out to be chromatic passing tones or borrowed chord tones that sound beautiful.",
+        wrong: "If you're plucking individual strings to find the notes first, you're bypassing your ear. The whole point is to let your singing brain find them.",
+        sarah: "Commit more, Jean! You should follow through and make that mistake so that you kind of learn from it. It's a beautiful thing that our brains naturally find these notes that are outside of the scale.",
+        levelUp: "Find 3+ notes per chord without plucking. Notice one 'surprise' note that works."
+      },
+      {
         id: "d3e3", time: 20, title: "ILTWYW — Full Work", type: "song",
         what: "This is the main event. Strum + vocals over the groove beat, with focus on syncopated vocal timing.",
         setup: "Guitar. Groove Beat 90 BPM on speaker. Phone ready to record. Lyrics printed/memorized.",
@@ -286,7 +303,7 @@ const DAYS = [
         ],
         feel: "When the syncopation is right, the song should feel like it has a 'bounce' or 'swagger.' The vocal line should feel like it's dancing around the guitar strum, not sitting on top of it.",
         wrong: "If the song sounds 'flat' or 'square,' you're probably putting words on the beat. Listen to the original again — hear the bounce, then try to match it.",
-        sarah: "Watch out for the timing of the last word of each line. Make sure you're not simplifying it and putting things directly on beat when they're supposed to be in between the beats.",
+        sarah: "Watch out for the timing of the last word of each line. Make sure you're not simplifying it and putting things directly on beat when they're supposed to be in between the beats. Master the strum without the video, and then bring it to the video.",
         levelUp: "Hear the difference between your syncopation and the original's."
       },
       {
@@ -302,7 +319,7 @@ const DAYS = [
         ],
         feel: "This should feel like musical exploration, not a drill. Each cycle is an opportunity to try new patterns. When you hit your break zone, the voice might crack — that's information, not failure. A committed crack is better than a safe whisper.",
         wrong: "If you're singing the same 4 notes on every chord, you're on autopilot. Force yourself to pick different starting notes, different intervals.",
-        sarah: "COMMIT to each note — if you push more air you'll be more likely to hit the note in key.",
+        sarah: "Commit more, Jean! If you push more air you'll be more likely to hit the note in key. It's actually a great thing when your voice finds notes outside the scale — our brains naturally find these beautiful notes.",
         levelUp: "Climb through A3 without backing down. Crack is data."
       }
     ],
@@ -367,7 +384,7 @@ const DAYS = [
         ],
         feel: "The scat improv should feel playful. You're making up music in real time. The groove beat keeps you honest rhythmically while you explore pitch.",
         wrong: "If your scat feels random (no relationship to the chord changes), simplify: just sing the root note of each chord on beat 1, then gradually add more notes.",
-        sarah: "Continue working out where the voice flips and harnessing control over that range.",
+        sarah: "Having that control — getting the high notes in a quiet way or in a louder way and flipping between the mechanisms — that would be great practice for you. Mixed voice is the most powerful one because you're using your head to get a big sound.",
         levelUp: "Scat improv where syncopations sound intentional, not accidental."
       }
     ],
@@ -401,7 +418,7 @@ const DAYS = [
         ],
         feel: "Listening to yourself is uncomfortable. That discomfort is the gap between what you hear in your head and what's actually coming out. The gap shrinks with practice.",
         wrong: "If you listen back and think 'that sounded fine,' listen again more carefully. Compare directly to the original. There's always a gap to close.",
-        sarah: "Record yourself and listen back to see how long it takes you to realize you've gone off beat.",
+        sarah: "Record yourself and listen back. You might be like, 'oh, it took me 20 seconds to hear that I was off.' Work it down to five seconds. As soon as you hear it, stop. It's way better to stop every 20 seconds than to keep going off beat.",
         levelUp: "Identify drift within 2–3 beats. Sol Del Sur video sent to Sarah."
       },
       {
@@ -416,7 +433,7 @@ const DAYS = [
         ],
         feel: "On the recording, the passaggio might sound different than it felt. Sometimes it sounds smoother than it felt (good sign). Sometimes there's a crack you didn't feel (more warm-up needed).",
         wrong: "If the siren recording has a hard 'click' or 'pop' at A3, you were pushing too much air through the flip. Try less air, more control.",
-        sarah: "Focus on the flip from head voice into chest into mixed voice around A3.",
+        sarah: "Your flip is around A3. That area is where I would really work — you want to be able to have full control over your tone choice when you're choosing those notes.",
         levelUp: "Siren recording shows gradual thinning (not a crack) through A3."
       }
     ],
@@ -435,7 +452,7 @@ const DAYS = [
         ],
         feel: "At 8 bars, your body should be on autopilot. The nod carries you. If you're counting bars consciously, that's fine — the nod is the important part.",
         wrong: "If you break at bar 5 or 6, fatigue might be the issue. Rest 30 seconds, try again. It's not a speed problem at that point.",
-        sarah: "This is the graduation test for the week.",
+        sarah: "As soon as you hear that you're off, you gotta stop. Really prioritize doing it right. You really don't want to practice it wrong if you can help it.",
         metronome: 244, levelUp: "8 clean bars, solid nod, at 244."
       },
       {
@@ -462,7 +479,7 @@ const DAYS = [
         ],
         feel: "This should feel like performing. The pressure of 'don't stop' creates a different mindset than drilling. Recovery is a skill — you're practicing the recovery, not the mistake.",
         wrong: "If you stop and restart, you've turned a performance into a drill. Commit to the no-stop rule.",
-        sarah: "Stop as soon as you realize you're off beat, and enter back in on beat.",
+        sarah: "If you start falling off, as soon as you realize it, either try to get back in or pause, listen, and jump back in. It's way better to stop every 20 seconds than to keep going off beat — because if you're not on beat, your brain is not in the state it needs to be in.",
         levelUp: "Complete ILTWYW run without restart. Re-entries within 1 beat."
       },
       {
@@ -507,7 +524,7 @@ const DAYS = [
         ],
         feel: "This is the ultimate test: can you stay in the groove while your mind is elsewhere? When the rhythm is truly internalized, it holds you up even when you're not thinking about it. Like walking.",
         wrong: "If your mind wanders and you go off beat, that's exactly the exercise. Notice the drift, re-enter, keep going.",
-        sarah: "Once you're locked in, meditate! Let your mind wander. It will likely make you go off beat — make sure to stay on!",
+        sarah: "Do the whole track — don't stop after three or four minutes. The magic really happens beyond that. Your brain will start wandering into thought spaces that are not normal. Use it as meditation — go into it with an intention, but don't get off the beat.",
         levelUp: "Stay on beat while thinking about something else."
       },
       {
@@ -521,7 +538,7 @@ const DAYS = [
         ],
         feel: "This should feel like the end of a good workout — tired but good. The voice might feel more 'flexible' than at the start of the week.",
         wrong: "If your voice feels strained or tight, skip this and just do gentle sirens. Rest is more important than one more exercise.",
-        sarah: "Musical play, not drilling. Enjoy the instrument.",
+        sarah: "Head voice is an amazing tool, and it's beautiful — you have a beautiful head voice. It's not even just a volume thing between chest and head, it's an engagement of that diaphragm muscle down there.",
         levelUp: "Can you sing through your break without thinking about it? That's graduation."
       }
     ],
@@ -559,7 +576,7 @@ const VOCAL_EXERCISES = [
       "BREATH (Appoggio): Maintain outward rib expansion as you exhale. Don't let your ribs collapse. This is what makes the swell possible without strain."
     ],
     diagram: "pp ━━━━━━━━ mf ━━━━━━━━ pp\n          (8 seconds)\n\nG3:  ●●● (should feel easy)\nA♭3: ●●● (getting interesting)\nA3:  ●●● (the crescendo wants to flip you)\nB♭3: ●●● (let it flip if it wants)",
-    feel: "On G3, this should feel effortless — like humming. On A♭3, you'll start to feel a 'choice point' during the crescendo: the voice wants to either push into full chest or thin out into head. On A3, the crescendo is the test — can you swell without the voice flipping? If it does flip, that's fine. On B♭3, most baritones will be in light head voice by the quiet part.",
+    feel: "On G3, this should feel effortless — like humming. On A♭3, you'll start to feel a 'choice point' during the crescendo: the voice wants to either push into full chest or thin out into head. On A3, the crescendo is the test — can you swell without the voice flipping? If it does flip, that's fine. On B♭3, you'll likely be shifting into light head voice by the quiet part.",
     wrong: "If the swell sounds like a sudden jump from quiet to loud (instead of a gradual ramp), slow down the crescendo. If the voice cracks during the swell on A3, reduce your maximum volume — don't go all the way to mf, stop at mp.",
     tip: "VOWEL MODIFICATION: As you approach A3, let 'ah' drift toward 'uh'. This lowers the first formant, letting the vocal folds thin out for mix voice instead of hitting the chest voice ceiling. It should sound rounder, not darker.",
     progression: "Week 1: Get comfortable with the shape (pp→mf→pp). Week 2: Smooth out the swell on A♭3 and A3. Week 3: Try to keep the same tone quality throughout the entire swell on A3."
@@ -639,6 +656,98 @@ const VOCAL_EXERCISES = [
     wrong: "If it sounds random (no connection to the chords), simplify. Go back to Level 1 and just sing root notes of each chord. Build back up.",
     tip: "Record yourself and listen back. The diagnostic: are the syncopations INTENTIONAL or ACCIDENTAL? Intentional syncopation = you chose to place that note off-beat. Accidental = you lost the beat. You can hear the difference — intentional sounds musical, accidental sounds lost.",
     progression: "Week 1: Comfortable at Level 1. Week 2: Clean Level 2. Week 3: Musical-sounding Level 3."
+  },
+  {
+    id: "v7", num: 7, title: "Ear Training — Chord Tone Singing", purpose: "Train your ear to naturally find notes over chords — 'wrong' notes can be beautiful",
+    when: "Days 3, 6. Before song practice sessions.",
+    what: "Strum a chord on guitar and sing the notes you hear — without plucking individual strings first. Your ear will naturally find notes in the scale, and sometimes beautiful notes outside it. Sarah discovered Gene singing F# over a C chord during the Jan 27 lesson, which worked musically because they were transitioning from Am.",
+    referencePitches: getPitchRange("C3", "C4"),
+    howTo: [
+      "Strum a C chord once, full and open. Let it ring.",
+      "Without thinking too hard, sing the first note you hear. Don't pluck individual strings — trust your ear.",
+      "Sing 3–4 notes you hear in the chord, one at a time. Commit to each one even if it feels wrong.",
+      "Now strum the chord again while singing those notes. Do they work? Even the 'wrong' ones?",
+      "Repeat with Am, G, D. Notice how your ear finds different notes over different chords."
+    ],
+    diagram: "Strum C → sing what you hear\n  ↓\nYou might find: C, E, G (chord tones)\n  or: F# ('wrong' but beautiful!)\n  ↓\nStrum + sing together → does it work?\n  ↓\nIf yes: your ear found something beautiful\nIf no: follow through anyway — learn from it",
+    feel: "This should feel exploratory, not like a test. There are no wrong answers — your ear is finding musical connections your conscious mind doesn't know about. When a note 'clicks' with the chord, you'll feel it resonate in your chest.",
+    wrong: "If you're plucking individual strings to find the notes first, you're bypassing your ear. The whole point is to let your singing brain find them, not your guitar brain.",
+    tip: "Sarah found that Gene's 'wrong' F# over C was actually musically beautiful because they were transitioning from Am. Your brain naturally makes chromatic connections between chords — trust it. As Sarah said: 'It's actually a great thing that you didn't pluck your guitar in that moment because you found something your fingers never would have.'",
+    progression: "Week 1: Find 2–3 notes per chord. Week 2: Sing patterns over chord changes. Week 3: Improvise melodies using only ear-found notes."
+  },
+  {
+    id: "v8", num: 8, title: "Chest Voice Activation — 'Hey, Stop It!'", purpose: "Find your chest voice through natural speech — feel the diaphragm engage",
+    when: "Before any vocal exercise. Great warm-up for Days 1, 3, 5.",
+    what: "Use conversational exclamations to naturally engage your chest voice and diaphragm. Sarah's 'Hey, stop it!' exercise helps you feel the physical difference between chest voice (diaphragm engaged, belly pushes out) and head voice (lighter, no belly engagement). Understanding this difference is the foundation for mixed voice and belting.",
+    referencePitches: getPitchRange("F3", "B3"),
+    howTo: [
+      "Put your hand on your belly, skin contact under your shirt.",
+      "Say 'Hey!' like someone across the room — loud, natural, conversational.",
+      "Feel your belly push against your hand? That's your diaphragm. That's chest voice.",
+      "Now say 'Hey' softly, gently, from your head. Notice: no belly push.",
+      "Say 'Hey, stop it!' — commit to it, like you mean it. That's full chest voice.",
+      "Alternate: loud 'Hey!' (chest) → quiet 'hey' (head) → loud 'Hey, STOP IT!' (chest). Feel the flip."
+    ],
+    diagram: "CHEST VOICE: 'HEY, STOP IT!'\n  → Belly pushes out\n  → Diaphragm engaged\n  → Louder, fuller tone\n  → Like yelling across a room\n\nHEAD VOICE: 'hey...'\n  → No belly engagement\n  → Lighter, gentler\n  → Neck up\n  → Like a whisper that carries\n\nMIXED VOICE: Best of both\n  → Head voice muscles + chest power\n  → This is what belting actually is\n  → Not yelling — it's controlled mixing",
+    feel: "When you nail chest voice, your whole torso resonates. It should feel like the sound is coming from your gut, not your throat. The belly push is unmistakable once you feel it. Head voice feels like the sound floats above your shoulders.",
+    wrong: "If 'Hey, stop it!' feels like you're just getting louder without the belly engagement, you're pushing from your throat. Think of getting punched in the stomach — that instinctive flex is what you want.",
+    tip: "Sarah explained: 'It's not even just a volume thing — it's an engagement of that diaphragm muscle down there. Like you're getting hit in the stomach — what you would do is flex those abs.' People often think belting is yelling, but actually belting is from a mixed voice. If you can mix it, you can have a huge voice.",
+    progression: "Week 1: Feel the clear difference between chest and head. Week 2: Flip between them on command. Week 3: Find your mixed voice — chest power through head voice placement."
+  }
+];
+
+// ─── LESSON NOTES ───────────────────────────────────────────────────
+const LESSON_NOTES = [
+  {
+    date: "2025-01-13",
+    title: "Rhythm & Song Practice",
+    duration: "~1hr 10min",
+    topics: ["Rhythm improvement", "Surf Rock Beat 120 BPM", "Fingerpicking", "I Like The Way You Walk", "Meditation while playing"],
+    highlights: [
+      { time: "00:00", text: "Gene reports bandmates noticed rhythm improvement — Sarah encourages staying with the band", type: "progress" },
+      { time: "07:13", text: "Exercise: island strum (down, down up, up, down up) over Surf Rock Beat 120 BPM with Am→C→G→D while counting out loud", type: "exercise" },
+      { time: "20:18", text: "Sarah: 'Your entry was perfect! You're slowing down a little bit when you start strumming'", type: "feedback" },
+      { time: "32:02", text: "Sarah: 'That's not cheating. That's exactly how you're supposed to do it' — finding a consistent rhythmic pattern to latch onto", type: "technique" },
+      { time: "33:18", text: "Sarah: 'The main goal is to find a consistent sound that you can jump and latch onto — find the count within that sound'", type: "technique" },
+      { time: "34:16", text: "Fingerpicking exercise: alternate thumb and pointer on A string and B string, same chord progression", type: "exercise" },
+      { time: "37:42", text: "Sarah: 'You want to find those consistent rhythms that reoccur and latch onto those — that's good, not cheating'", type: "technique" },
+      { time: "39:54", text: "Sarah: 'Your rhythm has gotten better since we've done rhythm stuff together'", type: "progress" },
+      { time: "41:03", text: "I Like The Way You Walk: starting at 80 BPM groove beat, working up to 90 (song is ~95 BPM)", type: "exercise" },
+      { time: "48:53", text: "Sarah: 'I have to move part of my body — physically embodying that beat. You need that downbeat somewhere in your body'", type: "technique" },
+      { time: "51:08", text: "Sarah: 'Doing things for more than six minutes is so good — the magic really happens beyond three or four minutes'", type: "technique" },
+      { time: "52:35", text: "Sarah: 'My worry is you would be off beat and if I didn't stop you, you would just keep going'", type: "feedback" },
+      { time: "53:10", text: "Sarah on meditation: 'Some of my greatest ideas come in that state — when I'm strumming and counting and letting my mind wander'", type: "technique" },
+      { time: "55:25", text: "Sarah: 'Stop. Fix it fast. Way better to stop every 20 seconds than to keep going off beat'", type: "technique" },
+      { time: "57:42", text: "Sarah: 'Master the strum without the video, and then bring it to the video'", type: "technique" },
+      { time: "59:40", text: "Sarah: 'Record yourself. See when you go off — was I too fast? Was I too slow?'", type: "technique" },
+      { time: "1:02:35", text: "Sarah: 'Incorporate the metronome into every single thing that you do'", type: "technique" },
+      { time: "1:05:33", text: "Sarah: 'Doing things slowly and right 100% of the time is way better than doing them fast and right 80% of the time'", type: "technique" },
+      { time: "1:06:53", text: "Sarah: 'Really prioritize doing it right. As soon as you hear you're off, you gotta stop. I recommend recording yourself'", type: "technique" },
+    ]
+  },
+  {
+    date: "2026-01-27",
+    title: "Ear Training & Voice Registers",
+    duration: "~14min",
+    topics: ["Ear training", "Chest voice", "Head voice", "Mixed voice", "Falsetto", "Passaggio at A3", "Tenor confirmed"],
+    highlights: [
+      { time: "00:09", text: "Ear training exercise: strum chord, sing notes you hear without plucking individual strings", type: "exercise" },
+      { time: "01:22", text: "Sarah: 'You should follow through and make that mistake so that you kind of learn from it'", type: "technique" },
+      { time: "02:30", text: "Discovery: Gene found F# over C chord — Sarah: 'It's actually a great thing... our brains naturally find these notes outside of the scale'", type: "discovery" },
+      { time: "03:58", text: "Sarah: 'Commit more, Jean'", type: "feedback" },
+      { time: "04:20", text: "Sarah identifies Gene flipping between head and chest voice on high notes — 'Let's try to sing both'", type: "feedback" },
+      { time: "05:00", text: "Chest voice exercise: say 'Hey!' — feel diaphragm engage. Head voice: say 'Hey' softly — no belly engagement", type: "exercise" },
+      { time: "06:13", text: "Sarah: 'Say hey, stop it! — that's your chest voice. Feel the engagement in your belly'", type: "exercise" },
+      { time: "07:02", text: "Diaphragm test: hand on belly — chest voice pushes out, head voice doesn't", type: "exercise" },
+      { time: "07:12", text: "Sarah: 'It's not even just a volume thing — it's an engagement of that diaphragm muscle down there'", type: "technique" },
+      { time: "07:39", text: "Sarah recommends AI-generated exercises for flipping between registers — 'make sure to tell them you have a man voice'", type: "technique" },
+      { time: "08:26", text: "Sarah identifies Gene's falsetto: 'That's your falsetto — that's like a whole octave above what we were just doing'", type: "discovery" },
+      { time: "08:38", text: "Sarah: 'Mixed voice is the most powerful one because you're using your head to get a big sound'", type: "technique" },
+      { time: "08:53", text: "Sarah: 'People often think belting is like yelling, but actually belting is from a mixed voice'", type: "technique" },
+      { time: "11:57", text: "Voice type confirmed — Sarah: 'So you're like a tenor, yeah, that makes sense'", type: "discovery" },
+      { time: "13:04", text: "Sarah: 'Part of it is commitment too — you're also not pushing'", type: "feedback" },
+      { time: "13:29", text: "Sarah: 'Your flip is around A3 — that area is where I would really work. You want full control over your tone choice'", type: "discovery" },
+    ]
   }
 ];
 
@@ -1937,6 +2046,96 @@ function ToolCard({ title, icon, defaultOpen = false, children }) {
   );
 }
 
+function LessonNotesView() {
+  const [openLesson, setOpenLesson] = useState(null);
+  const typeColors = {
+    progress: T.success,
+    exercise: T.gold,
+    feedback: T.coral,
+    technique: T.slate,
+    discovery: T.plum,
+  };
+  return (
+    <div>
+      <div style={{ textAlign: "center", marginBottom: 24 }}>
+        <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.warm, fontFamily: T.sans, marginBottom: 6 }}>
+          From the Source
+        </div>
+        <div style={{ fontSize: 32, fontWeight: 400, fontFamily: T.serif, color: T.textDark }}>Lesson Notes</div>
+        <div style={{ fontSize: 13, color: T.textMuted, fontFamily: T.sans, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+          Key moments from actual lessons with Sarah
+        </div>
+      </div>
+      {LESSON_NOTES.map((lesson, li) => {
+        const isOpen = openLesson === li;
+        return (
+          <div key={li} style={{
+            background: T.bgCard, border: `1px solid ${T.border}`, marginBottom: 12,
+            overflow: "hidden", boxShadow: isOpen ? T.md : T.sm, transition: "all 0.2s"
+          }}>
+            <div onClick={() => setOpenLesson(isOpen ? null : li)} style={{
+              display: "flex", alignItems: "center", gap: 14, padding: "18px 20px", cursor: "pointer"
+            }}>
+              <div style={{
+                width: 44, height: 44, borderRadius: T.radius, background: T.warmSoft,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontSize: 12, fontWeight: 600, color: T.warm, fontFamily: T.sans, flexShrink: 0
+              }}>{lesson.date.slice(5, 7)}/{lesson.date.slice(8, 10)}</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontWeight: 400, fontSize: 18, color: T.textDark, fontFamily: T.serif }}>{lesson.title}</div>
+                <div style={{ fontSize: 12, color: T.textMuted, fontFamily: T.sans, marginTop: 2 }}>{lesson.duration}</div>
+                <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginTop: 6 }}>
+                  {lesson.topics.map((t, i) => (
+                    <span key={i} style={{
+                      fontSize: 10, padding: "2px 8px", borderRadius: 10,
+                      background: T.bgSoft, border: `1px solid ${T.border}`,
+                      color: T.textLight, fontFamily: T.sans
+                    }}>{t}</span>
+                  ))}
+                </div>
+              </div>
+              <div style={{ color: T.textMuted, fontSize: 14, transition: "transform 0.2s", transform: isOpen ? "rotate(180deg)" : "" }}>▾</div>
+            </div>
+            {isOpen && (
+              <div style={{ padding: "0 20px 20px", borderTop: `1px solid ${T.borderSoft}` }}>
+                {lesson.highlights.map((h, hi) => (
+                  <div key={hi} style={{
+                    display: "flex", gap: 12, padding: "10px 0",
+                    borderBottom: hi < lesson.highlights.length - 1 ? `1px solid ${T.border}` : "none"
+                  }}>
+                    <div style={{
+                      fontSize: 11, color: T.textMuted, fontFamily: "'SF Mono','Fira Code',monospace",
+                      minWidth: 48, flexShrink: 0, paddingTop: 2
+                    }}>{h.time}</div>
+                    <div style={{
+                      width: 6, height: 6, borderRadius: "50%",
+                      background: typeColors[h.type] || T.textMuted,
+                      flexShrink: 0, marginTop: 7
+                    }} />
+                    <div style={{
+                      fontSize: 13, color: h.text.includes("Sarah:") ? T.goldDark : T.textMed,
+                      fontFamily: T.sans, lineHeight: 1.6,
+                      fontStyle: h.text.includes("Sarah:") ? "italic" : "normal"
+                    }}>{h.text}</div>
+                  </div>
+                ))}
+                <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 16, paddingTop: 12, borderTop: `1px solid ${T.border}` }}>
+                  {Object.entries(typeColors).map(([type, color]) => (
+                    <div key={type} style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                      <div style={{ width: 6, height: 6, borderRadius: "50%", background: color }} />
+                      <span style={{ fontSize: 10, color: T.textMuted, fontFamily: T.sans, textTransform: "capitalize" }}>{type}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 // ─── MAIN APP ───────────────────────────────────────────────────────
 export default function App() {
   const [isDark, setIsDark] = useState(() => {
@@ -2001,6 +2200,7 @@ export default function App() {
   const tabs = [
     { id: "week", label: "Week" },
     { id: "vocal", label: "Voice" },
+    { id: "notes", label: "Notes" },
     { id: "metro", label: "Metronome" },
     { id: "tools", label: "Tools" }
   ];
@@ -2051,7 +2251,7 @@ export default function App() {
           Sarah Glass Music
         </div>
         <div style={{ fontSize: 40, fontWeight: 400, fontFamily: T.serif, color: T.textDark, lineHeight: 1.2 }}>Practice Plan</div>
-        <div style={{ fontSize: 14, color: T.textMuted, marginTop: 6, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: "0.05em" }}>Lesson 3/2 · Baritone · Break ≈ A3</div>
+        <div style={{ fontSize: 14, color: T.textMuted, marginTop: 6, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: "0.05em" }}>Lesson 3/2 · Tenor · Break ≈ A3</div>
         <div style={{ maxWidth: 280, margin: "20px auto 0", display: "flex", alignItems: "center", gap: 14 }}>
           <div style={{ flex: 1 }}>
             <div style={{ height: 2, background: T.border, overflow: "hidden" }}>
@@ -2140,7 +2340,7 @@ export default function App() {
           <div>
             <div style={{ textAlign: "center", marginBottom: 24 }}>
               <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.plum, fontFamily: T.sans, marginBottom: 6 }}>
-                Baritone Passaggio
+                Tenor Passaggio
               </div>
               <div style={{ fontSize: 32, fontWeight: 400, fontFamily: T.serif, color: T.textDark }}>Vocal Exercises</div>
               <div style={{ fontSize: 13, color: T.textMuted, fontFamily: T.sans, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>
@@ -2151,6 +2351,9 @@ export default function App() {
             {VOCAL_EXERCISES.map(ex => <VocalCard key={ex.id} ex={ex} />)}
           </div>
         )}
+
+        {/* LESSON NOTES */}
+        {tab === "notes" && <LessonNotesView />}
 
         {/* METRONOME */}
         {tab === "metro" && (
