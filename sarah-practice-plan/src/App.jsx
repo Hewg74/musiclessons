@@ -1,8 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import * as Tone from "tone";
 import confetti from "canvas-confetti";
-import { AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector } from './JungleTools.jsx';
-import { DAYS, VOCAL_EXERCISES, LESSON_POOL, ALL_NOTES, getPitchRange } from './data/appData.js';
+import { AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, VolumeMeter, TAB_CONTENT } from './JungleTools.jsx';
+import { DAYS, KEYBOARD_LEVELS, LOOPER_LEVELS, LESSON_POOL, ALL_NOTES, getPitchRange } from './data/appData.js';
+import { VOCAL_LEVELS } from './data/vocalLevels.js';
+import { GUITAR_STUDY } from './data/guitarStudy.js';
+import { SINGER_SONGWRITER_LEVELS } from './data/singerSongwriter.js';
 
 // ─── DESIGN SYSTEM (sarahglassmusic.com) ────────────────────────────
 let T = {
@@ -60,6 +63,8 @@ const TYPE = {
   song: { label: "Song", color: "#d68383", icon: "𝄞" },
   record: { label: "Record", color: "#d4a373", icon: "●" },
   play: { label: "Free", color: "#72a8a8", icon: "✦" },
+  keys: { label: "Keys", color: "#5b7fa5", icon: "🎹" },
+  looper: { label: "Looper", color: "#3d8b6e", icon: "⟳" },
 };
 
 const DAY_COLORS = ["#d68383", "#d97d54", "#d4a373", "#7f9e88", "#72a8a8", "#6b8e9f", "#9e829c"];
@@ -423,7 +428,7 @@ function LyricGrid() {
 function SarahQuote({ text }) {
   return (
     <div style={{
-      borderLeft: `3px solid ${T.gold}`,
+      borderLeft: `1px solid ${T.gold}`,
       padding: "12px 20px", margin: "16px 0",
       background: T.bgSoft
     }}>
@@ -442,7 +447,7 @@ function DetailSection({ label, color, children }) {
     <div style={{
       background: color + "08", border: `1px solid ${color}18`,
       borderRadius: T.radius, padding: "16px", marginBottom: 12,
-      borderLeft: `3px solid ${color}`
+      borderLeft: `1px solid ${color}`
     }}>
       <div style={{ fontSize: 10, fontWeight: 700, color, letterSpacing: 1.5, marginBottom: 6, fontFamily: T.sans, textTransform: "uppercase" }}>
         {label}
@@ -528,6 +533,12 @@ function PitchRibbon({ pitches, playNote }) {
 
 function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMatch }) {
   const [open, setOpen] = useState(false);
+  const [showTimer, setShowTimer] = useState(false);
+  const [showTabs, setShowTabs] = useState(false);
+  const [stepDone, setStepDone] = useState({});
+  const [trackRates, setTrackRates] = useState({});
+  const audioRefs = useRef({});
+  const timer = useTimer(ex.time);
 
   const playNote = async (note) => {
     if (Tone.context.state !== 'running') {
@@ -539,32 +550,31 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
     }).toDestination();
     synth.volume.value = -8;
     synth.triggerAttackRelease(note.replace('♭', 'b'), "2n");
+    setTimeout(() => synth.dispose(), 2000);
   };
 
-  // Auto-detect audio tracks based on text
-  const textContent = (ex.setup || "") + " " + ex.steps.map(s => s.text).join(" ");
-  const tracks = [];
-  if (textContent.includes("Surf Rock Beat 120")) tracks.push({ name: "Surf Rock 120 BPM", src: "/surf-rock-120.mp3" });
-  if (textContent.includes("Groove Beat 90")) tracks.push({ name: "Groove Beat 90 BPM", src: "/groove-beat-90.mp3" });
-  if (textContent.includes("Sol Del Sur")) tracks.push({ name: "Sol Del Sur", src: "/iltwyw.mp3" });
-  if (textContent.includes("I Like The Way You Walk") || textContent.includes("ILTWYW")) tracks.push({ name: "I Like The Way You Walk", src: "/sol-del-sur.mp3" });
+  const tracks = ex.tracks || [];
 
   return (
     <div className="exercise-card" style={{
       background: completed ? T.successSoft : T.bgCard,
       border: `1px solid ${completed ? T.success + "40" : T.border}`,
-      borderLeft: `3px solid ${completed ? T.success : T.border}`,
-      marginBottom: 10, overflow: "hidden",
+      borderLeft: `1px solid ${completed ? T.success : T.border}`,
+      marginBottom: 4, overflow: "hidden", borderRadius: T.radius
     }}>
       <div onClick={() => setOpen(!open)} style={{
-        display: "flex", alignItems: "center", gap: 12, padding: "14px 18px", cursor: "pointer"
+        display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", cursor: "pointer"
       }}>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4, minWidth: 54 }}>
           <TypeBadge type={ex.type} />
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontWeight: 400, fontSize: 18, color: T.textDark, fontFamily: T.serif }}>{ex.title}</div>
-          <div style={{ fontSize: 12, color: T.textMuted, fontFamily: T.sans, marginTop: 1, textTransform: "uppercase", letterSpacing: "0.05em" }}>{ex.time} min</div>
+          <div style={{ fontSize: 12, color: T.textMuted, fontFamily: T.sans, marginTop: 1, textTransform: "uppercase", letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: 6 }}>
+            {ex.time} min
+            <span onClick={e => { e.stopPropagation(); setShowTimer(t => !t); }} style={{ cursor: "pointer", fontSize: 13, opacity: showTimer ? 1 : 0.5, transition: "opacity 0.2s" }} title="Toggle timer">&#9201;</span>
+            {timer.on && !open && <span style={{ width: 6, height: 6, borderRadius: "50%", background: T.gold, animation: "pulse-ring 2s infinite", display: "inline-block" }} />}
+          </div>
         </div>
         <div style={{ color: T.textMuted, fontSize: 13, transition: "transform 0.2s", transform: open ? "rotate(180deg)" : "" }}>▾</div>
       </div>
@@ -578,7 +588,7 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
           <div style={{
             fontSize: 14, color: T.textMed, fontFamily: T.sans, lineHeight: 1.7,
             marginBottom: 14, padding: "12px 16px", background: T.bgSoft, borderRadius: T.radius,
-            borderLeft: `3px solid ${T.gold}`
+            borderLeft: `1px solid ${T.gold}`
           }}>{ex.what}</div>
 
           {/* Setup */}
@@ -588,13 +598,45 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
             </div>
           )}
 
+          {/* Timer */}
+          {showTimer && (
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14, padding: "10px 16px", background: T.bgSoft, borderRadius: T.radiusMd, border: `1px solid ${T.border}` }}>
+              <TimerRing pct={timer.pct} fmt={timer.fmt} size={42} />
+              <div style={{ flex: 1, fontFamily: T.sans, fontSize: 14, color: T.textDark, fontWeight: 600 }}>{timer.fmt}</div>
+              <button onClick={timer.toggle} style={{
+                background: timer.on ? T.coral : T.gold, border: "none", color: "#fff",
+                padding: "6px 14px", fontSize: 11, fontWeight: 600, cursor: "pointer", borderRadius: T.radius,
+                fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
+              }}>{timer.on ? "Pause" : "Start"}</button>
+              <button onClick={timer.reset} style={{
+                background: "transparent", border: `1px solid ${T.border}`, color: T.textLight,
+                padding: "6px 12px", fontSize: 11, fontWeight: 600, cursor: "pointer", borderRadius: T.radius,
+                fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
+              }}>Reset</button>
+            </div>
+          )}
+
           {/* Audio Tracks */}
           {tracks.length > 0 && (
             <div style={{ marginBottom: 16 }}>
               {tracks.map((t, i) => (
                 <div key={i} style={{ marginBottom: 8, background: T.bgSoft, border: `1px solid ${T.border}`, padding: 12, borderRadius: T.radiusMd }}>
                   <div style={{ fontSize: 11, fontWeight: 700, color: T.textDark, letterSpacing: 1.5, marginBottom: 8, fontFamily: T.sans, textTransform: "uppercase" }}>{t.name}</div>
-                  <audio controls src={t.src} style={{ width: "100%", height: 36, borderRadius: T.radius }} />
+                  <audio controls src={t.src} ref={el => { audioRefs.current[i] = el; }} style={{ width: "100%", height: 36, borderRadius: T.radius }} />
+                  <div style={{ display: "flex", gap: 4, marginTop: 6 }}>
+                    {[0.75, 1, 1.25].map(rate => (
+                      <button key={rate} onClick={() => {
+                        if (audioRefs.current[i]) audioRefs.current[i].playbackRate = rate;
+                        setTrackRates(r => ({ ...r, [i]: rate }));
+                      }} style={{
+                        background: (trackRates[i] || 1) === rate ? T.gold : "transparent",
+                        color: (trackRates[i] || 1) === rate ? "#fff" : T.textMed,
+                        border: `1px solid ${(trackRates[i] || 1) === rate ? T.gold : T.borderSoft}`,
+                        padding: "3px 8px", fontSize: 10, fontWeight: 600, cursor: "pointer",
+                        borderRadius: T.radius, fontFamily: T.sans
+                      }}>{rate === 1 ? "1x" : `${rate}x`}</button>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>
@@ -624,16 +666,90 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
                   fontSize: 11, cursor: "pointer", fontWeight: 600, fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
                 }}>✋ Tap</button>
 
-                {ex.referencePitches && ex.referencePitches.length > 0 && (
-                  <LivePitchDetector theme={T} referencePitches={ex.referencePitches} inline={true} />
-                )}
+                <button onClick={() => metro.setSpeedBuilder(!metro.speedBuilder)} style={{
+                  background: metro.speedBuilder ? T.gold : "transparent",
+                  border: `1px solid ${metro.speedBuilder ? T.gold : T.borderSoft}`,
+                  color: metro.speedBuilder ? "#fff" : T.textMed,
+                  padding: "8px 10px", borderRadius: T.radius,
+                  fontSize: 11, cursor: "pointer", fontWeight: 600, fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
+                }} title="Auto +5 BPM every 4 bars">Speed +</button>
               </div>
             </div>
           )}
 
-          {!ex.metronome && ex.referencePitches && ex.referencePitches.length > 0 && (
+          {/* Pitch detector for metronome exercises — rendered outside the button row */}
+          {ex.metronome && ex.referencePitches && ex.referencePitches.length > 0 && (
+            <div style={{ marginBottom: 16 }}>
+              <LivePitchDetector theme={T} referencePitches={ex.referencePitches} inline={true} pitchContour={!!ex.pitchContour} />
+            </div>
+          )}
+
+          {!ex.metronome && !ex.pitchContour && ex.referencePitches && ex.referencePitches.length > 0 && (
             <div style={{ marginBottom: 16 }}>
               <LivePitchDetector theme={T} referencePitches={ex.referencePitches} inline={true} />
+            </div>
+          )}
+
+          {/* Inline Recorder */}
+          {ex.recorder && (
+            <div style={{ marginBottom: 16 }}>
+              <AudioRecorder theme={T} inline={true} />
+            </div>
+          )}
+
+          {/* Fretboard Diagram */}
+          {ex.fretboard && (
+            <FretboardDiagram
+              theme={T}
+              scale={ex.fretboard.scale}
+              position={ex.fretboard.position}
+              highlight={ex.fretboard.highlight || []}
+            />
+          )}
+
+          {/* Piano Keys Diagram */}
+          {ex.pianoKeys && (
+            <PianoKeysDiagram
+              notes={ex.pianoKeys.notes}
+              label={ex.pianoKeys.label}
+              range={ex.pianoKeys.range}
+            />
+          )}
+
+          {/* Volume Meter */}
+          {ex.volumeMeter && (
+            <VolumeMeter theme={T} inline={true} />
+          )}
+
+          {/* Pitch Contour (enhanced LivePitchDetector) */}
+          {!ex.metronome && ex.pitchContour && ex.referencePitches && ex.referencePitches.length > 0 && (
+            <div style={{ marginBottom: 16 }}>
+              <LivePitchDetector theme={T} referencePitches={ex.referencePitches} inline={true} pitchContour={true} />
+            </div>
+          )}
+
+          {/* Inline Tabs/Lyrics */}
+          {ex.tabs && TAB_CONTENT[ex.tabs] && (
+            <div style={{ marginBottom: 16 }}>
+              <button onClick={() => setShowTabs(!showTabs)} style={{
+                background: "transparent", border: `1px solid ${T.border}`, color: T.textMed,
+                padding: "8px 14px", borderRadius: T.radius, cursor: "pointer", fontWeight: 600,
+                fontFamily: T.sans, fontSize: 11, letterSpacing: 1, textTransform: "uppercase",
+                width: "100%", textAlign: "left", display: "flex", justifyContent: "space-between", alignItems: "center"
+              }}>
+                <span>{ex.tabs === "soldelsur" ? "Sol Del Sur — Tabs & Lyrics" : "I Like The Way You Walk — Lyrics"}</span>
+                <span style={{ transition: "transform 0.2s", transform: showTabs ? "rotate(180deg)" : "" }}>▾</span>
+              </button>
+              {showTabs && (
+                <pre style={{
+                  background: T.bgSoft, padding: 16, border: `1px solid ${T.border}`, borderTop: "none",
+                  borderRadius: `0 0 ${T.radiusMd} ${T.radiusMd}`, overflowX: "auto",
+                  fontFamily: "monospace", fontSize: 12, color: T.textDark, lineHeight: 1.5, marginTop: 0,
+                  whiteSpace: "pre-wrap"
+                }}>
+                  {TAB_CONTENT[ex.tabs].trim()}
+                </pre>
+              )}
             </div>
           )}
 
@@ -644,15 +760,31 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
                 {s.visual === "lyricGrid" && <LyricGrid />}
                 <div style={{
                   display: "flex", gap: 12, padding: "8px 0",
-                  borderBottom: i < ex.steps.length - 1 ? `1px solid ${T.border}` : "none"
+                  borderBottom: i < ex.steps.length - 1 ? `1px solid ${T.border}` : "none",
+                  opacity: ex.checklist && stepDone[i] ? 0.5 : 1,
+                  transition: "opacity 0.2s"
                 }}>
-                  <div style={{
-                    width: 24, height: 24, borderRadius: T.radius, background: dayColor + "08", border: `1px solid ${dayColor}25`,
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    fontSize: 12, fontWeight: 400, color: dayColor, flexShrink: 0, fontFamily: T.sans, marginTop: 1
-                  }}>{i + 1}</div>
+                  {ex.checklist ? (
+                    <div onClick={() => setStepDone(d => ({ ...d, [i]: !d[i] }))} style={{
+                      width: 24, height: 24, borderRadius: 4, border: `2px solid ${stepDone[i] ? T.success : dayColor}`,
+                      background: stepDone[i] ? T.success : "transparent",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      cursor: "pointer", flexShrink: 0, marginTop: 1, transition: "all 0.15s"
+                    }}>
+                      {stepDone[i] && <span style={{ color: "#fff", fontSize: 14, fontWeight: 700 }}>&#10003;</span>}
+                    </div>
+                  ) : (
+                    <div style={{
+                      width: 24, height: 24, borderRadius: "50%", background: dayColor + "10", border: `1px solid ${dayColor}30`,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      fontSize: 12, fontWeight: 600, color: dayColor, flexShrink: 0, fontFamily: T.sans, marginTop: 1
+                    }}>{i + 1}</div>
+                  )}
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 14, color: T.textDark, fontFamily: T.sans, lineHeight: 1.6, fontWeight: 500 }}>
+                    <div style={{
+                      fontSize: 14, color: T.textDark, fontFamily: T.sans, lineHeight: 1.6, fontWeight: 500,
+                      textDecoration: ex.checklist && stepDone[i] ? "line-through" : "none"
+                    }}>
                       {s.text}
                     </div>
                     {s.why && (
@@ -721,14 +853,14 @@ function DayView({ day, completed, onComplete, metro, onOpenTapMatch }) {
       {day.setup && (
         <div style={{
           background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radius,
-          padding: "16px 20px", marginBottom: 20, fontSize: 13, color: T.textLight, fontFamily: T.sans,
-          borderLeft: `3px solid ${T.gold}`
+          padding: "12px 16px", marginBottom: 16, fontSize: 13, color: T.textLight, fontFamily: T.sans,
+          borderLeft: `1px solid ${T.gold}`
         }}>
           <span style={{ fontWeight: 700, color: T.textMed }}>Before you start: </span>{day.setup}
         </div>
       )}
 
-      <div style={{ height: 3, background: T.border, borderRadius: 2, marginBottom: 16, overflow: "hidden" }}>
+      <div style={{ height: 3, background: T.border, borderRadius: 2, marginBottom: 12, overflow: "hidden" }}>
         <div style={{ height: "100%", width: `${pct}%`, background: pct === 100 ? T.success : T.gold, borderRadius: 2, transition: "width 0.5s" }} />
       </div>
 
@@ -740,104 +872,17 @@ function DayView({ day, completed, onComplete, metro, onOpenTapMatch }) {
   );
 }
 
-function VocalCard({ ex }) {
-  const [open, setOpen] = useState(false);
-  const colors = [T.plum, T.coral, T.slate, T.success, T.warm, T.coral];
-  const c = colors[(ex.num - 1) % colors.length];
-
-  const playNote = async (note) => {
-    if (Tone.context.state !== 'running') {
-      await Tone.context.resume();
-    }
-    const synth = new Tone.Synth({
-      oscillator: { type: 'triangle' },
-      envelope: { attack: 0.1, decay: 0.2, sustain: 1, release: 1 }
-    }).toDestination();
-    synth.volume.value = -8;
-    synth.triggerAttackRelease(note.replace('♭', 'b'), "2n");
-  };
-
-  return (
-    <div style={{
-      background: T.bgCard, border: `1px solid ${T.border}`,
-      marginBottom: 12, overflow: "hidden", boxShadow: open ? T.md : T.sm, transition: "all 0.2s"
-    }}>
-      <div onClick={() => setOpen(!open)} style={{
-        display: "flex", alignItems: "center", gap: 14, padding: "18px 20px", cursor: "pointer"
-      }}>
-        <div style={{
-          width: 36, height: 36, borderRadius: T.radius, background: c + "08", border: `1px solid ${c}25`,
-          display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: 16, fontWeight: 400, color: c, flexShrink: 0, fontFamily: T.serif
-        }}>{ex.num}</div>
-        <div style={{ flex: 1 }}>
-          <div style={{ fontWeight: 400, fontSize: 18, color: T.textDark, fontFamily: T.serif }}>{ex.title}</div>
-          <div style={{ fontSize: 12, color: c, fontWeight: 500, fontFamily: T.sans }}>{ex.purpose}</div>
-          <div style={{ fontSize: 11, color: T.textMuted, fontFamily: T.sans, marginTop: 2, textTransform: "uppercase", letterSpacing: "0.05em" }}>{ex.when}</div>
-        </div>
-        <div style={{ color: T.textMuted, fontSize: 14, transition: "transform 0.2s", transform: open ? "rotate(180deg)" : "" }}>▾</div>
-      </div>
-      {open && (
-        <div style={{ padding: "0 20px 20px" }}>
-          {/* Reference Pitches */}
-          <PitchRibbon pitches={ex.referencePitches} playNote={playNote} />
-
-          <div style={{ marginBottom: 20 }}>
-            <LivePitchDetector theme={T} referencePitches={ex.referencePitches} inline={true} />
-          </div>
-
-          {/* What */}
-          <div style={{
-            fontSize: 14, color: T.textMed, fontFamily: T.sans, lineHeight: 1.7,
-            marginBottom: 20, padding: "16px 20px", background: T.bgSoft, borderRadius: T.radius,
-            borderLeft: `3px solid ${T.gold}`
-          }}>{ex.what}</div>
-
-          {/* How to */}
-          <div style={{ marginBottom: 16 }}>
-            <div style={{ fontSize: 10, fontWeight: 700, color: T.textMuted, letterSpacing: 1.5, marginBottom: 10, fontFamily: T.sans }}>HOW TO DO IT</div>
-            {ex.howTo.map((step, i) => (
-              <div key={i} style={{ display: "flex", gap: 12, padding: "6px 0" }}>
-                <div style={{
-                  width: 24, height: 24, borderRadius: T.radius, background: c + "08", border: `1px solid ${c}25`,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 12, fontWeight: 400, color: c, flexShrink: 0, fontFamily: T.sans
-                }}>{i + 1}</div>
-                <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, lineHeight: 1.6 }}>{step}</div>
-              </div>
-            ))}
-          </div>
-
-          {/* Diagram */}
-          <pre style={{
-            background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radius,
-            padding: 20, fontSize: 13, color: T.textDark, lineHeight: 1.8,
-            overflowX: "auto", whiteSpace: "pre", fontFamily: "'SF Mono','Fira Code',monospace",
-            marginBottom: 20, borderLeft: `3px solid ${T.gold}`
-          }}>{ex.diagram}</pre>
-
-          {/* Feel / Wrong */}
-          <DetailSection label="What correct feels like" color={T.success}>{ex.feel}</DetailSection>
-          <DetailSection label="What's going wrong if" color={T.coral}>{ex.wrong}</DetailSection>
-
-          {/* Tip */}
-          <DetailSection label="Why this works" color={T.slate}>{ex.tip}</DetailSection>
-
-          {/* Progression */}
-          <div style={{
-            borderTop: `1px solid ${T.border}`, paddingTop: 12, marginTop: 4
-          }}>
-            <div style={{ fontSize: 10, fontWeight: 700, color: T.gold, letterSpacing: 1.5, marginBottom: 6, fontFamily: T.sans }}>PROGRESSION</div>
-            <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, lineHeight: 1.7 }}>{ex.progression}</div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
+// VocalCard removed — voice tab now uses VoiceView with ExerciseCard format
 
 function VowelMap() {
-  const notes = ["E3", "F3", "F#3", "G3", "A♭3", "A3", "B♭3", "B3", "C4"];
+  const whiteKeys = ["E3", "F3", "G3", "A3", "B3", "C4"];
+  const blackKeys = {
+    "F3": "F#3",
+    "G3": "A♭3",
+    "A3": "B♭3"
+  };
+  const noteIndex = { "E3": 0, "F3": 1, "F#3": 2, "G3": 3, "A♭3": 4, "A3": 5, "B♭3": 6, "B3": 7, "C4": 8 };
+
   const zones = [
     { range: [0, 3], label: "'ah' open", color: T.success },
     { range: [3, 4], label: "'ah'→'uh'", color: T.warm },
@@ -853,6 +898,7 @@ function VowelMap() {
     }).toDestination();
     synth.volume.value = -8;
     synth.triggerAttackRelease(n.replace('♭', 'b'), "2n");
+    setTimeout(() => synth.dispose(), 2000);
   };
 
   return (
@@ -860,39 +906,314 @@ function VowelMap() {
       background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: T.radiusMd,
       padding: 24, marginBottom: 20, boxShadow: T.sm
     }}>
-      <div style={{ fontSize: 10, fontWeight: 600, color: T.textMuted, marginBottom: 14, letterSpacing: 2, fontFamily: T.sans, textTransform: "uppercase" }}>
+      <div style={{ fontSize: 10, fontWeight: 600, color: T.textMuted, marginBottom: 20, letterSpacing: 2, fontFamily: T.sans, textTransform: "uppercase" }}>
         Vowel Modification Map — Tap notes to play 🔊
       </div>
-      <div style={{ display: "flex", gap: 2, marginBottom: 16, overflowX: "auto", paddingBottom: 4 }}>
-        {notes.map((n, i) => {
-          const zone = zones.find(z => i >= z.range[0] && i < z.range[1]);
-          return (
-            <div key={n} onClick={() => playNote(n)} style={{
-              flex: 1, minWidth: 40, textAlign: "center", padding: "14px 0",
-              background: zone ? `${zone.color}08` : T.bgSoft, cursor: "pointer",
-              borderRadius: i === 0 ? `${T.radius} 0 0 ${T.radius}` : i === notes.length - 1 ? `0 ${T.radius} ${T.radius} 0` : 0,
-              borderBottom: `2px solid ${zone?.color || T.border}`,
-              transition: "transform 0.1s"
-            }}
-              onPointerDown={e => e.currentTarget.style.transform = "scale(0.95)"}
-              onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
-              onPointerLeave={e => e.currentTarget.style.transform = "scale(1)"}>
-              <div style={{ fontSize: 12, fontWeight: 400, color: T.textDark, fontFamily: T.serif }}>{n}</div>
-            </div>
-          );
-        })}
+
+      <div style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}>
+        <div style={{
+          display: "flex",
+          position: "relative",
+          height: 140,
+          borderRadius: 6,
+          boxShadow: `0 4px 12px rgba(0,0,0,0.08)`,
+          border: `1px solid ${T.border}`,
+          background: "#1a1a1a",
+          padding: 2
+        }}>
+          {whiteKeys.map((wNote, idx) => {
+            const wIdx = noteIndex[wNote];
+            const wZone = zones.find(z => wIdx >= z.range[0] && wIdx < z.range[1]);
+            const bNote = blackKeys[wNote];
+            const bIdx = bNote ? noteIndex[bNote] : -1;
+            const bZone = bNote ? zones.find(z => bIdx >= z.range[0] && bIdx < z.range[1]) : null;
+
+            return (
+              <div key={wNote} style={{ position: "relative", display: "flex" }}>
+                <div
+                  onClick={() => playNote(wNote)}
+                  style={{
+                    width: 48,
+                    height: "100%",
+                    background: wZone ? `${wZone.color}20` : T.bgCard,
+                    border: `1px solid ${T.borderSoft}`,
+                    borderRadius: "0 0 4px 4px",
+                    display: "flex", alignItems: "flex-end", justifyContent: "center",
+                    paddingBottom: 12, cursor: "pointer",
+                    boxShadow: "inset 0 -2px 4px rgba(0,0,0,0.05)",
+                    transition: "all 0.1s ease", zIndex: 1,
+                    borderBottom: `4px solid ${wZone?.color || T.borderSoft}`
+                  }}
+                  onPointerDown={e => { e.currentTarget.style.transform = "translateY(2px)"; }}
+                  onPointerUp={e => { e.currentTarget.style.transform = "translateY(0)"; }}
+                  onPointerLeave={e => { e.currentTarget.style.transform = "translateY(0)"; }}
+                >
+                  <span style={{ fontSize: 13, fontWeight: 600, color: T.textDark, fontFamily: T.sans }}>{wNote}</span>
+                </div>
+
+                {bNote && (
+                  <div
+                    onClick={() => playNote(bNote)}
+                    style={{
+                      position: "absolute",
+                      right: -16, top: 0,
+                      width: 32, height: 85,
+                      background: bZone ? bZone.color : "#222",
+                      borderRadius: "0 0 3px 3px",
+                      zIndex: 2, cursor: "pointer",
+                      boxShadow: "0 2px 4px rgba(0,0,0,0.3), inset 0 -2px 2px rgba(255,255,255,0.2)",
+                      display: "flex", alignItems: "flex-end", justifyContent: "center",
+                      paddingBottom: 8, transition: "transform 0.1s ease"
+                    }}
+                    onPointerDown={e => { e.currentTarget.style.transform = "translateY(2px)"; }}
+                    onPointerUp={e => { e.currentTarget.style.transform = "translateY(0)"; }}
+                    onPointerLeave={e => { e.currentTarget.style.transform = "translateY(0)"; }}
+                  >
+                    <span style={{ fontSize: 11, fontWeight: 700, color: "#fff", fontFamily: T.sans }}>{bNote.replace('♭', 'b')}</span>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
-      <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 12 }}>
+
+      <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 16, justifyContent: "center" }}>
         {zones.map(z => (
           <div key={z.label} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <div style={{ width: 8, height: 8, borderRadius: "50%", background: z.color }} />
-            <span style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans }}>{z.label}</span>
+            <div style={{ width: 10, height: 10, borderRadius: "50%", background: z.color, boxShadow: `0 0 4px ${z.color}80` }} />
+            <span style={{ fontSize: 12, fontWeight: 500, color: T.textMed, fontFamily: T.sans }}>{z.label}</span>
           </div>
         ))}
       </div>
-      <div style={{ fontSize: 12, color: T.textLight, fontFamily: T.sans, lineHeight: 1.6 }}>
-        As you ascend, close the vowel to lower the first formant. This lets the folds thin out for mix/head voice instead of slamming into the chest voice ceiling. 'Ah' on G3 → hint of 'uh' on A♭3 → 'aw' on A3 → 'oh' in head voice.
+      <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, lineHeight: 1.6, textAlign: "center", maxWidth: 460, margin: "0 auto" }}>
+        As you ascend, close the vowel to lower the first formant. 'Ah' on G3 → hint of 'uh' on A♭3 → 'aw' on A3 → 'oh' in head voice.
       </div>
+    </div>
+  );
+}
+
+function PianoKeysDiagram({ notes = [], label = "", range }) {
+  const CHROMATIC = ["C", "C#", "D", "E♭", "E", "F", "F#", "G", "A♭", "A", "B♭", "B"];
+  const WHITE_NAMES = ["C", "D", "E", "F", "G", "A", "B"];
+  const BLACK_MAP = { "C": "C#", "D": "E♭", "F": "F#", "G": "A♭", "A": "B♭" };
+
+  // Determine range
+  const startOct = range ? parseInt(range[0].slice(-1)) : Math.min(...notes.map(n => parseInt(n.slice(-1))));
+  const endOct = range ? parseInt(range[1].slice(-1)) : Math.max(...notes.map(n => parseInt(n.slice(-1))));
+  const octaves = [];
+  for (let o = startOct; o <= endOct; o++) octaves.push(o);
+
+  const highlightSet = new Set(notes);
+
+  const playNote = async (n) => {
+    if (Tone.context.state !== 'running') await Tone.context.resume();
+    const synth = new Tone.Synth({
+      oscillator: { type: 'triangle' },
+      envelope: { attack: 0.1, decay: 0.2, sustain: 1, release: 1 }
+    }).toDestination();
+    synth.volume.value = -8;
+    synth.triggerAttackRelease(n.replace('♭', 'b'), "2n");
+    setTimeout(() => synth.dispose(), 2000);
+  };
+
+  const whiteKeys = [];
+  const blackKeys = [];
+  octaves.forEach(oct => {
+    WHITE_NAMES.forEach(w => {
+      const note = `${w}${oct}`;
+      whiteKeys.push(note);
+      const bName = BLACK_MAP[w];
+      if (bName) blackKeys.push({ note: `${bName}${oct}`, afterWhite: whiteKeys.length - 1 });
+    });
+  });
+
+  return (
+    <div style={{
+      background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radiusMd,
+      padding: 16, marginBottom: 16
+    }}>
+      {label && <div style={{ fontSize: 10, fontWeight: 600, color: T.textMuted, marginBottom: 12, letterSpacing: 2, fontFamily: T.sans, textTransform: "uppercase" }}>{label}</div>}
+      <div style={{ display: "flex", justifyContent: "center", overflowX: "auto" }}>
+        <div style={{ display: "flex", position: "relative", height: 120, borderRadius: 4, border: `1px solid ${T.border}`, background: "#1a1a1a", padding: 2 }}>
+          {whiteKeys.map((wNote, idx) => {
+            const isHighlight = highlightSet.has(wNote);
+            return (
+              <div key={wNote} style={{ position: "relative", display: "flex" }}>
+                <div onClick={() => playNote(wNote)} style={{
+                  width: 36, height: "100%",
+                  background: isHighlight ? `${T.gold}30` : T.bgCard,
+                  border: `1px solid ${T.borderSoft}`, borderRadius: "0 0 3px 3px",
+                  display: "flex", alignItems: "flex-end", justifyContent: "center",
+                  paddingBottom: 8, cursor: "pointer", zIndex: 1,
+                  borderBottom: isHighlight ? `3px solid ${T.gold}` : `1px solid ${T.borderSoft}`,
+                  transition: "all 0.1s ease"
+                }}
+                  onPointerDown={e => { e.currentTarget.style.transform = "translateY(2px)"; }}
+                  onPointerUp={e => { e.currentTarget.style.transform = "translateY(0)"; }}
+                  onPointerLeave={e => { e.currentTarget.style.transform = "translateY(0)"; }}
+                >
+                  <span style={{ fontSize: 10, fontWeight: isHighlight ? 700 : 500, color: isHighlight ? T.goldDark : T.textLight, fontFamily: T.sans }}>{wNote}</span>
+                </div>
+              </div>
+            );
+          })}
+          {blackKeys.map(({ note: bNote, afterWhite }) => {
+            const isHighlight = highlightSet.has(bNote);
+            const left = (afterWhite + 1) * 36 - 12;
+            return (
+              <div key={bNote} onClick={() => playNote(bNote)} style={{
+                position: "absolute", left, top: 0, width: 24, height: 72,
+                background: isHighlight ? T.gold : "#222", borderRadius: "0 0 3px 3px",
+                zIndex: 2, cursor: "pointer",
+                boxShadow: "0 2px 4px rgba(0,0,0,0.3)", display: "flex", alignItems: "flex-end", justifyContent: "center",
+                paddingBottom: 6, transition: "transform 0.1s ease"
+              }}
+                onPointerDown={e => { e.currentTarget.style.transform = "translateY(2px)"; }}
+                onPointerUp={e => { e.currentTarget.style.transform = "translateY(0)"; }}
+                onPointerLeave={e => { e.currentTarget.style.transform = "translateY(0)"; }}
+              >
+                <span style={{ fontSize: 9, fontWeight: 700, color: "#fff", fontFamily: T.sans }}>{bNote}</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── VOICE CURRICULUM ───────────────────────────────────────────────
+
+const VOCAL_COLORS = ["#9e829c", "#8b6f89", "#d97d54", "#7f9e88", "#5b7fa5", "#d68383", "#72a8a8", "#d4a373", "#6b8e9f", "#9e829c"];
+
+function VoiceView({ completed, onComplete, metro, onOpenTapMatch }) {
+  const [selectedLevel, setSelectedLevel] = useState(() => {
+    try {
+      const saved = localStorage.getItem("voice-current-level");
+      if (saved) {
+        const found = VOCAL_LEVELS.find(l => l.num === parseInt(saved));
+        if (found) return found;
+      }
+    } catch {}
+    return VOCAL_LEVELS[0];
+  });
+
+  // All levels unlocked — browse freely, work at your own pace
+  const unlocked = new Set(VOCAL_LEVELS.map(l => l.num));
+
+  useEffect(() => {
+    localStorage.setItem("voice-current-level", String(selectedLevel.num));
+  }, [selectedLevel]);
+
+  const totalEx = VOCAL_LEVELS.reduce((a, l) => a + l.exercises.length, 0);
+  const totalDone = VOCAL_LEVELS.reduce((a, l) => a + l.exercises.filter(e => completed.has(e.id)).length, 0);
+  const overallPct = Math.round((totalDone / totalEx) * 100);
+
+  return (
+    <div>
+      <div style={{ textAlign: "center", marginBottom: 24 }}>
+        <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: "#9e829c", fontFamily: T.sans, marginBottom: 6 }}>
+          Singer-Songwriter Curriculum
+        </div>
+        <div style={{ fontSize: 32, fontWeight: 400, fontFamily: T.serif, color: T.textDark }}>Voice</div>
+        <div style={{ fontSize: 13, color: T.textMuted, fontFamily: T.sans, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+          Breath to Performance · Psych-Surf-Reggae · {totalDone}/{totalEx} exercises
+        </div>
+        <div style={{ width: "100%", maxWidth: 320, margin: "16px auto 0", display: "flex", alignItems: "center", gap: 14 }}>
+          <div style={{ flex: 1 }}>
+            <div style={{ height: 2, background: T.border, overflow: "hidden" }}>
+              <div style={{ height: "100%", width: `${overallPct}%`, background: overallPct === 100 ? T.success : T.gold, transition: "width 0.5s" }} />
+            </div>
+          </div>
+          <div style={{ fontSize: 14, fontWeight: 400, fontFamily: T.serif, color: overallPct === 100 ? T.success : T.gold, minWidth: 36 }}>{overallPct}%</div>
+        </div>
+      </div>
+
+      {/* VowelMap — always visible as reference */}
+      <VowelMap />
+
+      {/* Level pills — horizontal scroll */}
+      <div className="hide-scrollbar" style={{
+        display: "flex", gap: 0, overflowX: "auto", padding: "0 0 0",
+        position: "sticky", top: 49, zIndex: 9, background: T.bg,
+        WebkitOverflowScrolling: "touch", scrollSnapType: "x mandatory",
+        msOverflowStyle: "none", scrollbarWidth: "none",
+        borderBottom: `1px solid ${T.border}`,
+      }}>
+        {VOCAL_LEVELS.map((level, idx) => {
+          const c = VOCAL_COLORS[idx % VOCAL_COLORS.length];
+          const done = level.exercises.filter(e => completed.has(e.id)).length;
+          const total = level.exercises.length;
+          const pct = Math.round((done / total) * 100);
+          const active = selectedLevel.num === level.num;
+          const isUnlocked = unlocked.has(level.num);
+          return (
+            <button key={level.num} onClick={() => isUnlocked && setSelectedLevel(level)} style={{
+              flex: "0 0 auto", scrollSnapAlign: "start",
+              background: active ? T.bgCard : "transparent",
+              border: "none",
+              borderBottom: `2px solid ${active ? c : "transparent"}`,
+              padding: "10px 16px 8px", cursor: isUnlocked ? "pointer" : "default",
+              textAlign: "center", transition: "all 0.2s",
+              opacity: isUnlocked ? (active ? 1 : 0.65) : 0.3,
+            }}>
+              <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: "uppercase", color: active ? c : T.textMuted, fontFamily: T.sans }}>
+                {level.num}
+              </div>
+              <div style={{ fontSize: 12, fontWeight: 400, color: active ? T.textDark : T.textMuted, fontFamily: T.serif, marginTop: 2, whiteSpace: "nowrap" }}>
+                {isUnlocked ? level.name : "locked"}
+              </div>
+              {isUnlocked && pct > 0 && (
+                <div style={{ fontSize: 9, color: pct === 100 ? T.success : c, fontFamily: T.sans, fontWeight: 600, marginTop: 2 }}>
+                  {pct === 100 ? "done" : `${done}/${total}`}
+                </div>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Level description */}
+      <div style={{
+        background: T.plumSoft, border: `1px solid ${T.plum}20`, borderRadius: T.radiusMd,
+        padding: "16px 20px", marginTop: 20, marginBottom: 4
+      }}>
+        <div style={{ fontSize: 15, fontWeight: 400, fontFamily: T.serif, color: T.textDark, marginBottom: 6 }}>
+          {selectedLevel.subtitle}
+        </div>
+        <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, lineHeight: 1.6, marginBottom: 8 }}>
+          {selectedLevel.description}
+        </div>
+        <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+          <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans }}>
+            <span style={{ fontWeight: 700, color: T.plum, textTransform: "uppercase", letterSpacing: 1 }}>Artists: </span>{selectedLevel.artists}
+          </div>
+          <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans }}>
+            <span style={{ fontWeight: 700, color: T.plum, textTransform: "uppercase", letterSpacing: 1 }}>Unlocks: </span>{selectedLevel.unlocks}
+          </div>
+        </div>
+      </div>
+
+      {/* Selected level exercises */}
+      <div style={{ marginTop: 20 }}>
+        <LevelView level={selectedLevel} completed={completed} onComplete={onComplete} metro={metro} onOpenTapMatch={onOpenTapMatch} levelColor={VOCAL_COLORS[(selectedLevel.num - 1) % VOCAL_COLORS.length]} />
+      </div>
+
+      {/* Milestone message for Levels 1-2 */}
+      {selectedLevel.num <= 2 && (
+        <div style={{
+          marginTop: 24, padding: "16px", background: T.bgSoft, border: `1px solid ${T.border}`,
+          borderRadius: T.radiusMd, textAlign: "center"
+        }}>
+          <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.gold, fontFamily: T.sans, marginBottom: 4 }}>
+            Milestone
+          </div>
+          <div style={{ fontSize: 14, color: T.textMed, fontFamily: T.sans }}>
+            After these, you have the physical foundation for everything else.
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -1340,11 +1661,11 @@ function ToolCard({ title, icon, defaultOpen = false, children }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
     <div style={{
-      background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: T.radiusMd,
-      marginBottom: 12, overflow: "hidden", boxShadow: open ? T.md : T.sm, transition: "all 0.2s"
+      background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: T.radius,
+      marginBottom: 4, overflow: "hidden", boxShadow: open ? T.md : T.sm, transition: "all 0.2s"
     }}>
       <div onClick={() => setOpen(!open)} style={{
-        display: "flex", alignItems: "center", gap: 14, padding: "18px 20px", cursor: "pointer"
+        display: "flex", alignItems: "center", gap: 14, padding: "14px 16px", cursor: "pointer"
       }}>
         <div style={{ fontSize: 20, flexShrink: 0 }}>{icon}</div>
         <div style={{ flex: 1 }}>
@@ -1353,7 +1674,7 @@ function ToolCard({ title, icon, defaultOpen = false, children }) {
         <div style={{ color: T.textMuted, fontSize: 14, transition: "transform 0.2s", transform: open ? "rotate(180deg)" : "" }}>▾</div>
       </div>
       {open && (
-        <div style={{ padding: "0 20px 20px", borderTop: `1px solid ${T.borderSoft}`, paddingTop: 20 }}>
+        <div style={{ padding: "0 16px 16px", borderTop: `1px solid ${T.borderSoft}`, paddingTop: 16 }}>
           {children}
         </div>
       )}
@@ -1506,6 +1827,587 @@ function LessonNotesView() {
   );
 }
 
+// ─── ARCHIVE BRANCH ─────────────────────────────────────────────────
+function ArchiveBranch({ type, exercises, completed, onComplete, metro, onOpenTapMatch }) {
+  const [open, setOpen] = useState(false);
+  const t = TYPE[type] || TYPE.rhythm;
+
+  return (
+    <div style={{ marginBottom: 10 }}>
+      <div onClick={() => setOpen(!open)} style={{
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        background: T.bgCard, border: `1px solid ${T.border}`, borderLeft: `3px solid ${t.color}`,
+        padding: "14px 18px", cursor: "pointer", boxShadow: T.sm,
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <span style={{ fontSize: 16 }}>{t.icon}</span>
+          <div>
+            <div style={{ fontSize: 15, fontWeight: 400, color: T.textDark, fontFamily: T.serif }}>{t.label}</div>
+            <div style={{ fontSize: 11, color: T.textMuted, fontFamily: T.sans, marginTop: 1 }}>{exercises.length} exercise{exercises.length !== 1 ? "s" : ""} from lessons</div>
+          </div>
+        </div>
+        <div style={{ color: T.textMuted, fontSize: 13, transition: "transform 0.2s", transform: open ? "rotate(180deg)" : "" }}>▾</div>
+      </div>
+      {open && (
+        <div style={{ marginTop: 6 }}>
+          {exercises.map(ex => (
+            <div key={ex.id}>
+              <div style={{ fontSize: 10, color: T.textMuted, fontFamily: T.sans, padding: "6px 4px 2px", letterSpacing: "0.05em", textTransform: "uppercase" }}>
+                {ex._lessonDate} · {ex._lessonTitle}
+              </div>
+              <ExerciseCard ex={ex} completed={completed.has(ex.id)} onComplete={onComplete} metro={metro} dayColor={t.color} onOpenTapMatch={onOpenTapMatch} />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── KEYBOARD CURRICULUM ────────────────────────────────────────────
+
+const LEVEL_COLORS = ["#5b7fa5", "#d97d54", "#7f9e88", "#9e829c", "#72a8a8", "#d68383", "#d4a373"];
+
+function LevelView({ level, completed, onComplete, metro, onOpenTapMatch, levelColor }) {
+  const c = levelColor || LEVEL_COLORS[(level.num - 1) % LEVEL_COLORS.length];
+  const total = level.exercises.length;
+  const done = level.exercises.filter(e => completed.has(e.id)).length;
+  const pct = Math.round((done / total) * 100);
+
+  return (
+    <div>
+      <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 12 }}>
+        <div>
+          <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: c, fontFamily: T.sans, marginBottom: 4 }}>Phase {level.num}</div>
+          <div style={{ fontSize: 28, fontWeight: 400, color: T.textDark, fontFamily: T.serif }}>{level.name}</div>
+          <div style={{ fontSize: 13, color: T.textMuted, fontFamily: T.sans, marginTop: 2, textTransform: "uppercase", letterSpacing: "0.05em" }}>{level.focus} · {level.duration}</div>
+        </div>
+        <div style={{ fontSize: 32, fontWeight: 700, fontFamily: T.serif, color: pct === 100 ? T.success : T.textDark }}>{pct}%</div>
+      </div>
+
+      {level.setup && (
+        <div style={{
+          background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radius,
+          padding: "12px 16px", marginBottom: 16, fontSize: 13, color: T.textLight, fontFamily: T.sans,
+          borderLeft: `1px solid ${T.gold}`
+        }}>
+          <span style={{ fontWeight: 700, color: T.textMed }}>Before you start: </span>{level.setup}
+        </div>
+      )}
+
+      <div style={{ height: 3, background: T.border, borderRadius: 2, marginBottom: 12, overflow: "hidden" }}>
+        <div style={{ height: "100%", width: `${pct}%`, background: pct === 100 ? T.success : T.gold, borderRadius: 2, transition: "width 0.5s" }} />
+      </div>
+
+      {level.exercises.map(ex => (
+        <ExerciseCard key={ex.id} ex={ex} metro={metro}
+          completed={completed.has(ex.id)} onComplete={onComplete} dayColor={c} onOpenTapMatch={onOpenTapMatch} />
+      ))}
+    </div>
+  );
+}
+
+function GuitarStudyView({ completed, onComplete, metro, onOpenTapMatch }) {
+  const [selectedLevel, setSelectedLevel] = useState(() => {
+    try {
+      const saved = localStorage.getItem("guitar-study-level");
+      if (saved) {
+        const found = GUITAR_STUDY.find(l => l.level === parseInt(saved));
+        if (found) return found;
+      }
+    } catch {}
+    return GUITAR_STUDY[0];
+  });
+
+  const [unlocked, setUnlocked] = useState(() => {
+    try {
+      const saved = localStorage.getItem("guitar-study-unlocked");
+      return saved ? new Set(JSON.parse(saved)) : new Set(GUITAR_STUDY.map(l => l.level));
+    } catch { return new Set(GUITAR_STUDY.map(l => l.level)); }
+  });
+
+  useEffect(() => {
+    setUnlocked(prev => {
+      const next = new Set(prev);
+      let changed = false;
+      for (let i = 0; i < GUITAR_STUDY.length - 1; i++) {
+        const level = GUITAR_STUDY[i];
+        const allDone = level.exercises.every(e => completed.has(e.id));
+        if (allDone && !next.has(GUITAR_STUDY[i + 1].level)) {
+          next.add(GUITAR_STUDY[i + 1].level);
+          changed = true;
+        }
+      }
+      if (changed) {
+        localStorage.setItem("guitar-study-unlocked", JSON.stringify([...next]));
+      }
+      return changed ? next : prev;
+    });
+  }, [completed]);
+
+  useEffect(() => {
+    localStorage.setItem("guitar-study-level", String(selectedLevel.level));
+  }, [selectedLevel]);
+
+  const totalEx = GUITAR_STUDY.reduce((a, l) => a + l.exercises.length, 0);
+  const totalDone = GUITAR_STUDY.reduce((a, l) => a + l.exercises.filter(e => completed.has(e.id)).length, 0);
+  const overallPct = Math.round((totalDone / totalEx) * 100);
+
+  const levelDone = selectedLevel.exercises.filter(e => completed.has(e.id)).length;
+  const levelTotal = selectedLevel.exercises.length;
+  const levelPct = Math.round((levelDone / levelTotal) * 100);
+
+  return (
+    <div>
+      <div style={{ textAlign: "center", marginBottom: 24 }}>
+        <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.slate, fontFamily: T.sans, marginBottom: 6 }}>
+          Genre-Driven Curriculum
+        </div>
+        <div style={{ fontSize: 32, fontWeight: 400, fontFamily: T.serif, color: T.textDark }}>Guitar Study</div>
+        <div style={{ fontSize: 13, color: T.textMuted, fontFamily: T.sans, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+          Psych-Surf · Reggae · Desert Blues · {totalDone}/{totalEx} exercises
+        </div>
+        <div style={{ width: "100%", maxWidth: 320, margin: "16px auto 0", display: "flex", alignItems: "center", gap: 14 }}>
+          <div style={{ flex: 1 }}>
+            <div style={{ height: 2, background: T.border, overflow: "hidden" }}>
+              <div style={{ height: "100%", width: `${overallPct}%`, background: overallPct === 100 ? T.success : T.slate, transition: "width 0.5s" }} />
+            </div>
+          </div>
+          <div style={{ fontSize: 14, fontWeight: 400, fontFamily: T.serif, color: overallPct === 100 ? T.success : T.slate, minWidth: 36 }}>{overallPct}%</div>
+        </div>
+      </div>
+
+      {/* Level pills — horizontal scroll */}
+      <div className="hide-scrollbar" style={{
+        display: "flex", gap: 0, overflowX: "auto", padding: "0 0 0",
+        position: "sticky", top: 49, zIndex: 9, background: T.bg,
+        WebkitOverflowScrolling: "touch", scrollSnapType: "x mandatory",
+        msOverflowStyle: "none", scrollbarWidth: "none",
+        borderBottom: `1px solid ${T.border}`,
+      }}>
+        {GUITAR_STUDY.map(level => {
+          const done = level.exercises.filter(e => completed.has(e.id)).length;
+          const total = level.exercises.length;
+          const pct = Math.round((done / total) * 100);
+          const active = selectedLevel.level === level.level;
+          const isUnlocked = unlocked.has(level.level);
+          return (
+            <button key={level.level} onClick={() => isUnlocked && setSelectedLevel(level)} style={{
+              flex: "0 0 auto", scrollSnapAlign: "start",
+              background: active ? T.bgCard : "transparent",
+              border: "none",
+              borderBottom: `2px solid ${active ? T.slate : "transparent"}`,
+              padding: "10px 16px 8px", cursor: isUnlocked ? "pointer" : "default",
+              textAlign: "center", transition: "all 0.2s",
+              opacity: isUnlocked ? (active ? 1 : 0.65) : 0.3,
+            }}>
+              <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: "uppercase", color: active ? T.slate : T.textMuted, fontFamily: T.sans }}>
+                {level.level}
+              </div>
+              <div style={{ fontSize: 12, fontWeight: 400, color: active ? T.textDark : T.textMuted, fontFamily: T.serif, marginTop: 2, whiteSpace: "nowrap" }}>
+                {isUnlocked ? level.title : "locked"}
+              </div>
+              {isUnlocked && pct > 0 && (
+                <div style={{ fontSize: 9, color: pct === 100 ? T.success : T.slate, fontFamily: T.sans, fontWeight: 600, marginTop: 2 }}>
+                  {pct === 100 ? "done" : `${done}/${total}`}
+                </div>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Level description */}
+      <div style={{
+        background: T.slateSoft, border: `1px solid ${T.slate}20`, borderRadius: T.radiusMd,
+        padding: "16px 20px", marginTop: 20, marginBottom: 4
+      }}>
+        <div style={{ fontSize: 15, fontWeight: 400, fontFamily: T.serif, color: T.textDark, marginBottom: 6 }}>
+          {selectedLevel.subtitle}
+        </div>
+        <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, lineHeight: 1.6, marginBottom: 8 }}>
+          {selectedLevel.description}
+        </div>
+        <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+          <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans }}>
+            <span style={{ fontWeight: 700, color: T.slate, textTransform: "uppercase", letterSpacing: 1 }}>Artists: </span>{selectedLevel.artists}
+          </div>
+          <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans }}>
+            <span style={{ fontWeight: 700, color: T.slate, textTransform: "uppercase", letterSpacing: 1 }}>Unlocks: </span>{selectedLevel.unlocks}
+          </div>
+        </div>
+      </div>
+
+      {/* Level header + progress + exercises */}
+      <div style={{ marginTop: 20 }}>
+        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 12 }}>
+          <div>
+            <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.slate, fontFamily: T.sans, marginBottom: 4 }}>Level {selectedLevel.level}</div>
+            <div style={{ fontSize: 28, fontWeight: 400, color: T.textDark, fontFamily: T.serif }}>{selectedLevel.title}</div>
+          </div>
+          <div style={{ fontSize: 32, fontWeight: 700, fontFamily: T.serif, color: levelPct === 100 ? T.success : T.textDark }}>{levelPct}%</div>
+        </div>
+
+        <div style={{ height: 3, background: T.border, borderRadius: 2, marginBottom: 12, overflow: "hidden" }}>
+          <div style={{ height: "100%", width: `${levelPct}%`, background: levelPct === 100 ? T.success : T.slate, borderRadius: 2, transition: "width 0.5s" }} />
+        </div>
+
+        {selectedLevel.exercises.map(ex => (
+          <ExerciseCard key={ex.id} ex={ex} metro={metro}
+            completed={completed.has(ex.id)} onComplete={onComplete} dayColor={T.slate} onOpenTapMatch={onOpenTapMatch} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function SingerSongwriterView({ completed, onComplete, metro, onOpenTapMatch }) {
+  const [selectedLevel, setSelectedLevel] = useState(() => {
+    try {
+      const saved = localStorage.getItem("songwriter-level");
+      if (saved) {
+        const found = SINGER_SONGWRITER_LEVELS.find(l => l.level === parseInt(saved));
+        if (found) return found;
+      }
+    } catch {}
+    return SINGER_SONGWRITER_LEVELS[0];
+  });
+
+  // All levels unlocked — browse freely, work at your own pace
+  const unlocked = new Set(SINGER_SONGWRITER_LEVELS.map(l => l.level));
+
+  useEffect(() => {
+    localStorage.setItem("songwriter-level", String(selectedLevel.level));
+  }, [selectedLevel]);
+
+  const totalEx = SINGER_SONGWRITER_LEVELS.reduce((a, l) => a + l.exercises.length, 0);
+  const totalDone = SINGER_SONGWRITER_LEVELS.reduce((a, l) => a + l.exercises.filter(e => completed.has(e.id)).length, 0);
+  const overallPct = Math.round((totalDone / totalEx) * 100);
+
+  const levelDone = selectedLevel.exercises.filter(e => completed.has(e.id)).length;
+  const levelTotal = selectedLevel.exercises.length;
+  const levelPct = Math.round((levelDone / levelTotal) * 100);
+
+  return (
+    <div>
+      <div style={{ textAlign: "center", marginBottom: 24 }}>
+        <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.coral, fontFamily: T.sans, marginBottom: 6 }}>
+          Voice + Guitar Integration
+        </div>
+        <div style={{ fontSize: 32, fontWeight: 400, fontFamily: T.serif, color: T.textDark }}>Singer-Songwriter</div>
+        <div style={{ fontSize: 13, color: T.textMuted, fontFamily: T.sans, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+          Psych-Surf · Reggae · Desert Blues · {totalDone}/{totalEx} exercises
+        </div>
+        <div style={{ width: "100%", maxWidth: 320, margin: "16px auto 0", display: "flex", alignItems: "center", gap: 14 }}>
+          <div style={{ flex: 1 }}>
+            <div style={{ height: 2, background: T.border, overflow: "hidden" }}>
+              <div style={{ height: "100%", width: `${overallPct}%`, background: overallPct === 100 ? T.success : T.coral, transition: "width 0.5s" }} />
+            </div>
+          </div>
+          <div style={{ fontSize: 14, fontWeight: 400, fontFamily: T.serif, color: overallPct === 100 ? T.success : T.coral, minWidth: 36 }}>{overallPct}%</div>
+        </div>
+      </div>
+
+      {/* Level pills — horizontal scroll */}
+      <div className="hide-scrollbar" style={{
+        display: "flex", gap: 0, overflowX: "auto", padding: "0 0 0",
+        position: "sticky", top: 49, zIndex: 9, background: T.bg,
+        WebkitOverflowScrolling: "touch", scrollSnapType: "x mandatory",
+        msOverflowStyle: "none", scrollbarWidth: "none",
+        borderBottom: `1px solid ${T.border}`,
+      }}>
+        {SINGER_SONGWRITER_LEVELS.map(level => {
+          const done = level.exercises.filter(e => completed.has(e.id)).length;
+          const total = level.exercises.length;
+          const pct = Math.round((done / total) * 100);
+          const active = selectedLevel.level === level.level;
+          const isUnlocked = unlocked.has(level.level);
+          return (
+            <button key={level.level} onClick={() => isUnlocked && setSelectedLevel(level)} style={{
+              flex: "0 0 auto", scrollSnapAlign: "start",
+              background: active ? T.bgCard : "transparent",
+              border: "none",
+              borderBottom: `2px solid ${active ? T.coral : "transparent"}`,
+              padding: "10px 16px 8px", cursor: isUnlocked ? "pointer" : "default",
+              textAlign: "center", transition: "all 0.2s",
+              opacity: isUnlocked ? (active ? 1 : 0.65) : 0.3,
+            }}>
+              <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: "uppercase", color: active ? T.coral : T.textMuted, fontFamily: T.sans }}>
+                {level.level}
+              </div>
+              <div style={{ fontSize: 12, fontWeight: 400, color: active ? T.textDark : T.textMuted, fontFamily: T.serif, marginTop: 2, whiteSpace: "nowrap" }}>
+                {isUnlocked ? level.title : "locked"}
+              </div>
+              {isUnlocked && pct > 0 && (
+                <div style={{ fontSize: 9, color: pct === 100 ? T.success : T.coral, fontFamily: T.sans, fontWeight: 600, marginTop: 2 }}>
+                  {pct === 100 ? "done" : `${done}/${total}`}
+                </div>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Level description */}
+      <div style={{
+        background: `${T.coral}10`, border: `1px solid ${T.coral}20`, borderRadius: T.radiusMd,
+        padding: "16px 20px", marginTop: 20, marginBottom: 4
+      }}>
+        <div style={{ fontSize: 15, fontWeight: 400, fontFamily: T.serif, color: T.textDark, marginBottom: 6 }}>
+          {selectedLevel.subtitle}
+        </div>
+        <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, lineHeight: 1.6, marginBottom: 8 }}>
+          {selectedLevel.description}
+        </div>
+        <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+          <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans }}>
+            <span style={{ fontWeight: 700, color: T.coral, textTransform: "uppercase", letterSpacing: 1 }}>Artists: </span>{selectedLevel.artists}
+          </div>
+          <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans }}>
+            <span style={{ fontWeight: 700, color: T.coral, textTransform: "uppercase", letterSpacing: 1 }}>Unlocks: </span>{selectedLevel.unlocks}
+          </div>
+        </div>
+      </div>
+
+      {/* Level header + progress + exercises */}
+      <div style={{ marginTop: 20 }}>
+        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 12 }}>
+          <div>
+            <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.coral, fontFamily: T.sans, marginBottom: 4 }}>Level {selectedLevel.level}</div>
+            <div style={{ fontSize: 28, fontWeight: 400, color: T.textDark, fontFamily: T.serif }}>{selectedLevel.title}</div>
+          </div>
+          <div style={{ fontSize: 32, fontWeight: 700, fontFamily: T.serif, color: levelPct === 100 ? T.success : T.textDark }}>{levelPct}%</div>
+        </div>
+
+        <div style={{ height: 3, background: T.border, borderRadius: 2, marginBottom: 12, overflow: "hidden" }}>
+          <div style={{ height: "100%", width: `${levelPct}%`, background: levelPct === 100 ? T.success : T.coral, borderRadius: 2, transition: "width 0.5s" }} />
+        </div>
+
+        {selectedLevel.exercises.map(ex => (
+          <ExerciseCard key={ex.id} ex={ex} metro={metro}
+            completed={completed.has(ex.id)} onComplete={onComplete} dayColor={T.coral} onOpenTapMatch={onOpenTapMatch} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function KeysView({ completed, onComplete, metro, onOpenTapMatch }) {
+  const [selectedLevel, setSelectedLevel] = useState(() => {
+    try {
+      const saved = localStorage.getItem("keys-current-level");
+      if (saved) {
+        const found = KEYBOARD_LEVELS.find(l => l.num === parseInt(saved));
+        if (found) return found;
+      }
+    } catch {}
+    return KEYBOARD_LEVELS[0];
+  });
+
+  // All levels unlocked — browse freely, work at your own pace
+  const unlocked = new Set(KEYBOARD_LEVELS.map(l => l.num));
+
+  useEffect(() => {
+    localStorage.setItem("keys-current-level", String(selectedLevel.num));
+  }, [selectedLevel]);
+
+  const totalEx = KEYBOARD_LEVELS.reduce((a, l) => a + l.exercises.length, 0);
+  const totalDone = KEYBOARD_LEVELS.reduce((a, l) => a + l.exercises.filter(e => completed.has(e.id)).length, 0);
+  const overallPct = Math.round((totalDone / totalEx) * 100);
+
+  return (
+    <div>
+      <div style={{ textAlign: "center", marginBottom: 24 }}>
+        <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: "#5b7fa5", fontFamily: T.sans, marginBottom: 6 }}>
+          Keyboard Curriculum
+        </div>
+        <div style={{ fontSize: 32, fontWeight: 400, fontFamily: T.serif, color: T.textDark }}>Keys</div>
+        <div style={{ fontSize: 13, color: T.textMuted, fontFamily: T.sans, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+          Psych-Surf-Reggae · Organ as texture · {totalDone}/{totalEx} exercises
+        </div>
+        <div style={{ width: "100%", maxWidth: 320, margin: "16px auto 0", display: "flex", alignItems: "center", gap: 14 }}>
+          <div style={{ flex: 1 }}>
+            <div style={{ height: 2, background: T.border, overflow: "hidden" }}>
+              <div style={{ height: "100%", width: `${overallPct}%`, background: overallPct === 100 ? T.success : T.gold, transition: "width 0.5s" }} />
+            </div>
+          </div>
+          <div style={{ fontSize: 14, fontWeight: 400, fontFamily: T.serif, color: overallPct === 100 ? T.success : T.gold, minWidth: 36 }}>{overallPct}%</div>
+        </div>
+      </div>
+
+      {/* Level pills — horizontal scroll */}
+      <div className="hide-scrollbar" style={{
+        display: "flex", gap: 0, overflowX: "auto", padding: "0 0 0",
+        position: "sticky", top: 49, zIndex: 9, background: T.bg,
+        WebkitOverflowScrolling: "touch", scrollSnapType: "x mandatory",
+        msOverflowStyle: "none", scrollbarWidth: "none",
+        borderBottom: `1px solid ${T.border}`,
+      }}>
+        {KEYBOARD_LEVELS.map((level, idx) => {
+          const c = LEVEL_COLORS[idx % LEVEL_COLORS.length];
+          const done = level.exercises.filter(e => completed.has(e.id)).length;
+          const total = level.exercises.length;
+          const pct = Math.round((done / total) * 100);
+          const active = selectedLevel.num === level.num;
+          const isUnlocked = unlocked.has(level.num);
+          return (
+            <button key={level.num} onClick={() => isUnlocked && setSelectedLevel(level)} style={{
+              flex: "0 0 auto", scrollSnapAlign: "start",
+              background: active ? T.bgCard : "transparent",
+              border: "none",
+              borderBottom: `2px solid ${active ? c : "transparent"}`,
+              padding: "10px 16px 8px", cursor: isUnlocked ? "pointer" : "default",
+              textAlign: "center", transition: "all 0.2s",
+              opacity: isUnlocked ? (active ? 1 : 0.65) : 0.3,
+            }}>
+              <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: "uppercase", color: active ? c : T.textMuted, fontFamily: T.sans }}>
+                {level.num}
+              </div>
+              <div style={{ fontSize: 12, fontWeight: 400, color: active ? T.textDark : T.textMuted, fontFamily: T.serif, marginTop: 2, whiteSpace: "nowrap" }}>
+                {isUnlocked ? level.name : "🔒"}
+              </div>
+              {isUnlocked && pct > 0 && (
+                <div style={{ fontSize: 9, color: pct === 100 ? T.success : c, fontFamily: T.sans, fontWeight: 600, marginTop: 2 }}>
+                  {pct === 100 ? "done" : `${done}/${total}`}
+                </div>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Selected level exercises */}
+      <div style={{ marginTop: 28 }}>
+        <LevelView level={selectedLevel} completed={completed} onComplete={onComplete} metro={metro} onOpenTapMatch={onOpenTapMatch} />
+      </div>
+
+      {/* Band-ready milestone */}
+      {selectedLevel.num <= 3 && (
+        <div style={{
+          marginTop: 24, padding: "16px", background: T.bgSoft, border: `1px solid ${T.border}`,
+          borderRadius: T.radiusMd, textAlign: "center"
+        }}>
+          <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.gold, fontFamily: T.sans, marginBottom: 4 }}>
+            Milestone
+          </div>
+          <div style={{ fontSize: 14, color: T.textMed, fontFamily: T.sans }}>
+            After Phase 3, you can play with the band on basic reggae parts.
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+const LOOPER_COLORS = ["#3d8b6e", "#2e7d5e", "#d97d54", "#5b7fa5", "#7f9e88", "#9e829c", "#72a8a8", "#d68383", "#d4a373", "#6b8e9f"];
+
+function LooperView({ completed, onComplete, metro, onOpenTapMatch }) {
+  const [selectedLevel, setSelectedLevel] = useState(() => {
+    try {
+      const saved = localStorage.getItem("looper-current-level");
+      if (saved) {
+        const found = LOOPER_LEVELS.find(l => l.num === parseInt(saved));
+        if (found) return found;
+      }
+    } catch {}
+    return LOOPER_LEVELS[0];
+  });
+
+  // All levels unlocked — browse freely, work at your own pace
+  const unlocked = new Set(LOOPER_LEVELS.map(l => l.num));
+
+  useEffect(() => {
+    localStorage.setItem("looper-current-level", String(selectedLevel.num));
+  }, [selectedLevel]);
+
+  const totalEx = LOOPER_LEVELS.reduce((a, l) => a + l.exercises.length, 0);
+  const totalDone = LOOPER_LEVELS.reduce((a, l) => a + l.exercises.filter(e => completed.has(e.id)).length, 0);
+  const overallPct = Math.round((totalDone / totalEx) * 100);
+
+  return (
+    <div>
+      <div style={{ textAlign: "center", marginBottom: 24 }}>
+        <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: "#3d8b6e", fontFamily: T.sans, marginBottom: 6 }}>
+          RC-505mkII Curriculum
+        </div>
+        <div style={{ fontSize: 32, fontWeight: 400, fontFamily: T.serif, color: T.textDark }}>Looper</div>
+        <div style={{ fontSize: 13, color: T.textMuted, fontFamily: T.sans, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+          Live Looping · Solo Performance · Psych-Surf-Reggae · {totalDone}/{totalEx} exercises
+        </div>
+        <div style={{ width: "100%", maxWidth: 320, margin: "16px auto 0", display: "flex", alignItems: "center", gap: 14 }}>
+          <div style={{ flex: 1 }}>
+            <div style={{ height: 2, background: T.border, overflow: "hidden" }}>
+              <div style={{ height: "100%", width: `${overallPct}%`, background: overallPct === 100 ? T.success : T.gold, transition: "width 0.5s" }} />
+            </div>
+          </div>
+          <div style={{ fontSize: 14, fontWeight: 400, fontFamily: T.serif, color: overallPct === 100 ? T.success : T.gold, minWidth: 36 }}>{overallPct}%</div>
+        </div>
+      </div>
+
+      {/* Level pills */}
+      <div className="hide-scrollbar" style={{
+        display: "flex", gap: 0, overflowX: "auto", padding: "0 0 0",
+        position: "sticky", top: 49, zIndex: 9, background: T.bg,
+        WebkitOverflowScrolling: "touch", scrollSnapType: "x mandatory",
+        msOverflowStyle: "none", scrollbarWidth: "none",
+        borderBottom: `1px solid ${T.border}`,
+      }}>
+        {LOOPER_LEVELS.map((level, idx) => {
+          const c = LOOPER_COLORS[idx % LOOPER_COLORS.length];
+          const done = level.exercises.filter(e => completed.has(e.id)).length;
+          const total = level.exercises.length;
+          const pct = Math.round((done / total) * 100);
+          const active = selectedLevel.num === level.num;
+          const isUnlocked = unlocked.has(level.num);
+          return (
+            <button key={level.num} onClick={() => isUnlocked && setSelectedLevel(level)} style={{
+              flex: "0 0 auto", scrollSnapAlign: "start",
+              background: active ? T.bgCard : "transparent",
+              border: "none",
+              borderBottom: `2px solid ${active ? c : "transparent"}`,
+              padding: "10px 16px 8px", cursor: isUnlocked ? "pointer" : "default",
+              textAlign: "center", transition: "all 0.2s",
+              opacity: isUnlocked ? (active ? 1 : 0.65) : 0.3,
+            }}>
+              <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: "uppercase", color: active ? c : T.textMuted, fontFamily: T.sans }}>
+                {level.num}
+              </div>
+              <div style={{ fontSize: 12, fontWeight: 400, color: active ? T.textDark : T.textMuted, fontFamily: T.serif, marginTop: 2, whiteSpace: "nowrap" }}>
+                {isUnlocked ? level.name : "🔒"}
+              </div>
+              {isUnlocked && pct > 0 && (
+                <div style={{ fontSize: 9, color: pct === 100 ? T.success : c, fontFamily: T.sans, fontWeight: 600, marginTop: 2 }}>
+                  {pct === 100 ? "done" : `${done}/${total}`}
+                </div>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Selected level exercises */}
+      <div style={{ marginTop: 28 }}>
+        <LevelView level={selectedLevel} levelColor={LOOPER_COLORS[(selectedLevel.num - 1) % LOOPER_COLORS.length]} completed={completed} onComplete={onComplete} metro={metro} onOpenTapMatch={onOpenTapMatch} />
+      </div>
+
+      {/* Settings quick reference */}
+      {selectedLevel.num <= 2 && (
+        <div style={{
+          marginTop: 24, padding: "16px", background: T.bgSoft, border: `1px solid ${T.border}`,
+          borderRadius: T.radiusMd, textAlign: "center"
+        }}>
+          <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.gold, fontFamily: T.sans, marginBottom: 4 }}>
+            Quick Reference
+          </div>
+          <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, textAlign: "left", lineHeight: 1.8 }}>
+            Quantize: MEASURE · Loop Sync: ON · Rhythm Guide: 80 BPM · Input peak at -6dB · Master output: 70-80%
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── MAIN APP ───────────────────────────────────────────────────────
 export default function App() {
   const [isDark, setIsDark] = useState(() => {
@@ -1524,8 +2426,8 @@ export default function App() {
     localStorage.setItem("theme", next ? "dark" : "light");
   };
 
-  const [tab, setTab] = useState("week");
-  const [selectedDay, setSelectedDay] = useState(null);
+  const [tab, setTab] = useState("practice");
+  const [selectedDay, setSelectedDay] = useState(DAYS[0]);
   const [completed, setCompleted] = useState(() => {
     try {
       const saved = localStorage.getItem("practice-completed");
@@ -1556,6 +2458,7 @@ export default function App() {
           synth.volume.value = -12;
           const now = Tone.now();
           synth.triggerAttackRelease(["C4", "E4", "G4", "C5"], "8n", now);
+          setTimeout(() => synth.dispose(), 2000);
         } catch (e) {
           console.error("Audio play failed", e);
         }
@@ -1576,11 +2479,26 @@ export default function App() {
   const weekPct = Math.round((totalDone / totalEx) * 100);
 
   const tabs = [
-    { id: "week", label: "Week" },
-    { id: "vocal", label: "Voice" },
-    { id: "lessons", label: "Lessons" },
-    { id: "metro", label: "Metronome" },
+    { id: "practice", label: "Practice" },
+    { id: "skills", label: "Skills" },
     { id: "tools", label: "Tools" }
+  ];
+
+  const [skillTab, setSkillTab] = useState(() => {
+    try {
+      const saved = localStorage.getItem("skill-tab");
+      if (saved && ["voice", "guitar", "keys", "looper", "songwriter"].includes(saved)) return saved;
+    } catch {}
+    return "voice";
+  });
+  useEffect(() => { localStorage.setItem("skill-tab", skillTab); }, [skillTab]);
+
+  const skillTabs = [
+    { id: "voice", label: "Voice", color: "#9e829c" },
+    { id: "guitar", label: "Guitar", color: "#6b8e9f" },
+    { id: "songwriter", label: "Singer-Songwriter", color: "#d68383" },
+    { id: "keys", label: "Keys", color: "#5b7fa5" },
+    { id: "looper", label: "Looper", color: "#3d8b6e" }
   ];
 
   return (
@@ -1616,183 +2534,238 @@ export default function App() {
         }
       `}</style>
       {/* Header */}
-      <div style={{ background: T.bgCard, padding: "60px 20px 40px", textAlign: "center", borderBottom: `1px solid ${T.border}`, position: "relative" }}>
-        <button className="interactive-btn" onClick={toggleTheme} style={{
-          position: "absolute", top: 20, right: 20,
-          background: "transparent", border: `1px solid ${T.border}`,
-          color: T.textMed, padding: "8px", borderRadius: T.radiusMd,
-          cursor: "pointer", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center"
-        }}>
-          {isDark ? "☀️" : "🌙"}
-        </button>
-        <div style={{ fontSize: 11, letterSpacing: 3, textTransform: "uppercase", color: T.gold, fontWeight: 600, fontFamily: T.sans, marginBottom: 8 }}>
-          Sarah Glass Music
-        </div>
-        <div style={{ fontSize: 40, fontWeight: 400, fontFamily: T.serif, color: T.textDark, lineHeight: 1.2 }}>Practice Plan</div>
-        <div style={{ fontSize: 14, color: T.textMuted, marginTop: 6, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: "0.05em" }}>Lesson 3/2 · Tenor · Break ≈ A3</div>
-        <div style={{ maxWidth: 280, margin: "20px auto 0", display: "flex", alignItems: "center", gap: 14 }}>
-          <div style={{ flex: 1 }}>
-            <div style={{ height: 2, background: T.border, overflow: "hidden" }}>
-              <div style={{ height: "100%", width: `${weekPct}%`, background: weekPct === 100 ? T.success : T.gold, transition: "width 0.5s" }} />
-            </div>
+      <div style={{ background: T.bgCard, borderBottom: `1px solid ${T.border}`, position: "relative", display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <div style={{ padding: "40px 20px 24px", width: "100%", maxWidth: 640, position: "relative" }}>
+          <button className="interactive-btn" onClick={toggleTheme} style={{
+            position: "absolute", top: 20, right: 20,
+            background: "transparent", border: `1px solid ${T.border}`,
+            color: T.textMed, padding: "8px", borderRadius: T.radiusMd,
+            cursor: "pointer", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center"
+          }}>
+            {isDark ? "☀️" : "🌙"}
+          </button>
+          <div style={{ fontSize: 11, letterSpacing: 3, textTransform: "uppercase", color: T.gold, fontWeight: 600, fontFamily: T.sans, marginBottom: 8 }}>
+            Sarah Glass Music
           </div>
-          <div style={{ fontSize: 14, fontWeight: 400, fontFamily: T.serif, color: weekPct === 100 ? T.success : T.gold, minWidth: 36 }}>{weekPct}%</div>
+          <div style={{ fontSize: 40, fontWeight: 400, fontFamily: T.serif, color: T.textDark, lineHeight: 1.2 }}>Practice Plan</div>
+          <div style={{ fontSize: 14, color: T.textMuted, marginTop: 6, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: "0.05em" }}>Lesson 3/2 · Tenor · Break ≈ A3</div>
+          <div style={{ width: "100%", maxWidth: 320, margin: "20px auto 0", display: "flex", alignItems: "center", gap: 14 }}>
+            <div style={{ flex: 1 }}>
+              <div style={{ height: 2, background: T.border, overflow: "hidden" }}>
+                <div style={{ height: "100%", width: `${weekPct}%`, background: weekPct === 100 ? T.success : T.gold, transition: "width 0.5s" }} />
+              </div>
+            </div>
+            <div style={{ fontSize: 14, fontWeight: 400, fontFamily: T.serif, color: weekPct === 100 ? T.success : T.gold, minWidth: 36 }}>{weekPct}%</div>
+          </div>
         </div>
       </div>
 
       {/* Tab bar */}
-      <div style={{ display: "flex", background: T.bgCard, borderBottom: `1px solid ${T.border}`, position: "sticky", top: 0, zIndex: 10 }}>
-        {tabs.map(t => (
-          <button key={t.id} onClick={() => { setTab(t.id); setSelectedDay(null); }} style={{
-            flex: 1, padding: "16px 0", background: "none", border: "none",
-            borderBottom: `2px solid ${tab === t.id ? T.gold : "transparent"}`,
-            color: tab === t.id ? T.gold : T.textMuted,
-            fontSize: 14, fontWeight: 400, cursor: "pointer", fontFamily: T.serif, letterSpacing: 0.5
-          }}>{t.label}</button>
-        ))}
+      <div className="hide-scrollbar" style={{ background: T.bgCard, borderBottom: `1px solid ${T.border}`, position: "sticky", top: 0, zIndex: 10, display: "flex", justifyContent: "center", boxShadow: T.sm, overflowX: "auto", WebkitOverflowScrolling: "touch", msOverflowStyle: "none", scrollbarWidth: "none" }}>
+        <div style={{ display: "flex", gap: 32, padding: "0 20px" }}>
+          {tabs.map(t => (
+            <button key={t.id} onClick={() => { setTab(t.id); }} style={{
+              padding: "16px 0", background: "none", border: "none",
+              borderBottom: `2px solid ${tab === t.id ? T.gold : "transparent"}`,
+              color: tab === t.id ? T.gold : T.textMuted,
+              fontSize: 14, fontWeight: 500, cursor: "pointer", fontFamily: T.serif, letterSpacing: 0.5,
+              transition: "color 0.2s", flexShrink: 0, whiteSpace: "nowrap"
+            }}>{t.label}</button>
+          ))}
+        </div>
       </div>
 
-      <div style={{ maxWidth: 560, margin: "0 auto", padding: "20px 16px 40px" }}>
-        {/* WEEK VIEW */}
-        {tab === "week" && !selectedDay && (
+      <div style={{ maxWidth: 560, margin: "0 auto", padding: `${tab === "practice" ? 0 : 20}px 16px 40px` }}>
+        {/* PRACTICE TAB — Week plan + Lessons archive + Lesson notes */}
+        {tab === "practice" && (
           <div>
-            <div style={{ fontSize: 13, color: T.textMuted, marginBottom: 20, textAlign: "center", fontFamily: T.sans }}>
-              Select a day to begin
-            </div>
-            {DAYS.map((day, idx) => {
-              const c = DAY_COLORS[idx % DAY_COLORS.length];
-              const done = day.exercises.filter(e => completed.has(e.id)).length;
-              const total = day.exercises.length;
-              const pct = Math.round((done / total) * 100);
-              // Count exercise types for this day
-              const types = [...new Set(day.exercises.map(e => e.type))];
-              return (
-                <div key={day.num} onClick={() => setSelectedDay(day)} style={{
-                  background: T.bgCard, border: `1px solid ${T.border}`,
-                  padding: "18px 22px", marginBottom: 10, cursor: "pointer",
-                  borderLeft: `4px solid ${c}`, boxShadow: T.sm, transition: "all 0.2s"
-                }}
-                  onMouseEnter={e => { e.currentTarget.style.boxShadow = T.md; e.currentTarget.style.transform = "translateY(-1px)"; }}
-                  onMouseLeave={e => { e.currentTarget.style.boxShadow = T.sm; e.currentTarget.style.transform = ""; }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <div>
-                      <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: c, fontFamily: T.sans, marginBottom: 2 }}>
-                        Day {day.num}
-                      </div>
-                      <div style={{ fontWeight: 400, fontSize: 22, color: T.textDark, fontFamily: T.serif }}>{day.name}</div>
-                      <div style={{ fontSize: 12, color: T.textMuted, fontFamily: T.sans, marginTop: 2, textTransform: "uppercase", letterSpacing: "0.05em" }}>{day.focus} · {day.duration}</div>
-                      <div style={{ display: "flex", gap: 4, marginTop: 6 }}>
-                        {types.map(t => <TypeBadge key={t} type={t} />)}
-                      </div>
+            {/* Day pill tabs — horizontal scroll */}
+            <div className="hide-scrollbar" style={{
+              display: "flex", gap: 0, overflowX: "auto", padding: "16px 0 0",
+              position: "sticky", top: 49, zIndex: 9, background: T.bg,
+              WebkitOverflowScrolling: "touch", scrollSnapType: "x mandatory",
+              msOverflowStyle: "none", scrollbarWidth: "none",
+              borderBottom: `1px solid ${T.border}`,
+            }}>
+              {DAYS.map((day, idx) => {
+                const c = DAY_COLORS[idx % DAY_COLORS.length];
+                const done = day.exercises.filter(e => completed.has(e.id)).length;
+                const total = day.exercises.length;
+                const pct = Math.round((done / total) * 100);
+                const active = selectedDay.num === day.num;
+                return (
+                  <button key={day.num} onClick={() => setSelectedDay(day)} style={{
+                    flex: "0 0 auto", scrollSnapAlign: "start",
+                    background: active ? T.bgCard : "transparent",
+                    border: "none",
+                    borderBottom: `2px solid ${active ? c : "transparent"}`,
+                    padding: "10px 16px 8px", cursor: "pointer",
+                    textAlign: "center", transition: "all 0.2s",
+                    opacity: active ? 1 : 0.65,
+                  }}>
+                    <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: "uppercase", color: active ? c : T.textMuted, fontFamily: T.sans }}>
+                      {day.num}
                     </div>
-                    <div style={{
-                      fontSize: 22, fontWeight: 700, fontFamily: T.serif,
-                      color: pct === 100 ? T.success : pct > 0 ? c : T.textMuted
-                    }}>
-                      {pct === 100 ? "✓" : `${done}/${total}`}
+                    <div style={{ fontSize: 12, fontWeight: 400, color: active ? T.textDark : T.textMuted, fontFamily: T.serif, marginTop: 2, whiteSpace: "nowrap" }}>
+                      {day.name}
                     </div>
-                  </div>
-                  <div style={{ height: 2, background: T.border, borderRadius: 1, marginTop: 12, overflow: "hidden" }}>
-                    <div style={{ height: "100%", width: `${pct}%`, background: pct === 100 ? T.success : c, borderRadius: 1, transition: "width 0.3s" }} />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-
-        {/* DAY DETAIL */}
-        {tab === "week" && selectedDay && (
-          <div>
-            <button onClick={() => setSelectedDay(null)} style={{
-              background: "none", border: "none", color: T.gold, fontSize: 13,
-              fontWeight: 600, cursor: "pointer", marginBottom: 16, padding: 0, fontFamily: T.sans
-            }}>← Back to week</button>
-            <DayView day={selectedDay} completed={completed} onComplete={toggleComplete} metro={metro} onOpenTapMatch={setTapMatchBpm} />
-          </div>
-        )}
-
-        {/* VOCAL */}
-        {tab === "vocal" && (
-          <div>
-            <div style={{ textAlign: "center", marginBottom: 24 }}>
-              <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.plum, fontFamily: T.sans, marginBottom: 6 }}>
-                Tenor Passaggio
-              </div>
-              <div style={{ fontSize: 32, fontWeight: 400, fontFamily: T.serif, color: T.textDark }}>Vocal Exercises</div>
-              <div style={{ fontSize: 13, color: T.textMuted, fontFamily: T.sans, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                Break ≈ A3 · Mixed voice training · Rhythm + pitch + improv
-              </div>
+                    {pct > 0 && (
+                      <div style={{ fontSize: 9, color: pct === 100 ? T.success : c, fontFamily: T.sans, fontWeight: 600, marginTop: 2 }}>
+                        {pct === 100 ? "done" : `${done}/${total}`}
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
             </div>
-            <VowelMap />
-            {VOCAL_EXERCISES.map(ex => <VocalCard key={ex.id} ex={ex} />)}
+
+            {/* Selected day exercises */}
+            <div style={{ marginTop: 28 }}>
+              <DayView day={selectedDay} completed={completed} onComplete={toggleComplete} metro={metro} onOpenTapMatch={setTapMatchBpm} />
+            </div>
+
+            {/* Archive — exercises from LESSON_POOL by skill branch */}
+            <div style={{ marginTop: 40, borderTop: `1px solid ${T.border}`, paddingTop: 24 }}>
+              <div style={{ textAlign: "center", marginBottom: 20 }}>
+                <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 3, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 4 }}>
+                  Exercise Archive
+                </div>
+                <div style={{ fontSize: 13, color: T.textLight, fontFamily: T.sans }}>
+                  All exercises from {LESSON_POOL.length} lesson{LESSON_POOL.length !== 1 ? "s" : ""}
+                </div>
+              </div>
+              {(() => {
+                // Group all LESSON_POOL exercises by type
+                const branches = {};
+                const activePlanIds = new Set(DAYS.flatMap(d => d.exercises.map(e => e.id)));
+                LESSON_POOL.forEach(lesson => {
+                  lesson.exercises.forEach(ex => {
+                    const branch = ex.type || "other";
+                    if (!branches[branch]) branches[branch] = [];
+                    branches[branch].push({ ...ex, _lessonTitle: lesson.title, _lessonDate: lesson.date, _inPlan: activePlanIds.has(ex.id) });
+                  });
+                });
+                const branchOrder = ["rhythm", "guitar", "vocal", "listen", "song", "record", "play"];
+                const sortedBranches = Object.entries(branches).sort(([a], [b]) => {
+                  const ai = branchOrder.indexOf(a), bi = branchOrder.indexOf(b);
+                  return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+                });
+                return sortedBranches.map(([type, exercises]) => (
+                  <ArchiveBranch key={type} type={type} exercises={exercises} completed={completed} onComplete={toggleComplete} metro={metro} onOpenTapMatch={setTapMatchBpm} />
+                ));
+              })()}
+            </div>
+
+            {/* Lesson Notes */}
+            <div style={{ marginTop: 40, borderTop: `1px solid ${T.border}`, paddingTop: 24 }}>
+              <LessonNotesView />
+            </div>
           </div>
         )}
 
-        {/* LESSON NOTES */}
-        {tab === "lessons" && <LessonNotesView />}
-
-        {/* METRONOME */}
-        {tab === "metro" && (
+        {/* SKILLS TAB — Voice / Guitar / Keys / Looper with sub-tabs */}
+        {tab === "skills" && (
           <div>
-            <div style={{ textAlign: "center", marginBottom: 24 }}>
-              <div style={{ fontSize: 32, fontWeight: 400, fontFamily: T.serif, color: T.textDark }}>Metronome</div>
-            </div>
-            <MetronomePanel metro={metro} onOpenTapMatch={setTapMatchBpm} />
-            {/* Quick Reference */}
-            <div style={{ background: T.bgCard, border: `1px solid ${T.border}`, padding: 22, marginTop: 20, boxShadow: T.sm, borderRadius: T.radiusMd }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-                <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans }}>
-                  Quick Reference
-                </div>
-                <button onClick={() => onOpenTapMatch(metro.bpm)} style={{
-                  background: "transparent", border: "none", color: T.gold, fontSize: 11, fontWeight: 600, cursor: "pointer",
-                  fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1, padding: 0
-                }}>
-                  ✋ Tap Minigame
-                </button>
-              </div>
-              {[
-                { bpm: "78", use: "16th note subdivision (Drill #3)" },
-                { bpm: "120", use: "Surf Rock — fingerpick + count + ooh climbing" },
-                { bpm: "122", use: "Lyric placement + Sol Del Sur tap-along" },
-                { bpm: "165", use: "Island strum (Surf Rock Drum)" },
-                { bpm: "200–244", use: "Main metronome work (Drills #1 & #2)" },
-              ].map((r, i) => (
-                <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: i < 4 ? `1px solid ${T.border}` : "none", fontSize: 13 }}>
-                  <span style={{ color: T.gold, fontWeight: 700, fontFamily: T.sans }}>{r.bpm}</span>
-                  <span style={{ color: T.textLight, fontFamily: T.sans }}>{r.use}</span>
-                </div>
+            {/* Skill sub-tabs */}
+            <div style={{
+              display: "flex", justifyContent: "center", gap: 0,
+              marginBottom: 24, borderBottom: `1px solid ${T.border}`,
+            }}>
+              {skillTabs.map(st => (
+                <button key={st.id} onClick={() => setSkillTab(st.id)} style={{
+                  padding: "12px 20px", background: "none", border: "none",
+                  borderBottom: `2px solid ${skillTab === st.id ? st.color : "transparent"}`,
+                  color: skillTab === st.id ? st.color : T.textMuted,
+                  fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: T.serif, letterSpacing: 0.5,
+                  transition: "color 0.2s", flexShrink: 0, whiteSpace: "nowrap"
+                }}>{st.label}</button>
               ))}
             </div>
-            <div style={{ background: T.bgCard, border: `1px solid ${T.border}`, padding: 22, marginTop: 16, boxShadow: T.sm }}>
-              <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 14 }}>
-                Backing Tracks
-              </div>
-              {[
-                { label: "Surf Rock 120 BPM", url: "youtube.com/watch?v=AEf8LF4Xu18" },
-                { label: "Groove Beat 90 BPM", url: "youtube.com/watch?v=n0nEhFAiorg" },
-                { label: "Surf Rock 165 BPM", url: "youtube.com/watch?v=gBNY43Xlp1Y" },
-                { label: "Groove Beat 80 BPM", url: "youtube.com/watch?v=0vgOdlxSTW0" },
-              ].map((l, i) => (
-                <div key={i} style={{ padding: "8px 0", fontSize: 13, borderBottom: i < 3 ? `1px solid ${T.border}` : "none" }}>
-                  <span style={{ color: T.gold, fontFamily: T.sans, fontWeight: 600 }}>{l.label}</span>
-                  <span style={{ color: T.textMuted, marginLeft: 10, fontSize: 11, fontFamily: T.sans }}>{l.url}</span>
-                </div>
-              ))}
-            </div>
+
+            {skillTab === "voice" && (
+              <VoiceView completed={completed} onComplete={toggleComplete} metro={metro} onOpenTapMatch={setTapMatchBpm} />
+            )}
+
+            {skillTab === "guitar" && (
+              <GuitarStudyView completed={completed} onComplete={toggleComplete} metro={metro} onOpenTapMatch={setTapMatchBpm} />
+            )}
+
+            {skillTab === "keys" && (
+              <KeysView completed={completed} onComplete={toggleComplete} metro={metro} onOpenTapMatch={setTapMatchBpm} />
+            )}
+
+            {skillTab === "looper" && (
+              <LooperView completed={completed} onComplete={toggleComplete} metro={metro} onOpenTapMatch={setTapMatchBpm} />
+            )}
+
+            {skillTab === "songwriter" && (
+              <SingerSongwriterView completed={completed} onComplete={toggleComplete} metro={metro} onOpenTapMatch={setTapMatchBpm} />
+            )}
           </div>
         )}
 
-        {/* TOOLS */}
+        {/* TOOLS TAB — Metronome + all tools combined */}
         {tab === "tools" && (
           <div>
             <div style={{ textAlign: "center", marginBottom: 24 }}>
               <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.gold, fontFamily: T.sans, marginBottom: 6 }}>
                 Jungle Mode
               </div>
-              <div style={{ fontSize: 32, fontWeight: 400, fontFamily: T.serif, color: T.textDark }}>Offline Tools</div>
+              <div style={{ fontSize: 32, fontWeight: 400, fontFamily: T.serif, color: T.textDark }}>Tools</div>
+            </div>
+
+            {/* Metronome — always first, most-used tool */}
+            <div style={{ marginBottom: 24 }}>
+              <MetronomePanel metro={metro} onOpenTapMatch={setTapMatchBpm} />
+              <div style={{ background: T.bgCard, border: `1px solid ${T.border}`, padding: 22, marginTop: 20, boxShadow: T.sm, borderRadius: T.radiusMd }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+                  <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans }}>
+                    Quick Reference
+                  </div>
+                  <button onClick={() => setTapMatchBpm(metro.bpm)} style={{
+                    background: "transparent", border: "none", color: T.gold, fontSize: 11, fontWeight: 600, cursor: "pointer",
+                    fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1, padding: 0
+                  }}>
+                    Tap Minigame
+                  </button>
+                </div>
+                {[
+                  { bpm: "78", use: "16th note subdivision (Drill #3)" },
+                  { bpm: "120", use: "Surf Rock — fingerpick + count + ooh climbing" },
+                  { bpm: "122", use: "Lyric placement + Sol Del Sur tap-along" },
+                  { bpm: "165", use: "Island strum (Surf Rock Drum)" },
+                  { bpm: "200-244", use: "Main metronome work (Drills #1 & #2)" },
+                ].map((r, i) => (
+                  <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: i < 4 ? `1px solid ${T.border}` : "none", fontSize: 13 }}>
+                    <span style={{ color: T.gold, fontWeight: 700, fontFamily: T.sans }}>{r.bpm}</span>
+                    <span style={{ color: T.textLight, fontFamily: T.sans }}>{r.use}</span>
+                  </div>
+                ))}
+              </div>
+              <div style={{ background: T.bgCard, border: `1px solid ${T.border}`, padding: 22, marginTop: 16, boxShadow: T.sm, borderRadius: T.radiusMd }}>
+                <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 14 }}>
+                  Backing Tracks
+                </div>
+                {[
+                  { label: "Surf Rock 120 BPM", url: "youtube.com/watch?v=AEf8LF4Xu18" },
+                  { label: "Groove Beat 90 BPM", url: "youtube.com/watch?v=n0nEhFAiorg" },
+                  { label: "Reggae One Drop 85 BPM", url: "youtube.com/watch?v=1aGp-CnwebE" },
+                  { label: "Dub Reggae 85 BPM", url: "youtube.com/watch?v=vmH-xBYBQIg" },
+                  { label: "Desert Blues 75 BPM", url: "youtube.com/watch?v=Yfyymjm24Ro" },
+                  { label: "Khruangbin Style 80 BPM", url: "youtube.com/watch?v=JlMy52s7qrI" },
+                  { label: "Cinematic Western 80 BPM", url: "youtube.com/watch?v=EKPjIt9GzX0" },
+                  { label: "Psych Rock 120 BPM", url: "youtube.com/watch?v=eqI_3Mw8go4" },
+                  { label: "Deep Soul Groove 80 BPM", url: "youtube.com/watch?v=55MTcCE6ZIk" },
+                  { label: "Soul Funk Groove 90 BPM", url: "youtube.com/watch?v=HhPq1J93uMI" },
+                  { label: "Surf Rock 165 BPM", url: "youtube.com/watch?v=gBNY43Xlp1Y" },
+                  { label: "Groove Beat 80 BPM", url: "youtube.com/watch?v=0vgOdlxSTW0" },
+                ].map((l, i, arr) => (
+                  <div key={i} style={{ padding: "8px 0", fontSize: 13, borderBottom: i < arr.length - 1 ? `1px solid ${T.border}` : "none" }}>
+                    <span style={{ color: T.gold, fontFamily: T.sans, fontWeight: 600 }}>{l.label}</span>
+                    <span style={{ color: T.textMuted, marginLeft: 10, fontSize: 11, fontFamily: T.sans }}>{l.url}</span>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <ToolCard icon="✅" title="Jungle Flight Check" defaultOpen={true}>
@@ -1839,8 +2812,8 @@ export default function App() {
       </div>
 
       {/* Floating metronome */}
-      {metro.playing && tab !== "metro" && !tapMatchBpm && (
-        <div onClick={() => setTab("metro")} style={{
+      {metro.playing && tab !== "tools" && !tapMatchBpm && (
+        <div onClick={() => setTab("tools")} style={{
           position: "fixed", bottom: 32, right: 32,
           background: T.bgCard, border: `1px solid ${T.gold}`,
           borderRadius: "50%", width: 64, height: 64, display: "flex",
