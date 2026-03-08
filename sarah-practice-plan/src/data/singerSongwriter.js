@@ -209,7 +209,9 @@ export const SINGER_SONGWRITER_LEVELS = [
         ],
         feel: "The humming should feel lazy and loose — like you're humming along to a song on the radio. Not performative, just following the tune while your hands do their thing.",
         wrong: "If your hum is tense or forced, you're working too hard. Humming should be the most relaxed vocal production possible. If you lose the melody, just drone on one comfortable note and let the contour come back naturally.",
-        sarah: "Gene, your vocal style is laid-back — think DOPE LEMON. This humming exercise is actually closer to your target vocal style than belting scales would be. Relax into it."
+        sarah: "Gene, your vocal style is laid-back — think DOPE LEMON. This humming exercise is actually closer to your target vocal style than belting scales would be. Relax into it.",
+        referencePitches: getPitchRange("E3", "A4"),
+        pitchContour: true
       },
       {
         id: "ss-2-3",
@@ -448,7 +450,7 @@ export const SINGER_SONGWRITER_LEVELS = [
         feel: "When you nail the pocket, it feels like the guitar is pulling you forward and your voice is taking its time. Relaxed, unhurried, like you have all the time in the world. Golden hour energy.",
         wrong: "If your timing is inconsistent — sometimes behind, sometimes ahead, sometimes on — that's not style, that's instability. The pocket should be consistent within a section. Also: behind the beat is subtle. If listeners notice you're late, you've gone too far.",
         sarah: "Gene, this is YOUR sound. Every artist you love — DOPE LEMON, Skinshape, Khruangbin's vocal parts — they all sit behind the beat. This isn't something you'll learn by accident. Drill it until it becomes your default.",
-        metronome: { min: 85, max: 100, default: 90 },
+        metronome: 90,
         recorder: true
       },
       {
@@ -571,7 +573,8 @@ export const SINGER_SONGWRITER_LEVELS = [
         feel: "When the number system clicks, you'll feel a shift — chords stop being isolated shapes and start being part of a family. You'll start hearing '1-4-5' in every song on the radio.",
         wrong: "If you're memorizing 'in G the chords are...' for each key individually, you're not using the system. The point is to think in numbers and apply them to any key on the fly.",
         sarah: "Gene, most of your favorite songs are 1-4-5 or 1-5-6-4. Once you hear the numbers, you'll never listen to music the same way. You'll start predicting chord changes before they happen.",
-        metronome: 90
+        metronome: 90,
+        recorder: true
       },
       {
         id: "ss-4-2",
@@ -581,13 +584,15 @@ export const SINGER_SONGWRITER_LEVELS = [
         what: "Add the minor chords to your number vocabulary. The '6-minor' (vi) is the emotional heart of pop music. The '2-minor' (ii) adds sophistication. Learn the two most important progressions in popular music: I-vi-IV-V (the '50s) and I-V-vi-IV (the 'pop').",
         steps: [
           { text: "In G: play the '50s progression' — G (1), Em (vi), C (IV), D (V). Loop it. Sing root notes.", why: "This progression is 'Stand By Me', 'Every Breath You Take', 'I Will Always Love You'. It's the emotional backbone of Western pop music." },
-          { text: "Now play the 'pop progression' — G (I), D (V), Em (vi), C (IV). Loop it. Notice how different it feels from the same four chords in different order.", why: "Same chords, different emotional journey. The order changes everything. This is 'No Woman No Cry', 'Let It Be', 'Africa'." },
+          { text: "Now play the 'pop progression' — G (I), D (V), Em (vi), C (IV). Loop it. Notice how different it feels from the same four chords in different order.", why: "Same chords, different emotional journey. The order changes everything. This is 'No Woman No Cry', 'Let It Be', and countless pop anthems." },
           { text: "Add the ii: Am (ii) in key of G. Play I-ii-IV-V (G-Am-C-D). This is smoother, jazzier.", why: "The ii chord adds a stepping-stone between I and IV. It's the sophistication chord — Khruangbin uses it constantly." },
           { text: "Play each progression and sing any melody over it. Which progression feels most like 'you'?", why: "Your harmonic preference is part of your artistic identity. Knowing which progressions resonate helps you write authentically." }
         ],
         feel: "The vi chord should feel bittersweet — not sad, but nostalgically warm. The ii chord should feel smooth and sophisticated. Together with I, IV, and V, you have 80% of popular music covered.",
         wrong: "If all progressions sound the same to you, play each one 10 times and sit with the emotional quality. They ARE different — your ear just needs more exposure to hear it.",
-        sarah: "Gene, your top artists ALL live in these progressions. Khruangbin loves I-ii-IV. Pepper lives on I-IV-V. Allah-Las are all about I-vi-IV-V. These aren't random patterns — they're emotional templates."
+        sarah: "Gene, your top artists ALL live in these progressions. Khruangbin works in minor-key modal vamps — groove and atmosphere over chord movement. Pepper lives on I-IV-V. Allah-Las lean into I-vi-IV-V. These aren't random patterns — they're emotional templates.",
+        metronome: 85,
+        recorder: true
       },
       {
         id: "ss-4-3",
@@ -622,7 +627,8 @@ export const SINGER_SONGWRITER_LEVELS = [
         ],
         feel: "Transcribing by ear is slow and sometimes frustrating, but when you land on the right chord, the satisfaction is immediate — the guitar and the recording align perfectly.",
         wrong: "If you're stuck on a chord, try the most common options first: I, IV, V, vi. Most songs are built from these four. If none work, the song might use 7th chords or borrowed chords — that's a Level 5+ challenge.",
-        sarah: "Gene, this single skill — learning songs by ear — is what separates musicians who depend on tabs from musicians who can learn anything, anywhere, with just a guitar. It's hard at first. It gets easier every time you do it."
+        sarah: "Gene, this single skill — learning songs by ear — is what separates musicians who depend on tabs from musicians who can learn anything, anywhere, with just a guitar. It's hard at first. It gets easier every time you do it.",
+        recorder: true
       },
       {
         id: "ss-4-5",
@@ -1051,7 +1057,7 @@ export const SINGER_SONGWRITER_LEVELS = [
         what: "Learn a basic fingerpicking pattern — thumb alternates on bass strings (4-5-6), index and middle fingers pick treble strings (1-2-3). Get it automatic on one chord before adding anything else. This is Level 1 again, for a new technique.",
         setup: "Guitar (nylon-string if available — Gene's texture preference). Metronome at 60 BPM.",
         steps: [
-          { text: "Hold Am. Thumb plays A string (5), then index plays B string (2), then middle plays high E string (1). That's the pattern: thumb-index-middle, repeating.", why: "This is the Travis picking foundation. Thumb on bass, fingers on treble. The thumb is the anchor — like the foot-tap for strumming." },
+          { text: "Hold Am. Thumb plays A string (5), then index plays G string (3), then middle plays B string (2). That's the pattern: thumb-index-middle, repeating.", why: "This is the Travis picking foundation. Thumb on bass, fingers on treble. The thumb is the anchor — like the foot-tap for strumming." },
           { text: "Loop this pattern at 60 BPM. One note per beat. Don't look at your right hand — feel the strings.", why: "Slow and clean builds the right-hand muscle memory. Each finger must find its string without looking." },
           { text: "Keep going for 3 minutes on Am. If you can zone out — think about surfing, your day, anything — the pattern is reaching autopilot.", why: "Same conversation test as Level 1. If thinking about something else breaks the pattern, it's not automatic yet." },
           { text: "Try the same pattern on C, then G, then Em. Same right-hand pattern, different left-hand chord. Thumb adjusts to the bass note of each chord.", why: "Each chord has a different bass string. Am=5th string, C=5th string, G=6th string, Em=6th string. The thumb must adapt." }
@@ -1059,7 +1065,8 @@ export const SINGER_SONGWRITER_LEVELS = [
         feel: "Fingerpicking should feel delicate and rolling — a gentle cascade of notes instead of a strum. The nylon-string sound is warm and intimate. Think Nick Drake, Tommy Guerrero, Hermanos Gutierrez.",
         wrong: "If your fingers are catching on strings or producing uneven volume, slow down. Each note should ring clearly with equal volume. If your thumb keeps hitting the wrong bass string, watch it for a while — then close your eyes and feel.",
         sarah: "Gene, fingerpicking + singing is the hardest integration in this curriculum. Your right hand needs a completely new autopilot. Be patient with yourself — this is Level 1 all over again, just with different fingers.",
-        metronome: 60
+        metronome: 60,
+        recorder: true
       },
       {
         id: "ss-7-2",

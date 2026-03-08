@@ -1297,7 +1297,8 @@ export const GUITAR_STUDY = [
         ],
         feel: "This should feel like a creative breakthrough — you're not just playing other people's scales and patterns anymore. You're making something that's yours.",
         wrong: "If nothing comes, you're thinking too hard. Go back to noodling. If the riff is too complex to remember after 30 seconds, simplify until it sticks.",
-        sarah: "Every guitarist has a moment where they stop playing other people's ideas and start creating their own. This exercise is designed to make that happen. Trust your instincts."
+        sarah: "Every guitarist has a moment where they stop playing other people's ideas and start creating their own. This exercise is designed to make that happen. Trust your instincts.",
+        recorder: true
       },
       {
         id: "gs-7-10",
@@ -1647,6 +1648,7 @@ export const GUITAR_STUDY = [
         feel: "This should feel like a performance — a complete musical statement with a beginning, middle, and end. You should feel proud, regardless of mistakes. You showed up for 15 minutes and made music.",
         wrong: "If it felt like 15 minutes of noodling, you need more structural awareness — plan your arc before you start. If one style dominated, you need more practice switching.",
         sarah: "This is it. Your surf rock graduation concert. 15 minutes of everything you've learned, driven by the beat that started it all. Record it. Keep it. Listen to it in a year.",
+        recorder: true,
         levelUp: "You can perform a structured 15-minute improvisation over surf rock that draws from all 9 levels with clear sections and natural style transitions."
       },
       {
@@ -1664,7 +1666,8 @@ export const GUITAR_STUDY = [
         ],
         feel: "This should feel deeper and more introspective than the surf set — like a late-night session rather than a beach party. The energy is internal, not external.",
         wrong: "If it sounded too similar to the surf set, you defaulted to one approach. The groove set should be slower, spacier, and more harmonically rich. If it felt boring, add more melodic variety.",
-        sarah: "Two golden hour sets, two different worlds. The surf set is about energy and drive. The groove set is about depth and feel. Both are equally valid expressions of musicianship."
+        sarah: "Two golden hour sets, two different worlds. The surf set is about energy and drive. The groove set is about depth and feel. Both are equally valid expressions of musicianship.",
+        recorder: true
       },
       {
         id: "gs-9-10",

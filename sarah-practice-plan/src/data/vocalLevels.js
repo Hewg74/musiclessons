@@ -278,10 +278,10 @@ export const VOCAL_LEVELS = [
       },
       {
         id: "v3e4", time: 4, title: "Reggae Phrasing: Call & Space", type: "vocal",
-        what: "Short 3-5 word bursts, then full-bar rests. Bob Marley's 50% silence principle -- what you DON'T sing is as important as what you do.",
+        what: "Short 3-5 word bursts, then full-bar rests. Marley's vocal approach uses as much space as sound -- what you DON'T sing is as important as what you do.",
         setup: "Reggae One Drop 85 BPM backing track or metronome at 85.",
         steps: [
-          { text: "Sing a 3-5 word phrase over 1 bar. Then rest for a full bar. Silence.", why: "Marley's vocals are 50% silence. The space gives each phrase weight and lets the riddim breathe." },
+          { text: "Sing a 3-5 word phrase over 1 bar. Then rest for a full bar. Silence.", why: "Marley's vocals use as much space as sound — short phrases, then full-bar rests. The space gives each phrase weight and lets the riddim breathe." },
           { text: "Example: 'Don't worry...' (bar of singing) then full bar of silence. 'About a thing...' (bar) silence.", why: "Each phrase is a statement. The silence lets it land before the next one arrives." },
           { text: "Resist the urge to fill the silence. The space IS the music.", why: "Western pop trains us to fill every beat. Reggae teaches the power of restraint." },
           { text: "Try improvising your own call-and-space phrases. Keep them short. Keep the silences full-bar.", why: "Improvising within constraints builds the phrasing skill faster than singing written lyrics." }
@@ -289,6 +289,7 @@ export const VOCAL_LEVELS = [
         feel: "Each phrase should feel like a complete thought that hangs in the air. The silence should feel intentional and powerful, not like you forgot what comes next.",
         wrong: "If you keep sneaking in extra words or humming during the rest bars, you're not comfortable with silence yet. Practice the silence as deliberately as the phrases.",
         metronome: 85,
+        recorder: true,
         levelUp: "2 minutes of improvised call-and-space phrasing with clean full-bar rests."
       },
       {
@@ -304,6 +305,7 @@ export const VOCAL_LEVELS = [
         feel: "The mixed section should feel like a conversation -- some things you say quickly, others you take your time with. The variety should feel natural, not mechanical.",
         wrong: "If all your phrases end up the same length, you're defaulting to your comfort zone. Deliberately alternate between extremes -- one word, then a full sentence.",
         metronome: 90,
+        recorder: true,
         levelUp: "2 minutes of mixed phrase lengths that sound conversational, not robotic."
       }
     ]
@@ -470,6 +472,7 @@ export const VOCAL_LEVELS = [
         ],
         feel: "Breathy should feel like a secret you're sharing. Full should feel like a declaration. Both should feel intentional, not accidental.",
         wrong: "If your breathy tone has no pitch (just air), engage the folds slightly more. If your full tone feels tight, you're pushing from the throat instead of supporting from the ribs.",
+        recorder: true,
         levelUp: "Clean toggle between breathy and full on the same phrase, 4 times, with both sounding musical."
       },
       {
@@ -560,6 +563,7 @@ export const VOCAL_LEVELS = [
         feel: "Like being inside the music rather than on top of it. Your voice is one color in the painting, not the subject.",
         wrong: "If your voice sticks out over the instruments, you're singing too loud or with too much vibrato. Pull back until you blend.",
         metronome: 120,
+        recorder: true,
         levelUp: "1 minute of vocal delivery that blends with the guitar rather than sitting on top of it."
       },
       {
@@ -603,6 +607,7 @@ export const VOCAL_LEVELS = [
         ],
         feel: "When the 3rd harmony locks in, you'll hear a sweetness -- a fullness that neither voice alone has. It should sound like one voice with two octaves, not two separate voices.",
         wrong: "If the harmony sounds dissonant on certain notes, you might be singing a strict 3rd (always 4 half steps) instead of a diatonic 3rd (following the key). Stay in the key.",
+        recorder: true,
         levelUp: "Sing a harmony a 3rd above a playback of your own melody through an entire verse."
       },
       {
@@ -618,6 +623,7 @@ export const VOCAL_LEVELS = [
         ],
         feel: "5ths should feel like standing at the edge of a canyon. Big, open, resonant. Less intimate than 3rds, more epic.",
         wrong: "If 5ths sound too hollow or empty, they might not suit the song. 5ths work best on sustained notes and simple melodies. Complex melodies usually want 3rds.",
+        recorder: true,
         levelUp: "Sing a 5th harmony over your recorded melody for a full verse, staying in key."
       },
       {
@@ -751,6 +757,7 @@ export const VOCAL_LEVELS = [
         feel: "Beat 1 entry feels strong and declarative. Beat 3 feels relaxed. & of 2 feels groovy and unexpected. Each creates a different emotional first impression.",
         wrong: "If all entries sound the same, you're probably defaulting to beat 1 regardless of where you think you're entering. Record and listen -- the recording doesn't lie.",
         metronome: 85,
+        recorder: true,
         levelUp: "Can intentionally start a vocal phrase on beat 1, beat 3, or & of 2, with each sounding natural."
       }
     ]
@@ -762,7 +769,7 @@ export const VOCAL_LEVELS = [
     duration: "20 min",
     setup: "Backing track from collection. Voice-only first.",
     subtitle: "Making It Up",
-    description: "Bradley Nowell freestyled half of Sublime's catalogue. Thom Yorke improvises vocal parts in the studio. The ability to make up melodies and lyrics in real time is the ultimate singer-songwriter skill -- it's where composition and performance merge.",
+    description: "Bradley Nowell built much of Sublime's catalogue through freestyle improvisation. Thom Yorke improvises vocal parts in the studio. The ability to make up melodies and lyrics in real time is the ultimate singer-songwriter skill -- it's where composition and performance merge.",
     artists: "Bradley Nowell, Thom Yorke",
     unlocks: "Performance & Integration (Level 10)",
     exercises: [
@@ -781,6 +788,7 @@ export const VOCAL_LEVELS = [
         wrong: "If it sounds random (no connection to the chords), simplify. Go back to Level 1 and just sing root notes of each chord. Build back up.",
         sarah: "The diagnostic: are the syncopations INTENTIONAL or ACCIDENTAL? You can hear the difference -- intentional sounds musical, accidental sounds lost.",
         metronome: 90,
+        recorder: true,
         levelUp: "Musical-sounding Level 3 scat over Am-C-G-D that follows chord tones."
       },
       {
@@ -796,11 +804,12 @@ export const VOCAL_LEVELS = [
         feel: "Round 1 feels safe. Round 2 feels like you're exploring familiar territory. Round 3 should feel like flying -- exhilarating and slightly scary.",
         wrong: "If Round 3 sounds like noise, you jumped to 'free' too quickly. Spend more time in Round 2. The passing tones prepare your ear for freedom.",
         metronome: 90,
+        recorder: true,
         levelUp: "2 minutes of free melodic improv that follows the chord changes and sounds musical."
       },
       {
         id: "v9e3", time: 4, title: "Lyric Freestyle", type: "vocal",
-        what: "Improvise words over a groove. Rhythm and melody take priority over meaning. Bradley Nowell's technique: let the mouth make sounds that happen to form words.",
+        what: "Improvise words over a groove. Rhythm and melody take priority over meaning. The freestyle approach Bradley Nowell exemplified: let the mouth make sounds that happen to form words.",
         setup: "Backing track at 85 BPM. Reggae or soul groove.",
         steps: [
           { text: "Start with nonsense syllables that sound like words. 'Sha-na-na, walking down the...'", why: "Don't try to write poetry in real time. Let sounds form words naturally." },
@@ -811,6 +820,7 @@ export const VOCAL_LEVELS = [
         feel: "Like talking in your sleep but with a beat. Don't think, don't edit, don't judge. Just let sounds come out in rhythm.",
         wrong: "If you keep stopping to think of the 'right' word, you're editing in real time. Say the wrong word -- it doesn't matter. Flow is everything.",
         metronome: 85,
+        recorder: true,
         levelUp: "2 minutes of lyric freestyle with consistent rhythm that contains at least 2-3 usable phrases."
       },
       {
@@ -826,6 +836,7 @@ export const VOCAL_LEVELS = [
         feel: "Each style switch should feel like putting on a different costume. Same you underneath, different presentation on top.",
         wrong: "If all four styles sound the same, you're not committing to each one. Exaggerate the differences. Caricature first, refine later.",
         metronome: 90,
+        recorder: true,
         levelUp: "Clean style switch every 4 bars, with each style recognizably different."
       },
       {
@@ -868,6 +879,7 @@ export const VOCAL_LEVELS = [
         ],
         feel: "This should feel slightly scary -- like it matters. That performance energy is what makes the difference between practice and playing for real.",
         wrong: "If you keep stopping, you're still in practice mode. Set a rule: no matter what happens, you play to the end. The song is 3-4 minutes. You can do anything for 4 minutes.",
+        recorder: true,
         levelUp: "Complete full song with no stops. Mistakes are fine. Recovery is the skill."
       },
       {
@@ -912,6 +924,7 @@ export const VOCAL_LEVELS = [
         ],
         feel: "Like a movie with three acts. The opener sets the mood, the middle builds tension, the closer delivers the payoff.",
         wrong: "If all three songs have the same energy level, rethink the order. Contrast is what creates the journey. If transitions feel awkward, practice just the transitions.",
+        recorder: true,
         levelUp: "Run a full 3-song mini-set that feels like a cohesive performance, not three separate songs."
       },
       {
