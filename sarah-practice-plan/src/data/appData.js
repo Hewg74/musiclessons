@@ -180,6 +180,7 @@ export const DAYS = [
         feel: "Sirens should feel like a smooth elevator ride through your range. The A3 zone might feel like hitting a speed bump — the trill may get uneven or the pitch wobbles. That's data, not failure. On pitch matching, the notes should 'lock in' to the chord you're playing on guitar.",
         wrong: "If your siren has a hard crack (not a gradual shift), you may be pushing too much air. Back off to 50% volume and try again.",
         sarah: "If you could find exercises where you are forced to flip from your head into your chest into your mixed — and make sure to tell them that you have a man voice because the notes that you flip on are going to be different.",
+        metronome: 90,
         levelUp: "Siren through A3 with gradual thinning instead of crack."
       }
     ],
@@ -245,6 +246,7 @@ export const DAYS = [
         feel: "When the syncopation is right, the song should feel like it has a 'bounce' or 'swagger.' The vocal line should feel like it's dancing around the guitar strum, not sitting on top of it.",
         wrong: "If the song sounds 'flat' or 'square,' you're probably putting words on the beat. Listen to the original again — hear the bounce, then try to match it.",
         sarah: "Watch out for the timing of the last word of each line. Make sure you're not simplifying it and putting things directly on beat when they're supposed to be in between the beats. Master the strum without the video, and then bring it to the video.",
+        metronome: 90,
         levelUp: "Hear the difference between your syncopation and the original's."
       },
       {
@@ -262,6 +264,7 @@ export const DAYS = [
         feel: "This should feel like musical exploration, not a drill. Each cycle is an opportunity to try new patterns. When you hit your break zone, the voice might crack — that's information, not failure. A committed crack is better than a safe whisper.",
         wrong: "If you're singing the same 4 notes on every chord, you're on autopilot. Force yourself to pick different starting notes, different intervals.",
         sarah: "Commit more, Jean! If you push more air you'll be more likely to hit the note in key. It's actually a great thing when your voice finds notes outside the scale — our brains naturally find these beautiful notes.",
+        metronome: 120,
         levelUp: "Climb through A3 without backing down. Crack is data."
       }
     ],
@@ -331,6 +334,7 @@ export const DAYS = [
         feel: "The scat improv should feel playful. You're making up music in real time. The groove beat keeps you honest rhythmically while you explore pitch.",
         wrong: "If your scat feels random (no relationship to the chord changes), simplify: just sing the root note of each chord on beat 1, then gradually add more notes.",
         sarah: "Having that control — getting the high notes in a quiet way or in a louder way and flipping between the mechanisms — that would be great practice for you. Mixed voice is the most powerful one because you're using your head to get a big sound.",
+        metronome: 90,
         levelUp: "Scat improv where syncopations sound intentional, not accidental."
       }
     ],
@@ -367,6 +371,7 @@ export const DAYS = [
         feel: "Listening to yourself is uncomfortable. That discomfort is the gap between what you hear in your head and what's actually coming out. The gap shrinks with practice.",
         wrong: "If you listen back and think 'that sounded fine,' listen again more carefully. Compare directly to the original. There's always a gap to close.",
         sarah: "Record yourself and listen back. You might be like, 'oh, it took me 20 seconds to hear that I was off.' Work it down to five seconds. As soon as you hear it, stop. It's way better to stop every 20 seconds than to keep going off beat.",
+        metronome: 90,
         levelUp: "Identify drift within 2–3 beats. Sol Del Sur video sent to Sarah."
       },
       {
@@ -431,6 +436,7 @@ export const DAYS = [
         feel: "This should feel like performing. The pressure of 'don't stop' creates a different mindset than drilling. Recovery is a skill — you're practicing the recovery, not the mistake.",
         wrong: "If you stop and restart, you've turned a performance into a drill. Commit to the no-stop rule.",
         sarah: "If you start falling off, as soon as you realize it, either try to get back in or pause, listen, and jump back in. It's way better to stop every 20 seconds than to keep going off beat — because if you're not on beat, your brain is not in the state it needs to be in.",
+        metronome: 90,
         levelUp: "Complete ILTWYW run without restart. Re-entries within 1 beat."
       },
       {
@@ -479,6 +485,7 @@ export const DAYS = [
         feel: "This is the ultimate test: can you stay in the groove while your mind is elsewhere? When the rhythm is truly internalized, it holds you up even when you're not thinking about it. Like walking.",
         wrong: "If your mind wanders and you go off beat, that's exactly the exercise. Notice the drift, re-enter, keep going.",
         sarah: "Do the whole track — don't stop after three or four minutes. The magic really happens beyond that. Your brain will start wandering into thought spaces that are not normal. Use it as meditation — go into it with an intention, but don't get off the beat.",
+        metronome: 120,
         levelUp: "Stay on beat while thinking about something else."
       },
       {
@@ -712,6 +719,7 @@ export const KEYBOARD_LEVELS = [
         feel: "Left hand heavy and anchoring, right hand light and percussive. Together they create a complete groove that sounds like bass + keys.",
         wrong: "If both hands drift to the same rhythm, strip back: left hand only for 4 bars, right hand only for 4 bars, then combine. Build the independence.",
         metronome: 72,
+        pianoKeys: { notes: ["C3", "E3", "G3", "C4", "E4", "G4"], label: "C Major (two hands)", range: ["C3", "C5"] },
         levelUp: "Both hands through C-Am-F-G at 80 BPM without rhythmic drift."
       },
       {
@@ -743,6 +751,7 @@ export const KEYBOARD_LEVELS = [
         feel: "Floating. The absence of beat 1 = weightlessness. That's the 'drop' in 'one-drop'. You should feel suspended between beats.",
         wrong: "If the one-drop feel isn't clicking, strip to right hand only and really exaggerate the silence on beat 1. Ghost it until you can barely hear it.",
         metronome: 76,
+        pianoKeys: { notes: ["A3", "C4", "E4"], label: "Am", range: ["A2", "E5"] },
         levelUp: "One-drop Am-Dm-G-C at 82 BPM with intentional & of 3 accent."
       },
       {
@@ -774,6 +783,7 @@ export const KEYBOARD_LEVELS = [
         feel: "Like a stress test. Each tempo should feel slightly harder. The goal isn't perfection at 140 — it's knowing your limits.",
         wrong: "If both hands desync above 100, go back to 100 and drill just the transitions (chord changes) at that tempo until they're instant.",
         metronome: 80,
+        pianoKeys: { notes: ["A3", "C4", "E4", "G4"], label: "Am7", range: ["A2", "G5"] },
         levelUp: "Clean two-hand groove at 120 BPM for a full Am-F-C-G cycle."
       }
     ]
@@ -796,6 +806,7 @@ export const KEYBOARD_LEVELS = [
         feel: "The verse should feel like whispering, the chorus like talking. Same chords, completely different energy. The contrast IS the arrangement.",
         wrong: "If verse and chorus sound the same, you're not differentiating enough. Try removing left hand entirely in verse. Make the gap bigger.",
         metronome: 90,
+        pianoKeys: { notes: ["A3", "C4", "E4"], label: "Am", range: ["A2", "G5"] },
         levelUp: "V-C-V-C with audible, dramatic energy difference between sections."
       },
       {
@@ -876,6 +887,7 @@ export const KEYBOARD_LEVELS = [
         feel: "Should sound like a 1960s beach party. The tremolo creates movement you don't have to play. Your job is just smooth chord changes and dynamic swells.",
         wrong: "If it sounds static, increase tremolo depth or speed. If chord changes are jarring, practice the voice-leading — find inversions with minimal movement.",
         metronome: 120,
+        pianoKeys: { notes: ["A3", "C4", "E4", "G4"], label: "Am7 Tremolo", range: ["A2", "G5"] },
         levelUp: "Smooth Am-G-F-E with swells at 120 BPM that sounds like vintage surf."
       },
       {
@@ -891,6 +903,7 @@ export const KEYBOARD_LEVELS = [
         feel: "Lo-fi, reverb-drenched, golden hour. Each note should bloom and fade. The spaces between notes are as important as the notes.",
         wrong: "If it sounds muddy, you're changing chords too fast or playing too many notes. Simplify — fewer notes, more space, more reverb.",
         metronome: 60,
+        pianoKeys: { notes: ["C4", "D4", "E4", "G4", "B4"], label: "Cadd9", range: ["C3", "B5"] },
         levelUp: "Cadd9-Am7-Fmaj7-G with reverb bloom and delay arpeggiation that sounds dreamy."
       },
       {
@@ -906,6 +919,7 @@ export const KEYBOARD_LEVELS = [
         feel: "The transition should feel like a scene change in a movie — same story, different mood. Reggae = daytime energy, surf/pad = sunset atmosphere.",
         wrong: "If the switch is clunky, practice just the transition: last bar of chop → first bar of pad, back and forth. Get the Ableton switching automatic.",
         metronome: 100,
+        pianoKeys: { notes: ["A3", "C4", "E4"], label: "Am", range: ["A2", "E5"] },
         levelUp: "Reggae-surf-reggae cycle twice at 108 BPM with smooth transitions."
       },
       {
@@ -936,6 +950,7 @@ export const KEYBOARD_LEVELS = [
         feel: "Like operating two instruments at once. The left hand is a drone or bass player, the right hand is the keyboard player. Together they fill the sonic space.",
         wrong: "If the two layers clash, check your register separation. Left hand must stay below C3, right hand above C4. The gap between = the bass player's space.",
         metronome: 80,
+        pianoKeys: { notes: ["A3", "C4", "E4", "G4"], label: "Am7", range: ["A2", "G5"] },
         levelUp: "Sustained bass pad + organ chop over Am-F-G progression, hands fully independent."
       }
     ]
@@ -973,6 +988,7 @@ export const KEYBOARD_LEVELS = [
         feel: "Effortless. No wrong notes means you can focus entirely on dynamics and phrasing. With tremolo, even simple runs sound cinematic.",
         wrong: "If runs sound like exercises (evenly spaced, same volume), add dynamics: start a note quieter, end a note louder. Shape the phrase.",
         metronome: 120,
+        pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Am Pentatonic", range: ["A2", "A5"] },
         levelUp: "8-bar pentatonic run with clear dynamic arc at 130 BPM."
       },
       {
@@ -988,6 +1004,7 @@ export const KEYBOARD_LEVELS = [
         feel: "Melancholy but not depressing — minor key at sunset. Slow dub tempos let every note breathe. The B natural adds a ray of light.",
         wrong: "If it sounds like plain D minor, you're not hitting B natural enough in your fills. Make it deliberate — land on B, let it ring.",
         metronome: 70,
+        pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4", "F#4", "G4"], label: "A Dorian", range: ["A2", "A5"] },
         levelUp: "Dm-G-Am-Dm with Dorian fills at 76 BPM. B natural appears in most fills."
       },
       {
@@ -1019,6 +1036,7 @@ export const KEYBOARD_LEVELS = [
         feel: "The blues scale should feel like a cheat code — everything sounds good. The blue note (Eb) adds instant soul to any phrase.",
         wrong: "If licks sound like scale exercises, play fewer notes. A 2-note lick with conviction beats a 6-note lick that sounds rehearsed.",
         metronome: 84,
+        pianoKeys: { notes: ["A3", "C4", "D4", "E♭4", "E4", "G4"], label: "Am Blues", range: ["A2", "A5"] },
         levelUp: "3 different blues licks inserted naturally into an Am-F-C-G chop at 90 BPM."
       },
       {
@@ -1070,6 +1088,7 @@ export const KEYBOARD_LEVELS = [
         feel: "Each 8-bar section should feel like a different room in the same house. The silence should feel like the most dramatic section.",
         wrong: "If transitions take more than 1 beat, practice just the switch points. The band doesn't stop for you to change sounds.",
         metronome: 100,
+        pianoKeys: { notes: ["A3", "C4", "E4", "G4"], label: "Am7", range: ["A2", "G5"] },
         levelUp: "3 full cycles (chop-tremolo-pad-silence) at 108 BPM with clean transitions."
       },
       {
@@ -1155,6 +1174,7 @@ export const LOOPER_LEVELS = [
         ],
         feel: "Like switching from a phone metronome to a built-in one. Same concept, better workflow — it's always there when you need it.",
         wrong: "If the rhythm guide is coming through the main output, check the routing. You don't want click bleed in recordings or performance.",
+        metronome: 80,
         levelUp: "Can set any BPM and start the rhythm guide in under 10 seconds."
       },
       {
@@ -1171,6 +1191,7 @@ export const LOOPER_LEVELS = [
         ],
         feel: "Like practicing a golf swing without a ball. The press should feel as natural as clapping on beat 1.",
         wrong: "If your loop lengths are inconsistent (3.5 bars, 4.5 bars), stay on Quantize: MEASURE until the press is automatic.",
+        metronome: 80,
         levelUp: "10 consecutive 4-bar loops where the stop press lands within a 16th note of beat 1."
       },
       {
@@ -1187,6 +1208,7 @@ export const LOOPER_LEVELS = [
         ],
         feel: "The first time your loop plays back seamlessly, it's magic — you're hearing yourself accompany yourself. That feeling never fully goes away.",
         wrong: "If you hear a click or gap at the loop point, your stop-press timing is off. Stay on Quantize: MEASURE and focus on pressing on beat 1.",
+        metronome: 80,
         levelUp: "3 out of 5 loops play back seamlessly with no audible boundary artifact."
       },
       {
@@ -1202,6 +1224,7 @@ export const LOOPER_LEVELS = [
         ],
         feel: "Like jamming with a rhythm guitarist who plays exactly what you want, exactly when you want it. Because it IS you.",
         wrong: "If you can't play guitar AND adjust the fader, that's normal. Practice fader moves between chord changes, not during.",
+        metronome: 80,
         levelUp: "Play through a full Am-C-G-D cycle live over your Am loop while adjusting the fader at least once."
       },
       {
@@ -1254,6 +1277,7 @@ export const LOOPER_LEVELS = [
         ],
         feel: "Like singing with a backing track, except YOU made the backing track 30 seconds ago. That ownership changes how you sing.",
         wrong: "If you keep losing your place in the song, simplify: just hum the melody. Add words once the melodic rhythm is locked.",
+        metronome: 90,
         levelUp: "Complete one full verse + chorus of ILTWYW while the loop plays, without losing your place."
       },
       {
@@ -1285,6 +1309,7 @@ export const LOOPER_LEVELS = [
         ],
         feel: "Like having a 'Ctrl-Z' for live music. The safety net makes you braver about trying things.",
         wrong: "If UNDO doesn't seem to work, check that you're in the right mode. UNDO only removes the most recent overdub layer, not the original recording.",
+        metronome: 80,
         levelUp: "Overdub, hear the mistake, UNDO — all within 2 seconds, without looking at the unit."
       },
       {
@@ -1300,6 +1325,7 @@ export const LOOPER_LEVELS = [
         ],
         feel: "Like adding a bass player to your band, one note at a time. Simple additions have outsized impact.",
         wrong: "If the overdub makes the loop muddy or distorted, your input level is too high. Drop knob [2] and re-record.",
+        metronome: 80,
         levelUp: "Clean overdub with bass notes that blend naturally — no volume spike, no mud."
       },
       {
@@ -1315,6 +1341,7 @@ export const LOOPER_LEVELS = [
         ],
         feel: "Like a pilot testing at different altitudes. You need to know your current clean ceiling so you can systematically raise it.",
         wrong: "If chord changes are sloppy at 80, don't push to 100. Master 80 first. Sloppy loops sound sloppy FOREVER — they repeat.",
+        metronome: 70,
         levelUp: "Clean internal Am-to-C chord change in a loop at 100 BPM."
       },
       {
@@ -1330,6 +1357,7 @@ export const LOOPER_LEVELS = [
         ],
         feel: "Like taking off training wheels. MEASURE is a tricycle, BEAT is a bicycle, OFF is a unicycle.",
         wrong: "If Quantize: OFF loops sound terrible, that's expected! Stay on MEASURE for practice and performance. OFF is a long-term goal.",
+        metronome: 80,
         levelUp: "Can hear the difference between all three modes and articulate which sounds cleanest."
       },
       {
@@ -1346,6 +1374,7 @@ export const LOOPER_LEVELS = [
         ],
         feel: "This IS a performance. One loop, one voice, clean ending. KT Tunstall launched her career with exactly this format.",
         wrong: "If you keep restarting because it's 'not perfect,' stop. Record one complete take, imperfections and all. You can do another after.",
+        metronome: 90,
         levelUp: "A recorded performance you'd show a friend. Not perfect — just complete and confident."
       }
     ]
@@ -1368,6 +1397,7 @@ export const LOOPER_LEVELS = [
         ],
         feel: "Like a guitar duet with yourself. Two distinct voices, each in their own space.",
         wrong: "If both tracks sound like one muddy guitar, you're in the same register. Push Track 1 lower and Track 2 higher.",
+        metronome: 90,
         levelUp: "Two tracks that sound like two distinct instruments, not one blurry guitar."
       },
       {
@@ -1444,6 +1474,7 @@ export const LOOPER_LEVELS = [
         ],
         feel: "Like discovering that your bandmates can play in different time signatures simultaneously. Fascinating but chaotic.",
         wrong: "If tracks feel 'off' from each other, check Loop Sync. It should be ON until you deliberately want polyrhythms.",
+        metronome: 85,
         levelUp: "Can explain the difference between Loop Sync ON and OFF, and know which you want for each situation."
       },
       {
@@ -1482,6 +1513,7 @@ export const LOOPER_LEVELS = [
         ],
         feel: "Like discovering your guitar is also a drum kit. The body percussion should feel rhythmic and groovy, not like you're hitting furniture.",
         wrong: "If the kick and snare sound the same, exaggerate the location difference. Kick = center of body. Snare = near the bridge.",
+        metronome: 90,
         levelUp: "8 bars of kick-hat-snare-hat at 90 BPM that sounds like a beat, not random tapping."
       },
       {
@@ -1498,6 +1530,7 @@ export const LOOPER_LEVELS = [
         ],
         feel: "The first time your body percussion loops back as a beat, it feels like magic. You ARE the drum machine.",
         wrong: "If the loop sounds like random thumping, the pattern isn't tight enough. Go back to the previous exercise and nail the pattern without the looper first.",
+        metronome: 90,
         levelUp: "3 out of 5 body percussion loops that genuinely groove."
       },
       {
@@ -1528,6 +1561,7 @@ export const LOOPER_LEVELS = [
         ],
         feel: "You're a one-person band. Drums, guitar, and vocals — all you. This is the Sheeran/Howie Day magic.",
         wrong: "If the percussion drowns the chords, T1 fader is too high. Percussion should be felt, not heard above the chords.",
+        metronome: 90,
         levelUp: "Full verse + chorus of ILTWYW over rhythm + chord loops with dynamic fader adjustment."
       },
       {
@@ -1559,6 +1593,7 @@ export const LOOPER_LEVELS = [
         ],
         feel: "Like discovering your mouth is a drum machine. It feels silly at first and impressive very quickly.",
         wrong: "If the beatbox sounds weak, it's a volume/proximity issue. Get close to the mic and push the sounds from your chest, not your throat.",
+        metronome: 80,
         levelUp: "8 bars of B-Ts-Pf-Ts at 80 BPM that sounds like a beat, not someone making sounds with their mouth."
       }
     ]
@@ -1581,6 +1616,7 @@ export const LOOPER_LEVELS = [
         ],
         feel: "Like hearing a full band — drums, bass, and lead guitar — except it's all you. Each frequency zone has its own space.",
         wrong: "If everything sounds like one wall of guitar, you're not separating registers enough. Push bass lower, melody higher.",
+        metronome: 90,
         levelUp: "Three tracks where a listener could identify each layer with their eyes closed."
       },
       {
@@ -1939,6 +1975,7 @@ export const LOOPER_LEVELS = [
         ],
         feel: "Like a short film — beginning, middle, end. The audience should feel taken on a journey, even in 5 minutes.",
         wrong: "If your build is too fast (all layers by 0:30), slow down. Patience in Act 1 makes Act 2 more powerful.",
+        metronome: 95,
         levelUp: "Complete 5-minute three-act performance without stopping, with clear build/peak/resolution."
       },
       {
@@ -2069,6 +2106,7 @@ export const LOOPER_LEVELS = [
         ],
         feel: "Like freewriting — the first sentence doesn't matter, but it unlocks the next one. Let the music surprise you.",
         wrong: "If you freeze at the blank canvas, simplify: just record a single chord. ONE chord. Build from there.",
+        metronome: 110,
         levelUp: "A 3-layer improvised loop that sounds like a coherent piece of music, created without any plan."
       },
       {
@@ -2114,6 +2152,7 @@ export const LOOPER_LEVELS = [
         ],
         feel: "A Khruangbin groove should make you involuntarily nod your head. It's all about the POCKET.",
         wrong: "If the muted rhythm isn't tight, it won't groove. Practice the 16th-note muted strum off the looper first.",
+        metronome: 105,
         levelUp: "A groove that makes you nod. That's the only test."
       },
       {
@@ -2350,6 +2389,7 @@ export const LESSON_POOL = [
         wrong: "If you're off beat and don't notice, that's the biggest danger. It's way better to stop every 20 seconds than to keep going off beat -- you'd be training your brain wrong.",
         sarah: "Stop. Fix it fast. It's way better to stop every 20 seconds than to keep going off beat, because if you're not on beat, your brain is not in the state it needs to be in.",
         metronome: 80,
+        recorder: true,
         levelUp: "Clean strum at 90 BPM through the full groove beat track."
       },
       {
@@ -2369,6 +2409,7 @@ export const LESSON_POOL = [
         feel: "Your body plays while your mind explores. It should feel like a trance state. Neurons are firing in unusual patterns because you're active physically while flowing in thought.",
         wrong: "If your mind wanders and you go off beat, that's the exercise -- notice the drift, stop, re-enter. Don't just keep going off beat.",
         sarah: "Do the whole track. Don't stop after three or four minutes. The magic really happens beyond that. Use it as meditation -- go into it with an intention, but don't get off the beat.",
+        metronome: 120,
         levelUp: "Complete a full 10+ minute backing track while thinking about something else entirely."
       }
     ],
@@ -2475,6 +2516,7 @@ export const LESSON_POOL = [
         feel: "You should feel the voice transition -- a moment where chest voice stops being comfortable and the voice wants to shift. With commitment, the flip is more obvious.",
         wrong: "If you can't find the flip, you're probably not committing enough. Half-singing and holding back hides the passaggio.",
         sarah: "Your flip is around A3. That area is where I would really work. You want to be able to have full control over your tone choice when you're choosing those notes.",
+        referencePitches: getPitchRange("E3", "A3"),
         levelUp: "Know your flip point on any given day and be able to approach it from both directions."
       }
     ],

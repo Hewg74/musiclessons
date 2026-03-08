@@ -247,17 +247,17 @@ export function OfflineTabs({ theme: T }) {
         <button onClick={() => setActiveTab('sol')} style={{
           background: activeTab === 'sol' ? T.gold : T.bgCard,
           color: activeTab === 'sol' ? '#fff' : T.textMed,
-          border: `1px solid ${T.border}`, padding: '8px 16px', borderRadius: T.radiusMd, cursor: 'pointer'
+          border: `1px solid ${T.border}`, padding: '8px 16px', borderRadius: T.radius, cursor: 'pointer'
         }}>Sol Del Sur</button>
         <button onClick={() => setActiveTab('iltwyw')} style={{
           background: activeTab === 'iltwyw' ? T.gold : T.bgCard,
           color: activeTab === 'iltwyw' ? '#fff' : T.textMed,
-          border: `1px solid ${T.border}`, padding: '8px 16px', borderRadius: T.radiusMd, cursor: 'pointer'
+          border: `1px solid ${T.border}`, padding: '8px 16px', borderRadius: T.radius, cursor: 'pointer'
         }}>I Like The Way You Walk</button>
       </div>
       <pre style={{
-        background: T.bgSoft, padding: 20, border: `1px solid ${T.border}`,
-        borderRadius: T.radiusMd, overflowX: 'auto', fontFamily: 'monospace', fontSize: 13,
+        background: T.bgSoft, padding: 16, border: `1px solid ${T.border}`,
+        borderRadius: T.radius, overflowX: 'auto', fontFamily: 'monospace', fontSize: 13,
         color: T.textDark, lineHeight: 1.5
       }}>
         {activeTab === 'sol' ? TAB_CONTENT.soldelsur.trim() : TAB_CONTENT.iltwyw.trim()}
@@ -320,7 +320,7 @@ export function AudioRecorder({ theme: T, inline = false }) {
   }, []);
 
   return (
-    <div style={inline ? { background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radiusMd, padding: 12 } : {}}>
+    <div style={inline ? { background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radius, padding: 16 } : {}}>
       {!inline && <p style={{ fontSize: 14, color: T.textMed, marginBottom: 16 }}>
         Record yourself and listen back immediately. (Saved temporarily in memory).
       </p>}
@@ -328,18 +328,18 @@ export function AudioRecorder({ theme: T, inline = false }) {
       <div style={{ display: 'flex', alignItems: 'center', gap: inline ? 10 : 16 }}>
         {!isRecording ? (
           <button onClick={startRecording} style={{
-            background: T.coral, color: '#fff', border: 'none', padding: inline ? '6px 14px' : '12px 24px',
-            borderRadius: 30, cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: 6,
-            fontSize: inline ? 11 : 14
+            background: T.coral, color: '#fff', border: 'none', padding: inline ? '8px 16px' : '12px 24px',
+            borderRadius: T.radius, cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: 6,
+            fontSize: inline ? 12 : 14
           }}>
             <div style={{ width: inline ? 8 : 10, height: inline ? 8 : 10, borderRadius: '50%', background: '#fff' }} />
             REC
           </button>
         ) : (
           <button onClick={stopRecording} style={{
-            background: T.textDark, color: '#fff', border: 'none', padding: inline ? '6px 14px' : '12px 24px',
-            borderRadius: 30, cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: 6,
-            animation: 'pulse-ring 2s infinite', fontSize: inline ? 11 : 14
+            background: T.textDark, color: '#fff', border: 'none', padding: inline ? '8px 16px' : '12px 24px',
+            borderRadius: T.radius, cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: 6,
+            animation: 'pulse-ring 2s infinite', fontSize: inline ? 12 : 14
           }}>
             <div style={{ width: inline ? 10 : 12, height: inline ? 10 : 12, background: '#fff', borderRadius: 2 }} />
             STOP
@@ -353,7 +353,7 @@ export function AudioRecorder({ theme: T, inline = false }) {
 
       {audioURL && !inline && (
         <div style={{ marginTop: 20 }}>
-          <div style={{ fontSize: 12, color: T.textLight, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>Latest Take</div>
+          <div style={{ fontSize: 11, fontWeight: 700, color: T.textMuted, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1.5, fontFamily: T.sans }}>Latest Take</div>
           <audio controls src={audioURL} style={{ width: '100%', height: 40 }} />
         </div>
       )}
@@ -417,28 +417,27 @@ export function PitchPipe({ theme: T }) {
         Standard Tuning (E A D G B E)
       </p>
 
-      <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: "repeat(3, 1fr)", gap: 12, justifyContent: 'center', maxWidth: 280, margin: "0 auto" }}>
         {strings.map(s => (
           <button
             key={s.note}
             onClick={() => playNote(s.note)}
             style={{
-              width: 72, height: 72,
+              aspectRatio: "1/1", width: "100%", maxWidth: 80, margin: "0 auto",
               borderRadius: "50%",
               border: activeNote === s.note ? `2px solid ${T.gold}` : `1px solid ${T.border}`,
               background: activeNote === s.note ? T.goldSoft : T.bgCard,
               color: activeNote === s.note ? T.goldDark : T.textDark,
               cursor: 'pointer',
-              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: "center", gap: 2,
-              transition: 'all 0.15s cubic-bezier(0.4, 0, 0.2, 1)',
-              boxShadow: activeNote === s.note ? `0 6px 16px ${T.gold}40` : "0 3px 10px rgba(0,0,0,0.04)"
+              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: "center", gap: 0,
+              transition: 'all 0.15s cubic-bezier(0.4, 0, 0.2, 1)'
             }}
             onPointerDown={e => { e.currentTarget.style.transform = "scale(0.92)"; }}
             onPointerUp={e => { e.currentTarget.style.transform = "scale(1)"; }}
             onPointerLeave={e => { e.currentTarget.style.transform = "scale(1)"; }}
           >
-            <span style={{ fontSize: 22, fontWeight: 700, fontFamily: T.sans, lineHeight: 1 }}>{s.label}</span>
-            <span style={{ fontSize: 10, fontWeight: 600, color: T.textMuted, fontFamily: T.sans }}>{s.string}</span>
+            <span style={{ fontSize: 24, fontWeight: 600, fontFamily: T.sans, lineHeight: 1 }}>{s.label}</span>
+            <span style={{ fontSize: 10, fontWeight: 600, color: T.textMuted, fontFamily: T.sans, marginTop: 2 }}>{s.string}</span>
           </button>
         ))}
       </div>
@@ -792,9 +791,8 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
   return (
     <div style={{
       background: bgTint, border: `1px solid ${borderTint}`,
-      borderRadius: T.radiusMd, padding: inline ? "18px" : "24px",
-      marginTop: inline ? 12 : 0, transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
-      boxShadow: pitchState.active ? `0 4px 12px ${statusColor}10` : "inset 0 2px 4px rgba(0,0,0,0.02)",
+      borderRadius: T.radius, padding: "16px",
+      marginTop: inline ? 12 : 0, marginBottom: 16, transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
       animation: "fade-in-up 0.3s ease-out forwards"
     }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
@@ -847,17 +845,15 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
           {/* Center mark */}
           <div style={{ position: "absolute", left: "50%", top: -4, width: 2, height: 12, background: T.textMuted, transform: "translateX(-50%)", borderRadius: 1 }} />
 
-          {/* Active Dot */}
           <div style={{
             position: "absolute",
-            top: -8,
+            top: -6,
             left: dotPosition,
-            width: 20, height: 20, borderRadius: "50%",
+            width: 16, height: 16, borderRadius: "50%",
             background: pitchState.active ? statusColor : T.bgCard,
             border: pitchState.active ? "none" : `2px solid ${T.textMuted}`,
             transform: "translateX(-50%)",
             transition: "left 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.4s ease, opacity 0.3s ease",
-            boxShadow: pitchState.active ? `0 2px 8px ${statusColor}60, inset 0 -2px 4px rgba(0,0,0,0.1)` : 'none',
             opacity: pitchState.active ? 1 : 0,
             zIndex: 2
           }} />
@@ -945,6 +941,26 @@ const SCALES = {
   "am-blues": {
     name: "Am Blues",
     notes: ["A", "C", "D", "E♭", "E", "G"]
+  },
+  "g-mixolydian": {
+    name: "G Mixolydian",
+    notes: ["G", "A", "B", "C", "D", "E", "F"]
+  },
+  "a-sus-pentatonic": {
+    name: "A Sus Pentatonic",
+    notes: ["A", "B", "D", "E", "G"]
+  },
+  "a-phrygian": {
+    name: "A Phrygian",
+    notes: ["A", "B♭", "C", "D", "E", "F", "G"]
+  },
+  "a-phrygian-dominant": {
+    name: "A Phrygian Dominant",
+    notes: ["A", "B♭", "C#", "D", "E", "F", "G"]
+  },
+  "a-dorian": {
+    name: "A Dorian",
+    notes: ["A", "B", "C", "D", "E", "F#", "G"]
   }
 };
 
@@ -1037,7 +1053,7 @@ export function FretboardDiagram({ theme: T, scale, position, highlight = [] }) 
   return (
     <div style={{
       background: T.bgSoft, border: `1px solid ${T.border}`,
-      borderRadius: T.radiusMd, padding: 16, marginBottom: 16
+      borderRadius: T.radius, padding: 16, marginBottom: 16
     }}>
       <div style={{
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
@@ -1243,7 +1259,7 @@ export function VolumeMeter({ theme: T, inline = false }) {
     return (
       <div style={{
         background: T.bgSoft, border: `1px solid ${T.border}`,
-        borderRadius: T.radiusMd, padding: inline ? 10 : 16, marginBottom: 16
+        borderRadius: T.radius, padding: inline ? 16 : 16, marginBottom: 16
       }}>
         <button
           onClick={startMeter}
@@ -1271,7 +1287,7 @@ export function VolumeMeter({ theme: T, inline = false }) {
   return (
     <div style={{
       background: T.bgSoft, border: `1px solid ${T.border}`,
-      borderRadius: T.radiusMd, padding: inline ? 10 : 16, marginBottom: 16
+      borderRadius: T.radius, padding: inline ? 16 : 16, marginBottom: 16
     }}>
       {/* dB Readout */}
       <div style={{

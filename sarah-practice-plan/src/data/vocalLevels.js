@@ -242,6 +242,7 @@ export const VOCAL_LEVELS = [
         feel: "Each 'dah' should land RIGHT on the click, not a millisecond early or late. It should feel like your voice and the metronome are the same event.",
         wrong: "If you consistently land slightly after the click, you're reacting to it instead of anticipating it. Try to ARRIVE at the click, not respond to it.",
         metronome: 90,
+        referencePitches: getPitchRange("A2", "C4"),
         levelUp: "8 bars of on-beat 'dah' with pitch where every syllable is indistinguishable from the click timing."
       },
       {

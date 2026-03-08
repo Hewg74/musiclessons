@@ -229,7 +229,8 @@ export const GUITAR_STUDY = [
         ],
         feel: "Mixolydian should feel brighter and more confident than the blues scale — like stepping out of a smoky club into sunlight. The b7 gives it swagger without sadness.",
         wrong: "If it sounds like a regular major scale, you're probably playing F# instead of F. If it sounds bluesy, you've slipped back into pentatonic. Listen for the brightness.",
-        sarah: "Mixolydian is the 'almost happy' scale. It's major enough to feel good but that flatted 7th keeps it interesting. It's why surf guitar never sounds cheesy — there's always an edge."
+        sarah: "Mixolydian is the 'almost happy' scale. It's major enough to feel good but that flatted 7th keeps it interesting. It's why surf guitar never sounds cheesy — there's always an edge.",
+        fretboard: { scale: "g-mixolydian", position: 1 }
       },
       {
         id: "gs-2-2",
@@ -246,6 +247,7 @@ export const GUITAR_STUDY = [
         feel: "Each position has a different character — low is powerful, middle is melodic, high is piercing. Moving between them should feel like shifting gears.",
         wrong: "If you keep getting lost between positions, spend more time on each one individually before connecting them. The shapes need to be automatic before you link them.",
         sarah: "Three positions is enough for surf. You don't need all seven modes mapped out — you need three shapes you can access without thinking.",
+        fretboard: { scale: "g-mixolydian", position: 1 },
         metronome: 60
       },
       {
@@ -317,6 +319,7 @@ export const GUITAR_STUDY = [
         feel: "The toggle should feel like changing channels — each scale has a distinct emotional color. Blues is tension and release; Mixolydian is forward momentum and brightness.",
         wrong: "If both sections sound the same, you're not committing to the character of each scale. Blues should be slower and bendier; Mixolydian should be straighter and brighter.",
         sarah: "Knowing two scales isn't twice as useful as knowing one — it's ten times as useful, because you can contrast them.",
+        fretboard: { scale: "g-mixolydian", position: 1, highlight: ["Eb3"] },
         metronome: 90
       },
       {
@@ -352,7 +355,8 @@ export const GUITAR_STUDY = [
         ],
         feel: "When the tremolo melody locks in with the surf beat, it should feel like riding a wave — momentum, shimmer, and a sense of forward motion.",
         wrong: "If the melody gets lost in the tremolo, you're sacrificing pitch accuracy for speed. Slow the melody down and make sure each note is clear before adding speed.",
-        sarah: "Tremolo melody is the highest expression of surf guitar. It's not about speed — it's about making a melody shimmer. Dick Dale's 'Misirlou' works because the melody is great, not because the picking is fast."
+        sarah: "Tremolo melody is the highest expression of surf guitar. It's not about speed — it's about making a melody shimmer. Dick Dale's 'Misirlou' works because the melody is great, not because the picking is fast.",
+        fretboard: { scale: "g-mixolydian", position: 1 }
       },
       {
         id: "gs-2-9",
@@ -487,7 +491,8 @@ export const GUITAR_STUDY = [
         ],
         feel: "Both progressions should feel like they could cycle forever. Reggae grooves are circular — there's no dramatic ending, just deeper and deeper pocket.",
         wrong: "If the progression sounds like a pop song, you're probably playing on the downbeat. If it sounds stilted, your chops aren't tight enough. If it sounds jazzy, your voicings might be too complex.",
-        sarah: "Bob Marley used maybe 5 chord progressions his entire career. He never needed more because the groove and the message carried everything."
+        sarah: "Bob Marley used maybe 5 chord progressions his entire career. He never needed more because the groove and the message carried everything.",
+        metronome: 95
       },
       {
         id: "gs-3-6",
@@ -522,7 +527,8 @@ export const GUITAR_STUDY = [
         ],
         feel: "This should feel energetic and fun — the best of both worlds. The reggae bounce combined with surf drive creates something that makes you want to move.",
         wrong: "If the skanks fall apart at 120 BPM, the tempo is challenging your muting technique. Practice the chop at 100 BPM first, then work up. If the surf leads sound disconnected from the skanks, you're not transitioning smoothly enough.",
-        sarah: "Pepper figured out that reggae and surf aren't opposites — they're both ocean music. One from the Caribbean, one from California. Same vibe, different expression."
+        sarah: "Pepper figured out that reggae and surf aren't opposites — they're both ocean music. One from the Caribbean, one from California. Same vibe, different expression.",
+        metronome: 120
       },
       {
         id: "gs-3-8",
@@ -607,7 +613,8 @@ export const GUITAR_STUDY = [
         ],
         feel: "The sus pentatonic should feel open and spacious — like standing in a vast landscape with nothing blocking the horizon. It's neither happy nor sad, just vast.",
         wrong: "If it sounds like regular pentatonic, you're playing C instead of B. If it sounds too bright, you might be playing a major scale. The sus pentatonic should feel ambiguous and floating.",
-        sarah: "One note is the difference between Mississippi Delta blues and Saharan desert blues. Same guitar, same technique, completely different emotional world. That's the power of note choice."
+        sarah: "One note is the difference between Mississippi Delta blues and Saharan desert blues. Same guitar, same technique, completely different emotional world. That's the power of note choice.",
+        fretboard: { scale: "a-sus-pentatonic", position: 2 }
       },
       {
         id: "gs-4-2",
@@ -899,7 +906,8 @@ export const GUITAR_STUDY = [
         ],
         feel: "This should feel like a warm conversation at low volume — intimate, unhurried, and slightly jazzy without being intellectual. It's music for headphones at midnight.",
         wrong: "If you're playing too many notes, strip away half of them. If the passing tones sound forced or academic, make them shorter — grace notes, not featured notes. If your tone is bright, move the picking hand closer to the neck.",
-        sarah: "Tommy Guerrero is a pro skateboarder who taught himself guitar. His playing has the grace of skating — flow, momentum, and an effortless quality that takes years to develop."
+        sarah: "Tommy Guerrero is a pro skateboarder who taught himself guitar. His playing has the grace of skating — flow, momentum, and an effortless quality that takes years to develop.",
+        volumeMeter: true
       },
       {
         id: "gs-5-8",
@@ -985,6 +993,7 @@ export const GUITAR_STUDY = [
         feel: "Each note should feel like dropping a pebble into still water — the ripples spread and overlap. Your playing should sound bigger than one guitar.",
         wrong: "If the notes sound clipped or staccato, you're muting too early. If it sounds muddy, slow down and let fewer notes overlap at once.",
         sarah: "Hermanos Gutierrez build entire songs from simple arpeggios drenched in reverb. The magic isn't complexity — it's letting each note breathe.",
+        volumeMeter: true,
         metronome: 70,
         levelUp: "You can play all three minor arpeggios with smooth, overlapping sustain and seamless transitions between chords."
       },
@@ -1054,7 +1063,8 @@ export const GUITAR_STUDY = [
         ],
         feel: "The Bb should feel like a plot twist — unexpected, dramatic, and meaningful. The rest of your playing provides the context that makes it powerful.",
         wrong: "If everything sounds 'Arabic' or 'Spanish,' you're overusing the Bb. If it just sounds like minor, you're not landing on the Bb with enough intention.",
-        sarah: "Phrygian is the scale of drama queens — and I mean that as a compliment. One well-placed Bb is worth more than a hundred fast runs."
+        sarah: "Phrygian is the scale of drama queens — and I mean that as a compliment. One well-placed Bb is worth more than a hundred fast runs.",
+        fretboard: { scale: "a-phrygian", position: 1 }
       },
       {
         id: "gs-6-6",
@@ -1071,7 +1081,8 @@ export const GUITAR_STUDY = [
         ],
         feel: "The quiet sections should feel intimate and fragile. The loud sections should feel powerful and inevitable. The transitions should feel like breathing — natural and connected.",
         wrong: "If your quiet sections are still pretty loud, work on reducing your picking force. If the transitions are abrupt instead of smooth, slow down the swell.",
-        sarah: "Dynamics are the most underrated tool in guitar. Most players have two settings: on and off. You're learning to use the entire spectrum."
+        sarah: "Dynamics are the most underrated tool in guitar. Most players have two settings: on and off. You're learning to use the entire spectrum.",
+        volumeMeter: true
       },
       {
         id: "gs-6-7",
@@ -1123,6 +1134,7 @@ export const GUITAR_STUDY = [
         feel: "This should feel like directing a short film with your guitar. You're not playing songs — you're creating atmosphere, tension, and release. Every section serves the narrative.",
         wrong: "If it sounds like three separate exercises stitched together, work on smoother transitions. If there's no dynamic contrast between acts, exaggerate the differences.",
         sarah: "This is the graduation exercise for cinematic guitar. You started Level 6 with single arpeggios — now you're scoring imaginary films. That's real artistic growth.",
+        volumeMeter: true,
         levelUp: "You can create a convincing 3-act musical narrative with clear dynamic contrast, Phrygian drama, and tremolo atmosphere. Your guitar tells stories."
       }
     ]
@@ -1183,7 +1195,8 @@ export const GUITAR_STUDY = [
         ],
         feel: "The scale should feel dangerous and exciting — like a snake charmer's melody or a Dick Dale surf break. The Bb-C# interval should give you chills.",
         wrong: "If it sounds like regular minor, you're not emphasizing the C#. If it sounds random, focus on the A-Bb-C#-D core. If it sounds timid, play harder.",
-        sarah: "Phrygian Dominant is the scale that launched a thousand surf songs. Once you have it under your fingers, you'll hear it everywhere — and you'll be able to play it anywhere."
+        sarah: "Phrygian Dominant is the scale that launched a thousand surf songs. Once you have it under your fingers, you'll hear it everywhere — and you'll be able to play it anywhere.",
+        fretboard: { scale: "a-phrygian-dominant", position: 1 }
       },
       {
         id: "gs-7-4",
@@ -1328,7 +1341,8 @@ export const GUITAR_STUDY = [
         ],
         feel: "Dorian should feel warm, groovy, and slightly jazzy. It's minor without the melancholy — like a sunset instead of a rainy day.",
         wrong: "If it sounds identical to minor pentatonic, you're not using the F# enough. If it sounds jazzy in a confusing way, simplify your phrases and focus on groove.",
-        sarah: "Dorian is the Goldilocks scale — it's minor enough to have depth, but warm enough to make people move. It's the reason soul music feels the way it does."
+        sarah: "Dorian is the Goldilocks scale — it's minor enough to have depth, but warm enough to make people move. It's the reason soul music feels the way it does.",
+        fretboard: { scale: "a-dorian", position: 1 }
       },
       {
         id: "gs-8-2",
@@ -1413,7 +1427,8 @@ export const GUITAR_STUDY = [
         ],
         feel: "Your solo should feel like a conversation with the chords — you speak, they respond, you adjust. The F# should feel like a secret weapon that makes everything sound better.",
         wrong: "If your solo sounds disconnected from the chords, you're playing patterns instead of listening. If every phrase sounds the same, vary your rhythm and target notes.",
-        sarah: "This is where scales become music. You're not just running A Dorian anymore — you're using it to have a conversation with sophisticated harmony. That's improvisation."
+        sarah: "This is where scales become music. You're not just running A Dorian anymore — you're using it to have a conversation with sophisticated harmony. That's improvisation.",
+        fretboard: { scale: "a-dorian", position: 1 }
       },
       {
         id: "gs-8-7",
@@ -1559,7 +1574,8 @@ export const GUITAR_STUDY = [
         ],
         feel: "Your solo should feel like it's inside the chords rather than on top of them. Each phrase should feel inevitable — guided by the harmony rather than by scale patterns.",
         wrong: "If it sounds like an exercise (too predictable), add rhythmic variation and approach notes. If your targets sound wrong, double-check you're landing on actual chord tones.",
-        sarah: "This is the technique that separates noodling from improvising. When every phrase connects to the harmony, your solo tells the same story as the chords. That's real music."
+        sarah: "This is the technique that separates noodling from improvising. When every phrase connects to the harmony, your solo tells the same story as the chords. That's real music.",
+        fretboard: { scale: "a-dorian", position: 1 }
       },
       {
         id: "gs-9-5",

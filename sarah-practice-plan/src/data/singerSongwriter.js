@@ -700,6 +700,7 @@ export const SINGER_SONGWRITER_LEVELS = [
         feel: "This should feel cosmic and expansive — like floating in warm water. No urgency, no structure, just sound and vibration. Pure golden hour energy.",
         wrong: "If you're singing too many notes or too fast, pull back. The drone jam is about space and atmosphere, not speed or complexity. Less is more. Way less.",
         sarah: "Gene, this is your genre at its purest — psych-surf without structure, just vibes. Allah-Las jam sessions sound like this. Close your eyes and surf the sound.",
+        metronome: 100,
         recorder: true
       }
     ]
@@ -1178,6 +1179,7 @@ export const SINGER_SONGWRITER_LEVELS = [
         feel: "A good jam feels like flying — you stop planning and start reacting. The music leads and you follow. When voice, guitar, and groove all lock in, you'll know it in your body.",
         wrong: "If you're stuck playing safe patterns, push into unfamiliar territory. Try a note you haven't tried. Play a chord you don't usually use. Mistakes in jams become discoveries.",
         sarah: "Gene, this is what it all leads to — picking up the guitar and making music in the moment, with or without other people. Every exercise in this curriculum was building toward this freedom.",
+        metronome: 85,
         recorder: true
       },
       {
