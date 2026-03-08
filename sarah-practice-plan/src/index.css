@@ -162,3 +162,15 @@ button {
   letter-spacing: 0.5px;
   font-family: 'Lato', sans-serif;
 }
+
+.sticky-pill-bar {
+  position: sticky;
+  top: 0;
+  z-index: 9;
+}
+
+@media (min-width: 641px) {
+  .sticky-pill-bar {
+    top: 49px;
+  }
+}

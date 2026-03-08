@@ -1,7 +1,7 @@
 import { getPitchRange } from "./appData.js";
 
 // ─── SINGER-SONGWRITER CURRICULUM ─────────────────────────────────
-// 7 levels, ~62 exercises. From autopilot strumming to original songs + free improvisation.
+// 7 levels, ~63 exercises. From autopilot strumming to original songs + free improvisation.
 // Designed for Gene: tenor, passaggio ~A3, sweet spot E3-A4.
 // Musical DNA: psych-surf, reggae, desert blues, Khruangbin, laid-back delivery.
 // Research basis: motor learning stages, Berklee singer/songwriter sequence,
@@ -142,7 +142,8 @@ export const SINGER_SONGWRITER_LEVELS = [
         feel: "Each tempo should feel like a slightly different genre: 80 is dub-reggae, 90 is roots reggae, 100 is surf-pop, 110 is psych-rock. The feel shifts but the technique stays.",
         wrong: "If your body tenses up at higher tempos, you're fighting the speed instead of riding it. Relax your shoulders, breathe, and let the tempo carry you.",
         sarah: "Gene, this ladder covers your entire Spotify universe. 80-110 BPM is where your music lives. Master this range and you can play along to almost anything in your library.",
-        metronome: 80
+        metronome: 80,
+        speedLadder: { start: 80, end: 110, increment: 10, bars: 4 }
       },
       {
         id: "ss-1-7",
@@ -285,16 +286,37 @@ export const SINGER_SONGWRITER_LEVELS = [
         recorder: true
       },
       {
+        id: "ss-2-9",
+        time: 8,
+        title: "Pentatonic Voice",
+        type: "vocal",
+        referencePitches: getPitchRange("A2", "A4"),
+        what: "Sing the minor pentatonic scale — A, C, D, E, G — while strumming Am. These five notes are the foundation of all vocal improvisation in your genres. If you can sing these five notes over a chord, you can improvise forever.",
+        setup: "Guitar. Metronome at 85 BPM.",
+        tracks: [{ name: "Desert Blues 75", src: "/desert-blues-75.mp3" }],
+        steps: [
+          { text: "Strum Am with your autopilot pattern. Sing each note of the pentatonic scale slowly: A... C... D... E... G. Use the guitar to find each note first, then match with your voice.", why: "The minor pentatonic is the most universal improvisation scale. It works over blues, reggae, psych-rock, desert blues — all of Gene's genres." },
+          { text: "Sing the scale ascending (A-C-D-E-G) then descending (G-E-D-C-A). Loop it. Let the rhythm align with your strum.", why: "Ascending and descending trains your ear to navigate the scale in both directions. Real improv goes both ways." },
+          { text: "Now skip around: A-D-G-E-C, or any random order. Can you land on any pentatonic note intentionally?", why: "Improvisation isn't just running up and down scales — it's jumping between notes. Random order builds the ear-voice connection for free improvisation." },
+          { text: "Put on the backing track and sing pentatonic phrases over it — short 3-4 note melodies using only A, C, D, E, G. Leave space between phrases.", why: "Constraint breeds creativity. Five notes, short phrases, lots of space — this is the Khruangbin vocal approach. Sparse and intentional." }
+        ],
+        feel: "The pentatonic scale should feel safe — these five notes always sound right over a minor chord. No wrong notes. Once this clicks, improvisation stops being scary.",
+        wrong: "If you're singing notes outside the pentatonic and they clash, you're leaving the five-note safe zone. Come back to A-C-D-E-G. If you can't find the notes by ear yet, use the guitar as a reference for each one.",
+        sarah: "Gene, the minor pentatonic is the skeleton key of improvisation. Tinariwen, Khruangbin, Tommy Guerrero — they all live in this scale. Learn these five notes by ear and you can jam over anything.",
+        metronome: 85,
+        recorder: true
+      },
+      {
         id: "ss-2-7",
         time: 6,
         title: "Make Up a Melody",
         type: "song",
         referencePitches: getPitchRange("E3", "B3"),
-        what: "Strum Em and G, 4 bars each, on repeat. Hum or sing any melody that comes — no words, no plan, just follow your ear. This is your first taste of creating, not reproducing. Record everything.",
-        setup: "Guitar. Recorder ready. No lyrics, no reference track — just you.",
+        what: "Strum Em and G, 4 bars each, on repeat. Using the pentatonic notes you just learned (A, C, D, E, G), sing any melody that comes — no words, no plan, just follow your ear. This is your first taste of creating, not reproducing. Record everything.",
+        setup: "Guitar. Recorder ready. No lyrics, no reference track — just you and your five safe notes.",
         steps: [
           { text: "Start strumming Em → G, 4 bars each. Simple downstrokes or jangle — whatever is most autopilot for you.", why: "Two chords = maximum creative freedom. The harmonic simplicity gives your voice room to wander." },
-          { text: "Start humming. Any notes. Let your voice wander up and down. Some notes will feel right over Em, others over G. Follow the ones that feel right.", why: "You're not composing — you're discovering. Your ear already knows what sounds good. Let it lead." },
+          { text: "Start with your pentatonic notes — A, C, D, E, G. Let your voice wander between them. Some will feel right over Em, others over G. Follow the ones that feel right.", why: "You already know these notes from the previous exercise. Now instead of drilling them, you're playing with them. That's the shift from vocabulary to expression." },
           { text: "If you find a phrase you like (a 4-5 note melody that feels good), repeat it. Then vary it. Then repeat the variation.", why: "Repetition with variation is the fundamental unit of melody. You're songwriting without knowing it." },
           { text: "Try 'ooh' or 'la' instead of humming. Open vowels carry more pitch and feel more like singing.", why: "Open vowels let you hear your pitch clearly and develop your melodic instinct." }
         ],
@@ -321,27 +343,6 @@ export const SINGER_SONGWRITER_LEVELS = [
         sarah: "Gene, listen to that recording. That's you, singing and playing guitar at the same time. Three weeks ago you couldn't do that. Progress isn't about perfection — it's about the gap between where you were and where you are.",
         recorder: true,
         levelUp: "Can play and sing one complete song at 80% tempo with stable rhythm, recognizable melody, and no full stops."
-      },
-      {
-        id: "ss-2-9",
-        time: 8,
-        title: "Pentatonic Voice",
-        type: "vocal",
-        referencePitches: getPitchRange("A2", "A4"),
-        what: "Sing the minor pentatonic scale — A, C, D, E, G — while strumming Am. These five notes are the foundation of all vocal improvisation in your genres. If you can sing these five notes over a chord, you can improvise forever.",
-        setup: "Guitar. Metronome at 85 BPM.",
-        tracks: [{ name: "Desert Blues 75", src: "/desert-blues-75.mp3" }],
-        steps: [
-          { text: "Strum Am with your autopilot pattern. Sing each note of the pentatonic scale slowly: A... C... D... E... G. Use the guitar to find each note first, then match with your voice.", why: "The minor pentatonic is the most universal improvisation scale. It works over blues, reggae, psych-rock, desert blues — all of Gene's genres." },
-          { text: "Sing the scale ascending (A-C-D-E-G) then descending (G-E-D-C-A). Loop it. Let the rhythm align with your strum.", why: "Ascending and descending trains your ear to navigate the scale in both directions. Real improv goes both ways." },
-          { text: "Now skip around: A-D-G-E-C, or any random order. Can you land on any pentatonic note intentionally?", why: "Improvisation isn't just running up and down scales — it's jumping between notes. Random order builds the ear-voice connection for free improvisation." },
-          { text: "Put on the backing track and sing pentatonic phrases over it — short 3-4 note melodies using only A, C, D, E, G. Leave space between phrases.", why: "Constraint breeds creativity. Five notes, short phrases, lots of space — this is the Khruangbin vocal approach. Sparse and intentional." }
-        ],
-        feel: "The pentatonic scale should feel safe — these five notes always sound right over a minor chord. No wrong notes. Once this clicks, improvisation stops being scary.",
-        wrong: "If you're singing notes outside the pentatonic and they clash, you're leaving the five-note safe zone. Come back to A-C-D-E-G. If you can't find the notes by ear yet, use the guitar as a reference for each one.",
-        sarah: "Gene, the minor pentatonic is the skeleton key of improvisation. Tinariwen, Khruangbin, Tommy Guerrero — they all live in this scale. Learn these five notes by ear and you can jam over anything.",
-        metronome: 85,
-        recorder: true
       }
     ]
   },
@@ -428,6 +429,26 @@ export const SINGER_SONGWRITER_LEVELS = [
         wrong: "If the whole song is one volume level, it sounds flat. If the dynamic shifts are jarring instead of smooth, practice the transition points — the last beat of a quiet verse leading into a loud chorus.",
         sarah: "Gene, this is where singing and playing starts to feel like performing. Dynamics are what separate someone who plays songs from someone who performs them.",
         volumeMeter: true,
+        recorder: true
+      },
+      {
+        id: "ss-3-10",
+        time: 7,
+        title: "The Laid-Back Pocket",
+        type: "vocal",
+        what: "Train the micro-timing that defines Gene's vocal aesthetic: behind the beat. Not late — intentionally delayed. DOPE LEMON, Skinshape, and Khruangbin vocals all sit slightly behind the guitar pulse. This is a learnable skill, not just a vibe.",
+        setup: "Metronome at 90 BPM. One of your covers from this level. Recorder on — you need to hear the difference.",
+        steps: [
+          { text: "Sing a verse dead on the beat. Precisely with the metronome click. Record it.", why: "On-the-beat singing is your baseline. It sounds correct but stiff — like a drum machine. Most beginners are actually ahead of the beat (rushing), so truly on-the-beat is already a skill." },
+          { text: "Now sing the same verse but place every syllable a hair AFTER the click — maybe 50-100 milliseconds late. Imagine the beat is a wave and your voice is riding just behind the crest. Record it.", why: "Behind-the-beat phrasing creates a sense of ease and confidence. The guitar keeps strict time while the voice floats just behind it. This is the DOPE LEMON / Skinshape sound." },
+          { text: "Now deliberately sing LATE — a full eighth note behind. Record it. Hear how this sounds sloppy and disconnected? That's the difference between behind-the-beat (intentional, relaxed) and late (uncontrolled, messy).", why: "You need to hear all three — on, behind, and late — to calibrate your ear. Most people can't tell behind-the-beat from late until they've experienced the contrast." },
+          { text: "Play back all three recordings. The 'behind' version should sound like the laid-back vocals in your favorite tracks. The 'late' version should sound wrong.", why: "Self-monitoring through recording is the fastest way to develop timing feel. Your ear learns faster than your muscles." },
+          { text: "Apply behind-the-beat to a full cover. Strum stays locked to the metronome. Voice sits in the pocket just behind. Especially on the verses — choruses can come closer to the beat for contrast.", why: "Verse behind / chorus on-the-beat is a natural dynamic that makes songs breathe. Many of your favorite songs use this exact technique." }
+        ],
+        feel: "When you nail the pocket, it feels like the guitar is pulling you forward and your voice is taking its time. Relaxed, unhurried, like you have all the time in the world. Golden hour energy.",
+        wrong: "If your timing is inconsistent — sometimes behind, sometimes ahead, sometimes on — that's not style, that's instability. The pocket should be consistent within a section. Also: behind the beat is subtle. If listeners notice you're late, you've gone too far.",
+        sarah: "Gene, this is YOUR sound. Every artist you love — DOPE LEMON, Skinshape, Khruangbin's vocal parts — they all sit behind the beat. This isn't something you'll learn by accident. Drill it until it becomes your default.",
+        metronome: { min: 85, max: 100, default: 90 },
         recorder: true
       },
       {

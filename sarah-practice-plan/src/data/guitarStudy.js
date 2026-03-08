@@ -87,6 +87,7 @@ export const GUITAR_STUDY = [
         wrong: "If you're pushing through mistakes to hit higher tempos, you're building bad habits. The ladder only works when each rung is solid before you climb.",
         sarah: "Speed is a byproduct of relaxation and accuracy. The fastest players in the world practiced slowly for years first.",
         metronome: 60,
+        speedLadder: { start: 60, end: 90, increment: 10, bars: 4 },
         levelUp: "You can play the blues scale cleanly at 90 BPM with one note per beat, no stumbles."
       },
       {
@@ -286,6 +287,7 @@ export const GUITAR_STUDY = [
         wrong: "If your arm burns, you're using too much muscle. If the rhythm lurches, you're past your clean speed. Speed without evenness is just noise.",
         sarah: "Tremolo speed is built in minutes per day over weeks, not in one long session. Ten focused minutes today is worth more than an hour of sloppy grinding.",
         metronome: 80,
+        speedLadder: { start: 80, end: 110, increment: 10, bars: 4 },
         levelUp: "Clean sixteenth-note tremolo at 80 BPM for 30 seconds without your arm tensing up."
       },
       {

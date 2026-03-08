@@ -592,6 +592,7 @@ export const KEYBOARD_LEVELS = [
         feel: "Like shifting gears. Each jump should feel like a small challenge. The highest tempo where you're still clean = your working range.",
         wrong: "If you're sloppy above 90, don't push. Stay at 90 for a week. Speed comes from clean repetition, not from forcing.",
         metronome: 70,
+        speedLadder: { start: 70, end: 110, increment: 10, bars: 8 },
         levelUp: "Clean chop at 110 BPM with no stabs landing on the beat."
       }
     ]

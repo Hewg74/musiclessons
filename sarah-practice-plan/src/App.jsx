@@ -156,7 +156,11 @@ function useMetronome() {
   const [beatsPerBar, setBeatsPerBar] = useState(4);
   const [soundKit, setSoundKit] = useState("classic");
   const [gapClick, setGapClick] = useState(0); // 0=off, 4=mute 4th bar
-  const [speedBuilder, setSpeedBuilder] = useState(false); // true = +5 bpm every 4 bars
+  const [speedBuilder, setSpeedBuilder] = useState(false);
+  const [speedIncrement, setSpeedIncrement] = useState(5); // BPM added each cycle
+  const [speedBars, setSpeedBars] = useState(4); // bars between each increment
+  const [speedCeiling, setSpeedCeiling] = useState(0); // 0=no ceiling, otherwise max BPM before loop-back
+  const startBpmRef = useRef(120); // BPM when speed builder was activated
 
   // Per-beat config: accent level + optional per-beat sound override
   const [beatConfig, setBeatConfig] = useState([
@@ -173,6 +177,9 @@ function useMetronome() {
   const bpmRef = useRef(bpm);
   const gapClickRef = useRef(gapClick);
   const speedBuilderRef = useRef(speedBuilder);
+  const speedIncrementRef = useRef(speedIncrement);
+  const speedBarsRef = useRef(speedBars);
+  const speedCeilingRef = useRef(speedCeiling);
 
   // Keep refs in sync
   useEffect(() => { beatConfigRef.current = beatConfig; }, [beatConfig]);
@@ -181,6 +188,9 @@ function useMetronome() {
   useEffect(() => { bpmRef.current = bpm; }, [bpm]);
   useEffect(() => { gapClickRef.current = gapClick; }, [gapClick]);
   useEffect(() => { speedBuilderRef.current = speedBuilder; }, [speedBuilder]);
+  useEffect(() => { speedIncrementRef.current = speedIncrement; }, [speedIncrement]);
+  useEffect(() => { speedBarsRef.current = speedBars; }, [speedBars]);
+  useEffect(() => { speedCeilingRef.current = speedCeiling; }, [speedCeiling]);
 
   // Create/dispose synths when kits change
   useEffect(() => {
@@ -214,11 +224,18 @@ function useMetronome() {
 
       const bar = Math.floor(count / numBeats);
 
-      if (speedBuilderRef.current && b === 0 && bar > 0 && bar % 4 === 0) {
-        const nextBpm = Math.min(280, bpmRef.current + 5);
-        bpmRef.current = nextBpm;
-        Tone.Transport.bpm.value = nextBpm;
-        Tone.Draw.schedule(() => setBpm(nextBpm), time);
+      if (speedBuilderRef.current && b === 0 && bar > 0 && bar % speedBarsRef.current === 0) {
+        const ceiling = speedCeilingRef.current;
+        const nextBpm = bpmRef.current + speedIncrementRef.current;
+        let newBpm;
+        if (ceiling > 0 && nextBpm > ceiling) {
+          newBpm = startBpmRef.current; // loop back to starting BPM
+        } else {
+          newBpm = Math.min(280, nextBpm);
+        }
+        bpmRef.current = newBpm;
+        Tone.Transport.bpm.value = newBpm;
+        Tone.Draw.schedule(() => setBpm(newBpm), time);
       }
 
       const gc = gapClickRef.current;
@@ -285,9 +302,15 @@ function useMetronome() {
     });
   }, [soundKit]);
 
+  const toggleSpeedBuilder = useCallback((on) => {
+    if (on) startBpmRef.current = bpmRef.current;
+    setSpeedBuilder(on);
+  }, []);
+
   return {
-    bpm, playing, beat, beatsPerBar, soundKit, beatConfig, gapClick, speedBuilder,
-    start, stop, changeBpm, changeBeats, setSoundKit, cycleAccent, setBeatKit, setGapClick, setSpeedBuilder
+    bpm, playing, beat, beatsPerBar, soundKit, beatConfig, gapClick, speedBuilder, speedIncrement, speedBars, speedCeiling,
+    start, stop, changeBpm, changeBeats, setSoundKit, cycleAccent, setBeatKit, setGapClick,
+    setSpeedBuilder: toggleSpeedBuilder, setSpeedIncrement, setSpeedBars, setSpeedCeiling
   };
 }
 
@@ -671,14 +694,30 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
                   fontSize: 11, cursor: "pointer", fontWeight: 600, fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
                 }}>✋ Tap</button>
 
-                <button onClick={() => metro.setSpeedBuilder(!metro.speedBuilder)} style={{
+                <button onClick={() => {
+                  if (!metro.speedBuilder && ex.speedLadder) {
+                    metro.changeBpm(ex.speedLadder.start);
+                    metro.setSpeedIncrement(ex.speedLadder.increment);
+                    metro.setSpeedBars(ex.speedLadder.bars);
+                    metro.setSpeedCeiling(ex.speedLadder.end);
+                  }
+                  metro.setSpeedBuilder(!metro.speedBuilder);
+                }} style={{
                   background: metro.speedBuilder ? T.gold : "transparent",
                   border: `1px solid ${metro.speedBuilder ? T.gold : T.borderSoft}`,
                   color: metro.speedBuilder ? "#fff" : T.textMed,
                   padding: "8px 10px", borderRadius: T.radius,
                   fontSize: 11, cursor: "pointer", fontWeight: 600, fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
-                }} title="Auto +5 BPM every 4 bars">Speed +</button>
+                }} title={ex.speedLadder ? `${ex.speedLadder.start}→${ex.speedLadder.end} BPM, +${ex.speedLadder.increment} every ${ex.speedLadder.bars} bars` : "Auto-increment BPM"}>
+                  Speed + {metro.speedBuilder && metro.speedCeiling > 0 ? `↩${metro.speedCeiling}` : ""}
+                </button>
               </div>
+              {metro.speedBuilder && (
+                <div style={{ display: "flex", gap: 6, marginTop: 8, fontSize: 11, color: T.textLight, fontFamily: T.sans, alignItems: "center" }}>
+                  <span>+{metro.speedIncrement} BPM / {metro.speedBars} bars</span>
+                  {metro.speedCeiling > 0 && <span style={{ color: T.coral }}>↩ loop at {metro.speedCeiling}</span>}
+                </div>
+              )}
             </div>
           )}
 
@@ -1355,8 +1394,69 @@ function MetronomePanel({ metro, onOpenTapMatch }) {
             border: `1px solid ${metro.speedBuilder ? T.gold : T.borderSoft}`,
             color: metro.speedBuilder ? "#fff" : T.textMed, borderRadius: T.radius,
             padding: "10px 16px", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: T.sans
-          }}>Speed Builder (+5/4 bars)</button>
+          }}>Speed Builder (+{metro.speedIncrement}/{metro.speedBars} bars)</button>
         </div>
+
+        {metro.speedBuilder && (
+          <div style={{ marginTop: 12, padding: "10px 14px", background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radiusMd }}>
+            <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 10, fontWeight: 600, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>+ BPM</div>
+                <div style={{ display: "flex", gap: 4 }}>
+                  {[1, 2, 3, 5, 10].map(n => (
+                    <button key={n} onClick={() => metro.setSpeedIncrement(n)} style={{
+                      background: metro.speedIncrement === n ? T.gold : "transparent",
+                      border: `1px solid ${metro.speedIncrement === n ? T.gold : T.borderSoft}`,
+                      color: metro.speedIncrement === n ? "#fff" : T.textMed,
+                      borderRadius: T.radius, padding: "4px 8px", fontSize: 12, fontWeight: 600,
+                      cursor: "pointer", fontFamily: T.sans, minWidth: 32
+                    }}>{n}</button>
+                  ))}
+                </div>
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 10, fontWeight: 600, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>Every N bars</div>
+                <div style={{ display: "flex", gap: 4 }}>
+                  {[2, 4, 8, 16].map(n => (
+                    <button key={n} onClick={() => metro.setSpeedBars(n)} style={{
+                      background: metro.speedBars === n ? T.gold : "transparent",
+                      border: `1px solid ${metro.speedBars === n ? T.gold : T.borderSoft}`,
+                      color: metro.speedBars === n ? "#fff" : T.textMed,
+                      borderRadius: T.radius, padding: "4px 8px", fontSize: 12, fontWeight: 600,
+                      cursor: "pointer", fontFamily: T.sans, minWidth: 32
+                    }}>{n}</button>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div style={{ marginTop: 10 }}>
+              <div style={{ fontSize: 10, fontWeight: 600, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>Loop back at BPM (0 = off)</div>
+              <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
+                <button onClick={() => metro.setSpeedCeiling(0)} style={{
+                  background: metro.speedCeiling === 0 ? T.gold : "transparent",
+                  border: `1px solid ${metro.speedCeiling === 0 ? T.gold : T.borderSoft}`,
+                  color: metro.speedCeiling === 0 ? "#fff" : T.textMed,
+                  borderRadius: T.radius, padding: "4px 8px", fontSize: 12, fontWeight: 600,
+                  cursor: "pointer", fontFamily: T.sans, minWidth: 32
+                }}>Off</button>
+                {[80, 90, 100, 110, 120, 140, 160].map(n => (
+                  <button key={n} onClick={() => metro.setSpeedCeiling(n)} style={{
+                    background: metro.speedCeiling === n ? T.coral : "transparent",
+                    border: `1px solid ${metro.speedCeiling === n ? T.coral : T.borderSoft}`,
+                    color: metro.speedCeiling === n ? "#fff" : T.textMed,
+                    borderRadius: T.radius, padding: "4px 8px", fontSize: 12, fontWeight: 600,
+                    cursor: "pointer", fontFamily: T.sans, minWidth: 32
+                  }}>{n}</button>
+                ))}
+              </div>
+              {metro.speedCeiling > 0 && (
+                <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans, marginTop: 4 }}>
+                  ↩ Loops back to {metro.bpm} BPM after reaching {metro.speedCeiling}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Per-beat editor */}
@@ -1991,9 +2091,9 @@ function GuitarStudyView({ completed, onComplete, metro, onOpenTapMatch }) {
       </div>
 
       {/* Level pills — horizontal scroll */}
-      <div className="hide-scrollbar" style={{
+      <div className="hide-scrollbar sticky-pill-bar" style={{
         display: "flex", gap: 0, overflowX: "auto", padding: "16px 0 0",
-        position: "sticky", top: 49, zIndex: 9, background: T.bg,
+        background: T.bg,
         WebkitOverflowScrolling: "touch", scrollSnapType: "x mandatory",
         msOverflowStyle: "none", scrollbarWidth: "none",
         borderBottom: `1px solid ${T.border}`,
@@ -2030,27 +2130,6 @@ function GuitarStudyView({ completed, onComplete, metro, onOpenTapMatch }) {
         })}
       </div>
 
-      {/* Level description */}
-      <div style={{
-        background: T.slateSoft, border: `1px solid ${T.slate}20`, borderRadius: T.radiusMd,
-        padding: "16px 20px", marginTop: 20, marginBottom: 4
-      }}>
-        <div style={{ fontSize: 15, fontWeight: 400, fontFamily: T.serif, color: T.textDark, marginBottom: 6 }}>
-          {selectedLevel.subtitle}
-        </div>
-        <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, lineHeight: 1.6, marginBottom: 8 }}>
-          {selectedLevel.description}
-        </div>
-        <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-          <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans }}>
-            <span style={{ fontWeight: 700, color: T.slate, textTransform: "uppercase", letterSpacing: 1 }}>Artists: </span>{selectedLevel.artists}
-          </div>
-          <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans }}>
-            <span style={{ fontWeight: 700, color: T.slate, textTransform: "uppercase", letterSpacing: 1 }}>Unlocks: </span>{selectedLevel.unlocks}
-          </div>
-        </div>
-      </div>
-
       {/* Level header + progress + exercises */}
       <div style={{ marginTop: 20 }}>
         <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 12 }}>
@@ -2063,6 +2142,27 @@ function GuitarStudyView({ completed, onComplete, metro, onOpenTapMatch }) {
 
         <div style={{ height: 3, background: T.border, borderRadius: 2, marginBottom: 12, overflow: "hidden" }}>
           <div style={{ height: "100%", width: `${levelPct}%`, background: levelPct === 100 ? T.success : T.slate, borderRadius: 2, transition: "width 0.5s" }} />
+        </div>
+
+        {/* Level description */}
+        <div style={{
+          background: T.slateSoft, border: `1px solid ${T.slate}20`, borderRadius: T.radiusMd,
+          padding: "16px 20px", marginTop: 12, marginBottom: 16
+        }}>
+          <div style={{ fontSize: 15, fontWeight: 400, fontFamily: T.serif, color: T.textDark, marginBottom: 6 }}>
+            {selectedLevel.subtitle}
+          </div>
+          <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, lineHeight: 1.6, marginBottom: 8 }}>
+            {selectedLevel.description}
+          </div>
+          <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+            <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans }}>
+              <span style={{ fontWeight: 700, color: T.slate, textTransform: "uppercase", letterSpacing: 1 }}>Artists: </span>{selectedLevel.artists}
+            </div>
+            <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans }}>
+              <span style={{ fontWeight: 700, color: T.slate, textTransform: "uppercase", letterSpacing: 1 }}>Unlocks: </span>{selectedLevel.unlocks}
+            </div>
+          </div>
         </div>
 
         {selectedLevel.exercises.map(ex => (
@@ -2122,9 +2222,9 @@ function SingerSongwriterView({ completed, onComplete, metro, onOpenTapMatch }) 
       </div>
 
       {/* Level pills — horizontal scroll */}
-      <div className="hide-scrollbar" style={{
+      <div className="hide-scrollbar sticky-pill-bar" style={{
         display: "flex", gap: 0, overflowX: "auto", padding: "16px 0 0",
-        position: "sticky", top: 49, zIndex: 9, background: T.bg,
+        background: T.bg,
         WebkitOverflowScrolling: "touch", scrollSnapType: "x mandatory",
         msOverflowStyle: "none", scrollbarWidth: "none",
         borderBottom: `1px solid ${T.border}`,
@@ -2161,27 +2261,6 @@ function SingerSongwriterView({ completed, onComplete, metro, onOpenTapMatch }) 
         })}
       </div>
 
-      {/* Level description */}
-      <div style={{
-        background: `${T.coral}10`, border: `1px solid ${T.coral}20`, borderRadius: T.radiusMd,
-        padding: "16px 20px", marginTop: 20, marginBottom: 4
-      }}>
-        <div style={{ fontSize: 15, fontWeight: 400, fontFamily: T.serif, color: T.textDark, marginBottom: 6 }}>
-          {selectedLevel.subtitle}
-        </div>
-        <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, lineHeight: 1.6, marginBottom: 8 }}>
-          {selectedLevel.description}
-        </div>
-        <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-          <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans }}>
-            <span style={{ fontWeight: 700, color: T.coral, textTransform: "uppercase", letterSpacing: 1 }}>Artists: </span>{selectedLevel.artists}
-          </div>
-          <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans }}>
-            <span style={{ fontWeight: 700, color: T.coral, textTransform: "uppercase", letterSpacing: 1 }}>Unlocks: </span>{selectedLevel.unlocks}
-          </div>
-        </div>
-      </div>
-
       {/* Level header + progress + exercises */}
       <div style={{ marginTop: 20 }}>
         <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 12 }}>
@@ -2194,6 +2273,27 @@ function SingerSongwriterView({ completed, onComplete, metro, onOpenTapMatch }) 
 
         <div style={{ height: 3, background: T.border, borderRadius: 2, marginBottom: 12, overflow: "hidden" }}>
           <div style={{ height: "100%", width: `${levelPct}%`, background: levelPct === 100 ? T.success : T.coral, borderRadius: 2, transition: "width 0.5s" }} />
+        </div>
+
+        {/* Level description */}
+        <div style={{
+          background: `${T.coral}10`, border: `1px solid ${T.coral}20`, borderRadius: T.radiusMd,
+          padding: "16px 20px", marginTop: 12, marginBottom: 16
+        }}>
+          <div style={{ fontSize: 15, fontWeight: 400, fontFamily: T.serif, color: T.textDark, marginBottom: 6 }}>
+            {selectedLevel.subtitle}
+          </div>
+          <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, lineHeight: 1.6, marginBottom: 8 }}>
+            {selectedLevel.description}
+          </div>
+          <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+            <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans }}>
+              <span style={{ fontWeight: 700, color: T.coral, textTransform: "uppercase", letterSpacing: 1 }}>Artists: </span>{selectedLevel.artists}
+            </div>
+            <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans }}>
+              <span style={{ fontWeight: 700, color: T.coral, textTransform: "uppercase", letterSpacing: 1 }}>Unlocks: </span>{selectedLevel.unlocks}
+            </div>
+          </div>
         </div>
 
         {selectedLevel.exercises.map(ex => (
@@ -2249,9 +2349,9 @@ function KeysView({ completed, onComplete, metro, onOpenTapMatch }) {
       </div>
 
       {/* Level pills — horizontal scroll */}
-      <div className="hide-scrollbar" style={{
+      <div className="hide-scrollbar sticky-pill-bar" style={{
         display: "flex", gap: 0, overflowX: "auto", padding: "0 0 0",
-        position: "sticky", top: 49, zIndex: 9, background: T.bg,
+        background: T.bg,
         WebkitOverflowScrolling: "touch", scrollSnapType: "x mandatory",
         msOverflowStyle: "none", scrollbarWidth: "none",
         borderBottom: `1px solid ${T.border}`,
@@ -2358,9 +2458,9 @@ function LooperView({ completed, onComplete, metro, onOpenTapMatch }) {
       </div>
 
       {/* Level pills */}
-      <div className="hide-scrollbar" style={{
+      <div className="hide-scrollbar sticky-pill-bar" style={{
         display: "flex", gap: 0, overflowX: "auto", padding: "0 0 0",
-        position: "sticky", top: 49, zIndex: 9, background: T.bg,
+        background: T.bg,
         WebkitOverflowScrolling: "touch", scrollSnapType: "x mandatory",
         msOverflowStyle: "none", scrollbarWidth: "none",
         borderBottom: `1px solid ${T.border}`,
@@ -2575,33 +2675,35 @@ export default function App() {
         }
       `}</style>
       {/* Header */}
-      <div style={{ background: T.bgCard, borderBottom: `1px solid ${T.border}`, position: "relative", display: "flex", flexDirection: "column", alignItems: "center" }}>
-        <div style={{ padding: "30px 20px 20px", width: "100%", maxWidth: 640, position: "relative" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
-            <div style={{ fontSize: 11, letterSpacing: 3, textTransform: "uppercase", color: T.gold, fontWeight: 600, fontFamily: T.sans }}>
-              Sarah Glass Music
-            </div>
-            <button className="interactive-btn" onClick={toggleTheme} style={{
-              background: "transparent", border: `1px solid ${T.border}`,
-              color: T.textMed, padding: "6px 8px", borderRadius: T.radiusMd,
-              cursor: "pointer", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center",
-              marginTop: -6
-            }}>
-              {isDark ? "☀️" : "🌙"}
-            </button>
-          </div>
-          <div style={{ fontSize: 40, fontWeight: 400, fontFamily: T.serif, color: T.textDark, lineHeight: 1.2 }}>Practice Plan</div>
-          <div style={{ fontSize: 14, color: T.textMuted, marginTop: 6, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: "0.05em" }}>Lesson 3/2 · Tenor · Break ≈ A3</div>
-          <div style={{ width: "100%", maxWidth: 320, margin: "20px auto 0", display: "flex", alignItems: "center", gap: 14 }}>
-            <div style={{ flex: 1 }}>
-              <div style={{ height: 6, background: T.border, overflow: "hidden", borderRadius: 4 }}>
-                <div style={{ height: "100%", width: `${weekPct}%`, background: weekPct === 100 ? T.success : T.gold, transition: "width 0.5s", borderRadius: 4 }} />
+      {tab !== "skills" && (
+        <div style={{ background: T.bgCard, borderBottom: `1px solid ${T.border}`, position: "relative", display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <div style={{ padding: "30px 20px 20px", width: "100%", maxWidth: 640, position: "relative" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
+              <div style={{ fontSize: 11, letterSpacing: 3, textTransform: "uppercase", color: T.gold, fontWeight: 600, fontFamily: T.sans }}>
+                Sarah Glass Music
               </div>
+              <button className="interactive-btn" onClick={toggleTheme} style={{
+                background: "transparent", border: `1px solid ${T.border}`,
+                color: T.textMed, padding: "6px 8px", borderRadius: T.radiusMd,
+                cursor: "pointer", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center",
+                marginTop: -6
+              }}>
+                {isDark ? "☀️" : "🌙"}
+              </button>
             </div>
-            <div style={{ fontSize: 16, fontWeight: 600, fontFamily: T.serif, color: weekPct === 100 ? T.success : T.gold, minWidth: 36 }}>{weekPct}%</div>
+            <div style={{ fontSize: 40, fontWeight: 400, fontFamily: T.serif, color: T.textDark, lineHeight: 1.2 }}>Practice Plan</div>
+            <div style={{ fontSize: 14, color: T.textMuted, marginTop: 6, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: "0.05em" }}>Lesson 3/2 · Tenor · Break ≈ A3</div>
+            <div style={{ width: "100%", maxWidth: 320, margin: "20px auto 0", display: "flex", alignItems: "center", gap: 14 }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ height: 6, background: T.border, overflow: "hidden", borderRadius: 4 }}>
+                  <div style={{ height: "100%", width: `${weekPct}%`, background: weekPct === 100 ? T.success : T.gold, transition: "width 0.5s", borderRadius: 4 }} />
+                </div>
+              </div>
+              <div style={{ fontSize: 16, fontWeight: 600, fontFamily: T.serif, color: weekPct === 100 ? T.success : T.gold, minWidth: 36 }}>{weekPct}%</div>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Tab bar (Desktop Only) */}
       <div className="hide-scrollbar desktop-only" style={{ background: T.bgCard, borderBottom: `1px solid ${T.border}`, position: "sticky", top: 0, zIndex: 10, display: "flex", justifyContent: "center", boxShadow: T.sm, overflowX: "auto", WebkitOverflowScrolling: "touch", msOverflowStyle: "none", scrollbarWidth: "none" }}>
@@ -2623,9 +2725,9 @@ export default function App() {
         {tab === "practice" && (
           <div>
             {/* Day pill tabs — horizontal scroll */}
-            <div className="hide-scrollbar" style={{
+            <div className="hide-scrollbar sticky-pill-bar" style={{
               display: "flex", gap: 0, overflowX: "auto", padding: "16px 0 0",
-              position: "sticky", top: 49, zIndex: 9, background: T.bg,
+              background: T.bg,
               WebkitOverflowScrolling: "touch", scrollSnapType: "x mandatory",
               msOverflowStyle: "none", scrollbarWidth: "none",
               borderBottom: `1px solid ${T.border}`,
