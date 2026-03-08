@@ -228,6 +228,7 @@ export const VOCAL_LEVELS = [
     description: "Great singers don't just sing the right notes -- they sing them at the right time. This level trains the vocal timing skills that separate karaoke from artistry: on-beat precision, offbeat phrasing, and the behind-the-beat delivery that defines reggae, surf, and psych vocals.",
     artists: "Jack Johnson, Bob Marley, DOPE LEMON",
     unlocks: "Ear Training & Harmony (Level 4)",
+    review: { label: "Level 1 Check-In", time: 5, exercises: ["v1e1", "v1e3"], prompt: "Do the 'Hey, Stop It!' chest voice activation — feel the belly push (v1e1). Then 1 minute of SOVT warm-up through a straw (v1e3). If the diaphragm engagement feels unfamiliar, revisit Level 1." },
     exercises: [
       {
         id: "v3e1", time: 4, title: "On-Beat Vocal Placement", type: "vocal",
@@ -307,6 +308,22 @@ export const VOCAL_LEVELS = [
         metronome: 90,
         recorder: true,
         levelUp: "2 minutes of mixed phrase lengths that sound conversational, not robotic."
+      },
+      {
+        id: "v3e5b", time: 5, title: "Straight vs Swung: Feel the Difference", type: "vocal",
+        what: "The rhythmic feel distinction your genres depend on. Surf-psych uses straight 8ths (even spacing). Reggae and soul use swung 8ths (long-short pattern). Learn to identify and deploy both.",
+        setup: "Metronome at 90 BPM. No guitar.",
+        steps: [
+          { text: "Set metronome at 90. Speak '1 and 2 and 3 and 4 and' with perfectly even 8th notes — each 'and' lands exactly between clicks. This is STRAIGHT. Surf rock, punk, and psych use this.", why: "Straight 8ths are mechanical and driving. The even spacing creates forward momentum. Allah-Las and surf bands live here." },
+          { text: "Same tempo. Now delay every 'and' — push it later so each pair sounds like 'DA-duh, DA-duh' instead of 'DA-DA, DA-DA.' The 'and' is lazy, arriving late. This is SWUNG.", why: "Swung 8ths create a loping, laid-back groove. The long-short pattern is the rhythmic DNA of blues, jazz, reggae, and soul." },
+          { text: "Alternate: 4 bars straight, 4 bars swung. Feel the gear-change in your body. Straight feels like driving. Swung feels like sauntering.", why: "Being able to switch feels on command is how Gene's genres work — a surf verse (straight) into a reggae-influenced chorus (swung) is a real arrangement move." },
+          { text: "Listen to an Allah-Las track (straight) then a DOPE LEMON track (swung). Can you hear the difference? The guitar strum, the vocal delivery, the overall feel — it all follows the 8th note choice.", why: "Once you hear it, you can't unhear it. This distinction unlocks your understanding of why different genres feel different, even at the same tempo." }
+        ],
+        feel: "Straight should feel like marching in step. Swung should feel like a lazy walk on the beach. Both should feel intentional — you're choosing the feel, not defaulting to one.",
+        wrong: "If your swung 8ths sound like dotted-8th-16th (TOO swung, like a shuffle), pull back. The swing should be subtle — maybe 60/40 long-short, not 75/25. Think 'lazy' not 'galloping.'",
+        metronome: 90,
+        recorder: true,
+        levelUp: "Can switch between straight and swung 8th note feel on demand, with each sounding natural and distinct."
       }
     ]
   },
@@ -320,6 +337,7 @@ export const VOCAL_LEVELS = [
     description: "Your ear is the most important instrument you own. These exercises train you to hear chord tones, sing intervals, and build melodies from what you hear -- not what you've memorized. Jeff Buckley and Nick Drake could hear music inside chords that other people missed.",
     artists: "Jeff Buckley, Nick Drake",
     unlocks: "Dynamics & Expression (Level 5)",
+    review: { label: "Level 2 Check-In", time: 5, exercises: ["v2e2", "v2e3"], prompt: "Slide through the A3 passaggio on 'wee' — smooth, no break (v2e2). Then sing in your mixed voice sweet spot for 1 minute (v2e3). If the passaggio is cracking again, spend time on Level 2." },
     exercises: [
       {
         id: "v4e1", time: 4, title: "Chord Tone Singing", type: "vocal",
@@ -409,6 +427,7 @@ export const VOCAL_LEVELS = [
     description: "Jeff Buckley could go from a whisper to a scream in one phrase. Elliott Smith's entire catalogue lives in the space between pp and mp. Dynamics are how you tell emotional stories with your voice -- louder isn't better, controlled contrast is everything.",
     artists: "Elliott Smith, Eddie Vedder, Jeff Buckley",
     unlocks: "Style & Texture (Level 6)",
+    review: { label: "Level 3 Check-In", time: 5, exercises: ["v3e1", "v3e4"], prompt: "Sing lyrics precisely on the beat for 1 minute (v3e1). Then do 1 minute of reggae call-and-space phrasing with full-bar rests (v3e4). Rhythm skills erode fast without practice." },
     exercises: [
       {
         id: "v5e1", time: 4, title: "Whisper-to-Full Scale", type: "vocal",
@@ -502,6 +521,7 @@ export const VOCAL_LEVELS = [
     description: "Every great singer has a recognizable texture. Angus Stone's lo-fi whisper, Thom Yorke's falsetto breaks, Bob Marley's rhythmic precision, Laura Lee's psychedelic float. This level explores genre-specific vocal textures so you can find the combination that sounds like YOU.",
     artists: "Angus Stone, Thom Yorke, Laura Lee (Khruangbin)",
     unlocks: "Harmony & Layering (Level 7)",
+    review: { label: "Level 4 Check-In", time: 5, exercises: ["v4e1", "v4e3"], prompt: "Strum Am and sing root-3rd-5th (A-C-E) without checking guitar (v4e1). Then sing the same melody in major and minor — hear the emotional difference (v4e3). Ear training needs maintenance." },
     exercises: [
       {
         id: "v6e1", time: 4, title: "The Falsetto Switch", type: "vocal",
@@ -593,6 +613,7 @@ export const VOCAL_LEVELS = [
     description: "Elliott Smith sang 3-part harmonies with himself. Bob Marley's backing vocals were as iconic as his leads. Bon Iver builds entire songs from stacked vocal layers. This level teaches you to harmonize with yourself -- the essential skill for looper-based singer-songwriter performance.",
     artists: "Bon Iver, Elliott Smith, Bob Marley",
     unlocks: "Singing While Playing (Level 8)",
+    review: { label: "Level 5 Check-In", time: 5, exercises: ["v5e1", "v5e4"], prompt: "Perform a vocal swell from pp to ff on a single note — smooth, no jumps (v5e1). Then toggle between breathy and full tone on the same phrase (v5e4). Dynamic control decays without drills." },
     exercises: [
       {
         id: "v7e1", time: 5, title: "Singing in 3rds", type: "vocal",
@@ -683,6 +704,7 @@ export const VOCAL_LEVELS = [
     description: "Singing while playing guitar is a coordination problem, not a talent problem. The guitar has to be on complete autopilot before the voice can enter. Jack Johnson, Nick Drake, and Eddie Vedder all built this skill through the same method: simplify the guitar until it's invisible, then add voice.",
     artists: "Jack Johnson, Nick Drake, Eddie Vedder",
     unlocks: "Freestyle & Improv (Level 9)",
+    review: { label: "Level 6 Check-In", time: 5, exercises: ["v6e3", "v6e4"], prompt: "Sing 1 minute of reggae vocal texture — rhythmic, slightly nasal, locked to the riddim (v6e3). Then 1 minute of surf-psych vocal float — straight tone, behind the guitar (v6e4). Style flexibility needs maintenance." },
     exercises: [
       {
         id: "v8e1", time: 5, title: "Simple Strum + Hum", type: "vocal",
@@ -772,6 +794,7 @@ export const VOCAL_LEVELS = [
     description: "Bradley Nowell built much of Sublime's catalogue through freestyle improvisation. Thom Yorke improvises vocal parts in the studio. The ability to make up melodies and lyrics in real time is the ultimate singer-songwriter skill -- it's where composition and performance merge.",
     artists: "Bradley Nowell, Thom Yorke",
     unlocks: "Performance & Integration (Level 10)",
+    review: { label: "Level 7 Check-In", time: 5, exercises: ["v7e1", "v7e3"], prompt: "Sing a 3rd harmony over a recorded melody for one verse (v7e1). Then record and stack a 2-voice arrangement on your phone (v7e3). Harmony skills are perishable — check them." },
     exercises: [
       {
         id: "v9e1", time: 5, title: "Scat Improv: 3 Levels", type: "vocal",
@@ -866,7 +889,24 @@ export const VOCAL_LEVELS = [
     description: "This is where every skill from every level converges. Full songs start to finish, looper arrangements, mic technique, and set building. You're not practicing anymore -- you're performing.",
     artists: "All of the above combined",
     unlocks: "The stage",
+    review: { label: "Level 8 Check-In", time: 5, exercises: ["v8e1", "v8e5"], prompt: "Sing while strumming a full verse — autopilot check (v8e1). Then try starting your vocal on beat 3 instead of beat 1 (v8e5). If singing while playing has regressed, revisit Level 8." },
     exercises: [
+      {
+        id: "v10e0", time: 5, title: "Performance Mode: Nerves as Fuel", type: "vocal",
+        what: "The pre-performance ritual that transforms anxiety into energy. Nerves and excitement are the same chemical — adrenaline. This exercise teaches you to reframe and channel that energy before every performance.",
+        setup: "Standing. Quiet space. Do this immediately before any performance exercise.",
+        steps: [
+          { text: "Body scan: stand, close eyes. Notice where tension lives — shoulders, jaw, hands, stomach. Shake it out physically: arms, legs, neck. 30 seconds of loose shaking.", why: "Tension lives in the body before the mind notices it. Physical release breaks the anxiety-tension feedback loop." },
+          { text: "Breathe: 4 counts in through the nose, 7 counts hold, 8 counts out through the mouth. 3 cycles.", why: "The extended exhale activates the parasympathetic nervous system — the body's calm-down switch. 3 cycles is enough to shift your state from fight-or-flight to ready-to-play." },
+          { text: "Reframe: say out loud 'I'm excited to play.' Not 'I'm nervous.' Research shows relabeling anxiety as excitement improves performance — same adrenaline, different story.", why: "Harvard research (Alison Wood Brooks) demonstrated that saying 'I'm excited' before a performance measurably improves outcomes compared to 'I'm calm' or 'I'm nervous.' The body is already activated — match the label to the energy." },
+          { text: "Set one intention for this performance. Not 'play perfectly' — something connective: 'feel the groove,' 'make eye contact,' 'enjoy the bridge.' Write it on your hand if needed.", why: "A single intention gives your mind a positive focus instead of a list of things to not screw up. It turns the performance from a test into an experience." },
+          { text: "Record 30 seconds of playing right now. Watch it back. Notice: you look and sound better than you feel. The gap between internal experience and external reality is always smaller than you think.", why: "The camera doesn't lie — but neither does it reflect your internal anxiety. Seeing proof that you look calm while feeling nervous recalibrates your self-perception." }
+        ],
+        feel: "After this exercise, you should feel energized rather than anxious. The adrenaline is still there — but it's fuel, not fear.",
+        wrong: "If the breathing doesn't help, you might be hyperventilating on the inhale. Slow the inhale down. If the reframe feels fake, try it anyway — the research works even when you don't fully believe it.",
+        sarah: "Gene, every performer you admire feels this before they play. Khruangbin gets nervous. Jack Johnson gets nervous. The difference is they have a ritual that channels it. Now you do too.",
+        recorder: true
+      },
       {
         id: "v10e1", time: 8, title: "Full Song: Voice + Guitar", type: "vocal",
         what: "Sol Del Sur or ILTWYW start to finish. No stopping for mistakes. The ability to recover from errors in real time is the difference between a practice run and a performance.",

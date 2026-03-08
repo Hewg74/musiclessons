@@ -17,6 +17,8 @@ export function AudioPlayer({ theme: T }) {
     { id: 'western', name: 'Cinematic Western 80 BPM', src: '/cinematic-western-80.mp3' },
     { id: 'deepsoul', name: 'Deep Soul Groove 80 BPM', src: '/deep-soul-groove-80.mp3' },
     { id: 'soulfunk', name: 'Soul Funk Groove 90 BPM', src: '/soul-funk-groove-90.mp3' },
+    { id: 'janglepsych', name: 'Jangle Psych 105 BPM', src: '/jangle-psych-105.mp3' },
+    { id: 'reggaerock', name: 'Reggae Rock 100 BPM', src: '/reggae-rock-100.mp3' },
     { id: 'soldelsur', name: 'Sol Del Sur (Original)', src: '/sol-del-sur.mp3' },
     { id: 'iltwyw', name: 'I Like The Way You Walk', src: '/iltwyw.mp3' }
   ];

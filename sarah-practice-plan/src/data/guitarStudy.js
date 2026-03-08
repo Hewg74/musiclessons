@@ -409,6 +409,7 @@ export const GUITAR_STUDY = [
       "Reggae guitar is the ultimate rhythm discipline — you play on the offbeat while everything in your musical training screams 'downbeat.' The skank (short, muted chord stabs on the 'and') is deceptively simple and maddeningly difficult. Master it and your rhythm playing transforms across every genre.",
     artists: "Bob Marley, Peter Tosh, Pepper, Slightly Stoopid, Skinshape",
     unlocks: "Desert Blues (Level 4)",
+    review: { label: "Level 1 Check-In", time: 5, exercises: ["gs-1-1", "gs-1-5"], prompt: "Play the A minor blues scale ascending and descending cleanly (gs-1-1). Then jam for 2 minutes over the blues backing track (gs-1-5). If the scale feels unfamiliar, revisit Level 1." },
     exercises: [
       {
         id: "gs-3-1",
@@ -495,6 +496,26 @@ export const GUITAR_STUDY = [
         wrong: "If the progression sounds like a pop song, you're probably playing on the downbeat. If it sounds stilted, your chops aren't tight enough. If it sounds jazzy, your voicings might be too complex.",
         sarah: "Bob Marley used maybe 5 chord progressions his entire career. He never needed more because the groove and the message carried everything.",
         metronome: 95
+      },
+      {
+        id: "gs-3-5b",
+        time: 10,
+        title: "Riddim Vocabulary: One-Drop, Rockers, Steppers",
+        type: "guitar",
+        what: "Three reggae rhythmic feels that define different eras and subgenres. You've been playing one-drop — now learn rockers and steppers. Each changes the skank's relationship to the kick drum.",
+        setup: "Guitar. Metronome at 85 BPM or Reggae One Drop 85 backing track.",
+        tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }, { name: "Dub Reggae 85", src: "/dub-reggae-85.mp3" }],
+        steps: [
+          { text: "One-Drop (what you know): the kick hits ONLY on beat 3. Skank the offbeats, feel the kick on 3 only. Count: 1-chk-2-chk-KICK-chk-4-chk. This is classic roots reggae — Bob Marley, Burning Spear.", why: "The one-drop is defined by the absence of kick on beat 1. That empty downbeat creates the floating, swaying feel that defines roots reggae." },
+          { text: "Rockers: kick on beats 2 AND 4. Same offbeat skank, but now the kick is steady underneath. Count: 1-chk-KICK-chk-3-chk-KICK-chk. This is Sly & Robbie, Pepper, Slightly Stoopid.", why: "Rockers is more driving than one-drop — the steady kick adds forward motion. Most reggae-rock bands use the rockers feel because it has more energy." },
+          { text: "Steppers: kick on EVERY beat — 1, 2, 3, 4. Your offbeat skank stays the same, but the feel is heavy, marching, hypnotic. This is dub, Lee Perry, late-era Marley.", why: "Steppers is the most intense riddim. Four-on-the-floor plus offbeat guitar creates a wall of groove. It's almost trance-like at slow tempos." },
+          { text: "Play each riddim for 2 minutes with the Am7-Dm7 progression. Feel how the SAME chords and guitar pattern become three different songs depending on the kick pattern underneath.", why: "Your skank stays identical — the difference is in what you're locking to. In a band context, you'd match your energy to the drummer's riddim. Alone, you internalize all three feels." },
+          { text: "Switch between riddims: 4 bars one-drop, 4 bars rockers, 4 bars steppers. The skank stays the same — only your internal kick changes. Your foot should stomp the kick pattern.", why: "Switching riddims is a real-world skill — some reggae songs change feels between verse (one-drop) and chorus (rockers). Your foot-stomp trains the internal clock." }
+        ],
+        feel: "One-drop feels like floating. Rockers feels like walking. Steppers feels like marching. Same guitar, three completely different energies.",
+        wrong: "If all three feel the same, your foot isn't stomping the kick pattern — you're only tracking the guitar skank. The kick pattern IS the difference. Exaggerate the foot stomp until you feel the distinction.",
+        sarah: "Gene, you already love reggae — this exercise gives you the vocabulary to understand WHY different reggae songs feel different. Pepper uses rockers. Marley uses one-drop. The skank is the same; the feel is the riddim.",
+        metronome: 85
       },
       {
         id: "gs-3-6",
@@ -600,6 +621,7 @@ export const GUITAR_STUDY = [
       "Desert blues comes from the Sahara — Tinariwen, Bombino, Ali Farka Toure. It uses a 'sus pentatonic' (replacing the minor 3rd with a 2nd), drone strings, and hypnotic repetition to create trance-like music. This level teaches patience as a musical technique.",
     artists: "Tinariwen, Bombino, Ali Farka Toure, Mdou Moctar",
     unlocks: "Khruangbin Space (Level 5)",
+    review: { label: "Level 2 Check-In", time: 5, exercises: ["gs-2-1", "gs-2-4"], prompt: "Play the Mixolydian scale in A (gs-2-1). Then play 1 minute of surf tremolo picking — clean, even, driving (gs-2-4). If tremolo picking has gone sloppy, spend 10 minutes on Level 2." },
     exercises: [
       {
         id: "gs-4-1",
@@ -788,6 +810,7 @@ export const GUITAR_STUDY = [
       "Khruangbin's guitar approach is anti-guitar-hero: soft pick attack, behind-the-beat phrasing, global pentatonic flavors, and more silence than sound. This level teaches restraint as a form of mastery — saying the most with the least.",
     artists: "Khruangbin, Tommy Guerrero, Skinshape",
     unlocks: "Funk & Rhythm Guitar (Level 6)",
+    review: { label: "Level 3 Check-In", time: 5, exercises: ["gs-3-1", "gs-3-5"], prompt: "Play a 2-minute reggae offbeat skank on Am7-Dm7 (gs-3-1). Then the full reggae chord progression at 3 tempos: 75, 85, 95 BPM (gs-3-5). The skank should be automatic and groovy." },
     exercises: [
       {
         id: "gs-5-1",
@@ -930,6 +953,24 @@ export const GUITAR_STUDY = [
         sarah: "Khruangbin makes guitar music for people who don't normally listen to guitar music. Their secret is restraint. They play 10% of what they could play, and that 10% is chosen with extraordinary care."
       },
       {
+        id: "gs-5-8b",
+        time: 10,
+        title: "Dissect a Track",
+        type: "listen",
+        what: "Deep active listening: pick one track from Khruangbin, Allah-Las, or Skinshape. Map every guitar decision — what's played, what's NOT played, where instruments enter and exit. This is how you steal like an artist.",
+        setup: "Phone/speaker. Headphones recommended. Notebook. Pick one track you love.",
+        steps: [
+          { text: "Listen once, eyes closed. Draw the energy map: where does intensity rise and fall? Mark the sections — intro, verse, chorus, bridge, outro.", why: "The energy map reveals the architecture. Before analyzing individual instruments, you need to see the big picture." },
+          { text: "Listen again. Focus ONLY on the guitar. When does it enter? What's it playing — chords, single notes, arpeggios? When does it stop? Count the bars of silence.", why: "Isolating one instrument forces you to hear what's usually invisible. Guitar silence in a full-band context is an arrangement choice — deliberate space." },
+          { text: "Listen a third time. What changes between verse and chorus? Does the guitar change pattern, register, volume, or tone? Or does it stay the same while other instruments shift?", why: "In Khruangbin, the guitar often stays nearly identical while bass and drums shift to create section contrast. In Allah-Las, the guitar changes character. Both are valid strategies." },
+          { text: "Note: what is the guitar NOT playing? Where are the rests? Where does it play fewer notes than you'd expect? This is the negative space — in these genres, it's the defining feature.", why: "The silence IS the technique. Counting what's absent teaches you more about these artists' approach than counting what's present." },
+          { text: "Write 3 specific takeaways you can apply to your own playing. Be precise: 'leave 2 bars empty after each phrase' or 'play the riff once, then vary it' — not 'play less.'", why: "Actionable takeaways turn passive listening into active learning. Vague insights change nothing. Specific ones change your playing immediately." }
+        ],
+        feel: "This should feel like studying a painting up close — seeing brushstrokes you never noticed from a distance. You'll hear these songs differently after dissecting them.",
+        wrong: "If you're listening without taking notes, you're vibing, not dissecting. The notebook is essential — your memory of what you heard won't survive past the listening session.",
+        sarah: "Gene, every guitarist you love developed their style by obsessively studying other guitarists. This exercise makes that process deliberate instead of osmotic. You're reverse-engineering the Khruangbin magic."
+      },
+      {
         id: "gs-5-9",
         time: 5,
         title: "Self-Check: Record and Count Silence",
@@ -979,6 +1020,7 @@ export const GUITAR_STUDY = [
     description: "Reverb becomes your instrument. Tremolo becomes your voice. You'll learn to build cinematic soundscapes — arpeggios that hang in the air, dynamics that tell stories, and the Spaghetti Western drama that makes Hermanos Gutierrez unforgettable.",
     artists: "Hermanos Gutierrez, Ennio Morricone, Wander & Mélodie",
     unlocks: "Minor arpeggios, tremolo effect, cinematic dynamics, Phrygian mode, two-guitar arranging, scene scoring",
+    review: { label: "Level 4 Check-In", time: 5, exercises: ["gs-4-1", "gs-4-6"], prompt: "Play the desert blues scale and hit 3 clean quarter-tone bends (gs-4-1). Then play a Tinariwen-style repetitive riff for 2 minutes without variation anxiety (gs-4-6). Patience is the skill." },
     exercises: [
       {
         id: "gs-6-1",
@@ -1150,6 +1192,7 @@ export const GUITAR_STUDY = [
     description: "60s psychedelic revival meets indie jangle. You'll learn the shimmering open-string voicings, the Phrygian Dominant 'Arabic' color, fuzz-driven soloing, and the garage rock energy that powers bands like Mystic Braves and BALTHVS.",
     artists: "Mystic Braves, BALTHVS, Allah-Las, Sun Room, Tame Impala",
     unlocks: "Sus2/add9 voicings, open string shimmer, Phrygian Dominant, fuzz tone soloing, jangle progressions, psych riff writing",
+    review: { label: "Level 5 Check-In", time: 5, exercises: ["gs-5-3", "gs-5-8"], prompt: "Play for 2 minutes with 40%+ silence (gs-5-3). Then play a Khruangbin-style riff with space and variation (gs-5-8). If you're filling every gap, the space habit has drifted." },
     exercises: [
       {
         id: "gs-7-1",
@@ -1329,6 +1372,7 @@ export const GUITAR_STUDY = [
     description: "The sophisticated voicings. You'll learn Dorian mode, major 7ths, dominant 9ths, minor 9ths and 11ths — the chords that make Khruangbin and BALTHVS sound effortlessly cool. Ghost notes meet extended harmony for the deepest grooves yet.",
     artists: "BALTHVS, Skinshape, Khruangbin, D'Angelo, Erykah Badu",
     unlocks: "Dorian mode, maj7/9th/11th voicings, extended chord progressions, soul-funk rhythm, ghost note + extended chord fusion",
+    review: { label: "Level 6 Check-In", time: 5, exercises: ["gs-6-1", "gs-6-6"], prompt: "Play a cinematic tremolo passage with slow chord movement (gs-6-1). Then a Morricone-style melody with sustain and space (gs-6-6). These atmospheric skills fade without practice." },
     exercises: [
       {
         id: "gs-8-1",
@@ -1511,6 +1555,7 @@ export const GUITAR_STUDY = [
     description: "Everything comes together. You'll switch between styles on command, match moods to music, transcribe by ear, build arrangements, and play extended golden hour sets that draw from every level. This is graduation — your guitar vocabulary is complete.",
     artists: "All artists from Levels 1-8",
     unlocks: "Style switching, mood matching, transcription, arrangement building, extended improvisation, complete musical voice",
+    review: { label: "Level 7 Check-In", time: 5, exercises: ["gs-7-1", "gs-7-4"], prompt: "Play jangle chord voicings — Dsus2, Aadd9, Cmaj7 (gs-7-1). Then toggle between clean and fuzz tones, adjusting your dynamics for each (gs-7-4). If the voicings feel awkward, revisit Level 7." },
     exercises: [
       {
         id: "gs-9-1",

@@ -557,6 +557,29 @@ function PitchRibbon({ pitches, playNote }) {
   );
 }
 
+function ReviewCheckIn({ review, accentColor }) {
+  const [open, setOpen] = useState(false);
+  if (!review) return null;
+  return (
+    <div style={{
+      background: `${accentColor}08`, border: `1px dashed ${accentColor}40`,
+      borderRadius: T.radiusMd, padding: "12px 16px", marginBottom: 16, cursor: "pointer"
+    }} onClick={() => setOpen(!open)}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: accentColor, fontFamily: T.sans }}>
+          {review.label} &middot; {review.time} min
+        </div>
+        <div style={{ fontSize: 12, color: T.textMuted, fontFamily: T.sans }}>{open ? "▾" : "▸"}</div>
+      </div>
+      {open && (
+        <div style={{ marginTop: 8, fontSize: 13, color: T.textMed, fontFamily: T.sans, lineHeight: 1.6 }}>
+          {review.prompt}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMatch }) {
   const [open, setOpen] = useState(false);
   const [showTimer, setShowTimer] = useState(false);
@@ -1239,8 +1262,9 @@ function VoiceView({ completed, onComplete, metro, onOpenTapMatch }) {
         </div>
       </div>
 
-      {/* Selected level exercises */}
+      {/* Review check-in + Selected level exercises */}
       <div style={{ marginTop: 20 }}>
+        <ReviewCheckIn review={selectedLevel.review} accentColor={T.plum} />
         <LevelView level={selectedLevel} completed={completed} onComplete={onComplete} metro={metro} onOpenTapMatch={onOpenTapMatch} levelColor={VOCAL_COLORS[(selectedLevel.num - 1) % VOCAL_COLORS.length]} />
       </div>
 
@@ -2165,6 +2189,7 @@ function GuitarStudyView({ completed, onComplete, metro, onOpenTapMatch }) {
           </div>
         </div>
 
+        <ReviewCheckIn review={selectedLevel.review} accentColor={T.slate} />
         {selectedLevel.exercises.map(ex => (
           <ExerciseCard key={ex.id} ex={ex} metro={metro}
             completed={completed.has(ex.id)} onComplete={onComplete} dayColor={T.slate} onOpenTapMatch={onOpenTapMatch} />
@@ -2296,6 +2321,7 @@ function SingerSongwriterView({ completed, onComplete, metro, onOpenTapMatch }) 
           </div>
         </div>
 
+        <ReviewCheckIn review={selectedLevel.review} accentColor={T.coral} />
         {selectedLevel.exercises.map(ex => (
           <ExerciseCard key={ex.id} ex={ex} metro={metro}
             completed={completed.has(ex.id)} onComplete={onComplete} dayColor={T.coral} onOpenTapMatch={onOpenTapMatch} />

@@ -358,6 +358,7 @@ export const SINGER_SONGWRITER_LEVELS = [
       "Build a repertoire of covers in your genres — reggae, surf-psych, desert blues — while beginning to write your own material. Covers build vocabulary; originals build voice. Even rough, 'bad' originals develop the composition muscle. Mix both from the start.",
     artists: "Pepper, Mystic Braves, Babe Rainbow, Khruangbin",
     unlocks: "Hearing Harmony (Level 4)",
+    review: { label: "Level 1 Check-In", time: 5, exercises: ["ss-1-3", "ss-1-5"], prompt: "Quick check: strum G-Em-C-D while describing your day (ss-1-3). Then play the reggae offbeat chop for 1 minute at 90 BPM (ss-1-5). If either feels shaky, spend 10 minutes on Level 1 this week." },
     exercises: [
       {
         id: "ss-3-1",
@@ -374,6 +375,26 @@ export const SINGER_SONGWRITER_LEVELS = [
         feel: "Choosing songs should feel exciting — you're picking the music that represents you. Pick songs you'd actually want to play for someone.",
         wrong: "Don't pick songs because they're 'easy' if you don't love them. Motivation matters more than simplicity. Also, don't pick songs with complex fingerpicking or fast chord changes — those aren't autopilot-able yet.",
         sarah: "Gene, your taste IS the curriculum. Pick from Pepper, Mystic Braves, Babe Rainbow, DOPE LEMON, The Lagoons, Sun Room — whatever makes you want to pick up the guitar."
+      },
+      {
+        id: "ss-3-1b",
+        time: 10,
+        title: "How to Learn a Song",
+        type: "listen",
+        what: "The step-by-step process for learning any song from scratch. This is the meta-skill that makes every cover in this level (and beyond) faster and more effective.",
+        setup: "Phone/speaker to play the song. Guitar. Notebook. One of your three songs from ss-3-1.",
+        steps: [
+          { text: "Listen to the song 3 times without touching the guitar. First time: enjoy it. Second time: count the sections (intro, verse, chorus, bridge, outro). Third time: map the structure on paper.", why: "Most people grab the guitar immediately and start hunting for chords. This leads to learning fragments, not songs. Structure first, details second." },
+          { text: "Find the key: hum the note that feels like 'home' — the note the song resolves to. Find that note on the guitar. That's your key.", why: "The key tells you which chords are likely (Nashville Numbers). If you know it's in G, you know the chords are probably G, C, D, Em, Am." },
+          { text: "Check the range: sing the highest and lowest melody notes. Do they sit within E3-A4? If the melody goes above A4, try a capo or singing an octave lower.", why: "Finding your key BEFORE learning the chords saves you from learning the song in a key that doesn't fit your voice, then having to relearn it." },
+          { text: "Map the chords: listen to each section and find the chords by ear. Use Nashville Numbers (from Level 4, or just match by sound for now). Verify against a chord chart only AFTER your ear attempt.", why: "Ears first, charts second. Even a wrong guess trains your ear. Checking a chart without trying first trains nothing." },
+          { text: "Learn the strum pattern: listen for whether it's straight downstrokes, offbeat chops, fingerpicking, or a specific rhythm. Simplify if needed — all downstrokes on the beat is always a valid starting point.", why: "Matching the strum pattern to the original gives the cover authenticity. But a simplified strum that stays in time beats a complex one that falls apart." },
+          { text: "Speak the lyrics in rhythm over your strumming. Then hum. Then sing. Use the Level 2 integration method.", why: "The speak→hum→sing method applies to every new song, not just the exercises where it was introduced. It's your universal integration tool." }
+        ],
+        feel: "By the end, you should have a rough but complete version of the song — structure mapped, chords found, vocals integrated. It won't be polished, but it'll be whole.",
+        wrong: "If you jumped straight to a chord chart or tabs without trying by ear first, you skipped the most valuable part. If you learned the verse perfectly but don't know the chorus, you learned a fragment, not a song.",
+        sarah: "Gene, this workflow is the same process every gigging musician uses. Once it becomes habit, you'll be able to learn a new song in 20-30 minutes. That's the skill that fills a setlist.",
+        recorder: true
       },
       {
         id: "ss-3-2",
@@ -556,6 +577,7 @@ export const SINGER_SONGWRITER_LEVELS = [
       "The Nashville Number System, ear training, melodic improvisation, and your first real jams. When you stop thinking of chords as finger shapes and start hearing them as sounds with emotional character, your songwriting and improvisation transform. Genre-specific jam templates — reggae vamps, surf drones — let you apply harmony knowledge in real time.",
     artists: "Khruangbin, Tinariwen, Bill Withers, Curtis Mayfield",
     unlocks: "Song Architecture & Melody (Level 5)",
+    review: { label: "Level 2 Check-In", time: 5, exercises: ["ss-2-3", "ss-2-5"], prompt: "Strum and sing root notes over G-C-D (ss-2-3). Then perform one full song using speak→hum→sing with no strum breaks (ss-2-5). If the integration isn't smooth, revisit Level 2." },
     exercises: [
       {
         id: "ss-4-1",
@@ -742,6 +764,7 @@ export const SINGER_SONGWRITER_LEVELS = [
       "Analyze the structure of songs you love, understand why verse-chorus-bridge works, and compose your own melodies using voice-first writing. The method: sing a melody before touching the guitar. This builds audiation — the ability to hear music in your inner ear — and prevents the trap of chord-driven cliches.",
     artists: "Nick Drake, Curtis Mayfield, Khruangbin, Tinariwen",
     unlocks: "Lyrics & Storytelling (Level 6)",
+    review: { label: "Level 3 Check-In", time: 5, exercises: ["ss-3-2", "ss-3-10"], prompt: "Play your reggae cover from Level 3 — does the laid-back pocket still feel natural (ss-3-10)? If the behind-the-beat timing has drifted, spend 10 minutes recalibrating." },
     exercises: [
       {
         id: "ss-5-1",
@@ -774,6 +797,23 @@ export const SINGER_SONGWRITER_LEVELS = [
         feel: "Drawing energy maps should make songs feel more three-dimensional — not just a sequence of sounds but a designed experience with intentional rises and falls.",
         wrong: "If your energy map is a flat line, you're not listening dynamically. Pay attention to instrumentation changes, volume shifts, new elements entering and leaving. Those ARE the energy shifts.",
         sarah: "Gene, when you write your own songs, you'll draw the energy map FIRST, then build sections to match it. Architecture before notes."
+      },
+      {
+        id: "ss-5-2b",
+        time: 8,
+        title: "Genre Listening Lab",
+        type: "listen",
+        what: "Active listening across three genres. For each track, answer specific questions about rhythm, vocal entry, phrasing, and chord rhythm. This trains the analytical ear that feeds your songwriting instincts.",
+        setup: "Phone/speaker. Notebook. Three tracks: one reggae, one surf-psych, one chill/soul from your playlists.",
+        steps: [
+          { text: "Track 1 (reggae): Clap the rhythm. Is the feel straight 8ths or slightly swung? When does the vocal enter — beat 1, beat 3, or offbeat? Count the bars of rest between vocal phrases.", why: "Reggae's rhythmic identity lives in the offbeat guitar and spaced vocal phrasing. Counting rest bars reveals how much silence defines the genre." },
+          { text: "Track 2 (surf-psych): Where does the guitar sit — front of the mix, background, or equal with vocals? Is there reverb or delay? Does the vocal have vibrato or is it straight-toned?", why: "Surf-psych production is as much a part of the sound as the notes. Understanding the mix informs how you present your own songs." },
+          { text: "Track 3 (chill/soul): What's the chord change rhythm — every bar, every 2 bars, every 4 bars? Is the bass following the guitar or doing something independent?", why: "Chord change rhythm is the hidden architecture of feel. Khruangbin changes chords every 4-8 bars. Pop changes every 1-2. This choice defines the groove." },
+          { text: "Compare your three analyses. What did the reggae track do with space that the others didn't? What did the surf-psych track do with texture? What did the soul track do with harmony?", why: "Cross-genre comparison reveals the building blocks of each style. You can then consciously borrow techniques across genres — reggae space in a surf song, soul harmony in a reggae tune." }
+        ],
+        feel: "Listening should feel like detective work — you're uncovering the invisible decisions that make each song sound the way it does. Every production choice was intentional.",
+        wrong: "If you're just vibing to the music without answering the specific questions, you're passive listening, not active. Active listening requires a notebook and specific observations.",
+        sarah: "Gene, the artists you love made thousands of tiny decisions in every song. This exercise teaches you to hear those decisions. Once you can hear them, you can steal them for your own music."
       },
       {
         id: "ss-5-3",
@@ -894,6 +934,7 @@ export const SINGER_SONGWRITER_LEVELS = [
       "The craft of words set to music. Concrete imagery over abstract emotion. Rhyme that serves the song, not the other way around. Syllable stress aligned with musical stress. And the discipline of finishing: one rough song per week, because songwriting is a muscle that strengthens with use.",
     artists: "DOPE LEMON (conversational), Skinshape (imagery), Tommy Guerrero (mood)",
     unlocks: "Fingerpicking, Performance & Identity (Level 7)",
+    review: { label: "Level 4 Check-In", time: 5, exercises: ["ss-4-1", "ss-4-5"], prompt: "Transpose a I-IV-V progression through 3 keys using Nashville Numbers (ss-4-1). Then improvise a melody over Am-C-G-D for 2 minutes (ss-4-5). If the numbers feel rusty or the improv feels stuck, revisit Level 4." },
     exercises: [
       {
         id: "ss-6-1",
@@ -1017,6 +1058,25 @@ export const SINGER_SONGWRITER_LEVELS = [
         levelUp: "Can write one complete original song per week with concrete imagery, natural syllable stress, and intentional rhyme scheme. Can self-critique and revise lyrics."
       },
       {
+        id: "ss-6-7b",
+        time: 12,
+        title: "Finish the Song",
+        type: "song",
+        what: "Take your best unfinished song fragment — from Level 3's parasitic songwriting, Level 5's melody seeds, or any rough idea — and apply a completion checklist to turn it into a performable song.",
+        setup: "Guitar. Your best unfinished fragment or rough song. Notebook. Recorder.",
+        steps: [
+          { text: "Pick your strongest unfinished idea. Play it through. What sections exist? Verse only? Verse + chorus? Write down what's MISSING: does it need a chorus, a bridge, a second verse, an intro/outro?", why: "Most unfinished songs die because the writer doesn't know what's missing. Naming the gap is the first step to filling it." },
+          { text: "Write the missing section(s). For a missing chorus: take the emotional peak of the verse and amplify it — higher melody, more open chords, the one line that says everything. For a missing bridge: change key, tempo, or perspective.", why: "Each section has a job. Verse = story. Chorus = thesis. Bridge = plot twist. Knowing the job makes writing the section easier." },
+          { text: "Check the lyrics: does every verse have at least one concrete image? Replace any leftover placeholder lines ('something something love') with real words. They don't need to be perfect — they need to be specific.", why: "Placeholder lines are the #1 reason songs stay unfinished. Replacing them with anything concrete — even if you rewrite later — removes the blocker." },
+          { text: "Play the whole song start to finish. Does the energy build from verse to chorus? Does the bridge redirect? Record the complete version.", why: "A finished song that's rough beats an unfinished song that's perfect. Record it, flaws and all. You can always polish later — you can't polish something that doesn't exist." },
+          { text: "Give the song a title. Write the date. This song is now FINISHED. Not perfect — finished. You can always revise, but it officially exists as a complete work.", why: "The psychological act of declaring a song 'done' is huge. Most songwriters have 50 fragments and zero finished songs. You now have at least one." }
+        ],
+        feel: "Finishing a song should feel like crossing a finish line — relief, pride, and the immediate desire to start another one. The song might not be your masterpiece, but it's YOURS and it's COMPLETE.",
+        wrong: "If you're rewriting the verse you already had instead of writing the missing chorus, you're polishing, not finishing. Write the missing parts first, polish second.",
+        sarah: "Gene, every songwriter's hard drive is a graveyard of unfinished ideas. This exercise teaches the skill that separates songwriters who have songs from songwriters who have fragments. Finish it. Even if it's imperfect. Especially if it's imperfect.",
+        recorder: true
+      },
+      {
         id: "ss-6-8",
         time: 10,
         title: "Loop Jam",
@@ -1048,6 +1108,7 @@ export const SINGER_SONGWRITER_LEVELS = [
       "Fingerpicking + singing is a new integration challenge — your right hand must build a new autopilot from scratch. Full dynamic arcs, live improvisation, jam circles, recording + self-critique, and the most important question: what kind of singer-songwriter are you becoming? Build your set, jam with others, find your voice, perform for someone.",
     artists: "Nick Drake, Tommy Guerrero, Khruangbin, your own voice",
     unlocks: "Your identity as a singer-songwriter",
+    review: { label: "Level 5 Check-In", time: 5, exercises: ["ss-5-3", "ss-5-8"], prompt: "Sing a melody from your inner ear without guitar (ss-5-3) — does audiation still flow? Then strum and sing a syncopated vocal line independently (ss-5-8). These skills decay without practice." },
     exercises: [
       {
         id: "ss-7-1",
@@ -1170,6 +1231,25 @@ export const SINGER_SONGWRITER_LEVELS = [
         feel: "Singing with someone should feel like a conversation — you listen, they respond, you meet in the chorus. If it makes you both smile, you're doing it right.",
         wrong: "If you're both singing the same thing at the same volume, try contrast: one person pulls back while the other leads. Take turns being the lead and the support.",
         sarah: "Gene, your 'Sing with Court' playlist tells me this is something you're already drawn to. Lean into it. Duet performing is one of the deepest joys in music.",
+        recorder: true
+      },
+      {
+        id: "ss-7-7b",
+        time: 8,
+        title: "Playing for One",
+        type: "song",
+        what: "Perform your best song for an audience of one — Court, a friend, a family member. This exercise focuses on the psychology of performing, not the music. Notice what changes in your body and mind when someone is listening.",
+        setup: "Guitar. Your strongest cover or original. One person willing to listen for 4 minutes.",
+        steps: [
+          { text: "Before you start: notice where in your body you feel nervous. Shoulders tense? Hands shaky? Stomach tight? Name the sensation out loud to yourself.", why: "Naming physical sensations reduces their power. Anxiety thrives in the unnamed — once you say 'my hands are shaky,' the shakiness becomes manageable." },
+          { text: "Start with your easiest, most confident song — a cover you know cold. Play it all the way through. Let this anchor your confidence before anything vulnerable.", why: "Starting with strength builds momentum. Professional performers always open with a safe bet — the risky material comes later, when confidence is established." },
+          { text: "Before your second song (ideally an original): take 3 slow breaths. Tell yourself 'this song is mine — it doesn't need to be perfect, it needs to be real.' Then play.", why: "The breath interrupts the anxiety spiral. The self-talk reframes the goal: authenticity over perfection. Nobody expects perfection in a living room." },
+          { text: "During the song, look up at your listener at least twice. Not for approval — just to include them. Eye contact turns playing-in-front-of-someone into playing-FOR-someone.", why: "Eye contact transforms the dynamic from audition (being judged) to connection (sharing something). This single habit changes everything about performing." },
+          { text: "After: ask them what they FELT, not what they thought. 'What did it make you feel?' is a better question than 'Was it good?' Their feeling is the real feedback.", why: "Technical feedback isn't useful at this stage. Emotional feedback tells you whether your music communicates what you intended." }
+        ],
+        feel: "This should feel vulnerable — and that's the point. The gap between practice-room you and performing-for-someone you is the gap this exercise closes. It gets smaller every time.",
+        wrong: "If you apologized before, during, or after playing, notice that. Apologizing undermines the performance before the listener even has a chance to respond. Play, then listen to their reaction. No disclaimers.",
+        sarah: "Gene, the lanai with Court is your first stage. This isn't a concert — it's a moment of sharing. The nervousness you feel is exactly what every musician feels before every show. The difference between amateurs and professionals isn't that professionals aren't nervous — it's that they play anyway.",
         recorder: true
       },
       {
