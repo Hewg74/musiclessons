@@ -13,6 +13,17 @@ function MiniAudioPlayer({ src, theme: T, title }) {
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
 
+  // Looping state
+  const [isLooping, setIsLooping] = useState(false);
+  const [showLoopSettings, setShowLoopSettings] = useState(false);
+  const [loopStart, setLoopStart] = useState(0); // seconds
+  const [loopEnd, setLoopEnd] = useState(0); // seconds
+
+  // Initialize loopEnd when duration loads
+  useEffect(() => {
+    if (duration > 0 && loopEnd === 0) setLoopEnd(duration);
+  }, [duration, loopEnd]);
+
   const togglePlay = () => {
     if (audioRef.current) {
       if (isPlaying) {
@@ -30,8 +41,15 @@ function MiniAudioPlayer({ src, theme: T, title }) {
 
   const onTimeUpdate = () => {
     if (audioRef.current) {
-      const current = audioRef.current.currentTime;
+      let current = audioRef.current.currentTime;
       const dur = audioRef.current.duration || 0;
+
+      // Enforce loop boundary
+      if (isLooping && loopEnd > 0 && current >= loopEnd) {
+        audioRef.current.currentTime = loopStart;
+        current = loopStart;
+      }
+
       setCurrentTime(current);
       if (dur > 0) setProgress(current / dur);
     }
@@ -48,8 +66,52 @@ function MiniAudioPlayer({ src, theme: T, title }) {
       const rect = progressRef.current.getBoundingClientRect();
       const clickX = e.clientX - rect.left;
       const newProgress = Math.max(0, Math.min(1, clickX / rect.width));
-      audioRef.current.currentTime = newProgress * duration;
+      let newTime = newProgress * duration;
+
+      // If looping, ensure scrub doesn't break out of bounds if they click outside (optional strictness, but let's allow jumping anywhere, it will simply loop back if it passes end)
+      audioRef.current.currentTime = newTime;
       setProgress(newProgress);
+      setCurrentTime(newTime);
+    }
+  };
+
+  const skipBack = () => {
+    if (audioRef.current) {
+      let newTime = Math.max(0, audioRef.current.currentTime - 10);
+      if (isLooping && newTime < loopStart) newTime = loopStart;
+      audioRef.current.currentTime = newTime;
+      setCurrentTime(newTime);
+    }
+  };
+
+  const resetSong = () => {
+    if (audioRef.current) {
+      const startT = isLooping ? loopStart : 0;
+      audioRef.current.currentTime = startT;
+      setCurrentTime(startT);
+      if (!isPlaying) togglePlay(); // Auto-play on reset
+    }
+  };
+
+  const setBoundary = (type) => { // type: 'A' or 'B'
+    if (!audioRef.current) return;
+    const current = audioRef.current.currentTime;
+    if (type === 'A') {
+      const newStart = Math.max(0, Math.min(current, loopEnd - 1)); // At least 1s gap
+      setLoopStart(newStart);
+      if (current < newStart) audioRef.current.currentTime = newStart;
+    } else {
+      const newEnd = Math.max(loopStart + 1, Math.min(current, duration));
+      setLoopEnd(newEnd);
+      if (current > newEnd) audioRef.current.currentTime = loopStart;
+    }
+  };
+
+  const nudgeBoundary = (type, amount) => {
+    if (type === 'A') {
+      setLoopStart(prev => Math.max(0, Math.min(prev + amount, loopEnd - 0.5)));
+    } else {
+      setLoopEnd(prev => Math.max(loopStart + 0.5, Math.min(prev + amount, duration)));
     }
   };
 
@@ -64,92 +126,210 @@ function MiniAudioPlayer({ src, theme: T, title }) {
     <div style={{
       background: T.bgCard, border: `1px solid ${T.border}`,
       borderRadius: T.radiusMd, padding: "14px 16px", marginBottom: 12,
-      display: "flex", alignItems: "center", gap: 16,
+      display: "flex", flexDirection: "column", gap: 12,
       boxShadow: "0 2px 8px rgba(44,40,37,0.03)"
     }}>
-      <audio
-        ref={audioRef}
-        src={src}
-        onTimeUpdate={onTimeUpdate}
-        onLoadedMetadata={onLoadedMetadata}
-        onEnded={() => setIsPlaying(false)}
-        preload="metadata"
-      />
+      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+        <audio
+          ref={audioRef}
+          src={src}
+          onTimeUpdate={onTimeUpdate}
+          onLoadedMetadata={onLoadedMetadata}
+          onEnded={() => setIsPlaying(false)}
+          preload="metadata"
+        />
 
-      <button onClick={togglePlay} style={{
-        background: "transparent", border: "none", cursor: "pointer",
-        display: "flex", alignItems: "center", justifyContent: "center",
-        width: 36, height: 36, borderRadius: "50%",
-        boxShadow: `0 0 0 1px ${T.border}`,
-        transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
-        color: T.textDark
-      }}
-        onPointerDown={e => e.currentTarget.style.transform = "scale(0.92)"}
-        onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
-        onPointerLeave={e => e.currentTarget.style.transform = "scale(1)"}
-      >
-        {isPlaying ? (
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-            <rect x="6" y="4" width="4" height="16" />
-            <rect x="14" y="4" width="4" height="16" />
-          </svg>
-        ) : (
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style={{ marginLeft: 3 }}>
-            <polygon points="5,3 19,12 5,21" />
-          </svg>
-        )}
-      </button>
+        <button onClick={togglePlay} style={{
+          background: "transparent", border: "none", cursor: "pointer",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          width: 36, height: 36, borderRadius: "50%",
+          boxShadow: `0 0 0 1px ${T.border}`,
+          transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+          color: T.textDark
+        }}
+          onPointerDown={e => e.currentTarget.style.transform = "scale(0.92)"}
+          onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
+          onPointerLeave={e => e.currentTarget.style.transform = "scale(1)"}
+        >
+          {isPlaying ? (
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <rect x="6" y="4" width="4" height="16" />
+              <rect x="14" y="4" width="4" height="16" />
+            </svg>
+          ) : (
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style={{ marginLeft: 3 }}>
+              <polygon points="5,3 19,12 5,21" />
+            </svg>
+          )}
+        </button>
 
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
-        {title && <div style={{ fontSize: 13, fontWeight: 600, color: T.textDark, fontFamily: T.sans }}>{title}</div>}
+        {/* Main Track Info & Scrub */}
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
+          {title && <div style={{ fontSize: 13, fontWeight: 600, color: T.textDark, fontFamily: T.sans }}>{title}</div>}
 
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <span style={{ fontSize: 10, color: T.textLight, fontFamily: T.sans, fontWeight: 500, fontVariantNumeric: "tabular-nums" }}>
-            {formatTime(currentTime)}
-          </span>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <span style={{ fontSize: 10, color: T.textLight, fontFamily: T.sans, fontWeight: 500, fontVariantNumeric: "tabular-nums" }}>
+              {formatTime(currentTime)}
+            </span>
 
-          {/* Thick hit area wrapper for easy scrubbing */}
-          <div
-            ref={progressRef}
-            onPointerDown={(e) => {
-              handleScrub(e);
-              const onMove = (moveEvent) => handleScrub(moveEvent);
-              const onUp = () => {
-                window.removeEventListener('pointermove', onMove);
-                window.removeEventListener('pointerup', onUp);
-              };
-              window.addEventListener('pointermove', onMove);
-              window.addEventListener('pointerup', onUp);
-            }}
-            style={{
-              flex: 1, height: 24, display: "flex", alignItems: "center", cursor: "pointer"
-            }}
-          >
-            {/* Visual thin track */}
-            <div style={{ width: "100%", height: 3, background: T.border, borderRadius: 2, position: "relative" }}>
-              {/* Visual progress fill */}
-              <div style={{
-                position: "absolute", left: 0, top: 0, bottom: 0,
-                width: `${progress * 100}%`, background: T.gold, borderRadius: 2
-              }} />
-              {/* Playhead dot */}
-              <div style={{
-                position: "absolute", top: "50%", left: `${progress * 100}%`,
-                width: 10, height: 10, borderRadius: "50%", background: T.gold,
-                transform: "translate(-50%, -50%)",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.15)"
-              }} />
+            {/* Thick hit area wrapper for easy scrubbing */}
+            <div
+              ref={progressRef}
+              onPointerDown={(e) => {
+                handleScrub(e);
+                const onMove = (moveEvent) => handleScrub(moveEvent);
+                const onUp = () => {
+                  window.removeEventListener('pointermove', onMove);
+                  window.removeEventListener('pointerup', onUp);
+                };
+                window.addEventListener('pointermove', onMove);
+                window.addEventListener('pointerup', onUp);
+              }}
+              style={{
+                flex: 1, height: 24, display: "flex", alignItems: "center", cursor: "pointer"
+              }}
+            >
+              {/* Visual thin track */}
+              <div style={{ width: "100%", height: 3, background: T.border, borderRadius: 2, position: "relative" }}>
+                {/* Loop Region Highlight */}
+                {isLooping && duration > 0 && (
+                  <div style={{
+                    position: "absolute", left: `${(loopStart / duration) * 100}%`, right: `${100 - (loopEnd / duration) * 100}%`,
+                    top: -2, bottom: -2, background: T.gold, opacity: 0.2, borderRadius: 2
+                  }} />
+                )}
+                {/* Visual progress fill */}
+                <div style={{
+                  position: "absolute", left: 0, top: 0, bottom: 0,
+                  width: `${progress * 100}%`, background: isLooping ? T.textMed : T.gold, borderRadius: 2
+                }} />
+                {/* Playhead dot */}
+                <div style={{
+                  position: "absolute", top: "50%", left: `${progress * 100}%`,
+                  width: 10, height: 10, borderRadius: "50%", background: isLooping ? T.textDark : T.gold,
+                  transform: "translate(-50%, -50%)",
+                  boxShadow: "0 1px 3px rgba(0,0,0,0.15)"
+                }} />
+              </div>
             </div>
-          </div>
 
-          <span style={{ fontSize: 10, color: T.textLight, fontFamily: T.sans, fontWeight: 500, fontVariantNumeric: "tabular-nums" }}>
-            {formatTime(duration)}
-          </span>
+            <span style={{ fontSize: 10, color: T.textLight, fontFamily: T.sans, fontWeight: 500, fontVariantNumeric: "tabular-nums" }}>
+              {formatTime(duration)}
+            </span>
+          </div>
+        </div>
+
+        {/* Inline Transport Controls (Right Side) */}
+        <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+          <button onClick={skipBack} title="Rewind 10s" style={{
+            background: "transparent", border: "none", color: T.textMed, cursor: "pointer",
+            padding: 6, display: "flex", alignItems: "center", justifyContent: "center",
+            transition: "transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
+          }}
+            onPointerDown={e => e.currentTarget.style.transform = "scale(0.85)"}
+            onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="11 17 6 12 11 7"></polyline>
+              <polyline points="18 17 13 12 18 7"></polyline>
+            </svg>
+          </button>
+          <button onClick={resetSong} title="Restart" style={{
+            background: "transparent", border: "none", color: T.textMed, cursor: "pointer",
+            padding: 6, display: "flex", alignItems: "center", justifyContent: "center",
+            transition: "transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
+          }}
+            onPointerDown={e => e.currentTarget.style.transform = "scale(0.85)"}
+            onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="1 4 1 10 7 10"></polyline>
+              <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+            </svg>
+          </button>
+          <button onClick={() => setShowLoopSettings(!showLoopSettings)} title="Loop Settings" style={{
+            background: isLooping || showLoopSettings ? T.bgSoft : "transparent",
+            border: `1px solid ${isLooping ? T.gold : showLoopSettings ? T.border : "transparent"}`,
+            color: isLooping || showLoopSettings ? T.gold : T.textMed, cursor: "pointer",
+            padding: 6, borderRadius: T.radius, display: "flex", alignItems: "center", justifyContent: "center",
+            transition: "all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+            marginLeft: 4
+          }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="9" y1="3" x2="9" y2="21"></line>
+            </svg>
+          </button>
         </div>
       </div>
+
+      {/* Expandable Loop Tray */}
+      {showLoopSettings && (
+        <div style={{
+          borderTop: `1px solid ${T.borderSoft}`, paddingTop: 12, marginTop: -4,
+          display: "flex", flexDirection: "column", gap: 12,
+          animation: 'fade-in-up 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: T.textDark, fontFamily: T.sans }}>A/B Loop Mode</span>
+            {/* Beautiful Pill Toggle */}
+            <button onClick={() => setIsLooping(!isLooping)} style={{
+              background: isLooping ? T.success : T.border, border: "none",
+              width: 44, height: 24, borderRadius: 12, position: "relative",
+              cursor: "pointer", transition: "background 0.3s ease"
+            }}>
+              <div style={{
+                position: "absolute", top: 2, left: isLooping ? 22 : 2,
+                width: 20, height: 20, borderRadius: "50%", background: "#fff",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.2)", transition: "left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
+              }} />
+            </button>
+          </div>
+
+          <div style={{ display: 'flex', gap: 12 }}>
+            {/* Start A */}
+            <div style={{ flex: 1, background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radius, padding: 8 }}>
+              <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 6 }}>Start (A)</div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: 14, fontWeight: 600, color: T.textDark, fontFamily: T.sans, fontVariantNumeric: "tabular-nums" }}>{formatTime(loopStart)}</span>
+                <div style={{ display: 'flex', gap: 4 }}>
+                  <button onClick={() => nudgeBoundary('A', -0.5)} style={nudgeBtnStyle(T)}>-</button>
+                  <button onClick={() => nudgeBoundary('A', 0.5)} style={nudgeBtnStyle(T)}>+</button>
+                  <button onClick={() => setBoundary('A')} style={setBtnStyle(T)}>Set</button>
+                </div>
+              </div>
+            </div>
+            {/* End B */}
+            <div style={{ flex: 1, background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radius, padding: 8 }}>
+              <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 6 }}>End (B)</div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: 14, fontWeight: 600, color: T.textDark, fontFamily: T.sans, fontVariantNumeric: "tabular-nums" }}>{formatTime(loopEnd)}</span>
+                <div style={{ display: 'flex', gap: 4 }}>
+                  <button onClick={() => nudgeBoundary('B', -0.5)} style={nudgeBtnStyle(T)}>-</button>
+                  <button onClick={() => nudgeBoundary('B', 0.5)} style={nudgeBtnStyle(T)}>+</button>
+                  <button onClick={() => setBoundary('B')} style={setBtnStyle(T)}>Set</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
+
+const nudgeBtnStyle = (T) => ({
+  background: T.borderSoft, border: "none", color: T.textMed,
+  width: 20, height: 20, borderRadius: 4, cursor: "pointer",
+  display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 600
+});
+
+const setBtnStyle = (T) => ({
+  background: T.gold, color: "#fff", border: "none",
+  padding: "2px 8px", borderRadius: 4, cursor: "pointer",
+  fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.5, fontFamily: T.sans
+});
 
 // --- 1. Audio Player ---
 export function AudioPlayer({ theme: T }) {
@@ -421,7 +601,13 @@ export function AudioRecorder({ theme: T, inline = false }) {
 
   const startRecording = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: false,
+          autoGainControl: false,
+          noiseSuppression: false
+        }
+      });
       mediaRecorderRef.current = new MediaRecorder(stream);
       audioChunksRef.current = [];
 
