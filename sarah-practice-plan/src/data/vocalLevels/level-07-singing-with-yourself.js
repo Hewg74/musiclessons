@@ -2,13 +2,13 @@ import { getPitchRange } from "../appData.js";
 
 export const level7 = {
   num: 7, name: "Harmony & Layering", focus: "Self-harmonizing, 3rds/5ths, looper vocal stacking",
-  duration: "25 min",
+  duration: "30 min",
   setup: "Guitar. RC-505mkII optional but ideal. Headphones.",
   subtitle: "Singing With Yourself",
   description: "Elliott Smith sang 3-part harmonies with himself. Bob Marley's backing vocals were as iconic as his leads. Bon Iver builds entire songs from stacked vocal layers. This level teaches you to harmonize with yourself -- the essential skill for looper-based singer-songwriter performance.",
   artists: "Bon Iver, Elliott Smith, Bob Marley",
   unlocks: "Singing While Playing (Level 8)",
-  review: { label: "Level 5 Check-In", time: 5, exercises: ["v5e1", "v5e4"], prompt: "Perform a vocal swell from pp to ff on a single note — smooth, no jumps (v5e1). Then toggle between breathy and full tone on the same phrase (v5e4). Dynamic control decays without drills." },
+  review: { label: "Level 5 Check-In", time: 5, exercises: ["v5e1", "v5e4"], prompt: "Perform a 5-note scale crescendo to f — smooth, controlled (v5e1). Then toggle between breathy and full tone on the same phrase (v5e4). Dynamic control decays without drills." },
   exercises: [
     {
       id: "v7e1", time: 5, title: "Singing in 3rds", type: "vocal",

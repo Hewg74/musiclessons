@@ -1,6 +1,6 @@
 export const level10 = {
   num: 10, name: "Performance & Integration", focus: "Full songs, mic technique, set building",
-  duration: "30 min",
+  duration: "35 min",
   setup: "Full setup: guitar, looper, mic, backing tracks.",
   subtitle: "Putting It All Together",
   description: "This is where every skill from every level converges. Full songs start to finish, looper arrangements, mic technique, and set building. You're not practicing anymore -- you're performing.",
@@ -43,6 +43,7 @@ export const level10 = {
     {
       id: "v10e2", time: 8, title: "Full Song: Voice + Guitar + Looper", type: "vocal",
       recorder: true,
+      tracks: [{ name: "ILTWYW", src: "/iltwyw.mp3" }, { name: "Sol Del Sur", src: "/sol-del-sur.mp3" }],
       what: "Same song with looper layers. Guitar loop -> vocal melody -> vocal harmony. The full singer-songwriter looper arrangement.",
       setup: "RC-505mkII. Guitar. Mic. 80-90 BPM. Headphones.",
       steps: [

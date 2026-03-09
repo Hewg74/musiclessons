@@ -8,7 +8,7 @@ export const level6 = {
   description: "Every great singer has a recognizable texture. Angus Stone's lo-fi whisper, Thom Yorke's falsetto breaks, Bob Marley's rhythmic precision, Laura Lee's psychedelic float. This level explores genre-specific vocal textures so you can find the combination that sounds like YOU.",
   artists: "Angus Stone, Thom Yorke, Laura Lee (Khruangbin)",
   unlocks: "Harmony & Layering (Level 7)",
-  review: { label: "Level 4 Check-In", time: 5, exercises: ["v4e1", "v4e3"], prompt: "Strum Am and sing root-3rd-5th (A-C-E) without checking guitar (v4e1). Then sing the same melody in major and minor — hear the emotional difference (v4e3). Ear training needs maintenance." },
+  review: { label: "Level 4 Check-In", time: 5, exercises: ["v4e1", "v4e3"], prompt: "Strum Am and sing root-3rd-5th (A-C-E) without checking guitar (v4e1). Then build a melody from chord tones over Am-C-G-D (v4e3). Ear training needs maintenance." },
   exercises: [
     {
       id: "v6e1", time: 4, title: "The Falsetto Switch", type: "vocal",
@@ -62,7 +62,7 @@ export const level6 = {
     },
     {
       id: "v6e4", time: 4, title: "Surf-Psych Vocal Float", type: "vocal",
-      tracks: [{ name: "Psych Rock 120", src: "/psych-rock-120.mp3" }],
+      tracks: [{ name: "Psych Rock 120", src: "/psych-rock-120.mp3" }, { name: "Surf Rock 120", src: "/surf-rock-120.mp3" }],
       what: "Allah-Las / Laura Lee (Khruangbin) style: voice as texture, minimal vibrato, sits INSIDE the guitar mix. The vocal doesn't lead -- it blends with the instruments like another color in the palette.",
       setup: "Psych Rock 120 BPM backing track or Surf Rock 120 BPM. Guitar droning Am.",
       steps: [

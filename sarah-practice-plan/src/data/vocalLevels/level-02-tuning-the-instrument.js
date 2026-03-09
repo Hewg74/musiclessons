@@ -2,8 +2,8 @@ import { getPitchRange } from "../appData.js";
 
 export const level2 = {
   num: 2, name: "Pitch & Range", focus: "Passaggio, register transitions, pitch accuracy",
-  duration: "20 min",
-  setup: "Standing. No guitar. Live Pitch Detector on.",
+  duration: "30 min",
+  setup: "Standing. Live Pitch Detector on. Guitar needed for v2e5 and v2e6.",
   subtitle: "Tuning the Instrument",
   description: "Your voice has a break point around A3 where chest voice transitions to head voice. These exercises map that transition zone, train smooth crossings, and build pitch accuracy across your range. This is where the original passaggio work lives.",
   artists: "Jeff Buckley, Thom Yorke",
@@ -107,8 +107,8 @@ export const level2 = {
     {
       id: "v2e4", time: 3, title: "Vowel Modification Climb", type: "vocal",
       pitchContour: true,
-      what: "Ascend E3-C4 shifting vowels as you climb: 'ah' in chest, 'uh' through the break, 'oh' in head. This uses the VowelMap data -- you're learning to modify vowels to smooth register transitions.",
-      setup: "Standing. VowelMap visible for reference. Pitch Detector on.",
+      what: "Ascend E3-C4 shifting vowels as you climb: 'ah' in chest, 'uh' through the break, 'oh' in head. You're learning to modify vowels to smooth register transitions — applying the formant shaping from v2e3b.",
+      setup: "Standing. Pitch Detector on. Reference the vowel formant work from v2e3b.",
       referencePitches: getPitchRange("E3", "C4"),
       steps: [
         { text: "Start on E3 with 'ah' (open chest vowel). Sing E3-F3-G3 on 'ah'. Should feel warm and full.", why: "Below the break, 'ah' is natural. Your chest voice handles these notes easily." },

@@ -2,13 +2,13 @@ import { getPitchRange } from "../appData.js";
 
 export const level3 = {
   num: 3, name: "Rhythm & Phrasing", focus: "Vocal timing, behind-the-beat, reggae delivery",
-  duration: "20 min",
+  duration: "25 min",
   setup: "Metronome or backing track. 85-90 BPM. No guitar.",
   subtitle: "Singing IN the Beat",
   description: "Great singers don't just sing the right notes -- they sing them at the right time. This level trains the vocal timing skills that separate karaoke from artistry: on-beat precision, offbeat phrasing, and the behind-the-beat delivery that defines reggae, surf, and psych vocals.",
   artists: "Jack Johnson, Bob Marley, DOPE LEMON",
   unlocks: "Ear Training & Harmony (Level 4)",
-  review: { label: "Level 1 Check-In", time: 5, exercises: ["v1e1", "v1e3"], prompt: "Do the 'Hey, Stop It!' chest voice activation — feel the belly push (v1e1). Then 1 minute of SOVT warm-up through a straw (v1e3). If the diaphragm engagement feels unfamiliar, revisit Level 1." },
+  review: { label: "Level 1 Check-In", time: 5, exercises: ["v1e1", "v1e3"], prompt: "Do the 'Hey, Stop It!' chest voice activation — feel the belly push (v1e1). Then 1 minute of lip trill warm-up (v1e3). If the diaphragm engagement feels unfamiliar, revisit Level 1." },
   exercises: [
     {
       id: "v3e1", time: 4, title: "On-Beat Vocal Placement", type: "vocal",
@@ -49,7 +49,7 @@ export const level3 = {
       recorder: true,
       tracks: [{ name: "Dub Reggae 85", src: "/dub-reggae-85.mp3" }],
       what: "Arrive a fraction AFTER the click. DOPE LEMON's lazy drawl, Jack Johnson's conversational timing. This is an intentional 50-100ms delay that creates the laid-back feel.",
-      setup: "Metronome at 85 BPM or Reggae One Drop 85 BPM backing track.",
+      setup: "Metronome at 85 BPM or Dub Reggae 85 BPM backing track.",
       steps: [
         { text: "Start by singing on the beat for 4 bars. Get locked in.", why: "You need to know where the beat IS before you can intentionally be late." },
         { text: "Now deliberately arrive a tiny bit AFTER the beat. Think 'lazy' or 'no rush'.", why: "The delay should be 50-100ms -- barely perceptible but deeply felt. This is the DOPE LEMON feel." },

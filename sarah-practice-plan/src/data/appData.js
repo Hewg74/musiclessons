@@ -532,6 +532,7 @@ export const KEYBOARD_LEVELS = [
       },
       {
         id: "k1e2", time: 10, title: "Chord Change Chop (I-IV-V)", type: "keys",
+        referencePitches: ["C4", "E4", "G4", "F4", "A4"],
         pianoKeys: { notes: ["C4", "E4", "G4", "F4", "A4", "C5", "G4", "B4", "D5"], label: "I-IV-V: C F G" },
         what: "C(2 bars)-F(2 bars)-G(2 bars)-C(2 bars), chopping on &'s. Same finger shape shifts — thumb-middle-pinky stays 1-3-5.",
         setup: "Same organ preset. Metronome at 76 BPM.",
@@ -569,13 +570,13 @@ export const KEYBOARD_LEVELS = [
         what: "Am-Dm-Em-Am chopping on &'s. Reggae lives in minor keys — this is the actual sound. Different hand shapes from the major chords you learned.",
         setup: "Organ preset. Metronome at 76 BPM.",
         steps: [
-          { text: "Am = A4-C5-E5 (1-3-5). Chop 4 bars. Hear how it's darker, more melancholy than C major.", why: "Minor triads have a completely different emotional weight. This is roots reggae territory." },
+          { text: "Am = A3-C4-E4 (1-3-5). Chop 4 bars. Hear how it's darker, more melancholy than C major.", why: "Minor triads have a completely different emotional weight. This is roots reggae territory." },
           { text: "Dm = D4-F4-A4 (1-3-5). Chop 4 bars. Then Em = E4-G4-B4 (1-3-5).", why: "Three minor shapes. Each feels different under the hand." },
           { text: "Am-Dm-Em-Am progression, 2 bars each, chopping on &'s.", why: "Minor i-iv-v-i = the most common reggae progression. Bob Marley, Peter Tosh, Skinshape all live here." },
           { text: "Compare: play C-F-G-C (major) then Am-Dm-Em-Am (minor). Feel the mood shift.", why: "Same technique, completely different emotional impact. You need both." }
         ],
         feel: "Darker, more soulful. If major chords are midday sun, minor chords are golden hour. The chop should feel weightier.",
-        wrong: "If Am sounds the same as C to you, play them back to back without the metronome. The minor 3rd (C vs C#) is the entire emotional difference.",
+        wrong: "If Am sounds the same as C to you, play them back to back without the metronome. The interval from A to C (minor 3rd) vs A to C# (major 3rd) is the entire emotional difference.",
         metronome: 76,
         levelUp: "Am-Dm-Em-Am at 84 BPM with the same crisp chop as your major progression."
       },
@@ -613,7 +614,7 @@ export const KEYBOARD_LEVELS = [
           { text: "Play C root position: C4-E4-G4 (1-3-5). Chop 4 bars.", why: "This is what you know. Home base." },
           { text: "Play C 1st inversion: E4-G4-C5 (1-3-5). Chop 4 bars. Hear the brightness.", why: "1st inversion = the classic reggae skank sound. Bright, cuts through the mix." },
           { text: "Play C 2nd inversion: G4-C5-E5 (1-3-5). Chop 4 bars. Hear the openness.", why: "2nd inversion = open, spacious. Great for surf and dreamy sections." },
-          { text: "Now play C-F-G-C all in 1st inversion: E4-G4-C5, F4-A4-C5 (already root!), G4-B4-D5, E4-G4-C5.", why: "1st inversion keeps everything in the sweet spot and minimal hand movement." }
+          { text: "Now play C-F-G-C: C in 1st inversion (E4-G4-C5), F in root position (F4-A4-C5), G in root position (G4-B4-D5), back to C 1st inversion (E4-G4-C5).", why: "1st inversion C keeps you in the sweet spot. F and G are root position here — notice the minimal hand movement." }
         ],
         feel: "Each inversion should sound noticeably different even though it's the same chord. 1st inversion should feel 'right' for the chop — bright and cutting.",
         wrong: "If all inversions sound the same to you, play them back to back slowly without the metronome. The color difference is subtle but real.",
@@ -659,7 +660,7 @@ export const KEYBOARD_LEVELS = [
         what: "Am, Dm, Em in root, 1st, and 2nd inversion. Minor inversions feel different under the hand — the intervals are flipped compared to major. 1st inversion minor = warm and dark, the go-to reggae voicing.",
         setup: "Organ preset. Metronome at 72 BPM.",
         steps: [
-          { text: "Am root: A4-C5-E5 (1-3-5). 1st inv: C4-E4-A4 (1-3-5). 2nd inv: E4-A4-C5 (1-2-5).", why: "Play each, hear the color difference. 1st inversion Am = the classic reggae minor sound." },
+          { text: "Am root: A4-C5-E5 (1-3-5). 1st inv: C4-E4-A4 (1-3-5). 2nd inv: E4-A4-C5 (1-3-5).", why: "Play each, hear the color difference. 1st inversion Am = the classic reggae minor sound." },
           { text: "Dm root: D4-F4-A4. 1st inv: F4-A4-D5. 2nd inv: A4-D5-F5.", why: "Same three shapes. 1st inversion Dm sits perfectly in the C4-C5 sweet spot." },
           { text: "Em root: E4-G4-B4. 1st inv: G4-B4-E5. 2nd inv: B4-E5-G5.", why: "Em 2nd inversion reaches high — good for cutting through a full band." },
           { text: "Am-Dm-Em-Am all in 1st inversion. Chop it. Feel the voice leading.", why: "1st inversion minor progression with minimal hand movement = your dark-mood sound." }
@@ -715,7 +716,7 @@ export const KEYBOARD_LEVELS = [
         steps: [
           { text: "Right hand: chop C major (1st inversion, E4-G4-C5) on &'s. This should be on autopilot.", why: "Phase 1 skills. If this isn't automatic yet, go back and drill more." },
           { text: "Left hand: hit C3 (pinky, finger 5) on beats 1 and 3 only.", why: "Left-right-left-right interleaving. Same concept as vocal offbeat drills where nod = downbeat." },
-          { text: "Apply to C-Am-F-G. Left hand roots: C3, A2, F3, G3.", why: "Both hands change together. Slow to 60 BPM if the coordination falls apart." },
+          { text: "Apply to C-Am-F-G. Left hand roots: C3, A3, F3, G3.", why: "Both hands change together. Slow to 60 BPM if the coordination falls apart." },
           { text: "Run 4 cycles. Left hand should feel heavy/anchoring, right hand light/percussive.", why: "This is a complete musical picture — bass and harmony from one player." }
         ],
         feel: "Left hand heavy and anchoring, right hand light and percussive. Together they create a complete groove that sounds like bass + keys.",
@@ -742,8 +743,9 @@ export const KEYBOARD_LEVELS = [
       },
       {
         id: "k3e3", time: 10, title: "One Drop", type: "keys",
+        tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }],
         what: "Right hand chops on &'s, soften the & of 1 (the 'hole' in one-drop). Left hand root ONLY on beat 3 — aligns with one-drop kick drum. The absence of beat 1 = weightlessness.",
-        setup: "Organ preset. Metronome at 76 BPM. Search YouTube for 'one drop drum loop 76 BPM' for a backing loop.",
+        setup: "Organ preset. Metronome at 76 BPM. Or use the Reggae One Drop backing track.",
         steps: [
           { text: "Right hand: chop on all &'s, but play the & of 1 softer (ghost it).", why: "The 'hole' on beat 1 is what makes one-drop feel like floating." },
           { text: "Left hand: root note ONLY on beat 3. Nothing on beat 1.", why: "The kick-on-3 + your bass-on-3 = the 'drop' in 'one-drop'." },
@@ -764,7 +766,7 @@ export const KEYBOARD_LEVELS = [
         steps: [
           { text: "Listen to 4 bars. Find the snare hits — they're on beats 2 and 4.", why: "The snare is the drummer's anchor. Locking to it makes you part of the same instrument." },
           { text: "Chop Am7 ONLY on 2 and 4. Silent on 1 and 3. Silent on all &'s.", why: "This is half as many chops as your normal pattern. The space between is the power." },
-          { text: "Left hand: root on beat 1 only. So you get: BASS(1)-silence-CHOP(2)-silence-silence-CHOP(4)-silence.", why: "Bass on 1, chop on 2 and 4 = the classic soul/reggae backbeat feel." },
+          { text: "Left hand: root on beat 1 only. So you get: BASS(1)-silence-CHOP(2)-BASS(3)-silence-CHOP(4)-silence.", why: "Bass on 1 and 3, chop on 2 and 4 = the classic soul/reggae backbeat feel." },
           { text: "Now compare: play the same progression with every-& chop, then switch to backbeat-only. Hear the difference.", why: "Every-& = energy, busy. Backbeat = power, space. You need both in your toolkit." }
         ],
         feel: "Powerful and sparse. Like a heartbeat. The silences on 1 and 3 should feel heavy with intention, not empty.",
@@ -797,6 +799,7 @@ export const KEYBOARD_LEVELS = [
     exercises: [
       {
         id: "k4e1", time: 10, title: "Dynamic Verse/Chorus", type: "keys",
+        volumeMeter: true,
         what: "VERSE: chop, right hand only, mp (medium quiet). No left hand bass. Sparse. CHORUS: chop + left hand bass, f (forte). Full energy. Same chords, completely different feel.",
         setup: "Organ preset. Metronome at 90 BPM.",
         steps: [
@@ -813,7 +816,8 @@ export const KEYBOARD_LEVELS = [
       },
       {
         id: "k4e2", time: 10, title: "Register Separation from Guitar", type: "keys",
-        what: "Play along with a backing track that has guitar. Stay in C5-C6 range. Sometimes sustained chords are the entire keyboard part. Backbeat chop (beats 2 & 4 only) when guitar already strums full rhythm.",
+        tracks: [{ name: "Groove Beat 90 BPM", src: "/groove-beat-90.mp3" }, { name: "Surf Rock 120", src: "/surf-rock-120.mp3" }],
+        what: "Play along with a backing track that has guitar. Stay in C5-C6 range — above the guitar's C4-C5 sweet spot. Sometimes sustained chords are the entire keyboard part. Backbeat chop (beats 2 & 4 only) when guitar already strums full rhythm.",
         setup: "Electric piano or organ preset. Metronome at 100 BPM. Find a YouTube guitar backing track.",
         steps: [
           { text: "Play along with guitar track. Voice chords in C5-C6 range — above the guitar.", why: "Staying high keeps you out of the guitar's register. Less mud, more clarity." },
@@ -857,6 +861,8 @@ export const KEYBOARD_LEVELS = [
       },
       {
         id: "k4e5", time: 10, title: "Ghost the Vocalist", type: "keys",
+        volumeMeter: true,
+        tracks: [{ name: "Sol Del Sur", src: "/sol-del-sur.mp3" }],
         what: "Play along with a vocal track. When the singer is loud, you're quiet. When the singer breathes (gaps between phrases), you're slightly louder. You're filling holes, not competing. This is the #1 band keyboard skill.",
         setup: "Any organ or Rhodes preset. Play a vocal-heavy track (BALTHVS 'Anouk', Skinshape 'I Didn't Know', Sun Room 'Sol Del Sur').",
         steps: [
@@ -894,6 +900,7 @@ export const KEYBOARD_LEVELS = [
       },
       {
         id: "k5e2", time: 10, title: "Ambient Pad Chords", type: "keys",
+        referencePitches: ["E4", "G4", "C5", "D5"],
         what: "Pad/synth preset with reverb bloom. Cadd9 held 8 beats, slow overlap transition to Am7. Overlapping changes = dreamy wash. Add delay arpeggiation for cascading echoes. Goth Babe / BALTHVS / Skinshape sound.",
         setup: "Mellotron V or warm synth pad preset. Reverb + dotted-eighth delay in Ableton. Metronome at 60 BPM.",
         steps: [
@@ -941,6 +948,7 @@ export const KEYBOARD_LEVELS = [
       },
       {
         id: "k5e5", time: 10, title: "Two-Texture Layering", type: "keys",
+        volumeMeter: true,
         what: "Left hand holds a low bass/pad note (C2-C3 range), right hand plays organ chop above. Two sonic layers from one keyboard simultaneously. This is how one keyboard player fills the room.",
         setup: "In Ableton: set up keyboard split or two tracks. Low notes (below C3) route to pad/bass sound, high notes (C3+) route to organ. Or use Analog Lab V split mode.",
         steps: [
@@ -967,7 +975,7 @@ export const KEYBOARD_LEVELS = [
         what: "G Mixolydian (G-A-B-C-D-E-F-G) — the flat 7th (F natural instead of F#) is THE reggae sound. Play chord chop for 3 bars, quick 4-note ascending fill on bar 4, resume chop.",
         setup: "Organ preset. Metronome at 76 BPM.",
         steps: [
-          { text: "G Mixolydian: G-A-B-C-D-E-F-G. Fingering: thumb G, index A, middle B, tuck thumb under to C, index D, middle E, ring F, pinky G.", why: "The flat 7th (F natural, not F#) = the reggae/surf color note." },
+          { text: "G Mixolydian: G-A-B-C-D-E-F-G. Fingering: thumb G, index A, middle B, thumb crosses under to C, then index D, middle E, ring F, pinky G.", why: "The flat 7th (F natural, not F#) = the reggae/surf color note." },
           { text: "Chop G chord for 3 bars. On bar 4, play a quick 4-note ascending fill: D-E-F-G.", why: "Fills are 2-4 notes. Brief comment between sentences, not a speech." },
           { text: "C Mixolydian (C-D-E-F-G-A-Bb-C) over C chord. Same pattern: 3 bars chop, 1 bar fill.", why: "Same idea, different key. Bb is the color note in C Mixolydian." },
           { text: "Practice inserting fills at different points. Always stepwise motion, always brief.", why: "Fills should feel like they grew naturally from the chop, not like a separate event." }
@@ -1006,11 +1014,12 @@ export const KEYBOARD_LEVELS = [
         feel: "Melancholy but not depressing — minor key at sunset. Slow dub tempos let every note breathe. The B natural adds a ray of light.",
         wrong: "If it sounds like plain D minor, you're not hitting B natural enough in your fills. Make it deliberate — land on B, let it ring.",
         metronome: 70,
-        pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4", "F#4", "G4"], label: "A Dorian", range: ["A2", "A5"] },
+        pianoKeys: { notes: ["D4", "E4", "F4", "G4", "A4", "B4", "C5"], label: "D Dorian", range: ["D3", "D6"] },
         levelUp: "Dm-G-Am-Dm with Dorian fills at 76 BPM. B natural appears in most fills."
       },
       {
         id: "k6e4", time: 10, title: "Call and Response", type: "keys",
+        pianoKeys: { notes: ["C4", "D4", "E4", "G4", "A4"], label: "Am Pentatonic (fills)", range: ["C4", "A5"] },
         what: "Hum 2 bars of a vocal line (any band song). Play a 2-beat keyboard fill in the gap after. Fills are 2-4 notes max, mirroring the vocal contour. The fill goes in the GAP, never during the vocal.",
         setup: "Organ or Rhodes preset. Metronome at 84 BPM.",
         steps: [
@@ -1043,6 +1052,7 @@ export const KEYBOARD_LEVELS = [
       },
       {
         id: "k6e6", time: 10, title: "Rhythmic Fills", type: "keys",
+        pianoKeys: { notes: ["A3", "C4", "E4", "G4"], label: "Am7", range: ["A2", "G5"] },
         what: "Fills that are RHYTHMIC, not melodic — 16th note chop patterns on a single chord. Like a drum fill but with pitch. The rhythm is the interest, not the notes. Think of the keyboard as a percussion instrument.",
         setup: "Organ preset. Metronome at 80 BPM.",
         steps: [
@@ -1053,6 +1063,7 @@ export const KEYBOARD_LEVELS = [
         ],
         feel: "Like a drum fill played on keys. The rhythm is the star, not the notes. It should make you nod harder.",
         wrong: "If the fill disrupts the groove instead of enhancing it, it's too long or too loud. Shorter, quieter. The fill serves the groove.",
+        pianoKeys: { notes: ["A3", "C4", "E4", "G4"], label: "Am7", range: ["A2", "G5"] },
         metronome: 80,
         levelUp: "16th note fills inserted at phrase endings that feel like a natural part of the groove."
       }
@@ -1065,6 +1076,7 @@ export const KEYBOARD_LEVELS = [
     exercises: [
       {
         id: "k7e1", time: 15, title: "Full Song Arrangement", type: "keys",
+        pianoKeys: { notes: ["A3", "C4", "E4", "G4"], label: "Am7", range: ["A2", "G5"] },
         what: "Pick a band song. Write out the form (Intro/V/C/V/C/Bridge/C/Outro). Assign textures to each section. Play through without stopping. Record in Ableton and listen back.",
         setup: "All presets available. Ableton recording armed. Use the song's actual tempo.",
         steps: [
@@ -1095,12 +1107,13 @@ export const KEYBOARD_LEVELS = [
       },
       {
         id: "k7e3", time: 10, title: "Band Rehearsal Simulation", type: "keys",
-        what: "Play along with a song from your band's repertoire or a reference artist (Allah-Las, Skinshape, Sun Room). Listen through once without playing. Map the gaps. Play along the second time. Lay out for 25%+ of the song.",
+        pianoKeys: { notes: ["A3", "C4", "E4"], label: "Am", range: ["A2", "E5"] },
+        what: "Play along with a song from your band's repertoire or a reference artist (Allah-Las, Skinshape, Sun Room). Listen through once without playing. Map the gaps. Play along the second time. Lay out for 30%+ of the song.",
         setup: "Any preset. Full song from Spotify or your library. No click — follow the song.",
         steps: [
           { text: "Listen through once without playing. Map: where are the gaps? Where is it full?", why: "Same approach as The Art of Not Playing. Map before you contribute." },
           { text: "Second time: play along. Start minimal, add gradually. Enter late, leave early.", why: "You're joining a band, not leading it. Serve the song." },
-          { text: "Lay out for 25%+ of the song. The silences are deliberate choices.", why: "If you play through the whole song, you're not listening. Restraint = musicianship." },
+          { text: "Lay out for 30%+ of the song. The silences are deliberate choices.", why: "If you play through the whole song, you're not listening. Restraint = musicianship." },
           { text: "Ultimate test: is the song better with keys? Would anyone miss them if removed? Both must be yes.", why: "This is the standard for every note you play in the band. Both tests, every time." }
         ],
         feel: "You should feel like a film colorist — adding warmth, contrast, atmosphere to something that already works. Not painting over the original.",
@@ -1109,6 +1122,7 @@ export const KEYBOARD_LEVELS = [
       },
       {
         id: "k7e4", time: 10, title: "Ear Copy a Keyboard Part", type: "keys",
+        pianoKeys: { notes: ["C4", "E4", "G4", "A4"], label: "C / Am", range: ["C3", "C6"] },
         what: "Pick a song with a keyboard part you love. Learn it by ear — no tabs, no sheet music, no YouTube tutorials. Ear → brain → hand. This is the skill that makes you self-sufficient as a musician.",
         setup: "Any preset that matches the song's keyboard sound. Song loaded in Spotify/YouTube. Slow-down tool optional (YouTube speed 0.75x).",
         steps: [
@@ -1123,6 +1137,7 @@ export const KEYBOARD_LEVELS = [
       },
       {
         id: "k7e5", time: 10, title: "Eyes Closed Performance", type: "keys",
+        pianoKeys: { notes: ["A3", "C4", "E4", "F4", "G4"], label: "Am-F-C-G", range: ["A2", "G5"] },
         what: "Play a full 3-minute arrangement without looking at the keyboard. Eyes closed or looking at the audience (the wall). This tests whether muscle memory is truly internalized — if you have to look, you're not ready for the stage.",
         setup: "All presets ready. Pick a song you've arranged in k7e1. No metronome — use internal time or a backing track.",
         steps: [
@@ -1143,7 +1158,7 @@ export const KEYBOARD_LEVELS = [
 export const LOOPER_LEVELS = [
   {
     num: 1, name: "First Contact", focus: "Interface + First Clean Loop",
-    duration: "20 min",
+    duration: "45 min",
     setup: "RC-505mkII powered on, headphones in PHONES jack, guitar in INST 1 input. No effects. Quantize: MEASURE [MENU] > MEMORY > PLAY > QUANTIZE. Loop Sync: ON [MENU] > MEMORY > TRACK > LOOP SYNC. Rhythm guide at 80 BPM.",
     exercises: [
       {
@@ -1199,6 +1214,7 @@ export const LOOPER_LEVELS = [
       {
         id: "lo1e4", time: 10, title: "Your First Loop", type: "looper",
         checklist: true,
+        volumeMeter: true,
         what: "Record 4 bars of Am fingerpicking — your first real loop.",
         setup: "Guitar in INST 1 input. Input level knob [2] peaking at -6dB (green, not red). Rhythm guide at 80 BPM. Quantize: MEASURE.",
         steps: [
@@ -1263,12 +1279,13 @@ export const LOOPER_LEVELS = [
   },
   {
     num: 2, name: "Loop + Voice", focus: "Minimum Viable Performance",
-    duration: "20 min",
+    duration: "50 min",
     setup: "RC-505mkII with guitar in INST 1, mic in MIC input (or use guitar-only exercises). Input levels peaking at -6dB. Quantize: MEASURE. Rhythm guide at 80-90 BPM.",
     exercises: [
       {
         id: "lo2e1", time: 10, title: "Sing Over Your Loop", type: "looper",
         checklist: true,
+        tracks: [{ name: "ILTWYW", src: "/iltwyw.mp3" }],
         what: "The minimum viable loop performance: chord loop + singing over it. The KT Tunstall / Howie Day starting point.",
         setup: "Record Am-C-G-D fingerpicking loop (4 bars) on Track 1 at 90 BPM.",
         steps: [
@@ -1383,12 +1400,13 @@ export const LOOPER_LEVELS = [
   },
   {
     num: 3, name: "Two Tracks", focus: "Frequency Separation + Muting",
-    duration: "20 min",
+    duration: "45 min",
     setup: "RC-505mkII with guitar and mic. Quantize: MEASURE. Loop Sync: ON. Rhythm guide at 85-95 BPM.",
     exercises: [
       {
         id: "lo3e1", time: 10, title: "Guitar + Guitar", type: "looper",
         checklist: true,
+        volumeMeter: true,
         what: "Two guitar layers with frequency separation — low register on Track 1, high register on Track 2.",
         setup: "Rhythm guide at 90 BPM. Both tracks empty.",
         steps: [
@@ -1415,6 +1433,7 @@ export const LOOPER_LEVELS = [
         ],
         feel: "Like adding a choir behind your guitar. The vocal pad should feel like warmth, not another instrument competing.",
         wrong: "If the vocal loop is pitchy, re-record. A pitchy vocal loop is painful because it repeats forever.",
+        metronome: 90,
         levelUp: "Guitar + vocal pad where the vocal is audible, on pitch, and rhythmically locked to the chord cycle."
       },
       {
@@ -1430,6 +1449,7 @@ export const LOOPER_LEVELS = [
         ],
         feel: "Like being a DJ with your own music. The mute dance turns two static loops into a dynamic arrangement.",
         wrong: "If muting while singing makes you lose your place, simplify: just hum while practicing the fader moves.",
+        metronome: 90,
         levelUp: "Full mute sequence (both > T1 > both > T2 > both) while humming, without timing errors."
       },
       {
@@ -1446,6 +1466,7 @@ export const LOOPER_LEVELS = [
         ],
         feel: "Like a sound engineer at a mixing board. Clean gain structure = clean sound at any volume.",
         wrong: "If you're compensating for quiet loops by cranking the master output, the problem is at the input stage. Fix input levels first.",
+        metronome: 90,
         levelUp: "Two tracks playing with combined output peaking at -6dB, confirmed on the meter."
       },
       {
@@ -1492,13 +1513,14 @@ export const LOOPER_LEVELS = [
         ],
         feel: "Like a drummer who drops out for exactly 4 bars and comes back. Controlled silence is powerful.",
         wrong: "If your mutes always feel panicky, you're reacting instead of planning. Count ahead and decide BEFORE the bar arrives.",
+        metronome: 90,
         levelUp: "3 consecutive deliberate-sounding mute-and-return sequences, all on beat 1."
       }
     ]
   },
   {
     num: 4, name: "Rhythm Foundation", focus: "Guitar Body Percussion + Rhythmic Texture",
-    duration: "20 min",
+    duration: "45 min",
     setup: "RC-505mkII with guitar and mic. Mic close to guitar body for body percussion. Quantize: MEASURE. Rhythm guide at 90 BPM.",
     exercises: [
       {
@@ -1539,7 +1561,7 @@ export const LOOPER_LEVELS = [
         id: "lo4e3", time: 5, title: "Subdivision Stacking", type: "looper",
         checklist: true,
         what: "Build rhythmic density using overdubs. Connects your '1 e and a' training directly to looping.",
-        setup: "Body percussion loop playing on Track 1.",
+        setup: "Empty Track 1. Rhythm guide at 90 BPM.",
         steps: [
           { text: "Record a loop of quarter-note strums on Track 1. Simple: strum on 1, 2, 3, 4.", why: "Starting sparse. Quarter notes = the skeleton." },
           { text: "Enter overdub. Add eighth-note hits (muted string scratches on the &'s).", why: "Now you have 1-&-2-&-3-&-4-&. Double the rhythmic density." },
@@ -1548,11 +1570,13 @@ export const LOOPER_LEVELS = [
         ],
         feel: "Like watching a pointillist painting come together — each dot adds to the groove. The 16th-note layer should make you nod.",
         wrong: "If the overdubs create a muddy mess, each layer is too loud. Record ghost notes VERY quietly.",
+        metronome: 90,
         levelUp: "Three-layer subdivision stack where each layer is audible and the groove intensifies."
       },
       {
         id: "lo4e4", time: 5, title: "Rhythm + Chords Stack", type: "looper",
         checklist: true,
+        volumeMeter: true,
         what: "The Ed Sheeran / Howie Day architecture: body percussion on Track 1, chords on Track 2, voice live.",
         setup: "Clean body percussion loop on Track 1 at 90 BPM.",
         steps: [
@@ -1602,7 +1626,7 @@ export const LOOPER_LEVELS = [
   },
   {
     num: 5, name: "Three Layers + FX", focus: "Frequency Zones + First Effects",
-    duration: "20 min",
+    duration: "55 min",
     setup: "RC-505mkII with guitar and mic. Quantize: MEASURE (moving toward BEAT). Rhythm guide at 90-100 BPM. Effects: unlocked.",
     exercises: [
       {
@@ -1619,6 +1643,7 @@ export const LOOPER_LEVELS = [
         feel: "Like hearing a full band — drums, bass, and lead guitar — except it's all you. Each frequency zone has its own space.",
         wrong: "If everything sounds like one wall of guitar, you're not separating registers enough. Push bass lower, melody higher.",
         metronome: 90,
+        volumeMeter: true,
         levelUp: "Three tracks where a listener could identify each layer with their eyes closed."
       },
       {
@@ -1635,6 +1660,8 @@ export const LOOPER_LEVELS = [
         ],
         feel: "Like a sunrise — each element adds light until the full scene is revealed. The build should feel inevitable, not random.",
         wrong: "If you're adding layers too fast (all three in 4 bars), slow down. Let each layer breathe for 8 bars. Patience is the skill.",
+        metronome: 90,
+        volumeMeter: true,
         levelUp: "Complete bottom-up build (T1 > T2 > T3 > voice) with 8-bar gaps between entries."
       },
       {
@@ -1651,6 +1678,7 @@ export const LOOPER_LEVELS = [
         ],
         feel: "Like plugging into a vintage amp for the first time. The reverb and echo should make your guitar sound like an Allah-Las or Skinshape record.",
         wrong: "If the effects are overwhelming (too much reverb, echo feedback spiraling), reduce the levels. Subtle is better than drowning.",
+        metronome: 90,
         levelUp: "Record a loop with reverb + tape echo that sounds like it belongs on a psych-surf record."
       },
       {
@@ -1682,6 +1710,7 @@ export const LOOPER_LEVELS = [
         ],
         feel: "Like a DJ breakdown. The moment everything drops out except the kick is one of the most powerful moves in music.",
         wrong: "If subtractions feel random, plan them on specific bar numbers. Subtract on bar 9, bar 13, rebuild on bar 17.",
+        metronome: 90,
         levelUp: "Full subtraction and rebuild cycle where every mute/unmute lands on beat 1."
       },
       {
@@ -1697,6 +1726,7 @@ export const LOOPER_LEVELS = [
         ],
         feel: "Like having a sound effects board. One-shots add punctuation to your loop performance.",
         wrong: "If the one-shot doesn't stop after playing, check the play mode setting. It might still be in LOOP mode.",
+        metronome: 90,
         levelUp: "Trigger a one-shot fill at exactly the right moment during a live performance, 3 times in a row."
       },
       {
@@ -1712,6 +1742,7 @@ export const LOOPER_LEVELS = [
         ],
         feel: "Like playing a record backward — the sound is familiar but alien. Reversed guitar should feel dreamy and otherworldly.",
         wrong: "If the reversed track sounds like noise, the original recording was too complex. Record something simpler — sustained chords reverse best.",
+        metronome: 90,
         levelUp: "A reversed guitar pad that adds psychedelic atmosphere to a 3-track arrangement."
       },
       {
@@ -1728,21 +1759,24 @@ export const LOOPER_LEVELS = [
         ],
         feel: "Like finding your signature amp tone. When you hear it, you'll know — it just sounds like YOU.",
         wrong: "If it sounds like a generic guitar demo, the effects are too subtle. If it sounds like drowning, too much. Find the 'warm bath' zone.",
+        metronome: 90,
         levelUp: "A recorded loop that you'd play for someone and say 'this is my sound.'"
       }
     ]
   },
   {
     num: 6, name: "Performance Craft", focus: "Complete Song + Recovery + First Audience",
-    duration: "20 min",
+    duration: "45 min",
     setup: "RC-505mkII fully configured. Effects chain from Level 5. Phone ready for video recording.",
     exercises: [
       {
         id: "lo6e1", time: 10, title: "ILTWYW Blueprint", type: "looper",
         checklist: true,
         tabs: "iltwyw",
+        tracks: [{ name: "ILTWYW", src: "/iltwyw.mp3" }],
         what: "Build the complete ILTWYW song as a loop performance. Your first full song arrangement.",
         setup: "RC-505mkII with your signature effects chain. BPM: 90.",
+        metronome: 90,
         steps: [
           { text: "T1: Body percussion (slap-scratch-tap-scratch). Record 4 bars.", why: "Rhythm foundation. The heartbeat of the performance." },
           { text: "T2: Bass roots (A-C-G-D, one per bar, low E/A strings, palm-muted). Record 4 bars.", why: "Bass gives the harmonic floor. Palm muting keeps it clean in the low end." },
@@ -1818,6 +1852,7 @@ export const LOOPER_LEVELS = [
       {
         id: "lo6e6", time: 5, title: "Emotional Arc", type: "looper",
         checklist: true,
+        volumeMeter: true,
         what: "Design your arrangement for feeling, not just sound. Even two tracks can have dynamics.",
         setup: "Two-track arrangement (any).",
         steps: [
@@ -1849,7 +1884,7 @@ export const LOOPER_LEVELS = [
   },
   {
     num: 7, name: "Effects as Expression", focus: "Track FX + Filters + Beat Effects",
-    duration: "20 min",
+    duration: "45 min",
     setup: "RC-505mkII with multi-track arrangement. Effects unlocked. Hold [TRACK FX] for ~2 sec to enter Track FX edit.",
     exercises: [
       {
@@ -1874,7 +1909,7 @@ export const LOOPER_LEVELS = [
         setup: "Three-track loop playing. Hold [TRACK FX] to edit per-track EQ.",
         steps: [
           { text: "Track 1 (percussion): EQ boost low end (+3dB around 100Hz) for kick thump. Cut mid (-3dB around 400Hz).", why: "Boosting low emphasizes the body percussion. Cutting mid prevents it from competing with guitar." },
-          { text: "Track 2 (bass): EQ cut low (-4dB below 200Hz) to tighten. Boost upper harmonics slightly.", why: "Tight bass = clarity. Muddy bass = disaster. This is the #1 EQ move for guitar loopers." },
+          { text: "Track 2 (bass): EQ cut mud frequencies (-4dB around 200-400Hz). Keep fundamental (80-150Hz) intact. Boost upper harmonics slightly.", why: "Tight bass = clarity. Muddy bass = disaster. Cutting mud while keeping the fundamental is the #1 EQ move for guitar loopers." },
           { text: "Track 3 (melody): EQ cut low entirely. Boost presence (2-4kHz) for sparkle.", why: "Melody should sit on top of everything. Cutting low prevents it from adding mud to the bass range." },
           { text: "A/B test: bypass all EQ, then engage. The difference should be noticeable clarity.", why: "If the A/B difference is subtle, push the cuts harder. You're learning — exaggerate to hear it." }
         ],
@@ -1961,7 +1996,7 @@ export const LOOPER_LEVELS = [
   },
   {
     num: 8, name: "Full Songs", focus: "Three-Act Structure + Song Repertoire",
-    duration: "25 min",
+    duration: "65 min",
     setup: "RC-505mkII with full effects chain. Multiple MEMORY slots available. Quantize: MEASURE for arranged, BEAT for flexible sections.",
     exercises: [
       {
@@ -1984,8 +2019,10 @@ export const LOOPER_LEVELS = [
         id: "lo8e2", time: 10, title: "Sol Del Sur Blueprint", type: "looper",
         checklist: true,
         tabs: "soldelsur",
+        tracks: [{ name: "Sol Del Sur", src: "/sol-del-sur.mp3" }],
         what: "Map Sol Del Sur to the RC-505mkII. Your second song in the repertoire.",
-        setup: "RC-505mkII with effects. BPM matched to Sol Del Sur.",
+        setup: "RC-505mkII with effects. BPM: 80.",
+        metronome: 80,
         steps: [
           { text: "T1: Rhythm — muted strum pattern matching Sol Del Sur's feel.", why: "The rhythmic foundation specific to this song." },
           { text: "T2: Bass — root notes following Sol Del Sur's chord changes.", why: "Bass establishes the harmonic floor." },
@@ -2092,7 +2129,7 @@ export const LOOPER_LEVELS = [
   },
   {
     num: 9, name: "Improvised Looping", focus: "Real-Time Composition + Creative Constraints",
-    duration: "20 min",
+    duration: "50 min",
     setup: "RC-505mkII with full effects chain. No pre-planned songs. Quantize: OFF for maximum freedom (or MEASURE if you prefer the safety net).",
     exercises: [
       {
@@ -2108,7 +2145,7 @@ export const LOOPER_LEVELS = [
         ],
         feel: "Like freewriting — the first sentence doesn't matter, but it unlocks the next one. Let the music surprise you.",
         wrong: "If you freeze at the blank canvas, simplify: just record a single chord. ONE chord. Build from there.",
-        metronome: 110,
+        metronome: 100,
         levelUp: "A 3-layer improvised loop that sounds like a coherent piece of music, created without any plan."
       },
       {
@@ -2206,7 +2243,7 @@ export const LOOPER_LEVELS = [
   },
   {
     num: 10, name: "Stage Ready", focus: "Reliability + Set List + Audience",
-    duration: "25 min",
+    duration: "55 min",
     setup: "RC-505mkII fully configured. 3+ songs saved in MEMORY slots. Phone for video recording. Effects chain dialed in.",
     exercises: [
       {

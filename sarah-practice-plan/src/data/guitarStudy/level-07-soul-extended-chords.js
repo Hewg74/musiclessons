@@ -95,7 +95,7 @@ export const level7 = {
       feel: "The progression should feel like a warm bath — enveloping, comfortable, and deep. Each chord should melt into the next with no sharp edges.",
       wrong: "If transitions are clunky, practice just the chord changes without rhythm until they're smooth. If the voicings sound thin, check that all intended strings are ringing.",
       sarah: "This progression is the skeleton key to soul harmony. Learn it in C, then move it to other keys. You'll hear it in every Khruangbin and D'Angelo song.",
-      metronome: 120
+      metronome: 80
     },
     {
       id: "gs-7-6",
@@ -113,7 +113,7 @@ export const level7 = {
       feel: "When the 16th-note pattern is locked in, your arm should feel like it's on autopilot — the wrist bounces steadily while your fretting hand sculpts the rhythm by choosing which strums ring. It should feel effortless and hypnotic.",
       wrong: "If your arm gets tired, you're using too much force or too much arm. The motion comes from the wrist — small, loose, efficient. If the ghost notes sound the same as the real strums, you're not releasing fretting hand pressure enough.",
       sarah: "16th-note strumming is the secret weapon of every funk and soul guitarist. Your hand never stops moving — it's always strumming. You just choose which strums the audience hears. That's the magic.",
-      metronome: 120,
+      metronome: 70,
       speedLadder: { start: 70, end: 90, increment: 10, bars: 4 }
     },
     {
@@ -132,7 +132,7 @@ export const level7 = {
       feel: "The groove should feel like a heartbeat — steady, deep, and unhurried. The extended chords add color without disrupting the rhythm. Ghost notes and harmony become one instrument.",
       wrong: "If the rhythm is unsteady, practice the ghost note pattern alone (no chord changes) until it's locked. If the chords sound cluttered, use smaller fragments — top 3 strings only.",
       sarah: "This is the Skinshape sweet spot — where reggae groove meets jazz harmony. Your right hand does the dancing while your left hand does the painting.",
-      metronome: 120
+      metronome: 90
     },
     {
       id: "gs-7-8",

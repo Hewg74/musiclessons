@@ -182,6 +182,7 @@ export const level2 = {
       feel: "This should feel like performing a surf rock mini-concert — energy, melody, contrast, and joy. Surf guitar is fun. If you're not smiling by the end, play louder and add more reverb.",
       wrong: "If the 12 minutes felt monotonous, you need more variety — switch between rhythm and lead, between Mixolydian and minor, between loud and soft. If your tremolo fell apart under pressure, it needs more isolated practice.",
       sarah: "You just played a 12-minute surf set that covers both The Ventures AND Allah-Las. Classic surf meets modern psych-jangle. That's not just playing — that's starting to develop a voice.",
+      metronome: 120,
       levelUp: "You can sustain a varied, dynamic surf jam using Mixolydian leads, tremolo picking, double stops, jangle voicings, and minor-key lines. Your surf vocabulary is functional."
     }
   ]

@@ -55,10 +55,10 @@ export const level2 = {
       what: "Same chord progression, but now hum the melody contour — the rising and falling shape of the tune. Don't worry about exact pitches. Just follow the general direction: up when the melody goes up, down when it goes down.",
       setup: "Guitar. The chord progression from the previous exercise.",
       steps: [
-        { text: "Start strumming. Hum the melody of the first line. Approximate — it doesn't need to be perfect pitch.", why: "Humming is easier than singing because there are no words to coordinate. You only need to manage pitch contour and strum simultaneously." },
+        { text: "Start strumming. Hum any melody contour over the chord progression — make up a rising-falling shape that fits. Approximate, not perfect.", why: "Humming is easier than singing because there are no words to coordinate. You only need to manage pitch contour and strum simultaneously." },
         { text: "Focus on where the melody goes UP and where it goes DOWN. Exaggerate the contour if needed.", why: "The shape of the melody is more important than exact notes at this stage. You're building the pitch layer on top of the rhythm layer." },
         { text: "If the strum breaks, hum a single note (a drone) while strumming until it stabilizes. Then go back to the melody contour.", why: "A single-note hum is the easiest vocal task. It's your fallback when things get overwhelming." },
-        { text: "Hum through the whole song. Repeat until the strum never wavers.", why: "Each pass makes the coordination more natural. You're training two motor programs to coexist." }
+        { text: "Hum through the whole progression for 2 minutes. Repeat until the strum never wavers.", why: "Each pass makes the coordination more natural. You're training two motor programs to coexist." }
       ],
       feel: "The humming should feel lazy and loose — like you're humming along to a song on the radio. Not performative, just following the tune while your hands do their thing.",
       wrong: "If your hum is tense or forced, you're working too hard. Humming should be the most relaxed vocal production possible. If you lose the melody, just drone on one comfortable note and let the contour come back naturally.",

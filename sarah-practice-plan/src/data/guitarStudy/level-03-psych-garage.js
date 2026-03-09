@@ -72,9 +72,9 @@ export const level3 = {
       title: "Psych Minor Progressions",
       type: "guitar",
       tracks: [{ name: "Psych Rock 120", src: "/psych-rock-120.mp3" }],
-      what: "Learn the minor-key chord progressions that power psychedelic rock. The classic Mystic Braves 'Desert Island' progression is Gm → Dm → C → F, which in Roman numeral analysis is i-v-VII-IV in G minor. These progressions create a dark, brooding atmosphere that defines psych rock.",
+      what: "Learn the minor-key chord progressions that power psychedelic rock. The classic Mystic Braves 'Desert Island' progression is Gm → Dm → C → F, which in Roman numeral analysis is i-v-IV-VII in G minor. These progressions create a dark, brooding atmosphere that defines psych rock.",
       steps: [
-        { text: "Learn the Mystic Braves progression: Gm (355333) → Dm (xx0231) → C (x32010) → F (133211). Play each chord for 1 bar, steady eighth-note strumming. The Gm is a barre chord — if that's new, here's the shape: barre all strings at the 3rd fret with your index finger, then add the minor chord shape with your remaining fingers.", why: "The i-v-VII-IV progression (all Roman numerals refer to scale degrees: lowercase = minor, uppercase = major) creates a dark, cyclical feel. The Gm establishes darkness. Dm reinforces it. The C and F provide a brief major-key brightness that makes the return to Gm feel inevitable and dramatic." },
+        { text: "Learn the Mystic Braves progression: Gm (355333) → Dm (xx0231) → C (x32010) → F (133211). Play each chord for 1 bar, steady eighth-note strumming. The Gm is a barre chord — if that's new, here's the shape: barre all strings at the 3rd fret with your index finger, then add the minor chord shape with your remaining fingers.", why: "The i-v-IV-VII progression (all Roman numerals refer to scale degrees: lowercase = minor, uppercase = major) creates a dark, cyclical feel. The Gm establishes darkness. Dm reinforces it. The C and F provide a brief major-key brightness that makes the return to Gm feel inevitable and dramatic." },
         { text: "Feel the emotional story: Gm is the home base — brooding, tense. Dm is the deepening — more darkness. C is the first ray of light. F is the tension before the cycle restarts. Play the progression 8 times and feel the narrative arc each time through.", why: "Psych rock progressions are designed to loop. Each repetition should feel deeper, not repetitive. The emotional story embedded in the chord movement is what makes 4 chords feel like a complete song." },
         { text: "Try a second psych progression: Am → Em → G → D (i-v-VII-IV in Am). Same Roman numeral relationship, different key. This one is more accessible — no barre chords — and works beautifully with the Am pentatonic you already know.", why: "Having the same progression in two keys gives you flexibility. The Am version uses all open chords, making it easier to play while you focus on feel and dynamics." },
         { text: "Play either progression with power chords instead of full chords: G5 → D5 → C5 → F5 (or A5 → E5 → G5 → D5). All downstrokes, eighth notes. With fuzz. This is the garage rock version — raw, aggressive, and driving.", why: "The same progression with power chords and fuzz becomes garage psych instead of jangle psych. The harmonic content is similar but the energy is completely different. Now you have two versions of the same musical idea — clean/jangle and fuzz/garage." }
@@ -82,7 +82,7 @@ export const level3 = {
       feel: "The minor progression should feel cyclical and hypnotic — like being pulled into a vortex. Each time through should feel slightly more intense than the last, even if you're not changing anything.",
       wrong: "If it sounds like a pop song, you're probably playing on the downbeat with too much brightness. Darken your tone, lean into the minor chords, and let the mood be heavy. If the barre chords are killing you, use the Am version until your hand strength develops.",
       sarah: "Mystic Braves, Tame Impala, BALTHVS — they all build entire songs on progressions like these. Four chords, one mood, infinite depth. The darkness is the point.",
-      metronome: 90
+      metronome: 120
     },
     {
       id: "gs-3-5",
@@ -119,7 +119,8 @@ export const level3 = {
       ],
       feel: "Your riff should feel like a mantra — something you could play for 10 minutes without getting tired of it. It should have a physical groove that makes you nod your head involuntarily.",
       wrong: "If the riff is too complex to play on repeat without thinking, simplify. If it doesn't make you move, the rhythm needs work. If it sounds generic, lean harder into the Phrygian Dominant color — the Bb-C# interval is what makes it distinctive.",
-      sarah: "The best psych riffs are embarrassingly simple on paper — but unstoppable in practice. Don't overthink it. Find the groove and commit. You're not writing a symphony. You're writing a hypnotic loop."
+      sarah: "The best psych riffs are embarrassingly simple on paper — but unstoppable in practice. Don't overthink it. Find the groove and commit. You're not writing a symphony. You're writing a hypnotic loop.",
+      metronome: 120
     },
     {
       id: "gs-3-7",
@@ -179,6 +180,7 @@ export const level3 = {
       feel: "This should feel like a complete psychedelic journey — departure, exploration, peak experience, and return. When it's working, you stop thinking about scales and start thinking in colors and feelings. The fuzz becomes part of your body. The scale becomes a language you speak fluently.",
       wrong: "If all 15 minutes sounded the same, you need more dynamic contrast between sections. If the Phrygian Dominant passages sounded random, focus on the Bb-C# interval as your anchor. If the garage sections lacked energy, push harder with downstrokes. If you never hit a climax, you were too reserved — let yourself be loud.",
       sarah: "This is your Level 3 graduation gig. You started this level learning a new scale. Now you're playing 15-minute psych sets with exotic scales, fuzz, garage energy, and dynamic arcs. You're not just learning guitar — you're building a musical identity. Record this one. Keep it.",
+      metronome: 120,
       levelUp: "You can sustain a 15-minute psych-garage jam with Phrygian Dominant coloring, power chords, dynamic build-and-release, and a clear energy arc from sparse to intense and back."
     }
   ]

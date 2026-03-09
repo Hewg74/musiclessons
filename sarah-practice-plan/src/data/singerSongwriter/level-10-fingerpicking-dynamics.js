@@ -47,6 +47,7 @@ export const level10 = {
       sarah: "Gene, fingerpicking unlocks the nylon-string, Hermanos Gutierrez, Tommy Guerrero side of your taste. It's a different sound world from strumming — more intimate, more spacious.",
       metronome: 60,
       referencePitches: getPitchRange("E3", "A4"),
+      volumeMeter: true,
       recorder: true
     },
     {

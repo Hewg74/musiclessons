@@ -86,7 +86,6 @@ export const level8 = {
       wrong: "If the intro is too long (>8 bars), the listener gets impatient. If the outro cuts off abruptly, the emotional experience is interrupted. Keep intros 4-8 bars. Keep outros 4-8 bars.",
       sarah: "Gene, intros and outros are the professional touch. They transform a song from 'I started playing and I stopped' into 'here's a composed piece of music with intention.'",
       metronome: 80,
-      speedLadder: { start: 70, end: 100, increment: 5, bars: 8 },
       recorder: true
     },
     {

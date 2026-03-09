@@ -35,10 +35,10 @@ export const level7 = {
       time: 6,
       title: "Major vs Minor Feeling",
       type: "vocal",
-      what: "Sing over a G major chord, then switch to G minor. Feel how the mood shifts from bright to dark. Then strum Am → A major. The single note that changes (C to C#, or C to C#) transforms the entire emotional landscape. Train your ear to hear and feel this fundamental color shift.",
+      what: "Sing over a G major chord, then switch to G minor. Feel how the mood shifts from bright to dark. Then strum Am → A major. The single note that changes (C to C#) transforms the entire emotional landscape. Train your ear to hear and feel this fundamental color shift.",
       steps: [
         { text: "Strum G major. Sing the chord tones: G-B-D. Notice the brightness — the major 3rd (B) creates warmth and optimism.", why: "The major 3rd is the 'happy' note. It's one semitone higher than the minor 3rd, and that single semitone changes everything." },
-        { text: "Now strum Gm (or just lower the B to Bb on the fretboard). Sing G-Bb-D. Feel the shift — melancholy, depth, introspection.", why: "The minor 3rd is one semitone lower. That tiny change rewrites the entire emotional character. This is the power of harmony." },
+        { text: "Now strum Gm (3-5-3-3-3-3): move your index to 3rd fret on the B string, giving you Bb instead of B. Sing G-Bb-D. Feel the shift — melancholy, depth, introspection.", why: "The minor 3rd is one semitone lower. That tiny change rewrites the entire emotional character. This is the power of harmony." },
         { text: "Strum Am. Sing A-C-E. Then switch to A major. Sing A-C#-E. The C→C# shift is the same major/minor toggle.", why: "Hearing the same root chord in major and minor trains your ear to the single most important harmonic distinction in all of Western music." },
         { text: "Play a random chord. Without looking at your fretting hand, can you hear whether it's major or minor? Test yourself 10 times.", why: "Major/minor recognition is the first ear-training milestone. When you can hear it instantly, you're ready for more complex harmonic listening." }
       ],
@@ -101,7 +101,7 @@ export const level7 = {
         { text: "Try G Mixolydian: G-A-B-C-D-E-F. Major scale with a lowered 7th. Bluesy, rootsy, laid-back. Play over G.", why: "Mixolydian is the sound of classic rock, blues, and folk. The flat 7 adds earthiness. Think Grateful Dead, Allman Brothers." },
         { text: "Improvise 2 minutes in Dorian over Am, then 2 minutes in Mixolydian over G. Each mode colors your improvisation differently. Record both.", why: "Modes expand your melodic palette beyond pentatonic. Each mode gives you a new emotional toolkit for songwriting." }
       ],
-      feel: "Each mode should feel like a different season — same landscape, different light. Dorian is autumn (warm melancholy). Mixolydian is late summer (bright but fading). Phrygian is winter night.",
+      feel: "Each mode should feel like a different season — same landscape, different light. Dorian is autumn (warm melancholy). Mixolydian is late summer (bright but fading).",
       wrong: "If the modes all sound the same as natural minor or major, focus on the ONE note that's different. In Dorian, it's the raised 6th. Emphasize that note — play it loud and often — until you hear the color shift.",
       sarah: "Gene, modes are the advanced toolkit. You don't need them for every song — but when you want a specific mood that major/minor can't capture, modes are the answer.",
       metronome: 80,

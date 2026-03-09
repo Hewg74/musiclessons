@@ -2,7 +2,7 @@ import { getPitchRange } from "../appData.js";
 
 export const level9 = {
   num: 9, name: "Freestyle & Improv", focus: "Melodic improv, scat, lyric freestyle",
-  duration: "20 min",
+  duration: "28 min",
   setup: "Backing track from collection. Voice-only first.",
   subtitle: "Making It Up",
   description: "Bradley Nowell built much of Sublime's catalogue through freestyle improvisation. Thom Yorke improvises vocal parts in the studio. The ability to make up melodies and lyrics in real time is the ultimate singer-songwriter skill -- it's where composition and performance merge.",

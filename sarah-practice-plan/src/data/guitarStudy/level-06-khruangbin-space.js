@@ -15,17 +15,18 @@ export const level6 = {
       time: 8,
       title: "Three-Note Voicings",
       type: "guitar",
-      what: "Learn chord fragments on the top 3 strings with the root omitted. Am becomes just C+E, Dm becomes just F+A. These minimal voicings sound open, ambiguous, and modern — the Khruangbin harmonic palette. The bass player defines the chord; you add color.",
+      what: "Learn chord fragments on the top 3 strings with the root omitted. Am top 3 strings becomes A+C+E, Dm becomes A+D+F. These minimal voicings sound open, ambiguous, and modern — the Khruangbin harmonic palette. The bass player defines the chord; you add color.",
       steps: [
-        { text: "Play Am as a full chord (x02210). Now strip it down to just the top 3 strings: play only the G, B, and E strings. You get the notes E, C, E — or just C and E (the 3rd and 5th of Am, no root). This voicing could be Am or C6 — it's beautifully ambiguous.", why: "Removing the root makes the chord ambiguous — it could be several things depending on the bass note underneath. This openness is the Khruangbin sound. The bass player (Laura Lee) defines the chord; Mark Speer adds color." },
-        { text: "Find 3-note voicings for Dm (top 3 strings: A, F, high open E or A), Em (open G, open B, open E — the simplest voicing), G (just B, G, D on the top strings), and C (E, C, E on the top strings). Each chord is just 2-3 unique notes.", why: "Three-note voicings are transparent — they suggest harmony without declaring it. This leaves room for the bass to define the chord and air to flow between the notes." },
+        { text: "Play Am as a full chord (x02210). Now strip it down to just the top 3 strings: play only the G, B, and E strings. You get the notes A (G string 2nd fret), C (B string 1st fret), E (open high E) — a complete Am triad in a compact, bright voicing.", why: "Removing the root makes the chord ambiguous — it could be several things depending on the bass note underneath. This openness is the Khruangbin sound. The bass player (Laura Lee) defines the chord; Mark Speer adds color." },
+        { text: "Find 3-note voicings for Dm (top 3 strings of xx0231: A, D, F), Em (open G, open B, open E — the simplest voicing), G (top 3 strings of 320003: G, B, G), and C (top 3 strings of x32010: G, C, E). Each chord is just 2-3 unique notes.", why: "Three-note voicings are transparent — they suggest harmony without declaring it. This leaves room for the bass to define the chord and air to flow between the notes." },
         { text: "Play a progression using only these stripped-down voicings: Am-Dm-G-C with 3 notes each. Strum only the top 3 strings. Notice how airy and spacious it sounds compared to full chords.", why: "Full chords fill the sonic space like oil paint. Three-note voicings are watercolors — lighter, more transparent, more suggestive." },
         { text: "Try playing these voicings with a soft pick attack — barely touching the strings. Let the notes whisper. This is the dynamic foundation for everything in Level 6.", why: "Khruangbin's dynamics are crucial. Soft attack + open voicings = the spacious, floating sound that defines their guitar tone." }
       ],
       feel: "Three-note voicings should feel like watercolors compared to full chords — lighter, more transparent, more suggestive. The sound should float rather than pound.",
       wrong: "If the chords sound thin or weak, you might be muting strings accidentally — check your fretting. If they sound like full chords, you're including too many strings. If they sound empty, you're not letting the notes sustain long enough.",
       sarah: "Mark Speer said he thinks of his guitar as a melodic instrument, not a rhythm instrument. These voicings blur the line between chords and melody — that's the point. You're not strumming; you're painting.",
-      metronome: 80
+      metronome: 80,
+      recorder: true
     },
     {
       id: "gs-6-2",
@@ -43,6 +44,7 @@ export const level6 = {
       feel: "The soft attack should feel like you're coaxing sound from the guitar, not forcing it. Notes should bloom — a slow, warm envelope instead of a sharp spike. It feels gentle, intimate, and controlled.",
       wrong: "If the notes are too quiet to hear, you've gone too soft — find the threshold where notes speak clearly but without any pick attack noise. If they still have that pick 'tick,' you're still too close to the bridge or picking too hard.",
       sarah: "Mark Speer uses flatwound strings, which have no brightness at all. You can get close to that sound with roundwound strings by changing your technique — pick position and attack do 80% of the work. The remaining 20% is the tone knob, which we'll get to next.",
+      metronome: 80,
       volumeMeter: true
     },
     {
@@ -100,13 +102,17 @@ export const level6 = {
       ],
       feel: "The tone knob should feel like a second voice — you're not just choosing notes and rhythms, you're choosing the tonal color of each phrase. Bright passages should feel energetic and present. Warm passages should feel intimate and distant.",
       wrong: "If you can't reach the tone knob without stopping your playing, practice the physical motion separately until it's smooth. If the tonal changes sound random, commit to a plan — bright for rhythm, warm for melody, or vice versa. If you don't hear much difference, check that your tone knob is actually working (some guitars have subtle tone controls).",
-      sarah: "This is the exercise that most guitar curricula never include. The tone knob is right there on your guitar, and it changes everything about your sound. Mark Speer treats it as seriously as his note choices — it's not setup, it's performance. Once you start using it, you'll wonder why you ever left it in one position."
+      sarah: "This is the exercise that most guitar curricula never include. The tone knob is right there on your guitar, and it changes everything about your sound. Mark Speer treats it as seriously as his note choices — it's not setup, it's performance. Once you start using it, you'll wonder why you ever left it in one position.",
+      metronome: 80,
+      recorder: true
     },
     {
       id: "gs-6-6",
       time: 10,
       title: "Chromatic Approach Notes",
       type: "guitar",
+      recorder: true,
+      tracks: [{ name: "Khruangbin Style 80 BPM", src: "/khruangbin-style-80.mp3" }],
       what: "Add chromatic approach notes to your pentatonic playing. 'Chromatic' means moving by half steps — one fret at a time. Before landing on a target note, approach it from one fret below. This adds an exotic, jazz-inflected flavor that Khruangbin uses constantly. Important: these are NOT scale degrees — they're chromatic neighbors. Approaching A from Ab (one fret below) is a chromatic lower approach, not a 'b2.' The b2 of A would be Bb, which is something different entirely.",
       steps: [
         { text: "Play an Am pentatonic phrase. Now, before landing on the A (root), play Ab (one fret below A — that's the 4th fret on the high E string) and slide up to A (5th fret). The Ab is a chromatic approach note — it's not part of any scale, it's just a half-step runway into your target.", why: "Chromatic approach notes create momentary tension that resolves instantly. The Ab wants to move to A — it pulls the listener's ear toward the resolution. This is how jazz musicians add sophistication to simple melodies." },

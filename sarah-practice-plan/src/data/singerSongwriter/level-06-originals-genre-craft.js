@@ -36,10 +36,10 @@ export const level6 = {
       time: 10,
       title: "Surf-Psych Original",
       type: "song",
-      what: "Create an original surf-psych piece: continuous jangle at 100 BPM, G-Em-C-D, with a shimmering melody that floats above the guitar. Surf vocals are ethereal and reverb-drenched in feeling — breathy, distant, dreamy.",
+      what: "Create an original surf-psych piece: continuous jangle at 120 BPM, G-Em-C-D, with a shimmering melody that floats above the guitar. Surf vocals are ethereal and reverb-drenched in feeling — breathy, distant, dreamy.",
       tracks: [{ name: "Surf Rock 120", src: "/surf-rock-120.mp3" }, { name: "Psych Rock 120", src: "/psych-rock-120.mp3" }],
       steps: [
-        { text: "Jangle G-Em-C-D at 100 BPM. Continuous 8th notes, light accent on beats 1 and 3. Let the guitar shimmer.", why: "The jangle IS the surf sound. It needs to be perfectly even and continuous before your voice can float on top." },
+        { text: "Jangle G-Em-C-D at 120 BPM. Continuous 8th notes, light accent on beats 1 and 3. Let the guitar shimmer.", why: "The jangle IS the surf sound. It needs to be perfectly even and continuous before your voice can float on top." },
         { text: "Improvise a melody using pentatonic notes in the upper range (D4-G4). Breathy delivery, lots of reverb in your imagination. Think Allah-Las.", why: "Surf vocals sit higher and breathier than reggae. The melody floats above the jangle like mist above the ocean." },
         { text: "Create a verse that's sparse (few words, long sustained notes between phrases) and a chorus with more rhythmic energy.", why: "Surf-psych contrast is about density: verses are spacious, choruses fill up. The jangle stays constant throughout." },
         { text: "Lyrics: images of coast, light, and motion. 'Driving down the coast / light is getting gold / waves are getting close.' Surf lyrics paint pictures.", why: "Surf lyrics are cinematic — they describe scenes, not feelings directly. The feelings come through the images." },
@@ -123,7 +123,7 @@ export const level6 = {
       type: "song",
       what: "Borrow a CHORD PROGRESSION pattern (not a melody) from a genre you love and write a completely original melody and lyrics over it. The chord shape is a template — like a building's foundation. Everything on top is yours. This is how most songs in history have been written.",
       steps: [
-        { text: "Pick a common chord progression: I-V-vi-IV (G-D-Em-C), i-III-VII-IV (Am-C-G-F), or i-iv-v (Am-Dm-Em). These belong to no one — they're musical infrastructure.", why: "Chord progressions cannot be copyrighted. They're shared musical language. Hundreds of hit songs use the same 4-5 progressions." },
+        { text: "Pick a common chord progression: I-V-vi-IV (G-D-Em-C), i-III-VII-VI (Am-C-G-F), or i-iv-v (Am-Dm-Em). These belong to no one — they're musical infrastructure.", why: "Chord progressions cannot be copyrighted. They're shared musical language. Hundreds of hit songs use the same 4-5 progressions." },
         { text: "Strum the progression in your chosen genre feel. Let the groove settle for 30 seconds before singing.", why: "The strum feel determines the genre. The same chords in reggae vs surf vs soul create completely different songs." },
         { text: "Improvise an original melody using pentatonic notes. This melody belongs to you — even though the chords are 'borrowed,' the melody is new.", why: "Melody is the fingerprint of a song. New melody + common chords = new song. This is how songwriting has worked for centuries." },
         { text: "Add lyrics. Record the complete piece. This is a fully original song built on a borrowed foundation — exactly how every songwriter works.", why: "Professional songwriters don't feel guilty about using common progressions. They feel empowered by them. The progression is a tool; the song is the art." }

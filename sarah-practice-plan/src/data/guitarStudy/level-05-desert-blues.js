@@ -35,7 +35,7 @@ export const level5 = {
       setup: "Tuner recommended. You can also tune by ear: play the 4th string (D) and tune the 6th string down until they match, one octave apart.",
       steps: [
         { text: "Tune the low E string down to D. Pick it alongside the open D string (4th string) — they should sound like the same note, one octave apart. If you have a tuner, watch it go from E to D as you loosen the string.", why: "Drop D gives you a deep, powerful bass drone. Tuareg guitarists often use open tunings for exactly this purpose." },
-        { text: "IMPORTANT: In Drop D, every fret on the 6th string is shifted. What used to be the 2nd fret (F#) is now E. The 3rd fret (used to be G) is now F#. The 5th fret is now G (was A in standard). When you see fret numbers for the 6th string in this level, they refer to Drop D positions.", why: "Understanding the shift prevents confusion. All other strings remain unchanged — only the 6th string moves." },
+        { text: "IMPORTANT: In Drop D, every fret on the 6th string is shifted. What used to be the 2nd fret (F#) is now E. The 3rd fret (used to be G) is now F. The 5th fret is now G (was A in standard). When you see fret numbers for the 6th string in this level, they refer to Drop D positions.", why: "Understanding the shift prevents confusion. All other strings remain unchanged — only the 6th string moves." },
         { text: "Let the low D ring open while you play the sus pentatonic on the top 3 strings. Alternate: pluck the bass, then a melody note. Bass-melody-melody-bass-melody-melody.", why: "Bass drone + melody is the core texture of desert blues. One guitar sounds like two instruments." },
         { text: "Experiment with fingerpicking: use your thumb for the bass drone and your index and middle fingers for melody notes. The bass should ring continuously underneath.", why: "Fingerpicking or hybrid picking lets you maintain the drone continuously. The bass never stops — it's the heartbeat of the piece." },
         { text: "To return to standard tuning when you're done: tighten the 6th string back up until your tuner reads E, or until the 6th string open matches the 5th fret of the A string. Always retune before moving to non-desert-blues exercises.", why: "Leaving the guitar in Drop D will make everything else you play sound wrong. Build the habit of tuning back to standard when you finish desert blues practice." }
@@ -98,7 +98,9 @@ export const level5 = {
       ],
       feel: "A good microtonal bend should sound like a voice — not quite one note, not quite another, but a human sound in between. It should make you feel slightly uncomfortable in a beautiful way.",
       wrong: "If the bend goes all the way to C, you've overshot — that's a regular half-step bend. If it doesn't move at all, you need more pressure. The quarter-tone is a very specific, very small movement. Use the 8th fret pitch as your ceiling — stop halfway there.",
-      sarah: "Microtonal bending is what separates guitar from piano. The piano can only play the notes that exist. Guitar can play the spaces between. Desert blues lives in those spaces."
+      sarah: "Microtonal bending is what separates guitar from piano. The piano can only play the notes that exist. Guitar can play the spaces between. Desert blues lives in those spaces.",
+      metronome: 75,
+      referencePitches: ["B3", "C4"]
     },
     {
       id: "gs-5-6",
@@ -161,6 +163,7 @@ export const level5 = {
       feel: "A 15-minute desert session should feel like a journey through a vast, still landscape. When it's working, you lose track of time. The repetition becomes meditative. You hear overtones and harmonics you never noticed.",
       wrong: "If you played fast and varied throughout, you missed the point. Desert blues is about restraint, patience, and depth. If you got bored and stopped early, try setting a timer and committing — the breakthrough happens after the boredom, not before it.",
       sarah: "This is the deepest musical experience in the curriculum so far. Most Western music is about going somewhere. Desert blues is about being somewhere — fully present, fully patient, fully alive in the moment. Remember to tune back to standard when you're done.",
+      metronome: 75,
       levelUp: "You can sustain a desert blues jam for 15 minutes that evolves gradually, maintains the drone, and doesn't rush. The repetition feels meditative, not monotonous."
     }
   ]

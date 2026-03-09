@@ -2,13 +2,13 @@ import { getPitchRange } from "../appData.js";
 
 export const level4 = {
   num: 4, name: "Ear Training & Harmony", focus: "Intervals, chord tones, hearing changes",
-  duration: "20 min",
+  duration: "25 min",
   setup: "Guitar for chord references. No backing track needed initially.",
   subtitle: "Hearing the Music Inside the Music",
   description: "Your ear is the most important instrument you own. These exercises train you to hear chord tones, sing intervals, and build melodies from what you hear -- not what you've memorized. Jeff Buckley and Nick Drake could hear music inside chords that other people missed.",
   artists: "Jeff Buckley, Nick Drake",
   unlocks: "Dynamics & Expression (Level 5)",
-  review: { label: "Level 2 Check-In", time: 5, exercises: ["v2e2", "v2e3"], prompt: "Slide through the A3 passaggio on 'wee' — smooth, no break (v2e2). Then sing in your mixed voice sweet spot for 1 minute (v2e3). If the passaggio is cracking again, spend time on Level 2." },
+  review: { label: "Level 2 Check-In", time: 5, exercises: ["v2e1b", "v2e3"], prompt: "Slide through the A3 passaggio on 'ooh' — smooth, no break (v2e1b). Then do siren glides bottom to top and back (v2e3). If the passaggio is cracking again, spend time on Level 2." },
   exercises: [
     {
       id: "v4e1", time: 4, title: "Chord Tone Singing", type: "vocal",
