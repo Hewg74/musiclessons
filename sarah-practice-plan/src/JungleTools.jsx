@@ -4,6 +4,52 @@ import * as Tone from 'tone';
 // We'll accept the theme object `T` from App.jsx via props or just hardcode some shared colors for now.
 // For simplicity, we can just pass the theme object to these components.
 
+// --- Helper Functions & Components ---
+export const formatTime = (time) => {
+  if (!time || isNaN(time)) return "0:00";
+  const minutes = Math.floor(time / 60);
+  const seconds = Math.floor(time % 60);
+  return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+};
+
+export const parseTime = (str) => {
+  if (!str) return 0;
+  if (!str.includes(':')) return parseFloat(str) || 0;
+  const parts = str.split(':');
+  if (parts.length === 2) {
+    return parseInt(parts[0], 10) * 60 + parseFloat(parts[1]);
+  }
+  return 0;
+};
+
+const TimeInput = ({ time, onChange, T }) => {
+  const [val, setVal] = useState(formatTime(time));
+  useEffect(() => { setVal(formatTime(time)); }, [time]);
+
+  return (
+    <input
+      value={val}
+      onChange={e => setVal(e.target.value)}
+      onBlur={() => {
+        let t = parseTime(val);
+        if (isNaN(t)) t = 0;
+        onChange(t);
+        setVal(formatTime(t));
+      }}
+      onKeyDown={e => {
+        if (e.key === 'Enter') e.target.blur();
+      }}
+      style={{
+        width: 44, background: 'transparent', border: 'none', borderBottom: `1px solid transparent`,
+        color: T.textDark, fontFamily: T.sans, fontSize: 15, fontWeight: 600, textAlign: 'center', padding: "0 0 2px 0",
+        outline: 'none', fontVariantNumeric: "tabular-nums", transition: "border-color 0.2s"
+      }}
+      onFocus={e => e.target.style.borderBottom = `1px solid ${T.gold}`}
+      onBlurCapture={e => e.target.style.borderBottom = `1px solid transparent`}
+    />
+  );
+};
+
 // --- Custom Audio Player Component ---
 function MiniAudioPlayer({ src, theme: T, title }) {
   const audioRef = useRef(null);
@@ -115,13 +161,6 @@ function MiniAudioPlayer({ src, theme: T, title }) {
     }
   };
 
-  const formatTime = (time) => {
-    if (!time || isNaN(time)) return "0:00";
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-  };
-
   return (
     <div style={{
       background: T.bgCard, border: `1px solid ${T.border}`,
@@ -221,32 +260,6 @@ function MiniAudioPlayer({ src, theme: T, title }) {
 
         {/* Inline Transport Controls (Right Side) */}
         <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-          <button onClick={skipBack} title="Rewind 10s" style={{
-            background: "transparent", border: "none", color: T.textMed, cursor: "pointer",
-            padding: 6, display: "flex", alignItems: "center", justifyContent: "center",
-            transition: "transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
-          }}
-            onPointerDown={e => e.currentTarget.style.transform = "scale(0.85)"}
-            onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="11 17 6 12 11 7"></polyline>
-              <polyline points="18 17 13 12 18 7"></polyline>
-            </svg>
-          </button>
-          <button onClick={resetSong} title="Restart" style={{
-            background: "transparent", border: "none", color: T.textMed, cursor: "pointer",
-            padding: 6, display: "flex", alignItems: "center", justifyContent: "center",
-            transition: "transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
-          }}
-            onPointerDown={e => e.currentTarget.style.transform = "scale(0.85)"}
-            onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="1 4 1 10 7 10"></polyline>
-              <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
-            </svg>
-          </button>
           <button onClick={() => setShowLoopSettings(!showLoopSettings)} title="Loop Settings" style={{
             background: isLooping || showLoopSettings ? T.bgSoft : "transparent",
             border: `1px solid ${isLooping ? T.gold : showLoopSettings ? T.border : "transparent"}`,
@@ -271,7 +284,29 @@ function MiniAudioPlayer({ src, theme: T, title }) {
           animation: 'fade-in-up 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards'
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: T.textDark, fontFamily: T.sans }}>A/B Loop Mode</span>
+            <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+              <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: T.textDark, fontFamily: T.sans }}>A/B Loop Mode</span>
+              {/* Relocated Transport Controls */}
+              <div style={{ display: "flex", gap: 6, paddingLeft: 12, borderLeft: `1px solid ${T.borderSoft}` }}>
+                <button onClick={skipBack} title="Rewind 10s" style={trayNavBtnStyle(T)}
+                  onPointerDown={e => e.currentTarget.style.transform = "scale(0.85)"}
+                  onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M11 17l-5-5 5-5M18 17l-5-5 5-5" />
+                  </svg>
+                </button>
+                <button onClick={resetSong} title="Restart" style={trayNavBtnStyle(T)}
+                  onPointerDown={e => e.currentTarget.style.transform = "scale(0.85)"}
+                  onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="19 20 9 12 19 4 19 20"></polygon>
+                    <line x1="5" y1="19" x2="5" y2="5"></line>
+                  </svg>
+                </button>
+              </div>
+            </div>
             {/* Beautiful Pill Toggle */}
             <button onClick={() => setIsLooping(!isLooping)} style={{
               background: isLooping ? T.success : T.border, border: "none",
@@ -288,10 +323,14 @@ function MiniAudioPlayer({ src, theme: T, title }) {
 
           <div style={{ display: 'flex', gap: 12 }}>
             {/* Start A */}
-            <div style={{ flex: 1, background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radius, padding: 8 }}>
+            <div style={{ flex: 1, background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radius, padding: "8px 10px" }}>
               <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 6 }}>Start (A)</div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: 14, fontWeight: 600, color: T.textDark, fontFamily: T.sans, fontVariantNumeric: "tabular-nums" }}>{formatTime(loopStart)}</span>
+                <TimeInput time={loopStart} onChange={(t) => {
+                  let newStart = Math.max(0, t);
+                  if (newStart >= loopEnd) newStart = Math.max(0, loopEnd - 1);
+                  setLoopStart(newStart);
+                }} T={T} />
                 <div style={{ display: 'flex', gap: 4 }}>
                   <button onClick={() => nudgeBoundary('A', -0.5)} style={nudgeBtnStyle(T)}>-</button>
                   <button onClick={() => nudgeBoundary('A', 0.5)} style={nudgeBtnStyle(T)}>+</button>
@@ -300,10 +339,14 @@ function MiniAudioPlayer({ src, theme: T, title }) {
               </div>
             </div>
             {/* End B */}
-            <div style={{ flex: 1, background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radius, padding: 8 }}>
+            <div style={{ flex: 1, background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radius, padding: "8px 10px" }}>
               <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 6 }}>End (B)</div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: 14, fontWeight: 600, color: T.textDark, fontFamily: T.sans, fontVariantNumeric: "tabular-nums" }}>{formatTime(loopEnd)}</span>
+                <TimeInput time={loopEnd} onChange={(t) => {
+                  let newEnd = Math.min(duration, t);
+                  if (newEnd <= loopStart) newEnd = Math.min(duration, loopStart + 1);
+                  setLoopEnd(newEnd);
+                }} T={T} />
                 <div style={{ display: 'flex', gap: 4 }}>
                   <button onClick={() => nudgeBoundary('B', -0.5)} style={nudgeBtnStyle(T)}>-</button>
                   <button onClick={() => nudgeBoundary('B', 0.5)} style={nudgeBtnStyle(T)}>+</button>
@@ -329,6 +372,12 @@ const setBtnStyle = (T) => ({
   background: T.gold, color: "#fff", border: "none",
   padding: "2px 8px", borderRadius: 4, cursor: "pointer",
   fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.5, fontFamily: T.sans
+});
+
+const trayNavBtnStyle = (T) => ({
+  background: T.borderSoft, border: `1px solid ${T.borderSoft}`, color: T.textDark, cursor: "pointer",
+  width: 24, height: 24, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center",
+  transition: "all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
 });
 
 // --- 1. Audio Player ---

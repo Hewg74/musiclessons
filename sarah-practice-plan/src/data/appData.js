@@ -427,8 +427,8 @@ export const DAYS = [
         id: "d6e3", time: 15, title: "ILTWYW — Performance Run", type: "song",
         tabs: "iltwyw",
         what: "Full song, no stopping. If you drift, re-enter on beat. This trains the recovery skill you need for live playing.",
-        setup: "Guitar. Groove Beat 90 BPM. Pretend it's a live performance.",
-        tracks: [{ name: "Groove Beat 90 BPM", src: "/groove-beat-90.mp3" }],
+        setup: "Guitar. I Like The Way You Walk backing track. Pretend it's a live performance.",
+        tracks: [{ name: "I Like The Way You Walk", src: "/iltwyw.mp3" }],
         steps: [
           { text: "Groove Beat 90 BPM. Full song: strum + vocals.", why: "This is a run-through, not a drill. No stopping." },
           { text: "If you drift off beat: DO NOT STOP. Re-enter on the next beat.", why: "Sarah (1/13): 'Stop as soon as you realize you're off beat, and enter back in on beat.' The key metric is how quickly you recover." },
@@ -444,7 +444,8 @@ export const DAYS = [
         id: "d6e4", time: 12, title: "Sol Del Sur — Full Pass", type: "guitar",
         tabs: "soldelsur",
         what: "Play along with the actual recording. Alternate lead and strum sections.",
-        setup: "Electric guitar. YouTube: Sol Del Sur at full speed.",
+        setup: "Electric guitar. Sol Del Sur at full speed.",
+        tracks: [{ name: "Sol Del Sur", src: "/sol-del-sur.mp3" }],
         steps: [
           { text: "Lead at full speed.", why: "You've built up from 75%." },
           { text: "Strum with clean entries (pluck → strum pattern).", why: "This is what you recorded on Day 5." },
