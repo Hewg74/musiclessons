@@ -24,7 +24,8 @@ let T = {
   radius: "2px",
   radiusMd: "6px",
 
-  sm: "0 2px 8px rgba(44, 40, 37, 0.04)", md: "0 8px 24px rgba(44, 40, 37, 0.08)",
+  sm: "0 4px 12px rgba(44, 40, 37, 0.03)",
+  md: "0 12px 32px rgba(44, 40, 37, 0.06), 0 4px 12px rgba(44, 40, 37, 0.02)",
 };
 
 const LIGHT_THEME = { ...T };
@@ -39,7 +40,8 @@ const DARK_THEME = {
   coralSoft: "#3b1f1f",
   plumSoft: "#2e202d",
   slateSoft: "#1e2a30",
-  sm: "0 2px 8px rgba(0, 0, 0, 0.4)", md: "0 8px 24px rgba(0, 0, 0, 0.6)",
+  sm: "0 4px 12px rgba(0,0,0,0.3)",
+  md: "0 12px 32px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.2)",
 };
 
 let ACCENT_CONFIG = {}; // Will be initialized below
@@ -2721,10 +2723,15 @@ export default function App() {
         }
 
         confetti({
-          particleCount: 100,
+          particleCount: 45,
           spread: 70,
-          origin: { y: 0.6 },
-          colors: ['#d68383', '#d97d54', '#d4a373', '#7f9e88', '#72a8a8', '#6b8e9f', '#9e829c']
+          origin: { y: 0.65 },
+          colors: [T.gold, T.goldMed, T.goldSoft, '#ffffff'],
+          disableForReducedMotion: true,
+          gravity: 0.4,
+          scalar: 1.1,
+          ticks: 300,
+          startVelocity: 35
         });
       }
       return next;
@@ -2771,13 +2778,13 @@ export default function App() {
           100% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); }
         }
         .exercise-card {
-          transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease, border-color 0.2s ease;
-          animation: fade-in-up 0.4s ease-out forwards;
+          transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease;
+          animation: fade-in-up 0.5s ease-out forwards;
         }
         .exercise-card:hover {
-          transform: translateY(-2px);
-          box-shadow: ${T.md};
-          border-color: #ccc !important;
+          transform: translateY(-3px) scale(1.01);
+          box-shadow: ${T.md} !important;
+          border-color: ${isDark ? "#444" : "#ddd"} !important;
         }
         .interactive-btn {
           transition: all 0.2s ease;
@@ -2793,7 +2800,7 @@ export default function App() {
       {/* Header */}
       {tab !== "skills" && (
         <div style={{ background: T.bgCard, borderBottom: `1px solid ${T.border}`, position: "relative", display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <div style={{ padding: "30px 20px 20px", width: "100%", maxWidth: 640, position: "relative" }}>
+          <div style={{ padding: "40px 24px 30px", width: "100%", maxWidth: 640, position: "relative" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <img src="/icon-jungle.png" alt="Jungle Tools Logo" style={{
@@ -2812,7 +2819,7 @@ export default function App() {
               </button>
             </div>
             <div style={{ fontSize: 40, fontWeight: 400, fontFamily: T.serif, color: T.textDark, lineHeight: 1.2 }}>Practice Plan</div>
-            <div style={{ fontSize: 14, color: T.textMuted, marginTop: 6, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: "0.05em" }}>Lesson 3/2 · Tenor · Break ≈ A3</div>
+            <div style={{ fontSize: 13, color: T.textMuted, marginTop: 10, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: "0.15em", lineHeight: 1.6 }}>Lesson 3/2 · Tenor · Break ≈ A3</div>
             <div style={{ width: "100%", maxWidth: 320, margin: "20px auto 0", display: "flex", alignItems: "center", gap: 14 }}>
               <div style={{ flex: 1 }}>
                 <div style={{ height: 6, background: T.border, overflow: "hidden", borderRadius: 4 }}>
@@ -2826,7 +2833,13 @@ export default function App() {
       )}
 
       {/* Tab bar (Desktop Only) */}
-      <div className="hide-scrollbar desktop-only" style={{ background: T.bgCard, borderBottom: `1px solid ${T.border}`, position: "sticky", top: 0, zIndex: 10, display: "flex", justifyContent: "center", boxShadow: T.sm, overflowX: "auto", WebkitOverflowScrolling: "touch", msOverflowStyle: "none", scrollbarWidth: "none" }}>
+      <div className="hide-scrollbar desktop-only" style={{
+        background: isDark ? "rgba(44, 40, 37, 0.75)" : "rgba(253, 251, 249, 0.75)",
+        backdropFilter: "blur(24px) saturate(140%)", WebkitBackdropFilter: "blur(24px) saturate(140%)",
+        borderBottom: `1px solid ${T.border}`, position: "sticky", top: 0, zIndex: 10, display: "flex",
+        justifyContent: "center", boxShadow: isDark ? "0 8px 32px rgba(0,0,0,0.2)" : "0 8px 32px rgba(44,40,37,0.04)",
+        overflowX: "auto", WebkitOverflowScrolling: "touch", msOverflowStyle: "none", scrollbarWidth: "none"
+      }}>
         <div style={{ display: "flex", gap: 32, padding: "0 20px" }}>
           {tabs.map(t => (
             <button key={t.id} onClick={() => { setTab(t.id); }} style={{
@@ -2847,7 +2860,8 @@ export default function App() {
             {/* Day pill tabs — horizontal scroll */}
             <div className="hide-scrollbar sticky-pill-bar" style={{
               display: "flex", gap: 0, overflowX: "auto", padding: "16px 0 0",
-              background: T.bg,
+              background: isDark ? "rgba(28, 25, 23, 0.85)" : "rgba(251, 248, 244, 0.85)",
+              backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
               WebkitOverflowScrolling: "touch", scrollSnapType: "x mandatory",
               msOverflowStyle: "none", scrollbarWidth: "none",
               borderBottom: `1px solid ${T.border}`,
@@ -2864,11 +2878,12 @@ export default function App() {
                     background: active ? c : T.bgCard,
                     border: `1px solid ${active ? c : T.border}`,
                     borderRadius: 24, padding: "8px 20px", margin: "4px 8px 12px 0px",
-                    cursor: "pointer", textAlign: "center", transition: "all 0.2s",
+                    cursor: "pointer", textAlign: "center", transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
                     opacity: active ? 1 : 0.8,
-                    boxShadow: active ? `0 4px 10px ${c}40` : "none"
+                    boxShadow: active ? `0 8px 16px ${c}40, 0 2px 4px ${c}20` : "none",
+                    transform: active ? "translateY(-1px) scale(1.02)" : "scale(1)"
                   }}>
-                    <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: active ? "#fff" : c, fontFamily: T.sans }}>
+                    <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", color: active ? "#fff" : c, fontFamily: T.sans }}>
                       DAY {day.num}
                     </div>
                     <div style={{ fontSize: 13, fontWeight: active ? 600 : 400, color: active ? "#fff" : T.textDark, fontFamily: T.serif, marginTop: 2, whiteSpace: "nowrap" }}>
@@ -2892,10 +2907,10 @@ export default function App() {
             {/* Archive — exercises from LESSON_POOL by skill branch */}
             <div style={{ marginTop: 40, borderTop: `1px solid ${T.border}`, paddingTop: 24 }}>
               <div style={{ textAlign: "center", marginBottom: 20 }}>
-                <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 3, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 4 }}>
+                <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 4, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 6 }}>
                   Exercise Archive
                 </div>
-                <div style={{ fontSize: 13, color: T.textLight, fontFamily: T.sans }}>
+                <div style={{ fontSize: 13, color: T.textLight, fontFamily: T.sans, lineHeight: 1.6 }}>
                   All exercises from {LESSON_POOL.length} lesson{LESSON_POOL.length !== 1 ? "s" : ""}
                 </div>
               </div>
@@ -2973,7 +2988,7 @@ export default function App() {
         {tab === "tools" && (
           <div>
             <div style={{ textAlign: "center", marginBottom: 24 }}>
-              <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.gold, fontFamily: T.sans, marginBottom: 6 }}>
+              <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 4, textTransform: "uppercase", color: T.gold, fontFamily: T.sans, marginBottom: 8 }}>
                 Jungle Mode
               </div>
               <div style={{ fontSize: 32, fontWeight: 400, fontFamily: T.serif, color: T.textDark }}>Tools</div>

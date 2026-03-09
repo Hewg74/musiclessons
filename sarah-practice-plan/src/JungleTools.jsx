@@ -476,19 +476,23 @@ export function AudioRecorder({ theme: T, inline = false }) {
           <button onClick={startRecording} style={{
             background: T.coral, color: '#fff', border: 'none', padding: inline ? '8px 16px' : '12px 24px',
             borderRadius: T.radius, cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: 6,
-            fontSize: inline ? 12 : 14
+            fontSize: inline ? 12 : 14, transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
           }}>
             <div style={{ width: inline ? 8 : 10, height: inline ? 8 : 10, borderRadius: '50%', background: '#fff' }} />
             REC
           </button>
         ) : (
           <button onClick={stopRecording} style={{
-            background: T.textDark, color: '#fff', border: 'none', padding: inline ? '8px 16px' : '12px 24px',
+            background: "rgba(214, 131, 131, 0.15)", color: T.coral, border: `1px solid ${T.coral}`, padding: inline ? '8px 16px' : '12px 24px',
             borderRadius: T.radius, cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: 6,
-            animation: 'pulse-ring 2s infinite', fontSize: inline ? 12 : 14
+            fontSize: inline ? 12 : 14, transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
           }}>
-            <div style={{ width: inline ? 10 : 12, height: inline ? 10 : 12, background: '#fff', borderRadius: 2 }} />
-            STOP
+            <div style={{
+              width: inline ? 10 : 12, height: inline ? 10 : 12, background: T.coral, borderRadius: "50%",
+              boxShadow: `0 0 0 4px rgba(214, 131, 131, 0.2), 0 0 0 8px rgba(214, 131, 131, 0.1)`,
+              animation: 'pulse-ring 2s infinite cubic-bezier(0.4, 0, 0.2, 1)'
+            }} />
+            RECORDING...
           </button>
         )}
 
@@ -1075,28 +1079,30 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
         {pitchState.active ? `${cents > 0 ? '+' : ''}${cents} ¢` : ''}
       </div>
 
-      {/* Reference Feedback */}
-      {pitchState.closestRef && pitchState.active && (
+      {/* Reference Feedback - reserved height to prevent layout shift */}
+      {referencePitches && referencePitches.length > 0 && (
         <div style={{
           marginTop: 14, padding: "10px 14px", borderRadius: T.radius,
-          background: statusColor + '08', border: `1px solid ${statusColor}18`,
+          background: pitchState.closestRef && pitchState.active ? statusColor + '08' : 'transparent',
+          border: `1px solid ${pitchState.closestRef && pitchState.active ? statusColor + '18' : 'transparent'}`,
           display: "flex", justifyContent: "space-between", alignItems: "center",
-          fontSize: 13, fontFamily: T.sans, transition: "all 0.3s ease"
+          fontSize: 13, fontFamily: T.sans, transition: "all 0.3s ease",
+          opacity: pitchState.closestRef && pitchState.active ? 1 : 0
         }}>
-          <span style={{ color: T.textMed }}>Target: <span style={{ color: T.textDark, fontWeight: 700 }}>{pitchState.closestRef}</span></span>
-          <span style={{ color: statusColor, fontWeight: 600 }}>{pitchState.refFeedback}</span>
+          <span style={{ color: T.textMed }}>Target: <span style={{ color: T.textDark, fontWeight: 700 }}>{pitchState.closestRef || "—"}</span></span>
+          <span style={{ color: statusColor, fontWeight: 600 }}>{pitchState.refFeedback || "—"}</span>
         </div>
       )}
 
-      {/* Pitch Contour Graph */}
-      {pitchContour && contourData.length > 1 && (() => {
+      {/* Pitch Contour Graph - always render box to prevent layout shift */}
+      {pitchContour && (() => {
         const W = 300, H = 120, PAD = 6;
         const refNotesObj = [
           { n: "C", m: 0 }, { n: "C#", m: 1 }, { n: "D", m: 2 }, { n: "E♭", m: 3 }, { n: "E", m: 4 }, { n: "F", m: 5 },
           { n: "F#", m: 6 }, { n: "G", m: 7 }, { n: "A♭", m: 8 }, { n: "A", m: 9 }, { n: "B♭", m: 10 }, { n: "B", m: 11 }
         ];
         // Parse reference pitches to MIDI values
-        const refMidis = referencePitches.map(ref => {
+        const refMidis = (referencePitches || []).map(ref => {
           const match = ref.match(/([A-G][b♭#]?)([0-9])/);
           if (!match) return null;
           const pClass = match[1].replace('b', '♭');
@@ -1109,6 +1115,7 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
         const midiVals = contourData.map(p => p.midi);
         const refMidiNums = refMidis.map(r => r.midi);
         const allMidis = [...midiVals, ...refMidiNums];
+        if (allMidis.length === 0) allMidis.push(60); // Default to middle C if completely empty
         const minM = Math.min(...allMidis) - 2;
         const maxM = Math.max(...allMidis) + 2;
         const rangeM = maxM - minM || 1;
@@ -1159,8 +1166,9 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
                 </g>
               ))}
               {/* Pitch line with subtle glow */}
-              <polyline points={points} fill="none" stroke={statusColor + "30"} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
-              <polyline points={points} fill="none" stroke={statusColor} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              {points && (
+                <polyline points={points} fill="none" stroke={statusColor} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" filter={`drop-shadow(0 2px 6px ${statusColor}60)`} opacity={0.9} />
+              )}
             </svg>
           </div>
         );
@@ -1310,6 +1318,13 @@ export function FretboardDiagram({ theme: T, scale, position, highlight = [] }) 
         viewBox={`0 0 ${svgWidth} ${svgHeight}`}
         style={{ width: '100%', minHeight: 160, maxWidth: '100%', display: 'block' }}
       >
+        <defs>
+          <linearGradient id="metal-string" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor={T.textMuted} stopOpacity="0.8" />
+            <stop offset="50%" stopColor="#ffffff" stopOpacity="0.6" />
+            <stop offset="100%" stopColor={T.textDark} stopOpacity="0.4" />
+          </linearGradient>
+        </defs>
         {/* Position highlight rectangle */}
         <rect
           x={leftPad + lo * fretSpacing}
@@ -1358,9 +1373,9 @@ export function FretboardDiagram({ theme: T, scale, position, highlight = [] }) 
             y1={stringY(idx)}
             x2={leftPad + totalFrets * fretSpacing}
             y2={stringY(idx)}
-            stroke={T.textLight}
+            stroke="url(#metal-string)"
             strokeWidth={stringWidths[idx]}
-            opacity={0.7}
+            opacity={0.8}
           />
         ))}
 
@@ -1383,13 +1398,14 @@ export function FretboardDiagram({ theme: T, scale, position, highlight = [] }) 
           const cx = fretX(d.fret);
           const cy = stringY(d.stringIdx);
           let fill = T.textMed;
-          if (d.isHighlighted) fill = T.coral;
-          else if (d.isRoot) fill = T.gold;
+          let filter = "drop-shadow(0 2px 4px rgba(44,40,37,0.2))";
+          if (d.isHighlighted) { fill = T.coral; filter = `drop-shadow(0 0 8px ${T.coral})`; }
+          else if (d.isRoot) { fill = T.gold; filter = `drop-shadow(0 0 8px ${T.gold})`; }
 
           return (
             <g
               key={`dot-${i}`}
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: 'pointer', filter, transition: "filter 0.3s ease" }}
               onClick={() => playNote(d.full)}
             >
               <circle cx={cx} cy={cy} r={9} fill={fill} opacity={0.9} />
@@ -1541,12 +1557,17 @@ export function VolumeMeter({ theme: T, inline = false }) {
       <div style={{
         width: '100%', height: inline ? 16 : 24,
         background: T.border, borderRadius: T.radius,
-        overflow: 'hidden', marginBottom: 12
+        overflow: 'hidden', marginBottom: 12,
+        boxShadow: "inset 0 2px 8px rgba(0,0,0,0.06)",
+        position: 'relative'
       }}>
         <div style={{
-          width: `${barWidth}%`, height: '100%',
-          background: barColor, borderRadius: T.radius,
-          transition: 'width 0.05s linear, background-color 0.15s ease'
+          position: 'absolute', top: 0, left: 0, bottom: 0,
+          width: `${barWidth}%`,
+          background: `linear-gradient(90deg, ${T.success} 0%, ${T.gold} 60%, ${T.coral} 100%)`,
+          backgroundSize: '300% 100%',
+          borderRadius: T.radius,
+          transition: 'width 0.08s ease-out'
         }} />
       </div>
 
