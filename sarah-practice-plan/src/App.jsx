@@ -3,9 +3,9 @@ import * as Tone from "tone";
 import confetti from "canvas-confetti";
 import { AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, VolumeMeter, TAB_CONTENT } from './JungleTools.jsx';
 import { DAYS, KEYBOARD_LEVELS, LOOPER_LEVELS, LESSON_POOL, ALL_NOTES, getPitchRange } from './data/appData.js';
-import { VOCAL_LEVELS } from './data/vocalLevels.js';
-import { GUITAR_STUDY } from './data/guitarStudy.js';
-import { SINGER_SONGWRITER_LEVELS } from './data/singerSongwriter.js';
+import { VOCAL_LEVELS } from './data/vocalLevels/index.js';
+import { GUITAR_STUDY } from './data/guitarStudy/index.js';
+import { SINGER_SONGWRITER_LEVELS } from './data/singerSongwriter/index.js';
 
 // ─── DESIGN SYSTEM (sarahglassmusic.com) ────────────────────────────
 let T = {
@@ -2795,8 +2795,12 @@ export default function App() {
         <div style={{ background: T.bgCard, borderBottom: `1px solid ${T.border}`, position: "relative", display: "flex", flexDirection: "column", alignItems: "center" }}>
           <div style={{ padding: "30px 20px 20px", width: "100%", maxWidth: 640, position: "relative" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
-              <div style={{ fontSize: 11, letterSpacing: 3, textTransform: "uppercase", color: T.gold, fontWeight: 600, fontFamily: T.sans }}>
-                Sarah Glass Music
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <img src="/icon-jungle.png" alt="Jungle Tools Logo" style={{
+                  height: 32, width: 32, objectFit: "cover",
+                  borderRadius: 8, boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+                  mixBlendMode: isDark ? "normal" : "multiply" // removes white background seamlessly on light theme
+                }} />
               </div>
               <button className="interactive-btn" onClick={toggleTheme} style={{
                 background: "transparent", border: `1px solid ${T.border}`,
