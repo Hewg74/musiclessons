@@ -51,7 +51,7 @@ const TimeInput = ({ time, onChange, T }) => {
 };
 
 // --- Custom Audio Player Component ---
-function MiniAudioPlayer({ src, theme: T, title, playbackRate = 1 }) {
+export function MiniAudioPlayer({ src, theme: T, title, playbackRate = 1 }) {
   const audioRef = useRef(null);
   const progressRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
