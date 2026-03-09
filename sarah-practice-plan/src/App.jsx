@@ -505,44 +505,68 @@ function PitchRibbon({ pitches, playNote }) {
       }}
         className="hide-scrollbar"
       >
-        <div style={{ display: "flex", gap: 4 }}>
+        <div style={{ display: "flex" }}>
           {pitches.map((note, i) => {
             const isAccidental = note.includes("♭") || note.includes("#");
-            const bg = isAccidental ? T.textDark : T.goldSoft;
-            const fg = isAccidental ? "#fff" : T.goldDark;
-            const border = isAccidental ? `1px solid ${T.textDark}` : `1px solid ${T.border}`;
+
+            // Re-using the beautiful artisanal styles from InlineKeyboard
+            const bgNormal = isAccidental ? "linear-gradient(180deg, #383330 0%, #2a2725 90%, #221f1d 100%)" : "linear-gradient(180deg, #f7f5f2 0%, #f0ece8 85%, #efeae4 100%)";
+            const bgActive = isAccidental ? `linear-gradient(180deg, #4a423e 0%, #38312e 100%)` : `linear-gradient(180deg, #fcfaf8 0%, ${T.goldSoft} 100%)`;
+            const fg = isAccidental ? "rgba(255,255,255,0.7)" : T.textDark;
+            const border = isAccidental ? `1px solid #1a1817` : `1px solid ${T.borderSoft}`;
+
+            // For a connected piano look, we only want the right border on white keys (except the last one, but fine for now), 
+            // but we'll overlap them or just set no gap.
+            const borderRight = isAccidental ? border : `1px solid ${T.borderSoft}`;
+            const borderLeft = isAccidental ? border : (i === 0 ? `1px solid ${T.borderSoft}` : "none");
+
+            const shadowNormal = isAccidental
+              ? "0 3px 6px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06), inset 0 -1px 2px rgba(0,0,0,0.4)"
+              : "inset 0 -2px 6px rgba(0,0,0,0.02), 0 1px 2px rgba(0,0,0,0.04)";
+
+            const shadowActive = isAccidental
+              ? `0 4px 8px rgba(0,0,0,0.2), inset 0 -2px 4px rgba(255,255,255,0.08), 0 0 12px ${T.gold}20`
+              : `inset 0 -6px 16px ${T.gold}15, 0 1px 3px rgba(0,0,0,0.05)`;
 
             return (
               <button
                 key={i}
                 onClick={() => playNote(note)}
                 onPointerDown={e => {
-                  e.currentTarget.style.transform = "scale(0.92) translateY(2px)";
-                  e.currentTarget.style.opacity = "0.8";
+                  e.currentTarget.style.transform = "translateY(2px)";
+                  e.currentTarget.style.background = bgActive;
+                  e.currentTarget.style.boxShadow = shadowActive;
                 }}
                 onPointerUp={e => {
-                  e.currentTarget.style.transform = "scale(1) translateY(0)";
-                  e.currentTarget.style.opacity = "1";
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.background = bgNormal;
+                  e.currentTarget.style.boxShadow = shadowNormal;
                 }}
                 onPointerLeave={e => {
-                  e.currentTarget.style.transform = "scale(1) translateY(0)";
-                  e.currentTarget.style.opacity = "1";
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.background = bgNormal;
+                  e.currentTarget.style.boxShadow = shadowNormal;
                 }}
                 style={{
                   flexShrink: 0,
                   scrollSnapAlign: "center",
-                  minWidth: isAccidental ? 54 : 64,
-                  height: isAccidental ? 70 : 80,
-                  borderRadius: T.radiusMd,
-                  background: bg, border: border,
+                  minWidth: isAccidental ? 40 : 50,
+                  height: isAccidental ? 75 : 85,
+                  borderRadius: "0 0 5px 5px", // Match piano key feel
+                  background: bgNormal,
+                  borderBottom: border,
+                  borderTop: isAccidental ? "none" : border,
+                  borderRight: borderRight,
+                  borderLeft: borderLeft,
                   color: fg, cursor: "pointer",
                   display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end",
                   paddingBottom: 12,
-                  transition: "all 0.15s cubic-bezier(0.4, 0, 0.2, 1)", fontFamily: T.sans,
-                  boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
+                  transition: "transform 0.1s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.1s, background 0.2s",
+                  fontFamily: T.sans,
+                  boxShadow: shadowNormal
                 }}
               >
-                <span style={{ fontSize: 18, fontWeight: 700, letterSpacing: -0.5 }}>{note}</span>
+                <span style={{ fontSize: isAccidental ? 14 : 16, fontWeight: 700, letterSpacing: 0.5 }}>{note.replace('♭', 'b')}</span>
               </button>
             );
           })}
@@ -697,9 +721,9 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
           {ex.metronome && (
             <div style={{ display: "flex", gap: 10, marginBottom: 16, alignItems: "center", background: T.bgSoft, padding: "10px 16px", borderRadius: T.radiusMd, border: `1px solid ${T.border}`, flexWrap: "wrap" }}>
               <div style={{ flex: 1, display: "flex", alignItems: "center", gap: 8 }}>
-                <button onClick={() => metro.changeBpm(Math.max(40, metro.bpm - 5))} style={{ background: "transparent", border: "none", fontSize: 18, cursor: "pointer", color: T.textMed }}>-</button>
+                <button onClick={() => metro.changeBpm(Math.max(40, metro.bpm - 1))} style={{ background: "transparent", border: "none", fontSize: 18, cursor: "pointer", color: T.textMed }}>-</button>
                 <div style={{ fontSize: 16, fontFamily: T.sans, color: T.textDark, fontWeight: 600, minWidth: 40, textAlign: "center" }}>{metro.bpm}</div>
-                <button onClick={() => metro.changeBpm(Math.min(280, metro.bpm + 5))} style={{ background: "transparent", border: "none", fontSize: 18, cursor: "pointer", color: T.textMed }}>+</button>
+                <button onClick={() => metro.changeBpm(Math.min(280, metro.bpm + 1))} style={{ background: "transparent", border: "none", fontSize: 18, cursor: "pointer", color: T.textMed }}>+</button>
                 <button onClick={() => metro.changeBpm(ex.metronome)} style={{ marginLeft: 6, fontSize: 10, background: T.goldSoft, border: "none", padding: "4px 8px", borderRadius: T.radius, color: T.goldDark, cursor: "pointer", fontWeight: 600, textTransform: "uppercase" }}>Target: {ex.metronome}</button>
               </div>
 
@@ -717,28 +741,84 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
                   fontSize: 11, cursor: "pointer", fontWeight: 600, fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
                 }}>✋ Tap</button>
 
-                <button onClick={() => {
-                  if (!metro.speedBuilder && ex.speedLadder) {
-                    metro.changeBpm(ex.speedLadder.start);
-                    metro.setSpeedIncrement(ex.speedLadder.increment);
-                    metro.setSpeedBars(ex.speedLadder.bars);
-                    metro.setSpeedCeiling(ex.speedLadder.end);
-                  }
-                  metro.setSpeedBuilder(!metro.speedBuilder);
-                }} style={{
-                  background: metro.speedBuilder ? T.gold : "transparent",
-                  border: `1px solid ${metro.speedBuilder ? T.gold : T.borderSoft}`,
-                  color: metro.speedBuilder ? "#fff" : T.textMed,
-                  padding: "8px 10px", borderRadius: T.radius,
-                  fontSize: 11, cursor: "pointer", fontWeight: 600, fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
-                }} title={ex.speedLadder ? `${ex.speedLadder.start}→${ex.speedLadder.end} BPM, +${ex.speedLadder.increment} every ${ex.speedLadder.bars} bars` : "Auto-increment BPM"}>
-                  Speed + {metro.speedBuilder && metro.speedCeiling > 0 ? `↩${metro.speedCeiling}` : ""}
-                </button>
+                {ex.speedLadder && (
+                  <button onClick={() => {
+                    if (!metro.speedBuilder) {
+                      metro.changeBpm(ex.speedLadder.start);
+                      metro.setSpeedIncrement(ex.speedLadder.increment);
+                      metro.setSpeedBars(ex.speedLadder.bars);
+                      metro.setSpeedCeiling(ex.speedLadder.end);
+                    }
+                    metro.setSpeedBuilder(!metro.speedBuilder);
+                  }} style={{
+                    background: metro.speedBuilder ? T.gold : "transparent",
+                    border: `1px solid ${metro.speedBuilder ? T.gold : T.borderSoft}`,
+                    color: metro.speedBuilder ? "#fff" : T.textMed,
+                    padding: "8px 10px", borderRadius: T.radius,
+                    fontSize: 11, cursor: "pointer", fontWeight: 600, fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
+                  }} title={`${ex.speedLadder.start}→${ex.speedLadder.end} BPM, +${ex.speedLadder.increment} every ${ex.speedLadder.bars} bars`}>
+                    Speed + {metro.speedBuilder && metro.speedCeiling > 0 ? `↩${metro.speedCeiling}` : ""}
+                  </button>
+                )}
               </div>
-              {metro.speedBuilder && (
-                <div style={{ display: "flex", gap: 6, marginTop: 8, fontSize: 11, color: T.textLight, fontFamily: T.sans, alignItems: "center" }}>
-                  <span>+{metro.speedIncrement} BPM / {metro.speedBars} bars</span>
-                  {metro.speedCeiling > 0 && <span style={{ color: T.coral }}>↩ loop at {metro.speedCeiling}</span>}
+              {ex.speedLadder && metro.speedBuilder && (
+                <div style={{ width: "100%", marginTop: 8, padding: "10px 14px", background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: T.radiusMd }}>
+                  <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
+                    <div style={{ flex: 1, minWidth: 120 }}>
+                      <div style={{ fontSize: 10, fontWeight: 600, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>+ BPM</div>
+                      <div style={{ display: "flex", gap: 4 }}>
+                        {[1, 2, 3, 5, 10].map(n => (
+                          <button key={n} onClick={() => metro.setSpeedIncrement(n)} style={{
+                            background: metro.speedIncrement === n ? T.gold : "transparent",
+                            border: `1px solid ${metro.speedIncrement === n ? T.gold : T.borderSoft}`,
+                            color: metro.speedIncrement === n ? "#fff" : T.textMed,
+                            borderRadius: T.radius, padding: "4px 8px", fontSize: 12, fontWeight: 600,
+                            cursor: "pointer", fontFamily: T.sans, minWidth: 32
+                          }}>{n}</button>
+                        ))}
+                      </div>
+                    </div>
+                    <div style={{ flex: 1, minWidth: 120 }}>
+                      <div style={{ fontSize: 10, fontWeight: 600, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>Every N bars</div>
+                      <div style={{ display: "flex", gap: 4 }}>
+                        {[2, 4, 8, 16].map(n => (
+                          <button key={n} onClick={() => metro.setSpeedBars(n)} style={{
+                            background: metro.speedBars === n ? T.gold : "transparent",
+                            border: `1px solid ${metro.speedBars === n ? T.gold : T.borderSoft}`,
+                            color: metro.speedBars === n ? "#fff" : T.textMed,
+                            borderRadius: T.radius, padding: "4px 8px", fontSize: 12, fontWeight: 600,
+                            cursor: "pointer", fontFamily: T.sans, minWidth: 32
+                          }}>{n}</button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{ marginTop: 10 }}>
+                    <div style={{ fontSize: 10, fontWeight: 600, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>Loop back at BPM (0 = off)</div>
+                    <div style={{ display: "flex", gap: 4, alignItems: "center", flexWrap: "wrap" }}>
+                      <button onClick={() => metro.setSpeedCeiling(0)} style={{
+                        background: metro.speedCeiling === 0 ? T.gold : "transparent",
+                        border: `1px solid ${metro.speedCeiling === 0 ? T.gold : T.borderSoft}`,
+                        color: metro.speedCeiling === 0 ? "#fff" : T.textMed,
+                        borderRadius: T.radius, padding: "4px 8px", fontSize: 12, fontWeight: 600,
+                        cursor: "pointer", fontFamily: T.sans, minWidth: 32
+                      }}>Off</button>
+                      {[80, 90, 100, 110, 120, 140, 160].map(n => (
+                        <button key={n} onClick={() => metro.setSpeedCeiling(n)} style={{
+                          background: metro.speedCeiling === n ? T.coral : "transparent",
+                          border: `1px solid ${metro.speedCeiling === n ? T.coral : T.borderSoft}`,
+                          color: metro.speedCeiling === n ? "#fff" : T.textMed,
+                          borderRadius: T.radius, padding: "4px 8px", fontSize: 12, fontWeight: 600,
+                          cursor: "pointer", fontFamily: T.sans, minWidth: 32
+                        }}>{n}</button>
+                      ))}
+                    </div>
+                    {metro.speedCeiling > 0 && (
+                      <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans, marginTop: 4 }}>
+                        ↩ Loops back to {metro.bpm} BPM after reaching {metro.speedCeiling}
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
@@ -942,107 +1022,28 @@ function DayView({ day, completed, onComplete, metro, onOpenTapMatch }) {
 // VocalCard removed — voice tab now uses VoiceView with ExerciseCard format
 
 function VowelMap() {
-  const whiteKeys = ["E3", "F3", "G3", "A3", "B3", "C4"];
-  const blackKeys = {
-    "F3": "F#3",
-    "G3": "A♭3",
-    "A3": "B♭3"
-  };
-  const noteIndex = { "E3": 0, "F3": 1, "F#3": 2, "G3": 3, "A♭3": 4, "A3": 5, "B♭3": 6, "B3": 7, "C4": 8 };
-
   const zones = [
     { range: [0, 3], label: "'ah' open", color: T.success },
     { range: [3, 4], label: "'ah'→'uh'", color: T.warm },
     { range: [4, 5], label: "'uh'→'oh'", color: T.coral },
-    { range: [5, 8], label: "'oh' (head)", color: T.plum }
+    { range: [5, 9], label: "'oh' (head)", color: T.plum }
   ];
-
-  const playNote = async (n) => {
-    if (Tone.context.state !== 'running') await Tone.context.resume();
-    const synth = new Tone.Synth({
-      oscillator: { type: 'triangle' },
-      envelope: { attack: 0.1, decay: 0.2, sustain: 1, release: 1 }
-    }).toDestination();
-    synth.volume.value = -8;
-    synth.triggerAttackRelease(n.replace('♭', 'b'), "2n");
-    setTimeout(() => synth.dispose(), 2000);
-  };
 
   return (
     <div style={{
       background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: T.radiusMd,
-      padding: 24, marginBottom: 20, boxShadow: T.sm
+      padding: "24px 24px 16px", marginBottom: 20, boxShadow: T.sm
     }}>
-      <div style={{ fontSize: 10, fontWeight: 600, color: T.textMuted, marginBottom: 20, letterSpacing: 2, fontFamily: T.sans, textTransform: "uppercase" }}>
-        Vowel Modification Map — Tap notes to play 🔊
+      <div style={{ fontSize: 10, fontWeight: 600, color: T.textMuted, marginBottom: 8, letterSpacing: 2, fontFamily: T.sans, textTransform: "uppercase", textAlign: "center" }}>
+        Vowel Modification Map (Tap to play)
       </div>
 
-      <div style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}>
-        <div style={{
-          display: "flex",
-          position: "relative",
-          height: 140,
-          borderRadius: 6,
-          boxShadow: `0 4px 12px rgba(0,0,0,0.08)`,
-          border: `1px solid ${T.border}`,
-          background: "#1a1a1a",
-          padding: 2
-        }}>
-          {whiteKeys.map((wNote, idx) => {
-            const wIdx = noteIndex[wNote];
-            const wZone = zones.find(z => wIdx >= z.range[0] && wIdx < z.range[1]);
-            const bNote = blackKeys[wNote];
-            const bIdx = bNote ? noteIndex[bNote] : -1;
-            const bZone = bNote ? zones.find(z => bIdx >= z.range[0] && bIdx < z.range[1]) : null;
-
-            return (
-              <div key={wNote} style={{ position: "relative", display: "flex" }}>
-                <div
-                  onClick={() => playNote(wNote)}
-                  style={{
-                    width: 48,
-                    height: "100%",
-                    background: wZone ? `${wZone.color}20` : T.bgCard,
-                    border: `1px solid ${T.borderSoft}`,
-                    borderRadius: "0 0 4px 4px",
-                    display: "flex", alignItems: "flex-end", justifyContent: "center",
-                    paddingBottom: 12, cursor: "pointer",
-                    boxShadow: "inset 0 -2px 4px rgba(0,0,0,0.05)",
-                    transition: "all 0.1s ease", zIndex: 1,
-                    borderBottom: `4px solid ${wZone?.color || T.borderSoft}`
-                  }}
-                  onPointerDown={e => { e.currentTarget.style.transform = "translateY(2px)"; }}
-                  onPointerUp={e => { e.currentTarget.style.transform = "translateY(0)"; }}
-                  onPointerLeave={e => { e.currentTarget.style.transform = "translateY(0)"; }}
-                >
-                  <span style={{ fontSize: 13, fontWeight: 600, color: T.textDark, fontFamily: T.sans }}>{wNote}</span>
-                </div>
-
-                {bNote && (
-                  <div
-                    onClick={() => playNote(bNote)}
-                    style={{
-                      position: "absolute",
-                      right: -16, top: 0,
-                      width: 32, height: 85,
-                      background: bZone ? bZone.color : "#222",
-                      borderRadius: "0 0 3px 3px",
-                      zIndex: 2, cursor: "pointer",
-                      boxShadow: "0 2px 4px rgba(0,0,0,0.3), inset 0 -2px 2px rgba(255,255,255,0.2)",
-                      display: "flex", alignItems: "flex-end", justifyContent: "center",
-                      paddingBottom: 8, transition: "transform 0.1s ease"
-                    }}
-                    onPointerDown={e => { e.currentTarget.style.transform = "translateY(2px)"; }}
-                    onPointerUp={e => { e.currentTarget.style.transform = "translateY(0)"; }}
-                    onPointerLeave={e => { e.currentTarget.style.transform = "translateY(0)"; }}
-                  >
-                    <span style={{ fontSize: 11, fontWeight: 700, color: "#fff", fontFamily: T.sans }}>{bNote.replace('♭', 'b')}</span>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
+      <div style={{ padding: "0 12px" }}>
+        <InlineKeyboard
+          range={["E3", "C4"]}
+          theme="dark"
+          zoneMap={zones}
+        />
       </div>
 
       <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 16, justifyContent: "center" }}>
@@ -1060,18 +1061,25 @@ function VowelMap() {
   );
 }
 
-function PianoKeysDiagram({ notes = [], label = "", range }) {
+function InlineKeyboard({
+  range = ["C3", "B4"],
+  highlightNotes = [],
+  label = "",
+  theme = "light", // "light" or "dark" (for VowelMap backward compatibility if needed)
+  zoneMap = [] // optional: [{range: [minIdx, maxIdx], color: string}]
+}) {
   const CHROMATIC = ["C", "C#", "D", "E♭", "E", "F", "F#", "G", "A♭", "A", "B♭", "B"];
   const WHITE_NAMES = ["C", "D", "E", "F", "G", "A", "B"];
   const BLACK_MAP = { "C": "C#", "D": "E♭", "F": "F#", "G": "A♭", "A": "B♭" };
 
-  // Determine range
-  const startOct = range ? parseInt(range[0].slice(-1)) : Math.min(...notes.map(n => parseInt(n.slice(-1))));
-  const endOct = range ? parseInt(range[1].slice(-1)) : Math.max(...notes.map(n => parseInt(n.slice(-1))));
+  // Parse range
+  const startOct = parseInt(range[0].slice(-1));
+  const endOct = parseInt(range[1].slice(-1));
+
   const octaves = [];
   for (let o = startOct; o <= endOct; o++) octaves.push(o);
 
-  const highlightSet = new Set(notes);
+  const highlightSet = new Set(highlightNotes);
 
   const playNote = async (n) => {
     if (Tone.context.state !== 'running') await Tone.context.resume();
@@ -1086,67 +1094,149 @@ function PianoKeysDiagram({ notes = [], label = "", range }) {
 
   const whiteKeys = [];
   const blackKeys = [];
+  let absoluteIndex = 0;
+
   octaves.forEach(oct => {
     WHITE_NAMES.forEach(w => {
       const note = `${w}${oct}`;
-      whiteKeys.push(note);
+      whiteKeys.push({ note, index: absoluteIndex });
+      absoluteIndex++;
+
       const bName = BLACK_MAP[w];
-      if (bName) blackKeys.push({ note: `${bName}${oct}`, afterWhite: whiteKeys.length - 1 });
+      if (bName) {
+        blackKeys.push({ note: `${bName}${oct}`, index: absoluteIndex, afterWhite: whiteKeys.length - 1 });
+        absoluteIndex++;
+      }
     });
   });
 
+  // Theme Colors
+  const isDark = theme === "dark";
+  const bg = isDark ? `linear-gradient(180deg, #1f1d1b 0%, #171514 100%)` : `linear-gradient(180deg, ${T.bgSoft} 0%, ${T.bgCard} 100%)`;
+  const containerBorder = isDark ? `1px solid #2a2725` : `1px solid ${T.border}`;
+  const labelColor = isDark ? T.textMuted : T.textMuted;
+  const keyBedBg = isDark ? "linear-gradient(180deg, #1a1a1a 0%, #111 100%)" : "linear-gradient(180deg, #e8e3de 0%, #dcd6d0 100%)";
+  const keyBedBorder = isDark ? `1px solid #111` : `1px solid ${T.borderSoft}`;
+
+  // White Key styling
+  const whiteGradNormal = isDark ? "linear-gradient(180deg, #333 0%, #2a2a2a 85%, #222 100%)" : "linear-gradient(180deg, #f7f5f2 0%, #f0ece8 85%, #efeae4 100%)";
+  const whiteGradActive = isDark ? `linear-gradient(180deg, ${T.goldDark} 0%, #3a2a1a 100%)` : `linear-gradient(180deg, #fcfaf8 0%, ${T.goldSoft} 100%)`;
+  const whiteTextNormal = isDark ? "rgba(255,255,255,0.4)" : T.textLight;
+
+  // Black Key styling
+  const blackGradNormal = "linear-gradient(180deg, #383330 0%, #2a2725 90%, #221f1d 100%)";
+  const blackGradActive = `linear-gradient(180deg, #4a423e 0%, #38312e 100%)`;
+  const blackBorder = `1px solid #1a1817`;
+
   return (
     <div style={{
-      background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radiusMd,
-      padding: 16, marginBottom: 16
+      background: bg, border: containerBorder, borderRadius: T.radiusMd,
+      padding: "16px 16px 20px", marginBottom: 16,
+      boxShadow: isDark ? "inset 0 1px 1px rgba(255,255,255,0.05)" : "0 4px 16px rgba(44,40,37,0.04)"
     }}>
-      {label && <div style={{ fontSize: 10, fontWeight: 600, color: T.textMuted, marginBottom: 12, letterSpacing: 2, fontFamily: T.sans, textTransform: "uppercase" }}>{label}</div>}
-      <div style={{ display: "flex", justifyContent: "center", overflowX: "auto" }}>
-        <div style={{ display: "flex", position: "relative", height: 120, borderRadius: 4, border: `1px solid ${T.border}`, background: "#1a1a1a", padding: 2 }}>
-          {whiteKeys.map((wNote, idx) => {
-            const isHighlight = highlightSet.has(wNote);
+      {label && <div style={{ fontSize: 10, fontWeight: 600, color: labelColor, marginBottom: 12, letterSpacing: 2, fontFamily: T.sans, textTransform: "uppercase", textAlign: "center" }}>{label}</div>}
+
+      <div style={{ display: "flex", justifyContent: "center", overflowX: "auto", WebkitOverflowScrolling: "touch", paddingBottom: 4 }}>
+        <div style={{
+          display: "flex", position: "relative", height: 140, borderRadius: "0 0 5px 5px",
+          border: keyBedBorder, background: keyBedBg,
+          padding: "0 2px 3px", boxShadow: "inset 0 2px 4px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.05)"
+        }}>
+          {whiteKeys.map(({ note, index }) => {
+            const isHighlight = highlightSet.has(note);
+            const isC = note.startsWith("C") && !note.startsWith("C#");
+            const zone = zoneMap.find(z => index >= z.range[0] && index < z.range[1]);
+
+            // Determine active/highlight visual state
+            const visualStateBg = isHighlight
+              ? whiteGradActive
+              : (zone ? `${zone.color}20` : whiteGradNormal);
+
+            const bottomBorder = isHighlight
+              ? `3px solid ${T.gold}`
+              : (zone ? `4px solid ${zone.color}` : (isDark ? `1px solid #111` : `1px solid #dcd6d0`));
+
             return (
-              <div key={wNote} style={{ position: "relative", display: "flex" }}>
-                <div onClick={() => playNote(wNote)} style={{
-                  width: 36, height: "100%",
-                  background: isHighlight ? `${T.gold}30` : T.bgCard,
-                  border: `1px solid ${T.borderSoft}`, borderRadius: "0 0 3px 3px",
+              <div key={note} style={{ position: "relative", display: "flex" }}>
+                <div onClick={() => playNote(note)} style={{
+                  width: 44, height: "100%",
+                  background: visualStateBg,
+                  borderLeft: isC && !isDark ? `2px solid #e8e3de` : `1px solid ${isDark ? '#222' : '#efeae4'}`,
+                  borderRight: `1px solid ${isDark ? '#222' : '#efeae4'}`,
+                  borderBottom: bottomBorder,
+                  borderRadius: "0 0 4px 4px",
                   display: "flex", alignItems: "flex-end", justifyContent: "center",
-                  paddingBottom: 8, cursor: "pointer", zIndex: 1,
-                  borderBottom: isHighlight ? `3px solid ${T.gold}` : `1px solid ${T.borderSoft}`,
-                  transition: "all 0.1s ease"
+                  paddingBottom: 10, cursor: "pointer", zIndex: 1,
+                  boxShadow: isHighlight
+                    ? `inset 0 -6px 16px ${T.gold}15, 0 1px 3px rgba(0,0,0,0.05)`
+                    : "inset 0 -2px 6px rgba(0,0,0,0.02), 0 1px 2px rgba(0,0,0,0.04)",
+                  transition: "transform 0.1s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.1s, background 0.2s"
                 }}
-                  onPointerDown={e => { e.currentTarget.style.transform = "translateY(2px)"; }}
-                  onPointerUp={e => { e.currentTarget.style.transform = "translateY(0)"; }}
-                  onPointerLeave={e => { e.currentTarget.style.transform = "translateY(0)"; }}
+                  onPointerDown={e => { e.currentTarget.style.transform = "translateY(2px)"; e.currentTarget.style.background = whiteGradActive; }}
+                  onPointerUp={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.background = visualStateBg; }}
+                  onPointerLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.background = visualStateBg; }}
                 >
-                  <span style={{ fontSize: 10, fontWeight: isHighlight ? 700 : 500, color: isHighlight ? T.goldDark : T.textLight, fontFamily: T.sans }}>{wNote}</span>
+                  <span style={{
+                    fontSize: 10, fontWeight: isHighlight ? 700 : 600,
+                    color: isHighlight ? T.goldDark : whiteTextNormal,
+                    fontFamily: T.sans, letterSpacing: 0.5
+                  }}>{note.replace('♭', 'b')}</span>
                 </div>
               </div>
             );
           })}
-          {blackKeys.map(({ note: bNote, afterWhite }) => {
-            const isHighlight = highlightSet.has(bNote);
-            const left = (afterWhite + 1) * 36 - 12;
+          {blackKeys.map(({ note, index, afterWhite }) => {
+            const isHighlight = highlightSet.has(note);
+            const left = (afterWhite + 1) * 44 - 15;
+            const zone = zoneMap.find(z => index >= z.range[0] && index < z.range[1]);
+
             return (
-              <div key={bNote} onClick={() => playNote(bNote)} style={{
-                position: "absolute", left, top: 0, width: 24, height: 72,
-                background: isHighlight ? T.gold : "#222", borderRadius: "0 0 3px 3px",
+              <div key={note} onClick={() => playNote(note)} style={{
+                position: "absolute", left, top: 0, width: 30, height: 85,
+                background: isHighlight ? blackGradActive : (zone ? zone.color : blackGradNormal),
+                border: blackBorder,
+                borderTop: "none",
+                borderRadius: "0 0 4px 4px",
                 zIndex: 2, cursor: "pointer",
-                boxShadow: "0 2px 4px rgba(0,0,0,0.3)", display: "flex", alignItems: "flex-end", justifyContent: "center",
-                paddingBottom: 6, transition: "transform 0.1s ease"
+                boxShadow: isHighlight
+                  ? `0 4px 8px rgba(0,0,0,0.2), inset 0 -2px 4px rgba(255,255,255,0.08), 0 0 12px ${T.gold}20`
+                  : "0 3px 6px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06), inset 0 -1px 2px rgba(0,0,0,0.4)",
+                display: "flex", alignItems: "flex-end", justifyContent: "center",
+                paddingBottom: 8, transition: "transform 0.1s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s"
               }}
-                onPointerDown={e => { e.currentTarget.style.transform = "translateY(2px)"; }}
-                onPointerUp={e => { e.currentTarget.style.transform = "translateY(0)"; }}
-                onPointerLeave={e => { e.currentTarget.style.transform = "translateY(0)"; }}
+                onPointerDown={e => { e.currentTarget.style.transform = "translateY(2px)"; e.currentTarget.style.background = blackGradActive; }}
+                onPointerUp={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.background = isHighlight ? blackGradActive : (zone ? zone.color : blackGradNormal); }}
+                onPointerLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.background = isHighlight ? blackGradActive : (zone ? zone.color : blackGradNormal); }}
               >
-                <span style={{ fontSize: 9, fontWeight: 700, color: "#fff", fontFamily: T.sans }}>{bNote}</span>
+                <span style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.7)", fontFamily: T.sans, letterSpacing: 0.5 }}>{note.replace('♭', 'b')}</span>
               </div>
             );
           })}
         </div>
       </div>
     </div>
+  );
+}
+
+function PianoKeysDiagram({ notes = [], label = "", range }) {
+  // Use the new shared InlineKeyboard component
+  let actualRange = range;
+
+  if (!actualRange && notes.length > 0) {
+    const startOct = Math.min(...notes.map(n => parseInt(n.slice(-1))));
+    const endOct = Math.max(...notes.map(n => parseInt(n.slice(-1))));
+    actualRange = [`C${startOct}`, `B${endOct}`];
+  } else if (!actualRange) {
+    actualRange = ["C3", "B4"]; // fallback
+  }
+
+  return (
+    <InlineKeyboard
+      range={actualRange}
+      highlightNotes={notes}
+      label={label}
+      theme="light"
+    />
   );
 }
 

@@ -305,6 +305,7 @@ export const DAYS = [
       {
         id: "d4e3", time: 15, title: "Sol Del Sur — Strum + Lead", type: "guitar",
         tabs: "soldelsur",
+        tracks: [{ name: "Sol Del Sur — Reference", src: "/sol-del-sur.mp3" }],
         recorder: true,
         what: "Work the strum pattern. Sarah wants a video of this one.",
         setup: "Electric guitar. YouTube: Sol Del Sur.",

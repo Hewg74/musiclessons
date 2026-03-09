@@ -4,6 +4,153 @@ import * as Tone from 'tone';
 // We'll accept the theme object `T` from App.jsx via props or just hardcode some shared colors for now.
 // For simplicity, we can just pass the theme object to these components.
 
+// --- Custom Audio Player Component ---
+function MiniAudioPlayer({ src, theme: T, title }) {
+  const audioRef = useRef(null);
+  const progressRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [progress, setProgress] = useState(0); // 0 to 1
+  const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+
+  const togglePlay = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        // Stop any other `<audio>` elements playing by dispatching an event that LivePitchDetector also listens to
+        document.querySelectorAll('audio').forEach(a => {
+          if (a !== audioRef.current && !a.paused) a.pause();
+        });
+        audioRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const onTimeUpdate = () => {
+    if (audioRef.current) {
+      const current = audioRef.current.currentTime;
+      const dur = audioRef.current.duration || 0;
+      setCurrentTime(current);
+      if (dur > 0) setProgress(current / dur);
+    }
+  };
+
+  const onLoadedMetadata = () => {
+    if (audioRef.current) {
+      setDuration(audioRef.current.duration);
+    }
+  };
+
+  const handleScrub = (e) => {
+    if (progressRef.current && audioRef.current && duration > 0) {
+      const rect = progressRef.current.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const newProgress = Math.max(0, Math.min(1, clickX / rect.width));
+      audioRef.current.currentTime = newProgress * duration;
+      setProgress(newProgress);
+    }
+  };
+
+  const formatTime = (time) => {
+    if (!time || isNaN(time)) return "0:00";
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  };
+
+  return (
+    <div style={{
+      background: T.bgCard, border: `1px solid ${T.border}`,
+      borderRadius: T.radiusMd, padding: "14px 16px", marginBottom: 12,
+      display: "flex", alignItems: "center", gap: 16,
+      boxShadow: "0 2px 8px rgba(44,40,37,0.03)"
+    }}>
+      <audio
+        ref={audioRef}
+        src={src}
+        onTimeUpdate={onTimeUpdate}
+        onLoadedMetadata={onLoadedMetadata}
+        onEnded={() => setIsPlaying(false)}
+        preload="metadata"
+      />
+
+      <button onClick={togglePlay} style={{
+        background: "transparent", border: "none", cursor: "pointer",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        width: 36, height: 36, borderRadius: "50%",
+        boxShadow: `0 0 0 1px ${T.border}`,
+        transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+        color: T.textDark
+      }}
+        onPointerDown={e => e.currentTarget.style.transform = "scale(0.92)"}
+        onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
+        onPointerLeave={e => e.currentTarget.style.transform = "scale(1)"}
+      >
+        {isPlaying ? (
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <rect x="6" y="4" width="4" height="16" />
+            <rect x="14" y="4" width="4" height="16" />
+          </svg>
+        ) : (
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style={{ marginLeft: 3 }}>
+            <polygon points="5,3 19,12 5,21" />
+          </svg>
+        )}
+      </button>
+
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
+        {title && <div style={{ fontSize: 13, fontWeight: 600, color: T.textDark, fontFamily: T.sans }}>{title}</div>}
+
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <span style={{ fontSize: 10, color: T.textLight, fontFamily: T.sans, fontWeight: 500, fontVariantNumeric: "tabular-nums" }}>
+            {formatTime(currentTime)}
+          </span>
+
+          {/* Thick hit area wrapper for easy scrubbing */}
+          <div
+            ref={progressRef}
+            onPointerDown={(e) => {
+              handleScrub(e);
+              const onMove = (moveEvent) => handleScrub(moveEvent);
+              const onUp = () => {
+                window.removeEventListener('pointermove', onMove);
+                window.removeEventListener('pointerup', onUp);
+              };
+              window.addEventListener('pointermove', onMove);
+              window.addEventListener('pointerup', onUp);
+            }}
+            style={{
+              flex: 1, height: 24, display: "flex", alignItems: "center", cursor: "pointer"
+            }}
+          >
+            {/* Visual thin track */}
+            <div style={{ width: "100%", height: 3, background: T.border, borderRadius: 2, position: "relative" }}>
+              {/* Visual progress fill */}
+              <div style={{
+                position: "absolute", left: 0, top: 0, bottom: 0,
+                width: `${progress * 100}%`, background: T.gold, borderRadius: 2
+              }} />
+              {/* Playhead dot */}
+              <div style={{
+                position: "absolute", top: "50%", left: `${progress * 100}%`,
+                width: 10, height: 10, borderRadius: "50%", background: T.gold,
+                transform: "translate(-50%, -50%)",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.15)"
+              }} />
+            </div>
+          </div>
+
+          <span style={{ fontSize: 10, color: T.textLight, fontFamily: T.sans, fontWeight: 500, fontVariantNumeric: "tabular-nums" }}>
+            {formatTime(duration)}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // --- 1. Audio Player ---
 export function AudioPlayer({ theme: T }) {
   const tracks = [
@@ -29,10 +176,7 @@ export function AudioPlayer({ theme: T }) {
         Place these MP3 files in the <code>public/</code> folder. The PWA will cache them automatically for offline use.
       </p>
       {tracks.map(t => (
-        <div key={t.id} style={{ background: T.bgCard, padding: 16, border: `1px solid ${T.border}`, borderRadius: T.radiusMd, marginBottom: 12 }}>
-          <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 8 }}>{t.name}</div>
-          <audio controls src={t.src} style={{ width: '100%', height: 40 }} />
-        </div>
+        <MiniAudioPlayer key={t.id} theme={T} src={t.src} title={t.name} />
       ))}
     </div>
   );
@@ -350,13 +494,17 @@ export function AudioRecorder({ theme: T, inline = false }) {
 
         {isRecording && <span style={{ color: T.coral, fontSize: inline ? 12 : 14, fontWeight: 600 }}>Recording...</span>}
 
-        {audioURL && inline && <audio controls src={audioURL} style={{ flex: 1, height: 32 }} />}
+        {audioURL && inline && (
+          <div style={{ flex: 1 }}>
+            <MiniAudioPlayer theme={T} src={audioURL} />
+          </div>
+        )}
       </div>
 
       {audioURL && !inline && (
         <div style={{ marginTop: 20 }}>
           <div style={{ fontSize: 11, fontWeight: 700, color: T.textMuted, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1.5, fontFamily: T.sans }}>Latest Take</div>
-          <audio controls src={audioURL} style={{ width: '100%', height: 40 }} />
+          <MiniAudioPlayer theme={T} src={audioURL} />
         </div>
       )}
     </div>
@@ -536,6 +684,7 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
   const emaFreqRef = useRef(null);
   const lastNoteUpdateRef = useRef(Date.now());
   const stableMidiRef = useRef(null);
+  const freqBufRef = useRef([]);
 
   // Auto-pause when any <audio> element plays
   useEffect(() => {
@@ -642,12 +791,21 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
       const freq = autoCorrelate(buffer, audioContextRef.current.sampleRate);
 
       if (freq) {
-        // 1. Exponential Moving Average (EMA) on Frequency
-        const alpha = 0.08; // Even heavier smoothing (lower = smoother but more lag)
-        if (!emaFreqRef.current || Math.abs(emaFreqRef.current - freq) > 100) {
-          emaFreqRef.current = freq; // Immediate jump if too far off (prevents long slides between notes)
+        // 1. Median filter to reject outliers (critical for noisy mobile mics)
+        freqBufRef.current.push(freq);
+        if (freqBufRef.current.length > 5) freqBufRef.current.shift();
+        const sorted = [...freqBufRef.current].sort((a, b) => a - b);
+        const medianFreq = sorted[Math.floor(sorted.length / 2)];
+
+        // 2. Exponential Moving Average (EMA) on median-filtered frequency
+        const alpha = 0.12;
+        const semitoneJump = emaFreqRef.current
+          ? Math.abs(12 * Math.log2(medianFreq / emaFreqRef.current))
+          : Infinity;
+        if (!emaFreqRef.current || semitoneJump > 5) {
+          emaFreqRef.current = medianFreq; // Immediate jump only if >5 semitones off
         } else {
-          emaFreqRef.current = alpha * freq + (1 - alpha) * emaFreqRef.current;
+          emaFreqRef.current = alpha * medianFreq + (1 - alpha) * emaFreqRef.current;
         }
 
         const smoothedFreq = emaFreqRef.current;
@@ -655,10 +813,10 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
         const cents = getCentsOffset(smoothedFreq, midi);
         const noteStr = midiToNoteString(midi);
 
-        // 2. Hysteresis for Note Display (don't flicker between notes quickly)
+        // 3. Hysteresis for Note Display (don't flicker between notes quickly)
         const now = Date.now();
         if (midi !== stableMidiRef.current) {
-          if (now - lastNoteUpdateRef.current > 120) { // Require note to be stable for ~120ms
+          if (now - lastNoteUpdateRef.current > 200) { // Require note to be stable for ~200ms
             stableMidiRef.current = midi;
             lastNoteUpdateRef.current = now;
           }
@@ -725,7 +883,8 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
         // Pitch contour: record data point
         if (pitchContour) {
           const now = Date.now();
-          contourRef.current.push({ t: now, midi: displayMidi });
+          const midiFloat = 69 + 12 * Math.log2(smoothedFreq / 440);
+          contourRef.current.push({ t: now, midi: midiFloat });
           // Keep last 10 seconds
           const cutoff = now - 10000;
           contourRef.current = contourRef.current.filter(p => p.t > cutoff);
@@ -773,37 +932,52 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
 
   if (!isActive) {
     return (
-      <button
-        onClick={startDetection}
-        className="interactive-btn"
-        style={{
-          background: "transparent", border: `1px solid ${T.border}`,
-          color: T.textDark, padding: inline ? "8px 16px" : "12px 24px",
-          borderRadius: 30, cursor: "pointer", fontWeight: 600,
-          fontFamily: T.sans, display: "inline-flex", alignItems: "center", gap: 8,
-          transition: "all 0.2s", fontSize: inline ? 13 : 14,
-          boxShadow: T.sm
-        }}
-      >
-        <span style={{ fontSize: 16 }}>🎤</span> Live Pitch
-      </button>
+      <div style={{ display: "flex", justifyContent: "center", width: "100%", marginTop: inline ? 12 : 0, marginBottom: 16 }}>
+        <button
+          onClick={startDetection}
+          className="interactive-btn"
+          style={{
+            background: `linear-gradient(135deg, #fff 0%, ${T.bgSoft} 100%)`,
+            border: `1px solid ${T.border}`,
+            color: T.textDark, padding: inline ? "8px 20px" : "12px 28px",
+            borderRadius: 40, cursor: "pointer", fontWeight: 600,
+            fontFamily: T.sans, display: "inline-flex", alignItems: "center", gap: 10,
+            transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)", fontSize: inline ? 13 : 14,
+            boxShadow: "0 4px 12px rgba(44,40,37,0.04), inset 0 -2px 4px rgba(0,0,0,0.02)"
+          }}
+          onPointerDown={e => { e.currentTarget.style.transform = "translateY(2px)"; }}
+          onPointerUp={e => { e.currentTarget.style.transform = "translateY(0)"; }}
+          onPointerLeave={e => { e.currentTarget.style.transform = "translateY(0)"; }}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7 }}>
+            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+            <line x1="12" x2="12" y1="19" y2="22" />
+          </svg>
+          Live Pitch
+        </button>
+      </div>
     );
   }
 
   return (
     <div style={{
-      background: bgTint, border: `1px solid ${borderTint}`,
-      borderRadius: T.radius, padding: "16px",
-      marginTop: inline ? 12 : 0, marginBottom: 16, transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
-      animation: "fade-in-up 0.3s ease-out forwards"
+      background: `linear-gradient(135deg, ${bgTint} 0%, ${T.bgCard} 100%)`,
+      border: `1px solid ${borderTint}`,
+      borderRadius: T.radiusMd, padding: "20px",
+      marginTop: inline ? 12 : 0, marginBottom: 16,
+      transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+      animation: "fade-in-up 0.3s ease-out forwards",
+      boxShadow: pitchState.active && absCents <= 10
+        ? `0 4px 20px ${T.success}18, inset 0 1px 0 rgba(255,255,255,0.5)`
+        : `0 2px 12px rgba(44,40,37,0.05), inset 0 1px 0 rgba(255,255,255,0.5)`
     }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <div style={{
             width: 8, height: 8, borderRadius: "50%",
             background: pitchState.active ? T.coral : T.border,
             boxShadow: pitchState.active ? `0 0 8px ${T.coral}80` : 'none',
-            // Simple opacity pulse to avoid clashing with global pulse-ring
             animation: pitchState.active ? "pulse-ring 2s infinite" : "none"
           }} />
           <span style={{ fontSize: 11, fontWeight: 700, color: T.textMuted, letterSpacing: 1.5, fontFamily: T.sans, textTransform: "uppercase" }}>
@@ -814,115 +988,178 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
         <button
           onClick={stopDetection}
           style={{
-            background: "transparent", border: "none", color: T.textMuted,
-            fontSize: 12, cursor: "pointer", fontWeight: 600, fontFamily: T.sans,
-            padding: "4px 8px", borderRadius: T.radius
+            background: "transparent", border: `1px solid ${T.borderSoft}`, color: T.textMuted,
+            fontSize: 11, cursor: "pointer", fontWeight: 600, fontFamily: T.sans,
+            padding: "4px 10px", borderRadius: 20, letterSpacing: 0.5,
+            transition: "all 0.15s ease"
           }}
         >
-          ✕ STOP
+          Stop
         </button>
       </div>
 
-      <div style={{ textAlign: "center", marginBottom: 12 }}>
+      {/* Note display with circular badge */}
+      <div style={{ textAlign: "center", marginBottom: 16 }}>
         <div style={{
-          fontSize: 48, fontWeight: 400, fontFamily: T.serif,
-          color: pitchState.active ? T.textDark : T.textMuted,
-          lineHeight: 1.1, minHeight: 52, transition: "color 0.2s"
+          display: "inline-flex", alignItems: "center", justifyContent: "center",
+          width: 96, height: 96, borderRadius: "50%",
+          background: pitchState.active
+            ? `linear-gradient(135deg, ${statusColor}08 0%, ${statusColor}15 100%)`
+            : T.bgSoft,
+          border: `2px solid ${pitchState.active ? statusColor + '30' : T.borderSoft}`,
+          transition: "all 0.3s ease",
+          boxShadow: pitchState.active && absCents <= 10
+            ? `0 0 24px ${T.success}20, inset 0 0 12px ${T.success}08`
+            : "none"
         }}>
-          {pitchState.note}
+          <div style={{
+            fontSize: 40, fontWeight: 400, fontFamily: T.serif,
+            color: pitchState.active ? T.textDark : T.textMuted,
+            lineHeight: 1, transition: "color 0.2s"
+          }}>
+            {pitchState.note}
+          </div>
         </div>
       </div>
 
       {/* Cents Gauge */}
-      <div style={{ position: "relative", width: "100%", height: 32, marginBottom: 8 }}>
+      <div style={{ position: "relative", width: "100%", height: 36, marginBottom: 6, padding: "0 4px" }}>
         {/* Labels */}
-        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: T.textMuted, fontFamily: T.sans, marginBottom: 4 }}>
-          <span>♭ Flat</span>
-          <span style={{ color: absCents <= 10 && pitchState.active ? T.success : T.textMuted, fontWeight: 600 }}>0</span>
-          <span>Sharp ♯</span>
+        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: T.textMuted, fontFamily: T.sans, marginBottom: 6 }}>
+          <span style={{ letterSpacing: 0.5 }}>♭ Flat</span>
+          <span style={{
+            color: absCents <= 10 && pitchState.active ? T.success : T.textMuted,
+            fontWeight: 700, fontSize: 11,
+            transition: "color 0.3s"
+          }}>0</span>
+          <span style={{ letterSpacing: 0.5 }}>Sharp ♯</span>
         </div>
 
-        {/* Track */}
-        <div style={{ height: 4, background: T.border, borderRadius: 2, position: "relative", top: 4, overflow: "visible" }}>
-          {/* Center mark */}
-          <div style={{ position: "absolute", left: "50%", top: -4, width: 2, height: 12, background: T.textMuted, transform: "translateX(-50%)", borderRadius: 1 }} />
+        {/* Track with tick marks */}
+        <div style={{ height: 6, background: `linear-gradient(90deg, ${T.coral}20 0%, ${T.success}20 45%, ${T.success}30 50%, ${T.success}20 55%, ${T.coral}20 100%)`, borderRadius: 3, position: "relative", top: 2, overflow: "visible" }}>
+          {/* Tick marks at 25% intervals */}
+          {[0, 25, 50, 75, 100].map(pct => (
+            <div key={pct} style={{
+              position: "absolute", left: `${pct}%`, top: pct === 50 ? -5 : -3,
+              width: pct === 50 ? 2 : 1,
+              height: pct === 50 ? 16 : 12,
+              background: pct === 50 ? T.textMed : T.textMuted + '60',
+              transform: "translateX(-50%)", borderRadius: 1
+            }} />
+          ))}
 
+          {/* Gauge dot */}
           <div style={{
             position: "absolute",
-            top: -6,
+            top: -8,
             left: dotPosition,
-            width: 16, height: 16, borderRadius: "50%",
+            width: 20, height: 20, borderRadius: "50%",
             background: pitchState.active ? statusColor : T.bgCard,
-            border: pitchState.active ? "none" : `2px solid ${T.textMuted}`,
+            border: pitchState.active ? `2px solid ${T.bgCard}` : `2px solid ${T.textMuted}`,
             transform: "translateX(-50%)",
-            transition: "left 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.4s ease, opacity 0.3s ease",
+            transition: "left 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.4s ease, opacity 0.3s ease, box-shadow 0.4s ease",
             opacity: pitchState.active ? 1 : 0,
-            zIndex: 2
+            zIndex: 2,
+            boxShadow: pitchState.active && absCents <= 10
+              ? `0 0 12px ${T.success}50, 0 2px 4px rgba(0,0,0,0.12)`
+              : "0 2px 4px rgba(0,0,0,0.12)"
           }} />
         </div>
       </div>
 
       <div style={{
-        textAlign: "center", fontSize: 14, color: pitchState.active ? statusColor : T.textMuted,
-        fontFamily: T.sans, fontWeight: 700, minHeight: 20, transition: "color 0.3s"
+        textAlign: "center", fontSize: 13, color: pitchState.active ? statusColor : T.textMuted,
+        fontFamily: T.sans, fontWeight: 700, minHeight: 20, transition: "color 0.3s",
+        letterSpacing: 0.5
       }}>
         {pitchState.active ? `${cents > 0 ? '+' : ''}${cents} ¢` : ''}
       </div>
 
-      {/* Reference Feedback (if applicable) */}
+      {/* Reference Feedback */}
       {pitchState.closestRef && pitchState.active && (
         <div style={{
-          marginTop: 16, paddingTop: 16, borderTop: `1px solid ${T.border}`,
+          marginTop: 14, padding: "10px 14px", borderRadius: T.radius,
+          background: statusColor + '08', border: `1px solid ${statusColor}18`,
           display: "flex", justifyContent: "space-between", alignItems: "center",
-          fontSize: 13, fontFamily: T.sans
+          fontSize: 13, fontFamily: T.sans, transition: "all 0.3s ease"
         }}>
-          <span style={{ color: T.textMuted }}>Target: <span style={{ color: T.textDark, fontWeight: 700 }}>{pitchState.closestRef}</span></span>
+          <span style={{ color: T.textMed }}>Target: <span style={{ color: T.textDark, fontWeight: 700 }}>{pitchState.closestRef}</span></span>
           <span style={{ color: statusColor, fontWeight: 600 }}>{pitchState.refFeedback}</span>
         </div>
       )}
 
       {/* Pitch Contour Graph */}
       {pitchContour && contourData.length > 1 && (() => {
-        const W = 300, H = 80, PAD = 4;
-        const midiVals = contourData.map(p => p.midi);
-        const minM = Math.min(...midiVals) - 2;
-        const maxM = Math.max(...midiVals) + 2;
-        const rangeM = maxM - minM || 1;
-        const now = Date.now();
-        const points = contourData.map(p => {
-          const x = PAD + ((p.t - (now - 10000)) / 10000) * (W - PAD * 2);
-          const y = H - PAD - ((p.midi - minM) / rangeM) * (H - PAD * 2);
-          return `${x},${y}`;
-        }).join(" ");
-
-        // Reference pitch lines
+        const W = 300, H = 120, PAD = 6;
         const refNotesObj = [
           { n: "C", m: 0 }, { n: "C#", m: 1 }, { n: "D", m: 2 }, { n: "E♭", m: 3 }, { n: "E", m: 4 }, { n: "F", m: 5 },
           { n: "F#", m: 6 }, { n: "G", m: 7 }, { n: "A♭", m: 8 }, { n: "A", m: 9 }, { n: "B♭", m: 10 }, { n: "B", m: 11 }
         ];
-        const refLines = referencePitches.map(ref => {
+        // Parse reference pitches to MIDI values
+        const refMidis = referencePitches.map(ref => {
           const match = ref.match(/([A-G][b♭#]?)([0-9])/);
           if (!match) return null;
           const pClass = match[1].replace('b', '♭');
           const oct = parseInt(match[2]);
           const pobj = refNotesObj.find(x => x.n === pClass);
           if (!pobj) return null;
-          const rMidi = (oct + 1) * 12 + pobj.m;
-          if (rMidi < minM || rMidi > maxM) return null;
-          const y = H - PAD - ((rMidi - minM) / rangeM) * (H - PAD * 2);
-          return { y, label: ref };
+          return { midi: (oct + 1) * 12 + pobj.m, label: ref };
         }).filter(Boolean);
 
+        const midiVals = contourData.map(p => p.midi);
+        const refMidiNums = refMidis.map(r => r.midi);
+        const allMidis = [...midiVals, ...refMidiNums];
+        const minM = Math.min(...allMidis) - 2;
+        const maxM = Math.max(...allMidis) + 2;
+        const rangeM = maxM - minM || 1;
+        const now = Date.now();
+        const toY = (m) => H - PAD - ((m - minM) / rangeM) * (H - PAD * 2);
+        const points = contourData.map(p => {
+          const x = PAD + ((p.t - (now - 10000)) / 10000) * (W - PAD * 2);
+          return `${x},${toY(p.midi)}`;
+        }).join(" ");
+
+        // Semitone grid lines
+        const gridLines = [];
+        for (let m = Math.ceil(minM); m <= Math.floor(maxM); m++) gridLines.push(m);
+
         return (
-          <div style={{ marginTop: 16, paddingTop: 12, borderTop: `1px solid ${T.border}` }}>
-            <div style={{ fontSize: 10, fontWeight: 600, color: T.textMuted, letterSpacing: 1.5, fontFamily: T.sans, textTransform: "uppercase", marginBottom: 6 }}>Pitch Contour (10s)</div>
-            <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", height: 80, background: T.bgSoft, borderRadius: 4, border: `1px solid ${T.border}` }}>
-              {refLines.map((rl, i) => (
+          <div style={{ marginTop: 16, paddingTop: 14 }}>
+            <div style={{ fontSize: 10, fontWeight: 600, color: T.textMuted, letterSpacing: 1.5, fontFamily: T.sans, textTransform: "uppercase", marginBottom: 8 }}>Pitch Contour (10s)</div>
+            <svg viewBox={`0 0 ${W} ${H}`} style={{
+              width: "100%", height: 130,
+              background: `linear-gradient(180deg, ${T.bgSoft} 0%, ${T.bgCard} 100%)`,
+              borderRadius: 6, border: `1px solid ${T.border}`,
+              boxShadow: "inset 0 1px 3px rgba(44,40,37,0.04)"
+            }}>
+              {/* Semitone grid */}
+              {gridLines.map(m => {
+                const noteName = ["C", "C#", "D", "E♭", "E", "F", "F#", "G", "A♭", "A", "B♭", "B"][m % 12];
+                const oct = Math.floor(m / 12) - 1;
+                return (
+                  <g key={`g${m}`}>
+                    <line x1={PAD} y1={toY(m)} x2={W - PAD} y2={toY(m)}
+                      stroke={T.border} strokeWidth="0.3" />
+                    <text x={PAD + 2} y={toY(m) - 2} fontSize="6" fill={T.textMuted + "80"} fontFamily={T.sans}>
+                      {noteName}{oct}
+                    </text>
+                  </g>
+                );
+              })}
+              {/* Target zones & reference lines */}
+              {refMidis.map((rl, i) => (
                 <g key={i}>
-                  <line x1={PAD} y1={rl.y} x2={W - PAD} y2={rl.y} stroke={T.gold + "60"} strokeWidth="0.5" strokeDasharray="4,3" />
-                  <text x={W - PAD - 2} y={rl.y - 3} textAnchor="end" fontSize="7" fill={T.gold} fontFamily={T.sans}>{rl.label}</text>
+                  <rect x={PAD} y={toY(rl.midi + 0.3)} width={W - PAD * 2}
+                    height={toY(rl.midi - 0.3) - toY(rl.midi + 0.3)}
+                    fill={T.success + "15"} rx="2" />
+                  <line x1={PAD} y1={toY(rl.midi)} x2={W - PAD} y2={toY(rl.midi)}
+                    stroke={T.gold} strokeWidth="0.8" strokeDasharray="6,3" opacity="0.7" />
+                  <text x={W - PAD - 3} y={toY(rl.midi) - 4} textAnchor="end"
+                    fontSize="9" fill={T.gold} fontFamily={T.sans} fontWeight="700">{rl.label}</text>
                 </g>
               ))}
+              {/* Pitch line with subtle glow */}
+              <polyline points={points} fill="none" stroke={statusColor + "30"} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
               <polyline points={points} fill="none" stroke={statusColor} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
