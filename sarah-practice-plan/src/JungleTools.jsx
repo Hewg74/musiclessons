@@ -51,13 +51,20 @@ const TimeInput = ({ time, onChange, T }) => {
 };
 
 // --- Custom Audio Player Component ---
-function MiniAudioPlayer({ src, theme: T, title }) {
+function MiniAudioPlayer({ src, theme: T, title, playbackRate = 1 }) {
   const audioRef = useRef(null);
   const progressRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0); // 0 to 1
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
+
+  // Apply playback rate globally when it changes
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.playbackRate = playbackRate;
+    }
+  }, [playbackRate]);
 
   // Looping state
   const [isLooping, setIsLooping] = useState(false);

@@ -697,20 +697,19 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
           {tracks.length > 0 && (
             <div style={{ marginBottom: 16 }}>
               {tracks.map((t, i) => (
-                <div key={i} style={{ marginBottom: 8, background: T.bgSoft, border: `1px solid ${T.border}`, padding: 12, borderRadius: T.radiusMd }}>
+                <div key={i} style={{ marginBottom: 16 }}>
                   <div style={{ fontSize: 11, fontWeight: 700, color: T.textDark, letterSpacing: 1.5, marginBottom: 8, fontFamily: T.sans, textTransform: "uppercase" }}>{t.name}</div>
-                  <audio controls src={t.src} ref={el => { audioRefs.current[i] = el; }} style={{ width: "100%", height: 36, borderRadius: T.radius }} />
-                  <div style={{ display: "flex", gap: 4, marginTop: 6 }}>
+                  <MiniAudioPlayer theme={T} src={t.src} playbackRate={trackRates[i] || 1} />
+                  <div style={{ display: "flex", gap: 6, marginTop: 4 }}>
                     {[0.75, 1, 1.25].map(rate => (
                       <button key={rate} onClick={() => {
-                        if (audioRefs.current[i]) audioRefs.current[i].playbackRate = rate;
                         setTrackRates(r => ({ ...r, [i]: rate }));
                       }} style={{
                         background: (trackRates[i] || 1) === rate ? T.gold : "transparent",
                         color: (trackRates[i] || 1) === rate ? "#fff" : T.textMed,
                         border: `1px solid ${(trackRates[i] || 1) === rate ? T.gold : T.borderSoft}`,
-                        padding: "3px 8px", fontSize: 10, fontWeight: 600, cursor: "pointer",
-                        borderRadius: T.radius, fontFamily: T.sans
+                        padding: "3px 10px", fontSize: 10, fontWeight: 700, cursor: "pointer",
+                        borderRadius: T.radius, fontFamily: T.sans, transition: "all 0.2s"
                       }}>{rate === 1 ? "1x" : `${rate}x`}</button>
                     ))}
                   </div>
