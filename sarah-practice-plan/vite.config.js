@@ -8,23 +8,23 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'apple-icon-180.png', 'vite.svg'],
+      includeAssets: ['icon-jungle.png'],
       manifest: {
         name: 'Sarah Practice Plan',
         short_name: 'Practice Plan',
         description: 'A music practice planning app',
-        theme_color: '#ffffff',
-        background_color: '#ffffff',
+        theme_color: '#2c2825',
+        background_color: '#2c2825',
         display: 'standalone',
         icons: [
           {
-            src: 'manifest-icon-192.maskable.png',
+            src: 'icon-jungle.png',
             sizes: '192x192',
             type: 'image/png',
             purpose: 'any maskable'
           },
           {
-            src: 'manifest-icon-512.maskable.png',
+            src: 'icon-jungle.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any maskable'

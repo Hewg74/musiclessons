@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#352f2b"/>
+      <stop offset="100%" stop-color="#1e1b19"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#e8c49a"/>
+      <stop offset="45%" stop-color="#d4a373"/>
+      <stop offset="100%" stop-color="#b58454"/>
+    </linearGradient>
+    <linearGradient id="goldShine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f0d8b8"/>
+      <stop offset="100%" stop-color="#d4a373"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="innerShadow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feOffset dx="0" dy="2" result="offset"/>
+      <feComposite in="SourceGraphic" in2="offset" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Rounded square background -->
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+
+  <!-- Subtle ring -->
+  <circle cx="256" cy="256" r="190" fill="none" stroke="#d4a373" stroke-width="1.5" opacity="0.15"/>
+
+  <!-- Guitar pick shape - centered, the main motif -->
+  <path d="
+    M256 88
+    C310 88 370 118 392 178
+    C414 238 390 310 356 362
+    C322 414 280 440 256 452
+    C232 440 190 414 156 362
+    C122 310 98 238 120 178
+    C142 118 202 88 256 88Z
+  " fill="url(#gold)" filter="url(#glow)" opacity="0.95"/>
+
+  <!-- Pick highlight (top shine) -->
+  <path d="
+    M256 100
+    C304 100 356 126 376 178
+    C386 208 376 240 356 270
+    C320 230 290 210 256 200
+    C222 210 192 230 156 270
+    C136 240 126 208 136 178
+    C156 126 208 100 256 100Z
+  " fill="white" opacity="0.08"/>
+
+  <!-- Eighth note - clean and centered -->
+  <g filter="url(#innerShadow)">
+    <!-- Note head (tilted ellipse) -->
+    <ellipse cx="232" cy="312" rx="38" ry="28" transform="rotate(-25, 232, 312)" fill="url(#bg)"/>
+    <!-- Stem -->
+    <rect x="264" y="148" width="9" height="176" rx="4.5" fill="url(#bg)"/>
+    <!-- Flag -->
+    <path d="
+      M273 148
+      C296 156 316 180 318 208
+      C318 228 306 244 290 252
+      C304 232 308 212 304 196
+      C300 180 288 164 273 156
+    Z" fill="url(#bg)"/>
+  </g>
+</svg>
