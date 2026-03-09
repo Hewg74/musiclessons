@@ -1425,31 +1425,80 @@ const CHROMATIC = ['C', 'C#', 'D', 'E♭', 'E', 'F', 'F#', 'G', 'A♭', 'A', 'B�
 const SCALES = {
   "am-pentatonic": {
     name: "Am Pentatonic",
-    notes: ["A", "C", "D", "E", "G"]
+    notes: ["A", "C", "D", "E", "G"],
+    positions: {
+      1: [5, 8],
+      2: [7, 10],
+      3: [9, 12],
+      4: [12, 15],
+      5: [0, 3] /* or [2, 5] if you think of G to C shape but open is 0-3 */
+    }
   },
   "am-blues": {
     name: "Am Blues",
-    notes: ["A", "C", "D", "E♭", "E", "G"]
+    notes: ["A", "C", "D", "E♭", "E", "G"],
+    positions: {
+      1: [5, 8],
+      2: [7, 10],
+      3: [9, 12],
+      4: [12, 15],
+      5: [0, 3]
+    }
   },
   "g-mixolydian": {
     name: "G Mixolydian",
-    notes: ["G", "A", "B", "C", "D", "E", "F"]
+    notes: ["G", "A", "B", "C", "D", "E", "F"],
+    positions: {
+      1: [3, 6], // Root on 6th string, 3rd fret
+      2: [5, 8],
+      3: [7, 10],
+      4: [10, 13],
+      5: [12, 15]
+    }
   },
   "a-sus-pentatonic": {
     name: "A Sus Pentatonic",
-    notes: ["A", "B", "D", "E", "G"]
+    notes: ["A", "B", "D", "E", "G"],
+    positions: {
+      1: [5, 8],
+      2: [7, 10],
+      3: [9, 12],
+      4: [12, 15],
+      5: [0, 3]
+    }
   },
   "a-phrygian": {
     name: "A Phrygian",
-    notes: ["A", "B♭", "C", "D", "E", "F", "G"]
+    notes: ["A", "B♭", "C", "D", "E", "F", "G"],
+    positions: {
+      1: [5, 8],
+      2: [7, 10],
+      3: [9, 12],
+      4: [12, 15],
+      5: [0, 3]
+    }
   },
   "a-phrygian-dominant": {
     name: "A Phrygian Dominant",
-    notes: ["A", "B♭", "C#", "D", "E", "F", "G"]
+    notes: ["A", "B♭", "C#", "D", "E", "F", "G"],
+    positions: {
+      1: [5, 8],
+      2: [7, 10],
+      3: [9, 12],
+      4: [12, 15],
+      5: [0, 3]
+    }
   },
   "a-dorian": {
     name: "A Dorian",
-    notes: ["A", "B", "C", "D", "E", "F#", "G"]
+    notes: ["A", "B", "C", "D", "E", "F#", "G"],
+    positions: {
+      1: [5, 8],
+      2: [7, 10],
+      3: [9, 12],
+      4: [12, 15],
+      5: [0, 3]
+    }
   }
 };
 
@@ -1462,13 +1511,7 @@ const STRING_MIDI = [
   { label: 'E', start: 28 }, // string 6 (low E) — E2
 ];
 
-const POSITION_RANGES = {
-  1: [5, 8],
-  2: [7, 10],
-  3: [9, 12],
-  4: [12, 15],
-  5: [0, 3],
-};
+
 
 const FRET_MARKERS = [3, 5, 7, 9, 12, 15];
 
@@ -1479,8 +1522,10 @@ function midiToNote(midi) {
 }
 
 export function FretboardDiagram({ theme: T, scale, position, highlight = [] }) {
+  const [selectedPos, setSelectedPos] = useState(position || 1);
   const scaleData = SCALES[scale] || SCALES["am-pentatonic"];
-  const [lo, hi] = POSITION_RANGES[position] || POSITION_RANGES[1];
+  const positionsConfig = scaleData.positions || { 1: [5, 8], 2: [7, 10], 3: [9, 12], 4: [12, 15], 5: [0, 3] };
+  const [lo, hi] = positionsConfig[selectedPos] || positionsConfig[1];
 
   // Expand render range by 1 fret on each side for dot rendering
   const renderLo = Math.max(0, lo - 1);
@@ -1546,14 +1591,38 @@ export function FretboardDiagram({ theme: T, scale, position, highlight = [] }) 
     }}>
       <div style={{
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        marginBottom: 12, fontFamily: T.sans
+        marginBottom: 12, fontFamily: T.sans, flexWrap: 'wrap', gap: 12
       }}>
-        <span style={{ fontSize: 14, fontWeight: 700, color: T.textDark }}>
-          {scaleData.name}
-        </span>
-        <span style={{ fontSize: 12, color: T.textMed }}>
-          Position {position} (frets {lo}–{hi})
-        </span>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <span style={{ fontSize: 14, fontWeight: 700, color: T.textDark }}>
+            {scaleData.name}
+          </span>
+          <span style={{ fontSize: 11, color: T.textMed, letterSpacing: 1, textTransform: 'uppercase' }}>
+            Pos {selectedPos} &middot; Frets {lo}–{hi}
+          </span>
+        </div>
+        <div style={{ display: 'flex', gap: 4 }}>
+          {[1, 2, 3, 4, 5].map(p => (
+            <button
+              key={p}
+              onClick={() => setSelectedPos(p)}
+              style={{
+                background: selectedPos === p ? T.gold : "transparent",
+                color: selectedPos === p ? "#fff" : T.textMed,
+                border: `1px solid ${selectedPos === p ? T.gold : T.borderSoft}`,
+                width: 28, height: 28, borderRadius: T.radius,
+                fontFamily: T.sans, fontSize: 12, fontWeight: 600,
+                cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+                transition: "all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
+              }}
+              onPointerDown={e => e.currentTarget.style.transform = "scale(0.92)"}
+              onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
+              onPointerLeave={e => e.currentTarget.style.transform = "scale(1)"}
+            >
+              {p}
+            </button>
+          ))}
+        </div>
       </div>
 
       <svg
