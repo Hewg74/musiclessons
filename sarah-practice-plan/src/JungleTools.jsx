@@ -697,9 +697,12 @@ export function AudioRecorder({ theme: T, inline = false }) {
         if (!analyserRef.current || !canvasRef.current) return;
 
         const canvas = canvasRef.current;
+        const width = canvas.clientWidth;
+        const height = canvas.clientHeight;
+        if (canvas.width !== width) canvas.width = width;
+        if (canvas.height !== height) canvas.height = height;
+
         const ctx = canvas.getContext("2d");
-        const width = canvas.width;
-        const height = canvas.height;
 
         const bufferLength = analyserRef.current.frequencyBinCount;
         const dataArray = new Uint8Array(bufferLength);
@@ -795,8 +798,8 @@ export function AudioRecorder({ theme: T, inline = false }) {
         )}
 
         {/* We keep the canvas in the DOM so the ref is ready instantly */}
-        <div style={{ display: isRecording ? 'block' : 'none', marginLeft: inline ? 4 : 16 }}>
-          <canvas ref={canvasRef} width={inline ? 100 : 160} height={inline ? 30 : 40} style={{ display: 'block' }} />
+        <div style={{ display: isRecording ? 'block' : 'none', flex: 1, marginLeft: inline ? 4 : 16, height: inline ? 30 : 40 }}>
+          <canvas ref={canvasRef} style={{ display: 'block', width: '100%', height: '100%' }} />
         </div>
 
         {audioURL && inline && !isRecording && (
@@ -901,7 +904,7 @@ export function PitchPipe({ theme: T }) {
 }
 
 // --- 6. Live Pitch Detector ---
-const MIN_FREQ = 65; // ~C2
+const MIN_FREQ = 40; // ~E1
 const MAX_FREQ = 1046; // ~C6
 const RMS_THRESHOLD = 0.008; // Unified silence gate
 const YIN_THRESHOLD = 0.15; // CMND dip threshold — tune after real-device testing
@@ -1071,10 +1074,10 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
       analyser.fftSize = 4096;
       analyserRef.current = analyser;
 
-      // High-pass filter at 80Hz to reject handling noise, room rumble, wind
+      // High-pass filter at 40Hz to reject handling noise, room rumble, wind
       const hpFilter = audioCtx.createBiquadFilter();
       hpFilter.type = 'highpass';
-      hpFilter.frequency.value = 80;
+      hpFilter.frequency.value = 40;
       hpFilter.Q.value = 0.7071; // Butterworth Q for flat passband
       hpFilterRef.current = hpFilter;
 
@@ -1379,16 +1382,8 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
           transition: "all 0.3s ease",
           boxShadow: pitchState.active
             ? `0 0 24px ${statusColor}40, inset 0 0 16px rgba(255,255,255,0.3)`
-            : "none",
-          transform: pitchState.active ? "scale(1.02)" : "scale(1)" // pseudo-breathe via CSS since we lack global keyframe hook
+            : "none"
         }}>
-          {pitchState.active && (
-            <div style={{
-              position: "absolute", inset: -12, borderRadius: "50%",
-              background: `radial-gradient(circle, ${statusColor}15 0%, transparent 70%)`,
-              animation: "pulse-ring 2.5s infinite"
-            }} />
-          )}
           <div style={{
             fontSize: 48, fontWeight: 500, fontFamily: T.serif,
             color: pitchState.active ? T.textDark : T.textMuted,
@@ -1470,7 +1465,7 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
 
       {/* Pitch Contour Graph - always render box to prevent layout shift */}
       {pitchContour && (() => {
-        const W = 300, H = 120, PAD = 6;
+        const W = 300, H = 180, PAD = 6;
         const refNotesObj = [
           { n: "C", m: 0 }, { n: "C#", m: 1 }, { n: "D", m: 2 }, { n: "E♭", m: 3 }, { n: "E", m: 4 }, { n: "F", m: 5 },
           { n: "F#", m: 6 }, { n: "G", m: 7 }, { n: "A♭", m: 8 }, { n: "A", m: 9 }, { n: "B♭", m: 10 }, { n: "B", m: 11 }
@@ -1489,7 +1484,11 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
         const midiVals = contourData.filter(p => p.midi !== null).map(p => p.midi);
         const refMidiNums = refMidis.map(r => r.midi);
         const allMidis = [...midiVals, ...refMidiNums];
-        if (allMidis.length === 0) allMidis.push(60); // Default to middle C if completely empty
+
+        // Ensure standard vocal range is always somewhat visible (E2 to E4)
+        allMidis.push(40); // E2
+        allMidis.push(64); // E4
+
         const minM = Math.min(...allMidis) - 2;
         const maxM = Math.max(...allMidis) + 2;
         const rangeM = maxM - minM || 1;
@@ -1518,7 +1517,7 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
           <div style={{ marginTop: 16, paddingTop: 14 }}>
             <div style={{ fontSize: 10, fontWeight: 600, color: T.textMuted, letterSpacing: 1.5, fontFamily: T.sans, textTransform: "uppercase", marginBottom: 8 }}>Pitch Contour (10s)</div>
             <svg viewBox={`0 0 ${W} ${H}`} style={{
-              width: "100%", height: 130,
+              width: "100%", height: 200,
               background: `linear-gradient(180deg, ${T.bgSoft} 0%, ${T.bgCard} 100%)`,
               borderRadius: 6, border: `1px solid ${T.border}`,
               boxShadow: "inset 0 1px 3px rgba(44,40,37,0.04)"

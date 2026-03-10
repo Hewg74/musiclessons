@@ -1793,20 +1793,25 @@ function TapMatchModal({ targetBpm, onClose, metro }) {
       onPointerDown={handleTap}
       style={{
         position: "fixed", inset: 0, zIndex: 1000,
-        background: flash ? T.successSoft : T.bg,
-        transition: flash ? "none" : "background 0.4s cubic-bezier(0.2, 0, 0, 1)",
+        background: T.bg, // Solid background
         display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
         color: T.textDark,
-        animation: flash ? "flashAnim 0.4s ease-out" : "none",
-        touchAction: "none" // Prevents zooming/scrolling on mobile to avoid missed taps
+        touchAction: "none", // Prevents zooming/scrolling on mobile to avoid missed taps
       }}
     >
-      <style>{`
-        @keyframes flashAnim {
-          0% { background: ${T.successSoft}; }
-          100% { background: ${T.bg}; }
-        }
-      `}</style>
+      {/* Tighter Burst Animation Layer */}
+      <div style={{
+        position: "absolute", top: "50%", left: "50%",
+        width: 120, height: 120, marginLeft: -60, marginTop: -60,
+        borderRadius: "50%",
+        background: T.successSoft,
+        pointerEvents: "none", zIndex: 0,
+        opacity: flash ? 0.8 : 0,
+        transform: flash ? "scale(6)" : "scale(1)",
+        transition: flash ? "none" : "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+      }} />
+
+      {/* Close button layered above the animation */}
       <button onPointerDown={(e) => { e.stopPropagation(); onClose(); }} style={{
         position: "absolute", top: 30, right: 30,
         background: "transparent", border: `1px solid ${T.border}`, padding: "10px 20px",
@@ -1814,7 +1819,7 @@ function TapMatchModal({ targetBpm, onClose, metro }) {
         zIndex: 10
       }}>Close</button>
 
-      <div style={{ fontSize: 18, color: T.textMuted, textTransform: "uppercase", letterSpacing: 4, marginBottom: 20, fontFamily: T.sans }}>
+      <div style={{ position: "relative", zIndex: 10, fontSize: 18, color: T.textMuted, textTransform: "uppercase", letterSpacing: 4, marginBottom: 20, fontFamily: T.sans }}>
         Tap Practice
       </div>
 
