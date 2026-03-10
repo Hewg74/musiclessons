@@ -1292,9 +1292,9 @@ function VoiceView({ completed, onComplete, metro, onOpenTapMatch }) {
       <VowelMap />
 
       {/* Level pills — horizontal scroll */}
-      <div className="hide-scrollbar" style={{
-        display: "flex", gap: 0, overflowX: "auto", padding: "0 0 0",
-        position: "sticky", top: 49, zIndex: 9, background: T.bg,
+      <div className="hide-scrollbar sticky-pill-bar" style={{
+        display: "flex", gap: 0, overflowX: "auto", padding: "16px 0 0",
+        background: T.bg,
         WebkitOverflowScrolling: "touch", scrollSnapType: "x mandatory",
         msOverflowStyle: "none", scrollbarWidth: "none",
         borderBottom: `1px solid ${T.border}`,

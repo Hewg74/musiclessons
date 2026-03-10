@@ -844,45 +844,76 @@ export function PitchPipe({ theme: T }) {
 // --- 6. Live Pitch Detector ---
 const MIN_FREQ = 65; // ~C2
 const MAX_FREQ = 1046; // ~C6
+const RMS_THRESHOLD = 0.008; // Unified silence gate
+const YIN_THRESHOLD = 0.15; // CMND dip threshold — tune after real-device testing
 
 function autoCorrelate(buffer, sampleRate) {
-  // Perform a quick root-mean-square to check for silence
+  // 1. RMS silence gate
   let rms = 0;
   for (let i = 0; i < buffer.length; i++) {
-    const val = buffer[i];
-    rms += val * val;
+    rms += buffer[i] * buffer[i];
   }
   rms = Math.sqrt(rms / buffer.length);
-  if (rms < 0.01) // Not enough signal
-    return null;
+  if (rms < RMS_THRESHOLD) return null;
 
-  // Find a range in the buffer where the values are below a given threshold.
-  let r1 = 0, r2 = buffer.length - 1, thres = 0.2;
-  for (let i = 0; i < buffer.length / 2; i++)
-    if (Math.abs(buffer[i]) < thres) { r1 = i; break; }
-  for (let i = 1; i < buffer.length / 2; i++)
-    if (Math.abs(buffer[buffer.length - i]) < thres) { r2 = buffer.length - i; break; }
+  // YIN pitch detection — uses CMND to eliminate octave errors
+  const W = Math.floor(buffer.length / 2); // Use first half of buffer
+  const maxLag = Math.min(Math.floor(sampleRate / MIN_FREQ), W - 1);
+  const minLag = Math.floor(sampleRate / MAX_FREQ);
 
-  buffer = buffer.slice(r1, r2);
-  let c = new Array(buffer.length).fill(0);
-  for (let i = 0; i < buffer.length; i++)
-    for (let j = 0; j < buffer.length - i; j++)
-      c[i] = c[i] + buffer[j] * buffer[j + i];
+  // 2. Difference function: d[tau] = sum((buf[n] - buf[n+tau])^2)
+  const d = new Float32Array(maxLag + 1);
+  d[0] = 0;
+  for (let tau = 1; tau <= maxLag; tau++) {
+    let sum = 0;
+    for (let n = 0; n < W; n++) {
+      const diff = buffer[n] - buffer[n + tau];
+      sum += diff * diff;
+    }
+    d[tau] = sum;
+  }
 
-  let d = 0; while (c[d] > c[d + 1]) d++;
-  let maxval = -1, maxpos = -1;
-  for (let i = d; i < buffer.length; i++) {
-    if (c[i] > maxval) {
-      maxval = c[i];
-      maxpos = i;
+  // 3. Cumulative mean normalized difference (CMND)
+  const dPrime = new Float32Array(maxLag + 1);
+  dPrime[0] = 1;
+  let runningSum = 0;
+  for (let tau = 1; tau <= maxLag; tau++) {
+    runningSum += d[tau];
+    dPrime[tau] = runningSum > 0 ? d[tau] / (runningSum / tau) : 1;
+  }
+
+  // 4. Absolute threshold — find first dip below YIN_THRESHOLD
+  let bestTau = -1;
+  for (let tau = minLag; tau <= maxLag; tau++) {
+    if (dPrime[tau] < YIN_THRESHOLD) {
+      // Walk to the local minimum
+      while (tau + 1 <= maxLag && dPrime[tau + 1] < dPrime[tau]) tau++;
+      bestTau = tau;
+      break;
     }
   }
-  let T0 = maxpos;
 
-  let x1 = c[T0 - 1], x2 = c[T0], x3 = c[T0 + 1];
-  let a = (x1 + x3 - 2 * x2) / 2;
-  let b = (x3 - x1) / 2;
-  if (a) T0 = T0 - b / (2 * a);
+  // If no dip found below threshold, find the global minimum as fallback
+  if (bestTau < 0) {
+    let minVal = Infinity;
+    for (let tau = minLag; tau <= maxLag; tau++) {
+      if (dPrime[tau] < minVal) {
+        minVal = dPrime[tau];
+        bestTau = tau;
+      }
+    }
+    // Only use global min if it's reasonably good
+    if (minVal > 0.5) return null;
+  }
+
+  // 5. Parabolic interpolation for sub-sample precision
+  let T0 = bestTau;
+  if (bestTau > 0 && bestTau < maxLag) {
+    const x1 = dPrime[bestTau - 1], x2 = dPrime[bestTau], x3 = dPrime[bestTau + 1];
+    const a = (x1 + x3 - 2 * x2) / 2;
+    const b = (x3 - x1) / 2;
+    if (a) T0 = bestTau - b / (2 * a);
+  }
 
   const freq = sampleRate / T0;
   return (freq >= MIN_FREQ && freq <= MAX_FREQ) ? freq : null;
@@ -922,15 +953,19 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
   const analyserRef = useRef(null);
   const streamRef = useRef(null);
   const sourceRef = useRef(null);
+  const hpFilterRef = useRef(null);
   const requestRef = useRef(null);
   const contourRef = useRef([]);
   const contourLastUpdate = useRef(0);
+  const pitchBufRef = useRef(null); // Cached Float32Array to reduce GC in hot loop
 
   // Smoothing state
   const emaFreqRef = useRef(null);
   const lastNoteUpdateRef = useRef(Date.now());
   const stableMidiRef = useRef(null);
   const freqBufRef = useRef([]);
+  const silenceStartRef = useRef(null); // Tracks silence duration for EMA hold
+  const wasSilentRef = useRef(false); // For contour gap detection (push one null sentinel)
 
   // Auto-pause when any <audio> element plays
   useEffect(() => {
@@ -981,13 +1016,19 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
       audioContextRef.current = audioCtx;
 
       const analyser = audioCtx.createAnalyser();
-      analyser.fftSize = 2048;
-      // Smoothing time constant for the raw audio buffer (not the pitch output)
-      analyser.smoothingTimeConstant = 0.5;
+      analyser.fftSize = 4096;
       analyserRef.current = analyser;
 
+      // High-pass filter at 80Hz to reject handling noise, room rumble, wind
+      const hpFilter = audioCtx.createBiquadFilter();
+      hpFilter.type = 'highpass';
+      hpFilter.frequency.value = 80;
+      hpFilter.Q.value = 0.7071; // Butterworth Q for flat passband
+      hpFilterRef.current = hpFilter;
+
       const source = audioCtx.createMediaStreamSource(stream);
-      source.connect(analyser);
+      source.connect(hpFilter);
+      hpFilter.connect(analyser);
       sourceRef.current = source;
 
       setIsActive(true);
@@ -1008,11 +1049,13 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
 
     if (requestRef.current) cancelAnimationFrame(requestRef.current);
     if (streamRef.current) streamRef.current.getTracks().forEach(t => t.stop());
+    if (hpFilterRef.current) hpFilterRef.current.disconnect();
     if (sourceRef.current) sourceRef.current.disconnect();
     if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
       audioContextRef.current.close().catch(console.error);
     }
     analyserRef.current = null;
+    pitchBufRef.current = null;
   };
 
   useEffect(() => {
@@ -1022,7 +1065,12 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
   const detectPitch = () => {
     if (!analyserRef.current) return;
 
-    const buffer = new Float32Array(analyserRef.current.fftSize);
+    // Cached buffer to reduce GC pressure in hot loop
+    const fftSize = analyserRef.current.fftSize;
+    if (!pitchBufRef.current || pitchBufRef.current.length !== fftSize) {
+      pitchBufRef.current = new Float32Array(fftSize);
+    }
+    const buffer = pitchBufRef.current;
     analyserRef.current.getFloatTimeDomainData(buffer);
 
     // Calculate RMS to filter out silence
@@ -1032,24 +1080,54 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
     }
     rms = Math.sqrt(rms / buffer.length);
 
-    if (rms > 0.005) { // Audibility threshold
-      // Use advanced autocorrelation instead of YIN for a smoother, less jumpy experience 
+    // Shared silence handler for both "no pitch" and "RMS silence" branches
+    const handleSilence = (isFullSilence) => {
+      const now = Date.now();
+      // Start silence timer — only reset EMA after 300ms of continuous silence
+      if (!silenceStartRef.current) silenceStartRef.current = now;
+      if (now - silenceStartRef.current > 300) {
+        emaFreqRef.current = null;
+        stableMidiRef.current = null;
+      }
+      // Push one null sentinel to contour on voice→silence transition
+      if (pitchContour && !wasSilentRef.current) {
+        contourRef.current.push({ t: now, midi: null });
+        const cutoff = now - 10000;
+        contourRef.current = contourRef.current.filter(p => p.t > cutoff);
+        if (!contourLastUpdate.current || now - contourLastUpdate.current > 100) {
+          setContourData([...contourRef.current]);
+          contourLastUpdate.current = now;
+        }
+      }
+      wasSilentRef.current = true;
+      if (isFullSilence) {
+        setPitchState({ note: '—', cents: 0, active: false, closestRef: null, refFeedback: '' });
+      } else {
+        setPitchState(prev => ({ ...prev, active: false }));
+      }
+    };
+
+    if (rms > RMS_THRESHOLD) {
       const freq = autoCorrelate(buffer, audioContextRef.current.sampleRate);
 
       if (freq) {
-        // 1. Median filter to reject outliers (critical for noisy mobile mics)
+        // Reset silence tracking
+        silenceStartRef.current = null;
+        wasSilentRef.current = false;
+
+        // 1. Median filter to reject outliers (3-sample for YIN's cleaner output)
         freqBufRef.current.push(freq);
-        if (freqBufRef.current.length > 5) freqBufRef.current.shift();
+        if (freqBufRef.current.length > 3) freqBufRef.current.shift();
         const sorted = [...freqBufRef.current].sort((a, b) => a - b);
         const medianFreq = sorted[Math.floor(sorted.length / 2)];
 
-        // 2. Exponential Moving Average (EMA) on median-filtered frequency
-        const alpha = 0.12;
+        // 2. Exponential Moving Average (EMA) — tuned for singing responsiveness
+        const alpha = 0.3;
         const semitoneJump = emaFreqRef.current
           ? Math.abs(12 * Math.log2(medianFreq / emaFreqRef.current))
           : Infinity;
-        if (!emaFreqRef.current || semitoneJump > 5) {
-          emaFreqRef.current = medianFreq; // Immediate jump only if >5 semitones off
+        if (!emaFreqRef.current || semitoneJump > 3) {
+          emaFreqRef.current = medianFreq;
         } else {
           emaFreqRef.current = alpha * medianFreq + (1 - alpha) * emaFreqRef.current;
         }
@@ -1057,24 +1135,22 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
         const smoothedFreq = emaFreqRef.current;
         const midi = freqToMidi(smoothedFreq);
         const cents = getCentsOffset(smoothedFreq, midi);
-        const noteStr = midiToNoteString(midi);
 
-        // 3. Hysteresis for Note Display (don't flicker between notes quickly)
+        // 3. Hysteresis for Note Display — 120ms for singing responsiveness
         const now = Date.now();
         if (midi !== stableMidiRef.current) {
-          if (now - lastNoteUpdateRef.current > 200) { // Require note to be stable for ~200ms
+          if (now - lastNoteUpdateRef.current > 120) {
             stableMidiRef.current = midi;
             lastNoteUpdateRef.current = now;
           }
         } else {
-          lastNoteUpdateRef.current = now; // reset stability timer while holding note
+          lastNoteUpdateRef.current = now;
         }
 
         // Figure out closest reference pitch (if any)
         let closestRef = null;
         let refFeedback = '';
         if (referencePitches && referencePitches.length > 0) {
-          // Parse references to find minimum distance
           const refNotesObj = [
             { n: "C", m: 0 }, { n: "C#", m: 1 }, { n: "D", m: 2 }, { n: "E♭", m: 3 }, { n: "E", m: 4 }, { n: "F", m: 5 },
             { n: "F#", m: 6 }, { n: "G", m: 7 }, { n: "A♭", m: 8 }, { n: "A", m: 9 }, { n: "B♭", m: 10 }, { n: "B", m: 11 }
@@ -1092,9 +1168,9 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
               const pobj = refNotesObj.find(x => x.n === pClass);
               if (pobj) {
                 const rMidi = (oct + 1) * 12 + pobj.m;
-                const d = Math.abs(midi - rMidi);
-                if (d < minMidiDist) {
-                  minMidiDist = d;
+                const dist = Math.abs(midi - rMidi);
+                if (dist < minMidiDist) {
+                  minMidiDist = dist;
                   bestRefStr = ref;
                   bestRefMidi = rMidi;
                 }
@@ -1107,9 +1183,8 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
             if (Math.abs(cents) <= 10) refFeedback = '✓ On target';
             else if (cents < 0) refFeedback = 'Flattening';
             else refFeedback = 'Sharpening';
-          } else if (minMidiDist <= 2) { // Show if within 2 semitones
+          } else if (minMidiDist <= 2) {
             closestRef = bestRefStr;
-            // Determine direction: compare detected midi to the closest reference midi
             const targetMidi = bestRefMidi;
             if (midi < targetMidi) refFeedback = '↑ Go higher';
             else if (midi > targetMidi) refFeedback = '↓ Go lower';
@@ -1128,29 +1203,23 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
 
         // Pitch contour: record data point
         if (pitchContour) {
-          const now = Date.now();
+          const now2 = Date.now();
           const midiFloat = 69 + 12 * Math.log2(smoothedFreq / 440);
-          contourRef.current.push({ t: now, midi: midiFloat });
-          // Keep last 10 seconds
-          const cutoff = now - 10000;
+          contourRef.current.push({ t: now2, midi: midiFloat });
+          const cutoff = now2 - 10000;
           contourRef.current = contourRef.current.filter(p => p.t > cutoff);
-          // Update state every ~100ms to avoid excessive renders
-          if (!contourLastUpdate.current || now - contourLastUpdate.current > 100) {
+          if (!contourLastUpdate.current || now2 - contourLastUpdate.current > 100) {
             setContourData([...contourRef.current]);
-            contourLastUpdate.current = now;
+            contourLastUpdate.current = now2;
           }
         }
       } else {
         // No pitch found (e.g. unvoiced consonant, breathing)
-        emaFreqRef.current = null;
-        stableMidiRef.current = null;
-        setPitchState(prev => ({ ...prev, active: false }));
+        handleSilence(false);
       }
     } else {
       // Silence
-      emaFreqRef.current = null;
-      stableMidiRef.current = null;
-      setPitchState({ note: '—', cents: 0, active: false, closestRef: null, refFeedback: '' });
+      handleSilence(true);
     }
 
     if (analyserRef.current) {
@@ -1354,7 +1423,7 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
           return { midi: (oct + 1) * 12 + pobj.m, label: ref };
         }).filter(Boolean);
 
-        const midiVals = contourData.map(p => p.midi);
+        const midiVals = contourData.filter(p => p.midi !== null).map(p => p.midi);
         const refMidiNums = refMidis.map(r => r.midi);
         const allMidis = [...midiVals, ...refMidiNums];
         if (allMidis.length === 0) allMidis.push(60); // Default to middle C if completely empty
@@ -1363,10 +1432,20 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
         const rangeM = maxM - minM || 1;
         const now = Date.now();
         const toY = (m) => H - PAD - ((m - minM) / rangeM) * (H - PAD * 2);
-        const points = contourData.map(p => {
-          const x = PAD + ((p.t - (now - 10000)) / 10000) * (W - PAD * 2);
-          return `${x},${toY(p.midi)}`;
-        }).join(" ");
+
+        // Split contour into segments at silence gaps (null midi values)
+        const segments = [];
+        let currentSeg = [];
+        contourData.forEach(p => {
+          if (p.midi === null) {
+            if (currentSeg.length > 1) segments.push(currentSeg);
+            currentSeg = [];
+          } else {
+            const x = PAD + ((p.t - (now - 10000)) / 10000) * (W - PAD * 2);
+            currentSeg.push(`${x},${toY(p.midi)}`);
+          }
+        });
+        if (currentSeg.length > 1) segments.push(currentSeg);
 
         // Semitone grid lines
         const gridLines = [];
@@ -1407,10 +1486,10 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
                     fontSize="9" fill={T.gold} fontFamily={T.sans} fontWeight="700">{rl.label}</text>
                 </g>
               ))}
-              {/* Pitch line with subtle glow */}
-              {points && (
-                <polyline points={points} fill="none" stroke={statusColor} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" filter={`drop-shadow(0 2px 6px ${statusColor}60)`} opacity={0.9} />
-              )}
+              {/* Pitch lines — split at silence gaps */}
+              {segments.map((seg, i) => (
+                <polyline key={i} points={seg.join(" ")} fill="none" stroke={statusColor} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" filter={`drop-shadow(0 2px 6px ${statusColor}60)`} opacity={0.9} />
+              ))}
             </svg>
           </div>
         );
@@ -1425,6 +1504,7 @@ const CHROMATIC = ['C', 'C#', 'D', 'E♭', 'E', 'F', 'F#', 'G', 'A♭', 'A', 'B�
 const SCALES = {
   "am-pentatonic": {
     name: "Am Pentatonic",
+    root: "A",
     notes: ["A", "C", "D", "E", "G"],
     positions: {
       1: [5, 8],
@@ -1436,6 +1516,7 @@ const SCALES = {
   },
   "am-blues": {
     name: "Am Blues",
+    root: "A",
     notes: ["A", "C", "D", "E♭", "E", "G"],
     positions: {
       1: [5, 8],
@@ -1447,6 +1528,7 @@ const SCALES = {
   },
   "g-mixolydian": {
     name: "G Mixolydian",
+    root: "G",
     notes: ["G", "A", "B", "C", "D", "E", "F"],
     positions: {
       1: [3, 6], // Root on 6th string, 3rd fret
@@ -1458,6 +1540,7 @@ const SCALES = {
   },
   "a-sus-pentatonic": {
     name: "A Sus Pentatonic",
+    root: "A",
     notes: ["A", "B", "D", "E", "G"],
     positions: {
       1: [5, 8],
@@ -1469,6 +1552,7 @@ const SCALES = {
   },
   "a-phrygian": {
     name: "A Phrygian",
+    root: "A",
     notes: ["A", "B♭", "C", "D", "E", "F", "G"],
     positions: {
       1: [5, 8],
@@ -1480,6 +1564,7 @@ const SCALES = {
   },
   "a-phrygian-dominant": {
     name: "A Phrygian Dominant",
+    root: "A",
     notes: ["A", "B♭", "C#", "D", "E", "F", "G"],
     positions: {
       1: [5, 8],
@@ -1491,6 +1576,7 @@ const SCALES = {
   },
   "a-dorian": {
     name: "A Dorian",
+    root: "A",
     notes: ["A", "B", "C", "D", "E", "F#", "G"],
     positions: {
       1: [5, 8],
@@ -1521,8 +1607,35 @@ function midiToNote(midi) {
   return { noteName, octave, full: `${noteName}${octave}` };
 }
 
+function getInterval(noteName, rootName) {
+  if (!rootName) return noteName;
+  const rootIdx = CHROMATIC.indexOf(rootName);
+  const noteIdx = CHROMATIC.indexOf(noteName);
+  if (rootIdx === -1 || noteIdx === -1) return noteName;
+
+  let diff = noteIdx - rootIdx;
+  if (diff < 0) diff += 12;
+
+  const intervals = {
+    0: "R",
+    1: "b2",
+    2: "2",
+    3: "b3",
+    4: "3",
+    5: "4",
+    6: "b5",
+    7: "5",
+    8: "b6",
+    9: "6",
+    10: "b7",
+    11: "7"
+  };
+  return intervals[diff] || noteName;
+}
+
 export function FretboardDiagram({ theme: T, scale, position, highlight = [] }) {
   const [selectedPos, setSelectedPos] = useState(position || 1);
+  const [viewMode, setViewMode] = useState("notes"); // 'notes' or 'intervals'
   const scaleData = SCALES[scale] || SCALES["am-pentatonic"];
   const positionsConfig = scaleData.positions || { 1: [5, 8], 2: [7, 10], 3: [9, 12], 4: [12, 15], 5: [0, 3] };
   const [lo, hi] = positionsConfig[selectedPos] || positionsConfig[1];
@@ -1566,13 +1679,15 @@ export function FretboardDiagram({ theme: T, scale, position, highlight = [] }) 
       const midi = s.start + fret;
       const { noteName, full } = midiToNote(midi);
       if (scaleData.notes.includes(noteName)) {
-        const isRoot = noteName === 'A';
+        const isRoot = noteName === scaleData.root;
         const isHighlighted = highlight.some(h => {
           // Normalize the highlight note for comparison
           const hNorm = h.replace('b', '♭');
           return hNorm === full;
         });
-        dots.push({ stringIdx, fret, noteName, full, midi, isRoot, isHighlighted });
+        const intervalName = getInterval(noteName, scaleData.root);
+        const displayLabel = viewMode === "intervals" ? intervalName : noteName;
+        dots.push({ stringIdx, fret, displayLabel, noteName, full, midi, isRoot, isHighlighted });
       }
     }
   });
@@ -1602,6 +1717,30 @@ export function FretboardDiagram({ theme: T, scale, position, highlight = [] }) 
           </span>
         </div>
         <div style={{ display: 'flex', gap: 4 }}>
+          {/* Notes vs Intervals Toggle */}
+          <div style={{
+            display: "flex", background: T.bgCard, border: `1px solid ${T.borderSoft}`,
+            borderRadius: T.radius, overflow: "hidden", marginRight: 8
+          }}>
+            <button
+              onClick={() => setViewMode("notes")}
+              style={{
+                background: viewMode === "notes" ? T.goldSoft : "transparent",
+                color: viewMode === "notes" ? T.goldDark : T.textMed, border: "none",
+                padding: "0 10px", fontSize: 11, fontWeight: 700, fontFamily: T.sans, cursor: "pointer",
+                textTransform: 'uppercase', letterSpacing: 1, transition: "background 0.2s"
+              }}>Notes</button>
+            <button
+              onClick={() => setViewMode("intervals")}
+              style={{
+                background: viewMode === "intervals" ? T.goldSoft : "transparent",
+                color: viewMode === "intervals" ? T.goldDark : T.textMed, border: "none",
+                padding: "0 10px", fontSize: 11, fontWeight: 700, fontFamily: T.sans, cursor: "pointer",
+                textTransform: 'uppercase', letterSpacing: 1, transition: "background 0.2s",
+                borderLeft: `1px solid ${T.borderSoft}`
+              }}>Intervals</button>
+          </div>
+
           {[1, 2, 3, 4, 5].map(p => (
             <button
               key={p}
@@ -1730,7 +1869,7 @@ export function FretboardDiagram({ theme: T, scale, position, highlight = [] }) 
                 fontFamily={T.sans}
                 fill="#fff"
               >
-                {d.noteName}
+                {d.displayLabel}
               </text>
             </g>
           );
