@@ -833,7 +833,7 @@ export function PitchPipe({ theme: T }) {
 }
 
 // --- 6. Live Pitch Detector ---
-const MIN_FREQ = 40; // ~E1
+const MIN_FREQ = 65; // ~C2 — realistic singing floor
 const MAX_FREQ = 1046; // ~C6
 const RMS_THRESHOLD = 0.008; // Unified silence gate
 const YIN_THRESHOLD = 0.15; // CMND dip threshold — tune after real-device testing
@@ -877,18 +877,8 @@ function autoCorrelate(buffer, sampleRate) {
     }
   }
 
-  // If no dip found below threshold, find the global minimum as fallback
-  if (bestTau < 0) {
-    let minVal = Infinity;
-    for (let tau = minLag; tau <= maxLag; tau++) {
-      if (dPrime[tau] < minVal) {
-        minVal = dPrime[tau];
-        bestTau = tau;
-      }
-    }
-    // Only use global min if it's reasonably good
-    if (minVal > 0.5) return null;
-  }
+  // No dip below threshold = no clear pitch — return null instead of guessing
+  if (bestTau < 0) return null;
 
   // 5. Parabolic interpolation for sub-sample precision
   let T0 = bestTau;
@@ -1004,10 +994,10 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
       analyser.fftSize = 4096;
       analyserRef.current = analyser;
 
-      // High-pass filter at 40Hz to reject handling noise, room rumble, wind
+      // High-pass filter at 60Hz to reject handling noise, room rumble, wind
       const hpFilter = audioCtx.createBiquadFilter();
       hpFilter.type = 'highpass';
-      hpFilter.frequency.value = 40;
+      hpFilter.frequency.value = 60;
       hpFilter.Q.value = 0.7071; // Butterworth Q for flat passband
       hpFilterRef.current = hpFilter;
 
@@ -1107,15 +1097,23 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
         const sorted = [...freqBufRef.current].sort((a, b) => a - b);
         const medianFreq = sorted[Math.floor(sorted.length / 2)];
 
-        // 2. Exponential Moving Average (EMA) — tuned for singing responsiveness
+        // 2. Octave correction — if freq is ~2x or ~0.5x the EMA, snap to correct octave
+        let correctedFreq = medianFreq;
+        if (emaFreqRef.current) {
+          const ratio = medianFreq / emaFreqRef.current;
+          if (ratio > 1.8 && ratio < 2.2) correctedFreq = medianFreq / 2; // Octave-up error
+          else if (ratio > 0.45 && ratio < 0.55) correctedFreq = medianFreq * 2; // Octave-down error
+        }
+
+        // 3. Exponential Moving Average (EMA) — tuned for singing responsiveness
         const alpha = 0.3;
         const semitoneJump = emaFreqRef.current
-          ? Math.abs(12 * Math.log2(medianFreq / emaFreqRef.current))
+          ? Math.abs(12 * Math.log2(correctedFreq / emaFreqRef.current))
           : Infinity;
         if (!emaFreqRef.current || semitoneJump > 3) {
-          emaFreqRef.current = medianFreq;
+          emaFreqRef.current = correctedFreq;
         } else {
-          emaFreqRef.current = alpha * medianFreq + (1 - alpha) * emaFreqRef.current;
+          emaFreqRef.current = alpha * correctedFreq + (1 - alpha) * emaFreqRef.current;
         }
 
         const smoothedFreq = emaFreqRef.current;

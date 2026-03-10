@@ -487,98 +487,20 @@ function DetailSection({ label, color, children }) {
   );
 }
 
-function PitchRibbon({ pitches, playNote }) {
+function PitchRibbon({ pitches }) {
   if (!pitches || pitches.length === 0) return null;
+
+  const startNote = pitches[0];
+  const endNote = pitches[pitches.length - 1];
+
   return (
-    <div style={{ marginBottom: 24 }}>
-      <div style={{ fontSize: 10, fontWeight: 700, color: T.textMuted, letterSpacing: 1.5, marginBottom: 12, fontFamily: T.sans }}>REFERENCE PITCHES</div>
-
-      {/* Scroll container — bleeds to edges */}
-      <div style={{
-        display: "flex",
-        overflowX: "auto",
-        paddingBottom: 8,
-        marginLeft: -20, marginRight: -20,
-        paddingLeft: 20, paddingRight: 20,
-        WebkitOverflowScrolling: "touch",
-        scrollbarWidth: "none", // Firefox
-        msOverflowStyle: "none", // IE
-        scrollSnapType: "x proximity"
-      }}
-        className="hide-scrollbar"
-      >
-        <div style={{ display: "flex" }}>
-          {pitches.map((note, i) => {
-            const isAccidental = note.includes("♭") || note.includes("#");
-
-            // Re-using the beautiful artisanal styles from InlineKeyboard
-            const bgNormal = isAccidental ? "linear-gradient(180deg, #383330 0%, #2a2725 90%, #221f1d 100%)" : "linear-gradient(180deg, #f7f5f2 0%, #f0ece8 85%, #efeae4 100%)";
-            const bgActive = isAccidental ? `linear-gradient(180deg, #4a423e 0%, #38312e 100%)` : `linear-gradient(180deg, #fcfaf8 0%, ${T.goldSoft} 100%)`;
-            const fg = isAccidental ? "rgba(255,255,255,0.7)" : T.textDark;
-            const border = isAccidental ? `1px solid #1a1817` : `1px solid ${T.borderSoft}`;
-
-            // For a connected piano look, we only want the right border on white keys (except the last one, but fine for now), 
-            // but we'll overlap them or just set no gap.
-            const borderRight = isAccidental ? border : `1px solid ${T.borderSoft}`;
-            const borderLeft = isAccidental ? border : (i === 0 ? `1px solid ${T.borderSoft}` : "none");
-
-            const shadowNormal = isAccidental
-              ? "0 3px 6px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06), inset 0 -1px 2px rgba(0,0,0,0.4)"
-              : "inset 0 -2px 6px rgba(0,0,0,0.02), 0 1px 2px rgba(0,0,0,0.04)";
-
-            const shadowActive = isAccidental
-              ? `0 4px 8px rgba(0,0,0,0.2), inset 0 -2px 4px rgba(255,255,255,0.08), 0 0 12px ${T.gold}20`
-              : `inset 0 -6px 16px ${T.gold}15, 0 1px 3px rgba(0,0,0,0.05)`;
-
-            return (
-              <button
-                key={i}
-                onClick={() => playNote(note)}
-                onPointerDown={e => {
-                  e.currentTarget.style.transform = "translateY(2px)";
-                  e.currentTarget.style.background = bgActive;
-                  e.currentTarget.style.boxShadow = shadowActive;
-                }}
-                onPointerUp={e => {
-                  e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.background = bgNormal;
-                  e.currentTarget.style.boxShadow = shadowNormal;
-                }}
-                onPointerLeave={e => {
-                  e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.background = bgNormal;
-                  e.currentTarget.style.boxShadow = shadowNormal;
-                }}
-                style={{
-                  flexShrink: 0,
-                  scrollSnapAlign: "center",
-                  minWidth: isAccidental ? 40 : 50,
-                  height: isAccidental ? 75 : 85,
-                  borderRadius: "0 0 5px 5px", // Match piano key feel
-                  background: bgNormal,
-                  borderBottom: border,
-                  borderTop: isAccidental ? "none" : border,
-                  borderRight: borderRight,
-                  borderLeft: borderLeft,
-                  color: fg, cursor: "pointer",
-                  display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end",
-                  paddingBottom: 12,
-                  transition: "transform 0.1s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.1s, background 0.2s",
-                  fontFamily: T.sans,
-                  boxShadow: shadowNormal
-                }}
-              >
-                <span style={{ fontSize: isAccidental ? 14 : 16, fontWeight: 700, letterSpacing: 0.5 }}>{note.replace('♭', 'b')}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-      <style>{`
-        .hide-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
+    <div style={{ marginBottom: 24, paddingLeft: 18, paddingRight: 18, marginLeft: -18, marginRight: -18 }}>
+      <InlineKeyboard
+        theme={T}
+        range={[startNote, endNote]}
+        label="REFERENCE PITCHES"
+        highlightNotes={pitches}
+      />
     </div>
   );
 }
