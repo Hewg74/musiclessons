@@ -821,84 +821,13 @@ export function AudioRecorder({ theme: T, inline = false }) {
 
 // --- 5. Pitch Pipe (Tone.js) ---
 export function PitchPipe({ theme: T }) {
-  const [activeNote, setActiveNote] = useState(null);
-  const synthRef = useRef(null);
-
-  const strings = [
-    { note: 'E2', label: 'E', string: 6 },
-    { note: 'A2', label: 'A', string: 5 },
-    { note: 'D3', label: 'D', string: 4 },
-    { note: 'G3', label: 'G', string: 3 },
-    { note: 'B3', label: 'B', string: 2 },
-    { note: 'E4', label: 'E', string: 1 }
-  ];
-
-  const playNote = async (note) => {
-    if (Tone.context.state !== 'running') {
-      await Tone.context.resume();
-    }
-
-    if (!synthRef.current) {
-      // Use an oscillator with some rich harmonics so it's audible on phone speakers
-      synthRef.current = new Tone.Synth({
-        oscillator: { type: 'triangle' },
-        envelope: { attack: 0.1, decay: 0.2, sustain: 1, release: 1 }
-      }).toDestination();
-      synthRef.current.volume.value = -8;
-    }
-
-    // Stop current note if it's playing
-    synthRef.current.triggerRelease();
-
-    if (activeNote === note) {
-      setActiveNote(null);
-      return;
-    }
-
-    setActiveNote(note);
-    synthRef.current.triggerAttack(note);
-  };
-
-  // Clean up on unmount
-  useEffect(() => {
-    return () => {
-      if (synthRef.current) {
-        synthRef.current.triggerRelease();
-        synthRef.current.dispose();
-      }
-    };
-  }, []);
-
+  // Use InlineKeyboard as the Pitch Pipe
   return (
     <div>
       <p style={{ fontSize: 13, color: T.textMed, marginBottom: 24, textAlign: "center", textTransform: "uppercase", letterSpacing: 1.5 }}>
-        Standard Tuning (E A D G B E)
+        Reference Keyboard
       </p>
-
-      <div style={{ display: 'grid', gridTemplateColumns: "repeat(3, 1fr)", gap: 12, justifyContent: 'center', maxWidth: 280, margin: "0 auto" }}>
-        {strings.map(s => (
-          <button
-            key={s.note}
-            onClick={() => playNote(s.note)}
-            style={{
-              aspectRatio: "1/1", width: "100%", maxWidth: 80, margin: "0 auto",
-              borderRadius: "50%",
-              border: activeNote === s.note ? `2px solid ${T.gold}` : `1px solid ${T.border}`,
-              background: activeNote === s.note ? T.goldSoft : T.bgCard,
-              color: activeNote === s.note ? T.goldDark : T.textDark,
-              cursor: 'pointer',
-              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: "center", gap: 0,
-              transition: 'all 0.15s cubic-bezier(0.4, 0, 0.2, 1)'
-            }}
-            onPointerDown={e => { e.currentTarget.style.transform = "scale(0.92)"; }}
-            onPointerUp={e => { e.currentTarget.style.transform = "scale(1)"; }}
-            onPointerLeave={e => { e.currentTarget.style.transform = "scale(1)"; }}
-          >
-            <span style={{ fontSize: 24, fontWeight: 600, fontFamily: T.sans, lineHeight: 1 }}>{s.label}</span>
-            <span style={{ fontSize: 10, fontWeight: 600, color: T.textMuted, fontFamily: T.sans, marginTop: 2 }}>{s.string}</span>
-          </button>
-        ))}
-      </div>
+      <InlineKeyboard theme={T} range={["C2", "C5"]} />
     </div>
   );
 }
@@ -1013,6 +942,7 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
   const contourRef = useRef([]);
   const contourLastUpdate = useRef(0);
   const pitchBufRef = useRef(null); // Cached Float32Array to reduce GC in hot loop
+  const contourRangeRef = useRef({ min: null, max: null }); // Smoothed Y-axis range for contour
 
   // Smoothing state
   const emaFreqRef = useRef(null);
@@ -1111,6 +1041,7 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
     }
     analyserRef.current = null;
     pitchBufRef.current = null;
+    contourRangeRef.current = { min: null, max: null };
   };
 
   useEffect(() => {
@@ -1463,13 +1394,14 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
         </div>
       )}
 
-      {/* Pitch Contour Graph - always render box to prevent layout shift */}
+      {/* Pitch Contour Graph - dynamically zoomed to active range */}
       {pitchContour && (() => {
-        const W = 300, H = 180, PAD = 6;
+        const W = 300, H = 180, PAD_TOP = 6, PAD_BOT = 6, PAD_L = 32, PAD_R = 6;
         const refNotesObj = [
           { n: "C", m: 0 }, { n: "C#", m: 1 }, { n: "D", m: 2 }, { n: "E♭", m: 3 }, { n: "E", m: 4 }, { n: "F", m: 5 },
           { n: "F#", m: 6 }, { n: "G", m: 7 }, { n: "A♭", m: 8 }, { n: "A", m: 9 }, { n: "B♭", m: 10 }, { n: "B", m: 11 }
         ];
+        const noteNames = ["C", "C#", "D", "E♭", "E", "F", "F#", "G", "A♭", "A", "B♭", "B"];
         // Parse reference pitches to MIDI values
         const refMidis = (referencePitches || []).map(ref => {
           const match = ref.match(/([A-G][b♭#]?)([0-9])/);
@@ -1483,19 +1415,47 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
 
         const midiVals = contourData.filter(p => p.midi !== null).map(p => p.midi);
         const refMidiNums = refMidis.map(r => r.midi);
-        const allMidis = [...midiVals, ...refMidiNums];
 
-        // Ensure standard vocal range is always somewhat visible (G2 to G4)
-        allMidis.push(43); // G2
-        allMidis.push(67); // G4
+        // Dynamic range: zoom to where the user is actually singing
+        const MIN_RANGE = 12; // At least one octave visible
+        const PADDING = 3;    // Semitones padding above/below
+        const SMOOTH_EXPAND = 0.15;   // Fast expansion to follow singer
+        const SMOOTH_CONTRACT = 0.04; // Slow contraction for stability
 
-        const minM = Math.min(...allMidis) - 2;
-        const maxM = Math.max(...allMidis) + 2;
+        let targetMin, targetMax;
+        const activeMidis = [...midiVals, ...refMidiNums];
+
+        if (activeMidis.length === 0) {
+          targetMin = 48; targetMax = 60; // Default C3-C4 before any data
+        } else {
+          const rawMin = Math.min(...activeMidis) - PADDING;
+          const rawMax = Math.max(...activeMidis) + PADDING;
+          const rawRange = rawMax - rawMin;
+          if (rawRange < MIN_RANGE) {
+            const center = (rawMin + rawMax) / 2;
+            targetMin = center - MIN_RANGE / 2;
+            targetMax = center + MIN_RANGE / 2;
+          } else {
+            targetMin = rawMin; targetMax = rawMax;
+          }
+        }
+
+        // Smooth range with asymmetric EMA (expand fast, contract slow = stable)
+        const cr = contourRangeRef.current;
+        if (cr.min === null || cr.max === null) {
+          cr.min = targetMin; cr.max = targetMax;
+        } else {
+          cr.min += (targetMin - cr.min) * (targetMin < cr.min ? SMOOTH_EXPAND : SMOOTH_CONTRACT);
+          cr.max += (targetMax - cr.max) * (targetMax > cr.max ? SMOOTH_EXPAND : SMOOTH_CONTRACT);
+        }
+
+        const minM = Math.floor(cr.min);
+        const maxM = Math.ceil(cr.max);
         const rangeM = maxM - minM || 1;
         const now = Date.now();
-        const toY = (m) => H - PAD - ((m - minM) / rangeM) * (H - PAD * 2);
+        const toY = (m) => H - PAD_BOT - ((m - minM) / rangeM) * (H - PAD_TOP - PAD_BOT);
 
-        // Split contour into segments at silence gaps (null midi values)
+        // Split contour into segments at silence gaps
         const segments = [];
         let currentSeg = [];
         contourData.forEach(p => {
@@ -1503,15 +1463,15 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
             if (currentSeg.length > 1) segments.push(currentSeg);
             currentSeg = [];
           } else {
-            const x = PAD + ((p.t - (now - 10000)) / 10000) * (W - PAD * 2);
+            const x = PAD_L + ((p.t - (now - 10000)) / 10000) * (W - PAD_L - PAD_R);
             currentSeg.push(`${x},${toY(p.midi)}`);
           }
         });
         if (currentSeg.length > 1) segments.push(currentSeg);
 
-        // Semitone grid lines
+        // Every semitone gets a grid line + note label
         const gridLines = [];
-        for (let m = Math.ceil(minM); m <= Math.floor(maxM); m++) gridLines.push(m);
+        for (let m = minM; m <= maxM; m++) gridLines.push(m);
 
         return (
           <div style={{ marginTop: 16, paddingTop: 14 }}>
@@ -1521,18 +1481,22 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
               background: `linear-gradient(180deg, ${T.bgSoft} 0%, ${T.bgCard} 100%)`,
               borderRadius: 8, border: `1px solid ${T.border}`,
               boxShadow: `inset 0 2px 8px rgba(0,0,0,0.06), 0 2px 6px ${T.bgSoft}`,
-              overflow: "hidden" // Keep lines within bounds
+              overflow: "hidden"
             }}>
-              {/* Semitone grid */}
+              {/* Semitone grid — every note labeled on Y axis */}
               {gridLines.map(m => {
-                const noteName = ["C", "C#", "D", "E♭", "E", "F", "F#", "G", "A♭", "A", "B♭", "B"][m % 12];
+                const name = noteNames[((m % 12) + 12) % 12];
                 const oct = Math.floor(m / 12) - 1;
+                const isC = name === "C";
+                const isNatural = !name.includes("#") && !name.includes("♭");
                 return (
                   <g key={`g${m}`}>
-                    <line x1={PAD} y1={toY(m)} x2={W - PAD} y2={toY(m)}
-                      stroke={T.border} strokeWidth="0.3" />
-                    <text x={PAD + 2} y={toY(m) - 2} fontSize="6" fill={T.textMuted + "80"} fontFamily={T.sans}>
-                      {noteName}{oct}
+                    <line x1={PAD_L} y1={toY(m)} x2={W - PAD_R} y2={toY(m)}
+                      stroke={isC ? T.textMuted + "40" : T.border} strokeWidth={isC ? "0.6" : "0.3"} />
+                    <text x={PAD_L - 3} y={toY(m) + 3} textAnchor="end"
+                      fontSize={isNatural ? "7" : "6"} fill={isC ? T.textDark : isNatural ? T.textMuted : T.textMuted + "80"} fontFamily={T.sans}
+                      fontWeight={isC ? "700" : isNatural ? "600" : "400"}>
+                      {name}{oct}
                     </text>
                   </g>
                 );
@@ -1544,17 +1508,14 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
                 const hitColor = isNailed ? T.success : T.gold;
                 return (
                   <g key={i}>
-                    {/* Background hit box */}
-                    <rect x={PAD} y={toY(rl.midi + 0.4)} width={W - PAD * 2}
+                    <rect x={PAD_L} y={toY(rl.midi + 0.4)} width={W - PAD_L - PAD_R}
                       height={toY(rl.midi - 0.4) - toY(rl.midi + 0.4)}
                       fill={isTargeted ? hitColor + "25" : T.success + "08"} rx="2"
                       style={{ transition: "all 0.3s ease" }} />
-                    {/* Active target line */}
-                    <line x1={PAD} y1={toY(rl.midi)} x2={W - PAD} y2={toY(rl.midi)}
+                    <line x1={PAD_L} y1={toY(rl.midi)} x2={W - PAD_R} y2={toY(rl.midi)}
                       stroke={isTargeted ? hitColor : T.gold} strokeWidth={isTargeted ? "2.5" : "0.5"} strokeDasharray={isTargeted ? "none" : "6,4"} opacity={isTargeted ? "0.9" : "0.4"}
                       style={{ transition: "all 0.3s ease" }} />
-                    {/* Note Label */}
-                    <text x={W - PAD - 4} y={toY(rl.midi) - 4} textAnchor="end"
+                    <text x={W - PAD_R - 4} y={toY(rl.midi) - 4} textAnchor="end"
                       fontSize={isTargeted ? "12" : "9"} fill={isTargeted ? hitColor : T.gold} fontFamily={T.sans} fontWeight="700" filter={isTargeted ? `drop-shadow(0 0 6px ${hitColor}50)` : "none"}
                       style={{ transition: "all 0.3s ease" }}>{rl.label}</text>
                   </g>
@@ -1568,18 +1529,6 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
           </div>
         );
       })()}
-
-      {/* Reference Keyboard */}
-      {referencePitches && referencePitches.length > 0 && (
-        <div style={{ marginTop: 24 }}>
-          <InlineKeyboard
-            range={["G2", "G4"]}
-            highlightNotes={referencePitches}
-            theme={T}
-            label="Reference Pitches"
-          />
-        </div>
-      )}
     </div>
   );
 }
