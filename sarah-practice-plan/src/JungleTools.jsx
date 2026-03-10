@@ -833,19 +833,19 @@ export function PitchPipe({ theme: T }) {
 }
 
 // --- 6. Live Pitch Detector ---
-const MIN_FREQ = 65; // ~C2 — realistic singing floor
-const MAX_FREQ = 1046; // ~C6
-const RMS_THRESHOLD = 0.008; // Unified silence gate
-const YIN_THRESHOLD = 0.15; // CMND dip threshold — tune after real-device testing
+const MIN_FREQ = 70; // ~D2 — practical singing floor
+const MAX_FREQ = 1050; // ~C6
+const RMS_THRESHOLD = 0.01; // -40dB silence gate (research standard)
+const YIN_THRESHOLD = 0.12; // CMND dip threshold — tighter = fewer false positives
+const CONFIDENCE_GATE = 0.30; // Reject frames where CMND dip > this (low confidence)
 
 function autoCorrelate(buffer, sampleRate) {
-  // YIN pitch detection — uses CMND to eliminate octave errors
-  // (RMS silence gate is handled by caller in detectPitch)
-  const W = Math.floor(buffer.length / 2); // Use first half of buffer
+  // YIN pitch detection with confidence output
+  const W = Math.floor(buffer.length / 2);
   const maxLag = Math.min(Math.floor(sampleRate / MIN_FREQ), W - 1);
   const minLag = Math.floor(sampleRate / MAX_FREQ);
 
-  // 2. Difference function: d[tau] = sum((buf[n] - buf[n+tau])^2)
+  // Difference function
   const d = new Float32Array(maxLag + 1);
   d[0] = 0;
   for (let tau = 1; tau <= maxLag; tau++) {
@@ -857,7 +857,7 @@ function autoCorrelate(buffer, sampleRate) {
     d[tau] = sum;
   }
 
-  // 3. Cumulative mean normalized difference (CMND)
+  // Cumulative mean normalized difference (CMND)
   const dPrime = new Float32Array(maxLag + 1);
   dPrime[0] = 1;
   let runningSum = 0;
@@ -866,21 +866,24 @@ function autoCorrelate(buffer, sampleRate) {
     dPrime[tau] = runningSum > 0 ? d[tau] / (runningSum / tau) : 1;
   }
 
-  // 4. Absolute threshold — find first dip below YIN_THRESHOLD
+  // Absolute threshold — find first dip below YIN_THRESHOLD
   let bestTau = -1;
   for (let tau = minLag; tau <= maxLag; tau++) {
     if (dPrime[tau] < YIN_THRESHOLD) {
-      // Walk to the local minimum
       while (tau + 1 <= maxLag && dPrime[tau + 1] < dPrime[tau]) tau++;
       bestTau = tau;
       break;
     }
   }
 
-  // No dip below threshold = no clear pitch — return null instead of guessing
   if (bestTau < 0) return null;
 
-  // 5. Parabolic interpolation for sub-sample precision
+  // Confidence gate — CMND value at best tau indicates periodicity strength
+  // Lower = more periodic = higher confidence. Reject weak detections.
+  const confidence = dPrime[bestTau];
+  if (confidence > CONFIDENCE_GATE) return null;
+
+  // Parabolic interpolation for sub-sample precision
   let T0 = bestTau;
   if (bestTau > 0 && bestTau < maxLag) {
     const x1 = dPrime[bestTau - 1], x2 = dPrime[bestTau], x3 = dPrime[bestTau + 1];
@@ -991,7 +994,7 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
       audioContextRef.current = audioCtx;
 
       const analyser = audioCtx.createAnalyser();
-      analyser.fftSize = 4096;
+      analyser.fftSize = 2048; // ~43ms at 48kHz — optimal for singing (lower latency than 4096)
       analyserRef.current = analyser;
 
       // High-pass filter at 60Hz to reject handling noise, room rumble, wind
@@ -1091,22 +1094,26 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
         silenceStartRef.current = null;
         wasSilentRef.current = false;
 
-        // 1. Median filter to reject outliers (3-sample for YIN's cleaner output)
+        // 1. Rolling median (5-sample) for outlier rejection
         freqBufRef.current.push(freq);
-        if (freqBufRef.current.length > 3) freqBufRef.current.shift();
+        if (freqBufRef.current.length > 5) freqBufRef.current.shift();
         const sorted = [...freqBufRef.current].sort((a, b) => a - b);
         const medianFreq = sorted[Math.floor(sorted.length / 2)];
 
-        // 2. Octave correction — if freq is ~2x or ~0.5x the EMA, snap to correct octave
-        let correctedFreq = medianFreq;
+        // 2. Smart-median: if raw freq deviates >1.5 semitones from median, use median
+        const deviationSt = Math.abs(12 * Math.log2(freq / medianFreq));
+        const cleanFreq = deviationSt > 1.5 ? medianFreq : freq;
+
+        // 3. Octave correction — if freq is ~2x or ~0.5x the EMA, snap to correct octave
+        let correctedFreq = cleanFreq;
         if (emaFreqRef.current) {
-          const ratio = medianFreq / emaFreqRef.current;
-          if (ratio > 1.8 && ratio < 2.2) correctedFreq = medianFreq / 2; // Octave-up error
-          else if (ratio > 0.45 && ratio < 0.55) correctedFreq = medianFreq * 2; // Octave-down error
+          const ratio = cleanFreq / emaFreqRef.current;
+          if (ratio > 1.8 && ratio < 2.2) correctedFreq = cleanFreq / 2;
+          else if (ratio > 0.45 && ratio < 0.55) correctedFreq = cleanFreq * 2;
         }
 
-        // 3. Exponential Moving Average (EMA) — tuned for singing responsiveness
-        const alpha = 0.3;
+        // 4. EMA smoothing — alpha 0.4 balances responsiveness + stability
+        const alpha = 0.4;
         const semitoneJump = emaFreqRef.current
           ? Math.abs(12 * Math.log2(correctedFreq / emaFreqRef.current))
           : Infinity;

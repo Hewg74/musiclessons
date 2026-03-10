@@ -490,8 +490,16 @@ function DetailSection({ label, color, children }) {
 function PitchRibbon({ pitches }) {
   if (!pitches || pitches.length === 0) return null;
 
-  const startNote = pitches[0];
-  const endNote = pitches[pitches.length - 1];
+  const getMidi = (note) => {
+    const match = note.match(/([A-G][b♭#]?)([0-9])/);
+    if (!match) return 0;
+    const n = { "C": 0, "C#": 1, "D": 2, "E♭": 3, "Eb": 3, "E": 4, "F": 5, "F#": 6, "G": 7, "A♭": 8, "Ab": 8, "A": 9, "B♭": 10, "Bb": 10, "B": 11 }[match[1].replace('b', '♭')] || 0;
+    return parseInt(match[2], 10) * 12 + n;
+  };
+
+  const sorted = [...pitches].sort((a, b) => getMidi(a) - getMidi(b));
+  const startNote = sorted[0];
+  const endNote = sorted[sorted.length - 1];
 
   return (
     <div style={{ marginBottom: 24, paddingLeft: 18, paddingRight: 18, marginLeft: -18, marginRight: -18 }}>
