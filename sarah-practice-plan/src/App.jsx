@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import * as Tone from "tone";
 import confetti from "canvas-confetti";
-import { MiniAudioPlayer, AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, VolumeMeter, TAB_CONTENT } from './JungleTools.jsx';
+import { MiniAudioPlayer, AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, VolumeMeter, DroneGenerator, TAB_CONTENT } from './JungleTools.jsx';
 import { DAYS, KEYBOARD_LEVELS, LOOPER_LEVELS, LESSON_POOL, ALL_NOTES, getPitchRange } from './data/appData.js';
 import { VOCAL_LEVELS } from './data/vocalLevels/index.js';
 import { GUITAR_STUDY } from './data/guitarStudy/index.js';
@@ -386,7 +386,7 @@ function BeatDots({ beat: externalBeat, playing, compact, beatConfig, beatsPerBa
   );
 }
 
-function TimerRing({ pct, fmt, size = 50 }) {
+function TimerRing({ pct, fmt, size = 50, textSize = 11 }) {
   const r = (size - 6) / 2, circ = 2 * Math.PI * r, done = pct >= 100;
   return (
     <div style={{ position: "relative", width: size, height: size, flexShrink: 0 }}>
@@ -398,7 +398,7 @@ function TimerRing({ pct, fmt, size = 50 }) {
           strokeLinecap="round" style={{ transition: "stroke-dashoffset 0.5s" }} />
       </svg>
       <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div style={{ fontSize: 11, fontWeight: 600, fontFamily: T.sans, color: done ? T.success : T.textDark }}>
+        <div style={{ fontSize: textSize, fontWeight: 600, fontFamily: T.sans, color: done ? T.success : T.textDark }}>
           {done ? "✓" : fmt}
         </div>
       </div>
@@ -1877,6 +1877,58 @@ function TapMatchModal({ targetBpm, onClose, metro }) {
   );
 }
 
+function TimerInner({ mins, theme: T }) {
+  const timer = useTimer(mins);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <TimerRing pct={timer.pct} fmt={timer.fmt} size={160} textSize={36} />
+      <div style={{ display: "flex", gap: 12, marginTop: 32 }}>
+        <button onClick={timer.toggle} style={{
+          background: timer.on ? T.coral : T.gold, border: "none", color: "#fff",
+          padding: "14px 28px", fontSize: 13, fontWeight: 700, cursor: "pointer", borderRadius: T.radius,
+          fontFamily: T.sans, letterSpacing: 1.5, textTransform: "uppercase", width: 120, transition: "all 0.2s"
+        }}>
+          {timer.on ? "Pause" : "Start"}
+        </button>
+        <button onClick={timer.reset} style={{
+          background: "transparent", border: `1px solid ${T.border}`, color: T.textMed,
+          padding: "14px 28px", fontSize: 13, fontWeight: 700, cursor: "pointer", borderRadius: T.radius,
+          fontFamily: T.sans, letterSpacing: 1.5, textTransform: "uppercase", width: 120, transition: "all 0.2s"
+        }}>
+          Reset
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function PracticeTimerTool({ theme: T }) {
+  const [inputMins, setInputMins] = useState(5);
+  const [activeMins, setActiveMins] = useState(5);
+  const [key, setKey] = useState(0);
+
+  return (
+    <div style={{ padding: "10px 0", textAlign: "center" }}>
+      <div style={{ marginBottom: 32 }}>
+        <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 12 }}>Set Duration (Min)</div>
+        <div style={{ display: "flex", justifyContent: "center", gap: 8, flexWrap: "wrap" }}>
+          {[1, 2, 3, 5, 10, 15, 20].map(m => (
+            <button key={m} onClick={() => { setActiveMins(m); setInputMins(m); setKey(k => k + 1); }} style={{
+              background: inputMins === m ? T.gold : "transparent",
+              border: `1px solid ${inputMins === m ? T.gold : T.borderSoft}`,
+              color: inputMins === m ? "#fff" : T.textMed,
+              padding: "8px 16px", borderRadius: T.radius, cursor: "pointer",
+              fontFamily: T.sans, fontWeight: 600, fontSize: 13, transition: "all 0.2s"
+            }}>{m}</button>
+          ))}
+        </div>
+      </div>
+      <TimerInner key={key} mins={activeMins} theme={T} />
+    </div>
+  );
+}
+
 function ToolCard({ title, icon, defaultOpen = false, children }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
@@ -2993,59 +3045,65 @@ export default function App() {
               <div style={{ fontSize: 32, fontWeight: 400, fontFamily: T.serif, color: T.textDark }}>Tools</div>
             </div>
 
-            {/* Metronome — always first, most-used tool */}
-            <div style={{ marginBottom: 24 }}>
+            <ToolCard icon="⏱️" title="Practice Timer" defaultOpen={true}>
+              <PracticeTimerTool theme={T} />
+            </ToolCard>
+
+            <ToolCard icon="🎛️" title="Metronome" defaultOpen={true}>
               <MetronomePanel metro={metro} onOpenTapMatch={setTapMatchBpm} />
-              <div style={{ background: T.bgCard, border: `1px solid ${T.border}`, padding: 22, marginTop: 20, boxShadow: T.sm, borderRadius: T.radiusMd }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-                  <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans }}>
-                    Quick Reference
-                  </div>
-                  <button onClick={() => setTapMatchBpm(metro.bpm)} style={{
-                    background: "transparent", border: "none", color: T.gold, fontSize: 11, fontWeight: 600, cursor: "pointer",
-                    fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1, padding: 0
-                  }}>
-                    Tap Minigame
-                  </button>
+            </ToolCard>
+
+            <ToolCard icon="🌫️" title="Drone Generator" defaultOpen={false}>
+              <DroneGenerator theme={T} />
+            </ToolCard>
+
+            <ToolCard icon="📚" title="Quick Reference" defaultOpen={false}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+                <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans }}>
+                  Quick Reference
                 </div>
-                {[
-                  { bpm: "78", use: "16th note subdivision (Drill #3)" },
-                  { bpm: "120", use: "Surf Rock — fingerpick + count + ooh climbing" },
-                  { bpm: "122", use: "Lyric placement + Sol Del Sur tap-along" },
-                  { bpm: "165", use: "Island strum (Surf Rock Drum)" },
-                  { bpm: "200-244", use: "Main metronome work (Drills #1 & #2)" },
-                ].map((r, i) => (
-                  <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: i < 4 ? `1px solid ${T.border}` : "none", fontSize: 13 }}>
-                    <span style={{ color: T.gold, fontWeight: 700, fontFamily: T.sans }}>{r.bpm}</span>
-                    <span style={{ color: T.textLight, fontFamily: T.sans }}>{r.use}</span>
-                  </div>
-                ))}
+                <button onClick={() => setTapMatchBpm(metro.bpm)} style={{
+                  background: "transparent", border: "none", color: T.gold, fontSize: 11, fontWeight: 600, cursor: "pointer",
+                  fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1, padding: 0
+                }}>
+                  Tap Minigame
+                </button>
               </div>
-              <div style={{ background: T.bgCard, border: `1px solid ${T.border}`, padding: 22, marginTop: 16, boxShadow: T.sm, borderRadius: T.radiusMd }}>
-                <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 14 }}>
-                  Backing Tracks
+              {[
+                { bpm: "78", use: "16th note subdivision (Drill #3)" },
+                { bpm: "120", use: "Surf Rock — fingerpick + count + ooh climbing" },
+                { bpm: "122", use: "Lyric placement + Sol Del Sur tap-along" },
+                { bpm: "165", use: "Island strum (Surf Rock Drum)" },
+                { bpm: "200-244", use: "Main metronome work (Drills #1 & #2)" },
+              ].map((r, i) => (
+                <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: i < 4 ? `1px solid ${T.border}` : "none", fontSize: 13 }}>
+                  <span style={{ color: T.gold, fontWeight: 700, fontFamily: T.sans }}>{r.bpm}</span>
+                  <span style={{ color: T.textLight, fontFamily: T.sans }}>{r.use}</span>
                 </div>
-                {[
-                  { label: "Surf Rock 120 BPM", url: "youtube.com/watch?v=AEf8LF4Xu18" },
-                  { label: "Groove Beat 90 BPM", url: "youtube.com/watch?v=n0nEhFAiorg" },
-                  { label: "Reggae One Drop 85 BPM", url: "youtube.com/watch?v=1aGp-CnwebE" },
-                  { label: "Dub Reggae 85 BPM", url: "youtube.com/watch?v=vmH-xBYBQIg" },
-                  { label: "Desert Blues 75 BPM", url: "youtube.com/watch?v=Yfyymjm24Ro" },
-                  { label: "Khruangbin Style 80 BPM", url: "youtube.com/watch?v=JlMy52s7qrI" },
-                  { label: "Cinematic Western 80 BPM", url: "youtube.com/watch?v=EKPjIt9GzX0" },
-                  { label: "Psych Rock 120 BPM", url: "youtube.com/watch?v=eqI_3Mw8go4" },
-                  { label: "Deep Soul Groove 80 BPM", url: "youtube.com/watch?v=55MTcCE6ZIk" },
-                  { label: "Soul Funk Groove 90 BPM", url: "youtube.com/watch?v=HhPq1J93uMI" },
-                  { label: "Surf Rock 165 BPM", url: "youtube.com/watch?v=gBNY43Xlp1Y" },
-                  { label: "Groove Beat 80 BPM", url: "youtube.com/watch?v=0vgOdlxSTW0" },
-                ].map((l, i, arr) => (
-                  <div key={i} style={{ padding: "8px 0", fontSize: 13, borderBottom: i < arr.length - 1 ? `1px solid ${T.border}` : "none" }}>
-                    <span style={{ color: T.gold, fontFamily: T.sans, fontWeight: 600 }}>{l.label}</span>
-                    <span style={{ color: T.textMuted, marginLeft: 10, fontSize: 11, fontFamily: T.sans }}>{l.url}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+              ))}
+            </ToolCard>
+
+            <ToolCard icon="🖇️" title="Backing Track Links" defaultOpen={false}>
+              {[
+                { label: "Surf Rock 120 BPM", url: "youtube.com/watch?v=AEf8LF4Xu18" },
+                { label: "Groove Beat 90 BPM", url: "youtube.com/watch?v=n0nEhFAiorg" },
+                { label: "Reggae One Drop 85 BPM", url: "youtube.com/watch?v=1aGp-CnwebE" },
+                { label: "Dub Reggae 85 BPM", url: "youtube.com/watch?v=vmH-xBYBQIg" },
+                { label: "Desert Blues 75 BPM", url: "youtube.com/watch?v=Yfyymjm24Ro" },
+                { label: "Khruangbin Style 80 BPM", url: "youtube.com/watch?v=JlMy52s7qrI" },
+                { label: "Cinematic Western 80 BPM", url: "youtube.com/watch?v=EKPjIt9GzX0" },
+                { label: "Psych Rock 120 BPM", url: "youtube.com/watch?v=eqI_3Mw8go4" },
+                { label: "Deep Soul Groove 80 BPM", url: "youtube.com/watch?v=55MTcCE6ZIk" },
+                { label: "Soul Funk Groove 90 BPM", url: "youtube.com/watch?v=HhPq1J93uMI" },
+                { label: "Surf Rock 165 BPM", url: "youtube.com/watch?v=gBNY43Xlp1Y" },
+                { label: "Groove Beat 80 BPM", url: "youtube.com/watch?v=0vgOdlxSTW0" },
+              ].map((l, i, arr) => (
+                <div key={i} style={{ padding: "8px 0", fontSize: 13, borderBottom: i < arr.length - 1 ? `1px solid ${T.border}` : "none" }}>
+                  <span style={{ color: T.gold, fontFamily: T.sans, fontWeight: 600 }}>{l.label}</span>
+                  <span style={{ color: T.textMuted, marginLeft: 10, fontSize: 11, fontFamily: T.sans }}>{l.url}</span>
+                </div>
+              ))}
+            </ToolCard>
 
             <ToolCard icon="✅" title="Jungle Flight Check" defaultOpen={true}>
               <FlightCheck theme={T} />

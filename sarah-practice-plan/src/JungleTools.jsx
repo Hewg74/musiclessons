@@ -655,14 +655,16 @@ export function AudioRecorder({ theme: T, inline = false }) {
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
 
+  // Viz refs
+  const canvasRef = useRef(null);
+  const audioCtxRef = useRef(null);
+  const analyserRef = useRef(null);
+  const requestRef = useRef(null);
+
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          echoCancellation: false,
-          autoGainControl: false,
-          noiseSuppression: false
-        }
+        audio: { echoCancellation: false, autoGainControl: false, noiseSuppression: false }
       });
       mediaRecorderRef.current = new MediaRecorder(stream);
       audioChunksRef.current = [];
@@ -681,6 +683,52 @@ export function AudioRecorder({ theme: T, inline = false }) {
       mediaRecorderRef.current.start();
       setIsRecording(true);
       setAudioURL(null); // clear previous
+
+      // Setup audio visualization
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      audioCtxRef.current = audioCtx;
+      const analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 2048;
+      analyserRef.current = analyser;
+      const source = audioCtx.createMediaStreamSource(stream);
+      source.connect(analyser);
+
+      const drawWaveform = () => {
+        if (!analyserRef.current || !canvasRef.current) return;
+
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext("2d");
+        const width = canvas.width;
+        const height = canvas.height;
+
+        const bufferLength = analyserRef.current.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+        analyserRef.current.getByteTimeDomainData(dataArray);
+
+        ctx.clearRect(0, 0, width, height);
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = T.coral;
+        ctx.beginPath();
+
+        const sliceWidth = width * 1.0 / bufferLength;
+        let x = 0;
+
+        for (let i = 0; i < bufferLength; i++) {
+          const v = dataArray[i] / 128.0;
+          const y = v * height / 2;
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+          x += sliceWidth;
+        }
+        ctx.lineTo(canvas.width, canvas.height / 2);
+        ctx.stroke();
+
+        requestRef.current = requestAnimationFrame(drawWaveform);
+      };
+
+      // Start drawing immediately
+      drawWaveform();
+
     } catch (e) {
       console.error('Microphone access denied', e);
       alert('Microphone access denied. Please allow mic permissions.');
@@ -691,25 +739,33 @@ export function AudioRecorder({ theme: T, inline = false }) {
     if (mediaRecorderRef.current && isRecording) {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
+
+      if (requestRef.current) cancelAnimationFrame(requestRef.current);
+      if (audioCtxRef.current && audioCtxRef.current.state !== 'closed') {
+        audioCtxRef.current.close().catch(console.error);
+      }
     }
   };
 
-  // Cleanup on unmount: stop recording and release mic
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
         mediaRecorderRef.current.stop();
       }
-      // Stop all mic tracks
       if (mediaRecorderRef.current && mediaRecorderRef.current.stream) {
         mediaRecorderRef.current.stream.getTracks().forEach(t => t.stop());
+      }
+      if (requestRef.current) cancelAnimationFrame(requestRef.current);
+      if (audioCtxRef.current && audioCtxRef.current.state !== 'closed') {
+        audioCtxRef.current.close().catch(console.error);
       }
     };
   }, []);
 
   return (
     <div style={inline ? { background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radius, padding: 16 } : {}}>
-      {!inline && <p style={{ fontSize: 14, color: T.textMed, marginBottom: 16 }}>
+      {!inline && <p style={{ fontSize: 13, color: T.textMed, marginBottom: 16 }}>
         Record yourself and listen back immediately. (Saved temporarily in memory).
       </p>}
 
@@ -734,20 +790,23 @@ export function AudioRecorder({ theme: T, inline = false }) {
               boxShadow: `0 0 0 4px rgba(214, 131, 131, 0.2), 0 0 0 8px rgba(214, 131, 131, 0.1)`,
               animation: 'pulse-ring 2s infinite cubic-bezier(0.4, 0, 0.2, 1)'
             }} />
-            RECORDING...
+            STOP
           </button>
         )}
 
-        {isRecording && <span style={{ color: T.coral, fontSize: inline ? 12 : 14, fontWeight: 600 }}>Recording...</span>}
+        {/* We keep the canvas in the DOM so the ref is ready instantly */}
+        <div style={{ display: isRecording ? 'block' : 'none', marginLeft: inline ? 4 : 16 }}>
+          <canvas ref={canvasRef} width={inline ? 100 : 160} height={inline ? 30 : 40} style={{ display: 'block' }} />
+        </div>
 
-        {audioURL && inline && (
+        {audioURL && inline && !isRecording && (
           <div style={{ flex: 1 }}>
             <MiniAudioPlayer theme={T} src={audioURL} />
           </div>
         )}
       </div>
 
-      {audioURL && !inline && (
+      {audioURL && !inline && !isRecording && (
         <div style={{ marginTop: 20 }}>
           <div style={{ fontSize: 11, fontWeight: 700, color: T.textMuted, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1.5, fontFamily: T.sans }}>Latest Take</div>
           <MiniAudioPlayer theme={T} src={audioURL} />
@@ -848,15 +907,8 @@ const RMS_THRESHOLD = 0.008; // Unified silence gate
 const YIN_THRESHOLD = 0.15; // CMND dip threshold — tune after real-device testing
 
 function autoCorrelate(buffer, sampleRate) {
-  // 1. RMS silence gate
-  let rms = 0;
-  for (let i = 0; i < buffer.length; i++) {
-    rms += buffer[i] * buffer[i];
-  }
-  rms = Math.sqrt(rms / buffer.length);
-  if (rms < RMS_THRESHOLD) return null;
-
   // YIN pitch detection — uses CMND to eliminate octave errors
+  // (RMS silence gate is handled by caller in detectPitch)
   const W = Math.floor(buffer.length / 2); // Use first half of buffer
   const maxLag = Math.min(Math.floor(sampleRate / MIN_FREQ), W - 1);
   const minLag = Math.floor(sampleRate / MAX_FREQ);
@@ -866,7 +918,7 @@ function autoCorrelate(buffer, sampleRate) {
   d[0] = 0;
   for (let tau = 1; tau <= maxLag; tau++) {
     let sum = 0;
-    for (let n = 0; n < W; n++) {
+    for (let n = 0; n < W - tau; n++) {
       const diff = buffer[n] - buffer[n + tau];
       sum += diff * diff;
     }
@@ -1316,21 +1368,32 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
       {/* Note display with circular badge */}
       <div style={{ textAlign: "center", marginBottom: 16 }}>
         <div style={{
+          position: "relative",
           display: "inline-flex", alignItems: "center", justifyContent: "center",
-          width: 96, height: 96, borderRadius: "50%",
+          width: 104, height: 104, borderRadius: "50%",
           background: pitchState.active
-            ? `linear-gradient(135deg, ${statusColor}08 0%, ${statusColor}15 100%)`
+            ? `linear-gradient(135deg, ${statusColor}15 0%, ${statusColor}30 100%)`
             : T.bgSoft,
-          border: `2px solid ${pitchState.active ? statusColor + '30' : T.borderSoft}`,
+          backdropFilter: pitchState.active ? "blur(4px)" : "none",
+          border: `2px solid ${pitchState.active ? 'rgba(255,255,255,0.4)' : T.borderSoft}`,
           transition: "all 0.3s ease",
-          boxShadow: pitchState.active && absCents <= 10
-            ? `0 0 24px ${T.success}20, inset 0 0 12px ${T.success}08`
-            : "none"
+          boxShadow: pitchState.active
+            ? `0 0 24px ${statusColor}40, inset 0 0 16px rgba(255,255,255,0.3)`
+            : "none",
+          transform: pitchState.active ? "scale(1.02)" : "scale(1)" // pseudo-breathe via CSS since we lack global keyframe hook
         }}>
+          {pitchState.active && (
+            <div style={{
+              position: "absolute", inset: -12, borderRadius: "50%",
+              background: `radial-gradient(circle, ${statusColor}15 0%, transparent 70%)`,
+              animation: "pulse-ring 2.5s infinite"
+            }} />
+          )}
           <div style={{
-            fontSize: 40, fontWeight: 400, fontFamily: T.serif,
+            fontSize: 48, fontWeight: 500, fontFamily: T.serif,
             color: pitchState.active ? T.textDark : T.textMuted,
-            lineHeight: 1, transition: "color 0.2s"
+            lineHeight: 1, transition: "color 0.2s", zIndex: 1,
+            textShadow: pitchState.active && absCents <= 10 ? `0 0 12px ${T.success}60` : "none"
           }}>
             {pitchState.note}
           </div>
@@ -1769,11 +1832,23 @@ export function FretboardDiagram({ theme: T, scale, position, highlight = [] }) 
         style={{ width: '100%', minHeight: 160, maxWidth: '100%', display: 'block' }}
       >
         <defs>
-          <linearGradient id="metal-string" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor={T.textMuted} stopOpacity="0.8" />
-            <stop offset="50%" stopColor="#ffffff" stopOpacity="0.6" />
-            <stop offset="100%" stopColor={T.textDark} stopOpacity="0.4" />
+          <linearGradient id="metal-string-plain" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#b5b5b5" />
+            <stop offset="50%" stopColor="#ffffff" />
+            <stop offset="100%" stopColor="#8c8c8c" />
           </linearGradient>
+          <linearGradient id="metal-string-wound" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#a88b6a" />
+            <stop offset="30%" stopColor="#d1b89d" />
+            <stop offset="50%" stopColor="#f5ddc3" />
+            <stop offset="70%" stopColor="#d1b89d" />
+            <stop offset="100%" stopColor="#8f7356" />
+          </linearGradient>
+          <radialGradient id="pearl-inlay" cx="30%" cy="30%" r="60%">
+            <stop offset="0%" stopColor="#fff" />
+            <stop offset="70%" stopColor="#f4ece1" />
+            <stop offset="100%" stopColor="#d6c6b3" />
+          </radialGradient>
         </defs>
         {/* Position highlight rectangle */}
         <rect
@@ -1786,17 +1861,39 @@ export function FretboardDiagram({ theme: T, scale, position, highlight = [] }) 
           opacity={0.08}
         />
 
-        {/* Fret lines (vertical) */}
-        {Array.from({ length: totalFrets + 1 }, (_, i) => (
-          <line
-            key={`fret-${i}`}
-            x1={leftPad + i * fretSpacing}
-            y1={topPad - 4}
-            x2={leftPad + i * fretSpacing}
-            y2={topPad + (numStrings - 1) * stringSpacing + 4}
-            stroke={i === 0 ? T.textDark : T.border}
-            strokeWidth={i === 0 ? 3 : 1}
-          />
+        {/* Fret lines (vertical) & Stylized Nut */}
+        {Array.from({ length: totalFrets + 1 }, (_, i) => {
+          if (i === 0) {
+            // Nut
+            return <rect key={`nut`} x={leftPad - 5} y={topPad - 5} width={10} height={(numStrings - 1) * stringSpacing + 10} rx={4} fill="#eee6de" stroke="#cfc0b2" strokeWidth="1" style={{ filter: "drop-shadow(3px 0 4px rgba(0,0,0,0.12))" }} />;
+          }
+          return (
+            <line
+              key={`fret-${i}`}
+              x1={leftPad + i * fretSpacing}
+              y1={topPad - 4}
+              x2={leftPad + i * fretSpacing}
+              y2={topPad + (numStrings - 1) * stringSpacing + 4}
+              stroke="#b5aead"
+              strokeWidth={2}
+              style={{ filter: "drop-shadow(1px 0px 1px rgba(255,255,255,0.4))" }}
+            />
+          );
+        })}
+
+        {/* Fret markers (dots at frets 3,5,7,9,12,15) */}
+        {/* We map the markers FIRST so they sit underneath the strings */}
+        {FRET_MARKERS.map(f => (
+          <React.Fragment key={`marker-${f}`}>
+            {f === 12 ? (
+              <>
+                <circle cx={fretX(f)} cy={topPad + 1.5 * stringSpacing} r={5.5} fill="url(#pearl-inlay)" stroke="rgba(0,0,0,0.08)" strokeWidth="0.5" style={{ filter: "drop-shadow(1px 1px 2px rgba(0,0,0,0.1))" }} />
+                <circle cx={fretX(f)} cy={topPad + 3.5 * stringSpacing} r={5.5} fill="url(#pearl-inlay)" stroke="rgba(0,0,0,0.08)" strokeWidth="0.5" style={{ filter: "drop-shadow(1px 1px 2px rgba(0,0,0,0.1))" }} />
+              </>
+            ) : (
+              <circle cx={fretX(f)} cy={topPad + 2.5 * stringSpacing} r={5.5} fill="url(#pearl-inlay)" stroke="rgba(0,0,0,0.08)" strokeWidth="0.5" style={{ filter: "drop-shadow(1px 1px 2px rgba(0,0,0,0.1))" }} />
+            )}
+          </React.Fragment>
         ))}
 
         {/* Fret numbers along the top */}
@@ -1804,44 +1901,40 @@ export function FretboardDiagram({ theme: T, scale, position, highlight = [] }) 
           <text
             key={`fnum-${i}`}
             x={fretX(i)}
-            y={topPad - 14}
+            y={topPad - 16}
             textAnchor="middle"
             fontSize={10}
             fontFamily={T.sans}
             fill={i >= lo && i <= hi ? T.textDark : T.textLight}
-            fontWeight={i >= lo && i <= hi ? 700 : 400}
+            fontWeight={i >= lo && i <= hi ? 700 : 500}
           >
             {i}
           </text>
         ))}
 
         {/* String lines (horizontal) */}
-        {STRING_MIDI.map((s, idx) => (
-          <line
-            key={`str-${idx}`}
-            x1={leftPad}
-            y1={stringY(idx)}
-            x2={leftPad + totalFrets * fretSpacing}
-            y2={stringY(idx)}
-            stroke="url(#metal-string)"
-            strokeWidth={stringWidths[idx]}
-            opacity={0.8}
-          />
-        ))}
-
-        {/* Fret markers (dots at frets 3,5,7,9,12,15) */}
-        {FRET_MARKERS.map(f => (
-          <React.Fragment key={`marker-${f}`}>
-            {f === 12 ? (
-              <>
-                <circle cx={fretX(f)} cy={topPad + 1.5 * stringSpacing} r={3} fill={T.textLight} opacity={0.3} />
-                <circle cx={fretX(f)} cy={topPad + 3.5 * stringSpacing} r={3} fill={T.textLight} opacity={0.3} />
-              </>
-            ) : (
-              <circle cx={fretX(f)} cy={topPad + 2.5 * stringSpacing} r={3} fill={T.textLight} opacity={0.3} />
-            )}
-          </React.Fragment>
-        ))}
+        {STRING_MIDI.map((s, idx) => {
+          const isWound = idx >= 3; // E(5), A(4), D(3)
+          return (
+            <g key={`str-${idx}`}>
+              {/* String shadow */}
+              <line
+                x1={leftPad} y1={stringY(idx) + 1.5}
+                x2={leftPad + totalFrets * fretSpacing} y2={stringY(idx) + 1.5}
+                stroke="rgba(0,0,0,0.18)" strokeWidth={stringWidths[idx]}
+                strokeLinecap="round"
+              />
+              {/* actual string */}
+              <line
+                x1={leftPad} y1={stringY(idx)}
+                x2={leftPad + totalFrets * fretSpacing} y2={stringY(idx)}
+                stroke={isWound ? "url(#metal-string-wound)" : "url(#metal-string-plain)"}
+                strokeWidth={stringWidths[idx]}
+                strokeLinecap="round"
+              />
+            </g>
+          );
+        })}
 
         {/* Scale note dots */}
         {dots.map((d, i) => {
@@ -2003,22 +2096,32 @@ export function VolumeMeter({ theme: T, inline = false }) {
         {Math.round(dbLevel)} dB
       </div>
 
-      {/* Horizontal Bar */}
+      {/* LED-style VU Meter */}
       <div style={{
-        width: '100%', height: inline ? 16 : 24,
-        background: T.border, borderRadius: T.radius,
-        overflow: 'hidden', marginBottom: 12,
-        boxShadow: "inset 0 2px 8px rgba(0,0,0,0.06)",
-        position: 'relative'
+        display: "flex", gap: inline ? 2 : 3, marginBottom: 12, height: inline ? 12 : 20,
+        padding: "4px", background: "#000", borderRadius: 4,
+        boxShadow: "inset 0 2px 8px rgba(0,0,0,0.5)"
       }}>
-        <div style={{
-          position: 'absolute', top: 0, left: 0, bottom: 0,
-          width: `${barWidth}%`,
-          background: `linear-gradient(90deg, ${T.success} 0%, ${T.gold} 60%, ${T.coral} 100%)`,
-          backgroundSize: '300% 100%',
-          borderRadius: T.radius,
-          transition: 'width 0.08s ease-out'
-        }} />
+        {Array.from({ length: 30 }).map((_, i) => {
+          // Range: -60dB to +0dB -> 30 segments (2dB per segment)
+          const thresholdDb = -60 + i * 2;
+          const isOn = dbLevel >= thresholdDb;
+
+          let color = T.success;
+          let glowColor = T.success;
+          if (thresholdDb >= -10) { color = T.gold; glowColor = T.gold; }
+          if (thresholdDb >= -4) { color = T.coral; glowColor = T.coral; }
+
+          return (
+            <div key={i} style={{
+              flex: 1, height: "100%",
+              background: isOn ? color : "#222",
+              borderRadius: 1,
+              boxShadow: isOn ? `0 0 8px ${glowColor}90` : "none",
+              transition: "background 0.05s ease-out, box-shadow 0.05s ease-out"
+            }} />
+          );
+        })}
       </div>
 
       {/* Sparkline */}
@@ -2052,6 +2155,122 @@ export function VolumeMeter({ theme: T, inline = false }) {
       >
         Stop
       </button>
+    </div>
+  );
+}
+
+// --- Drone Generator Component ---
+export function DroneGenerator({ theme: T }) {
+  const [playing, setPlaying] = useState(false);
+  const [root, setRoot] = useState("C");
+  const [volume, setVolume] = useState(-12);
+  const synthRef = useRef(null);
+
+  const notes = ["C", "C#", "D", "E♭", "E", "F", "F#", "G", "A♭", "A", "B♭", "B"];
+
+  useEffect(() => {
+    // A lush, warm pad
+    const chorus = new Tone.Chorus(4, 2.5, 0.5).toDestination().start();
+    // Use an LFO to modulate the filter frequency for a "breathing" living pad
+    const filter = new Tone.Filter(800, "lowpass").connect(chorus);
+
+    // Fat sawtooth with slow attack/release
+    const synth = new Tone.PolySynth(Tone.Synth, {
+      oscillator: { type: "fatsawtooth", count: 3, spread: 25 },
+      envelope: { attack: 2.5, decay: 0.1, sustain: 1, release: 4 }
+    }).connect(filter);
+
+    // LFO is started after synth creation
+    const lfo = new Tone.LFO(0.1, 400, 1200).connect(filter.frequency).start();
+
+    synth.volume.value = volume;
+    synthRef.current = synth;
+
+    return () => {
+      synth.dispose();
+      filter.dispose();
+      lfo.dispose();
+      chorus.dispose();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (synthRef.current) {
+      synthRef.current.volume.rampTo(volume, 0.1);
+    }
+  }, [volume]);
+
+  const toggleDrone = async () => {
+    if (!synthRef.current) return;
+    if (Tone.context.state !== "running") await Tone.context.resume();
+
+    if (playing) {
+      synthRef.current.releaseAll();
+      setPlaying(false);
+    } else {
+      const n1 = `${root.replace('♭', 'b')}2`;
+      const n2 = `${root.replace('♭', 'b')}3`;
+      synthRef.current.triggerAttack([n1, n2]);
+      setPlaying(true);
+    }
+  };
+
+  const changeRoot = (n) => {
+    if (playing && root !== n) {
+      synthRef.current.releaseAll();
+      const n1 = `${n.replace('♭', 'b')}2`;
+      const n2 = `${n.replace('♭', 'b')}3`;
+      synthRef.current.triggerAttack([n1, n2], "+0.5");
+    }
+    setRoot(n);
+  };
+
+  return (
+    <div style={{ padding: "10px 0" }}>
+      <div style={{ textAlign: "center", marginBottom: 32 }}>
+        <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, marginBottom: 8 }}>
+          Warm, continuous analog pad for ear training.
+        </div>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: 10, maxWidth: 360, margin: "0 auto 32px" }}>
+        {notes.map(n => {
+          const isActive = root === n;
+          return (
+            <button key={n} onClick={() => changeRoot(n)} style={{
+              width: "100%", aspectRatio: "1", borderRadius: T.radius,
+              background: isActive ? T.plum : "transparent",
+              border: `1px solid ${isActive ? T.plum : T.border}`,
+              color: isActive ? "#fff" : T.textMed,
+              fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: T.sans,
+              transition: "all 0.2s",
+              boxShadow: isActive ? `0 4px 12px ${T.plum}40` : "none"
+            }}>
+              {n}
+            </button>
+          );
+        })}
+      </div>
+
+      <div style={{ display: "flex", alignItems: "center", gap: 20, maxWidth: 300, margin: "0 auto", marginBottom: 32, background: T.bgSoft, padding: "12px 20px", borderRadius: T.radiusMd, border: `1px solid ${T.borderSoft}` }}>
+        <span style={{ fontSize: 11, color: T.textMuted, fontFamily: T.sans, fontWeight: 700, letterSpacing: 1 }}>VOL</span>
+        <input type="range" min={-30} max={0} value={volume}
+          onChange={e => setVolume(Number(e.target.value))}
+          style={{ flex: 1, accentColor: T.plum, height: 3 }} />
+      </div>
+
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <button onClick={toggleDrone} style={{
+          background: playing ? T.coral : T.plum, border: "none", color: "#fff",
+          padding: "16px 40px", fontSize: 13, fontWeight: 700, cursor: "pointer", borderRadius: 30,
+          fontFamily: T.sans, letterSpacing: 2, textTransform: "uppercase",
+          boxShadow: playing ? `0 0 24px ${T.coral}60` : `0 8px 20px ${T.plum}40`,
+          transition: "all 0.3s",
+          animation: playing ? "pulse-ring 3s infinite" : "none"
+        }}>
+          {playing ? "Stop Drone" : "Start Drone"}
+        </button>
+      </div>
     </div>
   );
 }
