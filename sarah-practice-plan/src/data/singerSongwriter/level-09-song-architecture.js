@@ -1,17 +1,17 @@
 import { getPitchRange } from "../appData.js";
 
-export const level8 = {
-  level: 8,
+export const level9 = {
+  level: 9,
   title: "Song Architecture",
   subtitle: "Verses tell stories. Choruses tell truths.",
   description:
     "You can create melodies and feel harmony. Now build complete songs with intentional structure — verse/chorus/bridge, dynamic arcs, intros and outros. Based on Berklee's songwriting sequence: melody and structure are taught together because they're inseparable. A great melody in a bad structure is a wasted melody.",
   artists: "DOPE LEMON, Nick Drake, Skinshape, BALTHVS",
-  unlocks: "Lyrics & Songcraft (Level 9)",
-  review: { label: "Level 6-7 Check-In", time: 5, exercises: ["ss-6-7", "ss-7-6"], prompt: "Play your complete original (ss-6-7). Then improvise over a new progression for 2 minutes (ss-7-6). Both confident? Move on." },
+  unlocks: "Lyrics & Songcraft (Level 10)",
+  review: { label: "Level 7-8 Check-In", time: 5, exercises: ["ss-7-7", "ss-8-6"], prompt: "Play your complete original (ss-7-7). Then improvise over a new progression for 2 minutes (ss-8-6). Both confident? Move on." },
   exercises: [
     {
-      id: "ss-8-1",
+      id: "ss-9-1",
       time: 8,
       title: "Verse Craft",
       type: "song",
@@ -31,13 +31,13 @@ export const level8 = {
       recorder: true
     },
     {
-      id: "ss-8-2",
+      id: "ss-9-2",
       time: 8,
       title: "Chorus Lift",
       type: "song",
       what: "Create a chorus that LIFTS from the verse — higher melody, more energy, simpler lyrics, stronger groove. The chorus is the emotional peak. It should feel like the verse was building toward it. Use contrast in range, rhythm, and delivery.",
       steps: [
-        { text: "Take your verse from ss-8-1. Identify its highest note. Your chorus should start at or above that note.", why: "Choruses lift above verses in range. Even a minor 3rd higher creates obvious sectional contrast." },
+        { text: "Take your verse from ss-9-1. Identify its highest note. Your chorus should start at or above that note.", why: "Choruses lift above verses in range. Even a minor 3rd higher creates obvious sectional contrast." },
         { text: "Create a chorus melody with a simpler rhythm — longer notes, more repetition, more singable. Verses can be intricate; choruses must be memorable.", why: "Chorus simplicity is what makes them stick. The listener should be able to sing along after hearing it once." },
         { text: "Increase your strum intensity for the chorus. More volume, fuller strumming, maybe switch from fingerpick to strum or from chop to full strum.", why: "The guitar reinforces the dynamic shift. A louder, fuller guitar signals 'chorus' to the listener's subconscious." },
         { text: "Play verse → chorus → verse → chorus. The transition into the chorus should feel like a door opening into a bigger room.", why: "The verse-to-chorus transition is the most important moment in the song. It's the payoff for the setup." }
@@ -51,7 +51,7 @@ export const level8 = {
       recorder: true
     },
     {
-      id: "ss-8-3",
+      id: "ss-9-3",
       time: 8,
       title: "Bridge: The Departure",
       type: "song",
@@ -71,7 +71,7 @@ export const level8 = {
       recorder: true
     },
     {
-      id: "ss-8-4",
+      id: "ss-9-4",
       time: 6,
       title: "Intro & Outro Framing",
       type: "guitar",
@@ -89,7 +89,7 @@ export const level8 = {
       recorder: true
     },
     {
-      id: "ss-8-5",
+      id: "ss-9-5",
       time: 8,
       title: "Dynamic Mapping",
       type: "song",
@@ -109,14 +109,14 @@ export const level8 = {
       recorder: true
     },
     {
-      id: "ss-8-6",
+      id: "ss-9-6",
       time: 10,
       title: "Complete Arranged Song",
       type: "song",
       what: "Build a fully arranged original song: intro, V1, chorus, V2, chorus, bridge, final chorus, outro. With dynamic mapping, contrasting sections, and intentional transitions. This is a professional-quality song structure.",
       tracks: [{ name: "Cinematic Western 80", src: "/cinematic-western-80.mp3" }],
       steps: [
-        { text: "Choose your best original from Level 6 or write a new one. Map the full structure: intro (4 bars) → V1 (8) → Chorus (8) → V2 (8) → Chorus (8) → Bridge (8) → Final Chorus (8) → Outro (4).", why: "A full arrangement plan keeps you from getting lost. 56 bars total, about 3 minutes at 80 BPM. That's a complete song." },
+        { text: "Choose your best original from Level 7 or write a new one. Map the full structure: intro (4 bars) → V1 (8) → Chorus (8) → V2 (8) → Chorus (8) → Bridge (8) → Final Chorus (8) → Outro (4).", why: "A full arrangement plan keeps you from getting lost. 56 bars total, about 3 minutes at 80 BPM. That's a complete song." },
         { text: "Mark the dynamic arc on your structure: pp → mp → f → mp → f → p → ff → pp. Practice each transition.", why: "Dynamics and structure work together. The bridge's drop to p makes the final chorus ff feel earned." },
         { text: "Practice transitions: verse → chorus (the lift). Chorus → verse (the settle). Verse → bridge (the departure). Bridge → final chorus (the arrival). Each transition is a mini-performance.", why: "Transitions are where songs fall apart or come alive. Smooth transitions create flow; jarring ones break immersion." },
         { text: "Perform the complete song 3 times. Record the 3rd take. Listen back. This is a fully arranged, dynamically mapped original song.", why: "The third take benefits from two warm-up passes. It's usually the take where technique and emotion align." }

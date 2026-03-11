@@ -1,17 +1,17 @@
 import { getPitchRange } from "../appData.js";
 
-export const level6 = {
-  level: 6,
+export const level7 = {
+  level: 7,
   title: "Originals & Genre Craft",
   subtitle: "Every genre is a toolkit. Build songs in each one.",
   description:
     "Apply your melodic and rhythmic skills to create original pieces in specific genres — reggae, surf-psych, desert blues, and soul. Each genre has its own strum feel, tempo pocket, and melodic personality. You'll create one original per genre, then blend them. Based on Lucy Green's 'create within a style' approach: genre constraints channel creativity productively.",
   artists: "DOPE LEMON, Allah-Las, Khruangbin, Skinshape, Tinariwen, Tommy Guerrero",
-  unlocks: "Hearing Harmony (Level 7)",
-  review: { label: "Level 4-5 Check-In", time: 5, exercises: ["ss-4-4", "ss-5-5"], prompt: "Play Am-C-G-Em in 3 different feels (ss-4-4). Then improvise pentatonic melody for 2 minutes over a backing track (ss-5-5). Both fluid? Move on." },
+  unlocks: "Hearing Harmony (Level 8)",
+  review: { label: "Level 5-6 Check-In", time: 5, exercises: ["ss-5-4", "ss-6-5"], prompt: "Play Am-C-G-Em in 3 different feels (ss-5-4). Then improvise pentatonic melody for 2 minutes over a backing track (ss-6-5). Both fluid? Move on." },
   exercises: [
     {
-      id: "ss-6-1",
+      id: "ss-7-1",
       time: 10,
       title: "Reggae Original",
       type: "song",
@@ -32,7 +32,7 @@ export const level6 = {
       recorder: true
     },
     {
-      id: "ss-6-2",
+      id: "ss-7-2",
       time: 10,
       title: "Surf-Psych Original",
       type: "song",
@@ -53,7 +53,7 @@ export const level6 = {
       recorder: true
     },
     {
-      id: "ss-6-3",
+      id: "ss-7-3",
       time: 10,
       title: "Desert Blues Original",
       type: "song",
@@ -74,7 +74,7 @@ export const level6 = {
       recorder: true
     },
     {
-      id: "ss-6-4",
+      id: "ss-7-4",
       time: 10,
       title: "Soul Groove Original",
       type: "song",
@@ -96,14 +96,14 @@ export const level6 = {
       recorder: true
     },
     {
-      id: "ss-6-5",
+      id: "ss-7-5",
       time: 8,
       title: "Genre Blend",
       type: "song",
       what: "Create an original that blends TWO of your genre pieces. Reggae verse → surf chorus. Or desert blues verse → soul chorus. Genre-blending is YOUR signature — the 'Coastal Psychedelic Omnivore' sound.",
       tracks: [{ name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" }],
       steps: [
-        { text: "Pick two genres from ss-6-1 through ss-6-4. Use one genre's feel for the verse and the other for the chorus.", why: "Genre-blending creates a sound that belongs to no category — which means it belongs to YOU. Khruangbin does exactly this." },
+        { text: "Pick two genres from ss-7-1 through ss-7-4. Use one genre's feel for the verse and the other for the chorus.", why: "Genre-blending creates a sound that belongs to no category — which means it belongs to YOU. Khruangbin does exactly this." },
         { text: "The strum pattern must change between sections. Reggae chop → surf jangle. Or sparse desert → soul groove. Let the guitar transformation signal the genre shift.", why: "The strum change IS the section change. Your audience feels the genre shift through the guitar texture, even unconsciously." },
         { text: "The vocal delivery shifts too: porch register for one genre, slightly more present for the other. Let the genre guide your voice.", why: "Each genre has a vocal personality. Matching your delivery to the genre creates authenticity within each section." },
         { text: "Record the blend. This is the most 'you' thing you've created so far — two of your favorite genres fused into one original piece.", why: "Genre-blending is where artistic identity emerges. The specific genres you choose to blend are your musical fingerprint." }
@@ -117,7 +117,7 @@ export const level6 = {
       recorder: true
     },
     {
-      id: "ss-6-6",
+      id: "ss-7-6",
       time: 8,
       title: "Parasitic Songwriting",
       type: "song",
@@ -137,7 +137,7 @@ export const level6 = {
       recorder: true
     },
     {
-      id: "ss-6-7",
+      id: "ss-7-7",
       time: 10,
       title: "Complete Original",
       type: "song",

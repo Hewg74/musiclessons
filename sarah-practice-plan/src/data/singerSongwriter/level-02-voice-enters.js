@@ -7,7 +7,7 @@ export const level2 = {
   description:
     "The gradual neural bridge between hands and voice. Based on Orff Schulwerk's speak-to-sing progression and dual-task motor learning research: add only ONE new vocal demand per exercise. Count before you speak, speak before you hum, hum before you sing. Each step adds exactly one layer of complexity.",
   artists: "DOPE LEMON, Skinshape, Babe Rainbow",
-  unlocks: "Your First Songs (Level 3)",
+  unlocks: "Voice Explores (Level 3)",
   exercises: [
     {
       id: "ss-2-0a",
@@ -126,8 +126,7 @@ export const level2 = {
       sarah: "Gene, you just doubled your singing vocabulary from one note per chord to two. That's a bigger deal than it sounds — two notes is enough to create simple melodies. Root and 5th are the bones that every melody hangs on.",
       metronome: 85,
       recorder: true,
-      referencePitches: getPitchRange("C3", "A4"),
-      levelUp: "Can sing root and 5th of G, C, D, Em, and Am while strumming at 85 BPM without strum breaks."
+      referencePitches: getPitchRange("C3", "A4")
     },
     {
       id: "ss-2-3c",
@@ -146,7 +145,8 @@ export const level2 = {
       wrong: "If you can't find the 3rd by ear, play each chord tone on the guitar and match it with your voice before trying to sing the triad freely. Don't rush — accuracy at 80 BPM beats sloppiness at any tempo.",
       sarah: "Gene, you're now singing three notes per chord — root, 3rd, 5th. That's the entire harmonic skeleton. When you improvise melodies later, these chord tones will be your anchor points. Every note you sing will relate to one of these three.",
       metronome: 80,
-      referencePitches: getPitchRange("A2", "E4")
+      referencePitches: getPitchRange("A2", "E4"),
+      levelUp: "Can sing root, 3rd, and 5th of G, C, D, Em, and Am while strumming at 80 BPM without strum breaks."
     }
   ]
 };

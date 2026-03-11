@@ -2536,6 +2536,30 @@ export default function App() {
     localStorage.setItem("theme", next ? "dark" : "light");
   };
 
+  // One-time migration for Voice Explores level insertion (Level 3)
+  // Shifts ss-3+ exercise IDs and songwriter-level by +1
+  if (!localStorage.getItem("ss-level-migration-v1")) {
+    try {
+      const savedLevel = localStorage.getItem("songwriter-level");
+      if (savedLevel && parseInt(savedLevel) >= 3) {
+        localStorage.setItem("songwriter-level", String(parseInt(savedLevel) + 1));
+      }
+      const savedCompleted = localStorage.getItem("practice-completed");
+      if (savedCompleted) {
+        const ids = JSON.parse(savedCompleted);
+        const migrated = ids.map(id => {
+          const match = id.match(/^ss-(\d+)-(.+)$/);
+          if (match && parseInt(match[1]) >= 3) {
+            return `ss-${parseInt(match[1]) + 1}-${match[2]}`;
+          }
+          return id;
+        });
+        localStorage.setItem("practice-completed", JSON.stringify(migrated));
+      }
+    } catch { /* ignore migration errors */ }
+    localStorage.setItem("ss-level-migration-v1", "done");
+  }
+
   const [tab, setTab] = useState("practice");
   const [selectedDay, setSelectedDay] = useState(DAYS[0]);
   const [completed, setCompleted] = useState(() => {

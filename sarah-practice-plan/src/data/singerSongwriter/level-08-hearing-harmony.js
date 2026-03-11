@@ -1,17 +1,17 @@
 import { getPitchRange } from "../appData.js";
 
-export const level7 = {
-  level: 7,
+export const level8 = {
+  level: 8,
   title: "Hearing Harmony",
   subtitle: "Your ears lead. Your voice follows.",
   description:
     "Move beyond the pentatonic into full diatonic melody — all 7 notes of the major and minor scales. Learn to hear intervals, feel chord functions (tension vs resolution), and navigate harmonic changes by ear. Based on Gordon's audiation stages: you'll learn to hear harmony in your inner ear before singing it. This level transforms you from a pentatonic improviser into a harmonic navigator.",
   artists: "Khruangbin, BALTHVS, Hermanos Gutierrez, Nick Drake",
-  unlocks: "Song Architecture (Level 8)",
-  review: { label: "Level 5-6 Check-In", time: 5, exercises: ["ss-5-5", "ss-6-7"], prompt: "Do 2 minutes of free pentatonic improv (ss-5-5). Then play through your complete original song (ss-6-7). Both confident? Move on." },
+  unlocks: "Song Architecture (Level 9)",
+  review: { label: "Level 6-7 Check-In", time: 5, exercises: ["ss-6-5", "ss-7-7"], prompt: "Do 2 minutes of free pentatonic improv (ss-6-5). Then play through your complete original song (ss-7-7). Both confident? Move on." },
   exercises: [
     {
-      id: "ss-7-1",
+      id: "ss-8-1",
       time: 6,
       title: "Interval Feeling",
       type: "vocal",
@@ -31,7 +31,7 @@ export const level7 = {
       recorder: true
     },
     {
-      id: "ss-7-2",
+      id: "ss-8-2",
       time: 6,
       title: "Major vs Minor Feeling",
       type: "vocal",
@@ -50,7 +50,7 @@ export const level7 = {
       recorder: true
     },
     {
-      id: "ss-7-3",
+      id: "ss-8-3",
       time: 8,
       title: "Chord Function: Tension & Resolution",
       type: "song",
@@ -71,7 +71,7 @@ export const level7 = {
       recorder: true
     },
     {
-      id: "ss-7-4",
+      id: "ss-8-4",
       time: 6,
       title: "Relative Minor Discovery",
       type: "vocal",
@@ -80,7 +80,7 @@ export const level7 = {
         { text: "Play G-Em-C-D. Then play Em-G-C-D. Same chords, different starting point. The first sounds 'happy-journey.' The second sounds 'melancholy-journey.'", why: "Relative major and minor share every note. The emotional difference comes entirely from which chord feels like 'home.' Starting on Em makes minor the center of gravity." },
         { text: "Strum G and sing a major-feeling melody (using B natural, the major 3rd). Then strum Em and sing a minor-feeling melody (using G natural, the minor 3rd of Em).", why: "Your melody tells the listener which mode you're in. The guitar chords are ambiguous — it's the vocal melody that declares 'this is major' or 'this is minor.'" },
         { text: "Try a song that starts in minor (Em verse) and shifts to major (G chorus). Same notes, different emotional center. The chorus 'lifts' by shifting the tonal center.", why: "Minor-verse, major-chorus is one of the most powerful structural tools. The major chorus feels like emotional arrival." },
-        { text: "Record a piece that alternates between minor and major feeling. This contrast is more sophisticated than anything in Levels 1-6.", why: "Controlling major/minor feeling with the same chord set is advanced harmonic awareness. You're composing with emotional color now." }
+        { text: "Record a piece that alternates between minor and major feeling. This contrast is more sophisticated than anything in Levels 1-7.", why: "Controlling major/minor feeling with the same chord set is advanced harmonic awareness. You're composing with emotional color now." }
       ],
       feel: "Switching between relative major and minor should feel like changing the lighting in a room — same space, totally different mood. When you control the mood shift, you control the listener's emotions.",
       wrong: "If you can't hear the difference between major and minor center, listen for which chord feels like 'home.' If G feels like resolution, you're in major. If Em feels like resolution, you're in minor.",
@@ -90,7 +90,7 @@ export const level7 = {
       recorder: true
     },
     {
-      id: "ss-7-5",
+      id: "ss-8-5",
       time: 8,
       title: "Modal Colors",
       type: "song",
@@ -110,7 +110,7 @@ export const level7 = {
       recorder: true
     },
     {
-      id: "ss-7-6",
+      id: "ss-8-6",
       time: 8,
       title: "Sing Over New Progressions",
       type: "song",

@@ -1,17 +1,17 @@
 import { getPitchRange } from "../appData.js";
 
-export const level5 = {
-  level: 5,
+export const level6 = {
+  level: 6,
   title: "Melody Building",
   subtitle: "Five notes. Infinite melodies. Zero wrong answers.",
   description:
     "The pentatonic scale is your 'safe space' — five notes that sound good over any chord in the key. Based on Orff Schulwerk and Kodály: the pentatonic scale is universally the first melodic framework taught because it contains no dissonant intervals. You CAN'T play a wrong note. This level builds from 2-note melodies to free pentatonic improvisation, with backing tracks as your band.",
   artists: "Khruangbin, Allah-Las, Tinariwen, BALTHVS",
-  unlocks: "Originals & Genre Craft (Level 6)",
-  review: { label: "Level 3-4 Check-In", time: 5, exercises: ["ss-3-3", "ss-4-6"], prompt: "Create a chord-tone melody over Am-C-G-Em (ss-3-3). Then do 2 minutes of one-note rhythm improv (ss-4-6). Both flowing? Move on." },
+  unlocks: "Originals & Genre Craft (Level 7)",
+  review: { label: "Level 4-5 Check-In", time: 5, exercises: ["ss-4-3", "ss-5-6"], prompt: "Create a chord-tone melody over Am-C-G-Em (ss-4-3). Then do 2 minutes of one-note rhythm improv (ss-5-6). Both flowing? Move on." },
   exercises: [
     {
-      id: "ss-5-1",
+      id: "ss-6-1",
       time: 6,
       title: "Pentatonic Playground",
       type: "vocal",
@@ -32,7 +32,7 @@ export const level5 = {
       recorder: true
     },
     {
-      id: "ss-5-2",
+      id: "ss-6-2",
       time: 8,
       title: "Call & Response",
       type: "song",
@@ -53,7 +53,7 @@ export const level5 = {
       recorder: true
     },
     {
-      id: "ss-5-3",
+      id: "ss-6-3",
       time: 6,
       title: "Constraint Melodies",
       type: "vocal",
@@ -72,7 +72,7 @@ export const level5 = {
       recorder: true
     },
     {
-      id: "ss-5-4",
+      id: "ss-6-4",
       time: 8,
       title: "Melodic Variation",
       type: "vocal",
@@ -92,7 +92,7 @@ export const level5 = {
       recorder: true
     },
     {
-      id: "ss-5-5",
+      id: "ss-6-5",
       time: 8,
       title: "Pentatonic Improv",
       type: "vocal",
@@ -114,7 +114,7 @@ export const level5 = {
       recorder: true
     },
     {
-      id: "ss-5-6",
+      id: "ss-6-6",
       time: 8,
       title: "Contour Drawing",
       type: "vocal",
@@ -135,7 +135,7 @@ export const level5 = {
       recorder: true
     },
     {
-      id: "ss-5-7",
+      id: "ss-6-7",
       time: 10,
       title: "First Original Over Backing Track",
       type: "song",

@@ -1,17 +1,17 @@
 import { getPitchRange } from "../appData.js";
 
-export const level4 = {
-  level: 4,
+export const level5 = {
+  level: 5,
   title: "Rhythm & Feel",
   subtitle: "The groove is the song. Everything else is decoration.",
   description:
     "Stoloff's Berklee principle: rhythm before pitch. Most singer-songwriters focus on melody and ignore rhythm — but groove is what makes people move. This level builds body-based rhythm (Dalcroze), rhythmic syllables (Kodály), and genre-specific feels. You'll learn to FEEL rhythm in your body before you put it in your voice. Based on motor learning research: rhythmic confidence must precede melodic improvisation.",
   artists: "Khruangbin, Skinshape, Tommy Guerrero, Pepper",
-  unlocks: "Melody Building (Level 5)",
-  review: { label: "Level 2-3 Check-In", time: 5, exercises: ["ss-2-3c", "ss-3-3"], prompt: "Walk the triad of Am-C-G-Em while strumming (ss-2-3c). Then create a 4-bar melody over changes (ss-3-3). Both solid? Move on." },
+  unlocks: "Melody Building (Level 6)",
+  review: { label: "Level 3-4 Check-In", time: 5, exercises: ["ss-3-6", "ss-4-3"], prompt: "Sustain 3-minute chord-tone freestyle over a backing track (ss-3-6). Then create a 4-bar melody over changes (ss-4-3). Both solid? Move on." },
   exercises: [
     {
-      id: "ss-4-1",
+      id: "ss-5-1",
       time: 5,
       title: "Body Metronome",
       type: "rhythm",
@@ -28,7 +28,7 @@ export const level4 = {
       metronome: 85
     },
     {
-      id: "ss-4-2",
+      id: "ss-5-2",
       time: 6,
       title: "Rhythmic Syllables",
       type: "rhythm",
@@ -46,7 +46,7 @@ export const level4 = {
       recorder: true
     },
     {
-      id: "ss-4-3",
+      id: "ss-5-3",
       time: 8,
       title: "Groove Lock",
       type: "guitar",
@@ -65,7 +65,7 @@ export const level4 = {
       recorder: true
     },
     {
-      id: "ss-4-4",
+      id: "ss-5-4",
       time: 8,
       title: "Feel Shifts",
       type: "guitar",
@@ -85,7 +85,7 @@ export const level4 = {
       recorder: true
     },
     {
-      id: "ss-4-5",
+      id: "ss-5-5",
       time: 6,
       title: "Syncopation",
       type: "vocal",
@@ -104,7 +104,7 @@ export const level4 = {
       recorder: true
     },
     {
-      id: "ss-4-6",
+      id: "ss-5-6",
       time: 8,
       title: "Rhythm Improv",
       type: "vocal",
@@ -124,7 +124,7 @@ export const level4 = {
       recorder: true
     },
     {
-      id: "ss-4-7",
+      id: "ss-5-7",
       time: 6,
       title: "Strum + Vocal Rhythm Conversation",
       type: "song",
