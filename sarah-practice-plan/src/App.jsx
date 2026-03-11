@@ -1458,7 +1458,7 @@ function MetronomePanel({ metro, onOpenTapMatch }) {
 
 function TapMatchModal({ targetBpm, onClose, metro }) {
   const [taps, setTaps] = useState([]);
-  const [flash, setFlash] = useState(false);
+  const [ripples, setRipples] = useState([]);
   const [tapMultiplier, setTapMultiplier] = useState(1); // 1 = 1 tap/beat, 0.5 = 1 tap/2 beats, 2 = 2 taps/beat
   const [isCountingIn, setIsCountingIn] = useState(true);
   const [countDown, setCountDown] = useState(4);
@@ -1514,9 +1514,7 @@ function TapMatchModal({ targetBpm, onClose, metro }) {
       return newTaps;
     });
 
-    // Force a re-render of the flash animation by toggling it off and on quickly
-    setFlash(false);
-    setTimeout(() => setFlash(true), 10);
+    setRipples(prev => [...prev.slice(-4), now]);
   }, [isCountingIn]);
 
   useEffect(() => {
@@ -1560,6 +1558,13 @@ function TapMatchModal({ targetBpm, onClose, metro }) {
   const diff = currentBpm !== "--" ? currentBpm - expectedBpm : 0;
   const isClose = Math.abs(diff) <= 3;
 
+  const getFeedbackColor = () => {
+    if (isCountingIn) return T.gold;
+    if (currentBpm === "--") return T.gold;
+    return isClose ? T.success : T.coral;
+  };
+  const feedbackColor = getFeedbackColor();
+
   return (
     <div
       onPointerDown={handleTap}
@@ -1571,17 +1576,34 @@ function TapMatchModal({ targetBpm, onClose, metro }) {
         touchAction: "none", // Prevents zooming/scrolling on mobile to avoid missed taps
       }}
     >
-      {/* Tighter Burst Animation Layer */}
+      <style>{`
+        @keyframes tap-ripple-anim {
+          0% { transform: scale(0.5); opacity: 0.8; border-width: 8px; }
+          100% { transform: scale(4.5); opacity: 0; border-width: 1px; }
+        }
+        .tap-ripple {
+          position: absolute; top: 50%; left: 50%;
+          width: 120px; height: 120px; margin-left: -60px; margin-top: -60px;
+          border-radius: 50%;
+          pointer-events: none; z-index: 0;
+          animation: tap-ripple-anim 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+      `}</style>
+
+      {/* Edge glow when locked in */}
       <div style={{
-        position: "absolute", top: "50%", left: "50%",
-        width: 120, height: 120, marginLeft: -60, marginTop: -60,
-        borderRadius: "50%",
-        background: T.successSoft,
-        pointerEvents: "none", zIndex: 0,
-        opacity: flash ? 0.8 : 0,
-        transform: flash ? "scale(6)" : "scale(1)",
-        transition: flash ? "none" : "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+        position: "absolute", inset: 0,
+        boxShadow: isClose && !isCountingIn ? `inset 0 0 120px ${T.success}20` : "none",
+        transition: "box-shadow 0.5s ease",
+        pointerEvents: "none", zIndex: 0
       }} />
+
+      {/* Ripple Animations */}
+      {ripples.map(id => (
+        <div key={id} className="tap-ripple" style={{
+          borderColor: feedbackColor
+        }} />
+      ))}
 
       {/* Close button layered above the animation */}
       <button onPointerDown={(e) => { e.stopPropagation(); onClose(); }} style={{
