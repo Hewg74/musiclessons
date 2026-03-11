@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import * as Tone from "tone";
 import confetti from "canvas-confetti";
-import { MiniAudioPlayer, AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, VolumeMeter, DroneGenerator, TAB_CONTENT, InlineKeyboard } from './JungleTools.jsx';
+import { MiniAudioPlayer, AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, VolumeMeter, DroneGenerator, TAB_CONTENT, InlineKeyboard, RhythmCellCards, PhraseFormGuide } from './JungleTools.jsx';
 import { DAYS, KEYBOARD_LEVELS, LOOPER_LEVELS, LESSON_POOL, ALL_NOTES, getPitchRange } from './data/appData.js';
 import { VOCAL_LEVELS } from './data/vocalLevels/index.js';
 import { GUITAR_STUDY } from './data/guitarStudy/index.js';
@@ -255,7 +255,7 @@ function useMetronome() {
       }
 
       Tone.Draw.schedule(() => {
-        window.dispatchEvent(new CustomEvent('metroBeat', { detail: { beat: b, isMute } }));
+        window.dispatchEvent(new CustomEvent('metroBeat', { detail: { beat: b, bar, isMute } }));
       }, time);
       count++;
     }, "4n").start(0);
@@ -545,6 +545,31 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
   const audioRefs = useRef({});
   const timer = useTimer(ex.time);
 
+  // Auto-close: when another exercise opens, close this one
+  const openRef = useRef(false);
+  useEffect(() => { openRef.current = open; }, [open]);
+
+  useEffect(() => {
+    const handleOtherOpen = (e) => {
+      if (e.detail.id !== ex.id && openRef.current) {
+        // Stop any playing audio elements inside this card
+        document.querySelectorAll(`.exercise-card-${ex.id} audio`).forEach(a => { a.pause(); a.currentTime = 0; });
+        setOpen(false);
+      }
+    };
+    window.addEventListener('exerciseOpen', handleOtherOpen);
+    return () => window.removeEventListener('exerciseOpen', handleOtherOpen);
+  }, [ex.id]);
+
+  const handleToggle = () => {
+    const next = !open;
+    if (next) {
+      // Broadcast that this exercise is opening — others will close
+      window.dispatchEvent(new CustomEvent('exerciseOpen', { detail: { id: ex.id } }));
+    }
+    setOpen(next);
+  };
+
   const playNote = async (note) => {
     if (Tone.context.state !== 'running') {
       await Tone.context.resume();
@@ -561,13 +586,13 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
   const tracks = ex.tracks || [];
 
   return (
-    <div className="exercise-card" style={{
+    <div className={`exercise-card exercise-card-${ex.id}`} style={{
       background: completed ? T.successSoft : T.bgCard,
       border: `1px solid ${completed ? T.success + "40" : T.border}`,
       borderLeft: `1px solid ${completed ? T.success : dayColor || T.gold}`,
       marginBottom: 12, overflow: "hidden", borderRadius: T.radius
     }}>
-      <div onClick={() => setOpen(!open)} style={{
+      <div onClick={handleToggle} style={{
         display: "flex", alignItems: "center", gap: 12, padding: "16px", cursor: "pointer"
       }}>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4, minWidth: 54 }}>
@@ -794,9 +819,19 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
             />
           )}
 
-          {/* Volume Meter */}
+          {/* Volume Meter / Volume Contour */}
           {ex.volumeMeter && (
-            <VolumeMeter theme={T} inline={true} />
+            <VolumeMeter theme={T} inline={true} volumeContour={!!ex.volumeContour} />
+          )}
+
+          {/* Rhythm Cells */}
+          {ex.rhythmCells && (
+            <RhythmCellCards theme={T} cells={ex.rhythmCells} bpm={ex.metronome || 80} />
+          )}
+
+          {/* Phrase Form Guide */}
+          {ex.phraseForm && (
+            <PhraseFormGuide theme={T} form={ex.phraseForm} />
           )}
 
           {/* Pitch Contour (enhanced LivePitchDetector) */}
@@ -2558,6 +2593,30 @@ export default function App() {
       }
     } catch { /* ignore migration errors */ }
     localStorage.setItem("ss-level-migration-v1", "done");
+  }
+
+  // V2 migration: Voice Combines (Level 4) + Voice Flows (Level 5) insertion
+  // Shifts ss-4+ exercise IDs and songwriter-level >=4 by +2
+  if (!localStorage.getItem("ss-level-migration-v2")) {
+    try {
+      const savedLevel = localStorage.getItem("songwriter-level");
+      if (savedLevel && parseInt(savedLevel) >= 4) {
+        localStorage.setItem("songwriter-level", String(parseInt(savedLevel) + 2));
+      }
+      const savedCompleted = localStorage.getItem("practice-completed");
+      if (savedCompleted) {
+        const ids = JSON.parse(savedCompleted);
+        const migrated = ids.map(id => {
+          const match = id.match(/^ss-(\d+)-(.+)$/);
+          if (match && parseInt(match[1]) >= 4) {
+            return `ss-${parseInt(match[1]) + 2}-${match[2]}`;
+          }
+          return id;
+        });
+        localStorage.setItem("practice-completed", JSON.stringify(migrated));
+      }
+    } catch { /* ignore migration errors */ }
+    localStorage.setItem("ss-level-migration-v2", "done");
   }
 
   const [tab, setTab] = useState("practice");

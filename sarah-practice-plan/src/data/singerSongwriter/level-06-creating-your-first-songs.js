@@ -1,17 +1,17 @@
 import { getPitchRange } from "../appData.js";
 
-export const level4 = {
-  level: 4,
+export const level6 = {
+  level: 6,
   title: "Creating Your First Songs",
   subtitle: "Chord tones become melodies. Melodies become songs.",
   description:
     "You can strum and sing individual notes. Now create original melodic phrases using the chord tones from Level 2. Start with 2-note phrases, grow to 4-note melodies, then string them into a simple song sketch. Everything is YOUR creation — no covers, no imitation. Based on Orff's 'create before you analyze' and Kratus's first improvisation level: exploration within constraints.",
   artists: "DOPE LEMON, Skinshape, Khruangbin",
-  unlocks: "Rhythm & Feel (Level 5)",
-  review: { label: "Level 2-3 Check-In", time: 5, exercises: ["ss-2-3b", "ss-3-6"], prompt: "Quick check: sing root-5th on each chord at 85 BPM (ss-2-3b). Then play through your Level 3 capstone exercise (ss-3-6). If either feels shaky, revisit those levels." },
+  unlocks: "Rhythm & Feel (Level 7)",
+  review: { label: "Level 4-5 Check-In", time: 5, exercises: ["ss-4-14", "ss-5-16"], prompt: "Combine two skills freely over a backing track (ss-4-14). Then sustain 5-minute freestyle over changes (ss-5-16). Both flowing? Move on." },
   exercises: [
     {
-      id: "ss-4-1",
+      id: "ss-6-1",
       time: 6,
       title: "Your First Phrase",
       type: "vocal",
@@ -31,7 +31,7 @@ export const level4 = {
       recorder: true
     },
     {
-      id: "ss-4-2",
+      id: "ss-6-2",
       time: 6,
       title: "Phrase Library",
       type: "vocal",
@@ -51,7 +51,7 @@ export const level4 = {
       recorder: true
     },
     {
-      id: "ss-4-3",
+      id: "ss-6-3",
       time: 8,
       title: "Melody Over Changes",
       type: "song",
@@ -72,13 +72,13 @@ export const level4 = {
       recorder: true
     },
     {
-      id: "ss-4-4",
+      id: "ss-6-4",
       time: 8,
       title: "Add Simple Words",
       type: "song",
-      what: "Take your favorite melody from ss-4-3 and add simple, descriptive words. No poetry, no cleverness — just describe what you see or feel. 'Sun is going down / water on the rocks / wind is getting warm.' Words turn melodies into songs.",
+      what: "Take your favorite melody from ss-6-3 and add simple, descriptive words. No poetry, no cleverness — just describe what you see or feel. 'Sun is going down / water on the rocks / wind is getting warm.' Words turn melodies into songs.",
       steps: [
-        { text: "Play your chord progression with your melody from ss-4-3. Hum it once through to lock it in.", why: "Reaffirming the melody before adding words ensures the pitch and rhythm are stable." },
+        { text: "Play your chord progression with your melody from ss-6-3. Hum it once through to lock it in.", why: "Reaffirming the melody before adding words ensures the pitch and rhythm are stable." },
         { text: "Look around you. Describe what you see in short phrases: 'Morning light on the wall.' Fit each phrase into your melody's rhythm.", why: "Observation-based lyrics are the easiest to generate. You're describing reality, not inventing stories. Zero creative pressure." },
         { text: "Don't worry about rhyme or meaning. Just let words land on the melody. Some will fit perfectly. Some will need adjustment.", why: "Prosody — matching word stress to melodic stress — happens naturally when you speak freely over a melody. Don't force it." },
         { text: "Sing through 4 passes with different words each time. On the 5th pass, use your favorite words from all the passes.", why: "Multiple passes generate options. Selecting favorites from multiple attempts is how professional songwriters work." }
@@ -91,7 +91,7 @@ export const level4 = {
       recorder: true
     },
     {
-      id: "ss-4-5",
+      id: "ss-6-5",
       time: 8,
       title: "Two-Section Song Sketch",
       type: "song",
@@ -109,10 +109,11 @@ export const level4 = {
       metronome: 80,
       referencePitches: getPitchRange("E3", "E4"),
       volumeMeter: true,
-      recorder: true
+      recorder: true,
+      phraseForm: { pattern: "AABA", barsPerSection: 4, labels: { A: "Verse", B: "Chorus" } }
     },
     {
-      id: "ss-4-6",
+      id: "ss-6-6",
       time: 10,
       title: "Second Song Sketch",
       type: "song",

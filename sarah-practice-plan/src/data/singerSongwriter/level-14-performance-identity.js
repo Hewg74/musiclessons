@@ -1,17 +1,17 @@
 import { getPitchRange } from "../appData.js";
 
-export const level12 = {
-  level: 12,
+export const level14 = {
+  level: 14,
   title: "Performance & Identity",
   subtitle: "You are a singer-songwriter. Act like one.",
   description:
     "Everything converges: technique, songwriting, improvisation, and the courage to share your music with another person. This level focuses on performance psychology, live improvisation, building a set of originals, and discovering your musical identity. Based on Csikszentmihalyi's flow state research: performing with 4% challenge above skill level creates optimal experience.",
   artists: "Your own sound — the artist you've been building since Level 1",
   unlocks: "The rest of your musical life",
-  review: { label: "Full Check-In", time: 5, exercises: ["ss-7-7", "ss-11-5"], prompt: "Play your strummed original (ss-7-7) and your fingerpicked original (ss-11-5) back to back. If both feel performance-ready, you're ready for Level 12." },
+  review: { label: "Full Check-In", time: 5, exercises: ["ss-9-7", "ss-13-5"], prompt: "Play your strummed original (ss-9-7) and your fingerpicked original (ss-13-5) back to back. If both feel performance-ready, you're ready for Level 14." },
   exercises: [
     {
-      id: "ss-12-1",
+      id: "ss-14-1",
       time: 8,
       title: "Improvise Lyrics Live",
       type: "vocal",
@@ -31,7 +31,7 @@ export const level12 = {
       recorder: true
     },
     {
-      id: "ss-12-2",
+      id: "ss-14-2",
       time: 10,
       title: "Record & Self-Critique",
       type: "record",
@@ -52,7 +52,7 @@ export const level12 = {
       recorder: true
     },
     {
-      id: "ss-12-3",
+      id: "ss-14-3",
       time: 6,
       title: "Build Your Set",
       type: "song",
@@ -70,7 +70,7 @@ export const level12 = {
       recorder: true
     },
     {
-      id: "ss-12-4",
+      id: "ss-14-4",
       time: 8,
       title: "Playing for One",
       type: "song",
@@ -90,7 +90,7 @@ export const level12 = {
       recorder: true
     },
     {
-      id: "ss-12-5",
+      id: "ss-14-5",
       time: 10,
       title: "Jam Circle",
       type: "play",
@@ -112,7 +112,7 @@ export const level12 = {
       recorder: true
     },
     {
-      id: "ss-12-6",
+      id: "ss-14-6",
       time: 10,
       title: "The Golden Hour",
       type: "play",
@@ -132,7 +132,7 @@ export const level12 = {
       recorder: true
     },
     {
-      id: "ss-12-7",
+      id: "ss-14-7",
       time: 5,
       title: "Your Musical Voice",
       type: "song",

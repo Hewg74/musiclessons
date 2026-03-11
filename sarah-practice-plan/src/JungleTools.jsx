@@ -1950,10 +1950,14 @@ export function FretboardDiagram({ theme: T, scale, position, highlight = [] }) 
 }
 
 // --- 8. Volume Meter ---
-export function VolumeMeter({ theme: T, inline = false }) {
+export function VolumeMeter({ theme: T, inline = false, volumeContour = false }) {
   const [isActive, setIsActive] = useState(false);
   const [dbLevel, setDbLevel] = useState(-60);
   const [history, setHistory] = useState([]);
+  const maxHistoryRef = useRef(volumeContour ? 600 : 100);
+  const bufferRef = useRef(null);
+
+  useEffect(() => { maxHistoryRef.current = volumeContour ? 600 : 100; }, [volumeContour]);
 
   const audioContextRef = useRef(null);
   const analyserRef = useRef(null);
@@ -1976,6 +1980,7 @@ export function VolumeMeter({ theme: T, inline = false }) {
       const source = audioCtx.createMediaStreamSource(stream);
       source.connect(analyser);
       sourceRef.current = source;
+      bufferRef.current = new Float32Array(analyser.fftSize);
       setIsActive(true);
       measureVolume();
     } catch (err) {
@@ -1984,18 +1989,18 @@ export function VolumeMeter({ theme: T, inline = false }) {
   };
 
   const measureVolume = () => {
-    if (!analyserRef.current) return;
-    const buffer = new Float32Array(analyserRef.current.fftSize);
-    analyserRef.current.getFloatTimeDomainData(buffer);
+    if (!analyserRef.current || !bufferRef.current) return;
+    analyserRef.current.getFloatTimeDomainData(bufferRef.current);
     let sum = 0;
-    for (let i = 0; i < buffer.length; i++) sum += buffer[i] * buffer[i];
-    const rms = Math.sqrt(sum / buffer.length);
+    for (let i = 0; i < bufferRef.current.length; i++) sum += bufferRef.current[i] * bufferRef.current[i];
+    const rms = Math.sqrt(sum / bufferRef.current.length);
     const db = rms > 0 ? 20 * Math.log10(rms) : -60;
     const clampedDb = Math.max(-60, Math.min(0, db));
     setDbLevel(clampedDb);
     const now = performance.now();
     if (now - lastHistoryUpdate.current > 100) {
-      setHistory(h => [...h.slice(-99), clampedDb]);
+      const max = maxHistoryRef.current;
+      setHistory(h => [...h.slice(-(max - 1)), clampedDb]);
       lastHistoryUpdate.current = now;
     }
     requestRef.current = requestAnimationFrame(measureVolume);
@@ -2054,7 +2059,7 @@ export function VolumeMeter({ theme: T, inline = false }) {
 
   // Build sparkline path from history
   const sparklinePoints = history.map((val, i) => {
-    const x = (i / 99) * 100;
+    const x = history.length > 1 ? (i / (history.length - 1)) * 100 : 50;
     const y = 40 - ((val + 60) / 60) * 40;
     return `${x},${y}`;
   }).join(' ');
@@ -2101,8 +2106,8 @@ export function VolumeMeter({ theme: T, inline = false }) {
         })}
       </div>
 
-      {/* Sparkline */}
-      {history.length > 1 && (
+      {/* Sparkline (standard mode) */}
+      {!volumeContour && history.length > 1 && (
         <svg
           width="100%" height="40"
           viewBox="0 0 100 40"
@@ -2118,6 +2123,39 @@ export function VolumeMeter({ theme: T, inline = false }) {
           />
         </svg>
       )}
+
+      {/* Volume Contour (enhanced scrolling graph) */}
+      {volumeContour && history.length > 1 && (() => {
+        const h = history;
+        const w = 600, ht = 160;
+        const points = h.map((val, i) => {
+          const x = (i / (maxHistory - 1)) * w;
+          const y = ht - ((val + 60) / 60) * ht;
+          return `${x},${y}`;
+        }).join(' ');
+        // Zone thresholds mapped to y
+        const whisperY = ht - (((-40) + 60) / 60) * ht; // -40dB
+        const mediumY = ht - (((-20) + 60) / 60) * ht;  // -20dB
+        const fullY = ht - (((-6) + 60) / 60) * ht;     // -6dB
+        return (
+          <div style={{ marginBottom: 12 }}>
+            <div style={{ fontSize: 10, fontWeight: 600, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>Volume Contour — {Math.round(h.length / 10)}s</div>
+            <svg width="100%" height={ht} viewBox={`0 0 ${w} ${ht}`} preserveAspectRatio="none" style={{ display: 'block', background: '#0001', borderRadius: 6 }}>
+              {/* Zone lines */}
+              <line x1="0" y1={whisperY} x2={w} y2={whisperY} stroke={T.success} strokeWidth="1" strokeDasharray="4 4" opacity="0.4" vectorEffect="non-scaling-stroke" />
+              <line x1="0" y1={mediumY} x2={w} y2={mediumY} stroke={T.gold} strokeWidth="1" strokeDasharray="4 4" opacity="0.4" vectorEffect="non-scaling-stroke" />
+              <line x1="0" y1={fullY} x2={w} y2={fullY} stroke={T.coral} strokeWidth="1" strokeDasharray="4 4" opacity="0.4" vectorEffect="non-scaling-stroke" />
+              {/* Contour line */}
+              <polyline points={points} fill="none" stroke={T.gold} strokeWidth="1.5" vectorEffect="non-scaling-stroke" strokeLinejoin="round" />
+            </svg>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 9, fontFamily: T.sans, color: T.textLight, marginTop: 4 }}>
+              <span style={{ color: T.success }}>Whisper</span>
+              <span style={{ color: T.gold }}>Medium</span>
+              <span style={{ color: T.coral }}>Full</span>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Stop Button */}
       <button
@@ -2411,6 +2449,220 @@ export function InlineKeyboard({
           })}
         </div>
       </div>
+    </div>
+  );
+}
+
+// ─── RHYTHM CELL CARDS ──────────────────────────────────────────────
+// Visual + audio rhythm pattern cards for Kodály-style rhythm cell exercises
+// Each cell: { name, pattern, description }
+// pattern is an array of durations in beats, e.g. [1] = quarter, [0.5, 0.5] = two 8ths
+
+export function RhythmCellCards({ theme: T, cells = [], bpm = 80 }) {
+  const [playingIdx, setPlayingIdx] = useState(null);
+  const timeoutsRef = useRef([]);
+
+  const playCell = (cell, idx) => {
+    // Clear any existing playback
+    timeoutsRef.current.forEach(clearTimeout);
+    timeoutsRef.current = [];
+    setPlayingIdx(idx);
+
+    const beatMs = 60000 / bpm;
+    let offset = 0;
+
+    cell.pattern.forEach((dur, i) => {
+      const t = setTimeout(async () => {
+        if (Tone.context.state !== 'running') await Tone.context.resume();
+        const synth = new Tone.Synth({
+          oscillator: { type: 'triangle' },
+          envelope: { attack: 0.01, decay: 0.1, sustain: 0.3, release: 0.2 }
+        }).toDestination();
+        synth.volume.value = -6;
+        synth.triggerAttackRelease("A3", `${dur * beatMs / 1000}`, Tone.now());
+        setTimeout(() => synth.dispose(), 2000);
+      }, offset);
+      timeoutsRef.current.push(t);
+      offset += dur * beatMs;
+    });
+
+    // Clear playing state after all notes finish
+    const endTimeout = setTimeout(() => setPlayingIdx(null), offset + 200);
+    timeoutsRef.current.push(endTimeout);
+  };
+
+  useEffect(() => {
+    return () => timeoutsRef.current.forEach(clearTimeout);
+  }, []);
+
+  // Visual dot representation
+  const renderPattern = (pattern) => {
+    if (!pattern || pattern.length === 0) return null;
+    const totalBeats = pattern.reduce((a, b) => a + b, 0);
+    if (totalBeats === 0) return null;
+    const width = 120;
+    let x = 0;
+    return (
+      <svg width={width} height="24" viewBox={`0 0 ${width} 24`} style={{ display: 'block' }}>
+        {pattern.map((dur, i) => {
+          const w = (dur / totalBeats) * width;
+          const cx = x + w / 2;
+          x += w;
+          // Short notes = small circles, long notes = wide rectangles
+          if (dur <= 0.25) {
+            return <circle key={i} cx={cx} cy={12} r={3} fill={T.gold} />;
+          } else if (dur <= 0.5) {
+            return <circle key={i} cx={cx} cy={12} r={4} fill={T.gold} />;
+          } else {
+            return <rect key={i} x={cx - w * 0.35} y={6} width={w * 0.7} height={12} rx={3} fill={T.gold} opacity={0.8} />;
+          }
+        })}
+        {/* Beat grid lines */}
+        {Array.from({ length: Math.ceil(totalBeats) }).map((_, i) => (
+          <line key={`g${i}`} x1={(i / totalBeats) * width} y1={0} x2={(i / totalBeats) * width} y2={24} stroke={T.border} strokeWidth={1} />
+        ))}
+      </svg>
+    );
+  };
+
+  return (
+    <div style={{ marginBottom: 16 }}>
+      <div style={{ fontSize: 10, fontWeight: 700, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1.5, marginBottom: 8 }}>Rhythm Cells</div>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+        {cells.map((cell, i) => (
+          <div key={i} onClick={() => playCell(cell, i)} style={{
+            flex: "1 1 140px", maxWidth: 200, cursor: "pointer",
+            background: playingIdx === i ? `${T.gold}20` : T.bgSoft,
+            border: `1px solid ${playingIdx === i ? T.gold : T.border}`,
+            borderRadius: T.radiusMd || 8, padding: "10px 12px",
+            transition: "all 0.2s"
+          }}>
+            <div style={{ fontSize: 15, fontWeight: 700, color: T.textDark, fontFamily: T.serif, marginBottom: 2 }}>{cell.name}</div>
+            <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans, marginBottom: 6 }}>{cell.description}</div>
+            {renderPattern(cell.pattern)}
+            <div style={{ fontSize: 9, color: T.textMuted, fontFamily: T.sans, marginTop: 4, textTransform: "uppercase", letterSpacing: 1 }}>
+              {playingIdx === i ? "Playing..." : "Tap to hear"}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── PHRASE FORM GUIDE ──────────────────────────────────────────────
+// Visual section indicator synced to metronome bar count
+// form: { pattern: "AABA" | ["Intro","V","Ch","V","Ch","Br","Ch","Outro"], barsPerSection: 4 | [4,8,8,8,8,8,8,4], labels?: { A: "Verse", B: "Chorus" } }
+// pattern: string of single chars OR array of section keys
+// barsPerSection: single number (uniform) OR array matching pattern length
+
+export function PhraseFormGuide({ theme: T, form }) {
+  const [currentBar, setCurrentBar] = useState(-1);
+  const [isActive, setIsActive] = useState(false);
+
+  const sections = Array.isArray(form.pattern) ? form.pattern : form.pattern.split('');
+  const barsArr = Array.isArray(form.barsPerSection)
+    ? form.barsPerSection
+    : sections.map(() => form.barsPerSection);
+  const totalBars = barsArr.reduce((a, b) => a + b, 0);
+
+  useEffect(() => {
+    const handleBeat = (e) => {
+      const { bar } = e.detail;
+      if (bar !== undefined) {
+        setCurrentBar(bar % totalBars);
+        setIsActive(true);
+      } else {
+        // Metronome stopped
+        setIsActive(false);
+        setCurrentBar(-1);
+      }
+    };
+    window.addEventListener('metroBeat', handleBeat);
+    return () => window.removeEventListener('metroBeat', handleBeat);
+  }, [totalBars]);
+
+  const colorPalette = [
+    T.gold || "#d4a373", T.coral || "#d68383",
+    T.plum || "#9e829c", T.slate || "#6b8e9f",
+    "#7fb685", "#c9a96e", "#8bb8d0", "#c07eb0"
+  ];
+  const singleCharColors = { A: colorPalette[0], B: colorPalette[1], C: colorPalette[2], D: colorPalette[3] };
+
+  // Assign colors: single-char keys use fixed map, multi-char keys get palette by unique key order
+  const uniqueKeys = [...new Set(sections)];
+  const colorFor = (s) => {
+    if (singleCharColors[s]) return singleCharColors[s];
+    const idx = uniqueKeys.indexOf(s);
+    return colorPalette[idx % colorPalette.length];
+  };
+
+  const labels = form.labels || {};
+
+  // Compute current section and bar-within-section from flat bar count
+  let currentSection = -1, barInSection = 0, sectionBars = 0;
+  if (currentBar >= 0) {
+    let remaining = currentBar;
+    for (let i = 0; i < sections.length; i++) {
+      if (remaining < barsArr[i]) { currentSection = i; barInSection = remaining + 1; sectionBars = barsArr[i]; break; }
+      remaining -= barsArr[i];
+    }
+    if (currentSection === -1) { currentSection = sections.length - 1; barInSection = barsArr[sections.length - 1]; sectionBars = barsArr[sections.length - 1]; }
+  }
+
+  // Display pattern: join array with " · " or show string directly
+  const patternDisplay = Array.isArray(form.pattern) ? form.pattern.join(" · ") : form.pattern;
+
+  return (
+    <div style={{ marginBottom: 16 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+        <div style={{ fontSize: 10, fontWeight: 700, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1.5 }}>
+          Phrase Form — {patternDisplay}
+        </div>
+        {isActive && currentSection >= 0 && (
+          <div style={{ fontSize: 12, fontWeight: 700, color: colorFor(sections[currentSection]), fontFamily: T.sans }}>
+            {labels[sections[currentSection]] || sections[currentSection]} · Bar {barInSection}/{sectionBars}
+          </div>
+        )}
+      </div>
+
+      {/* Section bar visualization */}
+      <div style={{ display: "flex", gap: 2, height: 32, borderRadius: 6, overflow: "hidden" }}>
+        {sections.map((s, i) => {
+          const color = colorFor(s);
+          const active = currentSection === i;
+          const secBars = barsArr[i];
+          const fillPct = active ? (barInSection / secBars) * 100 : (currentSection > i ? 100 : 0);
+          return (
+            <div key={i} style={{
+              flex: secBars, position: "relative",
+              background: `${color}15`,
+              border: `2px solid ${active ? color : `${color}30`}`,
+              borderRadius: 4, display: "flex", alignItems: "center", justifyContent: "center",
+              transition: "border-color 0.2s"
+            }}>
+              {/* Fill progress */}
+              <div style={{
+                position: "absolute", left: 0, top: 0, bottom: 0,
+                width: `${fillPct}%`, background: `${color}25`,
+                borderRadius: 2, transition: "width 0.15s"
+              }} />
+              <span style={{
+                position: "relative", fontSize: sections.length > 6 ? 10 : 13, fontWeight: 700,
+                color: active ? color : `${color}80`,
+                fontFamily: T.sans, letterSpacing: 1,
+                whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: "90%"
+              }}>{labels[s] || s}</span>
+            </div>
+          );
+        })}
+      </div>
+
+      {!isActive && (
+        <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans, marginTop: 6, fontStyle: "italic" }}>
+          Start the metronome to sync the phrase guide
+        </div>
+      )}
     </div>
   );
 }

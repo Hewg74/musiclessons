@@ -1,17 +1,17 @@
 import { getPitchRange } from "../appData.js";
 
-export const level11 = {
-  level: 11,
+export const level13 = {
+  level: 13,
   title: "Fingerpicking & Dynamics",
   subtitle: "New fingers. New voice. Same autopilot method.",
   description:
     "Fingerpicking is a completely different motor program from strumming — your right hand must relearn from scratch. Apply the same Level-1 autopilot process: drill the pattern until it's automatic, then layer voice on top. Fingerpicking + singing is the signature sound of intimate singer-songwriters: Nick Drake, Tommy Guerrero, Hermanos Gutierrez. This level also masters dynamic range — the difference between whisper and full voice.",
   artists: "Nick Drake, Tommy Guerrero, Hermanos Gutierrez, José González",
-  unlocks: "Performance & Identity (Level 12)",
-  review: { label: "Level 9-10 Check-In", time: 5, exercises: ["ss-9-6", "ss-10-4"], prompt: "Play your arranged song with dynamics (ss-9-6). Then check prosody on your latest lyrics (ss-10-4). Both polished? Move on." },
+  unlocks: "Performance & Identity (Level 14)",
+  review: { label: "Level 11-12 Check-In", time: 5, exercises: ["ss-11-6", "ss-12-4"], prompt: "Play your arranged song with dynamics (ss-11-6). Then check prosody on your latest lyrics (ss-12-4). Both polished? Move on." },
   exercises: [
     {
-      id: "ss-11-1",
+      id: "ss-13-1",
       time: 8,
       title: "Fingerpick Autopilot",
       type: "guitar",
@@ -31,13 +31,13 @@ export const level11 = {
       recorder: true
     },
     {
-      id: "ss-11-2",
+      id: "ss-13-2",
       time: 8,
       title: "Fingerpick + Voice Integration",
       type: "song",
       what: "Apply the Level 2 speak-hum-sing method to fingerpicking: speak over the pattern, then hum, then sing. Same three stages, new motor challenge. The voice layers on top of an entirely different hand pattern.",
       steps: [
-        { text: "Fingerpick Am-C-G at 60 BPM on autopilot. Now speak made-up phrases while picking. If picking breaks, stop speaking and re-establish.", why: "Speaking is the easiest vocal task. If the picking breaks during speech, it's not automatic enough. Go back to ss-11-1." },
+        { text: "Fingerpick Am-C-G at 60 BPM on autopilot. Now speak made-up phrases while picking. If picking breaks, stop speaking and re-establish.", why: "Speaking is the easiest vocal task. If the picking breaks during speech, it's not automatic enough. Go back to ss-13-1." },
         { text: "Hum a melody contour over your fingerpicking. Keep the picking steady — let the humming ride on top.", why: "Humming adds pitch without words. It's the intermediate step between speaking and singing." },
         { text: "Sing an original melody at a relaxed tempo. Porch register. Don't project. Let the fingerpicking be louder than your voice.", why: "Fingerpicking + quiet voice is the Singer-Songwriter Aesthetic. Think Nick Drake — the guitar is prominent, the voice is intimate." },
         { text: "If the picking falls apart during singing, deploy escape hatch: simplify to thumb-only (bass notes) while singing. Then gradually add fingers back.", why: "The escape hatch for fingerpicking is reducing to just the thumb. One bass note per chord is the minimum. Build back up from there." }
@@ -51,7 +51,7 @@ export const level11 = {
       recorder: true
     },
     {
-      id: "ss-11-3",
+      id: "ss-13-3",
       time: 8,
       title: "Travis Picking",
       type: "guitar",
@@ -71,7 +71,7 @@ export const level11 = {
       recorder: true
     },
     {
-      id: "ss-11-4",
+      id: "ss-13-4",
       time: 8,
       title: "Dynamic Range",
       type: "vocal",
@@ -91,7 +91,7 @@ export const level11 = {
       recorder: true
     },
     {
-      id: "ss-11-5",
+      id: "ss-13-5",
       time: 10,
       title: "Fingerpicked Original",
       type: "song",

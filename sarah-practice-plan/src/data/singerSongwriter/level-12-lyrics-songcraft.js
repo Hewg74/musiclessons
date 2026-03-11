@@ -1,17 +1,17 @@
 import { getPitchRange } from "../appData.js";
 
-export const level10 = {
-  level: 10,
+export const level12 = {
+  level: 12,
   title: "Lyrics & Songcraft",
   subtitle: "Show, don't tell. Sing, don't explain.",
   description:
     "Your songs have structure and melody. Now craft the words. Based on Pat Pattison's Berklee lyric method: use concrete images instead of abstract emotions. Show the listener a scene and let them feel the feeling themselves. Strong lyrics are specific, sensory, and surprising. This level teaches observation, imagery, prosody, and the art of editing.",
   artists: "DOPE LEMON, Nick Drake, Khruangbin (instrumental as lyric), Angus Stone",
-  unlocks: "Fingerpicking & Dynamics (Level 11)",
-  review: { label: "Level 8-9 Check-In", time: 5, exercises: ["ss-8-3", "ss-9-6"], prompt: "Sing over G-C-D-G feeling tension and resolution (ss-8-3). Then play through your arranged song (ss-9-6). Both solid? Move on." },
+  unlocks: "Fingerpicking & Dynamics (Level 13)",
+  review: { label: "Level 10-11 Check-In", time: 5, exercises: ["ss-10-3", "ss-11-6"], prompt: "Sing over G-C-D-G feeling tension and resolution (ss-10-3). Then play through your arranged song (ss-11-6). Both solid? Move on." },
   exercises: [
     {
-      id: "ss-10-1",
+      id: "ss-12-1",
       time: 8,
       title: "Observation Lyrics",
       type: "record",
@@ -31,7 +31,7 @@ export const level10 = {
       recorder: true
     },
     {
-      id: "ss-10-2",
+      id: "ss-12-2",
       time: 8,
       title: "Sensory Writing",
       type: "record",
@@ -51,7 +51,7 @@ export const level10 = {
       recorder: true
     },
     {
-      id: "ss-10-3",
+      id: "ss-12-3",
       time: 6,
       title: "Rhyme & Near-Rhyme",
       type: "vocal",
@@ -70,7 +70,7 @@ export const level10 = {
       recorder: true
     },
     {
-      id: "ss-10-4",
+      id: "ss-12-4",
       time: 6,
       title: "Prosody",
       type: "song",
@@ -89,14 +89,14 @@ export const level10 = {
       recorder: true
     },
     {
-      id: "ss-10-5",
+      id: "ss-12-5",
       time: 8,
       title: "Image & Metaphor",
       type: "record",
       what: "Transform observations into metaphors: 'The palm trees bending' becomes 'the island bowing.' 'Coffee getting cold' becomes 'time I poured but didn't drink.' Metaphors compress complex feelings into vivid images. They're the advanced tool of lyric writing.",
-      setup: "Notebook. Your observation lyrics from ss-10-1.",
+      setup: "Notebook. Your observation lyrics from ss-12-1.",
       steps: [
-        { text: "Take 3 observation lines from ss-10-1. For each one, ask: 'What else looks / sounds / feels like this?' A gecko on the screen = something watching from the edges. Rust on the railing = time making its mark.", why: "Metaphor is just asking 'what does this remind me of?' The connection between concrete image and abstract meaning creates depth." },
+        { text: "Take 3 observation lines from ss-12-1. For each one, ask: 'What else looks / sounds / feels like this?' A gecko on the screen = something watching from the edges. Rust on the railing = time making its mark.", why: "Metaphor is just asking 'what does this remind me of?' The connection between concrete image and abstract meaning creates depth." },
         { text: "Write the metaphorical version alongside the literal version. Sometimes the literal is better. Sometimes the metaphor elevates it. Choose the stronger one.", why: "Not every line needs a metaphor. The contrast between literal and figurative creates texture. A song that's ALL metaphor is exhausting." },
         { text: "Create a verse that mixes observation and metaphor: 2 literal lines + 2 metaphorical lines. The literal grounds the listener; the metaphor lifts them.", why: "The mix of literal and metaphorical is the mark of a skilled lyricist. Paul Simon, Joni Mitchell, and every great songwriter does this." },
         { text: "Set the verse to melody. Record it. Listen: does the metaphor feel natural or forced? If forced, go back to the literal version.", why: "Forced metaphors are worse than no metaphors. If a listener has to puzzle out your meaning, the metaphor has failed. Clarity always wins." }
@@ -109,12 +109,12 @@ export const level10 = {
       recorder: true
     },
     {
-      id: "ss-10-6",
+      id: "ss-12-6",
       time: 6,
       title: "The Edit",
       type: "record",
       what: "Take one of your completed songs and CUT it — remove every word that isn't essential. If a line works without an adjective, remove the adjective. If a verse repeats what another verse said, cut it. Editing is where good songs become great songs. As Pat Pattison says: 'Don't bore us, get to the chorus.'",
-      setup: "A completed song from Level 7-9. Notebook. Willingness to kill your darlings.",
+      setup: "A completed song from Level 9-11. Notebook. Willingness to kill your darlings.",
       steps: [
         { text: "Write out all your lyrics. Read them without the music. Cross out any word you could remove without losing meaning.", why: "Words that serve no purpose dilute the impact of words that do. Every unnecessary word weakens the song." },
         { text: "Look for 'telling' lines that could be 'showing' lines. 'I'm sad' → cut. 'Empty glass on the table' → keep. The image does the work.", why: "Telling robs the listener of the experience of feeling. Showing lets them discover the emotion themselves — which is 10x more powerful." },
