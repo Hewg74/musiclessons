@@ -1585,6 +1585,7 @@ function TapMatchModal({ targetBpm, onClose, metro }) {
           position: absolute; top: 50%; left: 50%;
           width: 120px; height: 120px; margin-left: -60px; margin-top: -60px;
           border-radius: 50%;
+          border-style: solid;
           pointer-events: none; z-index: 0;
           animation: tap-ripple-anim 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
