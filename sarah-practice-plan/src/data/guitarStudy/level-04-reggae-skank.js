@@ -6,7 +6,7 @@ export const level4 = {
     "Reggae guitar is the ultimate rhythm discipline — you play on the offbeat while everything in your musical training screams 'downbeat.' The skank (short, muted chord stabs on the 'and') is deceptively simple and maddeningly difficult. Combined with ghost notes, barre chord voicings, and the vocabulary of different riddim feels, this level transforms your rhythm playing across every genre.",
   artists: "Bob Marley, Peter Tosh, Pepper, Slightly Stoopid, Skinshape",
   unlocks: "Desert Blues (Level 5)",
-  review: { label: "Levels 1-2 Check-In", time: 5, exercises: ["gs-2-3", "gs-1-3"], prompt: "Play jangle-style tremolo picking for 30 seconds with even strokes (gs-2-3). Then play a clean blues bend phrase from Level 1 (gs-1-3). Both techniques feed into reggae — tremolo becomes the skank's precision, bends become lead breaks over the groove." },
+  review: { label: "Levels 1-2 Check-In", time: 5, exercises: ["gs-2-2", "gs-1-3"], prompt: "Play tremolo picking for 30 seconds with even strokes (gs-2-2). Then play a clean blues bend phrase from Level 1 (gs-1-3). Both techniques feed into reggae — tremolo becomes the skank's precision, bends become lead breaks over the groove." },
   exercises: [
     {
       id: "gs-4-1",
@@ -121,6 +121,25 @@ export const level4 = {
     },
     {
       id: "gs-4-7",
+      time: 8,
+      title: "Skank as Improv",
+      type: "guitar",
+      what: "The reggae skank isn't a fixed pattern — it's a vocabulary. Vary your skank every 2 bars: displace one stab, add an extra ghost, drop in a single melodic note, change the dynamic. This is comping improv — the rhythm guitar equivalent of a lead solo.",
+      steps: [
+        { text: "Play Am7 skank with ghost notes for 2 bars — your standard pattern. Then for the next 2 bars, move one stab from the 'and' of beat 2 to the 'and' of beat 3. Toggle between standard and displaced every 2 bars.", why: "The smallest possible variation — one displaced stab — shows that the skank can be improvised, not fixed." },
+        { text: "For 2 bars, remove all ghost notes. Just bare stabs on the offbeat with silence. Then 2 bars of extra-dense ghost notes (16th-note scratches). Toggle between sparse and dense.", why: "Ghost note density is a texture control. Switching between sparse and dense creates rhythmic breathing." },
+        { text: "Between two stabs, drop in a single pentatonic note — a quick E or C that appears and vanishes. One melodic fill per 2 bars maximum.", why: "A single melodic note within rhythm playing seeds the idea that rhythm and lead are not separate activities." },
+        { text: "Improvise comping for 2 minutes over Reggae One Drop 85. Never play the exact same 2 bars twice. Record yourself.", why: "If you can vary the reggae skank for 2 minutes without repeating, you've graduated from 'playing reggae' to 'improvising reggae.'" }
+      ],
+      feel: "Varied skanking should feel like a conversation with the drum track — responsive, alive, never robotic.",
+      wrong: "If the groove broke during a variation, the change was too dramatic. Keep variations micro — one element at a time.",
+      sarah: "Gene, Pepper's guitarist never plays the same skank twice. What sounds like a 'pattern' is actually live improvisation — micro-variations that keep the groove breathing.",
+      metronome: 85,
+      recorder: true,
+      tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }]
+    },
+    {
+      id: "gs-4-8",
       time: 12,
       title: "SoCal Reggae-Rock",
       type: "guitar",
@@ -140,7 +159,7 @@ export const level4 = {
       metronome: 120
     },
     {
-      id: "gs-4-8",
+      id: "gs-4-9",
       time: 12,
       title: "Full Reggae Jam",
       type: "guitar",
@@ -158,11 +177,10 @@ export const level4 = {
       feel: "A full reggae jam should feel like a meditation — repetitive, hypnotic, and deeply groovy. When it's working, you lose track of time and just ride the pocket.",
       wrong: "If you played lead the whole time, you missed the point. Reggae guitar is primarily rhythm. If the groove broke when you changed chords, slow down the changes. If the dub spaces felt awkward, you need to trust silence more.",
       sarah: "Reggae is the most disciplined genre in guitar. The discipline IS the art. When you can hold one groove for 12 minutes and make it feel deeper every bar, you've understood something most guitarists never learn.",
-      metronome: 85,
-      levelUp: "You can jam reggae for 12 minutes with solid offbeats, tight ghost notes, smooth chord changes, tasteful lead breaks, and intentional dub spaces."
+      metronome: 85
     },
     {
-      id: "gs-4-9",
+      id: "gs-4-10",
       time: 12,
       title: "Dub Space — Adding the Third Dimension",
       type: "guitar",
@@ -179,7 +197,8 @@ export const level4 = {
       feel: "The silence should feel intentional, not empty. When you re-enter, it should feel like a wave coming back — inevitable and satisfying. If you have effects, the reverb trails should feel like ghosts of the notes you played.",
       wrong: "If you can't resist filling the silent bars, you haven't internalized that silence is part of the music. If you re-enter on the wrong beat, your internal count is slipping. If the effect tails are muddy, use less reverb or pick more cleanly.",
       sarah: "Dub is the art of subtraction. Lee 'Scratch' Perry didn't add effects — he removed instruments and let the echoes fill the space. This is Skinshape territory, Gene — the spacious, reverb-drenched side of reggae that you love. Space is the most powerful sound in music.",
-      metronome: 85
+      metronome: 85,
+      levelUp: "You can jam reggae for 12 minutes with solid offbeats, tight ghost notes, smooth chord changes, tasteful lead breaks, and intentional dub spaces."
     }
   ]
 };

@@ -1,15 +1,15 @@
-export const level7 = {
-  level: 7,
+export const level8 = {
+  level: 8,
   title: "Soul & Extended Chords",
   subtitle: "The sophisticated voicings that make BALTHVS and Skinshape sound effortlessly cool.",
   description:
     "Dorian mode, major 7ths, dominant 9ths, minor 9ths and 11ths — the chords that separate good from great. This level teaches the harmonic vocabulary of soul, neo-soul, and indie-funk guitar. Ghost notes from Level 4 meet extended harmony for the deepest grooves yet.",
   artists: "BALTHVS, Skinshape, Khruangbin, D'Angelo, Erykah Badu",
-  unlocks: "Cinematic Guitar (Level 8)",
-  review: { label: "Level 5 Check-In", time: 5, exercises: ["gs-5-1", "gs-6-3"], prompt: "Play three-note Khruangbin voicings with soft attack and 40% silence (gs-5-1). Then play a cinematic tremolo passage with slow chord movement (gs-6-3). Space and atmosphere should feel natural — if they don't, revisit Levels 5-6." },
+  unlocks: "Cinematic Guitar (Level 9)",
+  review: { label: "Levels 6-7 Check-In", time: 5, exercises: ["gs-7-1", "gs-7-3"], prompt: "Play three-note Khruangbin voicings with soft attack (gs-7-1). Then play a 2-minute passage with at least 40% silence (gs-7-3). Space and atmosphere should feel natural — if they don't, revisit Levels 6-7." },
   exercises: [
     {
-      id: "gs-7-1",
+      id: "gs-8-1",
       time: 10,
       title: "Dorian Mode — The Soul Scale",
       type: "guitar",
@@ -29,7 +29,7 @@ export const level7 = {
       levelUp: "You can play A Dorian ascending and descending at 60 BPM, and you can improvise phrases where the F# sounds intentional, not accidental."
     },
     {
-      id: "gs-7-2",
+      id: "gs-8-2",
       time: 10,
       title: "Major 7th Voicings",
       type: "guitar",
@@ -46,7 +46,7 @@ export const level7 = {
       metronome: 120
     },
     {
-      id: "gs-7-3",
+      id: "gs-8-3",
       time: 10,
       title: "Dominant 9th Voicings",
       type: "guitar",
@@ -63,7 +63,7 @@ export const level7 = {
       metronome: 120
     },
     {
-      id: "gs-7-4",
+      id: "gs-8-4",
       time: 10,
       title: "Minor 9th & 11th Voicings",
       type: "guitar",
@@ -80,7 +80,7 @@ export const level7 = {
       metronome: 60
     },
     {
-      id: "gs-7-5",
+      id: "gs-8-5",
       time: 10,
       title: "Extended Chord Progression",
       type: "guitar",
@@ -98,7 +98,7 @@ export const level7 = {
       metronome: 80
     },
     {
-      id: "gs-7-6",
+      id: "gs-8-6",
       time: 10,
       title: "16th-Note Soul Strumming",
       type: "guitar",
@@ -117,7 +117,7 @@ export const level7 = {
       speedLadder: { start: 70, end: 90, increment: 10, bars: 4 }
     },
     {
-      id: "gs-7-7",
+      id: "gs-8-7",
       time: 12,
       title: "Ghost Note + Extended Chord Fusion",
       type: "guitar",
@@ -126,7 +126,7 @@ export const level7 = {
       steps: [
         { text: "Put on the Soul Funk Groove 90. Play Am9 with a ghost note pattern: muted scratch on beats 1 and 3, chord stab on the 'and' of 2 and 4. This is your reggae offbeat rhythm (Level 4) applied to extended chords.", why: "Ghost notes with extended chords create a deeply funky, sophisticated groove. The muted scratches provide rhythm while the extended stabs provide harmonic color." },
         { text: "Move the ghost note pattern through your extended progression: Am9→Dm7→G9→Cmaj7, 2 bars each. Every transition should be seamless — the rhythm never breaks.", why: "Maintaining a steady ghost note rhythm while changing complex chord shapes is a real coordination challenge. This is what separates intermediate from advanced rhythm guitar." },
-        { text: "Add behind-the-beat phrasing from Level 5: place each chord stab slightly late, while keeping the ghost notes on the beat. The rhythm should feel lazy and deep.", why: "The combination of on-beat ghost notes and behind-the-beat chord stabs creates the pocket that defines Skinshape and dub-influenced guitar. It's micro-timing mastery." },
+        { text: "Add behind-the-beat phrasing from Level 7: place each chord stab slightly late, while keeping the ghost notes on the beat. The rhythm should feel lazy and deep.", why: "The combination of on-beat ghost notes and behind-the-beat chord stabs creates the pocket that defines Skinshape and dub-influenced guitar. It's micro-timing mastery." },
         { text: "Reduce the chord stabs to just the top 3 strings. Play fragments of Am9 and G9 — lighter, more suggestive. Let the ghost notes carry the groove.", why: "Fragment voicings with ghost note rhythm is professional-level guitar playing. You're implying complex harmony with minimal effort." }
       ],
       feel: "The groove should feel like a heartbeat — steady, deep, and unhurried. The extended chords add color without disrupting the rhythm. Ghost notes and harmony become one instrument.",
@@ -135,7 +135,7 @@ export const level7 = {
       metronome: 90
     },
     {
-      id: "gs-7-8",
+      id: "gs-8-8",
       time: 12,
       title: "Soul Groove — BALTHVS/Skinshape Style",
       type: "guitar",
@@ -153,12 +153,12 @@ export const level7 = {
       sarah: "This is the sound that fills rooms without anyone noticing. People start moving their heads and don't know why. That's what rhythm guitar mastery feels like."
     },
     {
-      id: "gs-7-9",
+      id: "gs-8-9",
       time: 15,
       title: "Full Soul Groove Jam",
       type: "guitar",
       recorder: true,
-      what: "Extended 15-minute jam: improvise using Dorian scale over the extended chord progression. Focus on groove and feel over technical display. Everything from Level 7 in one session.",
+      what: "Extended 15-minute jam: improvise using Dorian scale over the extended chord progression. Focus on groove and feel over technical display. Everything from Level 8 in one session.",
       tracks: [{ name: "Deep Soul Groove 80 BPM", src: "/deep-soul-groove-80.mp3" }, { name: "Soul Funk Groove 90 BPM", src: "/soul-funk-groove-90.mp3" }],
       steps: [
         { text: "Start with Deep Soul Groove 80. Open with Am9 ghost note rhythm — minimal, deep, locked in. Let the groove breathe for 3 minutes before adding anything else.", why: "Starting sparse establishes the groove as the foundation. Everything you add should enhance it, not compete with it." },
@@ -168,7 +168,7 @@ export const level7 = {
       ],
       feel: "This should feel like performing at a late-night soul club — deep, groovy, sophisticated, and unhurried. Your playing should make people close their eyes and nod.",
       wrong: "If it sounds like a jazz exercise, add more groove and ghost notes. If it sounds like basic strumming, use your extended voicings and Dorian fills. If it's too busy, add more space.",
-      sarah: "This is the summit of Level 7. You started with a single Dorian scale — now you're playing soul sessions with extended harmony, ghost notes, and Dorian leads. That's real musical growth.",
+      sarah: "This is the summit of Level 8. You started with a single Dorian scale — now you're playing soul sessions with extended harmony, ghost notes, and Dorian leads. That's real musical growth.",
       levelUp: "You can sustain a 15-minute soul-funk jam using extended voicings (9ths, 11ths, maj7s), Dorian melodies, ghost note rhythm, and dynamic variation. Your harmonic vocabulary has leveled up."
     }
   ]

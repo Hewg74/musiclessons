@@ -1,3 +1,5 @@
+import { getPitchRange } from "../appData.js";
+
 export const level5 = {
   level: 5,
   title: "Desert Blues",
@@ -5,7 +7,7 @@ export const level5 = {
   description:
     "Desert blues comes from the Sahara — Tinariwen, Bombino, Ali Farka Toure, Mdou Moctar. It uses a 'sus pentatonic' scale (a Western approximation of Tuareg guitar modes, replacing the minor 3rd with a 2nd), drone strings, and hypnotic repetition to create trance-like music. Drop D tuning gives you the deep bass drone that anchors everything. This level teaches patience as a musical technique.",
   artists: "Tinariwen, Bombino, Ali Farka Toure, Mdou Moctar",
-  unlocks: "Khruangbin Space (Level 6)",
+  unlocks: "The Improvisation Engine (Level 6)",
   review: { label: "Levels 3-4 Check-In", time: 5, exercises: ["gs-3-1", "gs-2-4"], prompt: "Play the Phrygian Dominant scale ascending and descending, emphasizing the Bb-C# interval (gs-3-1). Then play surf double stops in 3rds and 6ths cleanly (gs-2-4). Phrygian Dominant colors feed into desert blues, and double-stop precision feeds into drone + melody technique." },
   exercises: [
     {
@@ -66,6 +68,27 @@ export const level5 = {
     },
     {
       id: "gs-5-4",
+      time: 8,
+      title: "Drone Motif Development",
+      type: "guitar",
+      what: "Take your hypnotic 4-note phrase from gs-5-3 and apply simple development: after 8 exact repetitions, change one note. After 8 more, reverse the direction. After 8 more, fragment to 2 notes. This is motif development applied to desert blues — glacial variation with intention.",
+      setup: "Drop D tuning if available. Clean tone, slight reverb.",
+      steps: [
+        { text: "Choose a 4-note sus pentatonic phrase from gs-5-3 (or create a new one). Play it with the A string drone 8 times. No variation. Commit to the repetition.", why: "The exact repetition baseline proves you can hold a phrase with discipline. Desert blues demands patience." },
+        { text: "Repetition 9: change one note. If your phrase was A-B-D-E, try A-B-D-G. One note changed. Repeat this new version 8 times. Listen to how enormous that tiny change feels.", why: "This is PReVaDe 'Vary' applied to desert blues. The ratio of 8 repetitions to 1 change is extreme — that's what makes it meaningful." },
+        { text: "Repetition 17: reverse the direction of your phrase. If it ascended (A-B-D-E), now descend (E-D-B-A). Keep the same rhythm. Repeat 8 times.", why: "Reversing direction is inversion — preserves interval content while changing melodic direction. Creates a mirror effect." },
+        { text: "Repetition 25: fragment to just the first 2 notes. Repeat as a short ostinato. Then just 1 note with the drone. Then just the drone alone. The piece dissolves.", why: "Deconstruction back to the drone creates a full arc: complexity from simplicity, returning to it." }
+      ],
+      feel: "Each variation should feel significant because of the patience that preceded it. The full arc should feel like a slow sunrise.",
+      wrong: "If you changed the phrase before completing 8 repetitions, you short-circuited the process. The patience IS the technique.",
+      sarah: "Tinariwen does this intuitively — a phrase repeats until it transforms. You're learning the structure behind their intuition. When you reach the improv level, this patience will be your secret weapon.",
+      metronome: 75,
+      recorder: true,
+      tracks: [{ name: "Desert Blues 75", src: "/desert-blues-75.mp3" }],
+      referencePitches: getPitchRange("A3", "E4")
+    },
+    {
+      id: "gs-5-5",
       time: 10,
       title: "Drone + Melody — The Communal Guitar",
       type: "guitar",
@@ -84,7 +107,7 @@ export const level5 = {
       metronome: 75
     },
     {
-      id: "gs-5-5",
+      id: "gs-5-6",
       time: 10,
       title: "Quarter-Tone Bends — Between the Notes",
       type: "guitar",
@@ -103,7 +126,7 @@ export const level5 = {
       referencePitches: ["B3", "C4"]
     },
     {
-      id: "gs-5-6",
+      id: "gs-5-7",
       time: 12,
       title: "Song Study: Tinariwen Nannuflay Style",
       type: "guitar",
@@ -125,7 +148,7 @@ export const level5 = {
       metronome: 75
     },
     {
-      id: "gs-5-7",
+      id: "gs-5-8",
       time: 10,
       title: "Desert Blues Toggle",
       type: "guitar",
@@ -145,7 +168,7 @@ export const level5 = {
       metronome: 75
     },
     {
-      id: "gs-5-8",
+      id: "gs-5-9",
       time: 15,
       title: "Extended Desert Jam",
       type: "guitar",

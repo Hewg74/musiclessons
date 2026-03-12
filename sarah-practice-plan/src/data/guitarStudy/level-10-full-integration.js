@@ -1,25 +1,25 @@
-export const level9 = {
-  level: 9,
+export const level10 = {
+  level: 10,
   title: "Full Integration",
   subtitle: "Everything comes together. The Golden Hour Set.",
   description:
-    "Style switching, mood matching, transcription, arrangement building, and extended golden hour sets that draw from every level. This is graduation — your guitar vocabulary is complete. Every scale, every style, every technique from Levels 1-8 becomes one unified musical voice.",
-  artists: "All artists from Levels 1-8",
-  unlocks: "Style switching, mood matching, transcription, arrangement building, extended improvisation, complete musical voice",
-  review: { label: "Level 8 Check-In", time: 5, exercises: ["gs-8-1", "gs-7-8"], prompt: "Play the PIMA fingerpicking pattern on Am-C-G with smooth transitions (gs-8-1). Then play a BALTHVS-style soul groove with ghost notes and extended chords (gs-7-8). Fingerpicking and soul groove should both feel natural." },
+    "Style switching, mood matching, transcription, arrangement building, and extended golden hour sets that draw from every level. This is graduation — your guitar vocabulary is complete. Every scale, every style, every technique from Levels 1-9 becomes one unified musical voice.",
+  artists: "All artists from Levels 1-9",
+  unlocks: "Complete musical voice — you've mastered the full curriculum",
+  review: { label: "Level 9 Check-In", time: 5, exercises: ["gs-9-1", "gs-8-8"], prompt: "Play the PIMA fingerpicking pattern on Am-C-G with smooth transitions (gs-9-1). Then play a BALTHVS-style soul groove with ghost notes and extended chords (gs-8-8). Fingerpicking and soul groove should both feel natural." },
   exercises: [
     {
-      id: "gs-9-1",
+      id: "gs-10-1",
       time: 10,
       title: "Style Switching Drill",
       type: "guitar",
       recorder: true,
-      what: "Cycle through blues (Level 1), surf (Level 2), psych-garage (Level 3), reggae (Level 4), desert (Level 5), Khruangbin space (Level 6), soul (Level 7), and cinematic (Level 8) every 4 bars. Every style you've learned, on demand.",
+      what: "Cycle through blues (Level 1), surf (Level 2), psych-garage (Level 3), reggae (Level 4), desert (Level 5), Khruangbin space (Level 7), soul (Level 8), and cinematic (Level 9) every 4 bars. Every style you've learned, on demand.",
       tracks: [{ name: "Surf Rock 120 BPM", src: "/surf-rock-120.mp3" }],
       steps: [
         { text: "Start with Surf Rock Beat 120. Bars 1-4: surf tremolo picking (Level 2) — bright Mixolydian, fast picking, forward energy. Bars 5-8: blues bends and pentatonic (Level 1) — dark, behind the beat. Bars 9-12: reggae offbeat skanks (Level 4) — tight chops, offbeat discipline. Keep switching every 4 bars.", why: "Style switching tests whether you've truly internalized each style or just memorized exercises. If you can switch instantly, the style is in your body, not just your head." },
-        { text: "Continue the rotation: bars 13-16: desert blues (Level 5) — sus pentatonic, drone, repetition. Bars 17-20: Khruangbin space (Level 6) — sparse, behind the beat, soft attack. Bars 21-24: cinematic (Level 8) — fingerpicked arpeggios, Phrygian drama, dynamics.", why: "Adding more styles to the rotation demands faster mental switching. Each style requires a completely different physical approach — pick attack, hand position, rhythmic feel, scale choice." },
-        { text: "Complete the cycle: bars 25-28: soul groove (Level 7) — extended chords, ghost notes, Dorian fills. Then restart from surf. Cycle through the full 7-style rotation twice.", why: "By Level 9, you should have at least 7 distinct approaches to playing over any backing track. This drill tests your fluency in all of them." },
+        { text: "Continue the rotation: bars 13-16: desert blues (Level 5) — sus pentatonic, drone, repetition. Bars 17-20: Khruangbin space (Level 7) — sparse, behind the beat, soft attack. Bars 21-24: cinematic (Level 9) — fingerpicked arpeggios, Phrygian drama, dynamics.", why: "Adding more styles to the rotation demands faster mental switching. Each style requires a completely different physical approach — pick attack, hand position, rhythmic feel, scale choice." },
+        { text: "Complete the cycle: bars 25-28: soul groove (Level 8) — extended chords, ghost notes, Dorian fills. Then restart from surf. Cycle through the full 7-style rotation twice.", why: "By Level 10, you should have at least 7 distinct approaches to playing over any backing track. This drill tests your fluency in all of them." },
         { text: "Challenge: write style names on cards and flip one every 4 bars. Random order removes the safety of a predictable sequence. If you hesitate on a style, that's where you need more practice.", why: "Random calling simulates real musical situations where you need to access any style at any moment. The styles that feel foreign under pressure reveal your blind spots." }
       ],
       feel: "You should feel like a musical chameleon — completely at home in any style. The switches should feel like changing language, not like starting over.",
@@ -27,7 +27,7 @@ export const level9 = {
       sarah: "This drill reveals your strengths and weaknesses. The styles that feel easy are your comfort zone. The ones that feel awkward are where you need work. Both are valuable information."
     },
     {
-      id: "gs-9-2",
+      id: "gs-10-2",
       time: 10,
       title: "Mood Matching",
       type: "guitar",
@@ -44,7 +44,7 @@ export const level9 = {
       sarah: "This is the most important exercise in the curriculum. Technique serves expression. If you can make someone feel something specific with your guitar, you've mastered the instrument."
     },
     {
-      id: "gs-9-3",
+      id: "gs-10-3",
       time: 10,
       title: "Ear Training & Intervals",
       type: "guitar",
@@ -61,7 +61,7 @@ export const level9 = {
       sarah: "Ear training isn't glamorous, but it's the skill that unlocks everything else. A guitarist with great ears and basic technique will always outplay a guitarist with great technique and deaf ears."
     },
     {
-      id: "gs-9-4",
+      id: "gs-10-4",
       time: 12,
       title: "Chord Tone Targeting",
       type: "guitar",
@@ -79,7 +79,7 @@ export const level9 = {
       sarah: "This is the technique that separates noodling from improvising. When every phrase connects to the harmony, your solo tells the same story as the chords. That's real music."
     },
     {
-      id: "gs-9-5",
+      id: "gs-10-5",
       time: 12,
       title: "Transcription",
       type: "guitar",
@@ -88,14 +88,14 @@ export const level9 = {
         { text: "Choose a song you love with a clear guitar part. Start simple — a Khruangbin riff, a Hermanos Gutiérrez arpeggio, a Skinshape melody. Listen to a 4-8 bar section 3 times without your guitar. Hum the melody.", why: "Active listening without your instrument forces your ear to do the work. Humming proves you've internalized the melody before you try to find it on the fretboard." },
         { text: "Pick up your guitar. Find the first note by trial and error — play notes until one matches. Then the second. Work note by note. This is slow — that's normal. 8 bars might take the full 12 minutes.", why: "Transcription is hard because it requires translating what you hear into fretboard positions. This builds the ear-to-hand connection that defines great musicians." },
         { text: "Focus on getting the melody right first. Rhythm second. Exact voicings third. If you can play the right notes in roughly the right rhythm, that's a success for your first transcription.", why: "Prioritizing melody over precision keeps you from getting frustrated. Even an approximate transcription teaches your ear more than reading perfect tabs." },
-        { text: "Compare your version to the original. What did you get right? What did you miss? The mistakes reveal specific ear training gaps: if you missed the rhythm, practice rhythmic dictation. If you missed the notes, practice intervals (gs-9-3).", why: "Self-evaluation after transcription shows you exactly where your ear is strong and where it needs work. Every transcription makes the next one easier. The first one is always the hardest." }
+        { text: "Compare your version to the original. What did you get right? What did you miss? The mistakes reveal specific ear training gaps: if you missed the rhythm, practice rhythmic dictation. If you missed the notes, practice intervals (gs-10-3).", why: "Self-evaluation after transcription shows you exactly where your ear is strong and where it needs work. Every transcription makes the next one easier. The first one is always the hardest." }
       ],
       feel: "This should feel like detective work — slow, satisfying, and occasionally frustrating. Each note you find should feel like a small victory. The complete transcription should feel like solving a puzzle.",
       wrong: "If you gave up and looked up tabs, try again with an easier passage — maybe just 2 bars. If it took less than 5 minutes, choose something more challenging. If you couldn't find a single note, start by identifying just the key (is it major or minor? What root?).",
       sarah: "Transcription is how every great musician learned. Before tabs and YouTube, you had to figure it out. There's no shortcut to developing your ear — but there's no more valuable skill either."
     },
     {
-      id: "gs-9-6",
+      id: "gs-10-6",
       time: 12,
       title: "Arrangement Building",
       type: "guitar",
@@ -103,9 +103,9 @@ export const level9 = {
       what: "Record layers: rhythm, lead, and texture. Build a 1-minute piece using skills from all levels. This is arranging — thinking about how parts fit together. Requires a looper pedal, multi-track app (GarageBand), or simply recording and playing along.",
       setup: "Phone or recording device with overdub capability. A looper pedal is ideal but not required.",
       steps: [
-        { text: "Record Layer 1 — Rhythm: a chord progression using extended voicings (Level 7) with ghost note rhythm (Level 4/7). Am9→Dm7→G9→Cmaj7, 2 bars each, 1 minute total. Steady tempo. This is your foundation.", why: "The rhythm part is the foundation of any arrangement. Using extended chords with ghost notes gives it sophistication and groove simultaneously." },
-        { text: "Record Layer 2 — Lead: over your rhythm track, play a melodic part using A Dorian. Simple phrases, spacious, behind the beat (Level 6 approach). This is your melody voice.", why: "The lead should complement the rhythm, not compete with it. Using the spacious Khruangbin approach ensures the parts breathe together." },
-        { text: "Record Layer 3 — Texture: fingerpicked cinematic arpeggios (Level 8) in the upper register of the neck. This part fills the spaces between rhythm and lead with atmosphere.", why: "The texture layer is the glue that holds an arrangement together. It adds depth without taking focus from the rhythm and melody." },
+        { text: "Record Layer 1 — Rhythm: a chord progression using extended voicings (Level 8) with ghost note rhythm (Level 4/8). Am9→Dm7→G9→Cmaj7, 2 bars each, 1 minute total. Steady tempo. This is your foundation.", why: "The rhythm part is the foundation of any arrangement. Using extended chords with ghost notes gives it sophistication and groove simultaneously." },
+        { text: "Record Layer 2 — Lead: over your rhythm track, play a melodic part using A Dorian. Simple phrases, spacious, behind the beat (Level 7 approach). This is your melody voice.", why: "The lead should complement the rhythm, not compete with it. Using the spacious Khruangbin approach ensures the parts breathe together." },
+        { text: "Record Layer 3 — Texture: fingerpicked cinematic arpeggios (Level 9) in the upper register of the neck. This part fills the spaces between rhythm and lead with atmosphere.", why: "The texture layer is the glue that holds an arrangement together. It adds depth without taking focus from the rhythm and melody." },
         { text: "Listen to all three layers together. Does it sound like a song? Adjust volumes if one layer dominates. Try removing one layer at a time — each layer should be missed when it's gone.", why: "Listening to your arrangement critically develops your producer's ear. You're learning to hear how parts interact — a skill that goes beyond guitar playing into musicianship." }
       ],
       feel: "You should feel like a producer — layering parts that serve the whole. Each layer should add something essential, and removing any one layer should feel like something is missing.",
@@ -114,7 +114,7 @@ export const level9 = {
       recorder: true
     },
     {
-      id: "gs-9-7",
+      id: "gs-10-7",
       time: 15,
       title: "Golden Hour Set 1: Surf-Psych",
       type: "guitar",
@@ -132,17 +132,17 @@ export const level9 = {
       sarah: "You're playing a full surf-psych set. Opening act: bright surf. Headliner: dark psych. Encore: shimmer jangle. You are the festival."
     },
     {
-      id: "gs-9-8",
+      id: "gs-10-8",
       time: 15,
       title: "Golden Hour Set 2: Groove",
       type: "guitar",
       recorder: true,
-      what: "15 minutes flowing from reggae offbeat skanks (Level 4) into Khruangbin space (Level 6) into soul groove with extended chords (Level 7). The rhythm-focused golden hour.",
+      what: "15 minutes flowing from reggae offbeat skanks (Level 4) into Khruangbin space (Level 7) into soul groove with extended chords (Level 8). The rhythm-focused golden hour.",
       tracks: [{ name: "Reggae One Drop 85 BPM", src: "/reggae-one-drop-85.mp3" }, { name: "Khruangbin Style 80 BPM", src: "/khruangbin-style-80.mp3" }, { name: "Soul Funk Groove 90 BPM", src: "/soul-funk-groove-90.mp3" }],
       steps: [
         { text: "Minutes 0-5: Reggae One Drop 85. Open with reggae skanks on Am7→Dm7 (Level 4). Tight chops, clean offbeat, deep in the pocket. Add brief lead breaks in the Skinshape style — taste, not feast.", why: "Starting with reggae establishes the groove as king. Everything in this set serves the pocket." },
-        { text: "Minutes 5-10: transition to the Khruangbin Style 80. Shift from reggae rhythm to Khruangbin space — softer attack, behind the beat, sparse pentatonic phrases with global flavors (Level 6). The energy gets more introspective.", why: "The transition from reggae drive to Khruangbin float should feel like the sun setting — the energy doesn't drop, it transforms from external to internal." },
-        { text: "Minutes 10-14: switch to Soul Funk Groove 90. Bring in extended chords (Am9, G9, Cmaj7) with ghost note rhythm and Dorian fills (Level 7). The groove deepens with harmonic sophistication.", why: "The soul section is the harmonic climax — same groove sensibility as reggae and Khruangbin, but with richer chords and more melodic fills." },
+        { text: "Minutes 5-10: transition to the Khruangbin Style 80. Shift from reggae rhythm to Khruangbin space — softer attack, behind the beat, sparse pentatonic phrases with global flavors (Level 7). The energy gets more introspective.", why: "The transition from reggae drive to Khruangbin float should feel like the sun setting — the energy doesn't drop, it transforms from external to internal." },
+        { text: "Minutes 10-14: switch to Soul Funk Groove 90. Bring in extended chords (Am9, G9, Cmaj7) with ghost note rhythm and Dorian fills (Level 8). The groove deepens with harmonic sophistication.", why: "The soul section is the harmonic climax — same groove sensibility as reggae and Khruangbin, but with richer chords and more melodic fills." },
         { text: "Minutes 14-15: strip back to a single Am7 skank on the offbeat. No fills, no extensions — just the pure reggae groove you started with. Fade to silence.", why: "Ending with the simplest possible groove after all that complexity is deeply satisfying. The arc is: simple → spacious → sophisticated → simple." }
       ],
       feel: "This should feel deeper and more introspective than the surf-psych set — like a late-night session rather than a beach party. The energy is internal, not external.",
@@ -150,26 +150,26 @@ export const level9 = {
       sarah: "The groove set is about depth and feel. Reggae is the heartbeat. Khruangbin is the breath. Soul is the mind. Together, they're the complete groove experience."
     },
     {
-      id: "gs-9-9",
+      id: "gs-10-9",
       time: 15,
       title: "Golden Hour Set 3: Cinematic",
       type: "guitar",
       recorder: true,
       volumeMeter: true,
-      what: "15 minutes flowing from desert blues drone (Level 5) into cinematic fingerpicked arpeggios (Level 8) into Phrygian drama (Level 8) and finally into silence. The most atmospheric golden hour set.",
+      what: "15 minutes flowing from desert blues drone (Level 5) into cinematic fingerpicked arpeggios (Level 9) into Phrygian drama (Level 9) and finally into silence. The most atmospheric golden hour set.",
       tracks: [{ name: "Desert Blues 75 BPM", src: "/desert-blues-75.mp3" }, { name: "Cinematic Western 80 BPM", src: "/cinematic-western-80.mp3" }],
       steps: [
         { text: "Minutes 0-5: Desert Blues 75. Drop D tuning. Start with the open D drone and a simple sus pentatonic melody (A-B-D-E-G). Hypnotic repetition from Level 5. Let the phrase cycle and evolve glacially.", why: "The desert opening establishes patience and atmosphere. One phrase, repeating, slowly mutating. The listener enters a trance state before the cinematic drama begins." },
-        { text: "Minutes 5-10: transition to the Cinematic Western Beat 80. Shift from drone-based playing to fingerpicked arpeggios (Level 8) — Am→Dm→Em. Build dynamics from Level 2 to Level 4. The desert becomes a canyon — same vastness, but with more movement and color.", why: "The transition from desert to cinematic should feel like a camera slowly pulling back to reveal a larger landscape. Same mood, wider scope." },
+        { text: "Minutes 5-10: transition to the Cinematic Western Beat 80. Shift from drone-based playing to fingerpicked arpeggios (Level 9) — Am→Dm→Em. Build dynamics from Level 2 to Level 4. The desert becomes a canyon — same vastness, but with more movement and color.", why: "The transition from desert to cinematic should feel like a camera slowly pulling back to reveal a larger landscape. Same mood, wider scope." },
         { text: "Minutes 10-13: full Phrygian drama. Spaghetti Western melodies with the Bb→A resolution. Tremolo effect on sustained notes. Build to the dynamic peak — Level 5 volume. This is the dramatic climax of the entire set.", why: "The Phrygian section is the emotional peak — maximum drama, maximum intensity, maximum cinematic power. Everything you've built across 13 minutes pays off here." },
         { text: "Minutes 13-15: dissolve. Strip away layers. Return to single notes. Fade from Level 5 dynamics to Level 1. End on a single open D drone ringing into complete silence. Don't touch the guitar until the string stops vibrating.", why: "The dissolution is the most cinematic moment — the story ends, the credits roll, and the final sustained note is the last shot before black." }
       ],
       feel: "This should feel like a film score in miniature — vast, dramatic, and deeply atmospheric. The desert drone, the cinematic arpeggios, the Phrygian drama, the final silence — each section serves a narrative purpose.",
-      wrong: "If it sounded like practicing, you weren't committed to the storytelling. If there was no dynamic contrast, reread exercise 8-5 and exaggerate the volume changes. If the Phrygian section felt awkward, practice exercise 8-4 more.",
+      wrong: "If it sounded like practicing, you weren't committed to the storytelling. If there was no dynamic contrast, reread exercise 9-5 and exaggerate the volume changes. If the Phrygian section felt awkward, practice exercise 9-4 more.",
       sarah: "This set is your inner film composer. Most guitarists never think about scoring scenes — they think about playing songs. You're beyond songs. You're creating worlds."
     },
     {
-      id: "gs-9-10",
+      id: "gs-10-10",
       time: 30,
       title: "The Full Golden Hour",
       type: "guitar",
@@ -177,7 +177,7 @@ export const level9 = {
       what: "30-minute set combining ALL styles, building from quiet to peak to resolution. No stopping. No planning beyond the general arc. This is graduation — the final exercise in the entire curriculum.",
       tracks: [{ name: "Khruangbin Style 80 BPM", src: "/khruangbin-style-80.mp3" }, { name: "Desert Blues 75 BPM", src: "/desert-blues-75.mp3" }, { name: "Reggae One Drop 85 BPM", src: "/reggae-one-drop-85.mp3" }, { name: "Surf Rock 120 BPM", src: "/surf-rock-120.mp3" }, { name: "Soul Funk Groove 90 BPM", src: "/soul-funk-groove-90.mp3" }, { name: "Cinematic Western 80 BPM", src: "/cinematic-western-80.mp3" }],
       steps: [
-        { text: "Minutes 0-5: THE DAWN. Start with no backing track. Just you and your guitar. Quiet fingerpicked arpeggios. A single sustained note. Space. Silence. The golden hour begins at first light.", why: "Starting without a backing track is the bravest choice. No safety net. Just your musical instincts and the skills from 9 levels of study. The silence is part of the music." },
+        { text: "Minutes 0-5: THE DAWN. Start with no backing track. Just you and your guitar. Quiet fingerpicked arpeggios. A single sustained note. Space. Silence. The golden hour begins at first light.", why: "Starting without a backing track is the bravest choice. No safety net. Just your musical instincts and the skills from 10 levels of study. The silence is part of the music." },
         { text: "Minutes 5-10: THE WARMTH. Fade in a mellow backing track (Khruangbin Style 80 or Desert Blues 75). Let the groove join you — not the other way around. Play behind the beat. Dorian warmth. Extended chords. The sun is rising.", why: "The backing track arrival should feel like dawn breaking — gradual, inevitable, and warm. Your playing transitions from solo meditation to groove-locked expression." },
         { text: "Minutes 10-17: THE JOURNEY. Move through styles as the music calls for them. Reggae skanks into blues bends into desert drones into Khruangbin space. Switch backing tracks if you want. Let the music guide you — don't force transitions.", why: "The middle section is your full vocabulary on display. Each style appears when the music needs it. You're not performing exercises — you're making choices. This is improvisation at its deepest." },
         { text: "Minutes 17-24: THE PEAK. Build energy. Surf tremolo over driving beats. Phrygian Dominant riffs. Garage rock intensity. Soul groove with extended chords and bold Dorian fills. This is where you unleash everything. Dynamics at Level 5. Full commitment.", why: "The climax of the golden hour should be undeniable — the moment when all your skills converge into maximum musical expression. Hold nothing back." },

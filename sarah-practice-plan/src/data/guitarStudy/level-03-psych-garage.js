@@ -1,3 +1,5 @@
+import { getPitchRange } from "../appData.js";
+
 export const level3 = {
   level: 3,
   title: "Psych-Garage",
@@ -5,8 +7,8 @@ export const level3 = {
   description:
     "Psych-garage is Gene's #2-4 genre territory: Neo-Psychedelic, Psychedelic Rock, and Garage Rock. This level teaches the Phrygian Dominant scale (the ACTUAL scale behind Misirlou — correctly placed here, not in the surf level), power chords, fuzz tone, psych minor progressions, and garage rock energy. You'll channel Mystic Braves, BALTHVS, and the darker side of Allah-Las.",
   artists: "Mystic Braves, BALTHVS, Allah-Las, Tame Impala",
-  unlocks: "Desert Blues (Level 4)",
-  review: { label: "Level 1 Review", time: 5, exercises: ["gs-1-1", "gs-1-6"], prompt: "Play the Am pentatonic ascending and descending cleanly (gs-1-1). Then run the speed ladder from 60 to 90 BPM (gs-1-6). If the scale is rusty or speed has regressed, spend 10 minutes on Level 1 before proceeding." },
+  unlocks: "Reggae Skank (Level 4)",
+  review: { label: "Level 1 Review", time: 5, exercises: ["gs-1-1", "gs-1-7"], prompt: "Play the Am pentatonic ascending and descending cleanly (gs-1-1). Then run the speed ladder from 60 to 90 BPM (gs-1-7). If the scale is rusty or speed has regressed, spend 10 minutes on Level 1 before proceeding." },
   exercises: [
     {
       id: "gs-3-1",
@@ -87,6 +89,25 @@ export const level3 = {
     {
       id: "gs-3-5",
       time: 8,
+      title: "Hear the Chord Tones",
+      type: "guitar",
+      what: "Over the psych progression Am-Em-G-D, play the ROOT of each chord on beat 1. Just one note per chord change, matching the harmony. This is your first taste of chord-tone targeting — the foundation of melodic improvisation.",
+      steps: [
+        { text: "Play the Am-Em-G-D progression as power chords for 4 bars to feel the movement. Then stop strumming and just play the ROOT as a single note on beat 1: A when Am starts, E when Em starts, G when G starts, D when D starts.", why: "Hearing the root of each chord as a single note trains your ear to track harmony. Most pentatonic players ignore what chord is underneath." },
+        { text: "Add pentatonic fill notes BETWEEN the roots. Play A (root of Am), then 2-3 pentatonic notes, then E (root of Em), then 2-3 notes. Roots are your anchors. Everything between is decoration.", why: "Anchoring on roots while filling with pentatonic notes is the simplest chord-tone targeting. It sounds 'inside' the changes because your strong-beat notes match the harmony." },
+        { text: "Now try targeting the 3RD instead of the root: C over Am, G over Em, B over G, F# over D. Find these notes in your pentatonic position.", why: "Targeting 3rds is more sophisticated because the 3rd defines whether a chord is major or minor." },
+        { text: "Play over Psych Rock 120 for 2 minutes, alternating between root targeting and 3rd targeting.", why: "This is a seed — you won't master chord-tone targeting here. But planting the awareness NOW means the full improv level will feel familiar." }
+      ],
+      feel: "When your single note matches the chord change, you'll hear it click — the note and the harmony agree.",
+      wrong: "If root notes don't sound connected to the chord, check your note locations. If fills between roots sound random, keep them short — 1-2 pentatonic notes.",
+      sarah: "Most guitarists play Level 9 before they learn this. You're getting it in Level 3. When your pentatonic licks match the chords underneath, everything changes.",
+      tracks: [{ name: "Psych Rock 120", src: "/psych-rock-120.mp3" }],
+      metronome: 120,
+      referencePitches: getPitchRange("A3", "G4")
+    },
+    {
+      id: "gs-3-6",
+      time: 8,
       title: "Garage Rock Energy",
       type: "guitar",
       recorder: true,
@@ -104,7 +125,7 @@ export const level3 = {
       metronome: 120
     },
     {
-      id: "gs-3-6",
+      id: "gs-3-7",
       time: 10,
       title: "Psych Riff Writing",
       type: "guitar",
@@ -123,7 +144,7 @@ export const level3 = {
       metronome: 120
     },
     {
-      id: "gs-3-7",
+      id: "gs-3-8",
       time: 12,
       title: "Song: Mystic Braves — Desert Island Style",
       type: "guitar",
@@ -142,7 +163,7 @@ export const level3 = {
       metronome: 120
     },
     {
-      id: "gs-3-8",
+      id: "gs-3-9",
       time: 10,
       title: "Song: BALTHVS Groove",
       type: "guitar",
@@ -162,7 +183,7 @@ export const level3 = {
       metronome: 90
     },
     {
-      id: "gs-3-9",
+      id: "gs-3-10",
       time: 15,
       title: "Psych Jam Session",
       type: "guitar",

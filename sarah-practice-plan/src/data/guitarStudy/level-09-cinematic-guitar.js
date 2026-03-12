@@ -1,17 +1,17 @@
 import { getPitchRange } from "../appData.js";
 
-export const level8 = {
-  level: 8,
+export const level9 = {
+  level: 9,
   title: "Cinematic Guitar",
   subtitle: "Reverb becomes your instrument. Fingerpicking is formally taught here.",
   description:
     "Hermanos Gutierrez territory. This level formally teaches fingerpicking (PIMA), minor arpeggios, the tremolo effect (not the same as tremolo picking from Level 2), Phrygian mode, cinematic dynamics, and scene scoring. Reverb is no longer optional — it's an instrument.",
   artists: "Hermanos Gutiérrez, Ennio Morricone, Wander & Mélodie",
-  unlocks: "Full Integration (Level 9)",
-  review: { label: "Level 6 Check-In", time: 5, exercises: ["gs-6-5", "gs-7-5"], prompt: "Roll your tone knob to 3 different positions and describe the difference (gs-6-5). Then play the Am9→Dm7→G9→Cmaj7 progression with clean fingerpicking (gs-7-5). Tone awareness and extended chords should be second nature." },
+  unlocks: "Full Integration (Level 10)",
+  review: { label: "Levels 7-8 Check-In", time: 5, exercises: ["gs-7-5", "gs-8-5"], prompt: "Roll your tone knob to 3 different positions and describe the difference (gs-7-5). Then play the Am9→Dm7→G9→Cmaj7 progression with clean fingerpicking (gs-8-5). Tone awareness and extended chords should be second nature." },
   exercises: [
     {
-      id: "gs-8-1",
+      id: "gs-9-1",
       time: 10,
       title: "Fingerpicking Basics — PIMA",
       type: "guitar",
@@ -31,7 +31,7 @@ export const level8 = {
       levelUp: "You can play the P-I-M-A-M-I rolling pattern on Am, C, and G with smooth chord changes and even note volume at 60 BPM."
     },
     {
-      id: "gs-8-2",
+      id: "gs-9-2",
       time: 10,
       title: "Minor Arpeggios — Fingerpicked",
       type: "guitar",
@@ -50,7 +50,7 @@ export const level8 = {
       levelUp: "You can fingerpick Am, Dm, and Em arpeggios with smooth, overlapping sustain and seamless transitions between chords."
     },
     {
-      id: "gs-8-3",
+      id: "gs-9-3",
       time: 10,
       title: "Tremolo Effect — Not Tremolo Picking",
       type: "guitar",
@@ -68,7 +68,7 @@ export const level8 = {
       metronome: 80
     },
     {
-      id: "gs-8-4",
+      id: "gs-9-4",
       time: 10,
       title: "Phrygian Mode — The Dramatic Scale",
       type: "guitar",
@@ -87,7 +87,7 @@ export const level8 = {
       sarah: "Phrygian is the scale of drama queens — and I mean that as a compliment. One well-placed Bb is worth more than a hundred fast runs."
     },
     {
-      id: "gs-8-5",
+      id: "gs-9-5",
       time: 10,
       title: "Cinematic Dynamics",
       type: "guitar",
@@ -105,7 +105,7 @@ export const level8 = {
       sarah: "Dynamics are the most underrated tool in guitar. Most players have two settings: on and off. You're learning to use the entire spectrum — and that spectrum is what makes cinematic guitar cinematic."
     },
     {
-      id: "gs-8-6",
+      id: "gs-9-6",
       time: 12,
       title: "Hermanos Gutiérrez Style",
       type: "guitar",
@@ -115,7 +115,7 @@ export const level8 = {
       tracks: [{ name: "Cinematic Western 80 BPM", src: "/cinematic-western-80.mp3" }],
       steps: [
         { text: "Learn the progression: G (320003)→A (x02220)→Bm (x24432)→Em (022000)→E (022100). Play each chord as fingerpicked arpeggios — thumb on bass, fingers on treble. 2 bars per chord. Let the reverb fill the space between notes.", why: "This progression (or something like it) is the Hermanos Gutiérrez template. The mix of major and minor chords creates a bittersweet, cinematic mood. Arpeggiation with reverb turns 5 simple chords into a soundtrack." },
-        { text: "Focus on your right hand: use the P-I-M-A assignment from exercise 8-1. Thumb walks between the bass note of each chord (G on 6th string, A on 5th, B on 5th, E on 6th). Fingers stay on strings 3-2-1.", why: "The thumb provides a walking bass line while the fingers provide the melody. In a Hermanos Gutiérrez song, these two layers create the illusion of two guitarists — but it's one player with good technique." },
+        { text: "Focus on your right hand: use the P-I-M-A assignment from exercise 9-1. Thumb walks between the bass note of each chord (G on 6th string, A on 5th, B on 5th, E on 6th). Fingers stay on strings 3-2-1.", why: "The thumb provides a walking bass line while the fingers provide the melody. In a Hermanos Gutiérrez song, these two layers create the illusion of two guitarists — but it's one player with good technique." },
         { text: "Add dynamics: start the progression quietly (Level 2). Each time through the progression, get slightly louder. Over 3 cycles, build from whisper to full voice. Then drop back to whisper on the 4th cycle.", why: "Dynamic arcs over repeated progressions are the Hermanos Gutiérrez signature. The same chords feel different at different volumes. The drop back to quiet after the build is the most dramatic moment." },
         { text: "Record yourself if possible. Listen back with eyes closed. Does it sound like it could score a scene? If yes — that's the goal. If not, add more space between notes and let the reverb do more work.", why: "The self-evaluation question 'does this sound like a soundtrack?' is the Cinematic Guitar litmus test. When the answer is yes, you've understood the aesthetic." }
       ],
@@ -124,7 +124,7 @@ export const level8 = {
       sarah: "Hermanos Gutiérrez proved that you don't need speed, complexity, or even lyrics to make guitar music that moves people to tears. Simplicity plus atmosphere equals cinema."
     },
     {
-      id: "gs-8-7",
+      id: "gs-9-7",
       time: 12,
       title: "Spaghetti Western Melody",
       type: "guitar",
@@ -144,7 +144,7 @@ export const level8 = {
       sarah: "This melody is your audition for an imaginary Sergio Leone film. Play it like the camera is slowly zooming in on your face."
     },
     {
-      id: "gs-8-8",
+      id: "gs-9-8",
       time: 12,
       title: "Two-Guitar Thinking",
       type: "guitar",
@@ -163,7 +163,7 @@ export const level8 = {
       sarah: "This is how you start thinking like a band instead of a solo player. Even when you're alone, you can create music that sounds like two people playing. That's the Hermanos Gutiérrez secret."
     },
     {
-      id: "gs-8-9",
+      id: "gs-9-9",
       time: 15,
       title: "Cinematic Scene Score",
       type: "guitar",
@@ -172,14 +172,14 @@ export const level8 = {
       what: "Pick a mood — sunrise, chase scene, farewell — and score it with everything from this level: fingerpicking, minor arpeggios, dynamics, Phrygian drama, tremolo effect, and reverb. No backing track. Create a 5-minute mini-soundtrack.",
       steps: [
         { text: "Choose your scene. Sunrise = start quiet, build to warm. Chase = start tense, build to frantic. Farewell = start full, fade to nothing. Write down the mood before you play — commit to it.", why: "Having a visual image to score gives your playing narrative purpose. You're not just practicing techniques — you're telling a story. The image guides every musical decision." },
-        { text: "Act 1 (0-2 min): Set the scene. For sunrise: quiet fingerpicked Am arpeggios, Level 1-2 dynamics, lots of reverb, lots of space. For chase: tense Phrygian Bb→A figures, tremolo effect, rising intensity. For farewell: warm Dorian melodies from Level 7 over extended chords.", why: "Every film score starts with atmosphere. Your job is to create a sense of place with minimal notes. This is where your dynamic control pays off." },
+        { text: "Act 1 (0-2 min): Set the scene. For sunrise: quiet fingerpicked Am arpeggios, Level 1-2 dynamics, lots of reverb, lots of space. For chase: tense Phrygian Bb→A figures, tremolo effect, rising intensity. For farewell: warm Dorian melodies from Level 8 over extended chords.", why: "Every film score starts with atmosphere. Your job is to create a sense of place with minimal notes. This is where your dynamic control pays off." },
         { text: "Act 2 (2-4 min): Build tension. Move up the neck to higher positions. Introduce the Phrygian Bb if you haven't. Add dynamics — crescendo over 4 bars. Something is coming.", why: "Rising pitch, new harmonic colors, and increasing volume all signal rising tension. The listener should feel that something important is about to happen." },
-        { text: "Act 3 (4-5 min): Resolution. A final dramatic phrase — your Spaghetti Western melody from exercise 8-7 or something inspired by it. Then a slow descent back to quiet. End on a single sustained A with tremolo effect fading to silence.", why: "The resolution should feel earned — all the tension of Act 2 pays off in one powerful moment, then dissolves. The ending silence is part of the music." },
+        { text: "Act 3 (4-5 min): Resolution. A final dramatic phrase — your Spaghetti Western melody from exercise 9-7 or something inspired by it. Then a slow descent back to quiet. End on a single sustained A with tremolo effect fading to silence.", why: "The resolution should feel earned — all the tension of Act 2 pays off in one powerful moment, then dissolves. The ending silence is part of the music." },
         { text: "Listen back if you recorded it. Does it feel like a scene? Can you hear the three acts? Would it work behind a moment in a film? If yes — you've graduated from cinematic guitar.", why: "Self-evaluation is how you develop artistic judgment. You're not just practicing technique — you're learning to compose and arrange in real time." }
       ],
       feel: "This should feel like directing a short film with your guitar. You're not playing songs — you're creating atmosphere, tension, and release. Every section serves the narrative.",
       wrong: "If it sounds like three separate exercises stitched together, work on smoother transitions between acts. If there's no dynamic contrast between acts, exaggerate the differences until they feel dramatic.",
-      sarah: "This is the graduation exercise for cinematic guitar. You started Level 8 learning where to put your fingers for fingerpicking — now you're scoring imaginary films. That's real artistic growth.",
+      sarah: "This is the graduation exercise for cinematic guitar. You started Level 9 learning where to put your fingers for fingerpicking — now you're scoring imaginary films. That's real artistic growth.",
       levelUp: "You can create a convincing 3-act musical narrative with clear dynamic contrast, Phrygian drama, fingerpicked arpeggios, and tremolo atmosphere. Your guitar tells stories."
     }
   ]

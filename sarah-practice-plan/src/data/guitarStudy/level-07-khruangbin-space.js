@@ -1,17 +1,17 @@
 import { getPitchRange } from "../appData.js";
 
-export const level6 = {
-  level: 6,
+export const level7 = {
+  level: 7,
   title: "Khruangbin Space",
   subtitle: "Maximum restraint. Every note must earn its place.",
   description:
     "Khruangbin's guitar approach is anti-guitar-hero: soft pick attack, behind-the-beat phrasing, global pentatonic flavors, and more silence than sound. Mark Speer treats the tone knob as an instrument, rolls between bright and warm constantly, and uses chromatic approach notes to add Eastern and global flavors. This level teaches restraint as a form of mastery — saying the most with the least.",
   artists: "Khruangbin, Tommy Guerrero, Skinshape",
-  unlocks: "Psych Fuzz & Jangle (Level 7)",
-  review: { label: "Levels 4-5 Check-In", time: 5, exercises: ["gs-4-1", "gs-4-8"], prompt: "Play a 2-minute reggae offbeat skank with ghost notes on Am7-Dm7 (gs-4-1). Then play the full reggae jam with chord changes and dub spaces (gs-4-8). The offbeat discipline and space awareness are both foundations for Khruangbin's approach — rhythm precision meets restraint." },
+  unlocks: "Soul & Extended Chords (Level 8)",
+  review: { label: "Levels 4-5 Check-In", time: 5, exercises: ["gs-4-1", "gs-4-10"], prompt: "Play a 2-minute reggae offbeat skank with ghost notes on Am7-Dm7 (gs-4-1). Then play the full reggae jam with chord changes and dub spaces (gs-4-10). The offbeat discipline and space awareness are both foundations for Khruangbin's approach — rhythm precision meets restraint." },
   exercises: [
     {
-      id: "gs-6-1",
+      id: "gs-7-1",
       time: 8,
       title: "Three-Note Voicings",
       type: "guitar",
@@ -20,7 +20,7 @@ export const level6 = {
         { text: "Play Am as a full chord (x02210). Now strip it down to just the top 3 strings: play only the G, B, and E strings. You get the notes A (G string 2nd fret), C (B string 1st fret), E (open high E) — a complete Am triad in a compact, bright voicing.", why: "Removing the root makes the chord ambiguous — it could be several things depending on the bass note underneath. This openness is the Khruangbin sound. The bass player (Laura Lee) defines the chord; Mark Speer adds color." },
         { text: "Find 3-note voicings for Dm (top 3 strings of xx0231: A, D, F), Em (open G, open B, open E — the simplest voicing), G (top 3 strings of 320003: G, B, G), and C (top 3 strings of x32010: G, C, E). Each chord is just 2-3 unique notes.", why: "Three-note voicings are transparent — they suggest harmony without declaring it. This leaves room for the bass to define the chord and air to flow between the notes." },
         { text: "Play a progression using only these stripped-down voicings: Am-Dm-G-C with 3 notes each. Strum only the top 3 strings. Notice how airy and spacious it sounds compared to full chords.", why: "Full chords fill the sonic space like oil paint. Three-note voicings are watercolors — lighter, more transparent, more suggestive." },
-        { text: "Try playing these voicings with a soft pick attack — barely touching the strings. Let the notes whisper. This is the dynamic foundation for everything in Level 6.", why: "Khruangbin's dynamics are crucial. Soft attack + open voicings = the spacious, floating sound that defines their guitar tone." }
+        { text: "Try playing these voicings with a soft pick attack — barely touching the strings. Let the notes whisper. This is the dynamic foundation for everything in Level 7.", why: "Khruangbin's dynamics are crucial. Soft attack + open voicings = the spacious, floating sound that defines their guitar tone." }
       ],
       feel: "Three-note voicings should feel like watercolors compared to full chords — lighter, more transparent, more suggestive. The sound should float rather than pound.",
       wrong: "If the chords sound thin or weak, you might be muting strings accidentally — check your fretting. If they sound like full chords, you're including too many strings. If they sound empty, you're not letting the notes sustain long enough.",
@@ -29,7 +29,7 @@ export const level6 = {
       recorder: true
     },
     {
-      id: "gs-6-2",
+      id: "gs-7-2",
       time: 8,
       title: "Soft Pick Attack — The Flatwound Feel",
       type: "guitar",
@@ -48,7 +48,7 @@ export const level6 = {
       volumeMeter: true
     },
     {
-      id: "gs-6-3",
+      id: "gs-7-3",
       time: 10,
       title: "40% Silence — The Space Rule",
       type: "guitar",
@@ -68,7 +68,7 @@ export const level6 = {
       sarah: "Miles Davis said 'It's not the notes you play, it's the notes you don't play.' Khruangbin took that literally. Their songs are more silence than sound, and the silence is what makes the notes matter."
     },
     {
-      id: "gs-6-4",
+      id: "gs-7-4",
       time: 10,
       title: "Behind the Beat",
       type: "guitar",
@@ -87,7 +87,7 @@ export const level6 = {
       metronome: 80
     },
     {
-      id: "gs-6-5",
+      id: "gs-7-5",
       time: 10,
       title: "Tone Knob as Instrument",
       type: "guitar",
@@ -107,7 +107,7 @@ export const level6 = {
       recorder: true
     },
     {
-      id: "gs-6-6",
+      id: "gs-7-6",
       time: 10,
       title: "Chromatic Approach Notes",
       type: "guitar",
@@ -126,7 +126,7 @@ export const level6 = {
       metronome: 80
     },
     {
-      id: "gs-6-7",
+      id: "gs-7-7",
       time: 10,
       title: "Global Pentatonic Flavors",
       type: "guitar",
@@ -144,7 +144,7 @@ export const level6 = {
       sarah: "Khruangbin's genius is treating the pentatonic scale as a global language — adding different accents and idioms depending on the song. This exercise gives you the same superpower. You already know the scale. Now you know how to make it speak different languages."
     },
     {
-      id: "gs-6-8",
+      id: "gs-7-8",
       time: 12,
       title: "Song Study: Khruangbin Style",
       type: "guitar",
@@ -163,24 +163,24 @@ export const level6 = {
       sarah: "Khruangbin makes guitar music for people who don't normally listen to guitar music. Their secret is restraint. They play 10% of what they could play, and that 10% is chosen with extraordinary care. This exercise teaches you to think like Mark Speer."
     },
     {
-      id: "gs-6-9",
+      id: "gs-7-9",
       time: 15,
       title: "Extended Space Jam",
       type: "guitar",
       recorder: true,
-      what: "15 minutes of maximum restraint improvisation. Every note must earn its place. Soft attack, behind the beat, global flavors, tone knob work, motif development, and silence as your primary instrument. This is the graduation exam for Level 6.",
+      what: "15 minutes of maximum restraint improvisation. Every note must earn its place. Soft attack, behind the beat, global flavors, tone knob work, motif development, and silence as your primary instrument. This is the graduation exam for Level 7.",
       setup: "Record yourself. Neck pickup. Clean tone. Warm reverb if available. Tone knob accessible.",
       tracks: [{ name: "Khruangbin Style 80 BPM", src: "/khruangbin-style-80.mp3" }],
       steps: [
         { text: "Put on Khruangbin Style 80. Listen for 16 beats — 4 full bars — before playing a single note. Let the groove establish itself without you. Your job is to join the music, not create it.", why: "Starting with extended listening sets the intention: you are a guest in this groove. The music exists without you. Your notes are offerings, not demands." },
         { text: "Play one note. Soft attack. Behind the beat. Let it ring until it fades completely. Then play another. For the first 3 minutes, never play more than one note at a time. Roll the tone knob between notes — bright for one, warm for the next.", why: "Single notes with full decay is the most restrained form of playing. Adding tone knob variation gives each note a different character, even at maximum simplicity." },
-        { text: "Minutes 3-8: develop a motif from three notes. Evolve it slowly using everything from Level 6 — chromatic approaches, global flavors, space, tone changes. Never play more than 5-6 notes in a phrase. Always leave at least 4 beats between phrases.", why: "The middle section is where motif development happens. Tiny mutations over 5 minutes create a journey that the listener follows subconsciously." },
+        { text: "Minutes 3-8: develop a motif from three notes. Evolve it slowly using everything from Level 7 — chromatic approaches, global flavors, space, tone changes. Never play more than 5-6 notes in a phrase. Always leave at least 4 beats between phrases.", why: "The middle section is where motif development happens. Tiny mutations over 5 minutes create a journey that the listener follows subconsciously." },
         { text: "Minutes 8-12: your most expressive playing. Still spacious, but allow yourself slightly more density. Add chromatic passing tones, behind-the-beat phrasing, dynamic variation, all three global flavors. This is your emotional peak — but even the peak is restrained.", why: "Even the climax of a Khruangbin-style piece is restrained by most standards. More expression, not more notes. Wider dynamics, not faster runs." },
         { text: "Minutes 12-15: return to single notes. Deconstruct the motif back to its simplest form. Roll the tone knob all the way off — warm, dark, fading. End on one sustained note that dissolves into silence.", why: "The return to simplicity creates symmetry with the opening. The piece breathes out and dissolves. The final silence is part of the music." }
       ],
       feel: "This should feel like the most mature playing you've done in the curriculum so far. Every note is a decision. Every silence is intentional. You're not showing off — you're communicating. When it's working, it feels effortless and profound.",
-      wrong: "If you filled the 15 minutes with nonstop playing, Level 6 hasn't clicked yet. If the silence felt awkward instead of musical, you need more practice trusting the space. If every phrase sounded the same, incorporate more global flavors and tone knob variation. If you never touched the tone knob, you missed a core Level 6 skill.",
-      sarah: "This is the summit of the first 6 levels. You started with blues scales and bends — now you're making music where silence matters as much as sound, where the tone knob is an instrument, and where restraint IS the technique. That's not just guitar technique. That's artistic maturity.",
+      wrong: "If you filled the 15 minutes with nonstop playing, Level 7 hasn't clicked yet. If the silence felt awkward instead of musical, you need more practice trusting the space. If every phrase sounded the same, incorporate more global flavors and tone knob variation. If you never touched the tone knob, you missed a core Level 7 skill.",
+      sarah: "This is the summit of the first 7 levels. You started with blues scales and bends — now you're making music where silence matters as much as sound, where the tone knob is an instrument, and where restraint IS the technique. That's not just guitar technique. That's artistic maturity.",
       levelUp: "You can sustain a 15-minute session where restraint feels natural, space feels musical, every note serves the whole, and the tone knob adds color throughout. Your playing has a voice — quiet, global, and unmistakably yours."
     }
   ]

@@ -70,6 +70,25 @@ export const level1 = {
     },
     {
       id: "gs-1-4",
+      time: 6,
+      title: "Rhythm Before Notes",
+      type: "guitar",
+      what: "Mute all strings with your fretting hand and improvise RHYTHMS ONLY — no pitch, just percussion. Vary your strum patterns, add accents, leave gaps. This proves rhythm alone can be musical.",
+      setup: "Metronome at 70 BPM. Fretting hand lightly mutes all strings.",
+      steps: [
+        { text: "Lay your fretting hand flat across all strings — no pressure, just muting. Strum down. You hear a percussive 'tchk' with no pitch. This is a ghost strum — pure rhythm.", why: "Removing pitch from the equation reveals rhythm as its own musical dimension." },
+        { text: "Strum quarter notes (4 per bar) for 4 bars. Boring, right? Now accent beats 2 and 4 (strum harder on those beats). The same pattern suddenly has a groove.", why: "Accenting 2 and 4 creates a backbeat — the rhythmic foundation of rock, reggae, funk, and blues." },
+        { text: "Improvise rhythms for 1 minute. Vary everything: long strums, short stabs, silence, accents, fast scratches, slow hits. No pitch — only rhythm.", why: "Rhythmic improvisation is improvisation. If you can make one minute of muted strumming interesting, you understand that rhythm IS the music." },
+        { text: "Record yourself. Listen back. Where did the rhythm groove? Where did it stumble? The moments that grooved are your natural rhythmic voice.", why: "Your natural rhythmic instincts are already there. This exercise reveals them before scales add complexity." }
+      ],
+      feel: "Pure rhythm should feel liberating — you can't play a wrong note because there are no notes. Focus entirely on the feel.",
+      wrong: "If every strum sounds the same, you're not varying dynamics or speed. If it sounds random, establish a repeating pattern first, then vary it.",
+      sarah: "Gene, your reggae offbeat is waiting for you in Level 4. This exercise is the first seed — proving that rhythm alone is enough to make music.",
+      metronome: 70,
+      recorder: true
+    },
+    {
+      id: "gs-1-5",
       time: 8,
       title: "The Blue Note — Adding Eb",
       type: "guitar",
@@ -90,7 +109,7 @@ export const level1 = {
       levelUp: "You can play the Am blues scale ascending and descending at 60 BPM without hesitation, and you can hear the difference between pentatonic and blues scale."
     },
     {
-      id: "gs-1-5",
+      id: "gs-1-6",
       time: 10,
       title: "Bending & Expressive Techniques",
       type: "guitar",
@@ -111,7 +130,7 @@ export const level1 = {
       metronome: 70
     },
     {
-      id: "gs-1-6",
+      id: "gs-1-7",
       time: 8,
       title: "Speed Ladder",
       type: "guitar",
@@ -131,7 +150,7 @@ export const level1 = {
       levelUp: "You can play the scale cleanly at 90 BPM with one note per beat, no stumbles."
     },
     {
-      id: "gs-1-7",
+      id: "gs-1-8",
       time: 10,
       title: "Song: DOPE LEMON Style",
       type: "guitar",
@@ -149,7 +168,7 @@ export const level1 = {
       metronome: 90
     },
     {
-      id: "gs-1-8",
+      id: "gs-1-9",
       time: 10,
       title: "First Improv — Call and Response",
       type: "guitar",
@@ -169,7 +188,7 @@ export const level1 = {
       metronome: 90
     },
     {
-      id: "gs-1-9",
+      id: "gs-1-10",
       time: 5,
       title: "Self-Check: Can You Sing It?",
       type: "guitar",

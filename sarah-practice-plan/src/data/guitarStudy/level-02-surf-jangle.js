@@ -1,3 +1,5 @@
+import { getPitchRange } from "../appData.js";
+
 export const level2 = {
   level: 2,
   title: "Surf & Jangle",
@@ -6,7 +8,7 @@ export const level2 = {
     "Surf guitar is the sound of the ocean — Mixolydian melodies, tremolo picking, and shimmering jangle voicings over driving rhythms. This level combines the classic surf vocabulary of The Ventures with the modern psych-jangle of Allah-Las and Sun Room. You'll learn the Mixolydian scale (correctly attributed — it's 'Walk Don't Run,' not 'Misirlou'), tremolo picking, sus2 voicings, double stops, and reverb as an instrument.",
   artists: "Sun Room, Allah-Las, The Ventures, Dick Dale",
   unlocks: "Psych-Garage (Level 3)",
-  review: { label: "Level 1 Check-In", time: 5, exercises: ["gs-1-1", "gs-1-8"], prompt: "Play the Am pentatonic ascending and descending cleanly (gs-1-1). Then jam for 2 minutes with call-and-response phrasing over a backing track (gs-1-8). If the scale feels unfamiliar or the improv feels impossible, revisit Level 1." },
+  review: { label: "Level 1 Check-In", time: 5, exercises: ["gs-1-1", "gs-1-9"], prompt: "Play the Am pentatonic ascending and descending cleanly (gs-1-1). Then jam for 2 minutes with call-and-response phrasing over a backing track (gs-1-9). If the scale feels unfamiliar or the improv feels impossible, revisit Level 1." },
   exercises: [
     {
       id: "gs-2-1",
@@ -108,6 +110,26 @@ export const level2 = {
     },
     {
       id: "gs-2-6",
+      time: 8,
+      title: "Catch the Lick — Motif Seed",
+      type: "guitar",
+      what: "Play a surf lick, then repeat it from memory. Then vary it slightly. This is your first taste of PReVaDe (Present, Repeat, Vary) — the motif development framework you'll use throughout the curriculum.",
+      steps: [
+        { text: "Put on Surf Rock 120. Play a short surf lick — 3-4 notes from Mixolydian. Anything that sounds cool. Then STOP. Can you remember what you just played?", why: "Most guitarists play things they instantly forget. The ability to remember what you just played is the foundation of motif development." },
+        { text: "Play the same lick again. Exactly the same — same notes, same rhythm. If you can't remember it precisely, simplify until you can.", why: "Exact repetition proves you've internalized the phrase. A 2-note lick repeated accurately beats a 6-note lick forgotten." },
+        { text: "Now vary ONE thing: change the last note, or change the rhythm, or play it an octave higher. Just one change. The lick should still be recognizable.", why: "Single-element variation is the simplest form of motivic development. The listener hears the original in the variation." },
+        { text: "Catch 3 different licks and run the catch-repeat-vary sequence on each. Record all three. Which was most memorable?", why: "Testing multiple licks reveals your melodic preferences. The ones that stick are your natural vocabulary." }
+      ],
+      feel: "Catching your own lick should feel like grabbing a fish — you played it spontaneously, now hold onto it.",
+      wrong: "If you can't remember any lick you just played, simplify to 2-3 notes with a clear rhythm. If the variation doesn't sound related, you changed too many things.",
+      sarah: "Gene, this is how surf instrumentals are born — a guitarist plays a lick, catches it, and develops it into a song. You're learning the origin story of every Ventures and Allah-Las track.",
+      recorder: true,
+      tracks: [{ name: "Surf Rock 120", src: "/surf-rock-120.mp3" }],
+      metronome: 120,
+      referencePitches: getPitchRange("G3", "D5")
+    },
+    {
+      id: "gs-2-7",
       time: 10,
       title: "Song: Sun Room — Sol Del Sur Style",
       type: "guitar",
@@ -126,7 +148,7 @@ export const level2 = {
       metronome: 100
     },
     {
-      id: "gs-2-7",
+      id: "gs-2-8",
       time: 10,
       title: "Song: Allah-Las — Catamaran Style",
       type: "guitar",
@@ -145,7 +167,7 @@ export const level2 = {
       metronome: 100
     },
     {
-      id: "gs-2-8",
+      id: "gs-2-9",
       time: 10,
       title: "Allah-Las Lead Style",
       type: "guitar",
@@ -164,7 +186,7 @@ export const level2 = {
       metronome: 100
     },
     {
-      id: "gs-2-9",
+      id: "gs-2-10",
       time: 12,
       title: "Extended Surf Jam",
       type: "guitar",

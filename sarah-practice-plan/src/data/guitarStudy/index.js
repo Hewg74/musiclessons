@@ -3,10 +3,11 @@ import { level2 } from "./level-02-surf-jangle.js";
 import { level3 } from "./level-03-psych-garage.js";
 import { level4 } from "./level-04-reggae-skank.js";
 import { level5 } from "./level-05-desert-blues.js";
-import { level6 } from "./level-06-khruangbin-space.js";
-import { level7 } from "./level-07-soul-extended-chords.js";
-import { level8 } from "./level-08-cinematic-guitar.js";
-import { level9 } from "./level-09-full-integration.js";
+import { level6 } from "./level-06-improvisation-engine.js";
+import { level7 } from "./level-07-khruangbin-space.js";
+import { level8 } from "./level-08-soul-extended-chords.js";
+import { level9 } from "./level-09-cinematic-guitar.js";
+import { level10 } from "./level-10-full-integration.js";
 
 export const GUITAR_STUDY = [
   level1,
@@ -17,5 +18,6 @@ export const GUITAR_STUDY = [
   level6,
   level7,
   level8,
-  level9
+  level9,
+  level10
 ];
