@@ -2129,7 +2129,7 @@ export function VolumeMeter({ theme: T, inline = false, volumeContour = false })
         const h = history;
         const w = 600, ht = 160;
         const points = h.map((val, i) => {
-          const x = (i / (maxHistory - 1)) * w;
+          const x = (i / (maxHistoryRef.current - 1)) * w;
           const y = ht - ((val + 60) / 60) * ht;
           return `${x},${y}`;
         }).join(' ');
@@ -2461,11 +2461,14 @@ export function InlineKeyboard({
 export function RhythmCellCards({ theme: T, cells = [], bpm = 80 }) {
   const [playingIdx, setPlayingIdx] = useState(null);
   const timeoutsRef = useRef([]);
+  const synthsRef = useRef([]);
 
   const playCell = (cell, idx) => {
     // Clear any existing playback
     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current = [];
+    synthsRef.current.forEach(s => { try { s.dispose(); } catch (_) {} });
+    synthsRef.current = [];
     setPlayingIdx(idx);
 
     const beatMs = 60000 / bpm;
@@ -2479,8 +2482,9 @@ export function RhythmCellCards({ theme: T, cells = [], bpm = 80 }) {
           envelope: { attack: 0.01, decay: 0.1, sustain: 0.3, release: 0.2 }
         }).toDestination();
         synth.volume.value = -6;
+        synthsRef.current.push(synth);
         synth.triggerAttackRelease("A3", `${dur * beatMs / 1000}`, Tone.now());
-        setTimeout(() => synth.dispose(), 2000);
+        setTimeout(() => { synth.dispose(); synthsRef.current = synthsRef.current.filter(s2 => s2 !== synth); }, 2000);
       }, offset);
       timeoutsRef.current.push(t);
       offset += dur * beatMs;
@@ -2492,7 +2496,10 @@ export function RhythmCellCards({ theme: T, cells = [], bpm = 80 }) {
   };
 
   useEffect(() => {
-    return () => timeoutsRef.current.forEach(clearTimeout);
+    return () => {
+      timeoutsRef.current.forEach(clearTimeout);
+      synthsRef.current.forEach(s => { try { s.dispose(); } catch (_) {} });
+    };
   }, []);
 
   // Visual dot representation
@@ -2561,6 +2568,7 @@ export function PhraseFormGuide({ theme: T, form }) {
   const [isActive, setIsActive] = useState(false);
 
   const sections = Array.isArray(form.pattern) ? form.pattern : form.pattern.split('');
+  if (sections.length === 0) return null;
   const barsArr = Array.isArray(form.barsPerSection)
     ? form.barsPerSection
     : sections.map(() => form.barsPerSection);
