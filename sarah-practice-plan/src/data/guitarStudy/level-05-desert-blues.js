@@ -8,7 +8,7 @@ export const level5 = {
     "Desert blues comes from the Sahara — Tinariwen, Bombino, Ali Farka Toure, Mdou Moctar. It uses a 'sus pentatonic' scale (a Western approximation of Tuareg guitar modes, replacing the minor 3rd with a 2nd), drone strings, and hypnotic repetition to create trance-like music. Drop D tuning gives you the deep bass drone that anchors everything. This level teaches patience as a musical technique.",
   artists: "Tinariwen, Bombino, Ali Farka Toure, Mdou Moctar",
   unlocks: "The Improvisation Engine (Level 6)",
-  review: { label: "Levels 3-4 Check-In", time: 5, exercises: ["gs-3-1", "gs-2-4"], prompt: "Play the Phrygian Dominant scale ascending and descending, emphasizing the Bb-C# interval (gs-3-1). Then play surf double stops in 3rds and 6ths cleanly (gs-2-4). Phrygian Dominant colors feed into desert blues, and double-stop precision feeds into drone + melody technique." },
+  review: { label: "Levels 3-4 Check-In", time: 5, exercises: ["gs-3-1", "gs-2-5"], prompt: "Play the Phrygian Dominant scale ascending and descending, emphasizing the Bb-C# interval (gs-3-1). Then play surf double stops in 3rds and 6ths cleanly (gs-2-5). Phrygian Dominant colors feed into desert blues, and double-stop precision feeds into drone + melody technique." },
   exercises: [
     {
       id: "gs-5-1",
@@ -49,6 +49,29 @@ export const level5 = {
     },
     {
       id: "gs-5-3",
+      time: 5,
+      title: "Rhythm Drone",
+      type: "guitar",
+      what: "Play ONLY the open D drone string (Drop D tuning). No melody, no chords — just one bass string. All expression comes from rhythm: when you strike it, how hard, how long you let it ring, and how much silence you leave. Make the drone groove.",
+      steps: [
+        { text: "Strike the open D string once per bar on beat 1. Let it ring for the full bar. 8 bars of this — one note, one hit, total patience.", why: "One strike per bar forces patience. The drone's sustain fills the space. This is the desert blues aesthetic: less is everything." },
+        { text: "Now strike on beats 1 and 3. Two hits per bar. Feel how doubling the frequency changes the energy — from meditative to pulsing.", why: "Adding one hit per bar doubles the energy. In desert blues, this kind of density change is a huge arrangement move." },
+        { text: "Try the 'heartbeat' pattern: two quick strikes close together (beats 1 and the 'and' of 1), then silence for the rest of the bar. The drone has a pulse.", why: "The heartbeat pattern mimics the human pulse. It's the most primal rhythm — used by Tinariwen when they let the bass drone carry the feel." },
+        { text: "Freestyle: 2 minutes of one-string rhythm improv. Mix all three patterns — single hits, double hits, heartbeats, silence. Record yourself.", why: "One string with great rhythm creates a complete musical experience. This proves the same lesson as Level 1's One-Note Groove, but in a completely different sonic world." }
+      ],
+      feel: "The drone should feel like a heartbeat or a distant drum — steady, alive, and deeply grounding. When you add silence between hits, the anticipation is the music.",
+      wrong: "If it sounds random, commit to one pattern for 4 bars before switching. If it sounds boring, you're not using enough silence — silence creates anticipation.",
+      sarah: "Gene, this is the deepest rhythm-first exercise in the curriculum. One string, no notes, pure rhythm. Tinariwen's bassists play like this — one note, infinite groove. Desert patience IS rhythmic mastery.",
+      metronome: 75,
+      recorder: true,
+      rhythmCells: [
+        { name: "Desert Pulse", pattern: [2], description: "One hit per 2 beats" },
+        { name: "Heartbeat", pattern: [0.5, 1.5], description: "Quick double then space" },
+        { name: "Walking", pattern: [1, 1], description: "Steady on beats 1 & 3" }
+      ]
+    },
+    {
+      id: "gs-5-4",
       time: 10,
       title: "Hypnotic Repetition",
       type: "guitar",
@@ -64,17 +87,17 @@ export const level5 = {
       wrong: "If you get bored and change the phrase early, you haven't committed to the process. The boredom is the point — push through it and something shifts. If the phrase is too complex to repeat exactly, simplify it.",
       sarah: "Tinariwen can play the same riff for 10 minutes and it gets MORE interesting, not less. The secret is that repetition reveals depth. Each cycle, you hear something new in the same notes.",
       metronome: 75,
-      levelUp: "You can repeat a 4-note phrase 16 times without variation, and the phrase deepens rather than becomes boring."
+      phraseForm: { pattern: ["Motif", "Vary1", "Vary2", "Dissolve"], barsPerSection: [16, 8, 8, 8], labels: { Motif: "Original x16", Vary1: "Change 1 Note", Vary2: "Change Another", Dissolve: "Return to Drone" } }
     },
     {
-      id: "gs-5-4",
+      id: "gs-5-5",
       time: 8,
       title: "Drone Motif Development",
       type: "guitar",
-      what: "Take your hypnotic 4-note phrase from gs-5-3 and apply simple development: after 8 exact repetitions, change one note. After 8 more, reverse the direction. After 8 more, fragment to 2 notes. This is motif development applied to desert blues — glacial variation with intention.",
+      what: "Take your hypnotic 4-note phrase from gs-5-4 and apply simple development: after 8 exact repetitions, change one note. After 8 more, reverse the direction. After 8 more, fragment to 2 notes. This is motif development applied to desert blues — glacial variation with intention.",
       setup: "Drop D tuning if available. Clean tone, slight reverb.",
       steps: [
-        { text: "Choose a 4-note sus pentatonic phrase from gs-5-3 (or create a new one). Play it with the A string drone 8 times. No variation. Commit to the repetition.", why: "The exact repetition baseline proves you can hold a phrase with discipline. Desert blues demands patience." },
+        { text: "Choose a 4-note sus pentatonic phrase from gs-5-4 (or create a new one). Play it with the A string drone 8 times. No variation. Commit to the repetition.", why: "The exact repetition baseline proves you can hold a phrase with discipline. Desert blues demands patience." },
         { text: "Repetition 9: change one note. If your phrase was A-B-D-E, try A-B-D-G. One note changed. Repeat this new version 8 times. Listen to how enormous that tiny change feels.", why: "This is PReVaDe 'Vary' applied to desert blues. The ratio of 8 repetitions to 1 change is extreme — that's what makes it meaningful." },
         { text: "Repetition 17: reverse the direction of your phrase. If it ascended (A-B-D-E), now descend (E-D-B-A). Keep the same rhythm. Repeat 8 times.", why: "Reversing direction is inversion — preserves interval content while changing melodic direction. Creates a mirror effect." },
         { text: "Repetition 25: fragment to just the first 2 notes. Repeat as a short ostinato. Then just 1 note with the drone. Then just the drone alone. The piece dissolves.", why: "Deconstruction back to the drone creates a full arc: complexity from simplicity, returning to it." }
@@ -85,10 +108,11 @@ export const level5 = {
       metronome: 75,
       recorder: true,
       tracks: [{ name: "Desert Blues 75", src: "/desert-blues-75.mp3" }],
-      referencePitches: getPitchRange("A3", "E4")
+      referencePitches: getPitchRange("A3", "E4"),
+      phraseForm: { pattern: "PRVD", barsPerSection: 8, labels: { P: "Present x8", R: "Vary x8", V: "Reverse x8", D: "Fragment x8" } }
     },
     {
-      id: "gs-5-5",
+      id: "gs-5-6",
       time: 10,
       title: "Drone + Melody — The Communal Guitar",
       type: "guitar",
@@ -104,10 +128,32 @@ export const level5 = {
       feel: "You should feel like two musicians — one holding down the foundation, one exploring above it. When the drone and melody lock together, the guitar resonates in a way that single-line playing never achieves.",
       wrong: "If the drone keeps dropping out, your right hand isn't returning to the bass strings consistently. Practice the bass pattern alone until it's automatic before adding melody. If the melody and drone clash, stick to sus pentatonic notes — they're designed to float over drones.",
       sarah: "In Tuareg culture, guitar is communal — multiple players interlock to create the trance. You're channeling that tradition through one instrument. The drone is not just a technique — it's a philosophy. Some things hold steady so other things can move.",
-      metronome: 75
+      metronome: 75,
+      volumeMeter: true
     },
     {
-      id: "gs-5-6",
+      id: "gs-5-7",
+      time: 5,
+      title: "Desert Recovery",
+      type: "guitar",
+      what: "While playing sus pentatonic over the drone, occasionally slip and play C (the minor 3rd from Am pentatonic) instead of B (the 2nd from sus pentatonic). Then recover: bend the C down toward B (a quarter-tone bend recovery), or repeat the C 3 times to make it 'blues' before returning to sus pentatonic. The 'wrong' note becomes a genre bridge.",
+      steps: [
+        { text: "Play a sus pentatonic phrase over the desert drone: A-B-D-E-G. After 4 bars, 'slip' and play C instead of B. Let the C ring — it changes the color from desert to blues instantly.", why: "C vs. B is a one-fret difference with a massive mood shift. C is the minor 3rd (blues/sadness). B is the 2nd (openness/desert). Hearing the contrast is ear training." },
+        { text: "RECOVERY MOVE 1 — THE QUARTER-TONE BEND: bend the C slightly toward B (not a full half-step, just a quarter-tone). The note hovers between blues and desert — this is the sound of Tinariwen, who live between Western and non-Western tuning.", why: "Quarter-tone recovery is unique to desert blues. Instead of fixing the 'wrong' note, you land in the space between the two scales. This is where the genre's magic lives." },
+        { text: "RECOVERY MOVE 2 — THE BLUES COMMITMENT: play C three more times with conviction. You've shifted from desert to blues — own it. Play a blues phrase (A-C-D-Eb-E), then gradually drift back to sus pentatonic (A-B-D-E-G).", why: "Committing to the 'wrong' scale and then drifting back creates a musical moment. The blues detour becomes a feature — a genre modulation within one solo." },
+        { text: "Improvise for 2 minutes with intentional C/B slips every 30 seconds. Alternate recovery moves. Record yourself.", why: "Practicing both recoveries builds a toolkit. When a real slip happens, you have two musical responses instead of panic." }
+      ],
+      feel: "The C/B slip should feel like stepping between two worlds — blues and desert. Both recoveries are valid; both create interesting music. There is no wrong choice, only different colors.",
+      wrong: "If the quarter-tone bend overshoots into a full half-step, you've gone too far — the bend should hover, not resolve. If the blues commitment sounds jarring, spend more bars in blues before drifting back.",
+      sarah: "Gene, this is the most musically interesting recovery exercise in the curriculum. The 'wrong' note (C) isn't wrong — it's the blues scale. You're learning to navigate between two scales in real time. This is what Tinariwen does naturally.",
+      metronome: 75,
+      tracks: [{ name: "Desert Blues 75", src: "/desert-blues-75.mp3" }],
+      recorder: true,
+      pitchContour: true,
+      referencePitches: ["B3", "C4"]
+    },
+    {
+      id: "gs-5-8",
       time: 10,
       title: "Quarter-Tone Bends — Between the Notes",
       type: "guitar",
@@ -123,10 +169,11 @@ export const level5 = {
       wrong: "If the bend goes all the way to C, you've overshot — that's a regular half-step bend. If it doesn't move at all, you need more pressure. The quarter-tone is a very specific, very small movement. Use the 8th fret pitch as your ceiling — stop halfway there.",
       sarah: "Microtonal bending is what separates guitar from piano. The piano can only play the notes that exist. Guitar can play the spaces between. Desert blues lives in those spaces.",
       metronome: 75,
-      referencePitches: ["B3", "C4"]
+      referencePitches: ["B3", "C4"],
+      pitchContour: true
     },
     {
-      id: "gs-5-7",
+      id: "gs-5-9",
       time: 12,
       title: "Song Study: Tinariwen Nannuflay Style",
       type: "guitar",
@@ -145,10 +192,11 @@ export const level5 = {
       feel: "This should feel meditative — the pattern plays itself and your mind enters a calm, focused state. When you change a note, it should feel significant, like a new color appearing in a sunrise.",
       wrong: "If you get bored and add complexity, you're resisting the process. If the drone keeps dropping out, focus on the right-hand alternation until it's automatic. If the melody notes clash with the drone, stick to A-B-D-E-G — the sus pentatonic was designed for this.",
       sarah: "Tinariwen's music is communal and trance-inducing. When you play their patterns alone, you're participating in a musical tradition that's been creating altered states for centuries. 'Nannuflay' is on your playlist, Gene — this is the sound you love, now in your fingers.",
-      metronome: 75
+      metronome: 75,
+      volumeContour: true
     },
     {
-      id: "gs-5-8",
+      id: "gs-5-10",
       time: 10,
       title: "Desert Blues Toggle",
       type: "guitar",
@@ -165,10 +213,12 @@ export const level5 = {
       feel: "The toggle should feel like switching between two landscapes — the Mississippi Delta and the Sahara Desert. Same heat, different terrain.",
       wrong: "If both sections sound the same, you're not committing to the character of each scale. Blues is vocal and bending; desert is repetitive and droning. Change your attitude, not just your notes.",
       sarah: "Ali Farka Toure said the blues came from Africa. When you play both scales, you hear the family resemblance — and the divergence. Same ancestor, different continents.",
-      metronome: 75
+      metronome: 75,
+      referencePitches: ["B3", "C4"],
+      pitchContour: true
     },
     {
-      id: "gs-5-9",
+      id: "gs-5-11",
       time: 15,
       title: "Extended Desert Jam",
       type: "guitar",
@@ -187,6 +237,8 @@ export const level5 = {
       wrong: "If you played fast and varied throughout, you missed the point. Desert blues is about restraint, patience, and depth. If you got bored and stopped early, try setting a timer and committing — the breakthrough happens after the boredom, not before it.",
       sarah: "This is the deepest musical experience in the curriculum so far. Most Western music is about going somewhere. Desert blues is about being somewhere — fully present, fully patient, fully alive in the moment. Remember to tune back to standard when you're done.",
       metronome: 75,
+      volumeContour: true,
+      phraseForm: { pattern: ["Drone", "Melody", "Evolve", "Peak", "Dissolve"], barsPerSection: [8, 12, 20, 16, 8], labels: { Drone: "Drone Alone", Melody: "3-Note Motif", Evolve: "Glacial Change", Peak: "Intensity", Dissolve: "Return to Drone" } },
       levelUp: "You can sustain a desert blues jam for 15 minutes that evolves gradually, maintains the drone, and doesn't rush. The repetition feels meditative, not monotonous."
     }
   ]

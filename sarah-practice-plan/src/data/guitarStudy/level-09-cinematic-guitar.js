@@ -8,7 +8,7 @@ export const level9 = {
     "Hermanos Gutierrez territory. This level formally teaches fingerpicking (PIMA), minor arpeggios, the tremolo effect (not the same as tremolo picking from Level 2), Phrygian mode, cinematic dynamics, and scene scoring. Reverb is no longer optional — it's an instrument.",
   artists: "Hermanos Gutiérrez, Ennio Morricone, Wander & Mélodie",
   unlocks: "Full Integration (Level 10)",
-  review: { label: "Levels 7-8 Check-In", time: 5, exercises: ["gs-7-5", "gs-8-5"], prompt: "Roll your tone knob to 3 different positions and describe the difference (gs-7-5). Then play the Am9→Dm7→G9→Cmaj7 progression with clean fingerpicking (gs-8-5). Tone awareness and extended chords should be second nature." },
+  review: { label: "Levels 7-8 Check-In", time: 5, exercises: ["gs-7-5", "gs-8-6"], prompt: "Roll your tone knob to 3 different positions and describe the difference (gs-7-5). Then play the Am9→Dm7→G9→Cmaj7 progression with clean fingerpicking (gs-8-6). Tone awareness and extended chords should be second nature." },
   exercises: [
     {
       id: "gs-9-1",
@@ -27,8 +27,7 @@ export const level9 = {
       feel: "Fingerpicking should feel gentle and controlled — each note plucked clearly with the fingertip, not the nail (unless you have nails grown for this purpose). The sound should be warm, round, and intimate.",
       wrong: "If your fingers are slipping off the strings, you're pulling too hard. Fingerpicking uses less force than you think. If notes are uneven in volume, focus on making each pluck the same strength. If your thumb keeps hitting the wrong string, look at it until the muscle memory forms.",
       sarah: "Fingerpicking opens up an entirely different relationship with your guitar. Instead of strumming — which is expressive but blunt — you're speaking individual notes. It's the difference between shouting across a room and whispering in someone's ear.",
-      metronome: 60,
-      levelUp: "You can play the P-I-M-A-M-I rolling pattern on Am, C, and G with smooth chord changes and even note volume at 60 BPM."
+      metronome: 60
     },
     {
       id: "gs-9-2",
@@ -46,8 +45,7 @@ export const level9 = {
       wrong: "If the notes sound clipped or staccato, you're muting too early — keep your fingers out of the way of ringing strings. If it sounds muddy, slow down and let fewer notes overlap at once.",
       sarah: "Hermanos Gutierrez build entire songs from simple arpeggios drenched in reverb. The magic isn't complexity — it's letting each note breathe.",
       volumeMeter: true,
-      metronome: 70,
-      levelUp: "You can fingerpick Am, Dm, and Em arpeggios with smooth, overlapping sustain and seamless transitions between chords."
+      metronome: 70
     },
     {
       id: "gs-9-3",
@@ -69,6 +67,26 @@ export const level9 = {
     },
     {
       id: "gs-9-4",
+      title: "Tremolo + Dynamics Fusion",
+      type: "guitar",
+      time: 10,
+      what: "Combine the tremolo effect with full dynamic range. Start with a whisper-tremolo, build to full-volume tremolo, then fade back down. Dynamic shaping meets cinematic texture.",
+      steps: [
+        { text: "Play a sustained Am chord with tremolo picking at pp (very quiet). Focus on keeping the tremolo even while barely touching the strings.", why: "Quiet tremolo is harder than loud — it builds fine motor control." },
+        { text: "Over 8 bars, gradually crescendo from pp to ff while maintaining the tremolo. Feel the drama build.", why: "Dynamic arcs over tremolo create the cinematic swell that defines this genre." },
+        { text: "Now apply this to the Am→Dm→Em progression. Each chord gets a dynamic shape: Am builds up, Dm peaks, Em fades.", why: "Mapping dynamics to chord function — this is how Hermanos Gutiérrez build emotional narratives." }
+      ],
+      feel: "Like a desert sunrise — the light builds slowly, peaks at golden hour, then softens.",
+      wrong: "Flat dynamics through the whole tremolo passage. The tremolo is the texture; dynamics are the story.",
+      sarah: "This is cinematic guitar at its core. Hermanos Gutiérrez, Ennio Morricone — they all use this tremolo-dynamics fusion.",
+      metronome: 80,
+      tracks: [{ name: "Cinematic Western 80", src: "/cinematic-western-80.mp3" }],
+      volumeMeter: true,
+      volumeContour: true,
+      recorder: true
+    },
+    {
+      id: "gs-9-5",
       time: 10,
       title: "Phrygian Mode — The Dramatic Scale",
       type: "guitar",
@@ -87,11 +105,12 @@ export const level9 = {
       sarah: "Phrygian is the scale of drama queens — and I mean that as a compliment. One well-placed Bb is worth more than a hundred fast runs."
     },
     {
-      id: "gs-9-5",
+      id: "gs-9-6",
       time: 10,
       title: "Cinematic Dynamics",
       type: "guitar",
       volumeMeter: true,
+      volumeContour: true,
       what: "Play the same arpeggio at 5 different volume levels, then practice crescendo (soft to loud) and decrescendo (loud to soft) over 8 bars. Volume is your most powerful expressive tool — more powerful than notes, chords, or scales.",
       tracks: [{ name: "Cinematic Western 80 BPM", src: "/cinematic-western-80.mp3" }],
       steps: [
@@ -105,11 +124,12 @@ export const level9 = {
       sarah: "Dynamics are the most underrated tool in guitar. Most players have two settings: on and off. You're learning to use the entire spectrum — and that spectrum is what makes cinematic guitar cinematic."
     },
     {
-      id: "gs-9-6",
+      id: "gs-9-7",
       time: 12,
       title: "Hermanos Gutiérrez Style",
       type: "guitar",
       recorder: true,
+      volumeContour: true,
       what: "Minor arpeggios, fingerpicking, heavy reverb, and slapback delay. Reference 'El Camino De Mi Alma' by Hermanos Gutiérrez: a progression like G-A-Bm-Em-E at around 90 BPM. Simple chords, maximum atmosphere.",
       setup: "Reverb (as much as you have). Slapback delay if available (short delay, 80-120ms, one repeat). Neck pickup. Fingerpicking.",
       tracks: [{ name: "Cinematic Western 80 BPM", src: "/cinematic-western-80.mp3" }],
@@ -124,11 +144,12 @@ export const level9 = {
       sarah: "Hermanos Gutiérrez proved that you don't need speed, complexity, or even lyrics to make guitar music that moves people to tears. Simplicity plus atmosphere equals cinema."
     },
     {
-      id: "gs-9-7",
+      id: "gs-9-8",
       time: 12,
       title: "Spaghetti Western Melody",
       type: "guitar",
       recorder: true,
+      volumeContour: true,
       fretboard: { scale: "a-phrygian", position: 1 },
       what: "Play Phrygian phrases with the Bb→A resolution — the Morricone signature. Simple melody, maximum drama through dynamics and space. This is where all the cinematic tools come together: fingerpicking, Phrygian, dynamics, reverb.",
       tracks: [{ name: "Cinematic Western 80 BPM", src: "/cinematic-western-80.mp3" }],
@@ -144,11 +165,12 @@ export const level9 = {
       sarah: "This melody is your audition for an imaginary Sergio Leone film. Play it like the camera is slowly zooming in on your face."
     },
     {
-      id: "gs-9-8",
+      id: "gs-9-9",
       time: 12,
       title: "Two-Guitar Thinking",
       type: "guitar",
       recorder: true,
+      volumeContour: true,
       what: "Record a simple fingerpicked rhythm part, then play a melodic lead line over it. Practice both roles — rhythm and lead — as separate voices on one guitar. This is how you self-accompany and think like an arranger.",
       setup: "Phone or looper to record yourself. Reverb recommended.",
       tracks: [{ name: "Cinematic Western 80 BPM", src: "/cinematic-western-80.mp3" }],
@@ -163,18 +185,20 @@ export const level9 = {
       sarah: "This is how you start thinking like a band instead of a solo player. Even when you're alone, you can create music that sounds like two people playing. That's the Hermanos Gutiérrez secret."
     },
     {
-      id: "gs-9-9",
+      id: "gs-9-10",
       time: 15,
       title: "Cinematic Scene Score",
       type: "guitar",
       recorder: true,
       volumeMeter: true,
+      volumeContour: true,
+      phraseForm: { sections: ["Intro", "Tension", "Release", "Climax", "Denouement"], barsPerSection: 8 },
       what: "Pick a mood — sunrise, chase scene, farewell — and score it with everything from this level: fingerpicking, minor arpeggios, dynamics, Phrygian drama, tremolo effect, and reverb. No backing track. Create a 5-minute mini-soundtrack.",
       steps: [
         { text: "Choose your scene. Sunrise = start quiet, build to warm. Chase = start tense, build to frantic. Farewell = start full, fade to nothing. Write down the mood before you play — commit to it.", why: "Having a visual image to score gives your playing narrative purpose. You're not just practicing techniques — you're telling a story. The image guides every musical decision." },
         { text: "Act 1 (0-2 min): Set the scene. For sunrise: quiet fingerpicked Am arpeggios, Level 1-2 dynamics, lots of reverb, lots of space. For chase: tense Phrygian Bb→A figures, tremolo effect, rising intensity. For farewell: warm Dorian melodies from Level 8 over extended chords.", why: "Every film score starts with atmosphere. Your job is to create a sense of place with minimal notes. This is where your dynamic control pays off." },
         { text: "Act 2 (2-4 min): Build tension. Move up the neck to higher positions. Introduce the Phrygian Bb if you haven't. Add dynamics — crescendo over 4 bars. Something is coming.", why: "Rising pitch, new harmonic colors, and increasing volume all signal rising tension. The listener should feel that something important is about to happen." },
-        { text: "Act 3 (4-5 min): Resolution. A final dramatic phrase — your Spaghetti Western melody from exercise 9-7 or something inspired by it. Then a slow descent back to quiet. End on a single sustained A with tremolo effect fading to silence.", why: "The resolution should feel earned — all the tension of Act 2 pays off in one powerful moment, then dissolves. The ending silence is part of the music." },
+        { text: "Act 3 (4-5 min): Resolution. A final dramatic phrase — your Spaghetti Western melody from exercise 9-8 or something inspired by it. Then a slow descent back to quiet. End on a single sustained A with tremolo effect fading to silence.", why: "The resolution should feel earned — all the tension of Act 2 pays off in one powerful moment, then dissolves. The ending silence is part of the music." },
         { text: "Listen back if you recorded it. Does it feel like a scene? Can you hear the three acts? Would it work behind a moment in a film? If yes — you've graduated from cinematic guitar.", why: "Self-evaluation is how you develop artistic judgment. You're not just practicing technique — you're learning to compose and arrange in real time." }
       ],
       feel: "This should feel like directing a short film with your guitar. You're not playing songs — you're creating atmosphere, tension, and release. Every section serves the narrative.",

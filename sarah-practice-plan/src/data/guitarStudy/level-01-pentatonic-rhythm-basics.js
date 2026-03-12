@@ -28,8 +28,7 @@ export const level1 = {
       feel: "The pentatonic should feel like a home base — a safe zone where every note sounds good. There are no 'wrong' notes in this scale. It should feel like a musical playground where everything works.",
       wrong: "If your fingers keep landing on the wrong frets, slow down and go note by note. If you can't play it without looking, spend more time on each string individually. If it sounds 'off,' check your tuning — open strings should be E-A-D-G-B-E from low to high.",
       sarah: "This scale is your musical mother tongue. Every guitarist you love — from Khruangbin to Allah-Las to DOPE LEMON — uses this shape constantly. Learn it once, use it forever.",
-      metronome: 60,
-      levelUp: "You can play the Am pentatonic ascending and descending at 60 BPM with eyes closed, 4 times in a row, without wrong notes."
+      metronome: 60
     },
     {
       id: "gs-1-2",
@@ -55,6 +54,7 @@ export const level1 = {
       time: 8,
       title: "Strumming Basics",
       type: "guitar",
+      volumeMeter: true,
       what: "Learn two strumming patterns: quarter-note downstrokes (4 strums per bar) and eighth-note down-up (8 strums per bar). Strumming is what turns chords into music — rhythm is more important than which chords you play.",
       setup: "Metronome at 70 BPM. Hold any chord you're comfortable with (Am is a good start).",
       steps: [
@@ -85,10 +85,37 @@ export const level1 = {
       wrong: "If every strum sounds the same, you're not varying dynamics or speed. If it sounds random, establish a repeating pattern first, then vary it.",
       sarah: "Gene, your reggae offbeat is waiting for you in Level 4. This exercise is the first seed — proving that rhythm alone is enough to make music.",
       metronome: 70,
-      recorder: true
+      recorder: true,
+      rhythmCells: [
+        { name: "Backbeat", pattern: [1, 1, 1, 1], description: "Accent beats 2 & 4" },
+        { name: "3-3-2", pattern: [0.75, 0.75, 0.5], description: "Afro-Cuban syncopation" }
+      ]
     },
     {
       id: "gs-1-5",
+      time: 5,
+      title: "One-Note Groove",
+      type: "guitar",
+      what: "Play ONLY the open A string (5th string). No chords, no scale, just one note. All expression comes from WHEN you play it: on the beat, off the beat, short, long, silent. If one note can groove, rhythm is the real instrument.",
+      steps: [
+        { text: "Play the open A string as quarter notes for 8 bars. Steady, even, boring. This is your baseline.", why: "The baseline proves that one note with no rhythm is just a metronome. Everything you do next is rhythmic improvisation." },
+        { text: "Now play A only on beats 2 and 4. Leave beats 1 and 3 silent. Feel the backbeat — this is where reggae lives.", why: "Removing beats 1 and 3 flips the emphasis. Silence on the strong beats creates groove." },
+        { text: "Try the 3-3-2 pattern: play A on the 1, the 'and' of 2, and beat 4. This creates a lopsided, swinging feel that appears in every genre you'll learn.", why: "The 3-3-2 grouping is the most universal rhythmic cell in popular music. Learning it on one note means you'll recognize it everywhere." },
+        { text: "Freestyle: 2 minutes of one-note improv. Mix everything — backbeats, 3-3-2, long holds, short stabs, silence. Record yourself and listen back.", why: "One note with great rhythm sounds better than a scale played mechanically. This exercise proves that rhythm IS the music." }
+      ],
+      feel: "When the single note grooves, you'll feel the pocket — the note dances around the beat instead of sitting on it. That's the feeling you want in every solo and every chord change.",
+      wrong: "If it sounds like a metronome, you're too even. Add silence, add syncopation, play behind the beat. If it sounds random, commit to a pattern for 4 bars before changing.",
+      sarah: "Gene, this is the foundation of everything in Level 6. Victor Wooten says one note with great rhythm beats a thousand notes with bad rhythm. Your reggae offbeat, your surf tremolo, your desert patience — they all start here.",
+      metronome: 70,
+      recorder: true,
+      rhythmCells: [
+        { name: "Backbeat", pattern: [1, 1, 1, 1], description: "Accent beats 2 & 4" },
+        { name: "3-3-2", pattern: [0.75, 0.75, 0.5], description: "Afro-Cuban syncopation" },
+        { name: "Displaced", pattern: [0.5, 1.5], description: "Off-beat accent" }
+      ]
+    },
+    {
+      id: "gs-1-6",
       time: 8,
       title: "The Blue Note — Adding Eb",
       type: "guitar",
@@ -105,11 +132,10 @@ export const level1 = {
       feel: "The Eb should feel like a tension note that wants to move. When you land on it and then slide to E, you should feel a tiny release — that's the blues sound. It's like holding your breath and then exhaling.",
       wrong: "If every note sounds the same, you're not lingering on Eb long enough. If your fingers stumble at the new note, slow down — your hand hasn't mapped it yet. If you can't hear the difference between pentatonic and blues scale, play them back to back 5 more times.",
       sarah: "The blue note isn't just a scale degree — it's an emotion. B.B. King built an entire career on knowing exactly when to land on it and when to leave. One note, infinite expression.",
-      metronome: 60,
-      levelUp: "You can play the Am blues scale ascending and descending at 60 BPM without hesitation, and you can hear the difference between pentatonic and blues scale."
+      metronome: 60
     },
     {
-      id: "gs-1-6",
+      id: "gs-1-7",
       time: 10,
       title: "Bending & Expressive Techniques",
       type: "guitar",
@@ -130,7 +156,27 @@ export const level1 = {
       metronome: 70
     },
     {
-      id: "gs-1-7",
+      id: "gs-1-8",
+      time: 5,
+      title: "Catch Your Phrase",
+      type: "guitar",
+      what: "Play a short phrase (3 notes from the pentatonic scale), then repeat it exactly 3 times. Then change ONE thing — one note, the rhythm, or the direction. This is the seed of motif development: repeat, then vary.",
+      steps: [
+        { text: "Play any 3 notes from Am pentatonic. Don't think — just play 3 notes. That's your phrase.", why: "Spontaneous creation is the goal. Overthinking kills motifs. The first 3 notes that come out are usually the most natural." },
+        { text: "Repeat that exact phrase 3 more times. Same notes, same rhythm, same everything. Can you play it identically each time?", why: "Exact repetition is harder than it sounds. If you can't repeat it, the phrase is too complex. Simplify until you can repeat it perfectly." },
+        { text: "Now change ONE thing: swap one note, or change the rhythm of one note, or reverse the direction. Play the variation 3 times.", why: "Single-element variation is the core of musical development. Change one thing and the phrase evolves. Change everything and it's a new phrase." },
+        { text: "Record the whole sequence: original 3x → variation 3x. Listen back. Can you hear the connection between original and variation?", why: "The ear should recognize the family resemblance. If the variation sounds unrelated, you changed too much. If it sounds identical, you changed too little." }
+      ],
+      feel: "The variation should feel like the same sentence said with a different inflection — recognizable but fresh. That 'same but different' feeling is the heart of music.",
+      wrong: "If you can't repeat your phrase exactly, it's too long or complex — try just 2 notes. If the variation sounds like a completely different phrase, you changed more than one element.",
+      sarah: "Gene, this is called PReVaDe — Present, Repeat, Vary. You'll use this framework in every level. Mark Speer from Khruangbin does exactly this: catches a lick, repeats it, varies it. It's how all great improvisers build solos.",
+      metronome: 70,
+      recorder: true,
+      referencePitches: getPitchRange("A3", "E4"),
+      phraseForm: { pattern: "PRV", barsPerSection: 2, labels: { P: "Present", R: "Repeat", V: "Vary" } }
+    },
+    {
+      id: "gs-1-9",
       time: 8,
       title: "Speed Ladder",
       type: "guitar",
@@ -146,14 +192,15 @@ export const level1 = {
       wrong: "If you're pushing through mistakes to hit higher tempos, you're building bad habits. The ladder only works when each rung is solid before you climb. Speed without accuracy is just noise.",
       sarah: "Speed is a byproduct of relaxation and accuracy. The fastest players in the world practiced slowly for years first. There is no shortcut, and that's actually good news — it means you're doing it right.",
       metronome: 60,
-      speedLadder: { start: 60, end: 90, increment: 10, bars: 4 },
-      levelUp: "You can play the scale cleanly at 90 BPM with one note per beat, no stumbles."
+      speedLadder: { start: 60, end: 90, increment: 10, bars: 4 }
     },
     {
-      id: "gs-1-8",
+      id: "gs-1-10",
       time: 10,
       title: "Song: DOPE LEMON Style",
       type: "guitar",
+      volumeMeter: true,
+      volumeContour: true,
       what: "Play a laid-back chord progression in the style of DOPE LEMON: Am → C → G → D, with a slow, lazy down-up strum. DOPE LEMON's guitar is about feel, not complexity — relaxed, behind the beat, sun-on-your-face vibes.",
       tracks: [{ name: "Groove Beat 90 BPM", src: "/groove-beat-90.mp3" }],
       steps: [
@@ -168,7 +215,25 @@ export const level1 = {
       metronome: 90
     },
     {
-      id: "gs-1-9",
+      id: "gs-1-11",
+      time: 5,
+      title: "Feel the Chord Change",
+      type: "guitar",
+      what: "Over Am→C→G→D (2 bars each), play the ROOT note as a single picked note on beat 1 of each chord change, then strum the chord on the remaining beats. Your ear learns to hear the root as the anchor of each chord.",
+      steps: [
+        { text: "Strum Am for 2 bars. On beat 1 of bar 1, pick ONLY the A note (open 5th string) before strumming. Hear how the root grounds the chord.", why: "The root is the anchor. Picking it separately before strumming trains your ear to hear the foundation of each chord." },
+        { text: "Move to C. Beat 1: pick the C note (3rd fret, 5th string). Then strum C. Then G: pick G (3rd fret, 6th string). Then D: pick D (open 4th string). Root → strum on every change.", why: "Each root has a different character. A is dark and stable. C is bright. G is open. D is forward-leaning. Hearing them separately reveals their personalities." },
+        { text: "Play through Am→C→G→D four times with root picks on every beat 1. The roots should feel like stepping stones across a river — each one solid and intentional.", why: "Root targeting on beat 1 is the simplest form of chord-tone improvisation. It connects melody to harmony with zero theory required." },
+        { text: "Try humming the root note before you play it. Hear it in your head, hum it, then pick it. If you can predict the root, your ear is learning the progression.", why: "Internal hearing (audiation) is the ultimate goal. When you can hear the next root before it arrives, you're truly hearing harmony." }
+      ],
+      feel: "The root pick on beat 1 should feel like arriving home on each chord change — solid, grounded, inevitable. The strum fills in the color around the anchor.",
+      wrong: "If the root doesn't 'click' with the chord, double-check the note. If all four roots sound the same to you, play them back to back without strumming — hear the differences.",
+      sarah: "Gene, this is the seed of chord-tone targeting — the single most important improvisation concept you'll learn in Level 6. For now, just learn to hear the root. Later you'll target 3rds, 5ths, and 7ths.",
+      metronome: 70,
+      referencePitches: ["A3", "C3", "G2", "D3"]
+    },
+    {
+      id: "gs-1-12",
       time: 10,
       title: "First Improv — Call and Response",
       type: "guitar",
@@ -185,10 +250,11 @@ export const level1 = {
       feel: "When a phrase sits right in the groove, you'll feel it lock in with the beat — like it was always supposed to be there. The silence between phrases should feel charged, not empty. Lean into the silence.",
       wrong: "If you're playing nonstop with no gaps, you're afraid of silence. Silence is your friend — it makes the notes you DO play matter more. If nothing sounds good to you, simplify: use fewer notes, slower rhythms, more space.",
       sarah: "You just improvised. That might not feel like a big deal, but it is. Most people spend years playing other people's music before they try making their own sounds. You're doing it in Level 1. Trust the process.",
-      metronome: 90
+      metronome: 90,
+      phraseForm: { pattern: "CR", barsPerSection: 4, labels: { C: "Call", R: "Response" } }
     },
     {
-      id: "gs-1-10",
+      id: "gs-1-13",
       time: 5,
       title: "Self-Check: Can You Sing It?",
       type: "guitar",

@@ -8,7 +8,7 @@ export const level6 = {
     "Improvisation isn't about knowing more notes — it's about using the notes you know with rhythmic intention, motivic development, and harmonic awareness. This level builds a complete improvisation toolkit using skills you already have: pentatonic scales, blues bends, offbeat rhythm, desert patience, and surf energy. Grounded in Kratus's improvisation stages (explore, process, product, flow) and the PReVaDe framework (Present, Repeat, Vary, Deconstruct). By the end, you'll improvise confidently over any backing track — not by playing fast, but by playing smart.",
   artists: "Khruangbin, Allah-Las, Skinshape, Slightly Stoopid, Tommy Guerrero",
   unlocks: "Khruangbin Space (Level 7)",
-  review: { label: "Levels 4-5 Check-In", time: 5, exercises: ["gs-4-1", "gs-5-3"], prompt: "Play a 1-minute reggae offbeat skank on Am (gs-4-1). Then play a hypnotic 4-note desert blues phrase repeated 16 times (gs-5-3). Offbeat discipline and patient repetition are both foundations for improvisation — if either wobbles, revisit Levels 4-5." },
+  review: { label: "Levels 4-5 Check-In", time: 5, exercises: ["gs-4-1", "gs-5-4"], prompt: "Play a 1-minute reggae offbeat skank on Am (gs-4-1). Then play a hypnotic 4-note desert blues phrase repeated 16 times (gs-5-4). Offbeat discipline and patient repetition are both foundations for improvisation — if either wobbles, revisit Levels 4-5." },
   exercises: [
     {
       id: "gs-6-1",
@@ -16,8 +16,8 @@ export const level6 = {
       title: "Rhythm First, Notes Never",
       type: "guitar",
       what: "Improvise using ONLY ONE NOTE — A. All expression comes from rhythm: when you play the note, how long you hold it, where you place it relative to the beat, and how much silence you leave. This proves that rhythm IS the improvisation.",
-      setup: "Metronome at 85 BPM. Any tone. Fret the A on the 5th fret, high E string.",
-      metronome: 85,
+      setup: "Any tone. Fret the A on the 5th fret, high E string.",
+      metronome: 90,
       recorder: true,
       tracks: [{ name: "Groove Beat 90", src: "/groove-beat-90.mp3" }],
       rhythmCells: [
@@ -25,7 +25,7 @@ export const level6 = {
         { name: "Displaced", pattern: [0.5, 1.5], description: "Off-beat accent" }
       ],
       steps: [
-        { text: "Play ONLY the note A (5th fret, high E string). Set metronome to 85. Play A as quarter notes on every beat for 4 bars. Boring? Good. That's the baseline.", why: "The baseline of 'one note, on the beat' is your control group. Everything you do after this is rhythmic improvisation — and the contrast with this boring version proves the power of rhythm." },
+        { text: "Play ONLY the note A (5th fret, high E string). Set metronome to 90. Play A as quarter notes on every beat for 4 bars. Boring? Good. That's the baseline.", why: "The baseline of 'one note, on the beat' is your control group. Everything you do after this is rhythmic improvisation — and the contrast with this boring version proves the power of rhythm." },
         { text: "Now displace: play A on the 'and' after beat 1, then silence for the rest of the bar. Repeat for 4 bars. Then try placing it on the 'and' of beat 3 only. One note per bar, different placement each time.", why: "Rhythmic displacement means shifting when a note lands within the bar. The same note on beat 1 feels stable. On the 'and' of 2 it feels funky. On beat 4 it feels like a pickup. Placement IS expression." },
         { text: "Explore groupings: play A in a 3-3-2 pattern (three eighth notes, three eighth notes, two eighth notes — a natural syncopation that fits inside 4/4). Accent the first note of each group.", why: "The 3-3-2 grouping creates a lopsided, swinging feel that sounds complex but uses only one note. This rhythmic cell appears in every genre you love — reggae, surf, desert blues." },
         { text: "Put on Groove Beat 90. Improvise with ONLY the note A for 2 minutes. Use everything: displacement, 3-3-2 groupings, long holds, short staccato jabs, silence. Record yourself.", why: "2 minutes of one-note improv forces you to exhaust your rhythmic vocabulary. When you run out of ideas, sit in silence and wait — a new rhythmic idea will come." }
@@ -60,8 +60,8 @@ export const level6 = {
       title: "Motif Seed — PReVaDe Intro",
       type: "guitar",
       what: "Learn the PReVaDe framework: Present a 3-4 note motif, Repeat it exactly, Vary one element (rhythm OR one note OR direction), then Deconstruct (fragment it to 1-2 notes). This is how Khruangbin and all melodic improvisers build solos — one idea, developed, not a stream of random notes.",
-      setup: "Clean tone. Metronome at 80 BPM.",
-      metronome: 80,
+      setup: "Clean tone.",
+      metronome: 90,
       recorder: true,
       tracks: [{ name: "Groove Beat 90", src: "/groove-beat-90.mp3" }],
       referencePitches: getPitchRange("A3", "E4"),
@@ -83,8 +83,7 @@ export const level6 = {
       title: "Chord-Tone Landing Pads",
       type: "guitar",
       what: "Over a simple Am-G-C progression, always land on a chord tone (root, 3rd, or 5th) on beat 1 of each chord. Everything between landing pads is embellishment. This single rule transforms random scale-running into intentional, harmonically grounded improvisation.",
-      setup: "Metronome at 80 BPM.",
-      metronome: 80,
+      metronome: 90,
       recorder: true,
       tracks: [{ name: "Groove Beat 90", src: "/groove-beat-90.mp3" }],
       referencePitches: getPitchRange("A3", "G4"),
@@ -198,7 +197,7 @@ export const level6 = {
       recorder: true,
       metronome: 120,
       tracks: [{ name: "Surf Rock 120", src: "/surf-rock-120.mp3" }],
-      referencePitches: getPitchRange("G3", "D5"),
+      referencePitches: getPitchRange("G3", "C5"),
       phraseForm: { pattern: "PPVVFD", barsPerSection: 4, labels: { P: "Present", V: "Vary", F: "Fragment", D: "Develop" } },
       steps: [
         { text: "Choose a 4-note Mixolydian surf lick. Example: G-A-B-D (ascending). Play it with tremolo picking. Repeat it 4 times.", why: "Starting with a specific lick grounds the development. Repetition establishes it as the theme." },

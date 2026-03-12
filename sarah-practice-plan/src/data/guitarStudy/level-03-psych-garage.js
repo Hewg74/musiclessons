@@ -8,7 +8,7 @@ export const level3 = {
     "Psych-garage is Gene's #2-4 genre territory: Neo-Psychedelic, Psychedelic Rock, and Garage Rock. This level teaches the Phrygian Dominant scale (the ACTUAL scale behind Misirlou — correctly placed here, not in the surf level), power chords, fuzz tone, psych minor progressions, and garage rock energy. You'll channel Mystic Braves, BALTHVS, and the darker side of Allah-Las.",
   artists: "Mystic Braves, BALTHVS, Allah-Las, Tame Impala",
   unlocks: "Reggae Skank (Level 4)",
-  review: { label: "Level 1 Review", time: 5, exercises: ["gs-1-1", "gs-1-7"], prompt: "Play the Am pentatonic ascending and descending cleanly (gs-1-1). Then run the speed ladder from 60 to 90 BPM (gs-1-7). If the scale is rusty or speed has regressed, spend 10 minutes on Level 1 before proceeding." },
+  review: { label: "Level 1 Review", time: 5, exercises: ["gs-1-1", "gs-1-9"], prompt: "Play the Am pentatonic ascending and descending cleanly (gs-1-1). Then run the speed ladder from 60 to 90 BPM (gs-1-9). If the scale is rusty or speed has regressed, spend 10 minutes on Level 1 before proceeding." },
   exercises: [
     {
       id: "gs-3-1",
@@ -52,10 +52,30 @@ export const level3 = {
     },
     {
       id: "gs-3-3",
+      time: 6,
+      title: "Power Chord PReVaDe",
+      type: "guitar",
+      what: "Take a 4-chord power chord riff (A5→D5→E5→D5) and develop it using PReVaDe: Present it 4 times, Repeat exactly 4 times, Vary by swapping one chord (E5 for C5), then Deconstruct to just A5→D5, then just A5 alone. Motif development with zero scale knowledge required.",
+      steps: [
+        { text: "PRESENT: play A5→D5→E5→D5 as quarter notes, one chord per beat. Loop it 4 times. This is your riff.", why: "A simple 4-chord riff is a perfect motif. The power chord shapes are familiar enough to play on autopilot, letting you focus on the development process." },
+        { text: "REPEAT: play the exact same riff 4 more times. Same chords, same rhythm, same volume. Repetition declares this riff as the theme.", why: "Repetition is the first tool of motif development. It tells the listener: remember this, it's important." },
+        { text: "VARY: swap E5 for C5. Play A5→D5→C5→D5 four times. One chord changed, everything else identical. Hear how one substitution shifts the mood.", why: "Single-element variation is the discipline. Changing one chord creates development while maintaining recognition. The ear hears 'same riff, new color.'" },
+        { text: "DECONSTRUCT: play just A5→D5, two chords, 4 times. Then just A5 alone, 4 times. The riff dissolves back to its root. Then silence.", why: "Deconstruction is how riffs end naturally. Instead of stopping cold, you simplify until only the essence remains. This is the ending that feels inevitable." }
+      ],
+      feel: "The full PReVaDe cycle should feel like a story: introduction, establishment, twist, and resolution. Four chords become a narrative.",
+      wrong: "If you changed more than one chord during 'Vary,' you jumped too far. If the Deconstruction felt abrupt, slow down — spend more bars on each reduction step.",
+      sarah: "Gene, PReVaDe with power chords is the simplest version of this framework. No scales, no theory — just chord shapes and development. You'll use this same approach with melodies in Level 6.",
+      metronome: 100,
+      recorder: true,
+      phraseForm: { pattern: "PRVD", barsPerSection: 4, labels: { P: "Present", R: "Repeat", V: "Vary", D: "Deconstruct" } }
+    },
+    {
+      id: "gs-3-4",
       time: 10,
       title: "Fuzz Tone & Dynamics",
       type: "guitar",
       volumeMeter: true,
+      volumeContour: true,
       what: "Learn how overdrive and fuzz change your playing approach. Gain compresses your signal — quiet notes get louder, loud notes get limited. This changes everything: notes sustain longer, bends are easier to control, and your picking dynamics need to adapt. If you don't have a fuzz pedal, pick harder and closer to the bridge to simulate a brighter, more aggressive tone.",
       setup: "Overdrive or fuzz pedal if available. If not, pick aggressively near the bridge.",
       steps: [
@@ -69,7 +89,7 @@ export const level3 = {
       sarah: "Fuzz is a conversation changer. Clean guitar whispers. Fuzz guitar declares. Learn to use that power responsibly — a few great notes beat a hundred sloppy ones."
     },
     {
-      id: "gs-3-4",
+      id: "gs-3-5",
       time: 10,
       title: "Psych Minor Progressions",
       type: "guitar",
@@ -87,10 +107,11 @@ export const level3 = {
       metronome: 120
     },
     {
-      id: "gs-3-5",
+      id: "gs-3-6",
       time: 8,
       title: "Hear the Chord Tones",
       type: "guitar",
+      pitchContour: true,
       what: "Over the psych progression Am-Em-G-D, play the ROOT of each chord on beat 1. Just one note per chord change, matching the harmony. This is your first taste of chord-tone targeting — the foundation of melodic improvisation.",
       steps: [
         { text: "Play the Am-Em-G-D progression as power chords for 4 bars to feel the movement. Then stop strumming and just play the ROOT as a single note on beat 1: A when Am starts, E when Em starts, G when G starts, D when D starts.", why: "Hearing the root of each chord as a single note trains your ear to track harmony. Most pentatonic players ignore what chord is underneath." },
@@ -100,13 +121,13 @@ export const level3 = {
       ],
       feel: "When your single note matches the chord change, you'll hear it click — the note and the harmony agree.",
       wrong: "If root notes don't sound connected to the chord, check your note locations. If fills between roots sound random, keep them short — 1-2 pentatonic notes.",
-      sarah: "Most guitarists play Level 9 before they learn this. You're getting it in Level 3. When your pentatonic licks match the chords underneath, everything changes.",
+      sarah: "Most guitarists play Level 10 before they learn this. You're getting it in Level 3. When your pentatonic licks match the chords underneath, everything changes.",
       tracks: [{ name: "Psych Rock 120", src: "/psych-rock-120.mp3" }],
       metronome: 120,
       referencePitches: getPitchRange("A3", "G4")
     },
     {
-      id: "gs-3-6",
+      id: "gs-3-7",
       time: 8,
       title: "Garage Rock Energy",
       type: "guitar",
@@ -125,11 +146,16 @@ export const level3 = {
       metronome: 120
     },
     {
-      id: "gs-3-7",
+      id: "gs-3-8",
       time: 10,
       title: "Psych Riff Writing",
       type: "guitar",
       recorder: true,
+      phraseForm: { pattern: "AB", barsPerSection: 4, labels: { A: "Phrygian Dom Riff", B: "Pentatonic Riff" } },
+      rhythmCells: [
+        { name: "Syncopated", pattern: [0.5, 1, 0.5], description: "Accented offbeat" },
+        { name: "Driving 8ths", pattern: [0.5, 0.5, 0.5, 0.5], description: "Even eighth notes" }
+      ],
       what: "Create a repeating, hypnotic riff using the Phrygian Dominant scale and minor pentatonic. A riff is a short, repeated musical phrase that drives a song — think the opening of 'Misirlou' or any Mystic Braves verse. The best psych riffs are simple, rhythmically compelling, and designed to loop endlessly.",
       tracks: [{ name: "Psych Rock 120 BPM", src: "/psych-rock-120.mp3" }],
       steps: [
@@ -144,15 +170,40 @@ export const level3 = {
       metronome: 120
     },
     {
-      id: "gs-3-8",
+      id: "gs-3-9",
+      time: 5,
+      title: "Rhythm-First Garage",
+      type: "guitar",
+      what: "Mute all strings. Create a 2-bar garage rock rhythm pattern using ONLY percussive hits — downstrokes, ghost notes, accents, silences. Then add A5 on ONLY the accented hits. The rhythm creates the riff; the chord just fills in the skeleton.",
+      steps: [
+        { text: "Mute all strings with your fretting hand. Play 2 bars of eighth-note downstrokes — all muted, all percussion. This is your rhythmic canvas.", why: "Starting muted separates rhythm from pitch completely. You're composing with time, not notes." },
+        { text: "Now choose 3-4 hits within those 2 bars to ACCENT (hit harder). The rest stay ghosted. Play this accented pattern 4 times until it grooves.", why: "The accent pattern IS the riff. Without any pitched notes, you can hear the rhythm's personality." },
+        { text: "Add A5 on ONLY the accented hits. Keep the ghost strums on everything else. The power chord appears exactly where the rhythm demands it.", why: "The chord fills the rhythm skeleton. This proves that rhythm creates the structure and pitch fills it in — not the other way around." },
+        { text: "Try different accent patterns: accents on 1 and the 'and' of 3 (driving). Accents on 2 and 4 (backbeat). Accents on the 'and' of every beat (syncopated). Each pattern creates a completely different riff from one chord.", why: "Three accent patterns = three riffs from one chord. This is rhythm-first composition." }
+      ],
+      feel: "When the accented power chords hit inside the ghost strum pattern, the riff should feel like it was always there — the rhythm just revealed it.",
+      wrong: "If the ghost strums are too loud, the accents won't pop. Exaggerate the contrast: whisper-quiet ghosts, hit-hard accents. If the pattern doesn't groove, simplify to just 2 accents per 2 bars.",
+      sarah: "Gene, garage rock IS rhythm with power chords. The Stooges, Black Keys, early White Stripes — they all compose rhythm-first. This approach connects directly to the Improvisation Engine in Level 6.",
+      metronome: 120,
+      tracks: [{ name: "Psych Rock 120", src: "/psych-rock-120.mp3" }],
+      recorder: true,
+      rhythmCells: [
+        { name: "Garage Drive", pattern: [0.5, 0.5, 0.5, 0.5], description: "All downstrokes, accent 1 & 3" },
+        { name: "Backbeat Punch", pattern: [1, 1, 1, 1], description: "Accent beats 2 & 4" },
+        { name: "Syncopated", pattern: [0.5, 1, 0.5], description: "Off-beat accent pattern" }
+      ]
+    },
+    {
+      id: "gs-3-10",
       time: 12,
       title: "Song: Mystic Braves — Desert Island Style",
       type: "guitar",
       recorder: true,
+      volumeContour: true,
       what: "Learn to play in the style of Mystic Braves' 'Desert Island' — a hypnotic minor-key psych anthem. Play both the rhythm part (chord progression with driving strumming) and the lead approach (minor pentatonic fills between chord phrases). This is where rhythm guitar and lead guitar coexist.",
       tracks: [{ name: "Psych Rock 120 BPM", src: "/psych-rock-120.mp3" }],
       steps: [
-        { text: "Play the progression from gs-3-4: Gm → Dm → C → F (or the easier Am → Em → G → D version). Steady eighth-note strumming, all downstrokes, with fuzz or overdrive. Play it 4 times to lock in the groove.", why: "The rhythm part is the foundation. In a band, this is what the rhythm guitarist would play — steady, driving, hypnotic. Get it locked before adding leads." },
+        { text: "Play the progression from gs-3-5: Gm → Dm → C → F (or the easier Am → Em → G → D version). Steady eighth-note strumming, all downstrokes, with fuzz or overdrive. Play it 4 times to lock in the groove.", why: "The rhythm part is the foundation. In a band, this is what the rhythm guitarist would play — steady, driving, hypnotic. Get it locked before adding leads." },
         { text: "Now add lead fills: between each chord change, play a quick 2-3 note minor pentatonic phrase. Keep the fills short — they're punctuation, not paragraphs. Strum Am (4 beats), fill (2 notes), strum Em (4 beats), fill (2 notes). The fill slides into the next chord.", why: "Mystic Braves guitarists weave tiny fills between chord strums — they're not soloing, they're decorating the rhythm. The fills should be so brief that you're back to strumming before the listener fully registers what happened." },
         { text: "Build intensity across 4 loops of the progression: Loop 1 — clean strumming only. Loop 2 — add fills. Loop 3 — strum harder, push the beat forward. Loop 4 — full energy, more fills, aggressive dynamics. This is the Mystic Braves energy arc.", why: "Psych songs that stay at one intensity level get boring. Building gradually keeps the listener engaged. Each repetition of the same 4 chords should feel more intense than the last." },
         { text: "On the 5th loop, break into a full lead section: solo over the progression using Am pentatonic or Phrygian Dominant for 8 bars. Then drop back to rhythm strumming. The contrast between soloing and strumming creates the push-pull dynamic of psych rock.", why: "The solo section should feel like an eruption — all the tension built by the rhythm playing gets released in a burst of lead guitar. Then returning to rhythm after the solo feels like landing after a jump." }
@@ -163,7 +214,7 @@ export const level3 = {
       metronome: 120
     },
     {
-      id: "gs-3-9",
+      id: "gs-3-11",
       time: 10,
       title: "Song: BALTHVS Groove",
       type: "guitar",
@@ -183,11 +234,13 @@ export const level3 = {
       metronome: 90
     },
     {
-      id: "gs-3-10",
+      id: "gs-3-12",
       time: 15,
       title: "Psych Jam Session",
       type: "guitar",
       recorder: true,
+      volumeContour: true,
+      phraseForm: { pattern: ["Sparse", "Build", "Peak", "Resolve"], barsPerSection: [12, 16, 16, 16], labels: { Sparse: "Mystery", Build: "Engine", Peak: "Eruption", Resolve: "Dissolve" } },
       what: "Extended psych-garage jam: fuzz on, Phrygian Dominant and pentatonic scales, psych progressions, and garage rock energy. Build from sparse and mysterious to full intensity, then bring it back down. 15 minutes of psychedelic immersion.",
       setup: "Fuzz or overdrive. Record yourself. Reverb if available.",
       tracks: [{ name: "Psych Rock 120 BPM", src: "/psych-rock-120.mp3" }],

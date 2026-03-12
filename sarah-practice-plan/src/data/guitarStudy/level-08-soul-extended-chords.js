@@ -6,7 +6,7 @@ export const level8 = {
     "Dorian mode, major 7ths, dominant 9ths, minor 9ths and 11ths — the chords that separate good from great. This level teaches the harmonic vocabulary of soul, neo-soul, and indie-funk guitar. Ghost notes from Level 4 meet extended harmony for the deepest grooves yet.",
   artists: "BALTHVS, Skinshape, Khruangbin, D'Angelo, Erykah Badu",
   unlocks: "Cinematic Guitar (Level 9)",
-  review: { label: "Levels 6-7 Check-In", time: 5, exercises: ["gs-7-1", "gs-7-3"], prompt: "Play three-note Khruangbin voicings with soft attack (gs-7-1). Then play a 2-minute passage with at least 40% silence (gs-7-3). Space and atmosphere should feel natural — if they don't, revisit Levels 6-7." },
+  review: { label: "Levels 6-7 Check-In", time: 5, exercises: ["gs-6-3", "gs-7-1", "gs-7-3"], prompt: "Run a PReVaDe cycle on a 3-note motif (gs-6-3). Then play three-note Khruangbin voicings with soft attack (gs-7-1). Then play a 2-minute passage with at least 40% silence (gs-7-3). Motif development, voicings, and space should all feel natural — if they don't, revisit Levels 6-7." },
   exercises: [
     {
       id: "gs-8-1",
@@ -26,7 +26,7 @@ export const level8 = {
       wrong: "If it sounds identical to minor pentatonic, you're not using the B and F# enough. If it sounds jazzy in a confusing way, simplify your phrases and focus on groove over complexity.",
       sarah: "Dorian is the Goldilocks scale — it's minor enough to have depth, but warm enough to make people move. It's the reason soul music feels the way it does.",
       metronome: 60,
-      levelUp: "You can play A Dorian ascending and descending at 60 BPM, and you can improvise phrases where the F# sounds intentional, not accidental."
+      // milestone: A Dorian at 60 BPM, F# sounds intentional
     },
     {
       id: "gs-8-2",
@@ -81,9 +81,29 @@ export const level8 = {
     },
     {
       id: "gs-8-5",
+      title: "Chord-Tone Targeting with Extensions",
+      type: "guitar",
+      time: 10,
+      what: "Land on the color tones (9th, 11th, 13th) of extended chords on strong beats. This is chord-tone targeting from Level 6, now applied to richer harmony.",
+      steps: [
+        { text: "Strum Am9. Identify the 9th (B). Sing or hum the B while strumming.", why: "Isolating the color tone trains your ear to hear extensions." },
+        { text: "Play the Am9→Dm7→G9→Cmaj7 progression. On each chord change, land a single-note melody on the extension (9th or 11th).", why: "Chord-tone targeting on extensions bridges rhythm-based improv and harmonic sophistication." },
+        { text: "Repeat, but now approach the target tone from a half-step below (chromatic approach from Level 7).", why: "Combining two techniques — approach notes + chord-tone targeting — creates fluid melodic motion." }
+      ],
+      feel: "Like you're painting highlights on a canvas — the extended tones are the shimmer on top of the chord.",
+      wrong: "Playing only root notes over extended chords. The whole point is to voice the extensions.",
+      sarah: "This is where your improv starts sounding sophisticated. Landing on a 9th over a major chord? That's the Khruangbin/Skinshape secret sauce.",
+      metronome: 80,
+      tracks: [{ name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }],
+      pitchContour: true,
+      recorder: true
+    },
+    {
+      id: "gs-8-6",
       time: 10,
       title: "Extended Chord Progression",
       type: "guitar",
+      phraseForm: { sections: ["I", "ii", "V", "IV"], barsPerSection: 4 },
       what: "Play Am9→Dm7→G9→Cmaj7 slowly, letting each voicing ring. This is a vi-ii-V-I in C major — the harmonic foundation of soul and neo-soul guitar. Am9 is the vi chord, Dm7 is the ii, G9 is the V, Cmaj7 is the I.",
       tracks: [{ name: "Deep Soul Groove 80 BPM", src: "/deep-soul-groove-80.mp3" }],
       steps: [
@@ -98,10 +118,11 @@ export const level8 = {
       metronome: 80
     },
     {
-      id: "gs-8-6",
+      id: "gs-8-7",
       time: 10,
       title: "16th-Note Soul Strumming",
       type: "guitar",
+      rhythmCells: ["1-e-&-a", "1-&", "1-e-&"],
       what: "Master 16th-note strumming — 4 strums per beat. Count '1-e-and-a, 2-e-and-a, 3-e-and-a, 4-e-and-a.' The pattern is Down-up-Down-up on each beat, with selected strums muted as ghost notes. This is the engine of funk and soul rhythm guitar.",
       tracks: [{ name: "Soul Funk Groove 90 BPM", src: "/soul-funk-groove-90.mp3" }],
       steps: [
@@ -117,10 +138,12 @@ export const level8 = {
       speedLadder: { start: 70, end: 90, increment: 10, bars: 4 }
     },
     {
-      id: "gs-8-7",
+      id: "gs-8-8",
       time: 12,
       title: "Ghost Note + Extended Chord Fusion",
       type: "guitar",
+      rhythmCells: ["ghost-note", "accent", "ghost-ghost-accent"],
+      volumeMeter: true,
       what: "Combine the muted ghost strums from Level 4 reggae with the extended chord voicings from this level. This is the Skinshape/BALTHVS fusion — extended chords played with rhythmic sophistication.",
       tracks: [{ name: "Soul Funk Groove 90 BPM", src: "/soul-funk-groove-90.mp3" }],
       steps: [
@@ -135,11 +158,12 @@ export const level8 = {
       metronome: 90
     },
     {
-      id: "gs-8-8",
+      id: "gs-8-9",
       time: 12,
       title: "Soul Groove — BALTHVS/Skinshape Style",
       type: "guitar",
       recorder: true,
+      volumeContour: true,
       what: "Combine extended chords, Dorian melodies, ghost note rhythm, and behind-the-beat feel over a backing track. This is the full BALTHVS/Skinshape experience — Dorian-based minor progression with 9th voicings.",
       tracks: [{ name: "Soul Funk Groove 90 BPM", src: "/soul-funk-groove-90.mp3" }, { name: "Deep Soul Groove 80 BPM", src: "/deep-soul-groove-80.mp3" }],
       steps: [
@@ -153,11 +177,13 @@ export const level8 = {
       sarah: "This is the sound that fills rooms without anyone noticing. People start moving their heads and don't know why. That's what rhythm guitar mastery feels like."
     },
     {
-      id: "gs-8-9",
+      id: "gs-8-10",
       time: 15,
       title: "Full Soul Groove Jam",
       type: "guitar",
       recorder: true,
+      volumeContour: true,
+      phraseForm: { sections: ["Intro", "Verse", "Chorus", "Bridge", "Outro"], barsPerSection: 8 },
       what: "Extended 15-minute jam: improvise using Dorian scale over the extended chord progression. Focus on groove and feel over technical display. Everything from Level 8 in one session.",
       tracks: [{ name: "Deep Soul Groove 80 BPM", src: "/deep-soul-groove-80.mp3" }, { name: "Soul Funk Groove 90 BPM", src: "/soul-funk-groove-90.mp3" }],
       steps: [

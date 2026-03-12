@@ -8,7 +8,7 @@ export const level2 = {
     "Surf guitar is the sound of the ocean — Mixolydian melodies, tremolo picking, and shimmering jangle voicings over driving rhythms. This level combines the classic surf vocabulary of The Ventures with the modern psych-jangle of Allah-Las and Sun Room. You'll learn the Mixolydian scale (correctly attributed — it's 'Walk Don't Run,' not 'Misirlou'), tremolo picking, sus2 voicings, double stops, and reverb as an instrument.",
   artists: "Sun Room, Allah-Las, The Ventures, Dick Dale",
   unlocks: "Psych-Garage (Level 3)",
-  review: { label: "Level 1 Check-In", time: 5, exercises: ["gs-1-1", "gs-1-9"], prompt: "Play the Am pentatonic ascending and descending cleanly (gs-1-1). Then jam for 2 minutes with call-and-response phrasing over a backing track (gs-1-9). If the scale feels unfamiliar or the improv feels impossible, revisit Level 1." },
+  review: { label: "Level 1 Check-In", time: 5, exercises: ["gs-1-1", "gs-1-12"], prompt: "Play the Am pentatonic ascending and descending cleanly (gs-1-1). Then jam for 2 minutes with call-and-response phrasing over a backing track (gs-1-12). If the scale feels unfamiliar or the improv feels impossible, revisit Level 1." },
   exercises: [
     {
       id: "gs-2-1",
@@ -37,6 +37,7 @@ export const level2 = {
       title: "Tremolo Picking — Even Strokes",
       type: "guitar",
       recorder: true,
+      volumeMeter: true,
       what: "Develop rapid, even alternate picking on a single string. Tremolo picking is the engine of surf guitar — it turns a single note into a shimmering wave of sound. Alternate picking means strict down-up-down-up — every other stroke changes direction.",
       setup: "Use a medium-thickness pick with a pointed tip. Clean tone with reverb. Relax your wrist completely.",
       steps: [
@@ -49,8 +50,7 @@ export const level2 = {
       wrong: "If your arm gets tired after 30 seconds, you're using too much motion — the movement should be tiny, all from the wrist. If the picking sounds galloping (da-DUM-da-DUM instead of even diddle-diddle-diddle), your down and up strokes aren't equal.",
       sarah: "Dick Dale picked so fast it sounded like a machine. But watch his right hand — it's completely relaxed. Tension is the enemy of tremolo. Relax your wrist and the speed will come.",
       metronome: 80,
-      speedLadder: { start: 80, end: 110, increment: 10, bars: 4 },
-      levelUp: "You can tremolo pick a single note for 30 seconds with perfectly even volume on both strokes. Sixteenth notes at 70 BPM, clean."
+      speedLadder: { start: 80, end: 110, increment: 10, bars: 4 }
     },
     {
       id: "gs-2-3",
@@ -71,6 +71,25 @@ export const level2 = {
     },
     {
       id: "gs-2-4",
+      time: 6,
+      title: "Jangle Dynamics",
+      type: "guitar",
+      what: "Play the same jangle progression (Dsus2→Asus2→G→Em) four times, each with a completely different dynamic shape. Same chords, same rhythm — only volume changes. This trains your picking hand to control intensity independently of everything else.",
+      steps: [
+        { text: "Pass 1: play all four chords at the same comfortable volume. This is your baseline — steady, even, no dynamic variation.", why: "The baseline is your control group. If you can't play at a consistent volume, dynamic shaping will be sloppy." },
+        { text: "Pass 2: crescendo through the progression. Dsus2 whisper-quiet, Asus2 slightly louder, G medium, Em full volume. Each chord louder than the last.", why: "A crescendo across a progression creates forward momentum. The ear leans in as volume builds." },
+        { text: "Pass 3: reverse — Em whisper, G medium, Asus2 loud, Dsus2 full volume. Decrescendo across the progression.", why: "A decrescendo creates a settling, resolving quality. Different emotional arc from the same chords." },
+        { text: "Pass 4: contrast — Dsus2 and G loud, Asus2 and Em quiet. Alternating dynamics create a breathing pattern.", why: "Alternating dynamics create rhythmic interest beyond the strumming pattern. The volume IS a rhythmic element." }
+      ],
+      feel: "By Pass 4, you should notice that the same chords tell completely different stories depending on volume. Dynamics are the cheapest, most powerful way to add expression to any chord progression.",
+      wrong: "If all four passes sounded the same, your dynamic range is too narrow. Exaggerate — whisper so quietly the strings barely ring, then strum so hard it almost hurts. The range between those extremes is your palette.",
+      sarah: "Gene, dynamics are the secret weapon of every great guitarist. Khruangbin goes from whisper to roar within a single song. Learning to control volume independently of everything else is a superpower.",
+      metronome: 100,
+      volumeMeter: true,
+      volumeContour: true
+    },
+    {
+      id: "gs-2-5",
       time: 10,
       title: "Double Stops — Surf 3rds & 6ths",
       type: "guitar",
@@ -89,12 +108,13 @@ export const level2 = {
       metronome: 100
     },
     {
-      id: "gs-2-5",
+      id: "gs-2-6",
       time: 10,
       title: "Surf Licks over Backing Track",
       type: "guitar",
       recorder: true,
       fretboard: { scale: "g-mixolydian", position: 1 },
+      phraseForm: { pattern: ["Walk-Up", "Tremolo", "Run", "Space"], barsPerSection: 4, labels: { "Walk-Up": "Walk-Up Lick", "Tremolo": "Tremolo Melody", "Run": "Mixolydian Run", "Space": "Breathe" } },
       what: "Build a vocabulary of short surf guitar phrases — combining Mixolydian lines, double stops, and tremolo picking — and play them over a surf rock backing track. This is where exercises become music.",
       tracks: [{ name: "Surf Rock 120 BPM", src: "/surf-rock-120.mp3" }],
       steps: [
@@ -109,10 +129,32 @@ export const level2 = {
       metronome: 120
     },
     {
-      id: "gs-2-6",
+      id: "gs-2-7",
+      time: 5,
+      title: "Wrong Note Surf Recovery",
+      type: "guitar",
+      what: "While playing Mixolydian licks over Surf Rock 120, deliberately hit a note OUTSIDE the scale every 20-30 seconds. Then recover: slide to the nearest Mixolydian note, or repeat the wrong note 3 times with confidence then resolve. Mistakes become features.",
+      steps: [
+        { text: "Play Mixolydian licks over Surf Rock 120 for 30 seconds normally. Then deliberately play a note outside the scale — any random fret between your positions. Let it ring. DON'T panic.", why: "Deliberate wrong notes in a safe environment rewire your relationship with mistakes. The note itself isn't wrong — your response to it determines whether it sounds like a mistake or a choice." },
+        { text: "RECOVERY MOVE 1 — THE SLIDE: from the wrong note, slide one fret up or down to the nearest Mixolydian note. The slide turns the 'mistake' into a chromatic approach note — a professional technique.", why: "Chromatic approach notes are used by every jazz and blues guitarist. The half-step slide into a scale tone sounds intentional and sophisticated." },
+        { text: "RECOVERY MOVE 2 — THE CONFIDENCE REPEAT: play the wrong note again. And again. Three times with conviction. Then resolve to a scale tone. A note played once sounds like a mistake. Played three times, it sounds like a choice.", why: "Repetition with conviction recontextualizes any dissonance. Jazz musicians call this 'playing outside' — the repeat signals intent." },
+        { text: "Improvise for 2 minutes. Hit a deliberate wrong note every 20 seconds and practice both recovery moves. Record yourself. On playback, can you tell which notes were 'wrong'?", why: "The ultimate test: when wrong notes smoothly resolve, you've built a safety net that eliminates performance anxiety forever." }
+      ],
+      feel: "Recovery should feel empowering — every wrong note is a doorway to an interesting phrase. When you know you can recover from anything, there's nothing to be afraid of.",
+      wrong: "If you freeze after the wrong note, commit to a recovery move immediately — don't think, just slide or repeat. If recoveries sound like corrections, you're too tentative. Sell the move.",
+      sarah: "Gene, this exercise kills performance anxiety. Once you know two ways to make any wrong note sound intentional, improvisation stops being scary. You'll use these recovery moves in every level from here on.",
+      metronome: 120,
+      tracks: [{ name: "Surf Rock 120", src: "/surf-rock-120.mp3" }],
+      recorder: true,
+      pitchContour: true,
+      referencePitches: getPitchRange("G3", "C5")
+    },
+    {
+      id: "gs-2-8",
       time: 8,
       title: "Catch the Lick — Motif Seed",
       type: "guitar",
+      phraseForm: { pattern: "PRV", barsPerSection: 2, labels: { P: "Play", R: "Repeat", V: "Vary" } },
       what: "Play a surf lick, then repeat it from memory. Then vary it slightly. This is your first taste of PReVaDe (Present, Repeat, Vary) — the motif development framework you'll use throughout the curriculum.",
       steps: [
         { text: "Put on Surf Rock 120. Play a short surf lick — 3-4 notes from Mixolydian. Anything that sounds cool. Then STOP. Can you remember what you just played?", why: "Most guitarists play things they instantly forget. The ability to remember what you just played is the foundation of motif development." },
@@ -126,10 +168,10 @@ export const level2 = {
       recorder: true,
       tracks: [{ name: "Surf Rock 120", src: "/surf-rock-120.mp3" }],
       metronome: 120,
-      referencePitches: getPitchRange("G3", "D5")
+      referencePitches: getPitchRange("G3", "C5")
     },
     {
-      id: "gs-2-7",
+      id: "gs-2-9",
       time: 10,
       title: "Song: Sun Room — Sol Del Sur Style",
       type: "guitar",
@@ -148,7 +190,7 @@ export const level2 = {
       metronome: 100
     },
     {
-      id: "gs-2-8",
+      id: "gs-2-10",
       time: 10,
       title: "Song: Allah-Las — Catamaran Style",
       type: "guitar",
@@ -167,7 +209,7 @@ export const level2 = {
       metronome: 100
     },
     {
-      id: "gs-2-9",
+      id: "gs-2-11",
       time: 10,
       title: "Allah-Las Lead Style",
       type: "guitar",
@@ -186,11 +228,13 @@ export const level2 = {
       metronome: 100
     },
     {
-      id: "gs-2-10",
+      id: "gs-2-12",
       time: 12,
       title: "Extended Surf Jam",
       type: "guitar",
       recorder: true,
+      volumeMeter: true,
+      volumeContour: true,
       what: "Combine everything from Level 2: Mixolydian melodies, tremolo picking, jangle voicings, double stops, and Allah-Las minor lines over a surf rock backing track. This is your full surf vocabulary in action.",
       setup: "Bright clean tone with reverb. Record yourself.",
       tracks: [{ name: "Surf Rock 120 BPM", src: "/surf-rock-120.mp3" }],

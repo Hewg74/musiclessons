@@ -8,7 +8,7 @@ export const level7 = {
     "Khruangbin's guitar approach is anti-guitar-hero: soft pick attack, behind-the-beat phrasing, global pentatonic flavors, and more silence than sound. Mark Speer treats the tone knob as an instrument, rolls between bright and warm constantly, and uses chromatic approach notes to add Eastern and global flavors. This level teaches restraint as a form of mastery — saying the most with the least.",
   artists: "Khruangbin, Tommy Guerrero, Skinshape",
   unlocks: "Soul & Extended Chords (Level 8)",
-  review: { label: "Levels 4-5 Check-In", time: 5, exercises: ["gs-4-1", "gs-4-10"], prompt: "Play a 2-minute reggae offbeat skank with ghost notes on Am7-Dm7 (gs-4-1). Then play the full reggae jam with chord changes and dub spaces (gs-4-10). The offbeat discipline and space awareness are both foundations for Khruangbin's approach — rhythm precision meets restraint." },
+  review: { label: "Level 4 Check-In", time: 5, exercises: ["gs-4-1", "gs-4-12"], prompt: "Play a 2-minute reggae offbeat skank with ghost notes on Am7-Dm7 (gs-4-1). Then play the full reggae jam with chord changes and dub spaces (gs-4-12). The offbeat discipline and space awareness are both foundations for Khruangbin's approach — rhythm precision meets restraint." },
   exercises: [
     {
       id: "gs-7-1",
@@ -54,6 +54,7 @@ export const level7 = {
       type: "guitar",
       recorder: true,
       volumeMeter: true,
+      rhythmCells: ["rest", "rest", "note", "rest"],
       what: "Play a short phrase. Then wait twice as long as you want to before playing the next one. Record 2 minutes and listen back. Count the silence. Your target: at least 40% of the recording should be silence. This is calibrated to Khruangbin's actual recordings.",
       setup: "Record yourself. Any tone. Backing track optional.",
       steps: [
@@ -73,6 +74,7 @@ export const level7 = {
       title: "Behind the Beat",
       type: "guitar",
       recorder: true,
+      rhythmCells: ["push", "drag", "pocket"],
       what: "Play deliberately behind the beat — placing every note slightly AFTER the metronome click or backing track pulse. This creates a lazy, floating, intentional feel that defines Khruangbin's rhythmic personality. Not late. Not sloppy. Fashionably behind.",
       tracks: [{ name: "Khruangbin Style 80 BPM", src: "/khruangbin-style-80.mp3" }],
       steps: [
@@ -112,6 +114,7 @@ export const level7 = {
       title: "Chromatic Approach Notes",
       type: "guitar",
       recorder: true,
+      pitchContour: true,
       tracks: [{ name: "Khruangbin Style 80 BPM", src: "/khruangbin-style-80.mp3" }],
       what: "Add chromatic approach notes to your pentatonic playing. 'Chromatic' means moving by half steps — one fret at a time. Before landing on a target note, approach it from one fret below. This adds an exotic, jazz-inflected flavor that Khruangbin uses constantly. Important: these are NOT scale degrees — they're chromatic neighbors. Approaching A from Ab (one fret below) is a chromatic lower approach, not a 'b2.' The b2 of A would be Bb, which is something different entirely.",
       steps: [
@@ -149,6 +152,7 @@ export const level7 = {
       title: "Song Study: Khruangbin Style",
       type: "guitar",
       recorder: true,
+      phraseForm: { sections: ["Intro", "A", "B", "A", "Outro"], barsPerSection: 8 },
       what: "Build a complete Khruangbin-style piece: a short signature riff, soft attack, lots of space, behind-the-beat phrasing, tone knob work, and slight variation on each repeat. Reference 'Evan Finds the Third Room' or 'People Everywhere' as templates.",
       tracks: [{ name: "Khruangbin Style 80 BPM", src: "/khruangbin-style-80.mp3" }],
       steps: [
@@ -168,6 +172,8 @@ export const level7 = {
       title: "Extended Space Jam",
       type: "guitar",
       recorder: true,
+      phraseForm: { sections: ["Intro", "Theme", "Space", "Build", "Theme", "Fade"], barsPerSection: 8 },
+      volumeContour: true,
       what: "15 minutes of maximum restraint improvisation. Every note must earn its place. Soft attack, behind the beat, global flavors, tone knob work, motif development, and silence as your primary instrument. This is the graduation exam for Level 7.",
       setup: "Record yourself. Neck pickup. Clean tone. Warm reverb if available. Tone knob accessible.",
       tracks: [{ name: "Khruangbin Style 80 BPM", src: "/khruangbin-style-80.mp3" }],

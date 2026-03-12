@@ -1,3 +1,5 @@
+import { getPitchRange } from "../appData.js";
+
 export const level4 = {
   level: 4,
   title: "Reggae Skank",
@@ -6,7 +8,7 @@ export const level4 = {
     "Reggae guitar is the ultimate rhythm discipline — you play on the offbeat while everything in your musical training screams 'downbeat.' The skank (short, muted chord stabs on the 'and') is deceptively simple and maddeningly difficult. Combined with ghost notes, barre chord voicings, and the vocabulary of different riddim feels, this level transforms your rhythm playing across every genre.",
   artists: "Bob Marley, Peter Tosh, Pepper, Slightly Stoopid, Skinshape",
   unlocks: "Desert Blues (Level 5)",
-  review: { label: "Levels 1-2 Check-In", time: 5, exercises: ["gs-2-2", "gs-1-3"], prompt: "Play tremolo picking for 30 seconds with even strokes (gs-2-2). Then play a clean blues bend phrase from Level 1 (gs-1-3). Both techniques feed into reggae — tremolo becomes the skank's precision, bends become lead breaks over the groove." },
+  review: { label: "Levels 1-2 Check-In", time: 5, exercises: ["gs-2-2", "gs-1-6"], prompt: "Play tremolo picking for 30 seconds with even strokes (gs-2-2). Then play a clean blues bend phrase from Level 1 (gs-1-6). Both techniques feed into reggae — tremolo becomes the skank's precision, bends become lead breaks over the groove." },
   exercises: [
     {
       id: "gs-4-1",
@@ -24,7 +26,11 @@ export const level4 = {
       wrong: "If you keep landing on the downbeat, your muscle memory is overriding your intention. Slow the metronome down to 60 BPM and try again. If the rhythm feels like it's lurching instead of bouncing, your timing between the clicks isn't even.",
       sarah: "This exercise is humbling. Guitarists who've played for years struggle with it. But once it clicks, you'll understand rhythm at a much deeper level than most players ever reach.",
       metronome: 80,
-      levelUp: "You can play consistent offbeat skanks at 80 BPM for 2 minutes without a single drift to the downbeat."
+      rhythmCells: [
+        { name: "Offbeat Skank", pattern: [0.5, 0.5], description: "Silence on beat, stab on 'and'" },
+        { name: "One-Drop Kick", pattern: [1, 1, 1, 1], description: "Kick ONLY on beat 3" }
+      ],
+      // milestone: offbeat skanks at 80 BPM for 2 minutes without drift
     },
     {
       id: "gs-4-2",
@@ -41,7 +47,8 @@ export const level4 = {
       feel: "The chop should sound like a percussion instrument — tight, short, punchy. When both hands sync up, you'll hear a clean 'tchk' instead of a messy 'brrrng.' The ghost notes should be felt more than heard — a quiet rhythmic pulse underneath the skanks.",
       wrong: "If the chords ring too long, your muting is too slow. If you hear string buzz, you're pressing too hard when you should be releasing. If there's no discernible pitch in the chop, you're muting before the strum. If the ghost notes have pitch bleeding through, press lighter — you want zero pitch, pure percussion.",
       sarah: "Ghost notes are the secret ingredient most people miss when learning reggae guitar. They think the sound is just the offbeat stabs — but it's the muted hits in between that create the continuous groove. Your arm is a metronome. The chop-and-ghost combination is what separates 'strumming on the upbeat' from actual reggae.",
-      metronome: 80
+      metronome: 80,
+      volumeMeter: true
     },
     {
       id: "gs-4-3",
@@ -83,6 +90,26 @@ export const level4 = {
     },
     {
       id: "gs-4-5",
+      time: 6,
+      title: "Chord-Tone Reggae",
+      type: "guitar",
+      what: "Over the reggae progression Am\u2192D\u2192Am\u2192E, play the ROOT note as a single picked note on beat 1, then skank the chord on all offbeats. Then upgrade to the 3rd on beat 1 instead. Chord-tone targeting meets reggae groove.",
+      steps: [
+        { text: "Strum Am offbeat skanks. On beat 1 of bar 1, pick ONLY the root A (open 5th string) cleanly before the skank resumes on the 'and'. Do this for every chord change: A on Am, D on D, A on Am, E on E.", why: "The root pick on beat 1 anchors the chord change. Your ear learns where each chord starts harmonically, not just rhythmically." },
+        { text: "Upgrade: instead of roots, play the 3rd on beat 1. C over Am, F# over D, C over Am, G# over E. The 3rd tells you whether the chord is major or minor.", why: "Targeting 3rds is more sophisticated \u2014 the 3rd defines the chord's emotional character. A minor 3rd (C over Am) feels dark. A major 3rd (F# over D) feels bright." },
+        { text: "Mix it up: root on some changes, 3rd on others. Let your ear decide which sounds better for each transition.", why: "Choosing between root and 3rd in real time is the beginning of improvised chord-tone navigation. Your ear makes the call, not your brain." },
+        { text: "Play the full progression 8 times with chord-tone targeting on beat 1. Record yourself. Can you hear the difference between root-targeted and 3rd-targeted changes?", why: "Recording reveals whether the targeted notes actually land on beat 1 or if the skank rhythm pulls them off-beat." }
+      ],
+      feel: "The picked chord tone on beat 1 should feel like a signpost \u2014 it tells you (and the listener) exactly where you are harmonically. The skank carries the groove; the chord tone carries the melody.",
+      wrong: "If the chord tone disrupts the skank rhythm, you're taking too long to pick it. The pick should be quick \u2014 just a flash of the note before the skank resumes. If the 3rds sound wrong, double-check the notes: C over Am, F# over D, G# over E.",
+      sarah: "Gene, chord-tone targeting over reggae is powerful because the offbeat skank gives you a clear rhythmic framework. Beat 1 is the chord-tone window. Everything else is groove. This directly prepares you for Level 6's chord-tone landing pads.",
+      metronome: 85,
+      tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }],
+      referencePitches: getPitchRange("A3", "E4"),
+      recorder: true
+    },
+    {
+      id: "gs-4-6",
       time: 10,
       title: "Riddim Vocabulary: One-Drop, Rockers, Steppers",
       type: "guitar",
@@ -99,16 +126,22 @@ export const level4 = {
       feel: "One-drop feels like floating. Rockers feels like driving. Steppers feels like marching. Same guitar, three completely different energies.",
       wrong: "If all three feel the same, your foot isn't stomping the kick pattern — you're only tracking the guitar skank. The kick pattern IS the difference. Exaggerate the foot stomp until you feel the distinction in your body.",
       sarah: "Gene, you already love reggae — this exercise gives you the vocabulary to understand WHY different reggae songs feel different. Pepper uses rockers-style grooves. Marley uses one-drop. The skank is the same; the feel is the riddim.",
-      metronome: 85
+      metronome: 85,
+      rhythmCells: [
+        { name: "One-Drop", pattern: [1, 1, 1, 1], description: "Kick on 3 only" },
+        { name: "Rockers", pattern: [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5], description: "4-on-the-floor kick" },
+        { name: "Steppers", pattern: [1, 1, 1, 1], description: "Heavy march, all beats equal" }
+      ]
     },
     {
-      id: "gs-4-6",
+      id: "gs-4-7",
       time: 10,
       title: "The Bubble — 16th Note Offbeats",
       type: "guitar",
       recorder: true,
       what: "Double the offbeat density: instead of skanking on just the 'and' of each beat (8th notes), play muted ghost strums on the 'e' and 'a' of each beat too, with the chord stab still on the 'and.' This creates the 'bubble' — a shimmering, rapid-fire reggae rhythm used in dancehall and modern reggae.",
       metronome: 75,
+      volumeMeter: true,
       steps: [
         { text: "Set metronome to 75 BPM (slower than usual — this pattern is dense). Count 16th notes: '1-e-and-a-2-e-and-a-3-e-and-a-4-e-and-a.' Your strumming hand moves continuously in a down-up-down-up 16th note pattern — it never stops.", why: "The bubble requires constant arm motion at the 16th note subdivision. Your arm is a machine — it moves on every subdivision. What changes is which strums are muted and which ring out." },
         { text: "Mute everything except the 'and' — that's where your chord stabs live. Every other subdivision gets a ghost note (muted strum). So: ghost-ghost-STAB-ghost, ghost-ghost-STAB-ghost, repeating. Your arm does down-up-DOWN-up continuously.", why: "The ghost notes between the stabs create a rapid, bubbling texture that fills the rhythmic space. It sounds like a 16th note hi-hat pattern played on guitar — rapid and shimmering." },
@@ -120,7 +153,7 @@ export const level4 = {
       sarah: "The bubble is what makes modern reggae guitar sound so intricate. It's actually simple — your arm does the same thing over and over. The skill is in the dynamic control between the ghosts and the stabs."
     },
     {
-      id: "gs-4-7",
+      id: "gs-4-8",
       time: 8,
       title: "Skank as Improv",
       type: "guitar",
@@ -135,11 +168,30 @@ export const level4 = {
       wrong: "If the groove broke during a variation, the change was too dramatic. Keep variations micro — one element at a time.",
       sarah: "Gene, Pepper's guitarist never plays the same skank twice. What sounds like a 'pattern' is actually live improvisation — micro-variations that keep the groove breathing.",
       metronome: 85,
+      phraseForm: { pattern: ["Standard", "Displaced", "Sparse", "Dense", "Melodic"], barsPerSection: 2, labels: { Standard: "Standard Skank", Displaced: "Displace 1 Stab", Sparse: "No Ghosts", Dense: "16th Ghosts", Melodic: "Add 1 Note" } },
       recorder: true,
       tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }]
     },
     {
-      id: "gs-4-8",
+      id: "gs-4-9",
+      time: 5,
+      title: "Recovery Skank",
+      type: "guitar",
+      what: "While skanking, deliberately stab on the DOWNBEAT (the 'wrong' beat for reggae). Then recover: immediately chop it dead and return to offbeat on the next 'and'. The downbeat error is the most common reggae mistake — learning to recover from it makes you bulletproof.",
+      steps: [
+        { text: "Skank Am on offbeats for 8 bars, locked in. On bar 9, deliberately stab on beat 1 (the downbeat). Feel the disruption — everything shifts.", why: "The downbeat stab in reggae feels like tripping on a curb. It's jarring because the whole genre lives on the 'and'. Experiencing it deliberately teaches you what the error feels like." },
+        { text: "RECOVERY: immediately after the downbeat stab, chop it dead (palm mute). Skip to the next 'and' and resume the offbeat skank. The recovery should take less than one beat.", why: "Quick recovery is the skill. The audience hears a tiny hiccup, not a train wreck. The chop-and-resume move works in any rhythmic context." },
+        { text: "Practice the pattern: 4 bars correct \u2192 1 deliberate downbeat error \u2192 instant recovery \u2192 4 bars correct. Repeat 4 times.", why: "Structured practice of error-and-recovery builds the muscle memory. When a real mistake happens on stage, your hands know what to do." },
+        { text: "Try recovering differently: instead of chopping, lean INTO the downbeat for 2 bars (making it a deliberate pattern change), then slip back to offbeats. Sometimes the 'mistake' becomes a feature.", why: "The confidence move: if you land on the downbeat, own it for a few bars. Play it like you meant it. Then smoothly return to offbeats. The audience hears a 'variation' instead of a mistake." }
+      ],
+      feel: "After practicing this, accidental downbeat stabs should feel like opportunities, not disasters. You have two recovery options: quick chop-and-resume, or lean-in-then-return. Both work.",
+      wrong: "If you can't recover within one beat, the initial panic is too strong. Slow the metronome to 70 and practice the chop-and-resume move until it's automatic.",
+      sarah: "Gene, this is the reggae version of wrong-note recovery. In reggae, rhythm mistakes are more dangerous than wrong notes — landing on the downbeat is the cardinal sin. But now you know how to recover from it instantly.",
+      metronome: 85,
+      recorder: true
+    },
+    {
+      id: "gs-4-10",
       time: 12,
       title: "SoCal Reggae-Rock",
       type: "guitar",
@@ -159,7 +211,27 @@ export const level4 = {
       metronome: 120
     },
     {
-      id: "gs-4-9",
+      id: "gs-4-11",
+      time: 6,
+      title: "Dynamic Reggae Arc",
+      type: "guitar",
+      what: "Play Am7\u2192Dm7\u2192G7\u2192Cmaj7 for 4 cycles. Cycle 1: whisper. Cycle 2: comfortable. Cycle 3: full voice. Cycle 4: sudden drop back to whisper. Same chords, same skank \u2014 only dynamics change. The volume shape tells a story.",
+      steps: [
+        { text: "Cycle 1 (whisper): skank the progression so quietly the strings barely ring. Ghost notes should be almost silent. Stabs should be felt more than heard.", why: "Whisper-quiet reggae requires extreme pick control. The hand does the same motion but with 10% of the force." },
+        { text: "Cycle 2 (comfortable): bring the volume up to normal conversation level. The ghost notes become audible. The stabs have body.", why: "Medium dynamics are your default. This is where most reggae lives \u2014 relaxed, not pushing." },
+        { text: "Cycle 3 (full voice): project the skanks with full confidence. Ghost notes are percussive. Stabs ring out. The guitar fills the room.", why: "Full voice in reggae is still controlled \u2014 it's not thrashing. The offbeat discipline should hold even at maximum volume." },
+        { text: "Cycle 4 (sudden drop): immediately back to whisper on the first stab. The contrast between Cycle 3's full voice and Cycle 4's whisper should be dramatic and intentional.", why: "The sudden dynamic drop is the most powerful move in arranging. It creates instant intimacy after full energy. This is how Skinshape builds tension." }
+      ],
+      feel: "The 4-cycle arc should feel like breathing: inhale (getting louder), exhale (sudden quiet). The return to whisper after full voice feels like surfacing from underwater \u2014 everything is heightened.",
+      wrong: "If Cycle 1 and Cycle 3 sound similar, your dynamic range is too narrow. Push the extremes: barely audible vs. fully projected. If the sudden drop isn't dramatic, Cycle 3 wasn't loud enough.",
+      sarah: "Gene, dynamic arcs over static progressions are how Skinshape and DOPE LEMON create movement without changing a single chord. Volume IS composition.",
+      metronome: 85,
+      tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }],
+      volumeMeter: true,
+      volumeContour: true
+    },
+    {
+      id: "gs-4-12",
       time: 12,
       title: "Full Reggae Jam",
       type: "guitar",
@@ -177,10 +249,12 @@ export const level4 = {
       feel: "A full reggae jam should feel like a meditation — repetitive, hypnotic, and deeply groovy. When it's working, you lose track of time and just ride the pocket.",
       wrong: "If you played lead the whole time, you missed the point. Reggae guitar is primarily rhythm. If the groove broke when you changed chords, slow down the changes. If the dub spaces felt awkward, you need to trust silence more.",
       sarah: "Reggae is the most disciplined genre in guitar. The discipline IS the art. When you can hold one groove for 12 minutes and make it feel deeper every bar, you've understood something most guitarists never learn.",
-      metronome: 85
+      metronome: 85,
+      volumeContour: true,
+      volumeMeter: true
     },
     {
-      id: "gs-4-10",
+      id: "gs-4-13",
       time: 12,
       title: "Dub Space — Adding the Third Dimension",
       type: "guitar",
@@ -198,6 +272,7 @@ export const level4 = {
       wrong: "If you can't resist filling the silent bars, you haven't internalized that silence is part of the music. If you re-enter on the wrong beat, your internal count is slipping. If the effect tails are muddy, use less reverb or pick more cleanly.",
       sarah: "Dub is the art of subtraction. Lee 'Scratch' Perry didn't add effects — he removed instruments and let the echoes fill the space. This is Skinshape territory, Gene — the spacious, reverb-drenched side of reggae that you love. Space is the most powerful sound in music.",
       metronome: 85,
+      volumeContour: true,
       levelUp: "You can jam reggae for 12 minutes with solid offbeats, tight ghost notes, smooth chord changes, tasteful lead breaks, and intentional dub spaces."
     }
   ]
