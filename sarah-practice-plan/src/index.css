@@ -179,3 +179,47 @@ button {
     top: 49px;
   }
 }
+
+/* Floating Metronome */
+.floating-metronome {
+  position: fixed;
+  bottom: 64px; /* Default: just above bottom-nav */
+  left: 0;
+  right: 0;
+  width: 100%;
+  border-radius: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04);
+  z-index: 998; /* Just below bottom-nav's 999 */
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.bottom-nav-dark ~ .floating-metronome,
+.floating-metronome-dark {
+  background: rgba(24, 24, 24, 0.9);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.3);
+}
+
+@media (min-width: 641px) {
+  .floating-metronome {
+    left: auto;
+    right: 32px;
+    bottom: 32px;
+    width: auto;
+    border-radius: 30px; /* Pill shape */
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+    padding: 8px 16px 8px 8px;
+  }
+  .floating-metronome-dark {
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+}

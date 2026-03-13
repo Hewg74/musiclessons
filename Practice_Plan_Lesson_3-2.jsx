@@ -547,13 +547,21 @@ const VOCAL_EXERCISES = [
 // ─── SOUND KITS ─────────────────────────────────────────────────────
 // Each kit defines synth params for Tone.js — different timbres
 const SOUND_KITS = {
-  click:    { label:"Click",     synthType:"membrane", osc:"sine",     pitchDecay:0.008, octaves:4,  attack:0.001, decay:0.06, volume:-8 },
-  wood:     { label:"Woodblock", synthType:"membrane", osc:"triangle", pitchDecay:0.005, octaves:6,  attack:0.001, decay:0.04, volume:-6 },
-  hihat:    { label:"Hi-Hat",    synthType:"metal",    osc:"square",   pitchDecay:0.01,  octaves:2,  attack:0.001, decay:0.03, volume:-14 },
-  rim:      { label:"Rimshot",   synthType:"membrane", osc:"sawtooth", pitchDecay:0.015, octaves:5,  attack:0.001, decay:0.05, volume:-8 },
-  cowbell:  { label:"Cowbell",   synthType:"metal",    osc:"square",   pitchDecay:0.02,  octaves:3,  attack:0.001, decay:0.08, volume:-12 },
-  clave:    { label:"Clave",     synthType:"membrane", osc:"sine",     pitchDecay:0.002, octaves:8,  attack:0.001, decay:0.03, volume:-6 },
-  shaker:   { label:"Shaker",    synthType:"noise",    osc:null,       pitchDecay:0,     octaves:0,  attack:0.001, decay:0.04, volume:-16 },
+  real: { label: "Real Metronome", isSample: true, urls: { "G5": "berklee/woodblock_pitched-do.mp3", "C5": "berklee/woodblock_pitched-sol.mp3" }, volume: 5, pitchAccent: "G5", pitchNormal: "C5" },
+  chime: { label: "Elegant Chimes", isSample: true, urls: { "G5": "berklee/smalltemplebell.mp3", "C5": "berklee/tinybell1.mp3" }, volume: 6, pitchAccent: "G5", pitchNormal: "C5" },
+  acoustic: { label: "Acoustic Wood", isSample: true, urls: { "G5": "berklee/woodblock_pitched-do.mp3", "C5": "berklee/woodblock_pitched-LOWERsol.mp3" }, volume: 5, pitchAccent: "G5", pitchNormal: "C5" },
+  ableton: { label: "Ableton Click", isSample: true, urls: { "G5": "berklee/click_1.mp3", "C5": "berklee/click_2.mp3" }, volume: 8, pitchAccent: "G5", pitchNormal: "C5" },
+  drums: { label: "Drum Kit", isSample: true, urls: { "G5": "drum-samples/acoustic-kit/snare.mp3", "C5": "drum-samples/acoustic-kit/kick.mp3", "C4": "drum-samples/acoustic-kit/hihat.mp3" }, volume: 8, pitchAccent: "G5", pitchNormal: "C5" },
+  classic: { label: "Classic", synthType: "synth", osc: "triangle", attack: 0.001, decay: 0.06, volume: 4 },
+  clave: { label: "Clave", synthType: "fm", osc: "sine", modOsc: "sine", harmonicity: 3.5, modIndex: 1, attack: 0.001, decay: 0.08, volume: 5 },
+  wood: { label: "Synth Wood", synthType: "fm", osc: "sine", modOsc: "triangle", harmonicity: 2, modIndex: 0.8, attack: 0.001, decay: 0.12, volume: 4 },
+  synthChime: { label: "Synth Bell", synthType: "fm", osc: "sine", modOsc: "sine", harmonicity: 3, modIndex: 2, attack: 0.001, decay: 0.4, volume: 3 },
+  click: { label: "Modern Click", synthType: "membrane", osc: "sine", pitchDecay: 0.008, octaves: 3, attack: 0.001, decay: 0.04, volume: 4 },
+  soft: { label: "Soft Tick", synthType: "synth", osc: "sine", attack: 0.002, decay: 0.04, volume: 0 },
+  hihat: { label: "Synth Hi-Hat", synthType: "metal", frequency: 300, resonance: 5000, octaves: 1.5, harmonicity: 5.1, modIndex: 16, attack: 0.001, decay: 0.04, volume: -4 },
+  rim: { label: "Rimshot", synthType: "membrane", osc: "sine", pitchDecay: 0.015, octaves: 4, attack: 0.001, decay: 0.04, volume: 3 },
+  cowbell: { label: "Cowbell", synthType: "metal", frequency: 400, resonance: 300, harmonicity: 5.1, modIndex: 20, octaves: 2, attack: 0.001, decay: 0.08, volume: -2 },
+  shaker: { label: "Shaker", synthType: "noise", attack: 0.005, decay: 0.04, volume: -6 },
 };
 
 const KIT_KEYS = Object.keys(SOUND_KITS);
@@ -562,14 +570,21 @@ const KIT_KEYS = Object.keys(SOUND_KITS);
 // accent = loud downbeat, normal = standard, ghost = quiet, mute = silent
 const ACCENT_LEVELS = ["accent","normal","ghost","mute"];
 const ACCENT_CONFIG = {
-  accent: { volOffset:0,   pitchOffset:0,  label:"Accent", color:T.gold },
-  normal: { volOffset:-4,  pitchOffset:12, label:"Normal", color:T.textMed },
-  ghost:  { volOffset:-10, pitchOffset:12, label:"Ghost",  color:T.textMuted },
-  mute:   { volOffset:-99, pitchOffset:0,  label:"Mute",   color:T.border },
+  accent: { velocity: 1.0, pitchOffset: 0, label: "Accent", color: T.gold },
+  normal: { velocity: 0.5, pitchOffset: 12, label: "Normal", color: T.textMed },
+  ghost: { velocity: 0.2, pitchOffset: 12, label: "Ghost", color: T.textMuted },
+  mute: { velocity: 0.0, pitchOffset: 0, label: "Mute", color: T.border },
 };
 
 function createSynth(kit) {
   const k = SOUND_KITS[kit];
+  if (k.isSample) {
+    return new Tone.Sampler({
+      urls: k.urls,
+      baseUrl: "https://tonejs.github.io/audio/",
+      volume: k.volume || 0
+    }).toDestination();
+  }
   if (k.synthType === "noise") {
     return new Tone.NoiseSynth({
       noise: { type: "white" },
@@ -592,17 +607,22 @@ function createSynth(kit) {
   }).toDestination();
 }
 
-function triggerSynth(synth, kit, pitchNote, volDb, time) {
+function triggerSynth(synth, kit, pitchNote, accConfig, time) {
   const k = SOUND_KITS[kit];
-  if (k.synthType === "noise") {
-    synth.volume.value = volDb;
-    synth.triggerAttackRelease("32n", time);
+  const velocity = accConfig.velocity;
+  
+  if (velocity === 0) return; // Mute
+
+  if (k.isSample) {
+    // For samples (chimes, woodblocks, drums), let the full sample play out naturally.
+    // Using triggerAttackRelease with a short duration like "32n" causes an abrupt cutoff (crackle).
+    synth.triggerAttack(pitchNote, time, velocity);
+  } else if (k.synthType === "noise") {
+    synth.triggerAttackRelease("32n", time, velocity);
   } else if (k.synthType === "metal") {
-    synth.volume.value = volDb;
-    synth.triggerAttackRelease("32n", time);
+    synth.triggerAttackRelease("32n", time, velocity);
   } else {
-    synth.volume.value = volDb;
-    synth.triggerAttackRelease(pitchNote, "32n", time);
+    synth.triggerAttackRelease(pitchNote, "32n", time, velocity);
   }
 }
 
@@ -614,6 +634,7 @@ function useMetronome() {
   const [beatsPerBar, setBeatsPerBar] = useState(4);
   const [soundKit, setSoundKit] = useState("click");
   const [gapClick, setGapClick] = useState(0);
+  const [subdivision, setSubdivision] = useState("4n"); // "4n", "8n", "16n", "8t"
   const [speedBuilder, setSpeedBuilder] = useState(false);
 
   // Per-beat config: accent level + optional per-beat sound override
@@ -630,6 +651,7 @@ function useMetronome() {
   const beatsRef = useRef(beatsPerBar);
   const bpmRef = useRef(bpm);
   const gapClickRef = useRef(gapClick);
+  const subdivisionRef = useRef(subdivision);
   const speedBuilderRef = useRef(speedBuilder);
 
   // Keep refs in sync
@@ -638,6 +660,7 @@ function useMetronome() {
   useEffect(() => { beatsRef.current = beatsPerBar; }, [beatsPerBar]);
   useEffect(() => { bpmRef.current = bpm; }, [bpm]);
   useEffect(() => { gapClickRef.current = gapClick; }, [gapClick]);
+  useEffect(() => { subdivisionRef.current = subdivision; }, [subdivision]);
   useEffect(() => { speedBuilderRef.current = speedBuilder; }, [speedBuilder]);
 
   // Create/dispose synths when kits change
@@ -683,13 +706,31 @@ function useMetronome() {
       let isMute = bc.accent === "mute";
       if (gc > 0 && bar % gc === (gc - 1)) isMute = true;
 
-      if (!isMute) {
-        const kit = bc.kit || soundKitRef.current;
-        const synth = synthsRef.current[kit];
-        if (synth) {
-          const basePitch = bc.accent === "accent" ? "C2" : "C3";
-          const vol = SOUND_KITS[kit].volume + acc.volOffset;
-          triggerSynth(synth, kit, basePitch, vol, time);
+      const subDiv = subdivisionRef.current;
+      const subDivNum = subDiv === "8n" ? 2 : subDiv === "16n" ? 4 : subDiv === "8t" ? 3 : 1;
+      
+      for (let i = 0; i < subDivNum; i++) {
+        const timeOffset = i * (Tone.Time("4n").toSeconds() / subDivNum);
+        const subTime = time + timeOffset;
+        
+        if (i === 0) {
+          if (!isMute) {
+            const kit = bc.kit || soundKitRef.current;
+            const synth = synthsRef.current[kit];
+            if (synth && synth.loaded !== false) {
+              const basePitch = bc.accent === "accent" ? SOUND_KITS[kit].pitchAccent || "C2" : SOUND_KITS[kit].pitchNormal || "C3";
+              triggerSynth(synth, kit, basePitch, acc, subTime);
+            }
+          }
+        } else {
+          if (!isMute) {
+            const kit = bc.kit || soundKitRef.current;
+            const synth = synthsRef.current[kit];
+            if (synth && synth.loaded !== false) {
+              const basePitch = SOUND_KITS[kit].pitchNormal || "C3";
+              triggerSynth(synth, kit, basePitch, ACCENT_CONFIG.ghost, subTime);
+            }
+          }
         }
       }
 
@@ -744,8 +785,8 @@ function useMetronome() {
   }, [soundKit]);
 
   return {
-    bpm, playing, beat, beatsPerBar, soundKit, beatConfig, gapClick, speedBuilder,
-    start, stop, changeBpm, changeBeats, setSoundKit, cycleAccent, setBeatKit, setGapClick, setSpeedBuilder
+    bpm, playing, beat, beatsPerBar, soundKit, beatConfig, gapClick, speedBuilder, subdivision,
+    start, stop, changeBpm, changeBeats, setSoundKit, cycleAccent, setBeatKit, setGapClick, setSpeedBuilder, setSubdivision
   };
 }
 
@@ -1201,6 +1242,56 @@ function VowelMap() {
   );
 }
 
+function VisualPendulum({ playing }) {
+  const armRef = useRef(null);
+
+  useEffect(() => {
+    let raf;
+    const render = () => {
+      if (!armRef.current) return;
+      if (playing && Tone.Transport.state === "started") {
+        const ticks = Tone.Transport.ticks;
+        const ppq = Tone.Transport.PPQ;
+        const beatProgress = ticks / ppq;
+        const angle = 30 * Math.cos(Math.PI * beatProgress);
+        armRef.current.style.transform = `rotate(${angle}deg)`;
+      } else {
+        armRef.current.style.transform = `rotate(0deg)`;
+      }
+      raf = requestAnimationFrame(render);
+    };
+    raf = requestAnimationFrame(render);
+    return () => cancelAnimationFrame(raf);
+  }, [playing]);
+
+  return (
+    <div style={{ display: "flex", justifyContent: "center", margin: "10px 0 20px" }}>
+      <div style={{ position: "relative", width: 100, height: 100 }}>
+        {/* Pivot */}
+        <div style={{
+          position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)",
+          width: 8, height: 8, borderRadius: "50%", background: T.gold, zIndex: 2
+        }} />
+        {/* Arm */}
+        <div ref={armRef} style={{
+          position: "absolute", top: 4, left: "50%",
+          width: 4, height: 80, background: T.border,
+          transformOrigin: "top center",
+          marginLeft: -2,
+          willChange: "transform"
+        }}>
+          {/* Bob */}
+          <div style={{
+            position: "absolute", bottom: -8, left: "50%", transform: "translateX(-50%)",
+            width: 24, height: 24, borderRadius: "50%", background: T.gold,
+            boxShadow: "0 2px 8px rgba(0,0,0,0.15)"
+          }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function MetronomePanel({ metro }) {
   const [editingBeat, setEditingBeat] = useState(null);
 
@@ -1214,6 +1305,8 @@ function MetronomePanel({ metro }) {
         <div style={{ fontSize:11, color:T.textMuted, fontWeight:600, letterSpacing:2, fontFamily:T.sans, textTransform:"uppercase", marginBottom:12 }}>
           Metronome
         </div>
+
+        <VisualPendulum playing={metro.playing} />
 
         {/* Beat visualizer — tap beats to edit */}
         <BeatDots beat={metro.beat} playing={metro.playing} beatConfig={metro.beatConfig} beatsPerBar={metro.beatsPerBar} />
@@ -1294,6 +1387,19 @@ function MetronomePanel({ metro }) {
         <div style={{ fontSize:11, fontWeight:600, letterSpacing:2, textTransform:"uppercase", color:T.textMuted, fontFamily:T.sans, marginBottom:12 }}>
           Practice Features
         </div>
+
+        {/* Subdivisions */}
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap:8, marginBottom:12 }}>
+          {[{v:"4n",l:"Quarter"}, {v:"8n",l:"8ths"}, {v:"16n",l:"16ths"}, {v:"8t",l:"Triplets"}].map(sub => (
+            <button key={sub.v} onClick={()=>metro.setSubdivision(sub.v)} style={{
+              background:metro.subdivision===sub.v?T.gold:"transparent",
+              border:`1px solid ${metro.subdivision===sub.v?T.gold:T.borderSoft}`,
+              color:metro.subdivision===sub.v?"#fff":T.textMed, borderRadius: 14,
+              padding:"8px", fontSize:11, fontWeight:600, cursor:"pointer", fontFamily:T.sans
+            }}>{sub.l}</button>
+          ))}
+        </div>
+
         <div style={{ display:"flex", gap:12, flexWrap:"wrap" }}>
           <button onClick={() => metro.setGapClick(metro.gapClick ? 0 : 4)} style={{
             flex:1, background:metro.gapClick?T.gold:"transparent",

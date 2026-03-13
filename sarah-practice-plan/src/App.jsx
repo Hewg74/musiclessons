@@ -48,10 +48,10 @@ let ACCENT_CONFIG = {}; // Will be initialized below
 
 export function applyTheme(isDark) {
   Object.assign(T, isDark ? DARK_THEME : LIGHT_THEME);
-  ACCENT_CONFIG.accent = { volOffset: 0, pitchOffset: 0, label: "Accent", color: T.gold };
-  ACCENT_CONFIG.normal = { volOffset: -4, pitchOffset: 12, label: "Normal", color: T.textMed };
-  ACCENT_CONFIG.ghost = { volOffset: -10, pitchOffset: 12, label: "Ghost", color: T.textMuted };
-  ACCENT_CONFIG.mute = { volOffset: -99, pitchOffset: 0, label: "Mute", color: T.border };
+  ACCENT_CONFIG.accent = { velocity: 1.0, pitchOffset: 0, label: "Accent", color: T.gold };
+  ACCENT_CONFIG.normal = { velocity: 0.5, pitchOffset: 12, label: "Normal", color: T.textMed };
+  ACCENT_CONFIG.ghost = { velocity: 0.2, pitchOffset: 12, label: "Ghost", color: T.textMuted };
+  ACCENT_CONFIG.mute = { velocity: 0.0, pitchOffset: 0, label: "Mute", color: T.border };
 }
 // Initialize
 applyTheme(false);
@@ -76,13 +76,18 @@ const DAY_COLORS = ["#d68383", "#d97d54", "#d4a373", "#7f9e88", "#72a8a8", "#6b8
 // ─── SOUND KITS ─────────────────────────────────────────────────────
 // Each kit defines synth params for Tone.js — different timbres
 const SOUND_KITS = {
+  real: { label: "Real Metronome", isSample: true, urls: { "G5": "berklee/woodblock_pitched-do.mp3", "C5": "berklee/woodblock_pitched-sol.mp3" }, volume: 5, pitchAccent: "G5", pitchNormal: "C5" },
+  chime: { label: "Elegant Chimes", isSample: true, urls: { "G5": "berklee/smalltemplebell.mp3", "C5": "berklee/tinybell1.mp3" }, volume: 6, pitchAccent: "G5", pitchNormal: "C5" },
+  acoustic: { label: "Acoustic Wood", isSample: true, urls: { "G5": "berklee/woodblock_pitched-do.mp3", "C5": "berklee/woodblock_pitched-LOWERsol.mp3" }, volume: 5, pitchAccent: "G5", pitchNormal: "C5" },
+  ableton: { label: "Ableton Click", isSample: true, urls: { "G5": "berklee/click_1.mp3", "C5": "berklee/click_2.mp3" }, volume: 8, pitchAccent: "G5", pitchNormal: "C5" },
+  drums: { label: "Drum Kit", isSample: true, urls: { "G5": "drum-samples/acoustic-kit/snare.mp3", "C5": "drum-samples/acoustic-kit/kick.mp3", "C4": "drum-samples/acoustic-kit/hihat.mp3" }, volume: 8, pitchAccent: "G5", pitchNormal: "C5" },
   classic: { label: "Classic", synthType: "synth", osc: "triangle", attack: 0.001, decay: 0.06, volume: 4 },
   clave: { label: "Clave", synthType: "fm", osc: "sine", modOsc: "sine", harmonicity: 3.5, modIndex: 1, attack: 0.001, decay: 0.08, volume: 5 },
-  wood: { label: "Woodblock", synthType: "fm", osc: "sine", modOsc: "triangle", harmonicity: 2, modIndex: 0.8, attack: 0.001, decay: 0.12, volume: 4 },
-  chime: { label: "Bell", synthType: "fm", osc: "sine", modOsc: "sine", harmonicity: 3, modIndex: 2, attack: 0.001, decay: 0.4, volume: 3 },
+  wood: { label: "Synth Wood", synthType: "fm", osc: "sine", modOsc: "triangle", harmonicity: 2, modIndex: 0.8, attack: 0.001, decay: 0.12, volume: 4 },
+  synthChime: { label: "Synth Bell", synthType: "fm", osc: "sine", modOsc: "sine", harmonicity: 3, modIndex: 2, attack: 0.001, decay: 0.4, volume: 3 },
   click: { label: "Modern Click", synthType: "membrane", osc: "sine", pitchDecay: 0.008, octaves: 3, attack: 0.001, decay: 0.04, volume: 4 },
   soft: { label: "Soft Tick", synthType: "synth", osc: "sine", attack: 0.002, decay: 0.04, volume: 0 },
-  hihat: { label: "Hi-Hat", synthType: "metal", frequency: 300, resonance: 5000, octaves: 1.5, harmonicity: 5.1, modIndex: 16, attack: 0.001, decay: 0.04, volume: -4 },
+  hihat: { label: "Synth Hi-Hat", synthType: "metal", frequency: 300, resonance: 5000, octaves: 1.5, harmonicity: 5.1, modIndex: 16, attack: 0.001, decay: 0.04, volume: -4 },
   rim: { label: "Rimshot", synthType: "membrane", osc: "sine", pitchDecay: 0.015, octaves: 4, attack: 0.001, decay: 0.04, volume: 3 },
   cowbell: { label: "Cowbell", synthType: "metal", frequency: 400, resonance: 300, harmonicity: 5.1, modIndex: 20, octaves: 2, attack: 0.001, decay: 0.08, volume: -2 },
   shaker: { label: "Shaker", synthType: "noise", attack: 0.005, decay: 0.04, volume: -6 },
@@ -96,6 +101,13 @@ const ACCENT_LEVELS = ["accent", "normal", "ghost", "mute"];
 
 function createSynth(kit) {
   const k = SOUND_KITS[kit];
+  if (k.isSample) {
+    return new Tone.Sampler({
+      urls: k.urls,
+      baseUrl: "https://tonejs.github.io/audio/",
+      volume: k.volume || 0
+    }).toDestination();
+  }
   if (k.synthType === "noise") {
     return new Tone.NoiseSynth({
       noise: { type: "white" },
@@ -136,17 +148,22 @@ function createSynth(kit) {
   }).toDestination();
 }
 
-function triggerSynth(synth, kit, pitchNote, volDb, time) {
+function triggerSynth(synth, kit, pitchNote, accConfig, time) {
   const k = SOUND_KITS[kit];
-  if (k.synthType === "noise") {
-    synth.volume.value = volDb;
-    synth.triggerAttackRelease("32n", time);
+  const velocity = accConfig.velocity;
+  
+  if (velocity === 0) return; // Mute
+
+  if (k.isSample) {
+    // For samples (chimes, woodblocks, drums), let the full sample play out naturally.
+    // Using triggerAttackRelease with a short duration like "32n" causes an abrupt cutoff (crackle).
+    synth.triggerAttack(pitchNote, time, velocity);
+  } else if (k.synthType === "noise") {
+    synth.triggerAttackRelease("32n", time, velocity);
   } else if (k.synthType === "metal") {
-    synth.volume.value = volDb;
-    synth.triggerAttackRelease("32n", time);
+    synth.triggerAttackRelease("32n", time, velocity);
   } else {
-    synth.volume.value = volDb;
-    synth.triggerAttackRelease(pitchNote, "32n", time);
+    synth.triggerAttackRelease(pitchNote, "32n", time, velocity);
   }
 }
 
@@ -158,6 +175,7 @@ function useMetronome() {
   const [beatsPerBar, setBeatsPerBar] = useState(4);
   const [soundKit, setSoundKit] = useState("classic");
   const [gapClick, setGapClick] = useState(0); // 0=off, 4=mute 4th bar
+  const [subdivision, setSubdivision] = useState("4n"); // "4n", "8n", "16n", "8t"
   const [speedBuilder, setSpeedBuilder] = useState(false);
   const [speedIncrement, setSpeedIncrement] = useState(5); // BPM added each cycle
   const [speedBars, setSpeedBars] = useState(4); // bars between each increment
@@ -178,6 +196,7 @@ function useMetronome() {
   const beatsRef = useRef(beatsPerBar);
   const bpmRef = useRef(bpm);
   const gapClickRef = useRef(gapClick);
+  const subdivisionRef = useRef(subdivision);
   const speedBuilderRef = useRef(speedBuilder);
   const speedIncrementRef = useRef(speedIncrement);
   const speedBarsRef = useRef(speedBars);
@@ -189,6 +208,7 @@ function useMetronome() {
   useEffect(() => { beatsRef.current = beatsPerBar; }, [beatsPerBar]);
   useEffect(() => { bpmRef.current = bpm; }, [bpm]);
   useEffect(() => { gapClickRef.current = gapClick; }, [gapClick]);
+  useEffect(() => { subdivisionRef.current = subdivision; }, [subdivision]);
   useEffect(() => { speedBuilderRef.current = speedBuilder; }, [speedBuilder]);
   useEffect(() => { speedIncrementRef.current = speedIncrement; }, [speedIncrement]);
   useEffect(() => { speedBarsRef.current = speedBars; }, [speedBars]);
@@ -244,19 +264,36 @@ function useMetronome() {
       let isMute = bc.accent === "mute";
       if (gc > 0 && bar % gc === (gc - 1)) isMute = true;
 
-      if (!isMute) {
-        const kit = bc.kit || soundKitRef.current;
-        const synth = synthsRef.current[kit];
-        if (synth) {
-          const basePitch = bc.accent === "accent" ? "G5" : "C5";
-          const vol = SOUND_KITS[kit].volume + acc.volOffset;
-          triggerSynth(synth, kit, basePitch, vol, time);
+      const subDiv = subdivisionRef.current;
+      const subDivNum = subDiv === "8n" ? 2 : subDiv === "16n" ? 4 : subDiv === "8t" ? 3 : 1;
+      
+      for (let i = 0; i < subDivNum; i++) {
+        const timeOffset = i * (Tone.Time("4n").toSeconds() / subDivNum);
+        const subTime = time + timeOffset;
+        
+        if (i === 0) {
+          if (!isMute) {
+            const kit = bc.kit || soundKitRef.current;
+            const synth = synthsRef.current[kit];
+            if (synth && synth.loaded !== false) { // check for loaded if it's a sampler
+              const basePitch = bc.accent === "accent" ? SOUND_KITS[kit].pitchAccent || "G5" : SOUND_KITS[kit].pitchNormal || "C5";
+              triggerSynth(synth, kit, basePitch, acc, subTime);
+            }
+          }
+          window.dispatchEvent(new CustomEvent('metroBeatAudio', { detail: { beat: b, bar, isMute, time: subTime } }));
+        } else {
+          if (!isMute) {
+            const kit = bc.kit || soundKitRef.current;
+            const synth = synthsRef.current[kit];
+            if (synth && synth.loaded !== false) {
+              const basePitch = SOUND_KITS[kit].pitchNormal || "C5";
+              // Ghost velocity for subdivisions, unless it's a very light sound then normal
+              triggerSynth(synth, kit, basePitch, ACCENT_CONFIG.ghost, subTime);
+            }
+          }
         }
       }
 
-      // Audio-thread event: fires immediately for sample-accurate scheduling (chimes, etc.)
-      // Works with screen off (no rAF dependency)
-      window.dispatchEvent(new CustomEvent('metroBeatAudio', { detail: { beat: b, bar, isMute, time } }));
       // Visual-thread event: fires via rAF for smooth UI updates
       Tone.Draw.schedule(() => {
         window.dispatchEvent(new CustomEvent('metroBeat', { detail: { beat: b, bar, isMute } }));
@@ -315,8 +352,8 @@ function useMetronome() {
   }, []);
 
   return {
-    bpm, playing, beat, beatsPerBar, soundKit, beatConfig, gapClick, speedBuilder, speedIncrement, speedBars, speedCeiling,
-    start, stop, changeBpm, changeBeats, setSoundKit, cycleAccent, setBeatKit, setGapClick,
+    bpm, playing, beat, beatsPerBar, soundKit, beatConfig, gapClick, speedBuilder, speedIncrement, speedBars, speedCeiling, subdivision,
+    start, stop, changeBpm, changeBeats, setSoundKit, cycleAccent, setBeatKit, setGapClick, setSubdivision,
     setSpeedBuilder: toggleSpeedBuilder, setSpeedIncrement, setSpeedBars, setSpeedCeiling
   };
 }
@@ -1189,6 +1226,56 @@ function VoiceView({ completed, onComplete, metro, onOpenTapMatch }) {
   );
 }
 
+function VisualPendulum({ playing }) {
+  const armRef = useRef(null);
+
+  useEffect(() => {
+    let raf;
+    const render = () => {
+      if (!armRef.current) return;
+      if (playing && Tone.Transport.state === "started") {
+        const ticks = Tone.Transport.ticks;
+        const ppq = Tone.Transport.PPQ;
+        const beatProgress = ticks / ppq;
+        const angle = 30 * Math.cos(Math.PI * beatProgress);
+        armRef.current.style.transform = `rotate(${angle}deg)`;
+      } else {
+        armRef.current.style.transform = `rotate(0deg)`;
+      }
+      raf = requestAnimationFrame(render);
+    };
+    raf = requestAnimationFrame(render);
+    return () => cancelAnimationFrame(raf);
+  }, [playing]);
+
+  return (
+    <div style={{ display: "flex", justifyContent: "center", margin: "10px 0 20px" }}>
+      <div style={{ position: "relative", width: 100, height: 100 }}>
+        {/* Pivot */}
+        <div style={{
+          position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)",
+          width: 8, height: 8, borderRadius: "50%", background: T.gold, zIndex: 2
+        }} />
+        {/* Arm */}
+        <div ref={armRef} style={{
+          position: "absolute", top: 4, left: "50%",
+          width: 4, height: 80, background: T.border,
+          transformOrigin: "top center",
+          marginLeft: -2,
+          willChange: "transform"
+        }}>
+          {/* Bob */}
+          <div style={{
+            position: "absolute", bottom: -8, left: "50%", transform: "translateX(-50%)",
+            width: 24, height: 24, borderRadius: "50%", background: T.gold,
+            boxShadow: "0 2px 8px rgba(0,0,0,0.15)"
+          }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function MetronomePanel({ metro, onOpenTapMatch }) {
   const [editingBeat, setEditingBeat] = useState(null);
   const [taps, setTaps] = useState([]);
@@ -1219,6 +1306,9 @@ function MetronomePanel({ metro, onOpenTapMatch }) {
         <div style={{ fontSize: 11, color: T.textMuted, fontWeight: 600, letterSpacing: 2, fontFamily: T.sans, textTransform: "uppercase", marginBottom: 12 }}>
           Metronome
         </div>
+
+        {/* Pendulum */}
+        <VisualPendulum playing={metro.playing} />
 
         {/* Beat visualizer — tap beats to edit */}
         <BeatDots beat={metro.beat} playing={metro.playing} beatConfig={metro.beatConfig} beatsPerBar={metro.beatsPerBar} />
@@ -1308,6 +1398,19 @@ function MetronomePanel({ metro, onOpenTapMatch }) {
         <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 12 }}>
           Practice Features
         </div>
+
+        {/* Subdivisions */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, marginBottom: 12 }}>
+          {[{v:"4n",l:"Quarter"}, {v:"8n",l:"8ths"}, {v:"16n",l:"16ths"}, {v:"8t",l:"Triplets"}].map(sub => (
+            <button key={sub.v} onClick={() => metro.setSubdivision(sub.v)} style={{
+              background: metro.subdivision === sub.v ? T.gold : "transparent",
+              border: `1px solid ${metro.subdivision === sub.v ? T.gold : T.borderSoft}`,
+              color: metro.subdivision === sub.v ? "#fff" : T.textMed, borderRadius: T.radius,
+              padding: "8px", fontSize: 11, fontWeight: 600, cursor: "pointer", fontFamily: T.sans
+            }}>{sub.l}</button>
+          ))}
+        </div>
+
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12 }}>
           <button onClick={() => metro.setGapClick(metro.gapClick ? 0 : 4)} style={{
             flex: 1, background: metro.gapClick ? T.gold : "transparent",
@@ -2530,6 +2633,77 @@ function LooperView({ completed, onComplete, metro, onOpenTapMatch }) {
   );
 }
 
+function FloatingMetronome({ metro, setTab, isDark, theme: T }) {
+  const [isDragging, setIsDragging] = useState(false);
+  const [startY, setStartY] = useState(0);
+  const [startBpm, setStartBpm] = useState(0);
+
+  const handlePointerDown = (e) => {
+    e.target.setPointerCapture(e.pointerId);
+    setIsDragging(true);
+    setStartY(e.clientY);
+    setStartBpm(metro.bpm);
+  };
+
+  const handlePointerMove = (e) => {
+    if (!isDragging) return;
+    const diffY = startY - e.clientY;
+    // 1 pixel = 1 BPM change (tune this sensitivity if needed)
+    const newBpm = Math.max(40, Math.min(280, startBpm + Math.floor(diffY)));
+    if (newBpm !== metro.bpm) {
+      metro.changeBpm(newBpm);
+    }
+  };
+
+  const handlePointerUp = (e) => {
+    e.target.releasePointerCapture(e.pointerId);
+    setIsDragging(false);
+  };
+
+  return (
+    <div className={`floating-metronome ${isDark ? "floating-metronome-dark" : ""}`} onClick={() => {
+      // Only open tools tab if we aren't dragging. If startY is close to current event clientY, it was a tap.
+      if (!isDragging) setTab("tools");
+    }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <div style={{ 
+          background: T.goldSoft, borderRadius: "50%", width: 42, height: 42, 
+          display: "flex", alignItems: "center", justifyContent: "center", border: `1px solid ${T.gold}`
+        }}>
+          <BeatDots beat={metro.beat} playing={true} compact beatConfig={metro.beatConfig} beatsPerBar={metro.beatsPerBar} />
+        </div>
+        <div className="desktop-only" style={{ fontWeight: 600, fontSize: 13, color: T.textDark, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1 }}>
+          Metronome
+        </div>
+      </div>
+      
+      <div 
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+        onClick={(e) => e.stopPropagation()} // Prevent opening tools when interacting with BPM
+        style={{ 
+          display: "flex", alignItems: "center", gap: 8, cursor: "ns-resize", touchAction: "none",
+          background: T.bgCard, padding: "4px 12px", borderRadius: 20, border: `1px solid ${T.border}`
+        }}
+        title="Drag up/down to change BPM"
+      >
+        <div style={{ fontSize: 18, fontWeight: 700, FontFamily: T.serif, color: T.textDark, minWidth: 32, textAlign: "right", userSelect: "none" }}>
+          {metro.bpm}
+        </div>
+        <div style={{ fontSize: 10, color: T.textMuted, fontWeight: 600, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1, userSelect: "none" }}>
+          BPM
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 2, opacity: 0.5 }}>
+          <div style={{ width: 0, height: 0, borderLeft: "4px solid transparent", borderRight: "4px solid transparent", borderBottom: `4px solid ${T.textDark}` }}></div>
+          <div style={{ width: 0, height: 0, borderLeft: "4px solid transparent", borderRight: "4px solid transparent", borderTop: `4px solid ${T.textDark}` }}></div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function BottomNav({ tab, setTab, isDark, theme: T }) {
   return (
     <div className={`bottom-nav mobile-only ${isDark ? "bottom-nav-dark" : ""}`}>
@@ -3038,15 +3212,7 @@ export default function App() {
 
       {/* Floating metronome */}
       {metro.playing && tab !== "tools" && !tapMatchBpm && (
-        <div onClick={() => setTab("tools")} style={{
-          position: "fixed", bottom: 32, right: 32,
-          background: T.bgCard, border: `1px solid ${T.gold}`,
-          borderRadius: "50%", width: 64, height: 64, display: "flex",
-          alignItems: "center", justifyContent: "center", cursor: "pointer",
-          boxShadow: `0 8px 30px ${T.goldMed}`, zIndex: 100
-        }}>
-          <BeatDots beat={metro.beat} playing={true} compact beatConfig={metro.beatConfig} beatsPerBar={metro.beatsPerBar} />
-        </div>
+        <FloatingMetronome metro={metro} setTab={setTab} isDark={isDark} theme={T} />
       )}
 
       {/* Tap Tempo Modal */}
