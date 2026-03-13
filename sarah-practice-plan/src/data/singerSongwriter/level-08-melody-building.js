@@ -138,6 +138,136 @@ export const level8 = {
     },
     {
       id: "ss-8-7",
+      time: 7,
+      title: "Target Note Landing",
+      type: "vocal",
+      what: "Sing freely over Am but LAND on a specific target note on beat 1 of each new bar. Approach from above, below, or by step. The target note changes each bar: A, then C, then E, then G. This teaches melodic intentionality — singing TOWARD something instead of wandering.",
+      setup: "Guitar strumming Am. Metronome at 80 BPM.",
+      steps: [
+        { text: "Strum Am. Bar 1 target: A. Sing any pentatonic notes you want during the bar, but LAND on A right on beat 1. Feel the gravity pulling your melody toward the target.", why: "Target-note singing builds intentionality. Instead of wandering through the scale, every phrase has a destination. This is how melodic storytelling works." },
+        { text: "Bar 2 target: C. Approach it from below (A stepping up to C) or from above (D dropping to C). Notice how the approach direction changes the emotional flavor of the landing.", why: "Approaching from below creates lift and arrival. Approaching from above creates settling and resolution. Both are essential melodic tools." },
+        { text: "Bar 3 target: E. Bar 4 target: G. Keep the cycle going — A, C, E, G — landing each target on beat 1. Let the notes between targets be free and intuitive.", why: "The four targets outline an Am7 chord (A-C-E-G). Your melodies are now chord-aware without needing to think about theory. The targets do the work." },
+        { text: "Speed up the cycle: change targets every 2 beats instead of every bar. A on beat 1, C on beat 3, E on beat 1, G on beat 3. The space between targets shrinks, demanding quicker melodic decisions.", why: "Faster target changes sharpen your melodic reflexes. This is the same skill jazz improvisers use over chord changes — landing chord tones on strong beats." },
+        { text: "Record a 2-minute pass. Listen back and notice which approaches sound best to your ear — stepwise, leaps, from above, from below. These are your melodic instincts revealing themselves.", why: "Self-review builds critical listening. The approaches you gravitate toward naturally become your melodic signature — the thing that makes your melodies sound like YOU." }
+      ],
+      feel: "Target-note landing should feel like a guided conversation — you have freedom to say anything, but each sentence must end on a specific word. The constraint creates direction without killing creativity.",
+      wrong: "If you're just singing the target notes with nothing in between, you're skipping the melody. The notes BETWEEN targets are where the music lives. Targets are destinations, not the whole journey.",
+      sarah: "Gene, this is how Tinariwen's guitarists improvise — free-flowing lines that always land on the root or fifth at key moments. It sounds effortless because the targets are internalized. That's what we're building here.",
+      referencePitches: getPitchRange("A3", "G4"),
+      pitchContour: true,
+      metronome: 80,
+      recorder: true
+    },
+    {
+      id: "ss-8-8",
+      time: 7,
+      title: "Pentatonic in New Keys",
+      type: "vocal",
+      what: "Sing Am pentatonic (A-C-D-E-G), then Em pentatonic (E-G-A-B-D), then G major pentatonic (G-A-B-D-E). Same scale shape, new locations. This breaks the 'only Am' habit and proves the pentatonic is a portable tool, not a fixed position.",
+      setup: "Guitar. Metronome at 80 BPM.",
+      steps: [
+        { text: "Sing Am pentatonic ascending and descending: A-C-D-E-G-E-D-C-A. This is home base — your most familiar territory. Strum Am underneath.", why: "Starting in Am grounds you in the known. You need a reference point before moving to new keys. Confidence here is the launchpad." },
+        { text: "Switch to Em pentatonic: E-G-A-B-D. Strum Em underneath. Sing ascending and descending. Notice: three of these notes overlap with Am pentatonic (E, G, A). Only B and D are new territory.", why: "Overlapping notes between keys reveal how pentatonic scales connect. This is how guitarists move between positions — shared notes are bridges." },
+        { text: "Now G major pentatonic: G-A-B-D-E. Strum G underneath. This is the brightest of the three — a major pentatonic sounds sunny and open compared to the minor pentatonics.", why: "Major vs. minor pentatonic is a massive emotional shift. Same 5-note concept, completely different mood. Hearing this contrast deepens your melodic palette." },
+        { text: "Improvise 1 minute in each key: Am pentatonic over Am, Em pentatonic over Em, G major pentatonic over G. Feel how the same scale framework creates different vibes in different keys.", why: "Improvising in multiple keys proves the pentatonic is a transferable skill. You're not memorizing patterns — you're internalizing a melodic system that works anywhere." },
+        { text: "Chain all three: 4 bars in Am → 4 bars in Em → 4 bars in G → 4 bars in Am. Record the full cycle. You just sang through a chord progression using key-appropriate pentatonics.", why: "Chaining pentatonics across a progression is how singers navigate songs with multiple sections. Each key shift demands a new melodic center — and you just did it." }
+      ],
+      feel: "Moving between keys should feel like visiting neighboring towns — familiar enough to navigate, different enough to notice. The pentatonic is your passport; it works everywhere.",
+      wrong: "If Em pentatonic feels impossible after Am, slow down. Sing E-G-A-B-D as a pure scale 10 times before improvising. The jump between keys gets easier with each repetition.",
+      sarah: "Gene, Allah-Las shift between minor and major pentatonic constantly — that shimmery quality in their melodies comes from this exact skill. You're learning to hear the same way they do.",
+      fretboard: { scale: "em-pentatonic", position: 1 },
+      referencePitches: getPitchRange("E3", "B4"),
+      recorder: true,
+      metronome: 80
+    },
+    {
+      id: "ss-8-9",
+      time: 8,
+      title: "Melodic Motif Development",
+      type: "song",
+      what: "Take a 4-note motif. Develop it through: sequence (same shape, different starting note), inversion (flip upside down), augmentation (double the note lengths), fragmentation (use only the first 2 notes). Classical development tools made accessible. 4 variations from one seed equals a complete melody section.",
+      setup: "Guitar strumming Am. Backing track ready.",
+      steps: [
+        { text: "Create a simple 4-note motif using pentatonic notes. Example: A-C-D-E. Sing it 4 times to lock it in. This is your seed — everything grows from here.", why: "A strong motif is short, singable, and distinctive. Four notes is the sweet spot — enough to have shape, few enough to remember and manipulate." },
+        { text: "Sequence: start the same shape on a different note. If your motif was A-C-D-E (up a 3rd, up a step, up a step), start on C: C-E-G-A. Same intervals, new pitch level. Sing both back to back.", why: "Sequence is the most common development tool in all music. It creates momentum — the ear recognizes the pattern and anticipates where it's going." },
+        { text: "Inversion: flip the motif upside down. If A-C-D-E goes up-up-up, the inversion goes down-down-down from E: E-D-C-A. Sing the original, then the inversion.", why: "Inversion creates a mirror image. It sounds related but emotionally different — rising hope becomes settling calm. Composers from Bach to Radiohead use this." },
+        { text: "Augmentation: double every note length. If the motif was quarter notes, sing it in half notes. Same pitches, twice as slow. Then try fragmentation: sing ONLY the first 2 notes (A-C) as a repeating cell.", why: "Augmentation creates gravity and weight. Fragmentation distills the motif to its essence. Both tools let you stretch or compress your musical idea." },
+        { text: "Chain all 4 variations over the Cinematic Western track: original (2 bars) → sequence (2 bars) → inversion (2 bars) → augmentation (2 bars) → fragmentation (2 bars). Record the full development.", why: "Ten bars of melody from one 4-note idea. This is how composers build entire sections — not by inventing new material, but by developing what they have." }
+      ],
+      feel: "Motif development should feel like sculpting — you start with a raw shape and carve different angles from it. Each variation reveals something new about the original idea.",
+      wrong: "If your variations sound completely unrelated to the original, you've changed too many elements at once. Keep the development gradual — change one thing at a time so the ear can follow the connection.",
+      sarah: "Gene, Tommy Guerrero's instrumental tracks are masterclasses in motif development. One guitar phrase, evolved through subtle variations across a whole song. That's exactly what you're learning here.",
+      recorder: true,
+      metronome: 80,
+      tracks: [{ name: "Cinematic Western 80", src: "/cinematic-western-80.mp3" }],
+      referencePitches: getPitchRange("A3", "G4")
+    },
+    {
+      id: "ss-8-10",
+      time: 6,
+      title: "Singing Intervals by Feel",
+      type: "vocal",
+      what: "Each melodic jump has an emotional color. Minor 3rd (A to C) is bluesy ache. Perfect 4th (A to D) is hopeful lift. Perfect 5th (A to E) is heroic openness. Minor 7th (A to G) is tension and longing. Sing each interval over a drone, name the feeling, then paint freely choosing intervals by emotion.",
+      setup: "Drone on A. No metronome for this one — let it be free.",
+      steps: [
+        { text: "Drone on A. Sing A, then jump to C (minor 3rd). Hold both notes long enough to feel the color. The minor 3rd is the soul interval — bluesy, wistful, bittersweet. Sing A→C five times.", why: "The minor 3rd is the signature interval of blues, soul, and most of the music you love. Feeling it as an emotion (not a theory concept) is how singers internalize intervals." },
+        { text: "Sing A→D (perfect 4th). This is the 'here comes the sun' interval — open, hopeful, lifting. Then A→E (perfect 5th): heroic, wide, like a desert horizon. Feel the difference between the 4th's hope and the 5th's openness.", why: "Perfect intervals (4th and 5th) are the backbone of melody. The 4th lifts gently; the 5th opens wide. Knowing them by feel lets you choose them deliberately when composing." },
+        { text: "Sing A→G (minor 7th). This is the tension interval — longing, unresolved, pulling toward something. It's the sound of 'not home yet.' Hold it and feel the pull back down to A.", why: "The minor 7th creates the strongest melodic tension in the pentatonic. It's the note that makes you want resolution. BALTHVS and Skinshape use this interval to create their dreamlike unresolved quality." },
+        { text: "Now paint freely: sing over the drone, choosing intervals by emotion. Want ache? Jump a minor 3rd. Want lift? Perfect 4th. Want vastness? Perfect 5th. Want longing? Minor 7th. Let feeling guide your note choices.", why: "Choosing intervals by emotion is the bridge between theory and expression. You're not calculating — you're feeling your way through the scale. This is how mature melodists work." }
+      ],
+      feel: "This exercise should feel like learning emotional vocabulary — each interval is a word with a specific meaning. When you can 'say' what you feel with intervals, your melodies become genuinely expressive.",
+      wrong: "If all intervals sound the same to you, slow down. Sing each one 10 times with eyes closed. The emotional colors emerge with repetition — they're subtle but real.",
+      sarah: "Gene, this is the secret behind your favorite singers. They're not choosing notes randomly — they're choosing feelings. That ache in a Skinshape melody? Minor 3rds. That openness in Khruangbin? Perfect 5ths. Now you know why.",
+      drone: { root: "A", octave: 2, texture: "pure" },
+      pianoKeys: true,
+      referencePitches: getPitchRange("A3", "G4"),
+      recorder: true
+    },
+    {
+      id: "ss-8-11",
+      time: 6,
+      title: "Space as Melody",
+      type: "vocal",
+      what: "Create a melody where at least 50% of the bars are SILENCE. Sing 2 bars, rest 2 bars. Or sing 1 bar, rest 3. The silence IS part of the melody — it creates anticipation. Khruangbin's vocal approach: what you DON'T sing matters as much as what you do.",
+      setup: "Backing track. No guitar strumming — let the track carry the groove.",
+      steps: [
+        { text: "Play the Khruangbin track. For the first 8 bars, sing only on bars 1 and 5. Bars 2-4 and 6-8 are silence. Feel how the silence creates anticipation for the next phrase.", why: "Forced silence trains you to resist the urge to fill every moment. Most beginner singers over-sing. Space is the cure — and the silence makes your phrases land harder." },
+        { text: "Now try 1 bar singing, 3 bars silence. You get ONE bar to make a statement, then 3 bars to let it breathe. Make every phrase count — you have very few of them.", why: "Extreme constraint forces economy. When you only get 25% of the time, every note must earn its place. This is the DOPE LEMON approach — sparse, deliberate, unhurried." },
+        { text: "Flip the ratio: 3 bars singing, 1 bar silence. Notice how even one bar of silence changes the energy. That single gap creates a breath, a reset, a moment of anticipation.", why: "Even minimal silence transforms a melody. One bar of rest per phrase gives the listener time to absorb what they heard. It's punctuation — a period at the end of a sentence." },
+        { text: "Free form: improvise a 16-bar melody where you choose when to sing and when to rest. The only rule is at least 8 bars must be silence. Record it and listen back — does the silence feel intentional or accidental?", why: "Intentional silence sounds confident. Accidental silence sounds lost. The difference is whether you OWN the silence as part of your melody. That ownership is what we're building." }
+      ],
+      feel: "Space-as-melody should feel like a conversation with long, comfortable pauses — not awkward silence, but the silence of someone who knows their next words will matter. Confident, unhurried, powerful.",
+      wrong: "If you keep filling the silent bars with humming or 'uh,' you're resisting the exercise. True silence. Nothing. Let the backing track exist alone. Your re-entry after silence will feel twice as powerful.",
+      sarah: "Gene, Khruangbin's Laura Lee sings fewer notes per song than almost any vocalist in modern music — and every note hits like a truck. That's the power of space. Less is more isn't a cliche; it's a technique.",
+      tracks: [{ name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" }],
+      recorder: true,
+      referencePitches: getPitchRange("A3", "G4")
+    },
+    {
+      id: "ss-8-12",
+      time: 8,
+      title: "Two-Melody Contrast",
+      type: "song",
+      what: "Create TWO contrasting melodies over the same progression. Melody A (verse): low range (E3-B3), stepwise motion, narrow contour. Melody B (chorus): higher range (C4-G4), wider intervals, arch contour. Play them back-to-back. The contrast between them IS the song structure.",
+      setup: "Guitar strumming Am-C-G-Em. Metronome at 80 BPM.",
+      steps: [
+        { text: "Create Melody A (verse): stay in E3-B3 range. Use stepwise motion — move only to the neighboring scale note. Keep the contour narrow, like a quiet conversation. Sing it for 4 bars over Am-C-G-Em.", why: "Low range + stepwise motion + narrow contour = intimacy. This is the verse texture — close, personal, drawing the listener in. Your porch register lives here." },
+        { text: "Create Melody B (chorus): jump up to C4-G4 range. Use wider intervals — skip notes, leap a 4th or 5th. Let the contour arch upward. Sing it for 4 bars over the same Am-C-G-Em.", why: "Higher range + wider intervals + arch contour = release and energy. The contrast with Melody A creates the emotional lift that defines a chorus. Same chords, completely different feeling." },
+        { text: "Sing Melody A (4 bars) then immediately Melody B (4 bars). Feel the shift. Does the chorus feel like it arrives? Does the verse feel like it sets up the chorus? Adjust until the contrast is obvious.", why: "The verse-to-chorus transition is the most important moment in a pop song. If the contrast is clear, the structure works. If it's subtle, push it further — bigger range shift, wider intervals, more energy." },
+        { text: "Add dynamics: sing Melody A at 60% volume, Melody B at 90% volume. Volume contrast amplifies the melodic contrast. Record the full structure: A-A-B-A (verse-verse-chorus-verse).", why: "Dynamic contrast is the simplest way to differentiate sections. Quiet verse, loud chorus — it's the Pixies formula, the Nirvana formula, and it works because human ears crave contrast." },
+        { text: "Listen back to your recording. Can you hear two distinct melodies? Does the chorus feel like a release after the verse? If yes, you've just written a verse-chorus structure from scratch.", why: "Self-assessment builds critical ears. If you can hear the contrast clearly on playback, a listener will feel it even more strongly. You've internalized the fundamental unit of song structure." }
+      ],
+      feel: "Two-melody contrast should feel like two characters in a conversation — the verse whispers, the chorus declares. When the shift between them feels inevitable and satisfying, you've found the sweet spot.",
+      wrong: "If both melodies sound the same, you haven't pushed the contrast hard enough. Try this: sing the verse melody, then sing the chorus an octave higher than feels comfortable. Now back off slightly. That's your chorus range.",
+      sarah: "Gene, every song you love does this. BALTHVS verses murmur in the low register; choruses bloom upward. Skinshape stays low and intimate, then the chorus melody opens like a window. You're learning the architecture of songs.",
+      referencePitches: getPitchRange("E3", "G4"),
+      pitchContour: true,
+      volumeMeter: true,
+      recorder: true,
+      metronome: 80
+    },
+    {
+      id: "ss-8-13",
       time: 10,
       title: "First Original Over Backing Track",
       type: "song",
@@ -156,7 +286,7 @@ export const level8 = {
       referencePitches: getPitchRange("A3", "G4"),
       volumeMeter: true,
       recorder: true,
-      levelUp: "Can freely improvise pentatonic melodies over backing tracks, create original verse/chorus melodies with contrasting contours, and use call-and-response between voice and guitar."
+      levelUp: "Can freely improvise pentatonic melodies over backing tracks, land on target notes intentionally, sing pentatonic in multiple keys, develop motifs through sequence/inversion/fragmentation, feel intervals as emotional colors, use silence as a melodic element, create contrasting verse/chorus melodies, and use call-and-response between voice and guitar."
     }
   ]
 };

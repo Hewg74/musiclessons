@@ -114,6 +114,141 @@ export const level10 = {
     },
     {
       id: "ss-10-6",
+      time: 7,
+      title: "Nashville Numbers",
+      type: "song",
+      what: "Learn to think in chord NUMBERS not names. Am-C-G-Em in Am = i-III-VII-v. In G major: G-C-D-Em = I-IV-V-vi. Numbers let you transpose instantly. Play a progression, sing the numbers, feel the function. Nashville number system is how professional musicians communicate harmony.",
+      steps: [
+        { text: "Play Am-C-G-Em. Say the numbers out loud as you strum: 'one... three... seven... five' (i-III-VII-v in A minor). Don't think of chord names — think of positions in the key.", why: "Nashville numbers abstract harmony away from specific keys. Once you think in numbers, you can play any song in any key instantly. Professional session musicians sight-read entire sessions this way." },
+        { text: "Now play in G major: G-C-D-Em. Say 'one... four... five... six' (I-IV-V-vi). Notice that V (D) is the tension chord and I (G) is home — the NUMBER tells you the function.", why: "Chord function is encoded in the number. I is always home, V is always tension, IV is always departure. The number IS the feeling." },
+        { text: "Transpose Am-C-G-Em to a new key using numbers. In D minor the same i-III-VII-v is Dm-F-C-Am. Play it. Same emotional shape, different key.", why: "This is the power of numbers — instant transposition. If a song is too high for your voice, move it to a new key by converting to numbers first." },
+        { text: "Pick a song you know. Write out the chords as numbers. Then play it in a different key using only the numbers. Record both versions.", why: "When you can think in numbers fluently, you've unlocked the universal language of harmony. Every key becomes accessible." }
+      ],
+      feel: "Numbers should start replacing chord names in your head. When someone says 'go to the four chord,' you should feel the departure energy before your fingers even move.",
+      wrong: "If you keep thinking in chord names, slow down. Say the numbers out loud every time you change chords. It takes repetition to rewire your brain from names to functions.",
+      sarah: "Gene, Nashville numbers are the shortcut every pro uses. When you jam with other musicians, numbers are how you communicate. This skill makes you fluent in the universal language of harmony.",
+      pianoKeys: true,
+      recorder: true,
+      metronome: 80
+    },
+    {
+      id: "ss-10-7",
+      time: 8,
+      title: "Emotional Mapping: Borrowed Chords",
+      type: "song",
+      drone: { root: "G", octave: 2, texture: "warm" },
+      what: "In the key of G major, play G then Ab (bVI). Feel the 'cinematic longing' — the chord doesn't belong to the key but creates an emotional effect nothing else can. Then try G to Bb (bVII) — 'triumphant departure.' Then iv (Cm in G major) — borrowed from the parallel minor, creates nostalgia. These are the 'color chords' that make songs emotionally rich.",
+      steps: [
+        { text: "Play G major for 4 bars, then Ab major (4-6-6-5-4-4). Let the Ab ring. Feel the sudden shift — cinematic, wistful, like a scene change in a film. This is the bVI chord, borrowed from G minor.", why: "The bVI is the most emotionally powerful borrowed chord. Hermanos Gutiérrez use it constantly — it creates instant cinematic weight. It works because it shares no notes with the I chord, creating maximum contrast." },
+        { text: "Now play G to Bb major (x-1-3-3-3-1). Feel the 'triumphant departure' — bVII has a rising, anthemic quality. Think of it as the chord that says 'we're going somewhere bigger.'", why: "The bVII is borrowed from Mixolydian/parallel minor. It's the sound of classic rock anthems and surf-rock climaxes. It lifts without the tension of the V chord." },
+        { text: "Play G to Cm (x-3-5-5-4-3). This is the iv chord — minor four, borrowed from the parallel minor. Feel the nostalgia, the bittersweet quality. It's the 'golden hour' chord.", why: "The iv chord replaces the normal IV (C major) with its minor version. That single note change (E to Eb) transforms brightness into wistfulness. Radiohead, Elliott Smith, and countless others use this." },
+        { text: "Build a progression using borrowed chords: G - Em - Cm - G, or G - Ab - Bb - G. Record it. These chords create emotional depth that standard diatonic harmony can't reach.", why: "Borrowed chords are your emotional special effects. Use them sparingly and they hit hard. Use them too much and the song loses its tonal center." }
+      ],
+      feel: "Each borrowed chord should hit like an unexpected emotion — a pang of nostalgia, a swell of cinematic wonder. They work because they break the rules of the key, and your ear notices.",
+      wrong: "If the borrowed chords just sound 'wrong,' you haven't established the key firmly enough. Play I-IV-V-I several times first to set up G major as home. Then introduce the borrowed chord — the contrast is what creates the effect.",
+      sarah: "Gene, borrowed chords are the secret sauce of your favorite artists. Hermanos Gutiérrez's entire sound is built on bVI. Once you hear it, you'll hear it everywhere — and you'll start using it in your own songs.",
+      referencePitches: getPitchRange("G3", "D4"),
+      pianoKeys: true,
+      recorder: true
+    },
+    {
+      id: "ss-10-8",
+      time: 7,
+      title: "Harmonic Rhythm as Architecture",
+      type: "song",
+      what: "Same Am-C-G-Em progression, three treatments: (1) chord changes every 2 bars — spacious, contemplative, verse energy; (2) every bar — standard movement; (3) every 2 beats — urgent, climactic, chorus/bridge energy. Harmonic rhythm creates section contrast without changing a single chord.",
+      steps: [
+        { text: "Play Am-C-G-Em with each chord lasting 2 BARS (8 beats). Sing over it. Feel the spaciousness — each chord has room to breathe. This is verse energy, contemplative and unhurried.", why: "Slow harmonic rhythm creates space for lyrics and vocal melody to be the focus. Most great verses use slow harmonic rhythm — the chords are scenery, not the story." },
+        { text: "Now play the same progression with each chord lasting 1 bar (4 beats). Standard pop/rock pacing. Feel how the energy increases — there's more forward motion, more harmonic activity.", why: "One chord per bar is the default harmonic rhythm of pop and rock. It balances motion with stability. Most choruses and standard sections live here." },
+        { text: "Now play each chord for only 2 beats. The chords fly by — urgent, driving, climactic. This is bridge or pre-chorus energy, building toward something.", why: "Fast harmonic rhythm creates urgency and excitement. It's the musical equivalent of a quickening heartbeat. Use it for climactic moments." },
+        { text: "Build a mini-song using all three speeds: verse (2 bars per chord), chorus (1 bar), bridge (2 beats). Same chords, three different energies. Record it.", why: "Harmonic rhythm is one of the most powerful and least understood songwriting tools. Changing chord speed creates section contrast more effectively than changing the chords themselves." }
+      ],
+      feel: "The slowest version should feel like a calm ocean. The fastest should feel like waves crashing. Same water, different energy — that's harmonic rhythm.",
+      wrong: "If all three speeds feel the same, exaggerate the differences. Make the slow version REALLY slow (4 bars per chord). Make the fast version REALLY fast (1 beat per chord). The contrast will become obvious.",
+      sarah: "Gene, harmonic rhythm is the hidden architecture of songs. When a chorus feels bigger than a verse but uses the same chords, harmonic rhythm is usually why. This is a pro-level tool.",
+      metronome: 80,
+      recorder: true
+    },
+    {
+      id: "ss-10-9",
+      time: 6,
+      title: "Singing the Bass Line",
+      type: "vocal",
+      drone: { mode: "cycle", progression: ["Am", "C", "G", "Em"], bpm: 80 },
+      what: "Sing ONLY the bass note (lowest root) of each chord as the progression moves. Am(A2)→C(C3)→G(G2)→Em(E2). Feel how bass motion creates forward drive. Then try singing the bass while strumming — this is what bass players hear.",
+      steps: [
+        { text: "Strum Am-C-G-Em slowly. Sing only the root of each chord in your lowest comfortable register: A... C... G... E. Hold each note for the full chord duration.", why: "The bass line is the harmonic foundation. When you sing the bass, you hear how root motion drives the progression forward. The jump from A down to G, then to E — that descending motion creates momentum." },
+        { text: "Notice the intervals between bass notes: A to C is a minor 3rd up. C to G is a 4th down. G to E is a minor 3rd down. These intervals define the harmonic rhythm of the bass.", why: "Bass motion by 3rds and 4ths is the most common in Western music. Hearing these intervals in the bass trains your ear to the deepest layer of harmony." },
+        { text: "Now try singing the bass while strumming the full chords above. Your voice is the bass, your guitar is the harmony. Two layers from one person.", why: "Singing the bass while strumming is the ultimate dual-task for harmonic awareness. It forces your ear to track the lowest voice independently — exactly what arrangers and producers do." },
+        { text: "Try an alternate bass pattern: instead of roots, sing A-G-B-E (root of Am, 5th of C, 3rd of G, root of Em). Non-root bass notes create smoother, more interesting bass lines.", why: "Professional bass lines don't always play the root. Singing inversions and non-root bass notes reveals how voice leading works at the foundation of harmony." }
+      ],
+      feel: "The bass line should feel like the ground under your feet — steady, directional, pulling the whole progression forward. When you hear the bass, you hear the skeleton of the song.",
+      wrong: "If singing this low feels uncomfortable, transpose up an octave. The point is hearing bass motion, not straining your range. A2 is low for most tenors — E3-C4 works fine.",
+      sarah: "Gene, hearing bass motion is what separates people who play chords from people who understand harmony. Bass players hear this all the time. Now you will too.",
+      referencePitches: getPitchRange("E2", "C3"),
+      recorder: true
+    },
+    {
+      id: "ss-10-10",
+      time: 7,
+      title: "Chord Tone Targeting Through Changes",
+      type: "vocal",
+      what: "Sing ONLY the 3rd of each chord through a progression: C over Am, E over C, B over G, G over Em. Watch how the 3rd moves smoothly between chords — often by step. Then sing only 5ths. These smooth lines through chord changes are the secret architecture of great melodies.",
+      steps: [
+        { text: "Play Am-C-G-Em. Sing only the 3rd of each chord: C(3rd of Am)... E(3rd of C)... B(3rd of G)... G(3rd of Em). Hold each note for the full chord.", why: "The 3rds trace a smooth ascending line: C-E-B-G. This hidden melody through the chord changes is called a 'guide tone line.' Great melodies often follow these lines without the songwriter knowing it." },
+        { text: "Now sing only the 5th of each chord: E(5th of Am)... G(5th of C)... D(5th of G)... B(5th of Em). Another smooth line through the changes.", why: "The 5ths create a different guide tone line. Each chord tone (root, 3rd, 5th) traces its own path through the progression. These paths are the scaffolding melodies hang on." },
+        { text: "Alternate: sing the 3rd on Am, the 5th on C, the 3rd on G, the root on Em. Mix and match chord tones. Every combination creates a different melodic contour.", why: "When you can freely choose which chord tone to target on each chord, you can sculpt melodies with precision. This is how jazz musicians and skilled songwriters navigate harmony." },
+        { text: "Improvise a melody over Am-C-G-Em, but make sure you land on a chord tone (root, 3rd, or 5th) on beat 1 of each chord change. Between chord tones, anything goes. Record it.", why: "Landing on chord tones at structural moments is the secret of melodies that 'fit' the harmony. The approach notes between can be chromatic, scalar, anything — the landing points anchor the melody to the chords." }
+      ],
+      feel: "You should start hearing the invisible lines connecting chord tones across changes. When a melody feels 'right' over a progression, it's because it's following these hidden paths.",
+      wrong: "If you can't hear the 3rd or 5th of a chord, play the chord and sing up from the root: root-3rd-5th. Arpeggiate it. Then isolate just the 3rd. It takes practice to hear chord tones independently.",
+      sarah: "Gene, chord tone targeting is what makes the difference between melodies that wander and melodies that tell a story. Your voice will start finding these paths naturally once you've practiced hearing them.",
+      pitchContour: true,
+      referencePitches: getPitchRange("G3", "E4"),
+      recorder: true,
+      metronome: 80
+    },
+    {
+      id: "ss-10-11",
+      time: 6,
+      title: "The Deceptive Cadence",
+      type: "song",
+      drone: { root: "G", octave: 2, texture: "pure" },
+      what: "Set up V→I (D→G) resolution. Play it 3 times to set the expectation. Then on the 4th time: V→vi (D→Em). The 'surprise landing' that pulls the ground out — the chord SHOULD resolve to G but lands on Em instead. Feel how it creates emotional depth, delayed satisfaction.",
+      steps: [
+        { text: "Play D→G three times. Sing the resolution each time: D... G. Feel how satisfying V→I is. Your ear expects it. Your body relaxes into it.", why: "Setting up the expectation is essential. The deceptive cadence only works because V→I is so deeply ingrained. You need to feel the 'normal' resolution before you can feel the surprise." },
+        { text: "On the 4th time, play D→Em instead. Sing D... then Em. Feel the surprise — your ear expected G but got Em. It's not wrong, it's unexpected. The emotion is bittersweet, like a story that doesn't end where you thought.", why: "The deceptive cadence (V→vi) is one of music's most powerful emotional tools. Em shares two notes with G (G and B), so it's close enough to feel related but different enough to surprise." },
+        { text: "Build a 4-bar phrase: G-C-D-Em. The first three chords set up a standard I-IV-V, but instead of resolving to I, you land on vi. Try singing a melody that follows the surprise.", why: "Using the deceptive cadence in a progression creates a moment of 'not yet' — the resolution is delayed, and the listener leans forward wanting more. It's the harmonic equivalent of a cliffhanger." },
+        { text: "Find a deceptive cadence in a song you love. It's everywhere — Beatles, Radiohead, even reggae. Once you hear it, you can't unhear it. Record yourself playing a progression that uses it.", why: "Recognizing the deceptive cadence in real music proves your ear is developing. It's a hallmark of sophisticated songwriting that you can now use intentionally." }
+      ],
+      feel: "The deceptive cadence should feel like reaching for a doorknob and finding the door slightly further away than expected. Not wrong — just surprising. That surprise is pure emotional power.",
+      wrong: "If D→Em doesn't feel surprising, you haven't set up the expectation strongly enough. Play D→G five or six times first. Really let your ear settle into the expected resolution. Then the deception will land.",
+      sarah: "Gene, the deceptive cadence is everywhere in the music you love. It's the moment in a song where you think it's going to resolve and it goes somewhere more interesting instead. Now you can write those moments.",
+      pianoKeys: true,
+      recorder: true
+    },
+    {
+      id: "ss-10-12",
+      time: 7,
+      title: "Dark Modal Colors",
+      type: "song",
+      fretboard: { scale: "e-phrygian", position: 1 },
+      drone: { root: "E", octave: 2, texture: "tanpura" },
+      what: "Explore Phrygian mode (E-F-G-A-B-C-D) for dark/Spanish/cinematic feel. Play Em with F major as the bII chord. Then try harmonic minor (Am with G# leading tone) for tension. Two more colors for the palette. Hermanos Gutiérrez and Tinariwen use these constantly.",
+      steps: [
+        { text: "Play Em, then F major (1-3-3-2-1-1). Let the F ring. That half-step movement E→F is the sound of Phrygian — dark, exotic, ancient. Strum Em-F-Em-F and sing over it.", why: "The bII chord (F major in E) is the signature sound of Phrygian mode. That half-step root motion creates a gravity and darkness that no other mode has. It's the sound of flamenco, desert blues, and cinematic tension." },
+        { text: "Improvise over the Em drone using E Phrygian: E-F-G-A-B-C-D. Emphasize the F (the flat 2nd) — that's the note that makes Phrygian dark. Lean into it. Let it clash slightly against the Em drone.", why: "The b2 is what distinguishes Phrygian from natural minor. It's the note that creates the 'exotic' or 'dark' quality. Tinariwen's desert blues guitar lines emphasize this note constantly." },
+        { text: "Now try A harmonic minor: A-B-C-D-E-F-G#. Play Am, then E major (not Em — the G# makes it major). That G#→A leading tone creates intense pull toward resolution.", why: "Harmonic minor adds a raised 7th to natural minor, creating a strong V chord (E major in Am). The augmented 2nd gap (F to G#) gives it a Middle Eastern/Spanish flavor." },
+        { text: "Build a dark progression: Em-F-Am-Em (Phrygian), or Am-Dm-E-Am (harmonic minor). Record an improvisation over each. These are powerful songwriting colors.", why: "Phrygian and harmonic minor are the advanced dark modes. They go beyond standard minor into territory that evokes specific cultural and emotional landscapes." }
+      ],
+      feel: "Phrygian should feel like a desert at night — vast, dark, ancient. Harmonic minor should feel like a knife's edge — tense, dramatic, pulling toward resolution. Both are intensely emotional.",
+      wrong: "If Phrygian just sounds 'wrong,' make sure you're emphasizing the F note, not avoiding it. The b2 IS the mode. Play it loud and often until your ear accepts it as a color, not a mistake.",
+      sarah: "Gene, Phrygian and harmonic minor are the sounds of Hermanos Gutiérrez, Tinariwen, and the cinematic desert-blues world you love. These modes are your advanced palette for dark, evocative songwriting.",
+      referencePitches: getPitchRange("E3", "E4"),
+      recorder: true
+    },
+    {
+      id: "ss-10-13",
       time: 8,
       title: "Sing Over New Progressions",
       type: "song",
@@ -132,7 +267,7 @@ export const level10 = {
       metronome: 85,
       referencePitches: getPitchRange("C3", "A4"),
       recorder: true,
-      levelUp: "Can hear and sing intervals, feel major/minor/modal colors, navigate tension-resolution, and improvise melodies over unfamiliar chord progressions by ear."
+      levelUp: "Can hear and sing intervals, feel major/minor/modal colors, navigate tension-resolution, think in Nashville numbers for instant transposition, use borrowed chords (bVI, bVII, iv) for emotional color, control harmonic rhythm as a structural tool, hear bass motion as harmonic drive, target chord tones through changes, create surprise with deceptive cadences, access dark modal colors, and improvise melodies over unfamiliar chord progressions by ear."
     }
   ]
 };

@@ -97,6 +97,89 @@ export const level9 = {
     },
     {
       id: "ss-9-5",
+      time: 10,
+      title: "Global Fusion Original",
+      type: "song",
+      what: "Create a piece blending non-Western elements: Tinariwen-style single-chord trance + Khruangbin's Thai funk influence. One-chord drone, pentatonic melody, hypnotic repetition with micro-variation. This is your 'Coastal Psychedelic Omnivore' identity — genre boundaries don't exist.",
+      tracks: [{ name: "Desert Blues 75", src: "/desert-blues-75.mp3" }],
+      steps: [
+        { text: "Set up a one-chord drone on Am. Keep the guitar locked into a repeating 2-bar riff — thumb bass, pentatonic fragments on top. This is the trance foundation.", why: "Single-chord trance is the oldest musical form on earth. Tinariwen, Ali Farka Touré, and Khruangbin all build hypnotic worlds on one harmonic center." },
+        { text: "Sing a pentatonic melody that repeats with micro-variations — same shape each time, but slightly different note choices, rhythms, or ornaments. Repetition with evolution, not repetition with boredom.", why: "Micro-variation is how trance music stays hypnotic without becoming monotonous. Each pass through the melody is 90% the same, 10% new." },
+        { text: "Experiment with non-Western phrasing: melismatic slides between notes, grace notes before landing on a pitch, call-and-response between your voice and your guitar riff.", why: "Western singing tends to land cleanly on pitches. Global vocal traditions live in the spaces between notes — the slides, bends, and ornaments carry the emotion." },
+        { text: "Build intensity through vocal dynamics only — the guitar stays constant. Start quiet and intimate, gradually increase vocal presence and range over 3-4 minutes.", why: "When the harmony is static, dynamics become the architecture. The voice controls the entire emotional arc of the piece." },
+        { text: "Record the full piece. Let it breathe — 4-5 minutes is natural for trance-based music. This is genre-boundary-dissolving work.", why: "This recording captures your most adventurous creative identity. It belongs to no genre and every genre. That's the Coastal Psychedelic Omnivore sound." }
+      ],
+      feel: "This should feel ancient and borderless — like music that could come from any continent or any century. If genre labels stop making sense while you're playing, you've found it.",
+      wrong: "If it sounds like a normal pop song over Am, you're adding too much structure. Strip back. One chord. One riff. Let the voice do all the traveling.",
+      sarah: "Gene, this is the exercise that most reflects your listening identity. Tinariwen into Khruangbin into Tommy Guerrero — your playlists already live here. Now your voice does too.",
+      metronome: 75,
+      fretboard: { scale: "am-pentatonic", position: 1 },
+      referencePitches: getPitchRange("E3", "A4"),
+      recorder: true
+    },
+    {
+      id: "ss-9-6",
+      time: 7,
+      title: "Genre Micro-Timing Deep Dive",
+      type: "rhythm",
+      what: "Play the SAME 4-bar melody in 4 genre pockets: reggae (way behind the beat), surf (on top of the beat), soul (slightly behind), desert blues (floating, no fixed pocket). Record all four. Same notes, completely different songs. This proves that FEEL, not melody, defines genre.",
+      tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }, { name: "Surf Rock 120", src: "/surf-rock-120.mp3" }],
+      steps: [
+        { text: "Compose a simple 4-bar pentatonic melody over Am-C-G-Em. Memorize it cold — you need to play it identically four times with only the timing changing.", why: "Controlling for melody isolates the variable you're studying: micro-timing. Same notes, same order, same dynamics — only the pocket changes." },
+        { text: "Play it reggae: every note lands AFTER the beat. Lay back hard. The metronome clicks and you arrive late on purpose. Strum the offbeat chop underneath.", why: "Reggae pocket is the most behind-the-beat of any genre. The laid-back feel is not laziness — it's precise rhythmic placement that creates relaxation." },
+        { text: "Play it surf: every note lands ON or slightly AHEAD of the beat. Forward momentum, brightness, drive. Jangle strum underneath.", why: "Surf pocket pushes forward — it creates the feeling of motion, of driving down the coast. The energy comes from where the notes sit relative to the beat." },
+        { text: "Play it soul: notes land just slightly behind the beat — not as far back as reggae, but with a gentle drag. Warm, unhurried. Ghost-note strum underneath.", why: "Soul pocket is the subtlest — just a hair behind. It creates warmth and intimacy without the obvious laid-back quality of reggae." },
+        { text: "Play it desert blues: the notes float — sometimes ahead, sometimes behind, not locked to any consistent pocket. The timing breathes and wanders.", why: "Desert blues has the loosest relationship with the beat. The voice is free — the guitar drone holds time, and the voice exists in its own temporal space." },
+        { text: "Record all four versions back to back. Listen and compare. Same melody, four different genres. This is the power of micro-timing.", why: "Hearing the four versions consecutively makes the lesson visceral. You'll never again think genre is about chord choice — it's about where notes sit in time." }
+      ],
+      feel: "Each version should feel genuinely different — like four different songs. If they all sound the same, you're not exaggerating the timing differences enough.",
+      wrong: "If you can't hear the difference between versions, your timing shifts aren't big enough. Exaggerate. Make the reggae version absurdly late. Make the surf version push hard. Subtlety comes after you can do the extremes.",
+      sarah: "Gene, this is the most ear-opening exercise in Level 9. Once you hear that the same melody becomes four genres just by shifting timing, you'll never hear music the same way.",
+      metronome: 85,
+      recorder: true
+    },
+    {
+      id: "ss-9-7",
+      time: 10,
+      title: "Song Deconstruction II",
+      type: "listen",
+      what: "Full 5-layer analysis of an Allah-Las or Skinshape track: (1) Structure map — section lengths in bars, (2) Harmonic rhythm — how often chords change per section, (3) Melodic contour — where's the highest note and what word lands on it?, (4) Lyric density — syllables per beat in verse vs chorus, (5) Prosodic audit — do stressed syllables land on strong beats? This is reverse-engineering at the professional level.",
+      steps: [
+        { text: "Pick a track by Allah-Las, Skinshape, or DOPE LEMON. Listen through once without analyzing — just absorb the feel and identify section boundaries.", why: "The first listen is for the emotional map. Where do you feel tension, release, lift, resolution? These feelings correspond to structural and harmonic choices you'll identify on deeper listens." },
+        { text: "Layer 1 — Structure map: Listen again with a stopwatch. Mark when each section starts. Count bars. Write it down: Intro (4 bars), Verse 1 (8 bars), Chorus (8 bars), etc.", why: "Structure is the skeleton of a song. Most songs in your genres use 4-bar or 8-bar sections. Knowing this lets you build songs with the same proportional balance." },
+        { text: "Layer 2 — Harmonic rhythm: For each section, note how often the chords change. Verse might change every 2 bars. Chorus might change every bar. Bridge might hold one chord.", why: "Harmonic rhythm is one of the most overlooked compositional tools. Faster chord changes create urgency. Slower changes create spaciousness. Great songwriters vary this between sections." },
+        { text: "Layer 3 — Melodic contour: Map the melody's shape. Where is the highest note in the whole song? What word is it on? Is the verse melody arch-shaped or valley-shaped?", why: "The highest note in a song is almost never random — it lands on the most emotionally important word. This is a conscious compositional choice you can use in your own songs." },
+        { text: "Layer 4 — Lyric density: Count syllables per beat in the verse vs the chorus. Verses are usually denser (more words, storytelling). Choruses are usually sparser (fewer words, sustained notes).", why: "Lyric density creates contrast between sections. Dense verses feel narrative and intimate. Sparse choruses feel anthemic and emotional. The shift in density IS part of the song's emotional design." },
+        { text: "Layer 5 — Prosodic audit: Do the stressed syllables in the lyrics land on strong beats (1 and 3)? Or do they land on weak beats for a syncopated feel? Note any mismatches — where stressed words land on weak beats.", why: "Prosody — the marriage of language stress and musical stress — is what separates amateur lyrics from professional ones. When stress aligns with the beat, lyrics sound natural. When they don't, they sound forced." },
+        { text: "Write up your complete 5-layer analysis. Record a voice memo summarizing your findings and how you'll apply them to your own songwriting.", why: "The written analysis becomes a reference template. Every time you write a song, you can check it against these 5 layers to ensure professional-level craft." }
+      ],
+      feel: "This should feel like discovering hidden architecture in a building you've walked past a thousand times. The song hasn't changed — your ability to perceive its construction has.",
+      wrong: "If you're only getting surface-level observations ('the verse is quieter'), dig deeper. Count actual bars. Count actual syllables. The precision IS the exercise.",
+      sarah: "Gene, you've listened to these artists hundreds of times for pleasure. Now you're listening as a craftsman. Both modes of listening matter — but this one teaches you to build.",
+      checklist: true,
+      recorder: true
+    },
+    {
+      id: "ss-9-8",
+      time: 7,
+      title: "Strum Pattern as Signature",
+      type: "guitar",
+      what: "Create YOUR personal strum pattern — a hybrid that blends two of your genre feels. Maybe reggae offbeat + surf jangle accents. Or soul ghost notes + desert blues space. This pattern becomes your compositional fingerprint — the feel that makes your songs sound like YOU.",
+      steps: [
+        { text: "Review the strum patterns from your four genre originals (ss-9-1 through ss-9-4). Play each one for 30 seconds. Notice what you love about each.", why: "Before you can blend, you need to clearly hear the components. Each genre strum has a distinct character — the offbeat chop, the continuous jangle, the sparse drone, the ghost-note groove." },
+        { text: "Pick two genres to blend. Start with the dominant feel (the one you want to be the foundation) and layer in accents from the second genre.", why: "Blending is not averaging. One genre leads, the other seasons. A reggae foundation with surf jangle accents sounds completely different from a surf foundation with reggae offbeats." },
+        { text: "Refine the pattern until it feels natural and repeatable. Strum it for 2 full minutes without variation — make it automatic.", why: "A signature pattern needs to be automatic. If you have to think about it, it's not a signature yet. Repetition burns it into your motor memory." },
+        { text: "Give it a name. 'Desert Jangle.' 'Porch Soul.' 'Reef Rock.' Whatever captures the blend. Record 2 minutes of the pattern over Am-C-G-Em.", why: "Naming your pattern makes it real. Professional musicians name their feels. This pattern is now a tool in your toolkit — something you can call up for any future song." },
+        { text: "Try singing a simple melody over it. Does the hybrid strum inspire different melodic ideas than either genre alone? That's the creative payoff.", why: "A new strum pattern generates new melodies. The rhythm underneath shapes the rhythm above. Your signature strum will naturally produce songs that sound like you." }
+      ],
+      feel: "When the hybrid strum locks in, it should feel like it was always there — obvious in hindsight. If it feels forced, try a different genre combination.",
+      wrong: "If your hybrid sounds like one genre with random disruptions from the other, the blend isn't integrated. The two feels need to merge into a single, cohesive pattern — not alternate between sections.",
+      sarah: "Gene, every great guitarist has a signature strum feel. Mark Speer (Khruangbin), Angus Young, Bob Marley — you hear two bars and know who's playing. Now you're building yours.",
+      metronome: 85,
+      recorder: true
+    },
+    {
+      id: "ss-9-9",
       time: 8,
       title: "Genre Blend",
       type: "song",
@@ -117,7 +200,66 @@ export const level9 = {
       recorder: true
     },
     {
-      id: "ss-9-6",
+      id: "ss-9-10",
+      time: 7,
+      title: "Tempo as Mood",
+      type: "song",
+      what: "Take one of your L9 originals and play it at three tempos: 75 BPM (cinematic, spacious), 90 BPM (groove, conversational), 120 BPM (energetic, driving). Each tempo transforms the emotional character completely. Tempo is a compositional decision, not a default.",
+      steps: [
+        { text: "Pick your favorite original from ss-9-1 through ss-9-4. Play it at its original tempo to establish the baseline. This is how you know the song.", why: "The baseline is your reference point. You need to know what the song sounds like 'normally' before you can hear how tempo transforms it." },
+        { text: "Play it at 75 BPM. Everything slows down — the strum becomes cinematic, the melody breathes, the spaces between notes become part of the music. It feels like a desert sunset.", why: "Slow tempos reveal space. Notes that flew by at 120 BPM now hang in the air. The song becomes contemplative, filmic, weighted." },
+        { text: "Play it at 90 BPM. This is the conversational sweet spot — the tempo of walking, of talking, of natural human rhythm. The groove settles in comfortably.", why: "90 BPM is the center of your genre world — soul, Khruangbin, DOPE LEMON all live here. It's the tempo that feels most natural for your porch register." },
+        { text: "Play it at 120 BPM. The song becomes energetic and driving — surf energy, forward momentum. The same melody now demands more breath and more commitment.", why: "Fast tempos demand different vocal technique. You'll naturally phrase differently, breathe differently, feel differently. The song transforms." },
+        { text: "Record all three. Listen back to back. Which tempo serves the song's emotional message best? That's the tempo you choose. Tempo is a compositional decision.", why: "Most beginning songwriters never try their songs at different tempos. Professionals always do. The 'right' tempo is the one that best serves the song's emotional intent." }
+      ],
+      feel: "Each tempo should feel like a fundamentally different song. If the three versions feel similar, you're not committing fully to each tempo's character.",
+      wrong: "If the slow version sounds like a normal song played lazily, you're not adjusting your delivery. At 75 BPM, sustain notes longer, add more space, let the guitar ring. Each tempo demands different musical behavior.",
+      sarah: "Gene, this exercise reveals something profound: you have more songs than you think. Every original you've written contains at least three songs hiding inside it at different tempos.",
+      metronome: 75,
+      speedLadder: { start: 75, end: 120, step: 15 },
+      recorder: true
+    },
+    {
+      id: "ss-9-11",
+      time: 7,
+      title: "Capo as Catalyst",
+      type: "guitar",
+      what: "Put a capo at fret 2. Play your familiar Am shape — it's now Bm. The voicings sound different, the key sits differently in your voice, new melodies emerge. Try capo 3, capo 5. Cross-modal learning: changing your physical interface sparks new ideas.",
+      steps: [
+        { text: "Play Am-C-G-Em without a capo. Sing a familiar melody from one of your originals. This is home base.", why: "You need the contrast. Playing without the capo first makes the change in sound and feel immediately obvious when the capo goes on." },
+        { text: "Capo at fret 2. Play the same shapes — they're now Bm-D-A-F#m. Sing your melody. Notice: the key is higher, the guitar voicings ring differently, the whole character shifts.", why: "The capo changes the key without changing your finger patterns. Your hands do the same thing, but your ears hear something new. This is why 54% of singer-songwriters say capo expanded their vocal range." },
+        { text: "Capo at fret 3. Same shapes — now Cm-Eb-Bb-Gm. Even higher. Does your melody still work? Does your voice want to go somewhere different? Follow it.", why: "As the key rises, your voice is pushed into different parts of your range. Melodies that sat comfortably in Am might feel strained — or might feel thrilling — in Cm." },
+        { text: "Capo at fret 5. Shapes become Dm-F-C-Am. The guitar sounds almost mandolin-like — bright, compressed, chimey. Improvise a new melody that fits this new sound world.", why: "High capo positions transform the guitar's timbre. The shorter string length produces a brighter, more percussive sound that inspires different musical ideas." },
+        { text: "Pick the capo position where your voice and the guitar sound best together. Record a 2-minute improvisation. This new key might become your next song's home.", why: "The right key for a song is where the voice sits most expressively and the guitar rings most beautifully. The capo lets you find that intersection without learning new chord shapes." }
+      ],
+      feel: "Moving the capo should feel like redecorating a familiar room — same furniture, completely different mood. If new melodic ideas start flowing, the capo is doing its job.",
+      wrong: "If you're just playing the same thing higher and calling it different, slow down and actually listen. The key change affects which notes are in your comfortable range, which changes the melody. Let your voice respond to the new key.",
+      sarah: "Gene, the capo is the simplest creative tool in your bag. Same three-chord shapes you already know, infinite new keys and timbres. It's a cheat code for songwriting.",
+      fretboard: { scale: "am-pentatonic", position: 1 },
+      recorder: true
+    },
+    {
+      id: "ss-9-12",
+      time: 8,
+      title: "Loop Thinking",
+      type: "song",
+      what: "Even without a loop pedal: record a 4-bar strum on your phone, play it back, sing over the playback. Then imagine adding a second vocal layer — harmony, counter-melody, percussive rhythm. Loop thinking = arrangement thinking. If you had infinite you's, what would each one play?",
+      tracks: [{ name: "Dub Reggae 85", src: "/dub-reggae-85.mp3" }],
+      steps: [
+        { text: "Record a clean 4-bar strum loop on your phone: Am-C-G-Em at 85 BPM. Keep it tight and even — this is your backing track.", why: "The first loop is the foundation. It needs to be rhythmically solid because everything you layer on top will be measured against it." },
+        { text: "Play it back. Sing a verse melody over it. This is Layer 2 — voice over guitar. You've done this before, but now think of it as LAYERING, not just singing.", why: "Reframing singing-over-guitar as 'adding a layer' changes your mindset from performer to arranger. You're building a sonic structure, not just playing a song." },
+        { text: "Now imagine Layer 3: if you could add a second voice, what would it do? A harmony a third above? A counter-melody in a different rhythm? Hum it while the recording plays.", why: "Imagining layers you can't yet record develops your arrangement ear. Professional producers think in layers — bass, rhythm, lead, harmony, texture. You're learning to think this way." },
+        { text: "Imagine Layer 4: a percussive vocal — beatboxing, rhythmic breathing, tongue clicks. Even crudely imagined, this adds a textural dimension.", why: "Percussive vocal layers are used by Ed Sheeran, Jacob Collier, and Bon Iver. Thinking about them expands your conception of what 'your voice' can contribute to a song." },
+        { text: "Record a voice memo describing your imagined arrangement: 'Layer 1 is guitar, Layer 2 is melody, Layer 3 would be a high harmony on the chorus, Layer 4 would be rhythmic breathing in the verse.' This is your first arrangement sketch.", why: "Describing the arrangement in words makes it concrete and recordable. When you eventually have a loop pedal or DAW, you'll know exactly what to build." }
+      ],
+      feel: "Loop thinking should feel expansive — like seeing your songs in 3D instead of 2D. Each layer adds depth. If you start hearing possibilities you didn't notice before, that's the shift happening.",
+      wrong: "If you're only thinking about the melody, you're not thinking in layers. Force yourself to imagine what a second and third voice would do. Even if the ideas are rough, the multi-layer mindset is what matters.",
+      sarah: "Gene, this is how Khruangbin builds tracks — layers of simple parts that create something complex together. You're learning to think like a producer, not just a performer.",
+      metronome: 85,
+      recorder: true
+    },
+    {
+      id: "ss-9-13",
       time: 8,
       title: "Parasitic Songwriting",
       type: "song",
@@ -137,7 +279,7 @@ export const level9 = {
       recorder: true
     },
     {
-      id: "ss-9-7",
+      id: "ss-9-14",
       time: 10,
       title: "Complete Original",
       type: "song",
@@ -160,7 +302,7 @@ export const level9 = {
       recorder: true,
       phraseForm: { pattern: ["Intro", "V", "Ch", "V", "Ch", "Outro"], barsPerSection: [4, 8, 8, 8, 8, 4], labels: { Intro: "Intro", V: "Verse", Ch: "Chorus", Outro: "Outro" } },
       volumeContour: true,
-      levelUp: "Can create complete original songs in 4 genre styles (reggae, surf-psych, desert blues, soul), blend genres, and compose a finished song with verse-chorus structure, melody, and lyrics."
+      levelUp: "Can create complete original songs in 4 genre styles (reggae, surf-psych, desert blues, soul), create genre-fusion originals, shift micro-timing to transform genre feel, deconstruct songs at all 5 analytical layers, craft a personal strum signature, use tempo as emotional lever, explore capo for compositional catalyst, think in loops/layers, blend genres, and compose a finished song with verse-chorus structure, melody, and lyrics."
     }
   ]
 };

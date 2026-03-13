@@ -72,6 +72,81 @@ export const level11 = {
     },
     {
       id: "ss-11-4",
+      time: 7,
+      title: "Pre-Chorus: The Ramp",
+      type: "song",
+      what: "The 2-4 bar section between verse and chorus that builds anticipation. Rising melody, building dynamics, harmonic tension — often landing on the V chord. Write a pre-chorus for one of your L9 songs. The pre-chorus makes the chorus arrival feel inevitable and earned.",
+      steps: [
+        { text: "Take your verse and chorus from ss-11-1/ss-11-2. Sing the last line of the verse, then jump straight into the chorus. Notice the gap — the verse ends intimate, the chorus starts big. The pre-chorus fills that gap.", why: "Without a pre-chorus, the verse-to-chorus transition can feel abrupt. The ramp smooths the dynamic shift and builds anticipation — like a plane accelerating before takeoff." },
+        { text: "Write 2-4 bars of melody that sit BETWEEN the verse's low range and the chorus's high range. Start near the verse's top note and rise toward the chorus's starting note. Use shorter, more urgent phrases.", why: "The pre-chorus melody creates a literal pitch ramp. Rising pitch triggers anticipation in the listener's brain — they can feel the chorus coming before it arrives." },
+        { text: "Harmonically, move toward the V chord (D if you're in G, E if you're in Am). The V chord creates tension that resolves when the chorus lands on I. Try: pre-chorus ends on V... pause... chorus explodes on I.", why: "The dominant chord is the most tension-heavy chord in the key. Ending the pre-chorus on V is like pulling back a slingshot — the chorus is the release." },
+        { text: "Build dynamics through the pre-chorus: start at the verse's mp volume and crescendo to the chorus's f. Increase strum intensity bar by bar. Record the full V → Pre-Chorus → Chorus sequence.", why: "Dynamic building reinforces the melodic and harmonic ramp. All three dimensions — pitch, harmony, volume — should point toward the chorus like arrows." }
+      ],
+      feel: "The pre-chorus should feel like the moment on a roller coaster when you're climbing the hill — you know the drop is coming, the anticipation builds, and the chorus is the drop.",
+      wrong: "If the pre-chorus sounds like another verse, the melody isn't rising enough. If it sounds like an early chorus, it's too high and too loud too soon. The ramp must be clearly between verse and chorus energy.",
+      sarah: "Gene, pre-choruses are the secret weapon in psych-surf and reggae-rock. That 2-bar ramp before the chorus drops — Allah-Las do this constantly. It's what makes their choruses hit so hard.",
+      metronome: 80,
+      referencePitches: getPitchRange("E3", "A4"),
+      volumeMeter: true,
+      recorder: true
+    },
+    {
+      id: "ss-11-5",
+      time: 7,
+      title: "Hook Inventory",
+      type: "song",
+      what: "Four types of hooks: melodic (catchy tune), rhythmic (infectious pattern), lyric (memorable phrase), guitar (signature riff). Take one of your songs and identify which hook type each section relies on. A great song needs at least one STRONG hook. Write a new hook for the weakest section.",
+      steps: [
+        { text: "Play through one of your originals and label each section's primary hook type. Verse hook: is it the melody, the rhythm, a lyric phrase, or a guitar figure? Do the same for chorus and bridge.", why: "Most songwriters accidentally rely on one hook type everywhere. Identifying what you're doing makes you intentional about what's catching the listener's ear." },
+        { text: "Rate each hook 1-5 for 'stickiness' — could someone hum or repeat it after one listen? A 5 is 'stuck in your head all day.' A 1 is 'I can't remember how it goes.' Be honest.", why: "Stickiness is the objective measure of a hook's effectiveness. If YOU can't remember your own hook after a day, a listener has no chance." },
+        { text: "Find the weakest section (lowest stickiness score). Now write a new hook for it using a DIFFERENT hook type than the section currently uses. If the verse has a weak melodic hook, try a rhythmic hook instead.", why: "Switching hook types forces creative thinking. A section that fails as a melody might succeed as a rhythm. Cross-pollinating hook types strengthens the whole song." },
+        { text: "Play the full song with the new hook integrated. Record it. Does the weakest section now pull its weight? The song should have no 'dead zones' where the listener's attention drifts.", why: "A song is only as strong as its weakest section. Audiences don't remember the best moment — they remember the moment they stopped paying attention." }
+      ],
+      feel: "A hook-rich song should feel magnetic — every section has something that grabs. Like walking through a market where every stall has something that catches your eye.",
+      wrong: "If you can't identify any hooks, the song may be too meandering. Every section needs at least one repeating element that the ear latches onto. If everything is a hook, nothing is — pick the strongest and let it shine.",
+      sarah: "Gene, Khruangbin is basically a masterclass in hook stacking — melodic bass hook, rhythmic guitar hook, and that groove underneath. Your songs have natural hooks in them; this exercise makes you find and sharpen them.",
+      checklist: true,
+      recorder: true
+    },
+    {
+      id: "ss-11-6",
+      time: 8,
+      title: "Song Deconstruction III: Architecture",
+      type: "listen",
+      what: "Full architectural analysis of a DOPE LEMON or Skinshape song: section lengths (are verses longer than choruses?), dynamic arc (where's the peak?), hook placement (when does the hook first appear?), harmonic rhythm per section (does the chorus change chords faster?). Map the blueprint, then compare to YOUR songs.",
+      steps: [
+        { text: "Choose a DOPE LEMON or Skinshape track. Listen once without analyzing — just feel it. Then listen again with a timer. Write down every section boundary and its length in bars or seconds.", why: "Timing reveals structural decisions. Most listeners never notice that the first verse is often longer than the second, or that the chorus is half the length of the verse. These are deliberate choices." },
+        { text: "Map the dynamic arc: rate each section 1-10 for intensity. Where is the peak? How quickly does the song build to it? How does it come down? Draw the intensity curve.", why: "Professional songs have carefully shaped dynamic arcs. The peak is almost never at the beginning or end — it's usually 60-75% through the song. This is the 'golden section' of arrangement." },
+        { text: "Identify the hook's first appearance. How many seconds in? Does it appear in the intro, or is it withheld until the chorus? Count how many times the hook repeats across the whole song.", why: "Hook placement is strategic. Some songs front-load the hook (verse 1 contains it). Others withhold it (chorus only). Both approaches work — but the choice should be intentional." },
+        { text: "Compare to one of YOUR songs: are your sections similar lengths? Is your dynamic arc as shaped? Does your hook appear at the right moment? Write down one structural change you'd make to your song based on what you learned.", why: "Comparing your instincts to professional choices reveals your blind spots. Most developing songwriters make all sections the same length and have flat dynamic arcs. This exercise calibrates your structural sense." }
+      ],
+      feel: "This should feel like X-raying a building — you're seeing the steel beams behind the beautiful facade. Once you see the structure, you can't un-see it. Every song becomes a lesson.",
+      wrong: "If you're just vibing to the song without counting bars and noting dynamics, you're listening for pleasure, not analysis. Use a stopwatch. Write things down. Analysis requires precision.",
+      sarah: "Gene, DOPE LEMON songs sound effortless but they're meticulously structured. Angus Stone knows exactly when to drop the hook, when to peak, when to pull back. Steal his blueprints.",
+      checklist: true,
+      phraseForm: { pattern: ["V", "V", "Ch", "V", "Ch", "Br", "Ch"], barsPerSection: [8, 8, 8, 8, 8, 4, 8] }
+    },
+    {
+      id: "ss-11-7",
+      time: 8,
+      title: "Contrast Toolkit",
+      type: "song",
+      what: "Six dimensions of contrast between verse and chorus: (1) melodic range, (2) rhythmic density, (3) harmonic rhythm, (4) guitar texture (strum vs pick), (5) dynamics, (6) lyric density. Take a song and toggle ONE dimension at a time. Then stack three dimensions. The more dimensions you contrast, the stronger the section shift feels.",
+      steps: [
+        { text: "Play your verse and chorus back to back. Rate each of the 6 dimensions on a 1-5 scale for contrast: 1 = verse and chorus are identical on that dimension, 5 = they're opposites. Write down all 6 scores.", why: "Quantifying contrast reveals where your sections differentiate and where they blend together. Most songs lean on 1-2 dimensions and ignore the rest — that's leaving tools on the table." },
+        { text: "Pick the lowest-scoring dimension. Change ONLY that one dimension between verse and chorus. If rhythmic density is low-contrast, make the verse sparse (whole notes) and chorus dense (eighth notes). Keep everything else the same.", why: "Isolating one dimension lets you hear exactly what that contrast contributes. Changing everything at once is overwhelming. One variable at a time teaches your ear what each dimension does." },
+        { text: "Now stack three high-contrast dimensions together. For example: verse = low range + fingerpick + quiet. Chorus = high range + strum + loud. Play the transition. Feel how multiple dimensions amplify the shift.", why: "Stacking contrast dimensions creates multiplicative impact. One dimension of contrast sounds subtle. Three dimensions sounds like a different song section. This is what makes professional chorus arrivals hit hard." },
+        { text: "Record the full verse-chorus sequence with 3 stacked dimensions of contrast. Listen back. Can you hear each dimension contributing? The transition should feel like walking from a dim room into sunlight.", why: "The recording test is honest. If the contrast isn't audible on playback, it's in your head, not in the performance. Push each dimension further until the playback reveals it clearly." }
+      ],
+      feel: "Stacking contrast should feel like flipping a switch — the song transforms. Verse and chorus should feel like two sides of the same coin: related but unmistakably different.",
+      wrong: "If the verse and chorus still sound the same after toggling dimensions, you're not pushing far enough. Exaggerate each dimension until it's almost comical, then dial it back 20%. The 'too much' point teaches you where 'just right' lives.",
+      sarah: "Gene, the Allah-Las are masters of subtle multi-dimensional contrast — their verses and choruses share the same vibe but the shift is unmistakable. It's not one big change, it's five small ones stacking up.",
+      metronome: 80,
+      volumeMeter: true,
+      recorder: true
+    },
+    {
+      id: "ss-11-8",
       time: 6,
       title: "Intro & Outro Framing",
       type: "guitar",
@@ -89,7 +164,7 @@ export const level11 = {
       recorder: true
     },
     {
-      id: "ss-11-5",
+      id: "ss-11-9",
       time: 8,
       title: "Dynamic Mapping",
       type: "song",
@@ -109,7 +184,62 @@ export const level11 = {
       recorder: true
     },
     {
-      id: "ss-11-6",
+      id: "ss-11-10",
+      time: 8,
+      title: "The 48-Hour Rewrite",
+      type: "song",
+      what: "Take a song from L9 you haven't touched in 48+ hours. Play it once. Listen to the recording. Now rewrite: change one melody note per section, tighten one lyric line, adjust one dynamic moment. Fresh ears hear what writing-mode ears miss. The 'distance rule': always wait before revising.",
+      steps: [
+        { text: "Pick a song you wrote at least 2 days ago. Don't look at notes or recordings first. Play it from memory — whatever you remember IS the song. What you forgot wasn't memorable enough.", why: "Memory is the first editor. If you can't remember a phrase after 48 hours, the listener won't remember it after 48 seconds. What sticks is what works." },
+        { text: "Now listen to your original recording. Compare what you remembered to what you recorded. Note the differences — the parts you forgot, the parts you changed unconsciously. These are revision targets.", why: "The gap between memory and recording reveals the song's weak spots. Your brain already edited it while you weren't looking — trust those instincts." },
+        { text: "Make exactly three changes: (1) one melody note per section — find the note that feels predictable and make it surprising. (2) One lyric line — find the weakest line and rewrite it tighter. (3) One dynamic moment — find where the energy sags and fix it.", why: "Limiting changes to three prevents over-revision. Rewriting everything destroys what worked. Surgical editing — three precise cuts — improves the song without killing its spirit." },
+        { text: "Record the revised version. Compare it to the original. The three changes should be audible improvements. If any change made the song worse, revert it. Not every edit is an improvement.", why: "The comparison test keeps revision honest. Sometimes the original was better. Having both recordings lets you choose the strongest version of each moment." }
+      ],
+      feel: "Revision should feel like polishing — the song is already there, you're just removing the rough edges. Not rebuilding, not second-guessing. Refining.",
+      wrong: "If you're rewriting the entire song, you're not revising — you're starting over. Limit yourself to three changes. If the song needs more than that, it might need to be shelved, not fixed.",
+      sarah: "Gene, every great songwriter revises. The first draft is discovery. The rewrite is craft. Angus Stone doesn't release first takes — he lets songs sit, then comes back with fresh ears and a sharper knife.",
+      checklist: true,
+      recorder: true
+    },
+    {
+      id: "ss-11-11",
+      time: 7,
+      title: "Alternative Song Forms",
+      type: "song",
+      what: "Beyond verse-chorus: (1) AAA (strophic — same melody, different lyrics each verse, like folk and blues), (2) ABAC (verse-chorus-verse-different chorus), (3) Through-composed (no repeated sections — a journey), (4) One-section loop (Tinariwen: one groove, evolving lyrics). Write a short piece in a non-standard form.",
+      steps: [
+        { text: "Write a 3-verse AAA song: same chord progression, same melody, three different sets of lyrics. No chorus. The melody carries the song; the lyrics tell a story across three verses. Think Dylan, Nick Drake, desert blues.", why: "Strophic form is the oldest song structure — it trusts the melody and lyrics completely. Without a chorus to lean on, every verse must be compelling. This builds lyric-writing muscle." },
+        { text: "Now try a one-section loop: one 4-8 bar progression that repeats for 2-3 minutes. The groove never changes. Instead, evolve the lyrics — start simple, add detail, build intensity, resolve. Like Tinariwen or early reggae.", why: "The loop form teaches you that repetition isn't boring — it's hypnotic. When the music stays constant, small changes in lyrics, delivery, or dynamics become magnified. Less structure, more presence." },
+        { text: "Try through-composed: write 4 sections where each one has a different melody and different chords. No section repeats. The song moves forward like a story with no refrain. This is the hardest form.", why: "Through-composed forces constant invention. Without repetition to anchor the listener, every section must be strong enough to stand alone. It builds compositional endurance." },
+        { text: "Choose the form that felt most natural. Expand it to a full 2-3 minute piece. Record it. Some songs want to be verse-chorus. Others want to be loops or journeys. The form should serve the song's emotional truth.", why: "Different emotions call for different forms. Longing suits AAA (the same feeling, different words). Joy suits verse-chorus (the hook returns). Restlessness suits through-composed (always moving). Matching form to feeling is artistry." }
+      ],
+      feel: "Alternative forms should feel liberating — like discovering you can paint without a canvas. Not every song needs a chorus. Not every song needs sections. Some songs just need a groove and a voice.",
+      wrong: "If the alternative form feels random or structureless, you've gone too far. Even AAA and loop forms have internal logic — repetition, variation, arc. Structure exists in every form; it's just expressed differently.",
+      sarah: "Gene, your psych-surf and desert blues influences are BUILT on non-standard forms. Tinariwen loops one riff for 7 minutes. Tommy Guerrero barely uses choruses. These forms are in your DNA — lean into them.",
+      phraseForm: { pattern: ["A", "A", "A"], barsPerSection: 8 },
+      recorder: true
+    },
+    {
+      id: "ss-11-12",
+      time: 8,
+      title: "Arranging for Emotional Arc",
+      type: "song",
+      what: "Four-pass arrangement refinement of your best song: Pass 1 — melody contour (does each section have a distinct shape?). Pass 2 — dynamics (verse quiet, chorus full, bridge stripped). Pass 3 — guitar texture (verse fingerpick, chorus strum). Pass 4 — vocal delivery (verse intimate, chorus projected). One element per pass prevents overwhelm.",
+      steps: [
+        { text: "Pass 1 — Melody contour: Play through your song and draw the melody shape of each section. Verse should descend or stay flat. Chorus should rise. Bridge should zigzag. If two sections have the same contour, rewrite one.", why: "Distinct melodic contours make sections instantly recognizable. The listener's ear tracks the shape of the melody before it tracks the notes. Different shapes = different sections = clear architecture." },
+        { text: "Pass 2 — Dynamics: Play the song focusing ONLY on volume. Verse at mp. Pre-chorus crescendo. Chorus at f. Bridge drops to p. Final chorus at ff. Ignore melody refinement — just nail the dynamic map.", why: "Isolating dynamics from melody lets you focus on one dimension of the arrangement. When dynamics are right, the song breathes naturally — expanding and contracting like a living thing." },
+        { text: "Pass 3 — Guitar texture: Play the song focusing ONLY on how you play the guitar. Verse: fingerpick or gentle strum. Chorus: full strum or aggressive rhythm. Bridge: arpeggios or silence. Each section gets a distinct guitar voice.", why: "Guitar texture is the most underused arrangement tool for singer-songwriters. Changing HOW you play the guitar between sections is as powerful as changing WHAT you play." },
+        { text: "Pass 4 — Vocal delivery: Sing the song focusing ONLY on how your voice sounds. Verse: intimate, close, conversational. Chorus: open, projected, confident. Bridge: vulnerable, uncertain. Record the full four-pass refined arrangement.", why: "Vocal delivery is the final layer. When melody, dynamics, texture, and delivery all shift between sections, the song transforms from a sequence of chords into a performed piece of art." }
+      ],
+      feel: "Each pass should feel like adding a layer of paint. After four passes, the arrangement should feel rich, intentional, and complete — every moment considered, every section distinct.",
+      wrong: "If you're trying to fix everything at once, you're ignoring the pass system. ONE element per pass. The power is in isolation — when you focus on dynamics alone, you hear things you miss when juggling everything.",
+      sarah: "Gene, this is how producers think. They don't build a mix all at once — they do passes. Melody pass. Dynamics pass. Texture pass. Each pass makes the song 25% better. Four passes and you've got a professional arrangement.",
+      volumeContour: true,
+      checklist: true,
+      recorder: true
+    },
+    {
+      id: "ss-11-13",
       time: 10,
       title: "Complete Arranged Song",
       type: "song",
@@ -131,7 +261,7 @@ export const level11 = {
       recorder: true,
       phraseForm: { pattern: ["Intro", "V1", "Ch", "V2", "Ch", "Br", "Ch", "Outro"], barsPerSection: [4, 8, 8, 8, 8, 8, 8, 4], labels: { Intro: "Intro", V1: "Verse 1", V2: "Verse 2", Ch: "Chorus", Br: "Bridge", Outro: "Outro" } },
       volumeContour: true,
-      levelUp: "Can compose and perform a fully arranged original song with verse/chorus/bridge structure, dynamic mapping, intentional intros/outros, and contrasting sections."
+      levelUp: "Can compose and perform a fully arranged original song with verse/chorus/bridge structure, dynamic mapping, intentional intros/outros, and contrasting sections. Can build pre-choruses that create anticipation, identify and strengthen hooks across 4 types, deconstruct professional songs architecturally, use 6 dimensions of contrast between sections, rewrite with fresh ears after 48 hours, compose in non-standard forms, and refine arrangements through systematic multi-pass editing."
     }
   ]
 };
