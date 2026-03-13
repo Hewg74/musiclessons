@@ -1796,7 +1796,7 @@ function CompactBeatEditor({ metro, theme: T }) {
   }, []);
 
   return (
-    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", height: "100%", width: "100%", padding: "4px 8px" }}>
+    <div style={{ display: "flex", gap: 6, alignItems: "center", height: "100%", width: "100%", padding: "4px 4px" }}>
       {metro.beatConfig.map((bc, i) => {
         const acc = ACCENT_CONFIG[bc.accent];
         const isActive = internalBeat === i;
@@ -2945,9 +2945,11 @@ function FloatingMetronome({ metro, setTab, isDark, theme: T }) {
           </button>
 
           {/* Integrated Visualizer & Editor */}
-          <div style={{ flex: 1, display: "flex", alignItems: "center", padding: "8px 6px", overflow: "visible" }}>
+          <div style={{ display: "flex", alignItems: "center", padding: "8px 0" }}>
             <CompactBeatEditor metro={metro} theme={T} />
           </div>
+
+          <div style={{ flex: 1 }} /> {/* Blank space in the middle to push controls left and arrow right */}
 
           <button onClick={(e) => { e.stopPropagation(); setIsExpanded(!isExpanded); }} style={{
             background: "none", border: "none", color: isExpanded ? T.gold : T.textMed, padding: "8px",

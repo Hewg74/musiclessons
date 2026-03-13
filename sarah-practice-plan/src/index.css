@@ -183,7 +183,7 @@ button {
 /* Floating Metronome */
 .floating-metronome {
   position: fixed;
-  bottom: 80px; /* Default: above bottom-nav */
+  bottom: 64px; /* Flush exactly with the bottom-nav height */
   left: 0; 
   right: 0;
   width: 100%;
@@ -201,6 +201,12 @@ button {
   justify-content: flex-start; /* Align contents left */
   padding: 8px 16px;
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .floating-metronome {
+    bottom: calc(64px + env(safe-area-inset-bottom));
+  }
 }
 
 .bottom-nav-dark ~ .floating-metronome,
