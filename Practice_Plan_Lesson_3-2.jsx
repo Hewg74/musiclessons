@@ -547,13 +547,13 @@ const VOCAL_EXERCISES = [
 // ─── SOUND KITS ─────────────────────────────────────────────────────
 // Each kit defines synth params for Tone.js — different timbres
 const SOUND_KITS = {
-  modernClick: { label: "Modern Click", isSample: true, urls: { "G5": "/sounds/click_high.mp3", "C5": "/sounds/click_low.mp3" }, volume: 6, pitchAccent: "G5", pitchNormal: "C5" },
+  modernClick: { label: "Modern Click", isSample: true, urls: { "G5": "click_high.mp3", "C5": "click_low.mp3" }, volume: 6, pitchAccent: "G5", pitchNormal: "C5" },
   mechanical: { label: "Mechanical", synthType: "synth", osc: "square", attack: 0.001, decay: 0.015, volume: 4, pitchAccent: "E4", pitchNormal: "A3", duration: "64n" },
-  wood: { label: "Woodblock", isSample: true, urls: { "G5": "/sounds/wood_high.mp3", "C5": "/sounds/wood_low.mp3" }, volume: 5, pitchAccent: "G5", pitchNormal: "C5" },
-  chime: { label: "Chimes", isSample: true, urls: { "G5": "/sounds/bell_high.mp3", "C5": "/sounds/bell_low.mp3" }, volume: 6, pitchAccent: "G5", pitchNormal: "C5" },
-  drums: { label: "Drum Kit", isSample: true, urls: { "G5": "/sounds/kick.mp3", "C5": "/sounds/hihat.mp3" }, volume: 6, pitchAccent: "G5", pitchNormal: "C5" },
-  cowbell: { label: "Cowbell", isSample: true, urls: { "G5": "/sounds/cowbell.mp3", "C5": "/sounds/cowbell.mp3" }, volume: -2, pitchAccent: "G5", pitchNormal: "C5" },
-  shaker: { label: "Shaker", isSample: true, urls: { "G5": "/sounds/shaker.mp3", "C5": "/sounds/shaker.mp3" }, volume: 2, pitchAccent: "G5", pitchNormal: "C5" },
+  wood: { label: "Woodblock", isSample: true, urls: { "G5": "wood_high.mp3", "C5": "wood_low.mp3" }, volume: 5, pitchAccent: "G5", pitchNormal: "C5" },
+  chime: { label: "Chimes", isSample: true, urls: { "G5": "bell_high.mp3", "C5": "bell_low.mp3" }, volume: 6, pitchAccent: "G5", pitchNormal: "C5" },
+  drums: { label: "Drum Kit", isSample: true, urls: { "G5": "kick.mp3", "C5": "hihat.mp3" }, volume: 6, pitchAccent: "G5", pitchNormal: "C5" },
+  cowbell: { label: "Cowbell", isSample: true, urls: { "G5": "cowbell.mp3", "C5": "cowbell.mp3" }, volume: -2, pitchAccent: "G5", pitchNormal: "C5" },
+  shaker: { label: "Shaker", isSample: true, urls: { "G5": "shaker.mp3", "C5": "shaker.mp3" }, volume: 2, pitchAccent: "G5", pitchNormal: "C5" },
   softTick: { label: "Soft Tick", synthType: "synth", osc: "sine", attack: 0.005, decay: 0.02, volume: 2, pitchAccent: "E5", pitchNormal: "C5", duration: "64n" },
   hihat: { label: "Synth Hi-Hat", synthType: "metal", frequency: 250, resonance: 4000, harmonicity: 5.1, modIndex: 16, octaves: 1.5, attack: 0.001, decay: 0.04, volume: -6, duration: "32n" },
   rimshot: { label: "Rimshot", synthType: "membrane", osc: "square", pitchDecay: 0.02, octaves: 4, attack: 0.001, decay: 0.04, volume: -2, pitchAccent: "E4", pitchNormal: "A3", duration: "32n" },
@@ -577,7 +577,8 @@ function createSynth(kit) {
   if (k.isSample) {
     return new Tone.Sampler({
       urls: k.urls,
-      baseUrl: "",
+      baseUrl: import.meta.env.BASE_URL,
+      onload: () => console.log(`Loaded samples for ${kit}`),
       volume: k.volume || 0
     }).toDestination();
   }

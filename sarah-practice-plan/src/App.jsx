@@ -76,15 +76,17 @@ const DAY_COLORS = ["#d68383", "#d97d54", "#d4a373", "#7f9e88", "#72a8a8", "#6b8
 // ─── SOUND KITS ─────────────────────────────────────────────────────
 // Each kit defines synth params for Tone.js — different timbres
 const SOUND_KITS = {
-  modernClick: { label: "Modern Click", isSample: true, urls: { "G5": "/sounds/click_high.mp3", "C5": "/sounds/click_low.mp3" }, volume: 6, pitchAccent: "G5", pitchNormal: "C5" },
-  mechanical: { label: "Mechanical", synthType: "synth", osc: "square", attack: 0.001, decay: 0.015, volume: 4, pitchAccent: "E4", pitchNormal: "A3", duration: "64n" },
-  wood: { label: "Woodblock", isSample: true, urls: { "G5": "/sounds/wood_high.mp3", "C5": "/sounds/wood_low.mp3" }, volume: 5, pitchAccent: "G5", pitchNormal: "C5" },
-  chime: { label: "Chimes", isSample: true, urls: { "G5": "/sounds/bell_high.mp3", "C5": "/sounds/bell_low.mp3" }, volume: 6, pitchAccent: "G5", pitchNormal: "C5" },
-  drums: { label: "Drum Kit", isSample: true, urls: { "G5": "/sounds/kick.mp3", "C5": "/sounds/hihat.mp3" }, volume: 6, pitchAccent: "G5", pitchNormal: "C5" },
-  cowbell: { label: "Cowbell", isSample: true, urls: { "G5": "/sounds/cowbell.mp3", "C5": "/sounds/cowbell.mp3" }, volume: -2, pitchAccent: "G5", pitchNormal: "C5" },
-  shaker: { label: "Shaker", isSample: true, urls: { "G5": "/sounds/shaker.mp3", "C5": "/sounds/shaker.mp3" }, volume: 2, pitchAccent: "G5", pitchNormal: "C5" },
+  modernClick: { label: "Modern Click", isSample: true, urls: { "G5": "sounds/new_click_high.wav", "C5": "sounds/new_click_low.wav" }, volume: 6, pitchAccent: "G5", pitchNormal: "C5" },
+  mechanical: { label: "Mechanical", isSample: true, urls: { "G5": "sounds/new_mech_high.wav", "C5": "sounds/new_mech_low.wav" }, volume: 6, pitchAccent: "G5", pitchNormal: "C5" },
+  wood: { label: "Woodblock", isSample: true, urls: { "G5": "sounds/new_wood_high.wav", "C5": "sounds/new_wood_low.wav" }, volume: 5, pitchAccent: "G5", pitchNormal: "C5" },
+  chime: { label: "Chimes", isSample: true, urls: { "G5": "sounds/new_chime_high.wav", "C5": "sounds/new_chime_low.wav" }, volume: 5, pitchAccent: "G5", pitchNormal: "C5" },
+  drums: { label: "Drum Kit", isSample: true, urls: { "G5": "sounds/kick.mp3", "C5": "sounds/hihat.mp3" }, volume: 6, pitchAccent: "G5", pitchNormal: "C5" },
+  cowbell: { label: "Cowbell", isSample: true, urls: { "G5": "sounds/cowbell.mp3", "C5": "sounds/cowbell.mp3" }, volume: -2, pitchAccent: "G5", pitchNormal: "C5" },
+  shaker: { label: "Shaker", isSample: true, urls: { "G5": "sounds/shaker.mp3", "C5": "sounds/shaker.mp3" }, volume: 2, pitchAccent: "G5", pitchNormal: "C5" },
   softTick: { label: "Soft Tick", synthType: "synth", osc: "sine", attack: 0.005, decay: 0.02, volume: 2, pitchAccent: "E5", pitchNormal: "C5", duration: "64n" },
-  hihat: { label: "Synth Hi-Hat", synthType: "metal", frequency: 250, resonance: 4000, harmonicity: 5.1, modIndex: 16, octaves: 1.5, attack: 0.001, decay: 0.04, volume: -6, duration: "32n" },
+  hihat: { label: "Synth Hi-Hat", isSample: true, urls: { "G5": "sounds/new_synthhat_high.wav", "C5": "sounds/new_synthhat_low.wav" }, volume: -2, pitchAccent: "G5", pitchNormal: "C5" },
+  quartz: { label: "Quartz", isSample: true, urls: { "G5": "sounds/new_quartz_high.wav", "C5": "sounds/new_quartz_low.wav" }, volume: 0, pitchAccent: "G5", pitchNormal: "C5" },
+  digitalBeep: { label: "Digital Beep", isSample: true, urls: { "G5": "sounds/new_beep_high.wav", "C5": "sounds/new_beep_low.wav" }, volume: 0, pitchAccent: "G5", pitchNormal: "C5" },
   rimshot: { label: "Rimshot", synthType: "membrane", osc: "square", pitchDecay: 0.02, octaves: 4, attack: 0.001, decay: 0.04, volume: -2, pitchAccent: "E4", pitchNormal: "A3", duration: "32n" },
   clave: { label: "Clave", synthType: "fm", osc: "sine", modOsc: "sine", harmonicity: 3.5, modIndex: 1, attack: 0.001, decay: 0.06, volume: 5, pitchAccent: "G5", pitchNormal: "D5", duration: "32n" },
 };
@@ -100,8 +102,9 @@ function createSynth(kit) {
   if (k.isSample) {
     return new Tone.Sampler({
       urls: k.urls,
-      // Provide an empty baseUrl because urls now contain full relative paths
-      baseUrl: "",
+      // Provide an empty baseUrl so it uses relative paths correctly in production and dev
+      baseUrl: import.meta.env.BASE_URL,
+      onload: () => console.log(`Loaded samples for ${kit}`),
       volume: k.volume || 0
     }).toDestination();
   }
@@ -172,7 +175,7 @@ function useMetronome() {
   const [playing, setPlaying] = useState(false);
   const beat = 0; // Dummy beat to satisfy return signature; actual beat is managed via events to prevent App re-renders
   const [beatsPerBar, setBeatsPerBar] = useState(4);
-  const [soundKit, setSoundKit] = useState("ableton");
+  const [soundKit, setSoundKit] = useState("modernClick");
   const [gapClick, setGapClick] = useState(0); // 0=off, 4=mute 4th bar
   const [subdivision, setSubdivision] = useState("4n"); // "4n", "8n", "16n", "8t"
   const [speedBuilder, setSpeedBuilder] = useState(false);
