@@ -1571,10 +1571,10 @@ function CompactMetronomeControls({ metro, theme: T }) {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
       {/* Time Signature */}
       <div>
-        <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 8 }}>
+        <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 6 }}>
           Time Signature
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: 6 }}>
@@ -1591,12 +1591,12 @@ function CompactMetronomeControls({ metro, theme: T }) {
 
       {/* Practice Features */}
       <div>
-        <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 8 }}>
+        <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 6 }}>
           Practice Features
         </div>
 
         {/* Subdivisions */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 6, marginBottom: 8 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 6, marginBottom: 6 }}>
           {[{v:"4n",l:"Quarter"}, {v:"8n",l:"8ths"}, {v:"16n",l:"16ths"}, {v:"8t",l:"Triplets"}].map(sub => (
             <button key={sub.v} onClick={() => metro.setSubdivision(sub.v)} style={{
               background: metro.subdivision === sub.v ? T.gold : "transparent",
@@ -1607,7 +1607,7 @@ function CompactMetronomeControls({ metro, theme: T }) {
           ))}
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
           <button onClick={() => metro.setGapClick(metro.gapClick ? 0 : 4)} style={{
             background: metro.gapClick ? T.gold : "transparent",
             border: `1px solid ${metro.gapClick ? T.gold : "rgba(150,150,150,0.2)"}`,
@@ -1685,7 +1685,7 @@ function CompactMetronomeControls({ metro, theme: T }) {
         
         {/* Tap Tempo standalone button */}
         <button onClick={handleTapTempo} style={{
-          marginTop: 12, width: "100%", background: "transparent", border: `1px dashed ${T.border}`, color: T.textMed,
+          marginTop: 8, width: "100%", background: "transparent", border: `1px dashed ${T.border}`, color: T.textMed,
           padding: "10px", fontSize: 12, fontWeight: 600, cursor: "pointer", borderRadius: 8,
           fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
         }}>
@@ -1696,7 +1696,7 @@ function CompactMetronomeControls({ metro, theme: T }) {
       {/* Per-beat editor */}
       <div>
         <div style={{
-          display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8
+          display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6
         }}>
           <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans }}>
             Beat Editor
@@ -2920,7 +2920,7 @@ function FloatingMetronome({ metro, setTab, isDark, theme: T }) {
             )}
           </button>
 
-          <div style={{ position: "relative", display: "flex", flexDirection: "column", alignItems: "center", flex: 1 }}>
+          <div style={{ position: "relative", display: "flex", flexDirection: "column", alignItems: "center", width: 140, flexShrink: 0 }}>
             {/* The 4-dot visualizer */}
             <div style={{ padding: "4px 8px", zIndex: 2 }}>
               <BeatDots beat={metro.beat} playing={metro.playing} compact beatConfig={metro.beatConfig} beatsPerBar={metro.beatsPerBar} />
@@ -2946,6 +2946,8 @@ function FloatingMetronome({ metro, setTab, isDark, theme: T }) {
             Metronome
           </div>
           
+          <div style={{ flex: 1 }} /> {/* Spacer to push toggle right */}
+
           <button onClick={(e) => { e.stopPropagation(); setIsExpanded(!isExpanded); }} style={{
             background: "none", border: "none", color: isExpanded ? T.gold : T.textMed, padding: "8px",
             display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer",
@@ -2988,7 +2990,7 @@ function FloatingMetronome({ metro, setTab, isDark, theme: T }) {
       
       {/* Expanded Sheet Content */}
       <div className="hide-scrollbar" style={{ 
-        marginTop: isExpanded ? 24 : 0, 
+        marginTop: isExpanded ? 16 : 0, 
         opacity: isExpanded ? 1 : 0, 
         flex: isExpanded ? 1 : "none", // Grow to fill container
         overflowY: "auto", // Allow inner scrolling
