@@ -183,12 +183,14 @@ button {
 /* Floating Metronome */
 .floating-metronome {
   position: fixed;
-  bottom: 64px; /* Default: just above bottom-nav */
-  left: 0;
-  right: 0;
-  width: 100%;
-  border-radius: 0;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  bottom: 80px; /* Default: above bottom-nav */
+  left: 16px; /* Align left */
+  right: auto;
+  width: auto;
+  min-width: 320px; /* Ensure it holds the controls */
+  max-width: calc(100% - 32px); /* Don't overflow screen */
+  border-radius: 24px; /* Maintain pill shape on mobile too */
+  border: 1px solid rgba(0, 0, 0, 0.05);
   box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04);
   z-index: 998; /* Just below bottom-nav's 999 */
   background: rgba(255, 255, 255, 0.65);
@@ -196,7 +198,7 @@ button {
   -webkit-backdrop-filter: blur(16px) saturate(140%);
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start; /* Align contents left */
   padding: 8px 16px;
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }

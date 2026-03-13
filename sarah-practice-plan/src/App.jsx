@@ -1693,96 +1693,85 @@ function CompactMetronomeControls({ metro, theme: T }) {
         </button>
       </div>
 
-      {/* Per-beat editor */}
-      <div>
-        <div style={{
-          display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6
-        }}>
-          <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans }}>
-            Beat Editor
-          </div>
-          <div style={{ fontSize: 9, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 0.5 }}>
-            Tap element to change
-          </div>
-        </div>
+    </div>
+  );
+}
 
-        <div style={{ display: "flex", gap: 6, justifyContent: "space-between" }}>
-          {metro.beatConfig.map((bc, i) => {
-            const acc = ACCENT_CONFIG[bc.accent];
-            const kitLabel = bc.kit ? SOUND_KITS[bc.kit]?.label : SOUND_KITS[metro.soundKit]?.label;
-            const isEditing = editingBeat === i;
-            return (
-              <div key={i} style={{
-                flex: 1, textAlign: "center", position: "relative" // Added position: relative for dropdown alignment
+// Extracted Beat Editor that can sit directly on the main metronome bar
+function CompactBeatEditor({ metro, theme: T }) {
+  const [editingBeat, setEditingBeat] = useState(null);
+
+  return (
+    <div style={{ display: "flex", gap: 6, alignItems: "flex-end", height: "100%" }}>
+      {metro.beatConfig.map((bc, i) => {
+        const acc = ACCENT_CONFIG[bc.accent];
+        const kitLabel = bc.kit ? SOUND_KITS[bc.kit]?.label : SOUND_KITS[metro.soundKit]?.label;
+        const isEditing = editingBeat === i;
+        return (
+          <div key={i} style={{
+            position: "relative", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end"
+          }}>
+            {/* Beat number */}
+            <div style={{ fontSize: 9, fontWeight: 700, color: T.textMuted, fontFamily: T.sans, marginBottom: 4 }}>
+              {i === 0 ? "▼" : (i + 1)}
+            </div>
+
+            {/* Accent button — tap to cycle accent level */}
+            <button onClick={() => metro.cycleAccent(i)} style={{
+              padding: "4px", width: 28, height: 32,
+              background: bc.accent === "mute" ? "transparent" : `${acc.color}15`,
+              border: `2px solid ${bc.accent === "mute" ? "rgba(150,150,150,0.2)" : acc.color}`,
+              borderStyle: bc.accent === "mute" ? "dashed" : "solid",
+              borderRadius: `6px`, cursor: "pointer",
+              display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+              transition: "all 0.15s"
+            }}>
+              <div style={{
+                width: bc.accent === "accent" ? 12 : bc.accent === "normal" ? 8 : bc.accent === "ghost" ? 4 : 0,
+                height: bc.accent === "accent" ? 12 : bc.accent === "normal" ? 8 : bc.accent === "ghost" ? 4 : 0,
+                borderRadius: "50%", background: bc.accent === "mute" ? "transparent" : acc.color,
+                transition: "all 0.15s",
+                border: bc.accent === "mute" ? `1px dashed ${T.border}` : "none"
+              }} />
+            </button>
+
+            {/* Sound selector — tap to open kit picker */}
+            <button onClick={() => setEditingBeat(isEditing ? null : i)} style={{
+              width: "100%", padding: "2px", marginTop: 2,
+              background: isEditing ? T.goldSoft : "transparent",
+              border: `1px solid rgba(150,150,150,0.2)`,
+              borderRadius: `4px`, cursor: "pointer",
+              fontSize: 8, color: bc.kit ? T.gold : T.textLight, fontFamily: T.sans, fontWeight: 600
+            }}>
+              {kitLabel?.length > 4 ? kitLabel.substring(0, 3) + "." : kitLabel}
+            </button>
+
+            {/* Kit picker dropdown */}
+            {isEditing && (
+              <div style={{
+                position: "absolute", zIndex: 100, bottom: "100%", left: "50%", transform: "translateX(-50%)", marginBottom: 4,
+                background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: T.radiusMd,
+                boxShadow: T.md, overflow: "hidden", minWidth: 100
               }}>
-                {/* Beat number */}
-                <div style={{ fontSize: 9, fontWeight: 700, color: T.textMuted, fontFamily: T.sans, marginBottom: 4 }}>
-                  {i === 0 ? "▼" : (i + 1)}
-                </div>
-
-                {/* Accent button — tap to cycle accent level */}
-                <button onClick={() => metro.cycleAccent(i)} style={{
-                  width: "100%", padding: "8px 2px",
-                  background: bc.accent === "mute" ? "transparent" : `${acc.color}15`,
-                  border: `2px solid ${bc.accent === "mute" ? "rgba(150,150,150,0.2)" : acc.color}`,
-                  borderStyle: bc.accent === "mute" ? "dashed" : "solid",
-                  borderRadius: `6px 6px 0 0`, cursor: "pointer",
-                  transition: "all 0.15s"
-                }}>
-                  <div style={{
-                    fontSize: 9, fontWeight: 700, color: acc.color, fontFamily: T.sans,
-                    textTransform: "uppercase", letterSpacing: 1
-                  }}>{acc.label}</div>
-                  <div style={{
-                    width: bc.accent === "accent" ? 16 : bc.accent === "normal" ? 12 : bc.accent === "ghost" ? 6 : 0,
-                    height: bc.accent === "accent" ? 16 : bc.accent === "normal" ? 12 : bc.accent === "ghost" ? 6 : 0,
-                    borderRadius: "50%", background: bc.accent === "mute" ? "transparent" : acc.color,
-                    margin: "4px auto 0", transition: "all 0.15s",
-                    border: bc.accent === "mute" ? `1px dashed ${T.border}` : "none"
-                  }} />
-                </button>
-
-                {/* Sound selector — tap to open kit picker */}
-                <button onClick={() => setEditingBeat(isEditing ? null : i)} style={{
-                  width: "100%", padding: "4px 2px",
-                  background: isEditing ? T.goldSoft : "transparent",
-                  border: `1px solid rgba(150,150,150,0.2)`, borderTop: "none",
-                  borderRadius: `0 0 6px 6px`, cursor: "pointer",
-                  fontSize: 9, color: bc.kit ? T.gold : T.textMuted, fontFamily: T.sans, fontWeight: 600
-                }}>
-                  {kitLabel?.length > 8 ? kitLabel.substring(0, 6) + ".." : kitLabel}
-                </button>
-
-                {/* Kit picker dropdown */}
-                {isEditing && (
-                  <div style={{
-                    position: "absolute", zIndex: 20, marginTop: 4, top: "100%", left: "50%", transform: "translateX(-50%)",
-                    background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: T.radiusMd,
-                    boxShadow: T.md, overflow: "hidden", minWidth: 120
-                  }}>
-                    {/* Default (inherit) option */}
-                    <button onClick={() => { metro.setBeatKit(i, null); setEditingBeat(null); }} style={{
-                      width: "100%", padding: "6px 8px", background: !bc.kit ? T.goldSoft : "transparent",
-                      border: "none", borderBottom: `1px solid ${T.borderSoft}`,
-                      fontSize: 10, color: !bc.kit ? T.gold : T.textMed, fontFamily: T.sans, cursor: "pointer",
-                      fontWeight: !bc.kit ? 700 : 400, textAlign: "left"
-                    }}>Default Kit</button>
-                    {KIT_KEYS.map(k => (
-                      <button key={k} onClick={() => { metro.setBeatKit(i, k); setEditingBeat(null); }} style={{
-                        width: "100%", padding: "6px 8px", background: bc.kit === k ? T.goldSoft : "transparent",
-                        border: "none", borderBottom: `1px solid ${T.borderSoft}`,
-                        fontSize: 10, color: bc.kit === k ? T.gold : T.textMed, fontFamily: T.sans, cursor: "pointer",
-                        fontWeight: bc.kit === k ? 700 : 400, textAlign: "left"
-                      }}>{SOUND_KITS[k].label}</button>
-                    ))}
-                  </div>
-                )}
+                <button onClick={() => { metro.setBeatKit(i, null); setEditingBeat(null); }} style={{
+                  width: "100%", padding: "6px", background: !bc.kit ? T.goldSoft : "transparent",
+                  border: "none", borderBottom: `1px solid ${T.borderSoft}`,
+                  fontSize: 10, color: !bc.kit ? T.gold : T.textMed, fontFamily: T.sans, cursor: "pointer",
+                  fontWeight: !bc.kit ? 700 : 400, textAlign: "left"
+                }}>Default Kit</button>
+                {KIT_KEYS.map(k => (
+                  <button key={k} onClick={() => { metro.setBeatKit(i, k); setEditingBeat(null); }} style={{
+                    width: "100%", padding: "6px", background: bc.kit === k ? T.goldSoft : "transparent",
+                    border: "none", borderBottom: `1px solid ${T.borderSoft}`,
+                    fontSize: 10, color: bc.kit === k ? T.gold : T.textMed, fontFamily: T.sans, cursor: "pointer",
+                    fontWeight: bc.kit === k ? 700 : 400, textAlign: "left"
+                  }}>{SOUND_KITS[k].label}</button>
+                ))}
               </div>
-            );
-          })}
-        </div>
-
-      </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -2893,7 +2882,9 @@ function FloatingMetronome({ metro, setTab, isDark, theme: T }) {
         padding: isExpanded ? "16px" : "8px 16px",
         height: isExpanded ? "70vh" : "auto", /* Reasonable expand height */
         maxHeight: 600,
-        borderRadius: isExpanded ? "24px 24px 0 0" : "", // rounded top corners when expanded on mobile
+        maxWidth: 500, // Kept relatively compact
+        marginRight: "auto", // Align to left side if container is larger
+        borderRadius: isExpanded ? "24px 24px 24px 0" : "24px", // rounded top corners, flat bottom-left
         borderTop: isExpanded ? `1px solid ${T.gold}` : "",
         transition: "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
       }}>
@@ -2942,17 +2933,16 @@ function FloatingMetronome({ metro, setTab, isDark, theme: T }) {
             </div>
           </div>
           
-          <div className="desktop-only" style={{ fontWeight: 600, fontSize: 13, color: T.textDark, fontFamily: T.sans, letterSpacing: 1 }}>
-            Metronome
+          {/* Inject Beat Editor in the bar so it's always accessible */}
+          <div style={{ flex: 1, display: "flex", alignItems: "center", overflowX: "auto" }} className="hide-scrollbar">
+            <CompactBeatEditor metro={metro} theme={T} />
           </div>
-          
-          <div style={{ flex: 1 }} /> {/* Spacer to push toggle right */}
 
           <button onClick={(e) => { e.stopPropagation(); setIsExpanded(!isExpanded); }} style={{
             background: "none", border: "none", color: isExpanded ? T.gold : T.textMed, padding: "8px",
             display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer",
              transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-             transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)"
+             transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)", flexShrink: 0
           }}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M18 15l-6-6-6 6" />
@@ -2971,7 +2961,7 @@ function FloatingMetronome({ metro, setTab, isDark, theme: T }) {
             padding: "6px 14px", borderRadius: 24, border: `1px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)"}`,
             transition: "background 0.2s",
             opacity: isExpanded ? 0.3 : 1, // Dim while expanded to indicate it's not the primary interaction
-            pointerEvents: isExpanded ? "none" : "auto"
+            pointerEvents: isExpanded ? "none" : "auto", flexShrink: 0
           }}
           title={isExpanded ? "" : "Drag up/down to change BPM"}
         >
