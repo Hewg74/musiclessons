@@ -2369,7 +2369,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         oscillator: { type: "fatsawtooth", count: 3, spread: 25 },
         envelope: { attack: 2.5, decay: 0.1, sustain: 1, release: 4 }
       }).connect(filter);
-      synth.maxPolyphony = 16;
+      synth.maxPolyphony = 32;
       const lfo = new Tone.LFO(0.1, 400, 1200).connect(filter.frequency).start();
       newNodes.push(chorus, filter, lfo);
     } 
@@ -2383,7 +2383,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         envelope: { attack: 3, decay: 0.1, sustain: 1, release: 5 },
         modulationEnvelope: { attack: 3, decay: 0.1, sustain: 1, release: 5 }
       }).connect(filter);
-      synth.maxPolyphony = 16;
+      synth.maxPolyphony = 32;
       newNodes.push(reverb, filter);
     }
     else if (texture === "organ") {
@@ -2396,7 +2396,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         envelope: { attack: 0.5, decay: 0.1, sustain: 1, release: 1 },
         modulationEnvelope: { attack: 0.5, decay: 0.1, sustain: 1, release: 1 }
       }).connect(eq);
-      synth.maxPolyphony = 16;
+      synth.maxPolyphony = 32;
       newNodes.push(chorus, eq);
     }
     else if (texture === "pure") {
@@ -2404,7 +2404,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         oscillator: { type: "sine" },
         envelope: { attack: 1, decay: 0, sustain: 1, release: 2 }
       }).connect(masterGain);
-      synth.maxPolyphony = 16;
+      synth.maxPolyphony = 32;
     }
     else if (texture === "strings") {
       const reverb = new Tone.Freeverb({ roomSize: 0.8, dampening: 3000 }).connect(masterGain);
@@ -2414,7 +2414,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         oscillator: { type: "sawtooth", count: 3, spread: 20 },
         envelope: { attack: 3, decay: 0.1, sustain: 1, release: 4 }
       }).connect(filter);
-      synth.maxPolyphony = 16;
+      synth.maxPolyphony = 32;
       const lfo = new Tone.LFO(0.1, 1000, 2500).connect(filter.frequency).start();
       newNodes.push(reverb, chorus, filter, lfo);
     }
@@ -2428,7 +2428,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         envelope: { attack: 2, decay: 0.1, sustain: 1, release: 3 },
         modulationEnvelope: { attack: 2, decay: 0.1, sustain: 1, release: 3 }
       }).connect(filter);
-      synth.maxPolyphony = 16;
+      synth.maxPolyphony = 32;
       newNodes.push(phaser, filter);
     }
     else if (texture === "crystal") {
@@ -2440,7 +2440,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         envelope: { attack: 4, decay: 0.1, sustain: 1, release: 6 },
         modulationEnvelope: { attack: 4, decay: 0.1, sustain: 1, release: 6 }
       }).connect(reverb);
-      synth.maxPolyphony = 16;
+      synth.maxPolyphony = 32;
       newNodes.push(reverb);
     }
     else if (texture === "lofi-tape") {
@@ -2451,7 +2451,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         oscillator: { type: "triangle" },
         envelope: { attack: 1.5, decay: 0.5, sustain: 0.8, release: 3 }
       }).connect(chorus);
-      synth.maxPolyphony = 16;
+      synth.maxPolyphony = 32;
       newNodes.push(vibrato, filter, chorus);
     }
     else if (texture === "surf-tremolo") {
@@ -2461,7 +2461,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         oscillator: { type: "sawtooth" },
         envelope: { attack: 0.5, decay: 0.2, sustain: 0.8, release: 2 }
       }).connect(tremolo);
-      synth.maxPolyphony = 16;
+      synth.maxPolyphony = 32;
       newNodes.push(reverb, tremolo);
     }
     else if (texture === "vintage-keys") {
@@ -2471,7 +2471,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         oscillator: { type: "square" },
         envelope: { attack: 0.1, decay: 0.1, sustain: 1, release: 0.5 }
       }).connect(chorus);
-      synth.maxPolyphony = 16;
+      synth.maxPolyphony = 32;
       newNodes.push(phaser, chorus);
     }
     else if (texture === "dub-sub") {
@@ -2483,7 +2483,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         envelope: { attack: 0.5, decay: 0.2, sustain: 1, release: 1 },
         modulationEnvelope: { attack: 0.5, decay: 0.2, sustain: 1, release: 1 }
       }).connect(filter);
-      synth.maxPolyphony = 16;
+      synth.maxPolyphony = 32;
       newNodes.push(filter);
     }
 
@@ -3131,50 +3131,69 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
             </div>
           )}
 
-          <div style={{ display: "flex", gap: 16 }}>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 11, color: T.textMuted, fontWeight: 800, fontFamily: T.sans, marginBottom: 8, textTransform: "uppercase", letterSpacing: 2 }}>Step Duration</div>
-              <select value={stepDuration} onChange={e => setStepDuration(e.target.value)}
-                style={{ width: "100%", padding: "12px 16px", borderRadius: T.radius, border: `1px solid ${T.borderSoft}`, background: T.bgSoft, color: T.textDark, fontFamily: T.sans, fontSize: 14, outline: "none", cursor: "pointer", fontWeight: 700, appearance: "none", boxShadow: T.sm }}>
-                <option value="4m">4 Bars</option>
-                <option value="2m">2 Bars</option>
-                <option value="1m">1 Bar</option>
-                <option value="2n">1/2 Bar (2 Beats)</option>
-                <option value="4n">1 Beat</option>
-              </select>
-            </div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 11, color: T.textMuted, fontWeight: 800, fontFamily: T.sans, marginBottom: 8, textTransform: "uppercase", letterSpacing: 2 }}>Tempo (BPM)</div>
-              <input type="number" min={40} max={240} value={bpm} onChange={e => { setBpm(Number(e.target.value)); if (playing) Tone.Transport.bpm.value = Number(e.target.value); }} 
-                style={{ width: "100%", padding: "12px 16px", borderRadius: T.radius, border: `1px solid ${T.borderSoft}`, background: T.bgSoft, color: T.textDark, fontFamily: T.sans, fontSize: 14, outline: "none", fontWeight: 700, boxShadow: T.sm }} />
-            </div>
-          </div>
         </div>
       )}
 
-      {/* Octave & Volume Controls */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", maxWidth: 460, margin: "0 auto 32px", gap: 20 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12, background: T.bgSoft, padding: "12px 20px", borderRadius: T.radiusLg, border: `1px solid ${T.borderSoft}`, boxShadow: T.shadow }}>
-          <span style={{ fontSize: 11, color: T.textMuted, fontFamily: T.sans, fontWeight: 800, letterSpacing: 2 }}>OCT</span>
-          <div style={{ display: "flex", gap: 6 }}>
-            {[1, 2, 3, 4].map(o => (
-              <button key={o} onClick={() => changeOctave(o)} style={{
-                background: octave === o ? T.plum : "transparent",
-                color: octave === o ? "#fff" : T.textMed,
-                border: `1px solid ${octave === o ? T.plum : T.border}`,
-                borderRadius: T.radius, width: 28, height: 28, fontSize: 13, fontWeight: 800, cursor: "pointer", fontFamily: T.sans,
-                boxShadow: octave === o ? `0 2px 8px ${T.plum}60` : "none",
-                transition: "all 0.2s"
-              }}>{o}</button>
-            ))}
-          </div>
-        </div>
+      {/* Universal Control Deck */}
+      <div style={{ maxWidth: 460, margin: "0 auto 32px", background: T.bgSoft, padding: "20px", borderRadius: T.radiusLg, border: `1px solid ${T.borderSoft}`, boxShadow: T.shadow }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+          
+          <div style={{ display: "flex", gap: 20 }}>
+            {/* Octave Base */}
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 11, color: T.textMuted, fontWeight: 800, fontFamily: T.sans, marginBottom: 10, textTransform: "uppercase", letterSpacing: 2 }}>Octave Base</div>
+              <div style={{ display: "flex", gap: 6 }}>
+                {[1, 2, 3, 4].map(o => (
+                  <button key={o} onClick={() => changeOctave(o)} style={{
+                    flex: 1, background: octave === o ? T.textDark : T.bgCard,
+                    color: octave === o ? "#fff" : T.textMed,
+                    border: `1px solid ${octave === o ? T.textDark : T.border}`,
+                    borderRadius: T.radius, padding: "10px 0", fontSize: 13, fontWeight: 800, cursor: "pointer", fontFamily: T.sans,
+                    boxShadow: octave === o ? T.sm : "none", transition: "all 0.2s"
+                  }}>{o}</button>
+                ))}
+              </div>
+            </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 16, flex: 1, background: T.bgSoft, padding: "16px 20px", borderRadius: T.radiusLg, border: `1px solid ${T.borderSoft}`, boxShadow: T.shadow }}>
-          <span style={{ fontSize: 11, color: T.textMuted, fontFamily: T.sans, fontWeight: 800, letterSpacing: 2 }}>VOL</span>
-          <input type="range" min={-30} max={0} value={volume}
-            onChange={e => setVolume(Number(e.target.value))}
-            style={{ flex: 1, accentColor: T.plum, height: 4, background: T.border, borderRadius: 2, outline: "none" }} />
+            {/* Volume */}
+            <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
+                <div style={{ fontSize: 11, color: T.textMuted, fontWeight: 800, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 2 }}>Volume</div>
+                <div style={{ fontSize: 11, color: T.textMed, fontWeight: 800, fontFamily: T.sans, fontVariantNumeric: "tabular-nums" }}>{volume} dB</div>
+              </div>
+              <div style={{ flex: 1, display: "flex", alignItems: "center" }}>
+                <input type="range" min={-40} max={0} value={volume}
+                  onChange={e => setVolume(Number(e.target.value))}
+                  style={{ width: "100%", accentColor: T.textDark, height: 6, background: T.border, borderRadius: 3, outline: "none", cursor: "pointer" }} />
+              </div>
+            </div>
+          </div>
+
+          {mode === "cycle" && (
+            <>
+              <div style={{ height: 1, background: T.borderSoft, width: "100%" }} />
+              <div style={{ display: "flex", gap: 20 }}>
+                {/* Step Duration */}
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 11, color: T.textMuted, fontWeight: 800, fontFamily: T.sans, marginBottom: 10, textTransform: "uppercase", letterSpacing: 2 }}>Step Duration</div>
+                  <select value={stepDuration} onChange={e => setStepDuration(e.target.value)}
+                    style={{ width: "100%", padding: "10px 12px", borderRadius: T.radius, border: `1px solid ${T.borderSoft}`, background: T.bgCard, color: T.textDark, fontFamily: T.sans, fontSize: 14, outline: "none", cursor: "pointer", fontWeight: 700, appearance: "none", boxShadow: T.sm }}>
+                    <option value="4m">4 Bars</option>
+                    <option value="2m">2 Bars</option>
+                    <option value="1m">1 Bar</option>
+                    <option value="2n">1/2 Bar (2 Beats)</option>
+                    <option value="4n">1 Beat</option>
+                  </select>
+                </div>
+                {/* Tempo */}
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 11, color: T.textMuted, fontWeight: 800, fontFamily: T.sans, marginBottom: 10, textTransform: "uppercase", letterSpacing: 2 }}>Tempo (BPM)</div>
+                  <input type="number" min={40} max={240} value={bpm} onChange={e => { setBpm(Number(e.target.value)); if (playing) Tone.Transport.bpm.value = Number(e.target.value); }} 
+                    style={{ width: "100%", padding: "10px 12px", borderRadius: T.radius, border: `1px solid ${T.borderSoft}`, background: T.bgCard, color: T.textDark, fontFamily: T.sans, fontSize: 14, outline: "none", fontWeight: 700, boxShadow: T.sm }} />
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
