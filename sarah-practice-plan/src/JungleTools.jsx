@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import * as Tone from 'tone';
 
 // We'll accept the theme object `T` from App.jsx via props or just hardcode some shared colors for now.
@@ -2460,98 +2460,287 @@ export function InlineKeyboard({
 
 export function RhythmCellCards({ theme: T, cells = [], bpm = 80 }) {
   const [playingIdx, setPlayingIdx] = useState(null);
+  const [loopingIdx, setLoopingIdx] = useState(null);
+  const [localBpm, setLocalBpm] = useState(bpm);
+  const [clickEnabled, setClickEnabled] = useState(false);
+  const [currentNoteIdx, setCurrentNoteIdx] = useState(-1);
   const timeoutsRef = useRef([]);
   const synthsRef = useRef([]);
+  const loopTimeoutRef = useRef(null);
+  const clickSynthRef = useRef(null);
+  const isLoopingRef = useRef(false);
+  const playCellRef = useRef(null);
 
-  const playCell = (cell, idx) => {
+  const stopAll = useCallback(() => {
+    isLoopingRef.current = false;
+    timeoutsRef.current.forEach(clearTimeout);
+    timeoutsRef.current = [];
+    if (loopTimeoutRef.current) { clearTimeout(loopTimeoutRef.current); loopTimeoutRef.current = null; }
+    synthsRef.current.forEach(s => { try { s.dispose(); } catch (_) {} });
+    synthsRef.current = [];
+    setPlayingIdx(null);
+    setLoopingIdx(null);
+    setCurrentNoteIdx(-1);
+  }, []);
+
+  const playCell = useCallback((cell, idx, loop = false) => {
     // Clear any existing playback
     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current = [];
+    if (loopTimeoutRef.current) { clearTimeout(loopTimeoutRef.current); loopTimeoutRef.current = null; }
     synthsRef.current.forEach(s => { try { s.dispose(); } catch (_) {} });
     synthsRef.current = [];
     setPlayingIdx(idx);
+    if (loop) { setLoopingIdx(idx); isLoopingRef.current = true; }
+    setCurrentNoteIdx(0);
 
-    const beatMs = 60000 / bpm;
+    const beatMs = 60000 / localBpm;
     let offset = 0;
+    const totalBeats = cell.pattern.reduce((a, b) => a + b, 0);
 
+    // Schedule click track on beat boundaries
+    if (clickEnabled || loop) {
+      const numBeats = Math.ceil(totalBeats);
+      for (let b = 0; b < numBeats; b++) {
+        const ct = setTimeout(async () => {
+          if (Tone.context.state !== 'running') await Tone.context.resume();
+          if (!clickSynthRef.current) {
+            clickSynthRef.current = new Tone.Synth({ oscillator: { type: 'sine' }, envelope: { attack: 0.001, decay: 0.05, sustain: 0, release: 0.05 } }).toDestination();
+            clickSynthRef.current.volume.value = -12;
+          }
+          try { clickSynthRef.current.triggerAttackRelease("C5", "32n", Tone.now()); } catch (_) {}
+        }, b * beatMs);
+        timeoutsRef.current.push(ct);
+      }
+    }
+
+    // Schedule pattern notes
     cell.pattern.forEach((dur, i) => {
       const t = setTimeout(async () => {
         if (Tone.context.state !== 'running') await Tone.context.resume();
+        setCurrentNoteIdx(i);
         const synth = new Tone.Synth({
           oscillator: { type: 'triangle' },
           envelope: { attack: 0.01, decay: 0.1, sustain: 0.3, release: 0.2 }
         }).toDestination();
         synth.volume.value = -6;
         synthsRef.current.push(synth);
-        synth.triggerAttackRelease("A3", `${dur * beatMs / 1000}`, Tone.now());
+        synth.triggerAttackRelease("A3", dur * beatMs / 1000, Tone.now());
         setTimeout(() => { synth.dispose(); synthsRef.current = synthsRef.current.filter(s2 => s2 !== synth); }, 2000);
       }, offset);
       timeoutsRef.current.push(t);
       offset += dur * beatMs;
     });
 
-    // Clear playing state after all notes finish
-    const endTimeout = setTimeout(() => setPlayingIdx(null), offset + 200);
+    // After pattern ends: loop or stop
+    const endTimeout = setTimeout(() => {
+      setCurrentNoteIdx(-1);
+      if (isLoopingRef.current) {
+        // 1-beat rest gap then re-trigger
+        loopTimeoutRef.current = setTimeout(() => {
+          if (isLoopingRef.current && playCellRef.current) playCellRef.current(cell, idx, true);
+        }, beatMs);
+      } else {
+        setPlayingIdx(null);
+      }
+    }, offset + 100);
     timeoutsRef.current.push(endTimeout);
-  };
+  }, [localBpm, clickEnabled]);
+  playCellRef.current = playCell;
+
+  const handleCellTap = useCallback((cell, idx) => {
+    if (loopingIdx === idx) {
+      // Currently looping this cell — stop
+      stopAll();
+    } else if (playingIdx === idx) {
+      // Currently playing once — switch to loop
+      playCell(cell, idx, true);
+    } else {
+      // Not playing — start single play (playCell already clears previous)
+      playCell(cell, idx, false);
+    }
+  }, [playingIdx, loopingIdx, playCell, stopAll]);
 
   useEffect(() => {
     return () => {
+      isLoopingRef.current = false;
       timeoutsRef.current.forEach(clearTimeout);
+      if (loopTimeoutRef.current) clearTimeout(loopTimeoutRef.current);
       synthsRef.current.forEach(s => { try { s.dispose(); } catch (_) {} });
+      if (clickSynthRef.current) { try { clickSynthRef.current.dispose(); } catch (_) {} }
     };
   }, []);
 
-  // Visual dot representation
-  const renderPattern = (pattern) => {
+  // Visual dot representation with beat numbers and active highlighting
+  const renderPattern = (pattern, activeIdx) => {
     if (!pattern || pattern.length === 0) return null;
     const totalBeats = pattern.reduce((a, b) => a + b, 0);
     if (totalBeats === 0) return null;
     const width = 120;
+    const numBeats = Math.ceil(totalBeats);
     let x = 0;
     return (
-      <svg width={width} height="24" viewBox={`0 0 ${width} 24`} style={{ display: 'block' }}>
+      <svg width={width} height="36" viewBox={`0 0 ${width} 36`} style={{ display: 'block' }}>
+        {/* Beat grid lines */}
+        {Array.from({ length: numBeats }).map((_, i) => (
+          <React.Fragment key={`g${i}`}>
+            <line x1={(i / totalBeats) * width} y1={0} x2={(i / totalBeats) * width} y2={24} stroke={T.border} strokeWidth={1} />
+            <text x={(i / totalBeats) * width + ((1 / totalBeats) * width) / 2} y={33} textAnchor="middle" fontSize="8" fill={T.textMuted} fontFamily={T.sans}>{i + 1}</text>
+          </React.Fragment>
+        ))}
+        {/* Pattern shapes */}
         {pattern.map((dur, i) => {
           const w = (dur / totalBeats) * width;
           const cx = x + w / 2;
           x += w;
-          // Short notes = small circles, long notes = wide rectangles
+          const isActive = activeIdx === i;
+          const opacity = activeIdx >= 0 ? (isActive ? 1 : 0.4) : 0.8;
           if (dur <= 0.25) {
-            return <circle key={i} cx={cx} cy={12} r={3} fill={T.gold} />;
+            return <circle key={i} cx={cx} cy={12} r={3} fill={T.gold} opacity={opacity} />;
           } else if (dur <= 0.5) {
-            return <circle key={i} cx={cx} cy={12} r={4} fill={T.gold} />;
+            return <circle key={i} cx={cx} cy={12} r={4} fill={T.gold} opacity={opacity} />;
           } else {
-            return <rect key={i} x={cx - w * 0.35} y={6} width={w * 0.7} height={12} rx={3} fill={T.gold} opacity={0.8} />;
+            return <rect key={i} x={cx - w * 0.35} y={6} width={w * 0.7} height={12} rx={3} fill={T.gold} opacity={opacity} />;
           }
         })}
-        {/* Beat grid lines */}
-        {Array.from({ length: Math.ceil(totalBeats) }).map((_, i) => (
-          <line key={`g${i}`} x1={(i / totalBeats) * width} y1={0} x2={(i / totalBeats) * width} y2={24} stroke={T.border} strokeWidth={1} />
-        ))}
       </svg>
     );
   };
 
+  const btnStyle = (active) => ({
+    background: active ? T.gold : "transparent",
+    border: `1px solid ${active ? T.gold : T.borderSoft}`,
+    color: active ? "#fff" : T.textMed,
+    borderRadius: T.radius, padding: "4px 8px", fontSize: 12, fontWeight: 600,
+    cursor: "pointer", fontFamily: T.sans, minWidth: 32
+  });
+
   return (
     <div style={{ marginBottom: 16 }}>
       <div style={{ fontSize: 10, fontWeight: 700, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1.5, marginBottom: 8 }}>Rhythm Cells</div>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-        {cells.map((cell, i) => (
-          <div key={i} onClick={() => playCell(cell, i)} style={{
-            flex: "1 1 140px", maxWidth: 200, cursor: "pointer",
-            background: playingIdx === i ? `${T.gold}20` : T.bgSoft,
-            border: `1px solid ${playingIdx === i ? T.gold : T.border}`,
-            borderRadius: T.radiusMd || 8, padding: "10px 12px",
-            transition: "all 0.2s"
+
+      {/* BPM adjuster row */}
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16, flexWrap: "wrap", justifyContent: "space-between" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 6, background: T.bgSoft, padding: "4px 6px", borderRadius: T.radius, border: `1px solid ${T.borderSoft}` }}>
+          <button onClick={() => setLocalBpm(b => Math.max(40, b - 1))} style={{
+            background: "transparent", border: "none", cursor: "pointer", color: T.textMed,
+            width: 24, height: 24, borderRadius: 4, display: "flex", alignItems: "center", justifyContent: "center",
+            transition: "all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
+          }}
+          onPointerDown={e => e.currentTarget.style.transform = "scale(0.85)"}
+          onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
+          onPointerLeave={e => e.currentTarget.style.transform = "scale(1)"}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+          
+          <div style={{ fontSize: 16, fontFamily: T.sans, color: T.textDark, fontWeight: 600, minWidth: 44, textAlign: "center", fontVariantNumeric: "tabular-nums" }}>{localBpm}</div>
+          
+          <button onClick={() => setLocalBpm(b => Math.min(200, b + 1))} style={{
+            background: "transparent", border: "none", cursor: "pointer", color: T.textMed,
+            width: 24, height: 24, borderRadius: 4, display: "flex", alignItems: "center", justifyContent: "center",
+            transition: "all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
+          }}
+          onPointerDown={e => e.currentTarget.style.transform = "scale(0.85)"}
+          onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
+          onPointerLeave={e => e.currentTarget.style.transform = "scale(1)"}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+          
+          <button onClick={() => setLocalBpm(bpm)} style={{ 
+            marginLeft: 4, fontSize: 10, background: T.goldSoft, border: "none", 
+            padding: "4px 8px", borderRadius: 4, color: T.goldDark, cursor: "pointer", 
+            fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.5, fontFamily: T.sans,
+            transition: "all 0.2s ease"
+          }}
+          onPointerEnter={e => e.currentTarget.style.background = T.gold + "30"}
+          onPointerLeave={e => e.currentTarget.style.background = T.goldSoft}
+          >Target: {bpm}</button>
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <span style={{ fontSize: 11, fontWeight: 600, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1 }}>Click Track</span>
+          <button onClick={() => setClickEnabled(!clickEnabled)} style={{
+              background: clickEnabled ? T.success : T.border, border: "none",
+              width: 44, height: 24, borderRadius: 12, position: "relative",
+              cursor: "pointer", transition: "background 0.3s ease"
           }}>
-            <div style={{ fontSize: 15, fontWeight: 700, color: T.textDark, fontFamily: T.serif, marginBottom: 2 }}>{cell.name}</div>
-            <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans, marginBottom: 6 }}>{cell.description}</div>
-            {renderPattern(cell.pattern)}
-            <div style={{ fontSize: 9, color: T.textMuted, fontFamily: T.sans, marginTop: 4, textTransform: "uppercase", letterSpacing: 1 }}>
-              {playingIdx === i ? "Playing..." : "Tap to hear"}
+              <div style={{
+                  position: "absolute", top: 2, left: clickEnabled ? 22 : 2,
+                  width: 20, height: 20, borderRadius: "50%", background: "#fff",
+                  boxShadow: "0 1px 3px rgba(0,0,0,0.2)", transition: "left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
+              }} />
+          </button>
+        </div>
+      </div>
+
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+        {cells.map((cell, i) => {
+          const isPlaying = playingIdx === i;
+          const isLooping = loopingIdx === i;
+          return (
+            <div key={i} onClick={() => handleCellTap(cell, i)} style={{
+              flex: "1 1 140px", maxWidth: 200, cursor: "pointer",
+              background: isPlaying || isLooping ? T.goldSoft : T.bgCard,
+              border: `1px solid ${isLooping ? T.gold : isPlaying ? T.gold + "80" : T.border}`,
+              borderRadius: T.radiusMd || 8, padding: "14px",
+              boxShadow: isPlaying || isLooping ? `0 0 0 1px ${T.gold}40, ${T.sm}` : T.sm,
+              transition: "all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+              transform: isPlaying || isLooping ? "translateY(-2px)" : "translateY(0)"
+            }}
+            onPointerEnter={e => {
+              if (!isPlaying && !isLooping) {
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.boxShadow = `0 4px 12px rgba(44, 40, 37, 0.06)`;
+                e.currentTarget.style.borderColor = T.borderSoft;
+              }
+            }}
+            onPointerLeave={e => {
+              if (!isPlaying && !isLooping) {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = T.sm;
+                e.currentTarget.style.borderColor = T.border;
+              }
+            }}
+            onPointerDown={e => {
+              e.currentTarget.style.transform = "scale(0.98)";
+            }}
+            onPointerUp={e => {
+              e.currentTarget.style.transform = isPlaying || isLooping ? "translateY(-2px)" : "translateY(0)";
+            }}
+            >
+              <div style={{ fontSize: 15, fontWeight: 700, color: (isPlaying || isLooping) ? T.goldDark : T.textDark, fontFamily: T.serif, marginBottom: 4, transition: "color 0.2s" }}>{cell.name}</div>
+              <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans, marginBottom: 10, lineHeight: 1.4 }}>{cell.description}</div>
+              <div style={{ marginBottom: 6 }}>
+                {renderPattern(cell.pattern, isPlaying ? currentNoteIdx : -1)}
+              </div>
+              <div style={{ 
+                fontSize: 9, 
+                color: isLooping ? T.goldDark : isPlaying ? T.textMed : T.textMuted, 
+                fontFamily: T.sans, 
+                marginTop: 8, 
+                textTransform: "uppercase", 
+                letterSpacing: 1,
+                fontWeight: isLooping || isPlaying ? 700 : 600,
+                display: "flex",
+                alignItems: "center",
+                gap: 4
+              }}>
+                {isLooping ? (
+                  <><span style={{ width: 6, height: 6, borderRadius: "50%", background: T.goldDark, display: "inline-block", animation: "pulse-ring 2s infinite" }} /> Looping &middot; tap to stop</>
+                ) : isPlaying ? (
+                  <><span style={{ width: 6, height: 6, borderRadius: "50%", background: T.textMed, display: "inline-block" }} /> Playing &middot; tap to loop</>
+                ) : "Tap to hear"}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
@@ -2565,30 +2754,94 @@ export function RhythmCellCards({ theme: T, cells = [], bpm = 80 }) {
 
 export function PhraseFormGuide({ theme: T, form }) {
   const [currentBar, setCurrentBar] = useState(-1);
+  const [absBar, setAbsBar] = useState(0);
   const [isActive, setIsActive] = useState(false);
+  const [barsOverride, setBarsOverride] = useState(null);
+  const [chimeEnabled, setChimeEnabled] = useState(true);
+  const [currentSection, setCurrentSection] = useState(-1);
+  const prevSectionRef = useRef(-1);
+  const chimeSynthRef = useRef(null);
 
-  const sections = Array.isArray(form.pattern) ? form.pattern : form.pattern.split('');
-  if (sections.length === 0) return null;
-  const barsArr = Array.isArray(form.barsPerSection)
-    ? form.barsPerSection
-    : sections.map(() => form.barsPerSection);
+  // Bug fix: normalize form.pattern || form.sections
+  const rawPattern = form.pattern || form.sections;
+  const sections = rawPattern ? (Array.isArray(rawPattern) ? rawPattern : rawPattern.split('')) : [];
+
+  const isUniformBars = !Array.isArray(form.barsPerSection);
+  const defaultBars = form.barsPerSection || 4;
+  const effectiveBarsPerSection = barsOverride !== null && isUniformBars ? barsOverride : defaultBars;
+  const barsArr = sections.length > 0
+    ? (Array.isArray(effectiveBarsPerSection) ? effectiveBarsPerSection : sections.map(() => effectiveBarsPerSection))
+    : [4];
   const totalBars = barsArr.reduce((a, b) => a + b, 0);
+
+  // Loop counter (derived from state, not ref)
+  const loopCount = isActive && absBar >= 0 ? Math.floor(absBar / totalBars) + 1 : 0;
+
+  // Chime synth lifecycle
+  useEffect(() => {
+    return () => {
+      if (chimeSynthRef.current) { try { chimeSynthRef.current.dispose(); } catch (_) {} chimeSynthRef.current = null; }
+    };
+  }, []);
+
+  const triggerChime = useCallback(async () => {
+    if (!chimeEnabled) return;
+    if (Tone.context.state !== 'running') await Tone.context.resume();
+    if (!chimeSynthRef.current) {
+      chimeSynthRef.current = new Tone.FMSynth({
+        harmonicity: 3, modulationIndex: 2,
+        oscillator: { type: 'sine' },
+        envelope: { attack: 0.01, decay: 0.3, sustain: 0, release: 0.2 },
+        modulation: { type: 'sine' },
+        modulationEnvelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.1 }
+      }).toDestination();
+      chimeSynthRef.current.volume.value = -10;
+    }
+    try { chimeSynthRef.current.triggerAttackRelease("E5", "8n", Tone.now()); } catch (_) {}
+  }, [chimeEnabled]);
 
   useEffect(() => {
     const handleBeat = (e) => {
       const { bar } = e.detail;
       if (bar !== undefined) {
+        setAbsBar(bar);
         setCurrentBar(bar % totalBars);
         setIsActive(true);
       } else {
-        // Metronome stopped
         setIsActive(false);
         setCurrentBar(-1);
+        setAbsBar(0);
+        setCurrentSection(-1);
+        prevSectionRef.current = -1;
       }
     };
     window.addEventListener('metroBeat', handleBeat);
     return () => window.removeEventListener('metroBeat', handleBeat);
   }, [totalBars]);
+
+  // Reset tracking when totalBars changes (e.g., user changes bars-per-section)
+  useEffect(() => {
+    prevSectionRef.current = -1;
+  }, [totalBars]);
+
+  // Compute current section and bar-within-section, trigger chime on section change
+  useEffect(() => {
+    if (sections.length === 0 || currentBar < 0) { setCurrentSection(-1); return; }
+    let newSection = -1, remaining = currentBar;
+    for (let i = 0; i < sections.length; i++) {
+      if (remaining < barsArr[i]) { newSection = i; break; }
+      remaining -= barsArr[i];
+    }
+    if (newSection === -1) newSection = sections.length - 1;
+    setCurrentSection(newSection);
+    if (newSection >= 0 && newSection !== prevSectionRef.current && prevSectionRef.current !== -1) {
+      triggerChime();
+    }
+    prevSectionRef.current = newSection;
+  }, [currentBar, sections.length, totalBars, triggerChime]);
+
+  // Early return after all hooks
+  if (!rawPattern || sections.length === 0) return null;
 
   const colorPalette = [
     T.gold || "#d4a373", T.coral || "#d68383",
@@ -2597,7 +2850,6 @@ export function PhraseFormGuide({ theme: T, form }) {
   ];
   const singleCharColors = { A: colorPalette[0], B: colorPalette[1], C: colorPalette[2], D: colorPalette[3] };
 
-  // Assign colors: single-char keys use fixed map, multi-char keys get palette by unique key order
   const uniqueKeys = [...new Set(sections)];
   const colorFor = (s) => {
     if (singleCharColors[s]) return singleCharColors[s];
@@ -2607,64 +2859,130 @@ export function PhraseFormGuide({ theme: T, form }) {
 
   const labels = form.labels || {};
 
-  // Compute current section and bar-within-section from flat bar count
-  let currentSection = -1, barInSection = 0, sectionBars = 0;
-  if (currentBar >= 0) {
+  // Derive bar-within-section from currentBar (pure computation, no hooks)
+  let barInSection = 0, sectionBars = 0;
+  if (currentBar >= 0 && currentSection >= 0) {
     let remaining = currentBar;
-    for (let i = 0; i < sections.length; i++) {
-      if (remaining < barsArr[i]) { currentSection = i; barInSection = remaining + 1; sectionBars = barsArr[i]; break; }
-      remaining -= barsArr[i];
-    }
-    if (currentSection === -1) { currentSection = sections.length - 1; barInSection = barsArr[sections.length - 1]; sectionBars = barsArr[sections.length - 1]; }
+    for (let i = 0; i < currentSection; i++) remaining -= barsArr[i];
+    barInSection = remaining + 1;
+    sectionBars = barsArr[currentSection];
   }
 
-  // Display pattern: join array with " · " or show string directly
-  const patternDisplay = Array.isArray(form.pattern) ? form.pattern.join(" · ") : form.pattern;
+  // Display pattern
+  const patternDisplay = Array.isArray(rawPattern) ? rawPattern.join(" \u00b7 ") : rawPattern;
+
+  const btnStyle = (active) => ({
+    background: active ? T.gold : "transparent",
+    border: `1px solid ${active ? T.gold : T.borderSoft}`,
+    color: active ? "#fff" : T.textMed,
+    borderRadius: T.radius, padding: "4px 8px", fontSize: 12, fontWeight: 600,
+    cursor: "pointer", fontFamily: T.sans, minWidth: 32
+  });
 
   return (
     <div style={{ marginBottom: 16 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-        <div style={{ fontSize: 10, fontWeight: 700, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1.5 }}>
-          Phrase Form — {patternDisplay}
-        </div>
-        {isActive && currentSection >= 0 && (
-          <div style={{ fontSize: 12, fontWeight: 700, color: colorFor(sections[currentSection]), fontFamily: T.sans }}>
-            {labels[sections[currentSection]] || sections[currentSection]} · Bar {barInSection}/{sectionBars}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10, flexWrap: "wrap", gap: 10 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: T.textDark, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1.5 }}>
+            Phrase Form &middot; <span style={{ color: T.textMuted }}>{patternDisplay}</span>
           </div>
-        )}
+          {/* Chime toggle */}
+          <button onClick={() => setChimeEnabled(v => !v)} style={{
+            background: chimeEnabled ? T.goldSoft : T.bgSoft, 
+            border: `1px solid ${chimeEnabled ? T.gold : T.borderSoft}`, 
+            cursor: "pointer", 
+            width: 28, height: 28, borderRadius: "50%",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            color: chimeEnabled ? T.goldDark : T.textMuted,
+            transition: "all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
+          }} 
+          onPointerDown={e => e.currentTarget.style.transform = "scale(0.85)"}
+          onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
+          onPointerLeave={e => e.currentTarget.style.transform = "scale(1)"}
+          title={chimeEnabled ? "Section chime on" : "Section chime off"}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              {!chimeEnabled && <line x1="2" y1="2" x2="22" y2="22" strokeWidth="2.5" />}
+            </svg>
+          </button>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          {isActive && loopCount > 0 && (
+            <div style={{ fontSize: 12, fontWeight: 700, color: T.textMuted, fontFamily: T.sans }}>
+              Loop {loopCount}
+            </div>
+          )}
+          {isActive && currentSection >= 0 && (
+            <div style={{ fontSize: 12, fontWeight: 700, color: colorFor(sections[currentSection]), fontFamily: T.sans }}>
+              {labels[sections[currentSection]] || sections[currentSection]} \u00b7 Bar {barInSection}/{sectionBars}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Section bar visualization */}
-      <div style={{ display: "flex", gap: 2, height: 32, borderRadius: 6, overflow: "hidden" }}>
+      <div style={{ display: "flex", gap: 3, height: 36, borderRadius: 8, overflow: "hidden", background: T.borderSoft, padding: 3 }}>
         {sections.map((s, i) => {
           const color = colorFor(s);
           const active = currentSection === i;
           const secBars = barsArr[i];
           const fillPct = active ? (barInSection / secBars) * 100 : (currentSection > i ? 100 : 0);
+          
           return (
             <div key={i} style={{
               flex: secBars, position: "relative",
-              background: `${color}15`,
-              border: `2px solid ${active ? color : `${color}30`}`,
-              borderRadius: 4, display: "flex", alignItems: "center", justifyContent: "center",
-              transition: "border-color 0.2s"
+              background: active ? T.bgCard : fillPct === 100 ? `${color}15` : `${color}08`,
+              borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center",
+              boxShadow: active ? `0 2px 8px ${color}30, 0 0 0 1px ${color}` : "none",
+              transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+              overflow: "hidden" // keep fill constrained
             }}>
-              {/* Fill progress */}
+              {/* Background Fill Layer */}
               <div style={{
                 position: "absolute", left: 0, top: 0, bottom: 0,
-                width: `${fillPct}%`, background: `${color}25`,
-                borderRadius: 2, transition: "width 0.15s"
+                width: `${fillPct}%`, 
+                background: active ? `linear-gradient(90deg, ${color}20 0%, ${color}40 100%)` : `${color}25`,
+                transition: "width 0.2s linear"
               }} />
+              
               <span style={{
-                position: "relative", fontSize: sections.length > 6 ? 10 : 13, fontWeight: 700,
-                color: active ? color : `${color}80`,
+                position: "relative", fontSize: sections.length > 6 ? 10 : 12, fontWeight: 800,
+                color: active ? color : fillPct === 100 ? `${color}90` : `${color}60`,
                 fontFamily: T.sans, letterSpacing: 1,
-                whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: "90%"
+                whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: "90%",
+                textShadow: active ? `0 1px 2px ${T.bgCard}` : "none",
+                transition: "color 0.2s"
               }}>{labels[s] || s}</span>
             </div>
           );
         })}
       </div>
+
+      {/* Bars-per-section adjuster — only for uniform bar counts */}
+      {isUniformBars && (
+        <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 12, flexWrap: "wrap", justifyContent: "flex-end" }}>
+          <div style={{ fontSize: 10, fontWeight: 600, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1 }}>Bars / Section</div>
+          <div style={{ display: "flex", gap: 6, background: T.bgSoft, padding: "4px", borderRadius: T.radiusMd, border: `1px solid ${T.borderSoft}` }}>
+            {[1, 2, 4, 8].map(n => {
+              const isActive = (barsOverride !== null ? barsOverride : defaultBars) === n;
+              return (
+                <button key={n} onClick={() => setBarsOverride(n === defaultBars ? null : n)} style={{
+                  background: isActive ? T.gold : "transparent",
+                  color: isActive ? "#fff" : T.textMed,
+                  border: "none",
+                  padding: "4px 12px", fontSize: 11, fontWeight: 700, cursor: "pointer",
+                  borderRadius: T.radius, fontFamily: T.sans, transition: "all 0.2s",
+                  boxShadow: isActive ? "0 1px 3px rgba(0,0,0,0.1)" : "none"
+                }}
+                onPointerEnter={e => { if (!isActive) e.currentTarget.style.color = T.textDark; }}
+                onPointerLeave={e => { if (!isActive) e.currentTarget.style.color = T.textMed; }}
+                >{n}</button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {!isActive && (
         <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans, marginTop: 6, fontStyle: "italic" }}>

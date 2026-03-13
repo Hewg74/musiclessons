@@ -48,6 +48,7 @@ export const level8 = {
       wrong: "If your voice always echoes the guitar exactly, you're mimicking, not responding. Try singing something DIFFERENT from what the guitar played — a contrast, not a copy.",
       sarah: "Gene, call and response is the DNA of the blues, and the blues is the DNA of every genre you love. Ali Farka Touré's guitar conversations are exactly this exercise, mastered.",
       metronome: 75,
+      phraseForm: { pattern: "CR", barsPerSection: 2, labels: { C: "Guitar Call", R: "Voice Answer" } },
       referencePitches: getPitchRange("A3", "G4"),
       fretboard: { scale: "am-pentatonic", position: 1 },
       recorder: true
