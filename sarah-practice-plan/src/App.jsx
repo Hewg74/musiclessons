@@ -1549,6 +1549,244 @@ function MetronomePanel({ metro, onOpenTapMatch }) {
   );
 }
 
+// A streamlined version of MetronomePanel focusing strictly on Practice Features + Beat Editor
+function CompactMetronomeControls({ metro, theme: T }) {
+  const [taps, setTaps] = useState([]);
+  const [editingBeat, setEditingBeat] = useState(null);
+
+  const handleTapTempo = () => {
+    const now = Date.now();
+    setTaps(prev => {
+      const recent = prev.filter(t => now - t < 3000);
+      const newTaps = [...recent, now];
+      if (newTaps.length > 1) {
+        let durs = [];
+        for (let i = 1; i < newTaps.length; i++) durs.push(newTaps[i] - newTaps[i - 1]);
+        const avg = durs.reduce((a, b) => a + b, 0) / durs.length;
+        const bpm = Math.round(60000 / avg);
+        if (bpm >= 40 && bpm <= 280) metro.changeBpm(bpm);
+      }
+      return newTaps;
+    });
+  };
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      {/* Time Signature */}
+      <div>
+        <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 8 }}>
+          Time Signature
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: 6 }}>
+          {[2, 3, 4, 5, 6, 7].map(n => (
+            <button key={n} onClick={() => metro.changeBeats(n)} style={{
+              background: metro.beatsPerBar === n ? T.gold : "transparent",
+              border: `1px solid ${metro.beatsPerBar === n ? T.gold : "rgba(150,150,150,0.2)"}`,
+              color: metro.beatsPerBar === n ? "#fff" : T.textMed,
+              padding: "6px", fontSize: 12, fontWeight: 500, cursor: "pointer", fontFamily: T.sans, borderRadius: 6
+            }}>{n}/4</button>
+          ))}
+        </div>
+      </div>
+
+      {/* Practice Features */}
+      <div>
+        <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 8 }}>
+          Practice Features
+        </div>
+
+        {/* Subdivisions */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 6, marginBottom: 8 }}>
+          {[{v:"4n",l:"Quarter"}, {v:"8n",l:"8ths"}, {v:"16n",l:"16ths"}, {v:"8t",l:"Triplets"}].map(sub => (
+            <button key={sub.v} onClick={() => metro.setSubdivision(sub.v)} style={{
+              background: metro.subdivision === sub.v ? T.gold : "transparent",
+              border: `1px solid ${metro.subdivision === sub.v ? T.gold : "rgba(150,150,150,0.2)"}`,
+              color: metro.subdivision === sub.v ? "#fff" : T.textMed, borderRadius: 6,
+              padding: "6px", fontSize: 11, fontWeight: 500, cursor: "pointer", fontFamily: T.sans
+            }}>{sub.l}</button>
+          ))}
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+          <button onClick={() => metro.setGapClick(metro.gapClick ? 0 : 4)} style={{
+            background: metro.gapClick ? T.gold : "transparent",
+            border: `1px solid ${metro.gapClick ? T.gold : "rgba(150,150,150,0.2)"}`,
+            color: metro.gapClick ? "#fff" : T.textMed, borderRadius: 6,
+            padding: "8px", fontSize: 11, fontWeight: 500, cursor: "pointer", fontFamily: T.sans
+          }}>Gap Click (Mute 1/4)</button>
+
+          <button onClick={() => metro.setSpeedBuilder(!metro.speedBuilder)} style={{
+            background: metro.speedBuilder ? T.gold : "transparent",
+            border: `1px solid ${metro.speedBuilder ? T.gold : "rgba(150,150,150,0.2)"}`,
+            color: metro.speedBuilder ? "#fff" : T.textMed, borderRadius: 6,
+            padding: "8px", fontSize: 11, fontWeight: 500, cursor: "pointer", fontFamily: T.sans
+          }}>Speed Builder</button>
+        </div>
+
+        {metro.speedBuilder && (
+          <div style={{ marginTop: 8, padding: "10px", background: "rgba(0,0,0,0.03)", border: `1px solid rgba(150,150,150,0.1)`, borderRadius: 6 }}>
+            <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 9, fontWeight: 600, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 4 }}>+ BPM</div>
+                <div style={{ display: "flex", gap: 2 }}>
+                  {[1, 2, 3, 5, 10].map(n => (
+                    <button key={n} onClick={() => metro.setSpeedIncrement(n)} style={{
+                      flex: 1, background: metro.speedIncrement === n ? T.gold : "transparent",
+                      border: `1px solid ${metro.speedIncrement === n ? T.gold : "rgba(150,150,150,0.2)"}`,
+                      color: metro.speedIncrement === n ? "#fff" : T.textMed,
+                      borderRadius: 4, padding: "4px 0", fontSize: 11, fontWeight: 500, cursor: "pointer", fontFamily: T.sans
+                    }}>{n}</button>
+                  ))}
+                </div>
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 9, fontWeight: 600, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 4 }}>Every N bars</div>
+                <div style={{ display: "flex", gap: 2 }}>
+                  {[2, 4, 8, 16].map(n => (
+                    <button key={n} onClick={() => metro.setSpeedBars(n)} style={{
+                      flex: 1, background: metro.speedBars === n ? T.gold : "transparent",
+                      border: `1px solid ${metro.speedBars === n ? T.gold : "rgba(150,150,150,0.2)"}`,
+                      color: metro.speedBars === n ? "#fff" : T.textMed,
+                      borderRadius: 4, padding: "4px 0", fontSize: 11, fontWeight: 500, cursor: "pointer", fontFamily: T.sans
+                    }}>{n}</button>
+                  ))}
+                </div>
+              </div>
+            </div>
+            
+            <div style={{ marginTop: 10 }}>
+              <div style={{ fontSize: 9, fontWeight: 600, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 4 }}>Loop back at BPM (0 = off)</div>
+              <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
+                <button onClick={() => metro.setSpeedCeiling(0)} style={{
+                  background: metro.speedCeiling === 0 ? T.gold : "transparent",
+                  border: `1px solid ${metro.speedCeiling === 0 ? T.gold : "rgba(150,150,150,0.2)"}`,
+                  color: metro.speedCeiling === 0 ? "#fff" : T.textMed,
+                  borderRadius: 4, padding: "4px 8px", fontSize: 11, fontWeight: 500,
+                  cursor: "pointer", fontFamily: T.sans, minWidth: 32
+                }}>Off</button>
+                {[80, 90, 100, 110, 120, 140, 160].map(n => (
+                  <button key={n} onClick={() => metro.setSpeedCeiling(n)} style={{
+                    background: metro.speedCeiling === n ? T.coral : "transparent",
+                    border: `1px solid ${metro.speedCeiling === n ? T.coral : "rgba(150,150,150,0.2)"}`,
+                    color: metro.speedCeiling === n ? "#fff" : T.textMed,
+                    borderRadius: 4, padding: "4px 8px", fontSize: 11, fontWeight: 500,
+                    cursor: "pointer", fontFamily: T.sans, minWidth: 32
+                  }}>{n}</button>
+                ))}
+              </div>
+              {metro.speedCeiling > 0 && (
+                <div style={{ fontSize: 10, color: T.textLight, fontFamily: T.sans, marginTop: 4 }}>
+                  ↩ Loops back to {metro.bpm} BPM after reaching {metro.speedCeiling}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+        
+        {/* Tap Tempo standalone button */}
+        <button onClick={handleTapTempo} style={{
+          marginTop: 12, width: "100%", background: "transparent", border: `1px dashed ${T.border}`, color: T.textMed,
+          padding: "10px", fontSize: 12, fontWeight: 600, cursor: "pointer", borderRadius: 8,
+          fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
+        }}>
+          ✋ Tap Tempo
+        </button>
+      </div>
+
+      {/* Per-beat editor */}
+      <div>
+        <div style={{
+          display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8
+        }}>
+          <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans }}>
+            Beat Editor
+          </div>
+          <div style={{ fontSize: 9, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 0.5 }}>
+            Tap element to change
+          </div>
+        </div>
+
+        <div style={{ display: "flex", gap: 6, justifyContent: "space-between" }}>
+          {metro.beatConfig.map((bc, i) => {
+            const acc = ACCENT_CONFIG[bc.accent];
+            const kitLabel = bc.kit ? SOUND_KITS[bc.kit]?.label : SOUND_KITS[metro.soundKit]?.label;
+            const isEditing = editingBeat === i;
+            return (
+              <div key={i} style={{
+                flex: 1, textAlign: "center", position: "relative" // Added position: relative for dropdown alignment
+              }}>
+                {/* Beat number */}
+                <div style={{ fontSize: 9, fontWeight: 700, color: T.textMuted, fontFamily: T.sans, marginBottom: 4 }}>
+                  {i === 0 ? "▼" : (i + 1)}
+                </div>
+
+                {/* Accent button — tap to cycle accent level */}
+                <button onClick={() => metro.cycleAccent(i)} style={{
+                  width: "100%", padding: "8px 2px",
+                  background: bc.accent === "mute" ? "transparent" : `${acc.color}15`,
+                  border: `2px solid ${bc.accent === "mute" ? "rgba(150,150,150,0.2)" : acc.color}`,
+                  borderStyle: bc.accent === "mute" ? "dashed" : "solid",
+                  borderRadius: `6px 6px 0 0`, cursor: "pointer",
+                  transition: "all 0.15s"
+                }}>
+                  <div style={{
+                    fontSize: 9, fontWeight: 700, color: acc.color, fontFamily: T.sans,
+                    textTransform: "uppercase", letterSpacing: 1
+                  }}>{acc.label}</div>
+                  <div style={{
+                    width: bc.accent === "accent" ? 16 : bc.accent === "normal" ? 12 : bc.accent === "ghost" ? 6 : 0,
+                    height: bc.accent === "accent" ? 16 : bc.accent === "normal" ? 12 : bc.accent === "ghost" ? 6 : 0,
+                    borderRadius: "50%", background: bc.accent === "mute" ? "transparent" : acc.color,
+                    margin: "4px auto 0", transition: "all 0.15s",
+                    border: bc.accent === "mute" ? `1px dashed ${T.border}` : "none"
+                  }} />
+                </button>
+
+                {/* Sound selector — tap to open kit picker */}
+                <button onClick={() => setEditingBeat(isEditing ? null : i)} style={{
+                  width: "100%", padding: "4px 2px",
+                  background: isEditing ? T.goldSoft : "transparent",
+                  border: `1px solid rgba(150,150,150,0.2)`, borderTop: "none",
+                  borderRadius: `0 0 6px 6px`, cursor: "pointer",
+                  fontSize: 9, color: bc.kit ? T.gold : T.textMuted, fontFamily: T.sans, fontWeight: 600
+                }}>
+                  {kitLabel?.length > 8 ? kitLabel.substring(0, 6) + ".." : kitLabel}
+                </button>
+
+                {/* Kit picker dropdown */}
+                {isEditing && (
+                  <div style={{
+                    position: "absolute", zIndex: 20, marginTop: 4, top: "100%", left: "50%", transform: "translateX(-50%)",
+                    background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: T.radiusMd,
+                    boxShadow: T.md, overflow: "hidden", minWidth: 120
+                  }}>
+                    {/* Default (inherit) option */}
+                    <button onClick={() => { metro.setBeatKit(i, null); setEditingBeat(null); }} style={{
+                      width: "100%", padding: "6px 8px", background: !bc.kit ? T.goldSoft : "transparent",
+                      border: "none", borderBottom: `1px solid ${T.borderSoft}`,
+                      fontSize: 10, color: !bc.kit ? T.gold : T.textMed, fontFamily: T.sans, cursor: "pointer",
+                      fontWeight: !bc.kit ? 700 : 400, textAlign: "left"
+                    }}>Default Kit</button>
+                    {KIT_KEYS.map(k => (
+                      <button key={k} onClick={() => { metro.setBeatKit(i, k); setEditingBeat(null); }} style={{
+                        width: "100%", padding: "6px 8px", background: bc.kit === k ? T.goldSoft : "transparent",
+                        border: "none", borderBottom: `1px solid ${T.borderSoft}`,
+                        fontSize: 10, color: bc.kit === k ? T.gold : T.textMed, fontFamily: T.sans, cursor: "pointer",
+                        fontWeight: bc.kit === k ? 700 : 400, textAlign: "left"
+                      }}>{SOUND_KITS[k].label}</button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
 function TapMatchModal({ targetBpm, onClose, metro }) {
   const [taps, setTaps] = useState([]);
   const [ripples, setRipples] = useState([]);
