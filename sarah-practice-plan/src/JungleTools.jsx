@@ -2350,16 +2350,20 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     let newNodes = [];
 
     // Master bus to prevent clipping and manage dynamics
-    const masterGain = new Tone.Gain(0.8);
+    const masterGain = new Tone.Gain(0.5);
+    // Highpass filter to kill sub-rumble below 30Hz that eats headroom and causes compressor distortion
+    const lowcut = new Tone.Filter(30, "highpass");
     const compressor = new Tone.Compressor({
-      threshold: -18,
+      threshold: -24,
       ratio: 4,
       attack: 0.1,
       release: 0.5
     });
+    // Final safety limiter to guarantee no digital clipping 
     const limiter = new Tone.Limiter(-1).toDestination();
-    masterGain.chain(compressor, limiter);
-    newNodes.push(masterGain, compressor, limiter);
+    
+    masterGain.chain(lowcut, compressor, limiter);
+    newNodes.push(masterGain, lowcut, compressor, limiter);
 
     // FIX: Replaced async Tone.Reverb with synchronous Tone.Freeverb to prevent Web Audio crashes on rapid switching
     if (texture === "analog") {
@@ -2368,7 +2372,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       synth = new Tone.PolySynth(Tone.Synth, {
         volume: -12,
         oscillator: { type: "fatsawtooth", count: 3, spread: 25 },
-        envelope: { attack: 2.5, decay: 0.1, sustain: 1, release: 4 }
+        envelope: { attack: 2.5, decay: 0.1, sustain: 1, release: 2 }
       }).connect(filter);
       synth.maxPolyphony = 32;
       const lfo = new Tone.LFO(0.1, 400, 1200).connect(filter.frequency).start();
@@ -2382,8 +2386,8 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         harmonicity: 1.01, modulationIndex: 2,
         oscillator: { type: "sine" },
         modulation: { type: "triangle" },
-        envelope: { attack: 3, decay: 0.1, sustain: 1, release: 5 },
-        modulationEnvelope: { attack: 3, decay: 0.1, sustain: 1, release: 5 }
+        envelope: { attack: 3, decay: 0.1, sustain: 1, release: 2 },
+        modulationEnvelope: { attack: 3, decay: 0.1, sustain: 1, release: 2 }
       }).connect(filter);
       synth.maxPolyphony = 32;
       newNodes.push(reverb, filter);
@@ -2417,7 +2421,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       synth = new Tone.PolySynth(Tone.Synth, {
         volume: -12,
         oscillator: { type: "fatsawtooth", count: 3, spread: 20 },
-        envelope: { attack: 3, decay: 0.1, sustain: 1, release: 4 }
+        envelope: { attack: 3, decay: 0.1, sustain: 1, release: 2 }
       }).connect(filter);
       synth.maxPolyphony = 32;
       const lfo = new Tone.LFO(0.1, 800, 1500).connect(filter.frequency).start();
@@ -2431,8 +2435,8 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         harmonicity: 2.01, modulationIndex: 3,
         oscillator: { type: "sawtooth" },
         modulation: { type: "sine" },
-        envelope: { attack: 2, decay: 0.1, sustain: 1, release: 3 },
-        modulationEnvelope: { attack: 2, decay: 0.1, sustain: 1, release: 3 }
+        envelope: { attack: 2, decay: 0.1, sustain: 1, release: 2 },
+        modulationEnvelope: { attack: 2, decay: 0.1, sustain: 1, release: 2 }
       }).connect(filter);
       synth.maxPolyphony = 32;
       newNodes.push(phaser, filter);
@@ -2444,8 +2448,8 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         harmonicity: 1.005, modulationIndex: 1.5,
         oscillator: { type: "sine" },
         modulation: { type: "sine" },
-        envelope: { attack: 4, decay: 0.1, sustain: 1, release: 6 },
-        modulationEnvelope: { attack: 4, decay: 0.1, sustain: 1, release: 6 }
+        envelope: { attack: 4, decay: 0.1, sustain: 1, release: 2 },
+        modulationEnvelope: { attack: 4, decay: 0.1, sustain: 1, release: 2 }
       }).connect(reverb);
       synth.maxPolyphony = 32;
       newNodes.push(reverb);
@@ -2457,7 +2461,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       synth = new Tone.PolySynth(Tone.Synth, {
         volume: -12,
         oscillator: { type: "triangle" },
-        envelope: { attack: 1.5, decay: 0.5, sustain: 0.8, release: 3 }
+        envelope: { attack: 1.5, decay: 0.5, sustain: 0.8, release: 2 }
       }).connect(chorus);
       synth.maxPolyphony = 32;
       newNodes.push(vibrato, filter, chorus);
@@ -2469,7 +2473,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       synth = new Tone.PolySynth(Tone.Synth, {
         volume: -12,
         oscillator: { type: "triangle" },
-        envelope: { attack: 0.8, decay: 0.2, sustain: 0.8, release: 3 }
+        envelope: { attack: 0.8, decay: 0.2, sustain: 0.8, release: 2 }
       }).connect(filter);
       synth.maxPolyphony = 32;
       newNodes.push(reverb, tremolo, filter);
@@ -3151,21 +3155,22 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         </div>
       )}
 
-      {/* Universal Control Deck */}
-      <div style={{ maxWidth: 460, margin: "0 auto 32px", background: T.bgSoft, padding: "20px", borderRadius: T.radiusLg, border: `1px solid ${T.borderSoft}`, boxShadow: T.shadow }}>
-        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-          
-          <div style={{ display: "flex", gap: 20 }}>
+      {/* Universal Control Deck & Engine Starter */}
+      <div style={{ maxWidth: 460, margin: "0 auto", background: T.bgCard, borderRadius: T.radiusLg, border: `1px solid ${T.borderSoft}`, boxShadow: T.shadow, overflow: 'hidden' }}>
+        
+        {/* Settings Deck */}
+        <div style={{ padding: "24px", display: "flex", flexDirection: "column", gap: 24 }}>
+          <div style={{ display: "flex", gap: 24 }}>
             {/* Octave Base */}
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 11, color: T.textMuted, fontWeight: 800, fontFamily: T.sans, marginBottom: 10, textTransform: "uppercase", letterSpacing: 2 }}>Octave Base</div>
-              <div style={{ display: "flex", gap: 6 }}>
+              <div style={{ fontSize: 11, color: T.textMuted, fontWeight: 800, fontFamily: T.sans, marginBottom: 12, textTransform: "uppercase", letterSpacing: 2 }}>Octave</div>
+              <div style={{ display: "flex", background: T.bgSoft, borderRadius: T.radius, padding: 4, border: `1px solid ${T.borderSoft}` }}>
                 {[1, 2, 3, 4].map(o => (
                   <button key={o} onClick={() => changeOctave(o)} style={{
-                    flex: 1, background: octave === o ? T.textDark : T.bgCard,
+                    flex: 1, background: octave === o ? T.textDark : "transparent",
                     color: octave === o ? "#fff" : T.textMed,
-                    border: `1px solid ${octave === o ? T.textDark : T.border}`,
-                    borderRadius: T.radius, padding: "10px 0", fontSize: 13, fontWeight: 800, cursor: "pointer", fontFamily: T.sans,
+                    border: "none",
+                    borderRadius: T.radius - 2, padding: "8px 0", fontSize: 13, fontWeight: 800, cursor: "pointer", fontFamily: T.sans,
                     boxShadow: octave === o ? T.sm : "none", transition: "all 0.2s"
                   }}>{o}</button>
                 ))}
@@ -3174,58 +3179,72 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
 
             {/* Volume */}
             <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12 }}>
                 <div style={{ fontSize: 11, color: T.textMuted, fontWeight: 800, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 2 }}>Volume</div>
-                <div style={{ fontSize: 11, color: T.textMed, fontWeight: 800, fontFamily: T.sans, fontVariantNumeric: "tabular-nums" }}>{volume} dB</div>
+                <div style={{ fontSize: 11, color: playing ? T.plum : T.textMuted, fontWeight: 800, fontFamily: T.sans, fontVariantNumeric: "tabular-nums", transition: "color 0.4s" }}>{volume} dB</div>
               </div>
-              <div style={{ flex: 1, display: "flex", alignItems: "center" }}>
+              <div style={{ flex: 1, display: "flex", alignItems: "center", position: "relative" }}>
+                <div style={{ position: "absolute", left: 0, right: 0, height: 6, background: T.bgSoft, borderRadius: 3, border: `1px solid ${T.borderSoft}`, pointerEvents: "none" }} />
+                <div style={{ position: "absolute", left: 0, width: `${(volume + 40) / 40 * 100}%`, height: 6, background: playing ? T.plum : T.textMed, borderRadius: 3, pointerEvents: "none", transition: "background 0.4s" }} />
                 <input type="range" min={-40} max={0} value={volume}
                   onChange={e => setVolume(Number(e.target.value))}
-                  style={{ width: "100%", accentColor: T.textDark, height: 6, background: T.border, borderRadius: 3, outline: "none", cursor: "pointer" }} />
+                  style={{ width: "100%", opacity: 0, height: 24, cursor: "pointer", position: "relative", zIndex: 10 }} />
+                {/* Custom Thumb */}
+                <div style={{ 
+                  position: "absolute", left: `calc(${(volume + 40) / 40 * 100}% - 8px)`, width: 16, height: 16, 
+                  background: "#fff", border: `2px solid ${playing ? T.plum : T.textMed}`, borderRadius: "50%", 
+                  pointerEvents: "none", boxShadow: "0 2px 4px rgba(0,0,0,0.1)", transition: "border-color 0.4s"
+                }} />
               </div>
             </div>
           </div>
 
           {mode === "cycle" && (
             <>
-              <div style={{ height: 1, background: T.borderSoft, width: "100%" }} />
-              <div style={{ display: "flex", gap: 20 }}>
+              <div style={{ height: 1, background: T.borderSoft, width: "100%", margin: "0" }} />
+              <div style={{ display: "flex", gap: 24 }}>
                 {/* Step Duration */}
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 11, color: T.textMuted, fontWeight: 800, fontFamily: T.sans, marginBottom: 10, textTransform: "uppercase", letterSpacing: 2 }}>Step Duration</div>
+                  <div style={{ fontSize: 11, color: T.textMuted, fontWeight: 800, fontFamily: T.sans, marginBottom: 10, textTransform: "uppercase", letterSpacing: 2 }}>Step Length</div>
                   <select value={stepDuration} onChange={e => setStepDuration(e.target.value)}
-                    style={{ width: "100%", padding: "10px 12px", borderRadius: T.radius, border: `1px solid ${T.borderSoft}`, background: T.bgCard, color: T.textDark, fontFamily: T.sans, fontSize: 14, outline: "none", cursor: "pointer", fontWeight: 700, appearance: "none", boxShadow: T.sm }}>
+                    style={{ width: "100%", padding: "10px 12px", borderRadius: T.radius, border: `1px solid ${T.borderSoft}`, background: T.bgSoft, color: T.textDark, fontFamily: T.sans, fontSize: 13, outline: "none", cursor: "pointer", fontWeight: 700, appearance: "none", boxShadow: "inset 0 1px 2px rgba(0,0,0,0.02)" }}>
                     <option value="4m">4 Bars</option>
                     <option value="2m">2 Bars</option>
                     <option value="1m">1 Bar</option>
-                    <option value="2n">1/2 Bar (2 Beats)</option>
+                    <option value="2n">1/2 Bar</option>
                     <option value="4n">1 Beat</option>
                   </select>
                 </div>
                 {/* Tempo */}
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 11, color: T.textMuted, fontWeight: 800, fontFamily: T.sans, marginBottom: 10, textTransform: "uppercase", letterSpacing: 2 }}>Tempo (BPM)</div>
-                  <input type="number" min={40} max={240} value={bpm} onChange={e => { setBpm(Number(e.target.value)); if (playing) Tone.Transport.bpm.value = Number(e.target.value); }} 
-                    style={{ width: "100%", padding: "10px 12px", borderRadius: T.radius, border: `1px solid ${T.borderSoft}`, background: T.bgCard, color: T.textDark, fontFamily: T.sans, fontSize: 14, outline: "none", fontWeight: 700, boxShadow: T.sm }} />
+                  <div style={{ fontSize: 11, color: T.textMuted, fontWeight: 800, fontFamily: T.sans, marginBottom: 10, textTransform: "uppercase", letterSpacing: 2 }}>Tempo</div>
+                  <div style={{ position: "relative" }}>
+                    <input type="number" min={40} max={240} value={bpm} onChange={e => { setBpm(Number(e.target.value)); if (playing) Tone.Transport.bpm.value = Number(e.target.value); }} 
+                      style={{ width: "100%", padding: "10px 12px", borderRadius: T.radius, border: `1px solid ${T.borderSoft}`, background: T.bgSoft, color: T.textDark, fontFamily: T.sans, fontSize: 13, outline: "none", fontWeight: 700, boxShadow: "inset 0 1px 2px rgba(0,0,0,0.02)", paddingRight: 40 }} />
+                    <span style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", fontSize: 10, fontWeight: 800, color: T.textMuted, pointerEvents: "none" }}>BPM</span>
+                  </div>
                 </div>
               </div>
             </>
           )}
         </div>
-      </div>
 
-      <div style={{ display: "flex", justifyContent: "center" }}>
+        {/* Huge Ignition Button */}
         <button onClick={toggleDrone} style={{
-          background: playing ? T.coral : T.plum, border: `2px solid ${playing ? T.coral : T.plum}`, color: "#fff",
-          padding: "16px 48px", fontSize: 14, fontWeight: 800, cursor: "pointer", borderRadius: T.radiusLg,
-          fontFamily: T.sans, letterSpacing: 2, textTransform: "uppercase",
-          boxShadow: playing ? `0 4px 20px ${T.coral}40` : `0 4px 16px ${T.plum}40`,
-          transition: "all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)"
+          width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: 12,
+          background: playing ? T.coral : T.plum, color: "#fff",
+          padding: "24px", fontSize: 16, fontWeight: 800, cursor: "pointer", border: "none", borderTop: `1px solid ${playing ? T.coral : T.plum}`,
+          fontFamily: T.sans, letterSpacing: 3, textTransform: "uppercase",
+          transition: "all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)"
         }}
-        onMouseOver={e => e.currentTarget.style.transform = "scale(1.02)"}
-        onMouseOut={e => e.currentTarget.style.transform = "scale(1)"}
+        onMouseOver={e => e.currentTarget.style.filter = "brightness(1.1)"}
+        onMouseOut={e => e.currentTarget.style.filter = "brightness(1)"}
         >
-          {playing ? "Stop Drone" : (mode === "cycle" ? "Start Sequence" : "Start Drone")}
+          {playing ? (
+            <><div style={{ width: 12, height: 12, background: "#fff", borderRadius: 2 }} /> STOP ENGINE</>
+          ) : (
+            <><div style={{ width: 0, height: 0, borderTop: "7px solid transparent", borderBottom: "7px solid transparent", borderLeft: "12px solid #fff" }} /> IGNITE {mode === "cycle" ? "SEQUENCE" : "DRONE"}</>
+          )}
         </button>
       </div>
     </div>
