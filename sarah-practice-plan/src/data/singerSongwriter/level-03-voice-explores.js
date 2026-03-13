@@ -28,7 +28,9 @@ export const level3 = {
       sarah: "Gene, this is the exercise the curriculum was missing. You know the notes from Level 2. Now forget the rules and just play with them. Think of it like paddling around a break without trying to catch a wave — just being in the water.",
       metronome: 80,
       referencePitches: getPitchRange("A2", "E4"),
-      recorder: true
+      recorder: true,
+      drone: { root: "A", octave: 2, texture: "pure" },
+      pitchContour: true
     },
     {
       id: "ss-3-2",
@@ -48,7 +50,9 @@ export const level3 = {
       sarah: "Gene, a lot of your favorite surf-psych songs live in G major — Allah-Las, Sun Room. This brighter palette is where the golden-hour energy comes from. Let it shine.",
       metronome: 80,
       referencePitches: getPitchRange("G2", "D4"),
-      recorder: true
+      recorder: true,
+      drone: { root: "G", octave: 2, texture: "pure" },
+      pitchContour: true
     },
     {
       id: "ss-3-3",
@@ -68,7 +72,8 @@ export const level3 = {
       sarah: "Gene, C major is where a lot of Skinshape and Babe Rainbow songs live. Em is Hermanos Gutiérrez territory — sparse, cinematic. Your voice will find its home in some chords more than others, and that's your songwriting compass.",
       metronome: 80,
       referencePitches: getPitchRange("C3", "B4"),
-      recorder: true
+      recorder: true,
+      pitchContour: true
     },
 
     // ─── NEW: STEPWISE MOTION ───
@@ -328,6 +333,73 @@ export const level3 = {
     {
       id: "ss-3-15",
       time: 6,
+      title: "Sing-Along Absorption",
+      type: "vocal",
+      what: "Pick a backing track and LISTEN for 30 seconds — hear where the groove breathes, where the accents fall, where silence lives. Then hum along, matching the track's energy and phrasing patterns. No chord tones to hit, no rules — just absorb the groove through your body. Mirror neuron research shows that active listening IS motor rehearsal.",
+      setup: "Guitar optional. One backing track of your choice.",
+      tracks: [
+        { name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" },
+        { name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" },
+        { name: "Desert Blues 75", src: "/desert-blues-75.mp3" }
+      ],
+      steps: [
+        { text: "Pick a backing track. Just LISTEN for 30 seconds with eyes closed. Don't play, don't hum. Where does the groove breathe? Where are the accents? Where is the silence? Map the groove in your body.", why: "Mirror neuron research shows that focused listening activates the same motor pathways as performing. When you deeply listen to a groove, your brain is rehearsing it — even in silence." },
+        { text: "Start humming along — no words, no specific notes. Just match the ENERGY of the track. When it's sparse, hum sparsely. When it fills up, hum more. You're absorbing phrasing patterns through imitation.", why: "Humming along with a reference is how musicians have learned for millennia — before notation, before theory. Your ear absorbs phrasing, timing, and dynamics faster through imitation than through instruction." },
+        { text: "Now add your guitar (strum Am lightly). Keep humming along with the track. Let the track's groove shape your strum pattern AND your humming. You're a third instrument joining the band.", why: "Matching a track while playing trains entrainment — your body syncing to an external groove. This is the foundation of playing with other musicians and playing with feel." },
+        { text: "Switch to a different backing track. Notice how your humming and strumming instantly change character. The groove tells you how to move. 2 minutes per track, try all three. Record the last one.", why: "Different grooves pull different responses from you. Building the habit of listening-then-absorbing means every song you hear becomes a lesson in phrasing and feel." }
+      ],
+      feel: "This should feel like joining a conversation that's already happening — you're not leading, you're blending in. The track is the teacher. Your job is to absorb.",
+      wrong: "If you're ignoring the track and doing your own thing, you're missing the exercise. The whole point is to let the track shape your response. Listen first, always.",
+      sarah: "Gene, this is how you already learn music — you listen to Khruangbin and Skinshape, and their phrasing seeps into you. This exercise makes that absorption conscious and deliberate. Every listen is a lesson.",
+      metronome: 80,
+      recorder: true
+    },
+    {
+      id: "ss-3-16",
+      time: 8,
+      title: "Interval Feeling — Notes as Colors",
+      type: "vocal",
+      drone: { root: "A", octave: 2, texture: "warm" },
+      what: "Each note in the chord isn't just a frequency — it's a COLOR. The root (A) is home, gravity, earth. The minor 3rd (C) is the ache, the blue tint, the emotion. The 5th (E) is open sky, wide horizon, space. Feel each note's emotional quality against the drone, then paint freely between them like choosing colors from a palette.",
+      setup: "Guitar optional — the drone anchors you. Metronome at 70 BPM (slow, contemplative).",
+      steps: [
+        { text: "Turn on the drone (A). Sing the root A. Hold it for 8 beats. Feel how it locks perfectly with the drone — stable, grounded, home. This is your earth color. Like planting your feet in warm sand.", why: "The root is the most consonant interval — it IS the tonic. Feeling this stability deeply gives you a 'home base' to return to. Every improvisation starts and ends here." },
+        { text: "Sing the 5th (E). Hold it for 8 beats against the drone. Feel how it's stable but more open — like looking at the horizon from a hilltop. Wide, spacious, not as grounded as the root but perfectly at rest.", why: "The perfect 5th is the second most consonant interval after the octave. It creates openness without tension. It's the 'sky' to the root's 'earth.' Most of your favorite artists hang on the 5th constantly." },
+        { text: "Sing the minor 3rd (C). Hold it for 8 beats against the drone. Feel the shift — there's an ache here, a bittersweet pull. The minor 3rd is where emotion lives. It's not sad exactly — it's depth, it's color, it's the blue in the golden hour.", why: "The minor 3rd is what makes Am minor. It's the emotional core of the chord — remove it and you have a hollow power chord. This interval is the 'blue' that gives your genres their melancholy warmth." },
+        { text: "Now paint freely: root (earth) → 5th (sky) → 3rd (blue) → root (home). Move between them at any speed, in any order. Feel each color as you arrive. 2 minutes with eyes closed. No rhythm constraint — just feel.", why: "When each interval has an emotional identity — not just a name — you can reach for feelings instead of theory. 'I want openness' = sing the 5th. 'I want ache' = sing the 3rd. Notes as colors, not numbers." },
+        { text: "Try the same over G major: root G (earth), major 3rd B (warmth/sunshine — brighter than the minor 3rd), 5th D (sky). Feel how the major 3rd has a completely different color — golden instead of blue. 2 minutes.", why: "Major 3rd vs minor 3rd is the most important emotional distinction in music. When you feel this difference in your body (not just hear it in theory), you can shift the mood of any improvisation by choosing which 3rd to sing." },
+        { text: "Final round: alternate Am and G. Paint with the minor palette (A-C-E) for 4 bars, then the major palette (G-B-D) for 4 bars. Feel the color shift as the chord changes — blue to gold and back. Record it.", why: "Hearing major vs minor as emotional colors rather than theory labels is the foundation of expressive singing. Your voice becomes a paintbrush choosing between warmth and melancholy." }
+      ],
+      feel: "Each note should feel like dipping your brush in a different color. The root is grounding. The 5th is expansive. The 3rd is where the feeling lives — minor 3rd for blue, major 3rd for gold.",
+      wrong: "If all three notes feel the same to you, slow down. Hold each one for 16 beats against the drone. Close your eyes. The emotional quality will emerge — it's subtle at first but unmistakable once you feel it.",
+      sarah: "Gene, this is the exercise that turns theory into feeling. You're not learning intervals — you're building a palette. When you reach for a note because of how it FEELS instead of what it's CALLED, you're singing like an artist, not a student.",
+      metronome: 70,
+      referencePitches: getPitchRange("G2", "E4"),
+      pitchContour: true,
+      pianoKeys: true,
+      recorder: true
+    },
+    {
+      id: "ss-3-17",
+      time: 8,
+      title: "Object Writing — Sensory Vocabulary",
+      type: "record",
+      what: "Pat Pattison's #1 daily exercise from Berklee. Pick an object — a surfboard, a bonfire, a highway at dusk. Set a timer for 7 minutes. Write (or speak into your recorder) using ALL your senses: what does it look like, sound like, smell like, taste like, feel against your skin? What does your body feel internally? Where are you in space? No editing, no judging — just sensory flow.",
+      setup: "Phone recorder or notebook. No guitar needed. Timer set to 7 minutes.",
+      steps: [
+        { text: "Pick an object that connects to your music — a wave, a desert road, a porch at sunset, a bonfire, a vintage amplifier. Something with sensory richness. Set a 7-minute timer.", why: "Pat Pattison at Berklee assigns this daily. The objects you choose reveal your artistic world. Songwriters who do this daily build a sensory vocabulary that makes lyrics vivid instead of generic." },
+        { text: "Start the timer. Speak into your recorder (or write) using ALL 7 senses: sight, sound, smell, taste, touch, organic (internal body feelings — heartbeat, breath, tension), kinesthetic (your body's position in space). Don't stop. Don't edit. Just flow.", why: "The 7-sense framework forces you past the visual default. Most people describe what they SEE. Songwriters who access all senses create lyrics that listeners FEEL. 'The salt air coating my lips' beats 'the beautiful ocean' every time." },
+        { text: "When the timer goes off, stop. Read/listen back. Circle or note any phrase that surprised you — something vivid, unexpected, or emotionally charged. These surprises are song seeds.", why: "The surprises are gold. Your conscious mind writes clichés. Your subconscious, freed by the timer pressure, produces original imagery. The circled phrases become future lyrics." },
+        { text: "Try it again with a different object. This time, pick something from your music — a feeling during a song you love, a moment while playing guitar, the sensation of singing a note that locks with the chord. 7 minutes.", why: "Object writing about musical experiences builds the vocabulary to write ABOUT music. Your lyrics will eventually describe musical moments with the same specificity you use for surfboards and sunsets." }
+      ],
+      feel: "This should feel like stream-of-consciousness — messy, surprising, sometimes nonsensical. The mess is where the gold hides. Don't try to write 'good' — try to write FAST and SPECIFIC.",
+      wrong: "If you're writing abstract emotions ('I felt happy,' 'the sunset was beautiful'), you're staying on the surface. Dig into the senses: WHAT does happy feel like in your chest? What COLOR is the sunset — not 'orange' but 'the orange of old rust on a tailgate'? Specificity is everything.",
+      sarah: "Gene, this is the foundation of every great lyric you've ever loved. 'Beautiful day that you know will end' — that's sensory, specific, embodied. Object writing builds the muscle that produces lines like that. Do this daily, even for 5 minutes, and your lyrics will transform.",
+      recorder: true
+    },
+    {
+      id: "ss-3-18",
+      time: 6,
       title: "Whisper to Full Voice",
       type: "vocal",
       what: "Improvise chord tones while moving through your dynamic range — from barely audible whisper to full chest voice and back. Dynamics in isolation: no chord changes, no rhythm constraints, just volume as a creative variable.",
@@ -346,7 +418,7 @@ export const level3 = {
       volumeMeter: true,
       volumeContour: true,
       recorder: true,
-      levelUp: "Can freely explore chord tones on all five chords, wander stepwise, internalize rhythm physically, name rhythm cells, hold a musical conversation between guitar and voice, audiate silently, shift emotional color, vary dynamics, shape vowel sounds, phrase with breath, and use silence as music — each skill individually, without the strum breaking."
+      levelUp: "Can freely explore chord tones on all five chords, wander stepwise, internalize rhythm physically, name rhythm cells, hold a musical conversation between guitar and voice, audiate silently, shift emotional color, vary dynamics, shape vowel sounds, phrase with breath, use silence as music, absorb grooves through listening, feel intervals as emotional colors, and build sensory vocabulary through object writing — each skill individually, without the strum breaking."
     }
   ]
 };

@@ -2217,7 +2217,7 @@ const getChordSpelling = (chordStr) => {
   let fifth = 7;
   let seventh = null;
 
-  if (q.match(/^m/i) || q.includes('min')) third = 3;
+  if (q.match(/^m(?!aj)/i) || q.includes('min')) third = 3;
   if (q.includes('dim')) { third = 3; fifth = 6; }
   if (q.includes('aug')) { third = 4; fifth = 8; }
   if (q.includes('sus2')) third = 2;
@@ -2281,7 +2281,7 @@ const parseChordToNotes = (chordStr, baseOct, type = "chord") => {
   let fifth = 7;
   let seventh = null;
 
-  if (q.match(/^m/i) || q.includes('min')) third = 3;
+  if (q.match(/^m(?!aj)/i) || q.includes('min')) third = 3;
   if (q.includes('dim')) { third = 3; fifth = 6; }
   if (q.includes('aug')) { third = 4; fifth = 8; }
   if (q.includes('sus2')) third = 2;
@@ -2349,19 +2349,32 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     let synth;
     let newNodes = [];
 
+    // Master bus to prevent clipping and manage dynamics
+    const masterGain = new Tone.Gain(0.8);
+    const compressor = new Tone.Compressor({
+      threshold: -18,
+      ratio: 4,
+      attack: 0.1,
+      release: 0.5
+    });
+    const limiter = new Tone.Limiter(-1).toDestination();
+    masterGain.chain(compressor, limiter);
+    newNodes.push(masterGain, compressor, limiter);
+
     // FIX: Replaced async Tone.Reverb with synchronous Tone.Freeverb to prevent Web Audio crashes on rapid switching
     if (texture === "analog") {
-      const chorus = new Tone.Chorus(4, 2.5, 0.5).toDestination().start();
+      const chorus = new Tone.Chorus(4, 2.5, 0.5).connect(masterGain).start();
       const filter = new Tone.Filter(800, "lowpass").connect(chorus);
       synth = new Tone.PolySynth(Tone.Synth, {
         oscillator: { type: "fatsawtooth", count: 3, spread: 25 },
         envelope: { attack: 2.5, decay: 0.1, sustain: 1, release: 4 }
       }).connect(filter);
+      synth.maxPolyphony = 16;
       const lfo = new Tone.LFO(0.1, 400, 1200).connect(filter.frequency).start();
-      newNodes = [chorus, filter, lfo];
+      newNodes.push(chorus, filter, lfo);
     } 
     else if (texture === "choir") {
-      const reverb = new Tone.Freeverb({ roomSize: 0.9, dampening: 2000 }).toDestination();
+      const reverb = new Tone.Freeverb({ roomSize: 0.9, dampening: 2000 }).connect(masterGain);
       const filter = new Tone.Filter(1500, "lowpass").connect(reverb);
       synth = new Tone.PolySynth(Tone.FMSynth, {
         harmonicity: 1.01, modulationIndex: 2,
@@ -2370,17 +2383,12 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         envelope: { attack: 3, decay: 0.1, sustain: 1, release: 5 },
         modulationEnvelope: { attack: 3, decay: 0.1, sustain: 1, release: 5 }
       }).connect(filter);
-      
-      // Removed LFO connection to synth.harmonicity.
-      // PolySynth does not expose single signal parameters like harmonicity directly
-      // in a way that an LFO can connect to it globally.
-      newNodes = [reverb, filter];
+      synth.maxPolyphony = 16;
+      newNodes.push(reverb, filter);
     }
     else if (texture === "organ") {
-      const chorus = new Tone.Chorus(2, 4, 0.8).toDestination().start();
+      const chorus = new Tone.Chorus(2, 4, 0.8).connect(masterGain).start();
       const eq = new Tone.EQ3(2, -2, -6).connect(chorus);
-      // AMSynth with dual square waves creates a very rich, reedy harmonium texture 
-      // without the bugged fatpwm oscillator.
       synth = new Tone.PolySynth(Tone.AMSynth, {
         harmonicity: 1.005,
         oscillator: { type: "square" },
@@ -2388,27 +2396,30 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         envelope: { attack: 0.5, decay: 0.1, sustain: 1, release: 1 },
         modulationEnvelope: { attack: 0.5, decay: 0.1, sustain: 1, release: 1 }
       }).connect(eq);
-      newNodes = [chorus, eq];
+      synth.maxPolyphony = 16;
+      newNodes.push(chorus, eq);
     }
     else if (texture === "pure") {
       synth = new Tone.PolySynth(Tone.Synth, {
         oscillator: { type: "sine" },
         envelope: { attack: 1, decay: 0, sustain: 1, release: 2 }
-      }).toDestination();
+      }).connect(masterGain);
+      synth.maxPolyphony = 16;
     }
     else if (texture === "strings") {
-      const reverb = new Tone.Freeverb({ roomSize: 0.8, dampening: 3000 }).toDestination();
+      const reverb = new Tone.Freeverb({ roomSize: 0.8, dampening: 3000 }).connect(masterGain);
       const chorus = new Tone.Chorus(2, 2.5, 0.6).connect(reverb).start();
       const filter = new Tone.Filter(2000, "lowpass").connect(chorus);
       synth = new Tone.PolySynth(Tone.Synth, {
         oscillator: { type: "sawtooth", count: 3, spread: 20 },
         envelope: { attack: 3, decay: 0.1, sustain: 1, release: 4 }
       }).connect(filter);
+      synth.maxPolyphony = 16;
       const lfo = new Tone.LFO(0.1, 1000, 2500).connect(filter.frequency).start();
-      newNodes = [reverb, chorus, filter, lfo];
+      newNodes.push(reverb, chorus, filter, lfo);
     }
     else if (texture === "tanpura") {
-      const phaser = new Tone.Phaser({ frequency: 0.2, octaves: 3, baseFrequency: 200 }).toDestination();
+      const phaser = new Tone.Phaser({ frequency: 0.2, octaves: 3, baseFrequency: 200 }).connect(masterGain);
       const filter = new Tone.Filter(3000, "lowpass").connect(phaser);
       synth = new Tone.PolySynth(Tone.FMSynth, {
         harmonicity: 2.01, modulationIndex: 3,
@@ -2417,10 +2428,11 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         envelope: { attack: 2, decay: 0.1, sustain: 1, release: 3 },
         modulationEnvelope: { attack: 2, decay: 0.1, sustain: 1, release: 3 }
       }).connect(filter);
-      newNodes = [phaser, filter];
+      synth.maxPolyphony = 16;
+      newNodes.push(phaser, filter);
     }
     else if (texture === "crystal") {
-      const reverb = new Tone.Freeverb({ roomSize: 0.95, dampening: 1000 }).toDestination();
+      const reverb = new Tone.Freeverb({ roomSize: 0.95, dampening: 1000 }).connect(masterGain);
       synth = new Tone.PolySynth(Tone.FMSynth, {
         harmonicity: 1.005, modulationIndex: 1.5,
         oscillator: { type: "sine" },
@@ -2428,43 +2440,42 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         envelope: { attack: 4, decay: 0.1, sustain: 1, release: 6 },
         modulationEnvelope: { attack: 4, decay: 0.1, sustain: 1, release: 6 }
       }).connect(reverb);
-      
-      // Need to connect LFO to the actual voices inside the PolySynth, or skip it
-      // PolySynth doesn't expose modulationIndex directly on its wrapper.
-      // Easiest fix to prevent the crash while keeping the sound is to remove the LFO 
-      // or set modulationIndex statically. Crystal bowl sounds fine static.
-      newNodes = [reverb];
+      synth.maxPolyphony = 16;
+      newNodes.push(reverb);
     }
     else if (texture === "lofi-tape") {
-      const vibrato = new Tone.Vibrato({ frequency: 2, depth: 0.1 }).toDestination();
+      const vibrato = new Tone.Vibrato({ frequency: 2, depth: 0.1 }).connect(masterGain);
       const filter = new Tone.Filter(1200, "lowpass").connect(vibrato);
       const chorus = new Tone.Chorus(4, 2.5, 0.4).connect(filter).start();
       synth = new Tone.PolySynth(Tone.Synth, {
         oscillator: { type: "triangle" },
         envelope: { attack: 1.5, decay: 0.5, sustain: 0.8, release: 3 }
       }).connect(chorus);
-      newNodes = [vibrato, filter, chorus];
+      synth.maxPolyphony = 16;
+      newNodes.push(vibrato, filter, chorus);
     }
     else if (texture === "surf-tremolo") {
-      const reverb = new Tone.Freeverb({ roomSize: 0.8, dampening: 4000 }).toDestination();
+      const reverb = new Tone.Freeverb({ roomSize: 0.8, dampening: 4000 }).connect(masterGain);
       const tremolo = new Tone.Tremolo(4, 0.75).connect(reverb).start();
       synth = new Tone.PolySynth(Tone.Synth, {
         oscillator: { type: "sawtooth" },
         envelope: { attack: 0.5, decay: 0.2, sustain: 0.8, release: 2 }
       }).connect(tremolo);
-      newNodes = [reverb, tremolo];
+      synth.maxPolyphony = 16;
+      newNodes.push(reverb, tremolo);
     }
     else if (texture === "vintage-keys") {
-      const phaser = new Tone.Phaser({ frequency: 0.5, octaves: 2, baseFrequency: 400 }).toDestination();
+      const phaser = new Tone.Phaser({ frequency: 0.5, octaves: 2, baseFrequency: 400 }).connect(masterGain);
       const chorus = new Tone.Chorus(2, 3, 0.6).connect(phaser).start();
       synth = new Tone.PolySynth(Tone.Synth, {
         oscillator: { type: "square" },
         envelope: { attack: 0.1, decay: 0.1, sustain: 1, release: 0.5 }
       }).connect(chorus);
-      newNodes = [phaser, chorus];
+      synth.maxPolyphony = 16;
+      newNodes.push(phaser, chorus);
     }
     else if (texture === "dub-sub") {
-      const filter = new Tone.Filter(150, "lowpass", -24).toDestination();
+      const filter = new Tone.Filter(150, "lowpass", -24).connect(masterGain);
       synth = new Tone.PolySynth(Tone.FMSynth, {
         harmonicity: 1, modulationIndex: 0.5,
         oscillator: { type: "sine" },
@@ -2472,7 +2483,8 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         envelope: { attack: 0.5, decay: 0.2, sustain: 1, release: 1 },
         modulationEnvelope: { attack: 0.5, decay: 0.2, sustain: 1, release: 1 }
       }).connect(filter);
-      newNodes = [filter];
+      synth.maxPolyphony = 16;
+      newNodes.push(filter);
     }
 
     synth.volume.value = volume;
@@ -2480,9 +2492,10 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     effectNodes = newNodes;
     synthRef.current = synth;
 
-    if (playing && mode === "manual") {
-      const chordNotes = parseChordToNotes(root, octaveRef.current, true);
+    if (playing && (mode === "manual" || mode === "single")) {
+      const chordNotes = parseChordToNotes(root, octaveRef.current, mode === "single" ? "single" : "chord");
       if (chordNotes) synth.triggerAttack(chordNotes);
+      previousNotesRef.current = chordNotes || [];
     }
 
     return () => {
@@ -2570,9 +2583,17 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
 
   const changeRoot = (n) => {
     if (playing && (mode === "manual" || mode === "single") && root !== n) {
-      synthRef.current.releaseAll();
       const chordNotes = parseChordToNotes(n, octaveRef.current, mode === "single" ? "single" : "chord");
-      if (chordNotes) synthRef.current.triggerAttack(chordNotes, "+0.1");
+      if (chordNotes) {
+        const currentNotes = previousNotesRef.current || [];
+        const notesToRelease = currentNotes.filter(note => !chordNotes.includes(note));
+        const notesToAttack = chordNotes.filter(note => !currentNotes.includes(note));
+        
+        if (notesToRelease.length > 0) synthRef.current.triggerRelease(notesToRelease);
+        if (notesToAttack.length > 0) synthRef.current.triggerAttack(notesToAttack, "+0.05"); // slight delay for crossfade
+        
+        previousNotesRef.current = chordNotes;
+      }
     }
     setRoot(n);
   };
@@ -2580,16 +2601,24 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
   const changeOctave = (oct) => {
     setOctave(oct);
     if (playing && (mode === "manual" || mode === "single")) {
-      synthRef.current.releaseAll();
       const chordNotes = parseChordToNotes(root, oct, mode === "single" ? "single" : "chord");
-      if (chordNotes) synthRef.current.triggerAttack(chordNotes, "+0.1");
+      if (chordNotes) {
+        const currentNotes = previousNotesRef.current || [];
+        const notesToRelease = currentNotes.filter(note => !chordNotes.includes(note));
+        const notesToAttack = chordNotes.filter(note => !currentNotes.includes(note));
+        
+        if (notesToRelease.length > 0) synthRef.current.triggerRelease(notesToRelease);
+        if (notesToAttack.length > 0) synthRef.current.triggerAttack(notesToAttack, "+0.05");
+        
+        previousNotesRef.current = chordNotes;
+      }
     }
   };
 
   const getParsedChord = (chordStr) => {
     if (!chordStr) return { base: "C", ext: "" };
-    // match base like C, F#m, Bbm
-    const match = chordStr.trim().match(/^([A-G][#b♭]?m?)(.*)$/i);
+    // match base like C, F#m, Bbm. Exclude 'm' if it's part of 'maj'
+    const match = chordStr.trim().match(/^([A-G][#b♭]?(?:m(?!aj))?)(.*)$/i);
     if (match) {
       return { base: match[1], ext: match[2] || "" };
     }
@@ -2764,7 +2793,11 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
                   onMouseOut={e => e.currentTarget.style.transform = "translate(-50%, -50%) scale(1)"}
                   >{major}</button>
                   
-                  <button onClick={() => changeRoot(`${minor}${currentExt}`)} style={{
+                  <button onClick={() => {
+                    let validExt = currentExt;
+                    if (validExt === 'maj7' || validExt === 'aug') validExt = '';
+                    changeRoot(`${minor}${validExt}`)
+                  }} style={{
                     position: "absolute", left: innerX, top: innerY, transform: "translate(-50%, -50%)",
                     width: 36, height: 36, borderRadius: "50%",
                     background: isMinorActive ? T.coral : T.bgCard,
@@ -2788,32 +2821,42 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
             Extensions / Modifications
           </div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center" }}>
-            {[
-              { label: "None", val: "" },
-              { label: "7", val: "7" },
-              { label: "Maj7", val: "maj7" },
-              { label: "Sus2", val: "sus2" },
-              { label: "Sus4", val: "sus4" },
-              { label: "Dim", val: "dim" },
-              { label: "Aug", val: "aug" }
-            ].map(ext => {
+            {(() => {
               const { base: currentBase, ext: currentExt } = getParsedChord(root);
-              const isExtActive = currentExt === ext.val;
-              return (
-                <button key={ext.label} onClick={() => {
-                  changeRoot(`${currentBase}${ext.val}`);
-                }} style={{
-                  padding: "8px 16px", borderRadius: T.radius,
-                  background: isExtActive ? T.textDark : T.bgSoft, 
-                  color: isExtActive ? "#ffffff" : T.textDark, 
-                  border: `1px solid ${isExtActive ? T.textDark : T.border}`,
-                  fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: T.sans,
-                  transition: "all 0.2s", boxShadow: isExtActive ? T.sm : "none"
-                }}>
-                  {ext.label}
-                </button>
-              )
-            })}
+              const isMinor = currentBase.endsWith('m');
+              const exts = isMinor ? [
+                { label: "None", val: "" },
+                { label: "7", val: "7" },
+                { label: "Sus2", val: "sus2" },
+                { label: "Sus4", val: "sus4" },
+                { label: "Dim", val: "dim" }
+              ] : [
+                { label: "None", val: "" },
+                { label: "7", val: "7" },
+                { label: "Maj7", val: "maj7" },
+                { label: "Sus2", val: "sus2" },
+                { label: "Sus4", val: "sus4" },
+                { label: "Dim", val: "dim" },
+                { label: "Aug", val: "aug" }
+              ];
+              return exts.map(ext => {
+                const isExtActive = currentExt === ext.val;
+                return (
+                  <button key={ext.label} onClick={() => {
+                    changeRoot(`${currentBase}${ext.val}`);
+                  }} style={{
+                    padding: "8px 16px", borderRadius: T.radius,
+                    background: isExtActive ? T.textDark : T.bgSoft, 
+                    color: isExtActive ? "#ffffff" : T.textDark, 
+                    border: `1px solid ${isExtActive ? T.textDark : T.border}`,
+                    fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: T.sans,
+                    transition: "all 0.2s", boxShadow: isExtActive ? T.sm : "none"
+                  }}>
+                    {ext.label}
+                  </button>
+                )
+              });
+            })()}
           </div>
         </div>
       ) : (
@@ -3015,7 +3058,9 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
                       
                       <button onClick={() => {
                         const newProg = [...progression];
-                        newProg[editingIndex] = `${minor}${currentExt}`;
+                        let validExt = currentExt;
+                        if (validExt === 'maj7' || validExt === 'aug') validExt = '';
+                        newProg[editingIndex] = `${minor}${validExt}`;
                         setProgression(newProg);
                         setActivePreset(null);
                       }} style={{
@@ -3042,36 +3087,46 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
                 Extensions / Modifications
               </div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center" }}>
-                {[
-                  { label: "None", val: "" },
-                  { label: "7", val: "7" },
-                  { label: "Maj7", val: "maj7" },
-                  { label: "Sus2", val: "sus2" },
-                  { label: "Sus4", val: "sus4" },
-                  { label: "Dim", val: "dim" },
-                  { label: "Aug", val: "aug" }
-                ].map(ext => {
+                {(() => {
                   const currentChord = progression[editingIndex] || "C";
                   const { base: currentBase, ext: currentExt } = getParsedChord(currentChord);
-                  const isExtActive = currentExt === ext.val;
-                  return (
-                    <button key={ext.label} onClick={() => {
-                      const newProg = [...progression];
-                      newProg[editingIndex] = `${currentBase}${ext.val}`;
-                      setProgression(newProg);
-                      setActivePreset(null);
-                    }} style={{
-                      padding: "8px 16px", borderRadius: T.radius,
-                      background: isExtActive ? T.textDark : T.bgSoft, 
-                      color: isExtActive ? "#ffffff" : T.textDark, 
-                      border: `1px solid ${isExtActive ? T.textDark : T.border}`,
-                      fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: T.sans,
-                      transition: "all 0.2s", boxShadow: isExtActive ? T.sm : "none"
-                    }}>
-                      {ext.label}
-                    </button>
-                  )
-                })}
+                  const isMinor = currentBase.endsWith('m');
+                  const exts = isMinor ? [
+                    { label: "None", val: "" },
+                    { label: "7", val: "7" },
+                    { label: "Sus2", val: "sus2" },
+                    { label: "Sus4", val: "sus4" },
+                    { label: "Dim", val: "dim" }
+                  ] : [
+                    { label: "None", val: "" },
+                    { label: "7", val: "7" },
+                    { label: "Maj7", val: "maj7" },
+                    { label: "Sus2", val: "sus2" },
+                    { label: "Sus4", val: "sus4" },
+                    { label: "Dim", val: "dim" },
+                    { label: "Aug", val: "aug" }
+                  ];
+                  return exts.map(ext => {
+                    const isExtActive = currentExt === ext.val;
+                    return (
+                      <button key={ext.label} onClick={() => {
+                        const newProg = [...progression];
+                        newProg[editingIndex] = `${currentBase}${ext.val}`;
+                        setProgression(newProg);
+                        setActivePreset(null);
+                      }} style={{
+                        padding: "8px 16px", borderRadius: T.radius,
+                        background: isExtActive ? T.textDark : T.bgSoft, 
+                        color: isExtActive ? "#ffffff" : T.textDark, 
+                        border: `1px solid ${isExtActive ? T.textDark : T.border}`,
+                        fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: T.sans,
+                        transition: "all 0.2s", boxShadow: isExtActive ? T.sm : "none"
+                      }}>
+                        {ext.label}
+                      </button>
+                    )
+                  });
+                })()}
               </div>
             </div>
           )}
@@ -3793,7 +3848,7 @@ export function PhraseFormGuide({ theme: T, form }) {
           )}
           {isActive && currentSection >= 0 && (
             <div style={{ fontSize: 12, fontWeight: 700, color: colorFor(sections[currentSection]), fontFamily: T.sans }}>
-              {labels[sections[currentSection]] || sections[currentSection]} \u00b7 Bar {barInSection}/{sectionBars}
+              {labels[sections[currentSection]] || sections[currentSection]} &middot; Bar {barInSection}/{sectionBars}
             </div>
           )}
         </div>

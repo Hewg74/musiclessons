@@ -325,10 +325,87 @@ export const level4 = {
       recorder: true
     },
 
+    // ─── TIMING, ROOTS & COLORS ───
+
+    {
+      id: "ss-4-15",
+      time: 8,
+      title: "Behind-the-Beat Feel",
+      type: "vocal",
+      what: "Combines: MICRO-TIMING + CHORD TONES. Sing the SAME phrase three ways: right on the beat, slightly behind the beat (laid-back), and slightly ahead (pushing). Record all three and compare. Your favorite artists — DOPE LEMON, Skinshape, Bob Marley — all sing behind the beat. This exercise makes that timing choice conscious and controllable.",
+      setup: "Guitar. Metronome at 80 BPM. LOUD click — you need to hear it clearly.",
+      tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }],
+      steps: [
+        { text: "Create a simple 4-beat phrase: sing A-C-E-A over Am. Practice it until you can sing it without thinking about pitch. This is your test phrase.", why: "You need a phrase that's completely automatic so ALL your attention can go to timing placement. If you're thinking about notes, you can't focus on micro-timing." },
+        { text: "Pass 1 — ON the beat: sing the phrase landing each note exactly with the metronome click. Precise, mechanical, right on top. Record it.", why: "On-the-beat singing is the baseline. It sounds clean and precise but can feel stiff. This is how a drum machine places notes — mathematically correct." },
+        { text: "Pass 2 — BEHIND the beat: sing the same phrase but let each note arrive just a fraction AFTER the click. Not late — laid-back. Imagine the click passes and you lazily follow it. Think Bob Marley, D'Angelo, DOPE LEMON. Record it.", why: "Behind-the-beat phrasing is THE defining vocal technique of reggae, soul, R&B, and psych. Berklee teaches it as a specific skill: 'The biggest thing that defines R&B singing is it's behind the beat.' Your porch register lives here naturally." },
+        { text: "Pass 3 — AHEAD of the beat: sing slightly before each click. Eager, forward, driving. This is punk energy, surf urgency. Notice how it feels anxious compared to behind-the-beat. Record it.", why: "Ahead-of-the-beat creates urgency and momentum. It's useful for choruses and high-energy sections. Having all three options available means you can CHOOSE your timing for different moods." },
+        { text: "Listen to all three recordings back-to-back. The same four notes will sound like three different singers. Behind-the-beat will sound the most like you. This IS your vocal identity.", why: "Micro-timing is invisible in theory but immediately audible in practice. When you can consciously place your voice behind, on, or ahead of the beat, you control the emotional temperature of every phrase." }
+      ],
+      feel: "Behind-the-beat should feel like exhaling into a hammock — unhurried, warm, completely relaxed. On-the-beat feels alert. Ahead feels urgent. The difference is subtle but transforms the music.",
+      wrong: "If all three passes sound the same, you're not displacing enough. Exaggerate: for behind-the-beat, wait until AFTER the click, then sing. For ahead, anticipate and start BEFORE the click. Once you can feel the extremes, finding the sweet spot is easy.",
+      sarah: "Gene, this is the secret ingredient. Your laid-back porch register NATURALLY sits behind the beat — that's why it sounds so good. This exercise makes it a choice you can dial in, not an accident. Skinshape, DOPE LEMON, Pepper — they all live in this pocket.",
+      metronome: 80,
+      referencePitches: getPitchRange("A2", "E4"),
+      pitchContour: true,
+      recorder: true
+    },
+    {
+      id: "ss-4-16",
+      time: 8,
+      title: "Root Singing — Feel the Function",
+      type: "vocal",
+      drone: { mode: "cycle", progression: ["Am", "C", "G", "Em"], bpm: 80, stepDuration: "1m" },
+      what: "Combines: FUNCTIONAL HEARING + CHORD CHANGES. Sing ONLY the root note of each chord as it passes: A over Am, C over C, G over G, E over Em. Don't think about what note is 'right' — FEEL the gravity of each chord pulling your voice to its center. This builds the harmonic GPS that lets you navigate any progression by ear.",
+      setup: "Guitar. Metronome at 80 BPM. Am (4 beats) → C (4 beats) → G (4 beats) → Em (4 beats).",
+      tracks: [{ name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }],
+      steps: [
+        { text: "Strum Am-C-G-Em. Sing ONLY the root of each chord: A... C... G... E... One note per chord, held for the full 4 beats. Feel how each root has a different gravitational pull — A feels like home, C feels like warmth, G feels bright, E feels contemplative.", why: "Berklee's ear training starts here: singing chord roots trains FUNCTIONAL hearing — you learn to feel where you are in the harmony, not just what note to sing. This is the GPS that makes chord navigation instinctive." },
+        { text: "Now feel the MOVEMENT between roots. A→C is a step up (departure). C→G is a leap up (lift). G→E is a step down (settling). E→A is a leap down (home). Sing through the cycle 4 times, feeling the direction of each move.", why: "Root motion is the skeleton of harmony. When you feel the direction of root movement, you can anticipate chord changes before they arrive — which is how great singers phrase ahead of the harmony." },
+        { text: "Try it eyes closed, no guitar — just the backing track. Can you FEEL where each chord arrives and sing the root without looking at your hands? Let your ear find the center of each chord.", why: "Eyes-closed root singing tests whether you're HEARING the harmony or just SEEING the chord shapes. When your ear can find the root without visual help, your harmonic hearing is developing." },
+        { text: "Now add one chord tone above each root: A→C over Am (root up to 3rd), C→E over C, G→B over G, E→G over Em. Two notes per chord: root + 3rd. The 3rd is the COLOR — it tells you major or minor.", why: "Root + 3rd is the minimum harmonic information. The root says WHERE you are. The 3rd says HOW IT FEELS (major=bright, minor=blue). Two notes per chord, and you've captured the entire emotional landscape." },
+        { text: "2-minute freestyle: sing roots freely with occasional 3rds and 5ths. Let the roots be your anchor — always know where HOME is for each chord. Record it.", why: "When root awareness becomes automatic, your ear has a compass. Every improvisation is oriented — you always know where you are in the harmony, even as your melodies wander freely." }
+      ],
+      feel: "Each root should feel like gravity — the note the chord WANTS you to sing. When you hit the root, everything locks in. When you sing the 3rd or 5th, you feel the distance from that center. That distance is expression.",
+      wrong: "If the roots all feel the same, you're not listening to the chord changes. Stop singing and just listen to the chords for 30 seconds. Hear how each one has a different center of gravity. Then sing that center.",
+      sarah: "Gene, this is the exercise that builds harmonic instinct. Once your ear knows where the root is at all times, you can wander as far as you want and always find your way home. It's the difference between exploring with a compass and wandering lost.",
+      metronome: 80,
+      referencePitches: getPitchRange("E3", "G4"),
+      pitchContour: true,
+      pianoKeys: true,
+      recorder: true
+    },
+    {
+      id: "ss-4-17",
+      time: 10,
+      title: "Color Palette Freestyle",
+      type: "vocal",
+      what: "Combines: INTERVAL FEELING (from L3) + CHORD CHANGES + GENRE FEEL. Each chord gives you a palette of 3 colors (root, 3rd, 5th). As the chords change, your palette shifts. Paint freely across the chord changes, reaching for notes by FEEL not by name. This is the paintbrush exercise — sounds as colors, chords as palettes.",
+      setup: "Guitar. Metronome at 80 BPM.",
+      tracks: [
+        { name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" },
+        { name: "Desert Blues 75", src: "/desert-blues-75.mp3" }
+      ],
+      steps: [
+        { text: "Strum Am. Your palette: earth (A), blue (C-minor 3rd), sky (E-5th). Paint freely for 1 minute — reach for openness when you want sky (E), reach for ache when you want blue (C), return to earth when you want grounding (A). Don't think note names. Think FEELINGS.", why: "When you associate notes with emotional qualities rather than letter names, your improvisations become expressive by default. You're not 'singing A-C-E' — you're choosing between home, ache, and space." },
+        { text: "Chord changes to C. New palette: warmth (C-root), brightness (E-major 3rd — note: E is now the MAJOR 3rd, a different color than over Am), comfort (G-5th). Notice how E changes emotional function — it was 'sky' over Am but is 'brightness' over C. Same note, different color.", why: "Context changes a note's meaning. The same E that felt like open space over Am now feels like warm brightness over C. This is harmonic color — and it's why chord changes make melodies richer." },
+        { text: "Strum Am-C-G-Em over the Khruangbin backing. For each chord, feel the palette shift. Am is blue+earth. C is warm+bright. G is golden+wide. Em is dark+deep. Navigate by feeling, not by note names. 3 minutes freestyle.", why: "Painting across changing palettes IS melodic improvisation at its most expressive. When you reach for feelings and the right note appears, your voice and ear are fully connected." },
+        { text: "Switch to the desert blues backing track. Stay on Am for 2 minutes straight — but now explore the SPACES BETWEEN the palette colors. What happens between earth and blue? Between blue and sky? Sing into the cracks between chord tones — passing tones, slides, the notes that don't have names yet.", why: "The spaces between palette colors are where the most interesting melodies live. Blues, desert blues, and soul all live in these cracks — bending toward a color without fully arriving. This is what gives Tinariwen and Ali Farka Touré their vocal magic." },
+        { text: "Final 2-minute freestyle: choose any backing track, any chords. Paint with your full palette — all the colors, all the spaces between them. Eyes closed. Trust your ear. Record it.", why: "When you can paint freely across harmonies using emotional colors instead of note names, you've internalized the sounds. They're part of you now — available instantly, like reaching for a color without looking at the paint tube." }
+      ],
+      feel: "This should feel like painting — choosing each note the way you'd choose a color. Not 'what note is correct here?' but 'what feeling do I want right now?' and letting your voice find it.",
+      wrong: "If you're thinking in letter names (A, C, E) instead of feelings (earth, blue, sky), the exercise hasn't clicked yet. Go back to the drone in ss-3-16 and feel each interval's emotional quality until it's instinctive.",
+      sarah: "Gene, this is the paintbrush exercise. Notes as colors. Chords as palettes. You're not playing scales — you're painting with sound. When this clicks, you'll never think about 'what note should I sing' again. You'll just reach for the feeling.",
+      metronome: 80,
+      referencePitches: getPitchRange("E3", "E4"),
+      pitchContour: true,
+      recorder: true
+    },
+
     // ─── COMBINATION CAPSTONE ───
 
     {
-      id: "ss-4-14",
+      id: "ss-4-18",
       time: 10,
       title: "Two-Skill Freestyle",
       type: "song",
@@ -352,7 +429,7 @@ export const level4 = {
       pitchContour: true,
       volumeMeter: true,
       recorder: true,
-      levelUp: "Can fluently combine any two improvisation skills — rhythm + dynamics, chord changes + emotion, genre feel + vowel shapes — while strumming, without either skill degrading when the other is added."
+      levelUp: "Can fluently combine any two improvisation skills — rhythm + dynamics, chord changes + emotion, genre feel + vowel shapes — navigate chord changes by feeling root gravity, place voice behind/on/ahead of the beat deliberately, and paint with notes as emotional colors across changing harmonic palettes — while strumming, without either skill degrading when the other is added."
     }
   ]
 };

@@ -355,10 +355,123 @@ export const level5 = {
       recorder: true
     },
 
-    // ─── GRADUATION ───
+    // ─── SONGWRITING READINESS ───
 
     {
       id: "ss-5-15",
+      time: 10,
+      title: "Song Dissection",
+      type: "listen",
+      what: "Pick a song from your playlist — something you love but have never analyzed. Listen 5 times, each time focusing on a different layer: (1) structure/sections, (2) melodic contour, (3) vocal phrasing/timing, (4) dynamics/energy arc, (5) what makes you FEEL something. Active listening with intent builds the same neural pathways as performing.",
+      setup: "Phone with a song queued up. Notebook or recorder for observations. No guitar needed.",
+      steps: [
+        { text: "Listen 1 — STRUCTURE: Play the song once. Map the sections: where does the verse start? Chorus? Bridge? How many bars is each section? Write it down: V(8)-V(8)-Ch(8)-V(8)-Ch(8)-Br(4)-Ch(8). This is the blueprint.", why: "Most songs follow predictable structures, but the details vary. Knowing how long each section lasts and where the chorus arrives teaches you pacing — arguably the most important songwriting skill." },
+        { text: "Listen 2 — MELODIC CONTOUR: Focus only on the vocal melody. Does the verse melody rise or fall? Where is the highest note in the whole song — what word does it land on? Is the verse melody narrow-range (speech-like) or wide? Is the chorus higher than the verse?", why: "Research from Hit Songs Deconstructed shows that in well-crafted songs, the single highest note almost always falls on a key emotional word. Mapping contour teaches you how professionals use pitch as architecture." },
+        { text: "Listen 3 — PHRASING & TIMING: Focus on WHEN the singer sings. Are they on the beat, behind it, ahead of it? How long are the phrases? Where do they breathe? How much SILENCE is there between phrases? Count the bars of singing vs. bars of rest.", why: "Phrasing is the fingerprint of a vocal style. DOPE LEMON phrases completely differently from Allah-Las. When you notice HOW they time their delivery, you can absorb that timing into your own singing." },
+        { text: "Listen 4 — DYNAMICS & ENERGY: How loud/soft does the singer get? Does the verse start quiet and the chorus open up? Where is the emotional peak? Where is the most intimate moment? Map the energy arc.", why: "Dynamic architecture is what makes songs feel like journeys, not loops. Mapping the energy arc teaches you that the CONTRAST between sections matters more than the absolute volume of any single moment." },
+        { text: "Listen 5 — THE FEEL: Last listen, forget the analysis. Close your eyes. Just feel. What moment in the song hits you hardest? What makes your body respond — a chill, a sway, a catch in your throat? Write that moment down. THAT is what you want to create.", why: "After four analytical listens, the fifth reconnects you to why you love the song in the first place. The moment that moves you is your target — everything else is a tool for getting there." }
+      ],
+      feel: "Each listen should reveal something you never noticed before — even in a song you've heard 100 times. The layers are always there. You just haven't looked for them yet.",
+      wrong: "If you're just vibing to the song without focusing on the specific layer, you're passive listening, not active dissection. Force yourself to focus: on listen 2, ONLY think about melody contour. Ignore everything else.",
+      sarah: "Gene, you've absorbed hundreds of songs unconsciously. This exercise makes that absorption conscious. When you know WHY a song moves you — the contour, the phrasing, the dynamics, the timing — you can build those same qualities into your own music.",
+      recorder: true
+    },
+    {
+      id: "ss-5-16",
+      time: 8,
+      title: "Prosody Check — Words Meet Melody",
+      type: "vocal",
+      what: "Take a simple phrase — 'driving down the coast at golden hour' — and SPEAK it naturally. Notice where your voice naturally stresses: 'DRIving DOWN the COAST at GOLDen HOUR.' Those stressed syllables MUST land on musical strong beats. Now sing it over Am-C. If the melody puts stress on 'the' or 'at,' rewrite the melody. This is prosody — the most important and least taught songwriting skill.",
+      setup: "Guitar. Metronome at 80 BPM. Strum Am-C.",
+      steps: [
+        { text: "Speak this phrase at natural conversation pace: 'driving down the coast at golden hour.' Exaggerate the stresses like you're making a point: 'DRIving DOWN the COAST at GOLDen HOUR.' Tap the table on each stressed syllable.", why: "Pat Pattison at Berklee calls this the #1 rule: spoken word stress MUST align with musical strong beats. When they don't align, the lyrics sound amateurish — even if the words are great." },
+        { text: "Now strum Am-C at 80 BPM. Sing the phrase, placing the stressed syllables (DRI-, DOWN, COAST, GOLD-, HOUR) on beats 1 and 3. The unstressed syllables (-ving, the, at, -en) fall between beats. Does it feel natural?", why: "When speech stress and musical stress align, lyrics feel effortless — like the melody was born from the words. When they clash, the listener feels something is 'off' even if they can't explain why." },
+        { text: "Now deliberately MIS-align it: put 'the' on beat 1, 'at' on beat 3. Sing it. Hear how wrong it feels? That awkwardness is bad prosody — and it's the #1 reason amateur songs sound amateur.", why: "Hearing bad prosody is as important as hearing good prosody. Once your ear catches the misalignment, you'll never un-hear it — in your own songs or anyone else's." },
+        { text: "Try your own phrase — something from your life. Speak it, find the stresses, then set it to a melody over Am-C where the stresses land on strong beats. Record it. This is your first prosody-aware lyric.", why: "Prosody should be checked on EVERY lyric line, every time. Speak it → tap the stresses → sing it → confirm alignment. This protocol becomes second nature and transforms your songwriting." },
+        { text: "Advanced: take a phrase where the stress alignment creates a choice. 'The SUN goes DOWN' vs. 'the sun GOES down' — different emphasis, different meaning, different melody. Which version serves the song better?", why: "Sometimes you can stress different syllables for different emotional effects. This isn't rule-breaking — it's advanced prosody. But you have to know the rules first to make intentional choices." }
+      ],
+      feel: "Good prosody should feel like the words and melody were made for each other — the melody makes the words sound BETTER than spoken, not worse. If it feels natural, the prosody is working.",
+      wrong: "If your melody forces weird emphasis on wrong syllables ('driving DOWN the coast AT golden HOUR'), the prosody is broken. Rewrite the melody to match the speech, or rewrite the words to match the melody — but they MUST align.",
+      sarah: "Gene, this is the thing that separates 'songs that feel right' from 'songs that feel off.' Pattison says misaligned prosody is the number one reason amateur lyrics sound amateurish. This one skill will transform your songwriting overnight.",
+      metronome: 80,
+      referencePitches: getPitchRange("E3", "D4"),
+      recorder: true
+    },
+    {
+      id: "ss-5-17",
+      time: 8,
+      title: "Self-Recording Protocol",
+      type: "song",
+      what: "Record a 2-minute freestyle, then listen back with a structured framework. Four passes: (1) overall feel, (2) pitch accuracy, (3) timing placement, (4) dynamics/expression. This turns 'record it' from a habit into a learning tool. You can't improve what you can't hear — and you can't hear yourself accurately while performing.",
+      setup: "Guitar. Backing track of your choice. Metronome at 80-85 BPM.",
+      tracks: [
+        { name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" },
+        { name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }
+      ],
+      steps: [
+        { text: "Record a 2-minute freestyle: strum Am-C-G-Em over a backing track, sing freely with all your Level 3-5 skills. Don't try to be perfect — just play. This is the raw material.", why: "The performance must be genuine, not self-conscious. If you're performing 'for the recording,' you'll play it safe. Play like no one is listening — then use the recording to learn." },
+        { text: "Listen 1 — OVERALL FEEL: Play the recording once without stopping. Don't analyze — just feel. Does the overall vibe match what you intended? Does it sound like YOUR voice, YOUR style? Rate it 1-10 on 'does this feel like me?'", why: "The gut check comes first. Research shows that overall musical impression captures quality more accurately than technical analysis. If it FEELS right, the details can be refined." },
+        { text: "Listen 2 — PITCH: Focus only on intonation. Are your note arrivals accurate? Do you drift sharp or flat on longer notes? Are there specific notes that consistently miss? Don't judge — just notice.", why: "Pitch accuracy is nearly impossible to self-assess in real time because your brain auto-corrects what it hears. The recording bypasses this illusion and shows you the truth." },
+        { text: "Listen 3 — TIMING: Are you behind the beat (good in reggae/soul), on it, or rushing? Are some phrases ahead and some behind? Is the timing consistent or erratic? Compare your timing to the backing track.", why: "Timing is the other dimension your brain distorts during performance. You THINK you're in the pocket, but the recording reveals whether that's true." },
+        { text: "Listen 4 — EXPRESSION: Dynamics, vowel variety, emotional color, use of silence. Are you varying volume? Using different vowels? Does the energy change across the 2 minutes or stay flat? This is the 'artistry' pass.", why: "Expression is where good becomes great. Most developing singers are focused on pitch and timing — but expression is what makes listeners lean in. Rating your expression teaches you to prioritize it." }
+      ],
+      feel: "The first time you hear yourself back, it's uncomfortable — everyone hates their recorded voice at first. By the fifth time, you start hearing what's ACTUALLY there, not what you feared. That's when the learning begins.",
+      wrong: "If you're only listening for mistakes (what went wrong), you're missing half the value. Also listen for STRENGTHS (what sounded great). Build on strengths as much as you fix weaknesses.",
+      sarah: "Gene, recording + structured listen-back is the fastest feedback loop available to a solo learner. Professional vocal coaches do exactly this — record, listen, assess, adjust. You're being your own coach.",
+      metronome: 85,
+      referencePitches: getPitchRange("E3", "E4"),
+      pitchContour: true,
+      volumeMeter: true,
+      recorder: true
+    },
+    {
+      id: "ss-5-18",
+      time: 6,
+      title: "Song Seed Capture",
+      type: "record",
+      what: "Build the capture habit. In this exercise, you'll generate 5 song seeds in 10 minutes — tiny musical fragments recorded on your phone. A 4-note melody. A chord change that feels good. A lyric phrase. A rhythm. A feeling. Prolific songwriters capture 5-10x more ideas than they finish. The habit of capturing is more important than the quality of any single seed.",
+      setup: "Phone voice recorder. Guitar optional. Timer set to 2 minutes per seed.",
+      steps: [
+        { text: "Seed 1 — MELODY: Hum or sing a short melody fragment (4-8 notes). Don't think about it — just let something come out. Record it immediately. Tag it: 'melody seed, [mood word], [date].' Done. Under 30 seconds.", why: "Speed matters more than quality. Professional songwriters like Dan Wilson (Semisonic, co-writer with Adele) maintain thousands of voice memos. The discipline is CAPTURE, not perfection." },
+        { text: "Seed 2 — GROOVE: Strum a chord or two with a rhythm that feels good. No melody, no lyrics — just a groove fragment. Record 15 seconds of it. Tag: 'groove seed, [feel], [date].'", why: "Groove seeds are a different species than melody seeds. They develop differently — a groove becomes a song's foundation, while a melody becomes its identity. Classifying at capture helps future-you assemble them." },
+        { text: "Seed 3 — LYRIC: Say a phrase that's been in your head — or object-write for 60 seconds and grab the best line. Record it spoken, not sung. Tag: 'lyric seed, [image], [date].'", why: "Lyric seeds capture language — an image, a turn of phrase, a title idea. Speaking them (not singing) keeps the melody open for later. Some of the best songs start with a single line that demanded a song around it." },
+        { text: "Seed 4 — CHORD CHANGE: Find a two-chord transition that feels emotionally charged — Am to F, Em to C, whatever moves you. Play it 4 times. Record. Tag: 'chord seed, [emotion], [date].'", why: "A single chord change can contain an entire emotional world. The Am→F move feels completely different from Am→G. Capturing these emotional moments means you have them when you need them." },
+        { text: "Seed 5 — WILD CARD: Record ANYTHING musical that comes to you. A beat tapped on the table. A vocal texture. A sound you want to recreate. The unexpected seeds are often the most valuable.", why: "The wild card teaches you that EVERYTHING is a potential song seed. The sound of rain, a conversation rhythm, a horn honking — prolific writers hear music everywhere." },
+        { text: "Review: you now have 5 seeds. Listen to each one. Does any pair want to be combined — a melody seed over a groove seed? A lyric seed with a chord change? Mark any connections. This is how songs assemble themselves.", why: "Cross-pollination between seeds is how professional writers break creative blocks. They don't wait for a complete song to arrive — they combine fragments from different sessions. Your archive IS your songwriting engine." }
+      ],
+      feel: "This should feel fast and low-pressure — capture speed, not recording quality. A voice memo recorded in a parking lot is more valuable than a perfect idea you forgot because you didn't record it.",
+      wrong: "If you're spending more than 2 minutes per seed, you're overthinking. The point is VOLUME and SPEED. Bad seeds are fine — you'll delete 80% of them. The 20% that survive become songs.",
+      sarah: "Gene, Ed Sheeran has thousands of voice memos. Tom Waits carries a notebook everywhere. The difference between songwriters who write 2 songs a year and songwriters who write 50 is the capture habit. Start today. Never stop.",
+      recorder: true
+    },
+    {
+      id: "ss-5-19",
+      time: 12,
+      title: "The Ugly First Draft",
+      type: "song",
+      what: "Write a complete song in 12 minutes. It will be bad. That's the point. Verse, chorus, simple chord progression, melody, words. Do NOT edit, do NOT restart, do NOT judge. The goal is a FINISHED draft, not a good one. Creative confidence research shows that volume of output — not careful planning — closes the gap between your taste and your ability.",
+      setup: "Guitar. Timer set to 12 minutes. Recorder on from the start.",
+      tracks: [{ name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }],
+      steps: [
+        { text: "Minutes 0-3: Pick two chords (any two). Start strumming. Hum until a melody fragment appears. When it does, claim it — that's your verse melody. Hum it 4 times to lock it in.", why: "Two chords removes decision paralysis. Constraint-based creativity research shows that fewer options increase both speed and originality. Don't choose 'the right' chords — choose the FIRST two that your hands find." },
+        { text: "Minutes 3-6: Add words to the verse melody. They don't need to be good. They don't need to rhyme. They need to be THERE. Describe what you see right now, or felt this morning, or imagined yesterday. First words that come. No editing.", why: "The 'ugly first draft' protocol comes from professional songwriting practice: commit to finishing regardless of quality. The inner critic freezes beginners. Speed bypasses the critic." },
+        { text: "Minutes 6-9: Create a chorus — slightly higher energy, different chords or same chords with a different strum. Sing a hook phrase — something that could be a title. Repeat it. Done.", why: "The chorus doesn't need to be brilliant. It needs to EXIST. A mediocre chorus that exists is infinitely more useful than a perfect chorus that never gets written." },
+        { text: "Minutes 9-12: Play through the whole song: verse → verse → chorus → verse → chorus. It's rough. It's imperfect. It's a SONG. You wrote a song in 12 minutes. Record the final pass.", why: "A finished draft — any finished draft — gives you something to IMPROVE. You can't edit a blank page. The ugly first draft is the raw material that becomes a real song through revision." },
+        { text: "After the timer: listen to the recording once. Don't judge. Just notice: was there ONE moment — one phrase, one chord change, one melody turn — that surprised you? Circle that. That's the seed of something real.", why: "Every ugly draft contains at least one genuine moment. Finding it and building from it is the revision process. You're not writing a song from nothing — you're excavating a song from a rough draft." }
+      ],
+      feel: "This should feel uncomfortable and freeing at the same time — uncomfortable because it's imperfect, freeing because you're creating without judgment. The timer is your permission slip to be bad.",
+      wrong: "If you restart, you've broken the exercise. If you stop to 'think of something better,' you've broken the exercise. If you judge a line and discard it, you've broken the exercise. KEEP GOING. Ugly is the goal. Edit LATER.",
+      sarah: "Gene, Ira Glass said it best: 'Your taste is good enough to tell that what you're making isn't great yet. The gap closes through VOLUME of work, not through being more careful.' This exercise is volume. Write ugly songs every week. Watch what happens.",
+      metronome: 80,
+      referencePitches: getPitchRange("E3", "A4"),
+      recorder: true,
+      phraseForm: { pattern: ["V", "V", "Ch", "V", "Ch"], barsPerSection: [4, 4, 4, 4, 4], labels: { V: "Verse", Ch: "Chorus" } }
+    },
+
+    // ─── GRADUATION ───
+
+    {
+      id: "ss-5-20",
       time: 10,
       title: "Genre Freestyle Round",
       type: "song",
@@ -384,7 +497,7 @@ export const level5 = {
       recorder: true
     },
     {
-      id: "ss-5-16",
+      id: "ss-5-21",
       time: 10,
       title: "5-Minute Freestyle",
       type: "song",
@@ -410,7 +523,7 @@ export const level5 = {
       referencePitches: getPitchRange("E3", "E4"),
       pitchContour: true,
       recorder: true,
-      levelUp: "Can sustain 5 minutes of fully integrated vocal improvisation over a backing track while strumming — varied rhythm, dynamics, emotional color, vowel shapes, and chord-tone navigation — across multiple genre feels without stopping or losing the groove."
+      levelUp: "Can sustain 5 minutes of fully integrated vocal improvisation over a backing track while strumming — varied rhythm, dynamics, emotional color, vowel shapes, and chord-tone navigation — across multiple genre feels without stopping or losing the groove. Can also dissect songs for structure/contour/phrasing/dynamics, check prosody alignment between speech and melody, assess recordings with a structured protocol, capture song seeds habitually, and write complete ugly first drafts under time pressure."
     }
   ]
 };
