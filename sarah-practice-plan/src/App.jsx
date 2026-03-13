@@ -76,21 +76,17 @@ const DAY_COLORS = ["#d68383", "#d97d54", "#d4a373", "#7f9e88", "#72a8a8", "#6b8
 // ─── SOUND KITS ─────────────────────────────────────────────────────
 // Each kit defines synth params for Tone.js — different timbres
 const SOUND_KITS = {
-  real: { label: "Real Metronome", isSample: true, urls: { "G5": "berklee/woodblock_pitched-do.mp3", "C5": "berklee/woodblock_pitched-sol.mp3" }, volume: 5, pitchAccent: "G5", pitchNormal: "C5" },
-  chime: { label: "Elegant Chimes", isSample: true, urls: { "G5": "berklee/smalltemplebell.mp3", "C5": "berklee/tinybell1.mp3" }, volume: 6, pitchAccent: "G5", pitchNormal: "C5" },
-  acoustic: { label: "Acoustic Wood", isSample: true, urls: { "G5": "berklee/woodblock_pitched-do.mp3", "C5": "berklee/woodblock_pitched-LOWERsol.mp3" }, volume: 5, pitchAccent: "G5", pitchNormal: "C5" },
-  ableton: { label: "Ableton Click", isSample: true, urls: { "G5": "berklee/click_1.mp3", "C5": "berklee/click_2.mp3" }, volume: 8, pitchAccent: "G5", pitchNormal: "C5" },
-  drums: { label: "Drum Kit", isSample: true, urls: { "G5": "drum-samples/acoustic-kit/snare.mp3", "C5": "drum-samples/acoustic-kit/kick.mp3", "C4": "drum-samples/acoustic-kit/hihat.mp3" }, volume: 8, pitchAccent: "G5", pitchNormal: "C5" },
-  classic: { label: "Classic", synthType: "synth", osc: "triangle", attack: 0.001, decay: 0.06, volume: 4 },
-  clave: { label: "Clave", synthType: "fm", osc: "sine", modOsc: "sine", harmonicity: 3.5, modIndex: 1, attack: 0.001, decay: 0.08, volume: 5 },
-  wood: { label: "Synth Wood", synthType: "fm", osc: "sine", modOsc: "triangle", harmonicity: 2, modIndex: 0.8, attack: 0.001, decay: 0.12, volume: 4 },
-  synthChime: { label: "Synth Bell", synthType: "fm", osc: "sine", modOsc: "sine", harmonicity: 3, modIndex: 2, attack: 0.001, decay: 0.4, volume: 3 },
-  click: { label: "Modern Click", synthType: "membrane", osc: "sine", pitchDecay: 0.008, octaves: 3, attack: 0.001, decay: 0.04, volume: 4 },
-  soft: { label: "Soft Tick", synthType: "synth", osc: "sine", attack: 0.002, decay: 0.04, volume: 0 },
-  hihat: { label: "Synth Hi-Hat", synthType: "metal", frequency: 300, resonance: 5000, octaves: 1.5, harmonicity: 5.1, modIndex: 16, attack: 0.001, decay: 0.04, volume: -4 },
-  rim: { label: "Rimshot", synthType: "membrane", osc: "sine", pitchDecay: 0.015, octaves: 4, attack: 0.001, decay: 0.04, volume: 3 },
-  cowbell: { label: "Cowbell", synthType: "metal", frequency: 400, resonance: 300, harmonicity: 5.1, modIndex: 20, octaves: 2, attack: 0.001, decay: 0.08, volume: -2 },
-  shaker: { label: "Shaker", synthType: "noise", attack: 0.005, decay: 0.04, volume: -6 },
+  modernClick: { label: "Modern Click", isSample: true, urls: { "G5": "/sounds/click_high.mp3", "C5": "/sounds/click_low.mp3" }, volume: 6, pitchAccent: "G5", pitchNormal: "C5" },
+  mechanical: { label: "Mechanical", synthType: "synth", osc: "square", attack: 0.001, decay: 0.015, volume: 4, pitchAccent: "E4", pitchNormal: "A3", duration: "64n" },
+  wood: { label: "Woodblock", isSample: true, urls: { "G5": "/sounds/wood_high.mp3", "C5": "/sounds/wood_low.mp3" }, volume: 5, pitchAccent: "G5", pitchNormal: "C5" },
+  chime: { label: "Chimes", isSample: true, urls: { "G5": "/sounds/bell_high.mp3", "C5": "/sounds/bell_low.mp3" }, volume: 6, pitchAccent: "G5", pitchNormal: "C5" },
+  drums: { label: "Drum Kit", isSample: true, urls: { "G5": "/sounds/kick.mp3", "C5": "/sounds/hihat.mp3" }, volume: 6, pitchAccent: "G5", pitchNormal: "C5" },
+  cowbell: { label: "Cowbell", isSample: true, urls: { "G5": "/sounds/cowbell.mp3", "C5": "/sounds/cowbell.mp3" }, volume: -2, pitchAccent: "G5", pitchNormal: "C5" },
+  shaker: { label: "Shaker", isSample: true, urls: { "G5": "/sounds/shaker.mp3", "C5": "/sounds/shaker.mp3" }, volume: 2, pitchAccent: "G5", pitchNormal: "C5" },
+  softTick: { label: "Soft Tick", synthType: "synth", osc: "sine", attack: 0.005, decay: 0.02, volume: 2, pitchAccent: "E5", pitchNormal: "C5", duration: "64n" },
+  hihat: { label: "Synth Hi-Hat", synthType: "metal", frequency: 250, resonance: 4000, harmonicity: 5.1, modIndex: 16, octaves: 1.5, attack: 0.001, decay: 0.04, volume: -6, duration: "32n" },
+  rimshot: { label: "Rimshot", synthType: "membrane", osc: "square", pitchDecay: 0.02, octaves: 4, attack: 0.001, decay: 0.04, volume: -2, pitchAccent: "E4", pitchNormal: "A3", duration: "32n" },
+  clave: { label: "Clave", synthType: "fm", osc: "sine", modOsc: "sine", harmonicity: 3.5, modIndex: 1, attack: 0.001, decay: 0.06, volume: 5, pitchAccent: "G5", pitchNormal: "D5", duration: "32n" },
 };
 
 const KIT_KEYS = Object.keys(SOUND_KITS);
@@ -104,7 +100,8 @@ function createSynth(kit) {
   if (k.isSample) {
     return new Tone.Sampler({
       urls: k.urls,
-      baseUrl: "https://tonejs.github.io/audio/",
+      // Provide an empty baseUrl because urls now contain full relative paths
+      baseUrl: "",
       volume: k.volume || 0
     }).toDestination();
   }
@@ -154,16 +151,18 @@ function triggerSynth(synth, kit, pitchNote, accConfig, time) {
   
   if (velocity === 0) return; // Mute
 
+  const dur = k.duration || "32n";
+
   if (k.isSample) {
     // For samples (chimes, woodblocks, drums), let the full sample play out naturally.
     // Using triggerAttackRelease with a short duration like "32n" causes an abrupt cutoff (crackle).
     synth.triggerAttack(pitchNote, time, velocity);
   } else if (k.synthType === "noise") {
-    synth.triggerAttackRelease("32n", time, velocity);
+    synth.triggerAttackRelease(dur, time, velocity);
   } else if (k.synthType === "metal") {
-    synth.triggerAttackRelease("32n", time, velocity);
+    synth.triggerAttackRelease(dur, time, velocity);
   } else {
-    synth.triggerAttackRelease(pitchNote, "32n", time, velocity);
+    synth.triggerAttackRelease(pitchNote, dur, time, velocity);
   }
 }
 
@@ -173,7 +172,7 @@ function useMetronome() {
   const [playing, setPlaying] = useState(false);
   const beat = 0; // Dummy beat to satisfy return signature; actual beat is managed via events to prevent App re-renders
   const [beatsPerBar, setBeatsPerBar] = useState(4);
-  const [soundKit, setSoundKit] = useState("classic");
+  const [soundKit, setSoundKit] = useState("ableton");
   const [gapClick, setGapClick] = useState(0); // 0=off, 4=mute 4th bar
   const [subdivision, setSubdivision] = useState("4n"); // "4n", "8n", "16n", "8t"
   const [speedBuilder, setSpeedBuilder] = useState(false);
@@ -2660,20 +2659,48 @@ function FloatingMetronome({ metro, setTab, isDark, theme: T }) {
     setIsDragging(false);
   };
 
+  // Determine pendulum tilt based on beat (-15deg to 15deg)
+  const isTick = metro.beat % 2 === 0;
+  const tilt = isTick ? "-15deg" : "15deg";
+
   return (
     <div className={`floating-metronome ${isDark ? "floating-metronome-dark" : ""}`} onClick={() => {
       // Only open tools tab if we aren't dragging. If startY is close to current event clientY, it was a tap.
       if (!isDragging) setTab("tools");
     }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        <div style={{ 
-          background: T.goldSoft, borderRadius: "50%", width: 42, height: 42, 
-          display: "flex", alignItems: "center", justifyContent: "center", border: `1px solid ${T.gold}`
+      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+        {/* Minimalist animated metronome icon */}
+        <div style={{
+          width: 36, height: 36, borderRadius: "50%", background: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.03)",
+          display: "flex", alignItems: "center", justifyContent: "center", position: "relative"
         }}>
-          <BeatDots beat={metro.beat} playing={true} compact beatConfig={metro.beatConfig} beatsPerBar={metro.beatsPerBar} />
+          {metro.playing && (
+             <div style={{
+               position: "absolute", top: 0, left: 0, right: 0, bottom: 0, borderRadius: "50%",
+               border: `1px solid ${T.gold}`, animation: "pulse-ring 1s infinite cubic-bezier(0.215, 0.61, 0.355, 1)",
+               opacity: metro.beat === 0 ? 1 : 0.5 // Emphasize downbeat
+             }} />
+          )}
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={metro.playing ? T.gold : T.textMuted} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+             style={{
+               transition: `transform ${(60/metro.bpm).toFixed(2)}s cubic-bezier(0.4, 0, 0.2, 1)`,
+               transform: metro.playing ? `rotate(${tilt})` : "rotate(0deg)",
+               transformOrigin: "bottom center"
+             }}
+          >
+            <path d="M12 2v20" />
+            <path d="M8 2h8" />
+            <circle cx="12" cy="14" r="3" fill={metro.playing ? T.gold : "transparent"} />
+          </svg>
         </div>
-        <div className="desktop-only" style={{ fontWeight: 600, fontSize: 13, color: T.textDark, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1 }}>
-          Metronome
+        
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <div style={{ fontWeight: 600, fontSize: 13, color: T.textDark, fontFamily: T.sans, letterSpacing: 1 }}>
+            Metronome
+          </div>
+          <div style={{ fontSize: 10, color: metro.playing ? T.gold : T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1.5, marginTop: 2 }}>
+            {metro.playing ? "Running" : "Paused"}
+          </div>
         </div>
       </div>
       
@@ -2685,19 +2712,21 @@ function FloatingMetronome({ metro, setTab, isDark, theme: T }) {
         onClick={(e) => e.stopPropagation()} // Prevent opening tools when interacting with BPM
         style={{ 
           display: "flex", alignItems: "center", gap: 8, cursor: "ns-resize", touchAction: "none",
-          background: T.bgCard, padding: "4px 12px", borderRadius: 20, border: `1px solid ${T.border}`
+          background: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.03)", 
+          padding: "6px 14px", borderRadius: 24, border: `1px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)"}`,
+          transition: "background 0.2s"
         }}
         title="Drag up/down to change BPM"
       >
-        <div style={{ fontSize: 18, fontWeight: 700, FontFamily: T.serif, color: T.textDark, minWidth: 32, textAlign: "right", userSelect: "none" }}>
+        <div style={{ fontSize: 18, fontWeight: 700, fontFamily: T.sans, color: T.gold, minWidth: 32, textAlign: "right", userSelect: "none" }}>
           {metro.bpm}
         </div>
-        <div style={{ fontSize: 10, color: T.textMuted, fontWeight: 600, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1, userSelect: "none" }}>
+        <div style={{ fontSize: 10, color: T.textMed, fontWeight: 600, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1, userSelect: "none" }}>
           BPM
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 2, opacity: 0.5 }}>
-          <div style={{ width: 0, height: 0, borderLeft: "4px solid transparent", borderRight: "4px solid transparent", borderBottom: `4px solid ${T.textDark}` }}></div>
-          <div style={{ width: 0, height: 0, borderLeft: "4px solid transparent", borderRight: "4px solid transparent", borderTop: `4px solid ${T.textDark}` }}></div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 3, opacity: 0.4, marginLeft: 2 }}>
+          <div style={{ width: 0, height: 0, borderLeft: "3px solid transparent", borderRight: "3px solid transparent", borderBottom: `4px solid ${T.textDark}` }}></div>
+          <div style={{ width: 0, height: 0, borderLeft: "3px solid transparent", borderRight: "3px solid transparent", borderTop: `4px solid ${T.textDark}` }}></div>
         </div>
       </div>
     </div>

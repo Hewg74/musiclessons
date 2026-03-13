@@ -547,21 +547,17 @@ const VOCAL_EXERCISES = [
 // ─── SOUND KITS ─────────────────────────────────────────────────────
 // Each kit defines synth params for Tone.js — different timbres
 const SOUND_KITS = {
-  real: { label: "Real Metronome", isSample: true, urls: { "G5": "berklee/woodblock_pitched-do.mp3", "C5": "berklee/woodblock_pitched-sol.mp3" }, volume: 5, pitchAccent: "G5", pitchNormal: "C5" },
-  chime: { label: "Elegant Chimes", isSample: true, urls: { "G5": "berklee/smalltemplebell.mp3", "C5": "berklee/tinybell1.mp3" }, volume: 6, pitchAccent: "G5", pitchNormal: "C5" },
-  acoustic: { label: "Acoustic Wood", isSample: true, urls: { "G5": "berklee/woodblock_pitched-do.mp3", "C5": "berklee/woodblock_pitched-LOWERsol.mp3" }, volume: 5, pitchAccent: "G5", pitchNormal: "C5" },
-  ableton: { label: "Ableton Click", isSample: true, urls: { "G5": "berklee/click_1.mp3", "C5": "berklee/click_2.mp3" }, volume: 8, pitchAccent: "G5", pitchNormal: "C5" },
-  drums: { label: "Drum Kit", isSample: true, urls: { "G5": "drum-samples/acoustic-kit/snare.mp3", "C5": "drum-samples/acoustic-kit/kick.mp3", "C4": "drum-samples/acoustic-kit/hihat.mp3" }, volume: 8, pitchAccent: "G5", pitchNormal: "C5" },
-  classic: { label: "Classic", synthType: "synth", osc: "triangle", attack: 0.001, decay: 0.06, volume: 4 },
-  clave: { label: "Clave", synthType: "fm", osc: "sine", modOsc: "sine", harmonicity: 3.5, modIndex: 1, attack: 0.001, decay: 0.08, volume: 5 },
-  wood: { label: "Synth Wood", synthType: "fm", osc: "sine", modOsc: "triangle", harmonicity: 2, modIndex: 0.8, attack: 0.001, decay: 0.12, volume: 4 },
-  synthChime: { label: "Synth Bell", synthType: "fm", osc: "sine", modOsc: "sine", harmonicity: 3, modIndex: 2, attack: 0.001, decay: 0.4, volume: 3 },
-  click: { label: "Modern Click", synthType: "membrane", osc: "sine", pitchDecay: 0.008, octaves: 3, attack: 0.001, decay: 0.04, volume: 4 },
-  soft: { label: "Soft Tick", synthType: "synth", osc: "sine", attack: 0.002, decay: 0.04, volume: 0 },
-  hihat: { label: "Synth Hi-Hat", synthType: "metal", frequency: 300, resonance: 5000, octaves: 1.5, harmonicity: 5.1, modIndex: 16, attack: 0.001, decay: 0.04, volume: -4 },
-  rim: { label: "Rimshot", synthType: "membrane", osc: "sine", pitchDecay: 0.015, octaves: 4, attack: 0.001, decay: 0.04, volume: 3 },
-  cowbell: { label: "Cowbell", synthType: "metal", frequency: 400, resonance: 300, harmonicity: 5.1, modIndex: 20, octaves: 2, attack: 0.001, decay: 0.08, volume: -2 },
-  shaker: { label: "Shaker", synthType: "noise", attack: 0.005, decay: 0.04, volume: -6 },
+  modernClick: { label: "Modern Click", isSample: true, urls: { "G5": "/sounds/click_high.mp3", "C5": "/sounds/click_low.mp3" }, volume: 6, pitchAccent: "G5", pitchNormal: "C5" },
+  mechanical: { label: "Mechanical", synthType: "synth", osc: "square", attack: 0.001, decay: 0.015, volume: 4, pitchAccent: "E4", pitchNormal: "A3", duration: "64n" },
+  wood: { label: "Woodblock", isSample: true, urls: { "G5": "/sounds/wood_high.mp3", "C5": "/sounds/wood_low.mp3" }, volume: 5, pitchAccent: "G5", pitchNormal: "C5" },
+  chime: { label: "Chimes", isSample: true, urls: { "G5": "/sounds/bell_high.mp3", "C5": "/sounds/bell_low.mp3" }, volume: 6, pitchAccent: "G5", pitchNormal: "C5" },
+  drums: { label: "Drum Kit", isSample: true, urls: { "G5": "/sounds/kick.mp3", "C5": "/sounds/hihat.mp3" }, volume: 6, pitchAccent: "G5", pitchNormal: "C5" },
+  cowbell: { label: "Cowbell", isSample: true, urls: { "G5": "/sounds/cowbell.mp3", "C5": "/sounds/cowbell.mp3" }, volume: -2, pitchAccent: "G5", pitchNormal: "C5" },
+  shaker: { label: "Shaker", isSample: true, urls: { "G5": "/sounds/shaker.mp3", "C5": "/sounds/shaker.mp3" }, volume: 2, pitchAccent: "G5", pitchNormal: "C5" },
+  softTick: { label: "Soft Tick", synthType: "synth", osc: "sine", attack: 0.005, decay: 0.02, volume: 2, pitchAccent: "E5", pitchNormal: "C5", duration: "64n" },
+  hihat: { label: "Synth Hi-Hat", synthType: "metal", frequency: 250, resonance: 4000, harmonicity: 5.1, modIndex: 16, octaves: 1.5, attack: 0.001, decay: 0.04, volume: -6, duration: "32n" },
+  rimshot: { label: "Rimshot", synthType: "membrane", osc: "square", pitchDecay: 0.02, octaves: 4, attack: 0.001, decay: 0.04, volume: -2, pitchAccent: "E4", pitchNormal: "A3", duration: "32n" },
+  clave: { label: "Clave", synthType: "fm", osc: "sine", modOsc: "sine", harmonicity: 3.5, modIndex: 1, attack: 0.001, decay: 0.06, volume: 5, pitchAccent: "G5", pitchNormal: "D5", duration: "32n" },
 };
 
 const KIT_KEYS = Object.keys(SOUND_KITS);
@@ -581,7 +577,7 @@ function createSynth(kit) {
   if (k.isSample) {
     return new Tone.Sampler({
       urls: k.urls,
-      baseUrl: "https://tonejs.github.io/audio/",
+      baseUrl: "",
       volume: k.volume || 0
     }).toDestination();
   }
@@ -613,16 +609,18 @@ function triggerSynth(synth, kit, pitchNote, accConfig, time) {
   
   if (velocity === 0) return; // Mute
 
+  const dur = k.duration || "32n";
+
   if (k.isSample) {
     // For samples (chimes, woodblocks, drums), let the full sample play out naturally.
     // Using triggerAttackRelease with a short duration like "32n" causes an abrupt cutoff (crackle).
     synth.triggerAttack(pitchNote, time, velocity);
   } else if (k.synthType === "noise") {
-    synth.triggerAttackRelease("32n", time, velocity);
+    synth.triggerAttackRelease(dur, time, velocity);
   } else if (k.synthType === "metal") {
-    synth.triggerAttackRelease("32n", time, velocity);
+    synth.triggerAttackRelease(dur, time, velocity);
   } else {
-    synth.triggerAttackRelease(pitchNote, "32n", time, velocity);
+    synth.triggerAttackRelease(pitchNote, dur, time, velocity);
   }
 }
 
@@ -632,7 +630,7 @@ function useMetronome() {
   const [playing, setPlaying] = useState(false);
   const beat = 0; // Dummy beat to satisfy return signature; actual beat is managed via events to prevent App re-renders
   const [beatsPerBar, setBeatsPerBar] = useState(4);
-  const [soundKit, setSoundKit] = useState("click");
+  const [soundKit, setSoundKit] = useState("ableton");
   const [gapClick, setGapClick] = useState(0);
   const [subdivision, setSubdivision] = useState("4n"); // "4n", "8n", "16n", "8t"
   const [speedBuilder, setSpeedBuilder] = useState(false);
