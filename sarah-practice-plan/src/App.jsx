@@ -1708,7 +1708,7 @@ function CompactBeatEditor({ metro, theme: T }) {
   }, []);
 
   return (
-    <div style={{ display: "flex", gap: 8, alignItems: "center", height: "100%" }}>
+    <div style={{ display: "flex", gap: 10, alignItems: "center", height: "100%", padding: "4px 8px" }}>
       {metro.beatConfig.map((bc, i) => {
         const acc = ACCENT_CONFIG[bc.accent];
         const isActive = internalBeat === i;
@@ -1719,7 +1719,7 @@ function CompactBeatEditor({ metro, theme: T }) {
           }}>
             {/* Accent button — tap to cycle accent level */}
             <button onClick={(e) => { e.stopPropagation(); metro.cycleAccent(i); }} style={{
-              padding: "0", width: 28, height: 28,
+              padding: "0", width: 26, height: 26, flexShrink: 0,
               background: bc.accent === "mute" ? "transparent" : `${acc.color}${isActive ? '30' : '15'}`,
               border: `2px solid ${bc.accent === "mute" ? "rgba(150,150,150,0.2)" : (isActive ? acc.color : acc.color + '40')}`,
               borderStyle: bc.accent === "mute" ? "dashed" : "solid",
@@ -1727,11 +1727,11 @@ function CompactBeatEditor({ metro, theme: T }) {
               display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
               transition: "all 0.15s",
               transform: isActive ? "scale(1.15)" : "scale(1)",
-              boxShadow: isActive && bc.accent !== "mute" ? `0 0 12px ${acc.color}50` : "none"
+              boxShadow: isActive && bc.accent !== "mute" ? `0 0 10px ${acc.color}50` : "none"
             }}>
               <div style={{
-                width: bc.accent === "accent" ? 12 : bc.accent === "normal" ? 8 : bc.accent === "ghost" ? 4 : 0,
-                height: bc.accent === "accent" ? 12 : bc.accent === "normal" ? 8 : bc.accent === "ghost" ? 4 : 0,
+                width: bc.accent === "accent" ? 10 : bc.accent === "normal" ? 6 : bc.accent === "ghost" ? 3 : 0,
+                height: bc.accent === "accent" ? 10 : bc.accent === "normal" ? 6 : bc.accent === "ghost" ? 3 : 0,
                 borderRadius: "50%", background: bc.accent === "mute" ? "transparent" : acc.color,
                 transition: "all 0.15s",
                 border: bc.accent === "mute" ? `1px dashed ${T.border}` : "none"
@@ -2860,7 +2860,7 @@ function FloatingMetronome({ metro, setTab, isDark, theme: T }) {
           </button>
 
           {/* Integrated Visualizer & Editor */}
-          <div style={{ flex: 1, display: "flex", alignItems: "center", overflowX: "auto", paddingLeft: 4 }} className="hide-scrollbar">
+          <div style={{ flex: 1, display: "flex", alignItems: "center", overflowX: "auto", padding: "8px 6px" }} className="hide-scrollbar">
             <CompactBeatEditor metro={metro} theme={T} />
           </div>
 
