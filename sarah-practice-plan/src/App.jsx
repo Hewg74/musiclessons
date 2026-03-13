@@ -2639,8 +2639,24 @@ function FloatingMetronome({ metro, setTab, isDark, theme: T }) {
   const [isDragging, setIsDragging] = useState(false);
   const [startY, setStartY] = useState(0);
   const [startBpm, setStartBpm] = useState(0);
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  // Close when tapping outside the expanded sheet
+  useEffect(() => {
+    if (!isExpanded) return;
+    const handleGlobalClick = (e) => {
+      // If clicking outside the metronome container, close it
+      if (!e.target.closest(".floating-metronome")) {
+        setIsExpanded(false);
+      }
+    };
+    // slight delay to prevent the opening click from instantly closing it
+    setTimeout(() => window.addEventListener("click", handleGlobalClick), 50);
+    return () => window.removeEventListener("click", handleGlobalClick);
+  }, [isExpanded]);
 
   const handlePointerDown = (e) => {
+    if (isExpanded) return; // Don't drag while expanded
     e.target.setPointerCapture(e.pointerId);
     setIsDragging(true);
     setStartY(e.clientY);
@@ -2650,7 +2666,6 @@ function FloatingMetronome({ metro, setTab, isDark, theme: T }) {
   const handlePointerMove = (e) => {
     if (!isDragging) return;
     const diffY = startY - e.clientY;
-    // 1 pixel = 1 BPM change (tune this sensitivity if needed)
     const newBpm = Math.max(40, Math.min(280, startBpm + Math.floor(diffY)));
     if (newBpm !== metro.bpm) {
       metro.changeBpm(newBpm);
@@ -2662,75 +2677,119 @@ function FloatingMetronome({ metro, setTab, isDark, theme: T }) {
     setIsDragging(false);
   };
 
-  // Determine pendulum tilt based on beat (-15deg to 15deg)
-  const isTick = metro.beat % 2 === 0;
-  const tilt = isTick ? "-15deg" : "15deg";
+  // Determine an inline pendulum swing based on beat progress
+  const [tilt, setTilt] = useState("0deg");
+  useEffect(() => {
+    let raf;
+    const render = () => {
+      if (metro.playing && Tone.Transport.state === "started") {
+        const ticks = Tone.Transport.ticks;
+        const ppq = Tone.Transport.PPQ;
+        const beatProgress = ticks / ppq;
+        // Swing from 20 to -20 degrees
+        const angle = 20 * Math.cos(Math.PI * beatProgress);
+        setTilt(`${angle}deg`);
+      } else {
+        setTilt("0deg");
+      }
+      raf = requestAnimationFrame(render);
+    };
+    raf = requestAnimationFrame(render);
+    return () => cancelAnimationFrame(raf);
+  }, [metro.playing]);
 
   return (
-    <div className={`floating-metronome ${isDark ? "floating-metronome-dark" : ""}`} onClick={() => {
-      // Only open tools tab if we aren't dragging. If startY is close to current event clientY, it was a tap.
-      if (!isDragging) setTab("tools");
-    }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-        {/* Minimalist animated metronome icon */}
-        <div style={{
-          width: 36, height: 36, borderRadius: "50%", background: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.03)",
-          display: "flex", alignItems: "center", justifyContent: "center", position: "relative"
-        }}>
-          {metro.playing && (
-             <div style={{
-               position: "absolute", top: 0, left: 0, right: 0, bottom: 0, borderRadius: "50%",
-               border: `1px solid ${T.gold}`, animation: "pulse-ring 1s infinite cubic-bezier(0.215, 0.61, 0.355, 1)",
-               opacity: metro.beat === 0 ? 1 : 0.5 // Emphasize downbeat
-             }} />
-          )}
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={metro.playing ? T.gold : T.textMuted} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-             style={{
-               transition: `transform ${(60/metro.bpm).toFixed(2)}s cubic-bezier(0.4, 0, 0.2, 1)`,
-               transform: metro.playing ? `rotate(${tilt})` : "rotate(0deg)",
-               transformOrigin: "bottom center"
-             }}
-          >
-            <path d="M12 2v20" />
-            <path d="M8 2h8" />
-            <circle cx="12" cy="14" r="3" fill={metro.playing ? T.gold : "transparent"} />
-          </svg>
-        </div>
-        
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ fontWeight: 600, fontSize: 13, color: T.textDark, fontFamily: T.sans, letterSpacing: 1 }}>
+    <div className={`floating-metronome ${isDark ? "floating-metronome-dark" : ""}`}
+      style={{
+        flexDirection: "column", 
+        alignItems: "stretch",
+        padding: isExpanded ? "16px" : "8px 16px",
+        height: isExpanded ? "85vh" : "auto", /* Expand height significantly */
+        maxHeight: 700,
+        borderRadius: isExpanded ? "24px 24px 0 0" : "", // rounded top corners when expanded on mobile
+        borderTop: isExpanded ? `1px solid ${T.gold}` : "",
+        transition: "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+        overflowY: isExpanded ? "auto" : "visible",
+        overflowX: "hidden"
+      }}>
+      
+      {/* Top Bar (Always visible) */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", gap: 12 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, flex: 1 }}>
+          <div style={{ position: "relative" }}>
+            {/* The 4-dot visualizer wrapped in a subtle background */}
+            <div style={{
+              background: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.03)",
+              padding: "6px 12px", borderRadius: 20, border: `1px solid ${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"}`,
+              position: "relative", zIndex: 2
+            }}>
+              <BeatDots beat={metro.beat} playing={true} compact beatConfig={metro.beatConfig} beatsPerBar={metro.beatsPerBar} />
+            </div>
+            {/* Minimalist pendulum stick behind dots */}
+            <div style={{
+              position: "absolute", bottom: -2, left: "50%",
+              width: 2, height: 44, background: T.gold,
+              transformOrigin: "bottom center", marginLeft: -1, zIndex: 1,
+              transform: `rotate(${tilt})`,
+              transition: "none" // updated rapidly via requestAnimationFrame
+            }} />
+          </div>
+          
+          <div className="desktop-only" style={{ fontWeight: 600, fontSize: 13, color: T.textDark, fontFamily: T.sans, letterSpacing: 1 }}>
             Metronome
           </div>
-          <div style={{ fontSize: 10, color: metro.playing ? T.gold : T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1.5, marginTop: 2 }}>
-            {metro.playing ? "Running" : "Paused"}
+          
+          <button onClick={(e) => { e.stopPropagation(); setIsExpanded(!isExpanded); }} style={{
+            background: "none", border: "none", color: isExpanded ? T.gold : T.textMed, padding: "8px",
+            display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer",
+             transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+             transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)"
+          }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 15l-6-6-6 6" />
+            </svg>
+          </button>
+        </div>
+        
+        <div 
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
+          style={{ 
+            display: "flex", alignItems: "center", gap: 8, cursor: isExpanded ? "default" : "ns-resize", touchAction: "none",
+            background: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.03)", 
+            padding: "6px 14px", borderRadius: 24, border: `1px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)"}`,
+            transition: "background 0.2s",
+            opacity: isExpanded ? 0.3 : 1, // Dim while expanded to indicate it's not the primary interaction
+            pointerEvents: isExpanded ? "none" : "auto"
+          }}
+          title={isExpanded ? "" : "Drag up/down to change BPM"}
+        >
+          <div style={{ fontSize: 18, fontWeight: 700, fontFamily: T.sans, color: T.gold, minWidth: 32, textAlign: "right", userSelect: "none" }}>
+            {metro.bpm}
+          </div>
+          <div style={{ fontSize: 10, color: T.textMed, fontWeight: 600, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1, userSelect: "none" }}>
+            BPM
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 3, opacity: 0.4, marginLeft: 2 }}>
+            <div style={{ width: 0, height: 0, borderLeft: "3px solid transparent", borderRight: "3px solid transparent", borderBottom: `4px solid ${T.textDark}` }}></div>
+            <div style={{ width: 0, height: 0, borderLeft: "3px solid transparent", borderRight: "3px solid transparent", borderTop: `4px solid ${T.textDark}` }}></div>
           </div>
         </div>
       </div>
       
-      <div 
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        onPointerCancel={handlePointerUp}
-        onClick={(e) => e.stopPropagation()} // Prevent opening tools when interacting with BPM
-        style={{ 
-          display: "flex", alignItems: "center", gap: 8, cursor: "ns-resize", touchAction: "none",
-          background: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.03)", 
-          padding: "6px 14px", borderRadius: 24, border: `1px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)"}`,
-          transition: "background 0.2s"
-        }}
-        title="Drag up/down to change BPM"
-      >
-        <div style={{ fontSize: 18, fontWeight: 700, fontFamily: T.sans, color: T.gold, minWidth: 32, textAlign: "right", userSelect: "none" }}>
-          {metro.bpm}
-        </div>
-        <div style={{ fontSize: 10, color: T.textMed, fontWeight: 600, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1, userSelect: "none" }}>
-          BPM
-        </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 3, opacity: 0.4, marginLeft: 2 }}>
-          <div style={{ width: 0, height: 0, borderLeft: "3px solid transparent", borderRight: "3px solid transparent", borderBottom: `4px solid ${T.textDark}` }}></div>
-          <div style={{ width: 0, height: 0, borderLeft: "3px solid transparent", borderRight: "3px solid transparent", borderTop: `4px solid ${T.textDark}` }}></div>
-        </div>
+      {/* Expanded Sheet Content */}
+      <div style={{ 
+        marginTop: isExpanded ? 24 : 0, 
+        opacity: isExpanded ? 1 : 0, 
+        height: isExpanded ? "auto" : 0,
+        overflow: "hidden",
+        transition: "opacity 0.3s 0.1s" 
+      }}>
+        {isExpanded && (
+           <MetronomePanel metro={metro} onOpenTapMatch={() => {}} />
+        )}
       </div>
     </div>
   );
@@ -2979,7 +3038,7 @@ export default function App() {
 
       {/* Tab bar (Desktop Only) */}
       <div className="hide-scrollbar desktop-only" style={{
-        background: isDark ? "rgba(44, 40, 37, 0.75)" : "rgba(253, 251, 249, 0.75)",
+        background: isDark ? "rgba(44, 40, 37, 0.55)" : "rgba(253, 251, 249, 0.65)",
         backdropFilter: "blur(24px) saturate(140%)", WebkitBackdropFilter: "blur(24px) saturate(140%)",
         borderBottom: `1px solid ${T.border}`, position: "sticky", top: 0, zIndex: 10, display: "flex",
         justifyContent: "center", boxShadow: isDark ? "0 8px 32px rgba(0,0,0,0.2)" : "0 8px 32px rgba(44,40,37,0.04)",
@@ -3005,7 +3064,7 @@ export default function App() {
             {/* Day pill tabs — horizontal scroll */}
             <div className="hide-scrollbar sticky-pill-bar" style={{
               display: "flex", gap: 0, overflowX: "auto", padding: "16px 0 0",
-              background: isDark ? "rgba(28, 25, 23, 0.85)" : "rgba(251, 248, 244, 0.85)",
+              background: isDark ? "rgba(28, 25, 23, 0.45)" : "rgba(251, 248, 244, 0.55)",
               backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
               WebkitOverflowScrolling: "touch", scrollSnapType: "x mandatory",
               msOverflowStyle: "none", scrollbarWidth: "none",

@@ -104,7 +104,7 @@ button {
   left: 0;
   right: 0;
   height: 64px;
-  background: linear-gradient(180deg, rgba(253, 251, 249, 0.65) 0%, rgba(253, 251, 249, 0.85) 100%);
+  background: linear-gradient(180deg, rgba(253, 251, 249, 0.45) 0%, rgba(253, 251, 249, 0.7) 100%);
   backdrop-filter: blur(24px) saturate(140%);
   -webkit-backdrop-filter: blur(24px) saturate(140%);
   border-top: 1px solid rgba(0, 0, 0, 0.04);
@@ -117,7 +117,7 @@ button {
 }
 
 .bottom-nav-dark {
-  background: linear-gradient(180deg, rgba(18, 18, 18, 0.5) 0%, rgba(18, 18, 18, 0.75) 100%);
+  background: linear-gradient(180deg, rgba(18, 18, 18, 0.35) 0%, rgba(18, 18, 18, 0.6) 100%);
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: 0 -4px 32px rgba(0, 0, 0, 0.3);
 }
@@ -191,9 +191,9 @@ button {
   border-top: 1px solid rgba(0, 0, 0, 0.05);
   box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04);
   z-index: 998; /* Just below bottom-nav's 999 */
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(12px) saturate(140%);
-  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -203,7 +203,7 @@ button {
 
 .bottom-nav-dark ~ .floating-metronome,
 .floating-metronome-dark {
-  background: rgba(24, 24, 24, 0.9);
+  background: rgba(24, 24, 24, 0.65);
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.3);
 }
