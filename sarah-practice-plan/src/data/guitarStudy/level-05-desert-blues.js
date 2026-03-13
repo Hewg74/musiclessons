@@ -116,6 +116,7 @@ export const level5 = {
       time: 10,
       title: "Drone + Melody — The Communal Guitar",
       type: "guitar",
+      drone: { root: "A", octave: 2, texture: "tanpura" },
       what: "In Tinariwen, two guitarists play interlocking parts: one holds a rhythmic drone, the other plays melody. On one guitar, you can simulate this by letting one string drone open while picking melody on adjacent strings. This is the communal approach reduced to one instrument.",
       setup: "Drop D tuning. Clean tone, slight reverb.",
       tracks: [{ name: "Desert Blues 75 BPM", src: "/desert-blues-75.mp3" }],

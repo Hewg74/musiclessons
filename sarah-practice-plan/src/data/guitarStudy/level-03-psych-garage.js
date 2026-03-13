@@ -15,6 +15,7 @@ export const level3 = {
       time: 10,
       title: "Phrygian Dominant — The Exotic Scale",
       type: "guitar",
+      drone: { root: "A", octave: 2, texture: "tanpura" },
       referencePitches: ["A2", "B♭2", "C#3", "D3", "E3", "F3", "G3", "A3"],
       fretboard: { scale: "a-phrygian-dominant", position: 1 },
       what: "Learn A Phrygian Dominant: A-Bb-C#-D-E-F-G. This is the scale behind Dick Dale's 'Misirlou' and the 'Arabic' or 'Egyptian' color in surf and psych rock. The key sound is the augmented 2nd — the unusually large gap between Bb and C# (3 semitones instead of the usual 1 or 2). That gap IS the exotic sound. Note: 'Phrygian Dominant' means the 5th mode of the harmonic minor scale. It's like regular Phrygian (A-Bb-C-D-E-F-G) but with a raised 3rd (C# instead of C).",

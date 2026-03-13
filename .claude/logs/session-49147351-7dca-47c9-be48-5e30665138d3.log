@@ -1,0 +1,19 @@
+[2026-03-13T09:33:50.594Z] please fix this
+[plugin:vite:react-babel] C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\JungleTools.jsx: Unexpected token (3061:2)
+  3064 |   const WHITE_NAMES = ["C", "D", "E", "F", "G", "A", "B"];
+C:/Users/hewg7/Documents/GitHub/musiclessons/sarah-practice-plan/src/JungleTools.jsx:3061:2
+3059 |    zoneMap = [] // optional: [{range: [minIdx, maxIdx], color: string}]
+3060 |  }) {
+3061 |    const T = theme;
+     |    ^
+3062 |    const CHROMATIC = ["C", "C#", "D", "E♭", "E", "F", "F#", "G", "A♭", "A", "B♭", "B"];
+3063 |    const CHROMATIC = ["C", "C#", "D", "E♭", "E", "F", "F#", "G", "A♭", "A", "B♭", "B"];
+[2026-03-13T09:35:10.240Z] [plugin:vite:react-babel] C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\JungleTools.jsx: Unexpected token (3061:2)
+  3064 |   const BLACK_MAP = { "C": "C#", "D": "E♭", "F": "F#", "G": "A♭", "A": "B♭" };
+C:/Users/hewg7/Documents/GitHub/musiclessons/sarah-practice-plan/src/JungleTools.jsx:3061:2
+3059 |    zoneMap = [] // optional: [{range: [minIdx, maxIdx], color: string}]
+3060 |  }) {
+3061 |    const T = theme;
+     |    ^
+3062 |    const CHROMATIC = ["C", "C#", "D", "E♭", "E", "F", "F#", "G", "A♭", "A", "B♭", "B"];
+3063 |    const WHITE_NAMES = ["C", "D", "E", "F", "G", "A", "B"];

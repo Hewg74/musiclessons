@@ -41,6 +41,7 @@ export const level4 = {
       time: 8,
       title: "Two-Chord Deep Dive",
       type: "vocal",
+      drone: { mode: "cycle", progression: ["Am", "Am", "C", "C"], bpm: 80, stepDuration: "1m" },
       what: "Combines: CHORD CHANGES + SHARED TONES. Strum just two chords — Am and C — and freely improvise. Focus on the transition: which notes carry over (C and E appear in both), which ones shift (A is unique to Am, G is unique to C)? Two chords is simpler than four, letting you zoom in on the harmonic connection.",
       setup: "Guitar. Metronome at 80 BPM. Am (4 beats) → C (4 beats), repeat.",
       steps: [
@@ -65,6 +66,7 @@ export const level4 = {
       time: 8,
       title: "Three-Chord Bridge",
       type: "vocal",
+      drone: { mode: "cycle", preset: "surf-garage" },
       what: "Combines: CHORD CHANGES + SHARED TONES over three chords. Am-C-G (no Em yet). Freely improvise with chord tones across three chords. Focus on the G arrival — the brightest chord in the sequence. Shared tones bridge Am↔C (C and E), and C↔G (G).",
       setup: "Guitar. Metronome at 90 BPM. Am (4 beats) → C (4 beats) → G (4 beats) → Am (4 beats).",
       tracks: [{ name: "Surf Rock 120", src: "/surf-rock-120.mp3" }],
@@ -90,6 +92,7 @@ export const level4 = {
       time: 8,
       title: "Stepping Between Chords",
       type: "vocal",
+      drone: { mode: "cycle", progression: ["Am", "C", "G", "Em"], bpm: 80, stepDuration: "1m" },
       what: "Combines: VOICE LEADING + CHORD CHANGES. Sing the nearest chord tone when chords change. Am→C: hold E (shared), or step A→G (nearest C-chord tone). Smooth voice leading, no leaps at transitions. Musical sewing.",
       setup: "Guitar. Metronome at 80 BPM. Am (4 beats) → C (4 beats) → G (4 beats) → Em (4 beats).",
       tracks: [{ name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" }],

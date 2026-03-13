@@ -91,6 +91,7 @@ export const level10 = {
       time: 12,
       title: "Chord Tone Targeting",
       type: "guitar",
+      drone: { mode: "cycle", preset: "coastal-soul" },
       fretboard: { scale: "a-dorian", position: 1 },
       what: "Over the Am9→Dm7→G9→Cmaj7 progression, target chord tones on downbeats: 3rds and 7ths first, then extensions. This is how jazz musicians think — and it's what makes solos sound 'inside' the changes instead of just running scales on top of them.",
       tracks: [{ name: "Deep Soul Groove 80 BPM", src: "/deep-soul-groove-80.mp3" }],

@@ -100,6 +100,7 @@ export const level3 = {
       time: 6,
       title: "Two-Note Constraint",
       type: "vocal",
+      drone: { root: "A", octave: 2, texture: "pure" },
       what: "Improvise using ONLY two notes at a time. Start with root and 5th (A and E over Am). Then root and 3rd (A and C). Then 3rd and 5th (C and E). Fewer notes forces deeper exploration of rhythm, dynamics, and phrasing within a tiny space.",
       setup: "Guitar. Metronome at 80 BPM.",
       steps: [

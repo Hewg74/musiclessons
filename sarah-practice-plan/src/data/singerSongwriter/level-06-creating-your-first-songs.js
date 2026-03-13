@@ -55,6 +55,7 @@ export const level6 = {
       time: 8,
       title: "Melody Over Changes",
       type: "song",
+      drone: { mode: "cycle", preset: "cinematic-sky" },
       what: "Create melodic phrases that follow chord changes: Am → C → G → Em. On each chord, sing phrases using that chord's tones. Your melody adapts to the harmony — this is the foundation of songwriting.",
       setup: "Guitar. Metronome at 80 BPM.",
       steps: [

@@ -15,6 +15,7 @@ export const level10 = {
       time: 6,
       title: "Interval Feeling",
       type: "vocal",
+      drone: { root: "A", octave: 2, texture: "pure" },
       what: "Sing the basic intervals and associate each with an emotional quality. Minor 2nd = tension. Major 3rd = brightness. Perfect 5th = strength. Perfect 4th = openness. Each interval has a 'personality' — learning to feel them is how you navigate harmony by instinct.",
       steps: [
         { text: "Sing A, then B (major 2nd — a step up). Then A to C (minor 3rd — sad). Then A to C# (major 3rd — happy). Notice how each interval FEELS different.", why: "Intervals are the atoms of melody. Every melodic movement is an interval. Hearing them emotionally makes them intuitive." },
@@ -54,6 +55,7 @@ export const level10 = {
       time: 8,
       title: "Chord Function: Tension & Resolution",
       type: "song",
+      drone: { mode: "cycle", progression: ["G", "C", "D", "G"], bpm: 80, stepDuration: "2m" },
       what: "Learn to feel harmonic tension (the V chord wants to resolve) and resolution (the I chord is home). Play G-C-D-G and sing long notes on each chord. The D chord feels unresolved. The G chord feels like arrival. This sensation is the foundation of all harmonic movement.",
       steps: [
         { text: "Strum G for 8 beats. Sing the root G. This is HOME — the tonic. Everything resolves here.", why: "The I chord is the reference point of all harmony. Every other chord is defined by its relationship to I." },
@@ -94,6 +96,7 @@ export const level10 = {
       time: 8,
       title: "Modal Colors",
       type: "song",
+      drone: { root: "A", octave: 2, texture: "tanpura" },
       what: "Beyond major and minor, modes give you 5 more emotional colors. Dorian = jazzy minor. Mixolydian = bluesy major. Phrygian = Spanish/dark. Play the same root chord but change the scale, and the entire mood transforms. Modes are the advanced color palette of melody.",
       steps: [
         { text: "Play Am and sing A natural minor: A-B-C-D-E-F-G. This is the standard minor sound. Melancholic, familiar.", why: "Natural minor is your reference point. Every mode is defined by how it differs from natural minor or major." },
@@ -114,6 +117,7 @@ export const level10 = {
       time: 8,
       title: "Sing Over New Progressions",
       type: "song",
+      drone: { mode: "cycle", preset: "coastal-soul" },
       what: "Improvise melody over chord progressions you've NEVER played before. A friend picks chords, or use a random progression generator. The goal: navigate ANY harmony by ear, using intervals and chord tones. No preparation, no pentatonic safety net — just your ears.",
       tracks: [{ name: "Soul Funk Groove 90", src: "/soul-funk-groove-90.mp3" }],
       steps: [

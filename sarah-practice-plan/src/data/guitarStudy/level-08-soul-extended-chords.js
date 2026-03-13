@@ -13,6 +13,7 @@ export const level8 = {
       time: 10,
       title: "Dorian Mode — The Soul Scale",
       type: "guitar",
+      drone: { root: "A", octave: 2, texture: "strings" },
       referencePitches: ["A2", "B2", "C3", "D3", "E3", "F♯3", "G3", "A3"],
       fretboard: { scale: "a-dorian", position: 1 },
       what: "Learn A Dorian: A-B-C-D-E-F#-G. It's a minor scale with a raised 6th — the F# instead of F is what separates it from natural minor. Dorian adds warmth without darkness. This is the scale of soul, funk, and Khruangbin's melodic vocabulary.",
@@ -83,6 +84,7 @@ export const level8 = {
       id: "gs-8-5",
       title: "Chord-Tone Targeting with Extensions",
       type: "guitar",
+      drone: { mode: "cycle", preset: "coastal-soul" },
       time: 10,
       what: "Land on the color tones (9th, 11th, 13th) of extended chords on strong beats. This is chord-tone targeting from Level 6, now applied to richer harmony.",
       steps: [

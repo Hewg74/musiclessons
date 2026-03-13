@@ -423,20 +423,22 @@ function BeatDots({ beat: externalBeat, playing, compact, beatConfig, beatsPerBa
   const cfg = beatConfig || Array.from({ length: n }, (_, i) => ({ accent: i === 0 ? "accent" : "normal" }));
   const s = compact ? 7 : 12, ds = compact ? 9 : 16;
   return (
-    <div style={{ display: "flex", gap: compact ? 3 : 6, justifyContent: "center", margin: compact ? 0 : "10px 0" }}>
+    <div style={{ display: "flex", gap: compact ? 4 : 12, justifyContent: "center", margin: compact ? 0 : "16px 0", height: compact ? ds : ds + 8, alignItems: "center" }}>
       {Array.from({ length: n }).map((_, i) => {
         const acc = cfg[i]?.accent || "normal";
         const c = ACCENT_CONFIG[acc]?.color || T.textMed;
         const isMute = acc === "mute";
         const isActive = playing && beat === i;
-        const size = acc === "accent" ? ds : s;
+        const size = acc === "accent" ? ds + (compact ? 0 : 2) : s + (compact ? 0 : 2);
         return (
           <div key={i} style={{
             width: size, height: size, borderRadius: "50%",
-            background: isMute ? "transparent" : (isActive ? T.textDark : c + "40"),
-            border: isMute ? `2px dashed ${T.border}` : (isActive ? `2px solid ${T.textDark}` : "2px solid transparent"),
-            transition: "all 0.08s", transform: isActive ? "scale(1.4)" : "scale(1)",
-            boxShadow: isActive && !isMute ? `0 0 12px ${T.textDark}40` : "none"
+            background: isMute ? "transparent" : (isActive ? T.gold : c + "30"),
+            border: isMute ? `1px dashed ${T.border}` : (isActive ? `none` : "1px solid transparent"),
+            transition: "all 0.1s cubic-bezier(0.34, 1.56, 0.64, 1)", 
+            transform: isActive ? "scale(1.5)" : "scale(1)",
+            boxShadow: isActive && !isMute ? `0 0 16px ${T.gold}, 0 0 32px ${T.gold}80` : "none",
+            opacity: isMute ? 0.4 : 1
           }} />
         );
       })}
@@ -851,6 +853,26 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
             </div>
           )}
 
+          {/* Inline Drone Generator */}
+          {ex.drone && (
+            <div style={{ marginBottom: 16 }}>
+              <DroneGenerator
+                theme={T}
+                inline={true}
+                {...(typeof ex.drone === 'object' ? {
+                  defaultRoot: ex.drone.root,
+                  defaultOctave: ex.drone.octave,
+                  defaultTexture: ex.drone.texture,
+                  defaultMode: ex.drone.mode,
+                  defaultPreset: ex.drone.preset,
+                  defaultProgression: ex.drone.progression,
+                  defaultBpm: ex.drone.bpm,
+                  defaultStepDuration: ex.drone.stepDuration,
+                } : {})}
+              />
+            </div>
+          )}
+
           {/* Inline Recorder */}
           {ex.recorder && (
             <div style={{ marginBottom: 16 }}>
@@ -1108,7 +1130,7 @@ function PianoKeysDiagram({ notes = [], label = "", range }) {
 
 // ─── VOICE CURRICULUM ───────────────────────────────────────────────
 
-const VOCAL_COLORS = ["#9e829c", "#8b6f89", "#d97d54", "#7f9e88", "#5b7fa5", "#d68383", "#72a8a8", "#d4a373", "#6b8e9f", "#9e829c"];
+const VOCAL_COLORS = ["#9e829c", "#8b6f89", "#d97d54", "#7f9e88", "#5b7fa5", "#d68383", "#72a8a8", "#d4a373", "#6b8e9f", "#9e829c", "#7a6f8e", "#c9815e", "#6a9e7a", "#8b7fa5"];
 
 function VoiceView({ completed, onComplete, metro, onOpenTapMatch }) {
   const [selectedLevel, setSelectedLevel] = useState(() => {
@@ -1267,68 +1289,99 @@ function MetronomePanel({ metro, onOpenTapMatch }) {
     <div>
       {/* Main metronome card */}
       <div style={{
-        background: T.bgCard, border: `1px solid ${T.border}`,
-        padding: 32, textAlign: "center", borderRadius: T.radius
+        position: "relative",
+        background: metro.playing ? T.bgSoft : T.bgCard, 
+        border: `1px solid ${metro.playing ? T.gold : T.borderSoft}`,
+        boxShadow: metro.playing ? `inset 0 2px 10px ${T.bgSoft}, 0 0 20px ${T.gold}20` : T.shadow,
+        padding: "40px 24px", textAlign: "center", borderRadius: T.radius,
+        transition: "all 0.4s", overflow: "hidden"
       }}>
-        <div style={{ fontSize: 11, color: T.textMuted, fontWeight: 600, letterSpacing: 2, fontFamily: T.sans, textTransform: "uppercase", marginBottom: 12 }}>
-          Metronome
-        </div>
+        {/* Subtle SVG Grid Background */}
+        <svg width="100%" height="100%" style={{ position: "absolute", top: 0, left: 0, pointerEvents: "none", opacity: 0.1 }}>
+          <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+            <circle cx="2" cy="2" r="1" fill={T.textMed} />
+          </pattern>
+          <rect width="100%" height="100%" fill="url(#grid)" />
+        </svg>
 
-        {/* Beat visualizer — tap beats to edit */}
-        <BeatDots beat={metro.beat} playing={metro.playing} beatConfig={metro.beatConfig} beatsPerBar={metro.beatsPerBar} />
+        <div style={{ position: "relative", zIndex: 2 }}>
+          <div style={{ fontSize: 10, color: metro.playing ? T.gold : T.textMuted, fontWeight: 800, letterSpacing: 3, fontFamily: T.sans, textTransform: "uppercase", marginBottom: 24, transition: "color 0.4s" }}>
+            Drum Engine
+          </div>
 
-        <div style={{ fontSize: 56, fontWeight: 700, color: T.textDark, fontFamily: T.serif, margin: "8px 0 0" }}>{metro.bpm}</div>
-        <div style={{ fontSize: 11, color: T.textMuted, letterSpacing: 2, fontFamily: T.sans, textTransform: "uppercase", marginBottom: 20 }}>BPM</div>
+          {/* Beat visualizer — tap beats to edit */}
+          <BeatDots beat={metro.beat} playing={metro.playing} beatConfig={metro.beatConfig} beatsPerBar={metro.beatsPerBar} />
 
-        <input type="range" min={40} max={280} value={metro.bpm}
-          onChange={e => metro.changeBpm(Number(e.target.value))}
-          style={{ width: "100%", accentColor: T.gold, marginBottom: 20, height: 2 }} />
+          <div style={{ fontSize: 84, fontWeight: 800, color: metro.playing ? T.textDark : T.textMed, fontFamily: T.sans, margin: "16px 0 0", lineHeight: 1, letterSpacing: -2, textShadow: metro.playing ? `0 2px 12px ${T.gold}40` : "none", transition: "all 0.4s" }}>
+            {metro.bpm}
+          </div>
+          <div style={{ fontSize: 11, color: T.textMuted, letterSpacing: 3, fontFamily: T.sans, textTransform: "uppercase", marginBottom: 32, fontWeight: 700 }}>BPM</div>
 
-        {/* Preset BPMs */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 20 }}>
-          {[78, 120, 122, 165, 200, 244].map(v => (
-            <button key={v} onClick={() => metro.changeBpm(v)} style={{
-              background: metro.bpm === v ? T.gold : "transparent", border: `1px solid ${metro.bpm === v ? T.gold : T.borderSoft}`,
-              color: metro.bpm === v ? "#fff" : T.textMed, padding: "8px 20px", borderRadius: T.radius,
-              fontSize: 12, fontWeight: 400, cursor: "pointer", fontFamily: T.sans, letterSpacing: 1
-            }}>{v}</button>
-          ))}
-        </div>
+          <input type="range" min={40} max={280} value={metro.bpm}
+            onChange={e => metro.changeBpm(Number(e.target.value))}
+            style={{ width: "100%", accentColor: T.gold, marginBottom: 32, height: 4, borderRadius: 2, outline: "none", background: T.borderSoft }} />
 
-        {/* Start/Stop & Tap Tempo */}
-        <div style={{ display: "flex", gap: 12 }}>
-          <button onClick={handleTapTempo} style={{
-            flex: 1, background: "transparent", border: `1px dashed ${T.border}`, color: T.textMed,
-            padding: "14px", fontSize: 13, fontWeight: 600, cursor: "pointer", borderRadius: T.radius,
-            fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
-          }}>
-            ✋ Tap Tempo
-          </button>
-          <button onClick={metro.playing ? metro.stop : metro.start} style={{
-            flex: 2, background: metro.playing ? T.coral : T.gold, border: "none", color: "#fff",
-            padding: "14px", fontSize: 15, fontWeight: 600, cursor: "pointer", borderRadius: T.radius,
-            fontFamily: T.sans, letterSpacing: 1.5, textTransform: "uppercase"
-          }}>
-            {metro.playing ? "Stop" : "Start"}
-          </button>
+          {/* Preset BPMs */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginBottom: 32 }}>
+            {[78, 120, 122, 165, 200, 244].map(v => (
+              <button key={v} onClick={() => metro.changeBpm(v)} style={{
+                background: metro.bpm === v ? T.gold : "transparent", 
+                border: `1px solid ${metro.bpm === v ? T.gold : T.border}`,
+                color: metro.bpm === v ? "#fff" : T.textMed, padding: "10px 0", borderRadius: T.radius,
+                fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: T.sans, letterSpacing: 1,
+                boxShadow: metro.bpm === v ? `0 4px 12px ${T.gold}40` : "none",
+                transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)"
+              }}
+              onMouseOver={e => { if(metro.bpm !== v) { e.currentTarget.style.borderColor = T.textMed; e.currentTarget.style.color = T.textDark; } }}
+              onMouseOut={e => { if(metro.bpm !== v) { e.currentTarget.style.borderColor = T.border; e.currentTarget.style.color = T.textMed; } }}
+              >{v}</button>
+            ))}
+          </div>
+
+          {/* Start/Stop & Tap Tempo */}
+          <div style={{ display: "flex", gap: 16 }}>
+            <button onClick={handleTapTempo} style={{
+              flex: 1, background: "transparent", border: `2px dashed ${T.border}`, color: T.textMed,
+              padding: "16px", fontSize: 13, fontWeight: 700, cursor: "pointer", borderRadius: T.radius,
+              fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase", transition: "all 0.2s"
+            }}
+            onMouseOver={e => { e.currentTarget.style.borderColor = T.textMed; e.currentTarget.style.color = T.textDark; }}
+            onMouseOut={e => { e.currentTarget.style.borderColor = T.border; e.currentTarget.style.color = T.textMed; }}
+            >
+              ✋ Tap
+            </button>
+            <button onClick={metro.playing ? metro.stop : metro.start} style={{
+              flex: 1.5, background: metro.playing ? T.bgCard : T.gold, border: `2px solid ${metro.playing ? T.coral : T.gold}`, color: metro.playing ? T.coral : "#fff",
+              padding: "16px", fontSize: 14, fontWeight: 800, cursor: "pointer", borderRadius: T.radius,
+              fontFamily: T.sans, letterSpacing: 2, textTransform: "uppercase",
+              boxShadow: metro.playing ? `0 4px 20px ${T.coral}40` : `0 4px 16px ${T.gold}40`,
+              transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)"
+            }}
+            onMouseOver={e => e.currentTarget.style.transform = "scale(1.02)"}
+            onMouseOut={e => e.currentTarget.style.transform = "scale(1)"}
+            >
+              {metro.playing ? "Stop Engine" : "Start Engine"}
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Sound Kit selector */}
       <div style={{
         background: T.bgCard, border: `1px solid ${T.border}`,
-        padding: 20, marginTop: 16, borderRadius: T.radius
+        padding: "24px", marginTop: 24, borderRadius: T.radius, boxShadow: T.shadow
       }}>
-        <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 12 }}>
-          Sound
+        <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 16 }}>
+          Sound Kit
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 8 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 10 }}>
           {KIT_KEYS.map(k => (
             <button key={k} onClick={() => metro.setSoundKit(k)} style={{
-              background: metro.soundKit === k ? T.gold : "transparent",
+              background: metro.soundKit === k ? T.goldSoft : "transparent",
               border: `1px solid ${metro.soundKit === k ? T.gold : T.borderSoft}`,
-              color: metro.soundKit === k ? "#fff" : T.textMed,
-              padding: "8px 20px", fontSize: 12, fontWeight: 400, cursor: "pointer", fontFamily: T.sans, letterSpacing: 1
+              color: metro.soundKit === k ? T.textDark : T.textMed,
+              padding: "10px 16px", fontSize: 12, fontWeight: metro.soundKit === k ? 700 : 500, cursor: "pointer", fontFamily: T.sans, letterSpacing: 0.5,
+              borderRadius: T.radius, transition: "all 0.2s"
             }}>{SOUND_KITS[k].label}</button>
           ))}
         </div>
@@ -1337,18 +1390,19 @@ function MetronomePanel({ metro, onOpenTapMatch }) {
       {/* Time Signature */}
       <div style={{
         background: T.bgCard, border: `1px solid ${T.border}`,
-        padding: 20, marginTop: 16, borderRadius: T.radius
+        padding: "24px", marginTop: 16, borderRadius: T.radius, boxShadow: T.shadow
       }}>
-        <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 12 }}>
+        <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 16 }}>
           Time Signature
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
           {[2, 3, 4, 5, 6, 7].map(n => (
             <button key={n} onClick={() => metro.changeBeats(n)} style={{
-              background: metro.beatsPerBar === n ? T.gold : "transparent",
+              background: metro.beatsPerBar === n ? T.goldSoft : "transparent",
               border: `1px solid ${metro.beatsPerBar === n ? T.gold : T.borderSoft}`,
-              color: metro.beatsPerBar === n ? "#fff" : T.textMed,
-              padding: "8px 20px", fontSize: 12, fontWeight: 400, cursor: "pointer", fontFamily: T.sans, letterSpacing: 1
+              color: metro.beatsPerBar === n ? T.textDark : T.textMed,
+              padding: "10px 16px", fontSize: 13, fontWeight: metro.beatsPerBar === n ? 700 : 500, cursor: "pointer", fontFamily: T.sans,
+              borderRadius: T.radius, transition: "all 0.2s"
             }}>{n}/4</button>
           ))}
         </div>
@@ -1357,20 +1411,21 @@ function MetronomePanel({ metro, onOpenTapMatch }) {
       {/* Practice Features */}
       <div style={{
         background: T.bgCard, border: `1px solid ${T.border}`,
-        padding: 20, marginTop: 16, borderRadius: T.radius
+        padding: "24px", marginTop: 16, borderRadius: T.radius, boxShadow: T.shadow
       }}>
-        <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 12 }}>
-          Practice Features
+        <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 16 }}>
+          Practice Engine
         </div>
 
         {/* Subdivisions */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, marginBottom: 12 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10, marginBottom: 16 }}>
           {[{v:"4n",l:"Quarter"}, {v:"8n",l:"8ths"}, {v:"16n",l:"16ths"}, {v:"8t",l:"Triplets"}].map(sub => (
             <button key={sub.v} onClick={() => metro.setSubdivision(sub.v)} style={{
-              background: metro.subdivision === sub.v ? T.gold : "transparent",
+              background: metro.subdivision === sub.v ? T.goldSoft : "transparent",
               border: `1px solid ${metro.subdivision === sub.v ? T.gold : T.borderSoft}`,
-              color: metro.subdivision === sub.v ? "#fff" : T.textMed, borderRadius: T.radius,
-              padding: "8px", fontSize: 11, fontWeight: 600, cursor: "pointer", fontFamily: T.sans
+              color: metro.subdivision === sub.v ? T.textDark : T.textMed, borderRadius: T.radius,
+              padding: "10px 6px", fontSize: 11, fontWeight: metro.subdivision === sub.v ? 700 : 500, cursor: "pointer", fontFamily: T.sans,
+              transition: "all 0.2s"
             }}>{sub.l}</button>
           ))}
         </div>
@@ -1380,14 +1435,16 @@ function MetronomePanel({ metro, onOpenTapMatch }) {
             flex: 1, background: metro.gapClickActive ? T.gold : "transparent",
             border: `1px solid ${metro.gapClickActive ? T.gold : T.borderSoft}`,
             color: metro.gapClickActive ? "#fff" : T.textMed, borderRadius: T.radius,
-            padding: "10px 16px", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: T.sans
+            padding: "12px 16px", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: T.sans,
+            boxShadow: metro.gapClickActive ? `0 4px 12px ${T.gold}40` : "none", transition: "all 0.2s"
           }}>Gap Click</button>
 
           <button onClick={() => metro.setSpeedBuilder(!metro.speedBuilder)} style={{
             flex: 1, background: metro.speedBuilder ? T.gold : "transparent",
             border: `1px solid ${metro.speedBuilder ? T.gold : T.borderSoft}`,
             color: metro.speedBuilder ? "#fff" : T.textMed, borderRadius: T.radius,
-            padding: "10px 16px", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: T.sans
+            padding: "12px 16px", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: T.sans,
+            boxShadow: metro.speedBuilder ? `0 4px 12px ${T.gold}40` : "none", transition: "all 0.2s"
           }}>Speed Builder (+{metro.speedIncrement}/{metro.speedBars} bars)</button>
         </div>
 
@@ -2871,6 +2928,8 @@ function FloatingMetronome({ metro, setTab, isDark, theme: T }) {
   const [startY, setStartY] = useState(0);
   const [startBpm, setStartBpm] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [taps, setTaps] = useState([]);
+  const [tapPulse, setTapPulse] = useState(false);
 
   // Close when tapping outside the expanded sheet
   useEffect(() => {
@@ -2906,6 +2965,26 @@ function FloatingMetronome({ metro, setTab, isDark, theme: T }) {
   const handlePointerUp = (e) => {
     e.target.releasePointerCapture(e.pointerId);
     setIsDragging(false);
+
+    // If it was just a tap (no significant vertical movement), act as Tap Tempo
+    if (Math.abs(e.clientY - startY) < 5 && !isExpanded) {
+      setTapPulse(true);
+      setTimeout(() => setTapPulse(false), 150);
+      
+      const now = Date.now();
+      setTaps(prev => {
+        const recent = prev.filter(t => now - t < 3000);
+        const newTaps = [...recent, now];
+        if (newTaps.length > 1) {
+          let durs = [];
+          for (let i = 1; i < newTaps.length; i++) durs.push(newTaps[i] - newTaps[i - 1]);
+          const avg = durs.reduce((a, b) => a + b, 0) / durs.length;
+          const bpm = Math.round(60000 / avg);
+          if (bpm >= 40 && bpm <= 280) metro.changeBpm(bpm);
+        }
+        return newTaps;
+      });
+    }
   };
 
   // Removed trackProgress to simplify UI as requested
@@ -2972,11 +3051,13 @@ function FloatingMetronome({ metro, setTab, isDark, theme: T }) {
             display: "flex", alignItems: "center", gap: 8, cursor: isExpanded ? "default" : "ns-resize", touchAction: "none",
             background: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.03)", 
             padding: "6px 14px", borderRadius: 24, border: `1px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)"}`,
-            transition: "background 0.2s",
+            transition: "all 0.15s",
+            transform: tapPulse ? "scale(0.95)" : "scale(1)",
+            boxShadow: tapPulse ? `0 0 12px ${T.gold}40` : "none",
             opacity: isExpanded ? 0.3 : 1, // Dim while expanded to indicate it's not the primary interaction
             pointerEvents: isExpanded ? "none" : "auto", flexShrink: 0
           }}
-          title={isExpanded ? "" : "Drag up/down to change BPM"}
+          title={isExpanded ? "" : "Tap for tap tempo, drag up/down to change"}
         >
           <div style={{ fontSize: 18, fontWeight: 700, fontFamily: T.sans, color: T.gold, minWidth: 32, textAlign: "right", userSelect: "none" }}>
             {metro.bpm}

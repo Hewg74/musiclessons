@@ -14,6 +14,7 @@ export const level1 = {
       time: 10,
       title: "Am Pentatonic — The Shape",
       type: "guitar",
+      drone: { root: "A", octave: 2, texture: "analog" },
       referencePitches: ["A2", "C3", "D3", "E3", "G3", "A3"],
       fretboard: { scale: "am-pentatonic", position: 1 },
       what: "Learn the Am pentatonic scale in 5th position, note by note. This is the most important shape on the guitar — it's the foundation for blues, rock, surf, reggae, and everything else in this curriculum. The notes are A-C-D-E-G.",
