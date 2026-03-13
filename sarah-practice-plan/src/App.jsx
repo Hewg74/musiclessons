@@ -176,7 +176,9 @@ function useMetronome() {
   const beat = 0; // Dummy beat to satisfy return signature; actual beat is managed via events to prevent App re-renders
   const [beatsPerBar, setBeatsPerBar] = useState(4);
   const [soundKit, setSoundKit] = useState("modernClick");
-  const [gapClick, setGapClick] = useState(0); // 0=off, 4=mute 4th bar
+  const [gapClickActive, setGapClickActive] = useState(false);
+  const [gapClickPlay, setGapClickPlay] = useState(3);
+  const [gapClickMute, setGapClickMute] = useState(1);
   const [subdivision, setSubdivision] = useState("4n"); // "4n", "8n", "16n", "8t"
   const [speedBuilder, setSpeedBuilder] = useState(false);
   const [speedIncrement, setSpeedIncrement] = useState(5); // BPM added each cycle
@@ -197,7 +199,9 @@ function useMetronome() {
   const soundKitRef = useRef(soundKit);
   const beatsRef = useRef(beatsPerBar);
   const bpmRef = useRef(bpm);
-  const gapClickRef = useRef(gapClick);
+  const gapClickActiveRef = useRef(gapClickActive);
+  const gapClickPlayRef = useRef(gapClickPlay);
+  const gapClickMuteRef = useRef(gapClickMute);
   const subdivisionRef = useRef(subdivision);
   const speedBuilderRef = useRef(speedBuilder);
   const speedIncrementRef = useRef(speedIncrement);
@@ -209,7 +213,9 @@ function useMetronome() {
   useEffect(() => { soundKitRef.current = soundKit; }, [soundKit]);
   useEffect(() => { beatsRef.current = beatsPerBar; }, [beatsPerBar]);
   useEffect(() => { bpmRef.current = bpm; }, [bpm]);
-  useEffect(() => { gapClickRef.current = gapClick; }, [gapClick]);
+  useEffect(() => { gapClickActiveRef.current = gapClickActive; }, [gapClickActive]);
+  useEffect(() => { gapClickPlayRef.current = gapClickPlay; }, [gapClickPlay]);
+  useEffect(() => { gapClickMuteRef.current = gapClickMute; }, [gapClickMute]);
   useEffect(() => { subdivisionRef.current = subdivision; }, [subdivision]);
   useEffect(() => { speedBuilderRef.current = speedBuilder; }, [speedBuilder]);
   useEffect(() => { speedIncrementRef.current = speedIncrement; }, [speedIncrement]);
@@ -262,9 +268,17 @@ function useMetronome() {
         Tone.Draw.schedule(() => setBpm(newBpm), time);
       }
 
-      const gc = gapClickRef.current;
+      const gcActive = gapClickActiveRef.current;
       let isMute = bc.accent === "mute";
-      if (gc > 0 && bar % gc === (gc - 1)) isMute = true;
+      if (gcActive) {
+        const play = gapClickPlayRef.current;
+        const mute = gapClickMuteRef.current;
+        const cycle = play + mute;
+        const pos = bar % cycle;
+        if (pos >= play) {
+          isMute = true;
+        }
+      }
 
       const subDiv = subdivisionRef.current;
       const subDivNum = subDiv === "8n" ? 2 : subDiv === "16n" ? 4 : subDiv === "8t" ? 3 : 1;
@@ -354,8 +368,8 @@ function useMetronome() {
   }, []);
 
   return {
-    bpm, playing, beat, beatsPerBar, soundKit, beatConfig, gapClick, speedBuilder, speedIncrement, speedBars, speedCeiling, subdivision,
-    start, stop, changeBpm, changeBeats, setSoundKit, cycleAccent, setBeatKit, setGapClick, setSubdivision,
+    bpm, playing, beat, beatsPerBar, soundKit, beatConfig, gapClickActive, gapClickPlay, gapClickMute, speedBuilder, speedIncrement, speedBars, speedCeiling, subdivision,
+    start, stop, changeBpm, changeBeats, setSoundKit, cycleAccent, setBeatKit, setGapClickActive, setGapClickPlay, setGapClickMute, setSubdivision,
     setSpeedBuilder: toggleSpeedBuilder, setSpeedIncrement, setSpeedBars, setSpeedCeiling
   };
 }
@@ -1362,12 +1376,12 @@ function MetronomePanel({ metro, onOpenTapMatch }) {
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12 }}>
-          <button onClick={() => metro.setGapClick(metro.gapClick ? 0 : 4)} style={{
-            flex: 1, background: metro.gapClick ? T.gold : "transparent",
-            border: `1px solid ${metro.gapClick ? T.gold : T.borderSoft}`,
-            color: metro.gapClick ? "#fff" : T.textMed, borderRadius: T.radius,
+          <button onClick={() => metro.setGapClickActive(!metro.gapClickActive)} style={{
+            flex: 1, background: metro.gapClickActive ? T.gold : "transparent",
+            border: `1px solid ${metro.gapClickActive ? T.gold : T.borderSoft}`,
+            color: metro.gapClickActive ? "#fff" : T.textMed, borderRadius: T.radius,
             padding: "10px 16px", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: T.sans
-          }}>Gap Click (Mute 1/4)</button>
+          }}>Gap Click</button>
 
           <button onClick={() => metro.setSpeedBuilder(!metro.speedBuilder)} style={{
             flex: 1, background: metro.speedBuilder ? T.gold : "transparent",
@@ -1376,6 +1390,44 @@ function MetronomePanel({ metro, onOpenTapMatch }) {
             padding: "10px 16px", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: T.sans
           }}>Speed Builder (+{metro.speedIncrement}/{metro.speedBars} bars)</button>
         </div>
+
+        {metro.gapClickActive && (
+          <div style={{ marginTop: 12, padding: "10px 14px", background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radiusMd }}>
+            <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 10, fontWeight: 600, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>Play Bars</div>
+                <div style={{ display: "flex", gap: 4 }}>
+                  {[1, 2, 3, 4, 8].map(n => (
+                    <button key={n} onClick={() => metro.setGapClickPlay(n)} style={{
+                      background: metro.gapClickPlay === n ? T.gold : "transparent",
+                      border: `1px solid ${metro.gapClickPlay === n ? T.gold : T.borderSoft}`,
+                      color: metro.gapClickPlay === n ? "#fff" : T.textMed,
+                      borderRadius: T.radius, padding: "4px 8px", fontSize: 12, fontWeight: 600,
+                      cursor: "pointer", fontFamily: T.sans, minWidth: 32
+                    }}>{n}</button>
+                  ))}
+                </div>
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 10, fontWeight: 600, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>Mute Bars</div>
+                <div style={{ display: "flex", gap: 4 }}>
+                  {[1, 2, 3, 4, 8].map(n => (
+                    <button key={n} onClick={() => metro.setGapClickMute(n)} style={{
+                      background: metro.gapClickMute === n ? T.gold : "transparent",
+                      border: `1px solid ${metro.gapClickMute === n ? T.gold : T.borderSoft}`,
+                      color: metro.gapClickMute === n ? "#fff" : T.textMed,
+                      borderRadius: T.radius, padding: "4px 8px", fontSize: 12, fontWeight: 600,
+                      cursor: "pointer", fontFamily: T.sans, minWidth: 32
+                    }}>{n}</button>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans, marginTop: 8 }}>
+              Plays for {metro.gapClickPlay} bar{metro.gapClickPlay > 1 ? "s" : ""}, then goes silent for {metro.gapClickMute} bar{metro.gapClickMute > 1 ? "s" : ""} to test your internal timing.
+            </div>
+          </div>
+        )}
 
         {metro.speedBuilder && (
           <div style={{ marginTop: 12, padding: "10px 14px", background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radiusMd }}>
@@ -1608,12 +1660,12 @@ function CompactMetronomeControls({ metro, theme: T }) {
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
-          <button onClick={() => metro.setGapClick(metro.gapClick ? 0 : 4)} style={{
-            background: metro.gapClick ? T.gold : "transparent",
-            border: `1px solid ${metro.gapClick ? T.gold : "rgba(150,150,150,0.2)"}`,
-            color: metro.gapClick ? "#fff" : T.textMed, borderRadius: 6,
+          <button onClick={() => metro.setGapClickActive(!metro.gapClickActive)} style={{
+            background: metro.gapClickActive ? T.gold : "transparent",
+            border: `1px solid ${metro.gapClickActive ? T.gold : "rgba(150,150,150,0.2)"}`,
+            color: metro.gapClickActive ? "#fff" : T.textMed, borderRadius: 6,
             padding: "8px", fontSize: 11, fontWeight: 500, cursor: "pointer", fontFamily: T.sans
-          }}>Gap Click (Mute 1/4)</button>
+          }}>Gap Click</button>
 
           <button onClick={() => metro.setSpeedBuilder(!metro.speedBuilder)} style={{
             background: metro.speedBuilder ? T.gold : "transparent",
@@ -1622,6 +1674,42 @@ function CompactMetronomeControls({ metro, theme: T }) {
             padding: "8px", fontSize: 11, fontWeight: 500, cursor: "pointer", fontFamily: T.sans
           }}>Speed Builder</button>
         </div>
+
+        {metro.gapClickActive && (
+          <div style={{ marginTop: 8, padding: "10px", background: "rgba(0,0,0,0.03)", border: `1px solid rgba(150,150,150,0.1)`, borderRadius: 6 }}>
+            <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 9, fontWeight: 600, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 4 }}>Play Bars</div>
+                <div style={{ display: "flex", gap: 2 }}>
+                  {[1, 2, 3, 4, 8].map(n => (
+                    <button key={n} onClick={() => metro.setGapClickPlay(n)} style={{
+                      flex: 1, background: metro.gapClickPlay === n ? T.gold : "transparent",
+                      border: `1px solid ${metro.gapClickPlay === n ? T.gold : "rgba(150,150,150,0.2)"}`,
+                      color: metro.gapClickPlay === n ? "#fff" : T.textMed,
+                      borderRadius: 4, padding: "4px 0", fontSize: 11, fontWeight: 500, cursor: "pointer", fontFamily: T.sans
+                    }}>{n}</button>
+                  ))}
+                </div>
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 9, fontWeight: 600, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 4 }}>Mute Bars</div>
+                <div style={{ display: "flex", gap: 2 }}>
+                  {[1, 2, 3, 4, 8].map(n => (
+                    <button key={n} onClick={() => metro.setGapClickMute(n)} style={{
+                      flex: 1, background: metro.gapClickMute === n ? T.gold : "transparent",
+                      border: `1px solid ${metro.gapClickMute === n ? T.gold : "rgba(150,150,150,0.2)"}`,
+                      color: metro.gapClickMute === n ? "#fff" : T.textMed,
+                      borderRadius: 4, padding: "4px 0", fontSize: 11, fontWeight: 500, cursor: "pointer", fontFamily: T.sans
+                    }}>{n}</button>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div style={{ fontSize: 10, color: T.textLight, fontFamily: T.sans, marginTop: 8 }}>
+              Plays for {metro.gapClickPlay} bar{metro.gapClickPlay > 1 ? "s" : ""}, then goes silent for {metro.gapClickMute} bar{metro.gapClickMute > 1 ? "s" : ""} to test your internal timing.
+            </div>
+          </div>
+        )}
 
         {metro.speedBuilder && (
           <div style={{ marginTop: 8, padding: "10px", background: "rgba(0,0,0,0.03)", border: `1px solid rgba(150,150,150,0.1)`, borderRadius: 6 }}>
@@ -1708,7 +1796,7 @@ function CompactBeatEditor({ metro, theme: T }) {
   }, []);
 
   return (
-    <div style={{ display: "flex", gap: 10, alignItems: "center", height: "100%", padding: "4px 8px" }}>
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", height: "100%", width: "100%", padding: "4px 8px" }}>
       {metro.beatConfig.map((bc, i) => {
         const acc = ACCENT_CONFIG[bc.accent];
         const isActive = internalBeat === i;
@@ -2830,9 +2918,6 @@ function FloatingMetronome({ metro, setTab, isDark, theme: T }) {
         padding: isExpanded ? "16px" : "8px 16px",
         height: "auto", /* Allow content to dictate height */
         maxHeight: "80vh", /* Still prevent overflow off-screen */
-        maxWidth: 500, // Kept relatively compact
-        marginRight: "auto", // Align to left side if container is larger
-        borderRadius: isExpanded ? "24px 24px 24px 0" : "24px", // rounded top corners, flat bottom-left
         borderTop: isExpanded ? `1px solid ${T.gold}` : "",
         transition: "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
       }}>
@@ -2860,7 +2945,7 @@ function FloatingMetronome({ metro, setTab, isDark, theme: T }) {
           </button>
 
           {/* Integrated Visualizer & Editor */}
-          <div style={{ flex: 1, display: "flex", alignItems: "center", overflowX: "auto", padding: "8px 6px" }} className="hide-scrollbar">
+          <div style={{ flex: 1, display: "flex", alignItems: "center", padding: "8px 6px", overflow: "visible" }}>
             <CompactBeatEditor metro={metro} theme={T} />
           </div>
 

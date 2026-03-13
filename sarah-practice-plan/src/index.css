@@ -184,13 +184,13 @@ button {
 .floating-metronome {
   position: fixed;
   bottom: 80px; /* Default: above bottom-nav */
-  left: 16px; /* Align left */
-  right: auto;
-  width: auto;
-  min-width: 320px; /* Ensure it holds the controls */
-  max-width: calc(100% - 32px); /* Don't overflow screen */
-  border-radius: 24px; /* Maintain pill shape on mobile too */
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  left: 0; 
+  right: 0;
+  width: 100%;
+  max-width: none;
+  border-radius: 0; 
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
   box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04);
   z-index: 998; /* Just below bottom-nav's 999 */
   background: rgba(255, 255, 255, 0.65);
@@ -205,23 +205,29 @@ button {
 
 .bottom-nav-dark ~ .floating-metronome,
 .floating-metronome-dark {
-  background: rgba(24, 24, 24, 0.65);
+  background: rgba(24, 24, 24, 0.85);
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.3);
 }
 
 @media (min-width: 641px) {
   .floating-metronome {
-    left: auto;
-    right: 32px;
-    bottom: 32px;
-    width: auto;
-    border-radius: 30px; /* Pill shape */
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
-    padding: 8px 16px 8px 8px;
+    left: 0;
+    right: 0;
+    bottom: 0; /* No bottom nav on desktop */
+    width: 100%;
+    border-radius: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+    padding: 8px 32px;
+    justify-content: center; /* Center contents on desktop */
+  }
+  .floating-metronome > div {
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
   }
   .floating-metronome-dark {
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
   }
 }
