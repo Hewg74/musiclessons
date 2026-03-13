@@ -1699,32 +1699,35 @@ function CompactMetronomeControls({ metro, theme: T }) {
 
 // Extracted Beat Editor that can sit directly on the main metronome bar
 function CompactBeatEditor({ metro, theme: T }) {
-  const [editingBeat, setEditingBeat] = useState(null);
+  const [internalBeat, setInternalBeat] = useState(0);
+
+  useEffect(() => {
+    const handleBeat = (e) => setInternalBeat(e.detail.beat);
+    window.addEventListener('metroBeat', handleBeat);
+    return () => window.removeEventListener('metroBeat', handleBeat);
+  }, []);
 
   return (
-    <div style={{ display: "flex", gap: 6, alignItems: "flex-end", height: "100%" }}>
+    <div style={{ display: "flex", gap: 8, alignItems: "center", height: "100%" }}>
       {metro.beatConfig.map((bc, i) => {
         const acc = ACCENT_CONFIG[bc.accent];
-        const kitLabel = bc.kit ? SOUND_KITS[bc.kit]?.label : SOUND_KITS[metro.soundKit]?.label;
-        const isEditing = editingBeat === i;
+        const isActive = internalBeat === i;
+        
         return (
           <div key={i} style={{
-            position: "relative", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end"
+            position: "relative", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"
           }}>
-            {/* Beat number */}
-            <div style={{ fontSize: 9, fontWeight: 700, color: T.textMuted, fontFamily: T.sans, marginBottom: 4 }}>
-              {i === 0 ? "▼" : (i + 1)}
-            </div>
-
             {/* Accent button — tap to cycle accent level */}
-            <button onClick={() => metro.cycleAccent(i)} style={{
-              padding: "4px", width: 28, height: 32,
-              background: bc.accent === "mute" ? "transparent" : `${acc.color}15`,
-              border: `2px solid ${bc.accent === "mute" ? "rgba(150,150,150,0.2)" : acc.color}`,
+            <button onClick={(e) => { e.stopPropagation(); metro.cycleAccent(i); }} style={{
+              padding: "0", width: 28, height: 28,
+              background: bc.accent === "mute" ? "transparent" : `${acc.color}${isActive ? '30' : '15'}`,
+              border: `2px solid ${bc.accent === "mute" ? "rgba(150,150,150,0.2)" : (isActive ? acc.color : acc.color + '40')}`,
               borderStyle: bc.accent === "mute" ? "dashed" : "solid",
-              borderRadius: `6px`, cursor: "pointer",
+              borderRadius: `50%`, cursor: "pointer",
               display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-              transition: "all 0.15s"
+              transition: "all 0.15s",
+              transform: isActive ? "scale(1.15)" : "scale(1)",
+              boxShadow: isActive && bc.accent !== "mute" ? `0 0 12px ${acc.color}50` : "none"
             }}>
               <div style={{
                 width: bc.accent === "accent" ? 12 : bc.accent === "normal" ? 8 : bc.accent === "ghost" ? 4 : 0,
@@ -1734,41 +1737,6 @@ function CompactBeatEditor({ metro, theme: T }) {
                 border: bc.accent === "mute" ? `1px dashed ${T.border}` : "none"
               }} />
             </button>
-
-            {/* Sound selector — tap to open kit picker */}
-            <button onClick={() => setEditingBeat(isEditing ? null : i)} style={{
-              width: "100%", padding: "2px", marginTop: 2,
-              background: isEditing ? T.goldSoft : "transparent",
-              border: `1px solid rgba(150,150,150,0.2)`,
-              borderRadius: `4px`, cursor: "pointer",
-              fontSize: 8, color: bc.kit ? T.gold : T.textLight, fontFamily: T.sans, fontWeight: 600
-            }}>
-              {kitLabel?.length > 4 ? kitLabel.substring(0, 3) + "." : kitLabel}
-            </button>
-
-            {/* Kit picker dropdown */}
-            {isEditing && (
-              <div style={{
-                position: "absolute", zIndex: 100, bottom: "100%", left: "50%", transform: "translateX(-50%)", marginBottom: 4,
-                background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: T.radiusMd,
-                boxShadow: T.md, overflow: "hidden", minWidth: 100
-              }}>
-                <button onClick={() => { metro.setBeatKit(i, null); setEditingBeat(null); }} style={{
-                  width: "100%", padding: "6px", background: !bc.kit ? T.goldSoft : "transparent",
-                  border: "none", borderBottom: `1px solid ${T.borderSoft}`,
-                  fontSize: 10, color: !bc.kit ? T.gold : T.textMed, fontFamily: T.sans, cursor: "pointer",
-                  fontWeight: !bc.kit ? 700 : 400, textAlign: "left"
-                }}>Default Kit</button>
-                {KIT_KEYS.map(k => (
-                  <button key={k} onClick={() => { metro.setBeatKit(i, k); setEditingBeat(null); }} style={{
-                    width: "100%", padding: "6px", background: bc.kit === k ? T.goldSoft : "transparent",
-                    border: "none", borderBottom: `1px solid ${T.borderSoft}`,
-                    fontSize: 10, color: bc.kit === k ? T.gold : T.textMed, fontFamily: T.sans, cursor: "pointer",
-                    fontWeight: bc.kit === k ? 700 : 400, textAlign: "left"
-                  }}>{SOUND_KITS[k].label}</button>
-                ))}
-              </div>
-            )}
           </div>
         );
       })}
@@ -2852,36 +2820,16 @@ function FloatingMetronome({ metro, setTab, isDark, theme: T }) {
     setIsDragging(false);
   };
 
-  // Horizontal oscillating track progress (0 to 1 back to 0)
-  const [trackProgress, setTrackProgress] = useState(0);
-  useEffect(() => {
-    let raf;
-    const render = () => {
-      if (metro.playing && Tone.Transport.state === "started") {
-        const ticks = Tone.Transport.ticks;
-        const ppq = Tone.Transport.PPQ;
-        const beatProgress = ticks / ppq; // e.g. 0.0 to 1.0 representing one beat
-        // We want an oscillating motion.
-        // A simple sine wave covers -1 to 1. We map it to 0 to 1 for the translation.
-        const osc = (Math.sin(Math.PI * beatProgress - Math.PI / 2) + 1) / 2;
-        setTrackProgress(osc);
-      } else {
-        setTrackProgress(0); // Reset to far left when stopped
-      }
-      raf = requestAnimationFrame(render);
-    };
-    raf = requestAnimationFrame(render);
-    return () => cancelAnimationFrame(raf);
-  }, [metro.playing]);
-
+  // Removed trackProgress to simplify UI as requested
+  
   return (
     <div className={`floating-metronome ${isDark ? "floating-metronome-dark" : ""}`}
       style={{
         flexDirection: "column", 
         alignItems: "stretch",
         padding: isExpanded ? "16px" : "8px 16px",
-        height: isExpanded ? "70vh" : "auto", /* Reasonable expand height */
-        maxHeight: 600,
+        height: "auto", /* Allow content to dictate height */
+        maxHeight: "80vh", /* Still prevent overflow off-screen */
         maxWidth: 500, // Kept relatively compact
         marginRight: "auto", // Align to left side if container is larger
         borderRadius: isExpanded ? "24px 24px 24px 0" : "24px", // rounded top corners, flat bottom-left
@@ -2890,8 +2838,8 @@ function FloatingMetronome({ metro, setTab, isDark, theme: T }) {
       }}>
       
       {/* Top Bar (Always visible) */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", gap: 12, flexShrink: 0 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12, flex: 1 }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", gap: 8, flexShrink: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, flex: 1, minWidth: 0 }}>
           {/* Play/Stop Button */}
           <button onClick={(e) => { e.stopPropagation(); metro.playing ? metro.stop() : metro.start(); }} style={{
             background: metro.playing ? T.gold : "transparent",
@@ -2911,30 +2859,8 @@ function FloatingMetronome({ metro, setTab, isDark, theme: T }) {
             )}
           </button>
 
-          <div style={{ position: "relative", display: "flex", flexDirection: "column", alignItems: "center", width: 140, flexShrink: 0 }}>
-            {/* The 4-dot visualizer */}
-            <div style={{ padding: "4px 8px", zIndex: 2 }}>
-              <BeatDots beat={metro.beat} playing={metro.playing} compact beatConfig={metro.beatConfig} beatsPerBar={metro.beatsPerBar} />
-            </div>
-            
-            {/* Horizontal sweep track behind/below dots */}
-            <div style={{ 
-              width: "100%", height: 3, background: isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.06)", 
-              borderRadius: 2, marginTop: 4, position: "relative" 
-            }}>
-               {/* The moving glowing pill */}
-               <div style={{
-                 position: "absolute", top: -1.5,
-                 left: `calc(${trackProgress * 100}% - 4px)`, // -4px centers the 8px wide pill
-                 width: 8, height: 6, borderRadius: 3, background: metro.playing ? T.gold : T.textMuted,
-                 boxShadow: metro.playing ? `0 0 6px ${T.gold}80` : "none",
-                 transition: "none" // updated rapidly via requestAnimationFrame
-               }} />
-            </div>
-          </div>
-          
-          {/* Inject Beat Editor in the bar so it's always accessible */}
-          <div style={{ flex: 1, display: "flex", alignItems: "center", overflowX: "auto" }} className="hide-scrollbar">
+          {/* Integrated Visualizer & Editor */}
+          <div style={{ flex: 1, display: "flex", alignItems: "center", overflowX: "auto", paddingLeft: 4 }} className="hide-scrollbar">
             <CompactBeatEditor metro={metro} theme={T} />
           </div>
 
