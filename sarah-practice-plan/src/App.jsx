@@ -1228,55 +1228,6 @@ function VoiceView({ completed, onComplete, metro, onOpenTapMatch }) {
   );
 }
 
-function VisualPendulum({ playing }) {
-  const armRef = useRef(null);
-
-  useEffect(() => {
-    let raf;
-    const render = () => {
-      if (!armRef.current) return;
-      if (playing && Tone.Transport.state === "started") {
-        const ticks = Tone.Transport.ticks;
-        const ppq = Tone.Transport.PPQ;
-        const beatProgress = ticks / ppq;
-        const angle = 30 * Math.cos(Math.PI * beatProgress);
-        armRef.current.style.transform = `rotate(${angle}deg)`;
-      } else {
-        armRef.current.style.transform = `rotate(0deg)`;
-      }
-      raf = requestAnimationFrame(render);
-    };
-    raf = requestAnimationFrame(render);
-    return () => cancelAnimationFrame(raf);
-  }, [playing]);
-
-  return (
-    <div style={{ display: "flex", justifyContent: "center", margin: "10px 0 20px" }}>
-      <div style={{ position: "relative", width: 100, height: 100 }}>
-        {/* Pivot */}
-        <div style={{
-          position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)",
-          width: 8, height: 8, borderRadius: "50%", background: T.gold, zIndex: 2
-        }} />
-        {/* Arm */}
-        <div ref={armRef} style={{
-          position: "absolute", top: 4, left: "50%",
-          width: 4, height: 80, background: T.border,
-          transformOrigin: "top center",
-          marginLeft: -2,
-          willChange: "transform"
-        }}>
-          {/* Bob */}
-          <div style={{
-            position: "absolute", bottom: -8, left: "50%", transform: "translateX(-50%)",
-            width: 24, height: 24, borderRadius: "50%", background: T.gold,
-            boxShadow: "0 2px 8px rgba(0,0,0,0.15)"
-          }} />
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function MetronomePanel({ metro, onOpenTapMatch }) {
   const [editingBeat, setEditingBeat] = useState(null);
@@ -1308,9 +1259,6 @@ function MetronomePanel({ metro, onOpenTapMatch }) {
         <div style={{ fontSize: 11, color: T.textMuted, fontWeight: 600, letterSpacing: 2, fontFamily: T.sans, textTransform: "uppercase", marginBottom: 12 }}>
           Metronome
         </div>
-
-        {/* Pendulum */}
-        <VisualPendulum playing={metro.playing} />
 
         {/* Beat visualizer — tap beats to edit */}
         <BeatDots beat={metro.beat} playing={metro.playing} beatConfig={metro.beatConfig} beatsPerBar={metro.beatsPerBar} />
@@ -2677,20 +2625,21 @@ function FloatingMetronome({ metro, setTab, isDark, theme: T }) {
     setIsDragging(false);
   };
 
-  // Determine an inline pendulum swing based on beat progress
-  const [tilt, setTilt] = useState("0deg");
+  // Horizontal oscillating track progress (0 to 1 back to 0)
+  const [trackProgress, setTrackProgress] = useState(0);
   useEffect(() => {
     let raf;
     const render = () => {
       if (metro.playing && Tone.Transport.state === "started") {
         const ticks = Tone.Transport.ticks;
         const ppq = Tone.Transport.PPQ;
-        const beatProgress = ticks / ppq;
-        // Swing from 20 to -20 degrees
-        const angle = 20 * Math.cos(Math.PI * beatProgress);
-        setTilt(`${angle}deg`);
+        const beatProgress = ticks / ppq; // e.g. 0.0 to 1.0 representing one beat
+        // We want an oscillating motion.
+        // A simple sine wave covers -1 to 1. We map it to 0 to 1 for the translation.
+        const osc = (Math.sin(Math.PI * beatProgress - Math.PI / 2) + 1) / 2;
+        setTrackProgress(osc);
       } else {
-        setTilt("0deg");
+        setTrackProgress(0); // Reset to far left when stopped
       }
       raf = requestAnimationFrame(render);
     };
@@ -2704,35 +2653,36 @@ function FloatingMetronome({ metro, setTab, isDark, theme: T }) {
         flexDirection: "column", 
         alignItems: "stretch",
         padding: isExpanded ? "16px" : "8px 16px",
-        height: isExpanded ? "85vh" : "auto", /* Expand height significantly */
-        maxHeight: 700,
+        height: isExpanded ? "70vh" : "auto", /* Reasonable expand height */
+        maxHeight: 600,
         borderRadius: isExpanded ? "24px 24px 0 0" : "", // rounded top corners when expanded on mobile
         borderTop: isExpanded ? `1px solid ${T.gold}` : "",
-        transition: "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-        overflowY: isExpanded ? "auto" : "visible",
-        overflowX: "hidden"
+        transition: "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
       }}>
       
       {/* Top Bar (Always visible) */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", gap: 12 }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", gap: 12, flexShrink: 0 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12, flex: 1 }}>
-          <div style={{ position: "relative" }}>
-            {/* The 4-dot visualizer wrapped in a subtle background */}
-            <div style={{
-              background: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.03)",
-              padding: "6px 12px", borderRadius: 20, border: `1px solid ${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"}`,
-              position: "relative", zIndex: 2
-            }}>
-              <BeatDots beat={metro.beat} playing={true} compact beatConfig={metro.beatConfig} beatsPerBar={metro.beatsPerBar} />
+          <div style={{ position: "relative", display: "flex", flexDirection: "column", alignItems: "center" }}>
+            {/* The 4-dot visualizer */}
+            <div style={{ padding: "4px 8px", zIndex: 2 }}>
+              <BeatDots beat={metro.beat} playing={metro.playing} compact beatConfig={metro.beatConfig} beatsPerBar={metro.beatsPerBar} />
             </div>
-            {/* Minimalist pendulum stick behind dots */}
-            <div style={{
-              position: "absolute", bottom: -2, left: "50%",
-              width: 2, height: 44, background: T.gold,
-              transformOrigin: "bottom center", marginLeft: -1, zIndex: 1,
-              transform: `rotate(${tilt})`,
-              transition: "none" // updated rapidly via requestAnimationFrame
-            }} />
+            
+            {/* Horizontal sweep track behind/below dots */}
+            <div style={{ 
+              width: "100%", height: 3, background: isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.06)", 
+              borderRadius: 2, marginTop: 4, position: "relative" 
+            }}>
+               {/* The moving glowing pill */}
+               <div style={{
+                 position: "absolute", top: -1.5,
+                 left: `calc(${trackProgress * 100}% - 4px)`, // -4px centers the 8px wide pill
+                 width: 8, height: 6, borderRadius: 3, background: metro.playing ? T.gold : T.textMuted,
+                 boxShadow: metro.playing ? `0 0 6px ${T.gold}80` : "none",
+                 transition: "none" // updated rapidly via requestAnimationFrame
+               }} />
+            </div>
           </div>
           
           <div className="desktop-only" style={{ fontWeight: 600, fontSize: 13, color: T.textDark, fontFamily: T.sans, letterSpacing: 1 }}>
@@ -2780,15 +2730,15 @@ function FloatingMetronome({ metro, setTab, isDark, theme: T }) {
       </div>
       
       {/* Expanded Sheet Content */}
-      <div style={{ 
+      <div className="hide-scrollbar" style={{ 
         marginTop: isExpanded ? 24 : 0, 
         opacity: isExpanded ? 1 : 0, 
-        height: isExpanded ? "auto" : 0,
-        overflow: "hidden",
+        flex: isExpanded ? 1 : "none", // Grow to fill container
+        overflowY: "auto", // Allow inner scrolling
         transition: "opacity 0.3s 0.1s" 
       }}>
         {isExpanded && (
-           <MetronomePanel metro={metro} onOpenTapMatch={() => {}} />
+           <CompactMetronomeControls metro={metro} theme={T} />
         )}
       </div>
     </div>
