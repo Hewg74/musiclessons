@@ -254,6 +254,10 @@ function useMetronome() {
         }
       }
 
+      // Audio-thread event: fires immediately for sample-accurate scheduling (chimes, etc.)
+      // Works with screen off (no rAF dependency)
+      window.dispatchEvent(new CustomEvent('metroBeatAudio', { detail: { beat: b, bar, isMute, time } }));
+      // Visual-thread event: fires via rAF for smooth UI updates
       Tone.Draw.schedule(() => {
         window.dispatchEvent(new CustomEvent('metroBeat', { detail: { beat: b, bar, isMute } }));
       }, time);
@@ -267,6 +271,7 @@ function useMetronome() {
     loopRef.current?.stop(); loopRef.current?.dispose();
     Tone.Transport.stop(); Tone.Transport.position = 0;
     setPlaying(false);
+    window.dispatchEvent(new CustomEvent('metroBeatAudio', { detail: { beat: 0 } }));
     window.dispatchEvent(new CustomEvent('metroBeat', { detail: { beat: 0 } }));
   }, []);
 

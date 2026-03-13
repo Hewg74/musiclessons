@@ -2759,8 +2759,12 @@ export function PhraseFormGuide({ theme: T, form }) {
   const [barsOverride, setBarsOverride] = useState(null);
   const [chimeEnabled, setChimeEnabled] = useState(true);
   const [currentSection, setCurrentSection] = useState(-1);
-  const prevSectionRef = useRef(-1);
+  const prevSectionAudioRef = useRef(-1);  // tracks section in audio thread (for chime)
+  const prevSectionVisualRef = useRef(-1); // tracks section in visual thread (for UI)
   const chimeSynthRef = useRef(null);
+  const chimeEnabledRef = useRef(true);
+  const totalBarsRef = useRef(4);
+  const barsArrRef = useRef([4]);
 
   // Bug fix: normalize form.pattern || form.sections
   const rawPattern = form.pattern || form.sections;
@@ -2774,71 +2778,92 @@ export function PhraseFormGuide({ theme: T, form }) {
     : [4];
   const totalBars = barsArr.reduce((a, b) => a + b, 0);
 
+  // Keep refs in sync for audio-thread handler
+  totalBarsRef.current = totalBars;
+  barsArrRef.current = barsArr;
+  chimeEnabledRef.current = chimeEnabled;
+
   // Loop counter (derived from state, not ref)
   const loopCount = isActive && absBar >= 0 ? Math.floor(absBar / totalBars) + 1 : 0;
 
-  // Chime synth lifecycle
+  // Chime synth — pre-create on mount, dispose on unmount
   useEffect(() => {
+    chimeSynthRef.current = new Tone.FMSynth({
+      harmonicity: 3, modulationIndex: 2,
+      oscillator: { type: 'sine' },
+      envelope: { attack: 0.005, decay: 0.3, sustain: 0, release: 0.15 },
+      modulation: { type: 'sine' },
+      modulationEnvelope: { attack: 0.005, decay: 0.2, sustain: 0, release: 0.1 }
+    }).toDestination();
+    chimeSynthRef.current.volume.value = -10;
     return () => {
       if (chimeSynthRef.current) { try { chimeSynthRef.current.dispose(); } catch (_) {} chimeSynthRef.current = null; }
     };
   }, []);
 
-  const triggerChime = useCallback(async () => {
-    if (!chimeEnabled) return;
-    if (Tone.context.state !== 'running') await Tone.context.resume();
-    if (!chimeSynthRef.current) {
-      chimeSynthRef.current = new Tone.FMSynth({
-        harmonicity: 3, modulationIndex: 2,
-        oscillator: { type: 'sine' },
-        envelope: { attack: 0.01, decay: 0.3, sustain: 0, release: 0.2 },
-        modulation: { type: 'sine' },
-        modulationEnvelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.1 }
-      }).toDestination();
-      chimeSynthRef.current.volume.value = -10;
-    }
-    try { chimeSynthRef.current.triggerAttackRelease("E5", "8n", Tone.now()); } catch (_) {}
-  }, [chimeEnabled]);
+  // Audio-thread chime: listens to metroBeatAudio (fires immediately from Tone.Loop,
+  // carries audio `time` for sample-accurate scheduling). Works with screen off.
+  useEffect(() => {
+    const handleAudioBeat = (e) => {
+      const { bar, time, beat } = e.detail;
+      if (bar === undefined || beat !== 0) return; // only check on downbeats (beat 0)
+      const tb = totalBarsRef.current;
+      const ba = barsArrRef.current;
+      const localBar = bar % tb;
+      // Compute which section this bar falls in
+      let section = -1, remaining = localBar;
+      for (let i = 0; i < ba.length; i++) {
+        if (remaining < ba[i]) { section = i; break; }
+        remaining -= ba[i];
+      }
+      if (section === -1) section = ba.length - 1;
+      // Fire chime on section change (skip the very first beat)
+      if (section !== prevSectionAudioRef.current && prevSectionAudioRef.current !== -1 && chimeEnabledRef.current) {
+        if (chimeSynthRef.current) {
+          try { chimeSynthRef.current.triggerAttackRelease("E5", "8n", time); } catch (_) {}
+        }
+      }
+      prevSectionAudioRef.current = section;
+    };
+    window.addEventListener('metroBeatAudio', handleAudioBeat);
+    return () => window.removeEventListener('metroBeatAudio', handleAudioBeat);
+  }, []); // no deps — reads everything from refs
 
+  // Visual-thread updates: listens to metroBeat (fires via rAF for smooth UI)
   useEffect(() => {
     const handleBeat = (e) => {
       const { bar } = e.detail;
       if (bar !== undefined) {
         setAbsBar(bar);
-        setCurrentBar(bar % totalBars);
+        const localBar = bar % totalBars;
+        setCurrentBar(localBar);
         setIsActive(true);
+        // Compute section for visual display
+        let section = -1, remaining = localBar;
+        for (let i = 0; i < barsArr.length; i++) {
+          if (remaining < barsArr[i]) { section = i; break; }
+          remaining -= barsArr[i];
+        }
+        if (section === -1) section = barsArr.length - 1;
+        setCurrentSection(section);
       } else {
         setIsActive(false);
         setCurrentBar(-1);
         setAbsBar(0);
         setCurrentSection(-1);
-        prevSectionRef.current = -1;
+        prevSectionAudioRef.current = -1;
+        prevSectionVisualRef.current = -1;
       }
     };
     window.addEventListener('metroBeat', handleBeat);
     return () => window.removeEventListener('metroBeat', handleBeat);
-  }, [totalBars]);
+  }, [totalBars, barsArr]);
 
-  // Reset tracking when totalBars changes (e.g., user changes bars-per-section)
+  // Reset tracking when totalBars changes (user changed bars-per-section)
   useEffect(() => {
-    prevSectionRef.current = -1;
+    prevSectionAudioRef.current = -1;
+    prevSectionVisualRef.current = -1;
   }, [totalBars]);
-
-  // Compute current section and bar-within-section, trigger chime on section change
-  useEffect(() => {
-    if (sections.length === 0 || currentBar < 0) { setCurrentSection(-1); return; }
-    let newSection = -1, remaining = currentBar;
-    for (let i = 0; i < sections.length; i++) {
-      if (remaining < barsArr[i]) { newSection = i; break; }
-      remaining -= barsArr[i];
-    }
-    if (newSection === -1) newSection = sections.length - 1;
-    setCurrentSection(newSection);
-    if (newSection >= 0 && newSection !== prevSectionRef.current && prevSectionRef.current !== -1) {
-      triggerChime();
-    }
-    prevSectionRef.current = newSection;
-  }, [currentBar, sections.length, totalBars, triggerChime]);
 
   // Early return after all hooks
   if (!rawPattern || sections.length === 0) return null;
