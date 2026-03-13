@@ -2901,7 +2901,26 @@ function FloatingMetronome({ metro, setTab, isDark, theme: T }) {
       {/* Top Bar (Always visible) */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", gap: 12, flexShrink: 0 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12, flex: 1 }}>
-          <div style={{ position: "relative", display: "flex", flexDirection: "column", alignItems: "center" }}>
+          {/* Play/Stop Button */}
+          <button onClick={(e) => { e.stopPropagation(); metro.playing ? metro.stop() : metro.start(); }} style={{
+            background: metro.playing ? T.gold : "transparent",
+            border: `1.5px solid ${T.gold}`, color: metro.playing ? "#fff" : T.gold,
+            width: 36, height: 36, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center",
+            cursor: "pointer", flexShrink: 0, transition: "all 0.2s"
+          }}>
+            {metro.playing ? (
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <rect x="6" y="4" width="4" height="16" />
+                <rect x="14" y="4" width="4" height="16" />
+              </svg>
+            ) : (
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style={{ marginLeft: 3 }}>
+                <polygon points="5 3 19 12 5 21 5 3" />
+              </svg>
+            )}
+          </button>
+
+          <div style={{ position: "relative", display: "flex", flexDirection: "column", alignItems: "center", flex: 1 }}>
             {/* The 4-dot visualizer */}
             <div style={{ padding: "4px 8px", zIndex: 2 }}>
               <BeatDots beat={metro.beat} playing={metro.playing} compact beatConfig={metro.beatConfig} beatsPerBar={metro.beatsPerBar} />
