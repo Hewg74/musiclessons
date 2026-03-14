@@ -398,7 +398,7 @@ export const level4 = {
       feel: "Each feel shift should feel like changing clothes — same body, different outfit. The chords stay familiar; only the energy and timing transform. One of these will feel like HOME.",
       wrong: "If all four feels sound the same, your right hand isn't changing enough. Reggae should sound nothing like jangle. Record yourself and compare.",
       sarah: "Gene, your playlists tell me reggae and surf are your home feels. But trying soul and desert blues might surprise you — Khruangbin lives in that soul-desert overlap.",
-      tracks: [{ name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }, { name: "Desert Blues 75", src: "/desert-blues-75.mp3" }],
+      tracks: [{ name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }, { name: "Desert Blues 75", src: "/desert-blues-75.mp3" }, { name: "Ska Upbeat 95", src: "/ska-upbeat-95.mp3" }, { name: "Reggae Rock 100", src: "/reggae-rock-100.mp3" }],
       metronome: 85,
       recorder: true
     },

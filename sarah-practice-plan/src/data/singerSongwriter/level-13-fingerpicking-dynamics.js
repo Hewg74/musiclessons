@@ -73,7 +73,7 @@ export const level13 = {
       wrong: "If the bossa nova pattern doesn't feel syncopated, you're probably playing it straight. Clap the rhythm first: 1-(and)-2-AND-3-(and)-4. The accent on the 'and' of 2 is the bossa DNA.",
       sarah: "Gene, this is Level 7's feel-shift concept applied to fingerpicking. Your reggae offbeat sense will make the bossa nova pattern feel natural — it's the same rhythmic instinct, different hand technique.",
       metronome: 60,
-      tracks: [{ name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }],
+      tracks: [{ name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }, { name: "Bossa Nova 75", src: "/bossa-nova-75.mp3" }],
       recorder: true
     },
     {

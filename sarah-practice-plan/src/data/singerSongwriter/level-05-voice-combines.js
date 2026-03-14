@@ -223,7 +223,7 @@ export const level5 = {
       type: "vocal",
       what: "Combines: REGGAE RHYTHM + CHORD CHANGES + SPACE. Strum a reggae offbeat chop over Am-C and improvise vocally with chord tones — but lock your voice to the reggae feel. Short phrases, big spaces, behind the beat. The strum pattern changes how your voice wants to move.",
       setup: "Guitar. Reggae offbeat chop. Metronome at 85 BPM.",
-      tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }],
+      tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }, { name: "Reggae Rock 100", src: "/reggae-rock-100.mp3" }],
       steps: [
         { text: "Set up the reggae chop: mute on beats 1 and 3, strum on the 'and' of 2 and 4. Get it flowing on autopilot over Am-C (4 bars each). This is from Level 1.", why: "The reggae offbeat creates a completely different rhythmic grid for your voice. Your vocal phrases will naturally fall in the spaces between the chops." },
         { text: "Sing chord tones but respect the reggae space. Short phrases, then silence. Let the offbeat chop breathe. Think Chronixx or Protoje — the voice rides the riddim, never fights it.", why: "Reggae vocal phrasing is defined by restraint and pocket. The gaps between phrases are as important as the phrases themselves." },

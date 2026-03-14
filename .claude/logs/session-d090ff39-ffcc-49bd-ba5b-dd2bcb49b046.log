@@ -1249,3 +1249,243 @@ Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-
 [2026-03-14T21:22:25.770Z] ok how about the higher levels? make sure that the progression past level 6 is smooth and gradual as well! /plan-reviewer
 [2026-03-14T21:32:05.972Z] yes please we should reorder, also rhythm is fendemental can we make it so its baked into the lower levels as well? we should be experimenting with rhytm in the lower levels as its super useful .no need to remix songs, the idea is to make the user (me) to be able to improvise freely
 [2026-03-14T22:11:39.788Z] yes commit and then lets generate. or you can even download
+[2026-03-14T22:15:09.458Z] <task-notification>
+<task-id>a78623fa4aba62c72</task-id>
+<tool-use-id>toolu_01SCnW1KboJbLcsEY2wuUfRE</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\d090ff39-ffcc-49bd-ba5b-dd2bcb49b046\tasks\a78623fa4aba62c72.output</output-file>
+<status>completed</status>
+<summary>Agent "Research free backing track sources" completed</summary>
+<result>I now have enough data for a comprehensive answer. Let me compile it.
+
+---
+
+# Backing Track Research: Comprehensive Findings
+
+---
+
+## Executive Summary
+
+For immediate, free use in a practice app: **WikiLoops** is the single best source (real instruments, filterable by key + BPM + genre, free download). **GuitarToneMaster** is the best dedicated backing track site with full key/BPM filtering. For custom generation, **Suno v5** with a paid plan gives you full key/BPM/genre control and up to 8 minutes — the free plan is non-commercial only and generates shorter tracks with an older model. Udio is comparable but weaker on precise key control.
+
+---
+
+## 1. Suno AI
+
+### Current State (v5, late 2025)
+Suno v5 is a significant structural overhaul. The platform now generates up to **8 minutes** of music with professional structural coherence on paid plans. The free Basic plan runs on the older v4.5-All model and has shorter generation limits — the exact free cap isn't publicly posted, but extend/upload features (needed to push past ~2 min) are **paid-only**.
+
+### Specifying Key, BPM, Genre
+Suno supports this via inline prompt text in Custom Mode. There is no separate "key" dropdown — you write it directly in the style prompt. Tested patterns that work:
+
+- `instrumental, reggae dub, 80 BPM, A minor, reverb-heavy guitar, offbeat skank, no vocals`
+- `desert blues instrumental, E minor, 90 BPM, slide guitar, sparse drums, warm reverb`
+- `surf rock instrumental, 120 BPM, A minor, tremolo guitar, reverb, driving drums`
+
+Key specification is honored **approximately** — it gets the tonality right but may not be mathematically locked to A=440 at an exact key. BPM is similarly approximate (usually within ±5 BPM).
+
+### Royalty-Free / License Status
+This is the critical catch:
+
+- **Free plan**: Suno retains ownership. You get **non-commercial use only**. Cannot use in an app even for personal distribution.
+- **Pro ($8/mo) / Premier ($24/mo)**: You get commercial use rights. You don't own the copyright (AI-generated work isn't copyrightable in the US), but you have a commercial license to distribute and use the tracks.
+- For a **personal practice app** shared privately: free plan is technically fine under non-commercial terms.
+- For a **deployed/public app**: you need a paid plan.
+
+### Verdict for Your Use Case
+Best option for custom tracks matching Gene's DNA exactly (khruangbin-style-80, psych-surf, desert blues). Use the Custom Mode with specific BPM, key, and instrumentation. Pro plan at $8/mo is worth it if you want to generate a library and use them in a deployed app.
+
+---
+
+## 2. Udio AI
+
+### Current State
+Udio remains competitive with Suno, with slightly higher audio fidelity noted by reviewers. It focuses heavily on vocal productions but supports full instrumental mode via the Advanced controls panel.
+
+### Specifying Key, BPM, Genre
+- **BPM**: Include directly in prompt — `90 BPM`, `slow 70 BPM` works.
+- **Key**: Less reliable than Suno. No explicit key parameter. You can write `A minor` or `key of E minor` in the prompt and it will often (not always) comply. Community guides suggest descriptive mood language as backup: `dark minor key` vs. `bright major key`.
+- **Genre**: Very prompt-responsive. Handles reggae, afrobeat, bossa nova, surf, psych well.
+- **Track length**: Similar constraints — free plan gives 100 monthly / 10 daily credits, each generation = 2 credits, produces ~2 min clips. Paid from $8/mo for longer tracks.
+
+### License Status
+Same structure as Suno:
+- Free plan: personal/non-commercial only
+- Paid plans: commercial rights included
+
+### Verdict for Your Use Case
+Udio is a viable alternative to Suno, especially if Suno's key outputs sound off. But Suno v5 is currently ahead in structural coherence and prompt adherence. **Use Suno as primary, Udio as backup for second opinions on a specific vibe.**
+
+---
+
+## 3. Free Backing Track Websites (Ranked for Your Genres)
+
+### Tier 1: Best Options
+
+**WikiLoops** — [wikiloops.com](https://www.wikiloops.com/tracks/track-finder.php)
+The clear winner for your use case. Highlights:
+- 265,000+ collaboratively recorded tracks (real musicians, not AI)
+- **Genres available**: Reggae (2,844 tracks), Blues, BossaNova (4,450+), Funk (21,000+), Soul — afrobeat coverage is thinner
+- **Filter by**: Genre, Key (all 12 keys), BPM (adjustable range, e.g., [reggae at 75-76 BPM](https://www.wikiloops.com/tracks/Reggae-75_76bpm.php)), instruments, time signature
+- **Download**: Free, licensed under WikiLoops license (free for non-commercial use with attribution; commercial use requires a paid WikiLoops membership ~$6/mo)
+- **Specific URLs to bookmark**:
+  - Reggae: `wikiloops.com/tracks/Reggae.php`
+  - Bossa Nova: `wikiloops.com/tracks/BossaNova.php`
+  - Funk: `wikiloops.com/tracks/Funk.php`
+  - Key of A minor: `wikiloops.com/tracks/Am.php`
+
+**GuitarToneMaster** — [guitartonemaster.com/guitar-backing-tracks](https://www.guitartonemaster.com/guitar-backing-tracks)
+- 3,200+ free backing tracks
+- **Genres**: Rock, Blues, Funk, Reggae, Afrobeat (4 tracks), Soul, Groove — no surf or psych label but some crossover
+- **Filter by**: Key (all 12 keys), BPM range (42–205 BPM with custom from/to), genre, scale, mood
+- **Download**: Mix of free and paid downloads — filter by "Free download" option
+- Confirmed: Reggae A minor at 70 BPM tracks exist in catalog
+
+### Tier 2: Solid but More Limited
+
+**YT Jam Tracks** — [ytjamtracks.bandcamp.com](https://ytjamtracks.bandcamp.com/)
+- Original backing tracks by creator "Mikee," released free on YouTube
+- Genres: Blues, Funk, Soul, R&B, Reggae, Dub
+- Confirmed track: "Reggae Dub Backing Track in A Minor" — key always labeled in title
+- Free download via Bandcamp (name-your-price, $0 works)
+- **Best for**: Dub reggae, soul/funk in specific minor keys
+
+**Karl Golden Music Education** — [karlgolden.org/backing-tracks](https://karlgolden.org/backing-tracks)
+- Educator-created, real instruments
+- Genres: Rock, Funk, Reggae, Soul, Metal, Lo-Fi
+- Key and BPM labeled per track
+- Free download
+
+**QuistJam / Quistorama** — [quistorama.com/jamtracks](https://www.quistorama.com/jamtracks)
+- YouTube channel + Bandcamp
+- Genres: Blues, Jazz-Blues, Reggae-Blues hybrid, Dub
+- Key always in track title (e.g., "Reggae Blues Jam Backing Track (Bm)")
+- Free on YouTube; Bandcamp pay-what-you-want
+
+### Tier 3: Genre-Specific but Paid or Limited
+
+**JamTracksGuitar** — [jamtracksguitar.com](https://www.jamtracksguitar.com/)
+- High quality, real musicians
+- Has Reggae (10 tracks), Bossa Nova/Samba (9 tracks), Soul/Funk packs
+- **Paid**: $9.90/pack — no key/BPM filter, browse by genre only
+- Worth it if you want a professionally curated reggae or bossa nova pack
+
+**Bluesblast** — [bluesblast.com](https://bluesblast.com/)
+- Blues, rock, jazz only — no reggae/surf/afrobeat
+- Free download, key and tempo labeled in track names
+- Useful for desert blues / blues adjacent content
+
+**SOUNDRAW** — [soundraw.io](https://soundraw.io/)
+- AI-generated, full key + BPM + genre control (similar to Suno but more structured)
+- Free plan: generate and edit in-app but **cannot download** on free tier
+- Paid plan required for file export
+- Strong for: Lo-fi, funk, soul, afrobeat — weaker for authentic reggae/surf feel
+
+---
+
+## 4. YouTube Channels for Practice Backing Tracks
+
+These channels specify key in video titles and are free to watch (downloading requires yt-dlp or similar):
+
+| Channel | Best Genres | Key Labeling | Notes |
+|---|---|---|---|
+| **YT Jam Tracks** | Reggae, Dub, Soul, Funk, R&B | Always in title | Also on Bandcamp for free download |
+| **QuistJam** | Blues, Reggae-Blues, Dub | In title (e.g., "Bm") | Good dub reggae feel |
+| **Karl Golden** | Funk, Reggae, Soul, Lo-Fi | Yes | Educational context, clean recordings |
+| **Guitar Tone Master** (channel) | Wide — uses site catalog | Yes | Direct channel for their site |
+| **Live Backing Track** | Jazz, Blues, Rock, Funk | Chord progressions shown live | Real-time chord display during playback |
+| **Ultimate Backing Track Channel** | Wide including Bossa Nova | Yes | Separate Bandcamp for downloads |
+
+**Search strategy for YouTube**: Use `"backing track" + genre + key` in YouTube search directly:
+- `reggae backing track Am 80 BPM`
+- `afrobeat backing track Em`
+- `bossa nova backing track Dm 75 BPM`
+- `surf rock backing track Am`
+
+YouTube results always include key in titles for backing track content — this is the de facto standard in that community.
+
+---
+
+## Recommendations: What to Try First
+
+**Immediate, zero-cost**:
+1. **WikiLoops** for reggae, bossa nova, funk, soul — filter by key (Am/Em/Dm/G) and BPM (65–120). Download and drop directly into `/public/`.
+2. **GuitarToneMaster** for reggae and blues — use the key + BPM filters to hit your exact specs.
+3. **YT Jam Tracks on Bandcamp** for dub reggae specifically in A minor — confirmed tracks available at $0.
+
+**For custom tracks matching Gene's specific DNA**:
+4. **Suno Pro ($8/mo)** — generate 5+ minute instrumentals with exact prompts like `psych-surf instrumental, 90 BPM, A minor, jangly tremolo guitar, reverb-heavy, Khruangbin-influenced, no vocals`. This is the only way to get tracks tuned exactly to his taste profile. Generate a batch, keep the best 3-4 per genre.
+
+**If Suno sounds wrong**:
+5. Try the same prompt in **Udio** — different model sometimes nails a vibe that Suno misses.
+
+---
+
+## Caveats
+
+- WikiLoops license requires attribution for non-commercial use; commercial deployment needs a paid membership. Check the specific track's license before embedding.
+- Suno/Udio free plan outputs are restricted to non-commercial use — fine for a private practice app, potentially not fine for a publicly deployed Vercel app depending on interpretation.
+- Key specification in AI generators is approximate — always verify the output key by ear or using a pitch detection tool before embedding.
+- YouTube downloading is technically against YouTube ToS; use WikiLoops or Bandcamp for legitimate downloads.
+- Afrobeat is the weakest genre across all these sources — WikiLoops has the best coverage but it's sparse compared to reggae/blues.
+
+---
+
+Sources:
+- [Suno How to Make a Song](https://suno.com/hub/how-to-make-a-song)
+- [Suno v5 Complete Guide - HookGenius](https://hookgenius.app/learn/suno-v5-complete-guide/)
+- [Suno Rights & Ownership - Help Center](https://help.suno.com/en/categories/550145)
+- [Suno Copyright 2025 New Rules - Lilys.ai](https://lilys.ai/en/notes/suno-ai-20260102/suno-ai-copyright-2025-new-rules)
+- [Suno Track Length - Help Center](https://help.suno.com/en/articles/2409473)
+- [Udio Prompt Like a Master - Help Center](https://help.udio.com/en/articles/10716541-prompt-like-a-master)
+- [Udio AI Music Generator Guide - Mureka](https://www.mureka.ai/hub/aimusic/udio-ai-music-generator/)
+- [WikiLoops Free Backing Tracks](https://www.wikiloops.com/tracks/track-finder.php)
+- [WikiLoops Reggae at 75-76 BPM](https://www.wikiloops.com/tracks/Reggae-75_76bpm.php)
+- [WikiLoops Free BossaNova Tracks](https://www.wikiloops.com/tracks/BossaNova.php)
+- [WikiLoops Free Funk Tracks](https://www.wikiloops.com/tracks/Funk.php)
+- [GuitarToneMaster Backing Tracks](https://www.guitartonemaster.com/guitar-backing-tracks)
+- [GuitarToneMaster Reggae Minor Tracks](https://www.guitartonemaster.com/guitar-backing-tracks/genre/reggae-201)
+- [YT Jam Tracks - Reggae Dub in A Minor](https://ytjamtracks.bandcamp.com/track/reggae-dub-backing-track-in-a-minor)
+- [QuistJam - Reggae Blues Backing Track Bm](https://quistorama.com/track/1492375/reggae-blues-jam-backing-track-bm)
+- [Karl Golden Music Education - Backing Tracks](https://karlgolden.org/backing-tracks)
+- [JamTracks Guitar](https://www.jamtracksguitar.com/)
+- [SOUNDRAW Backing Tracks for Guitarists](https://soundraw.io/blog/post/a-new-session-partner-for-guitarists-instant-backing-tracks-with-soundraw)
+- [Bluesblast Free Blues Jam Tracks](https://bluesblast.com/)
+- [AI Music Prompts Guide 2026 - MusicSmith](https://musicsmith.ai/blog/ai-music-generation-prompts-best-practices)
+- [Suno v5 Prompt Patterns - PlainEnglish](https://plainenglish.io/blog/i-made-10-suno-v5-prompt-patterns-that-never-miss)</result>
+<usage><total_tokens>27559</total_tokens><tool_uses>21</tool_uses><duration_ms>158232</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\d090ff39-ffcc-49bd-ba5b-dd2bcb49b046\tasks\a78623fa4aba62c72.output
+[2026-03-14T22:25:16.298Z] lets do everything free if possible, also lets have you do as much of it as you can, try to listen to the audio to see if its good audio, or you can use gemini to analyze the audio and tell you if its a god fit
+[2026-03-14T22:35:51.122Z] <task-notification>
+<task-id>brhbem9uk</task-id>
+<tool-use-id>toolu_01YSVLxNrtHQLhAhpGnoP6SD</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\d090ff39-ffcc-49bd-ba5b-dd2bcb49b046\tasks\brhbem9uk.output</output-file>
+<status>completed</status>
+<summary>Background command "Download afrobeat candidate" completed (exit code 0)</summary>
+</task-notification>
+Read the output file to retrieve the result: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\d090ff39-ffcc-49bd-ba5b-dd2bcb49b046\tasks\brhbem9uk.output
+[2026-03-14T22:35:56.964Z] <task-notification>
+<task-id>beds6ruq6</task-id>
+<tool-use-id>toolu_013VHdhaT6AgPWxqTBVCWCY5</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\d090ff39-ffcc-49bd-ba5b-dd2bcb49b046\tasks\beds6ruq6.output</output-file>
+<status>completed</status>
+<summary>Background command "Download bossa nova Am candidate (Spanish rumba in Am)" completed (exit code 0)</summary>
+</task-notification>
+Read the output file to retrieve the result: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\d090ff39-ffcc-49bd-ba5b-dd2bcb49b046\tasks\beds6ruq6.output
+[2026-03-14T22:36:02.715Z] <task-notification>
+<task-id>b0ts08uuh</task-id>
+<tool-use-id>toolu_01XqUZ6q1mMhuQLgU3Cqayw8</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\d090ff39-ffcc-49bd-ba5b-dd2bcb49b046\tasks\b0ts08uuh.output</output-file>
+<status>completed</status>
+<summary>Background command "Download reggae Am backing track (10+ min, roots reggae)" completed (exit code 0)</summary>
+</task-notification>
+Read the output file to retrieve the result: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\d090ff39-ffcc-49bd-ba5b-dd2bcb49b046\tasks\b0ts08uuh.output
+[2026-03-14T22:36:08.450Z] <task-notification>
+<task-id>bzm82dqx8</task-id>
+<tool-use-id>toolu_01KpzLf5c7gmmF712EeB5bvL</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\d090ff39-ffcc-49bd-ba5b-dd2bcb49b046\tasks\bzm82dqx8.output</output-file>
+<status>completed</status>
+<summary>Background command "Install librosa to correct python" completed (exit code 0)</summary>
+</task-notification>
+Read the output file to retrieve the result: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\d090ff39-ffcc-49bd-ba5b-dd2bcb49b046\tasks\bzm82dqx8.output
+[2026-03-14T22:37:57.855Z] please commit, make sure the audios are linked to the right excercises, and that you can analyze what they acctually are so we get good quailty beautiful relevant ones

@@ -482,7 +482,8 @@ export const level6 = {
       tracks: [
         { name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" },
         { name: "Surf Rock 120", src: "/surf-rock-120.mp3" },
-        { name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }
+        { name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" },
+        { name: "Ska Upbeat 95", src: "/ska-upbeat-95.mp3" }
       ],
       steps: [
         { text: "Round 1 — Reggae: offbeat chop, Am-C-G, 85 BPM. Vocal style: laid-back, choppy phrases, lots of space. All skills: dynamics, emotion, vowels, chord navigation. 3 minutes, record.", why: "Reggae is your comfort zone — start here to warm up. But now integrate everything: dynamic shifts, emotional color, vowel variety, rhythmic play. Not just reggae phrasing — full expression." },
@@ -510,7 +511,8 @@ export const level6 = {
         { name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" },
         { name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" },
         { name: "Desert Blues 75", src: "/desert-blues-75.mp3" },
-        { name: "Dub Reggae 85", src: "/dub-reggae-85.mp3" }
+        { name: "Dub Reggae 85", src: "/dub-reggae-85.mp3" },
+        { name: "Afrobeat 100", src: "/afrobeat-100.mp3" }
       ],
       steps: [
         { text: "Choose a backing track and a chord progression you love. Set the metronome. Start strumming. Take 8 bars of just guitar to lock into the groove.", why: "Choosing your own context is the first act of creative autonomy. You're not following instructions anymore — you're making musical decisions." },

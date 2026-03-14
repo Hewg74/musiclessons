@@ -16,7 +16,7 @@ export const level10 = {
       title: "Reggae Original",
       type: "song",
       what: "Create an original reggae piece: offbeat strum at 85 BPM, Am-C-G, pentatonic melody sung in porch register with syncopated rhythm. The reggae pocket is laid-back — every note sits slightly behind the beat. This is YOUR reggae sound.",
-      tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }, { name: "Dub Reggae 85", src: "/dub-reggae-85.mp3" }],
+      tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }, { name: "Dub Reggae 85", src: "/dub-reggae-85.mp3" }, { name: "Reggae Rock 100", src: "/reggae-rock-100.mp3" }],
       steps: [
         { text: "Strum the offbeat chop at 85 BPM: Am (4 bars) → C (4 bars) → G (4 bars) → Am (4 bars). Get it locked.", why: "The reggae chop needs to be completely automatic before your voice enters. The rhythm IS the genre." },
         { text: "Improvise a melody over the progression using pentatonic notes. Let it sit behind the beat — lazy, unhurried. Sing on 'la' or 'ooh' first.", why: "Behind-the-beat phrasing is the reggae vocal signature. Don't rush to land on downbeats. Let them pass, then arrive." },
@@ -58,7 +58,7 @@ export const level10 = {
       title: "Desert Blues Original",
       type: "song",
       what: "Create an original desert blues piece: sparse, hypnotic guitar at 75 BPM, Am drone with pentatonic melody. Desert blues is the most minimal genre — one chord, repeating riff, trance-like repetition. The voice is raw and direct.",
-      tracks: [{ name: "Desert Blues 75", src: "/desert-blues-75.mp3" }],
+      tracks: [{ name: "Desert Blues 75", src: "/desert-blues-75.mp3" }, { name: "Bossa Nova 75", src: "/bossa-nova-75.mp3" }],
       steps: [
         { text: "Create a simple repeating guitar riff on Am — 2 bars, something you can loop endlessly. Thumb on the bass note (A), fingers on a pentatonic pattern. Or simple downstrokes with space.", why: "Desert blues riffs are hypnotic through repetition. Tinariwen, Ali Farka Touré — one riff, repeated for minutes. The trance IS the music." },
         { text: "Improvise pentatonic vocals over the riff. Sing in your lower range (E3-B3). Raw, unpolished, conversational. Like talking to someone across a fire.", why: "Desert blues vocals are the most direct vocal style — no decoration, no tricks. Just honest sound over a drone. Your porch register is perfect for this." },
@@ -101,7 +101,7 @@ export const level10 = {
       title: "Global Fusion Original",
       type: "song",
       what: "Create a piece blending non-Western elements: Tinariwen-style single-chord trance + Khruangbin's Thai funk influence. One-chord drone, pentatonic melody, hypnotic repetition with micro-variation. This is your 'Coastal Psychedelic Omnivore' identity — genre boundaries don't exist.",
-      tracks: [{ name: "Desert Blues 75", src: "/desert-blues-75.mp3" }],
+      tracks: [{ name: "Desert Blues 75", src: "/desert-blues-75.mp3" }, { name: "Bossa Nova 75", src: "/bossa-nova-75.mp3" }, { name: "Afrobeat 100", src: "/afrobeat-100.mp3" }],
       steps: [
         { text: "Set up a one-chord drone on Am. Keep the guitar locked into a repeating 2-bar riff — thumb bass, pentatonic fragments on top. This is the trance foundation.", why: "Single-chord trance is the oldest musical form on earth. Tinariwen, Ali Farka Touré, and Khruangbin all build hypnotic worlds on one harmonic center." },
         { text: "Sing a pentatonic melody that repeats with micro-variations — same shape each time, but slightly different note choices, rhythms, or ornaments. Repetition with evolution, not repetition with boredom.", why: "Micro-variation is how trance music stays hypnotic without becoming monotonous. Each pass through the melody is 90% the same, 10% new." },
@@ -123,7 +123,7 @@ export const level10 = {
       title: "Genre Micro-Timing Deep Dive",
       type: "rhythm",
       what: "Play the SAME 4-bar melody in 4 genre pockets: reggae (way behind the beat), surf (on top of the beat), soul (slightly behind), desert blues (floating, no fixed pocket). Record all four. Same notes, completely different songs. This proves that FEEL, not melody, defines genre.",
-      tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }, { name: "Surf Rock 120", src: "/surf-rock-120.mp3" }],
+      tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }, { name: "Surf Rock 120", src: "/surf-rock-120.mp3" }, { name: "Ska Upbeat 95", src: "/ska-upbeat-95.mp3" }],
       steps: [
         { text: "Compose a simple 4-bar pentatonic melody over Am-C-G-Em. Memorize it cold — you need to play it identically four times with only the timing changing.", why: "Controlling for melody isolates the variable you're studying: micro-timing. Same notes, same order, same dynamics — only the pocket changes." },
         { text: "Play it reggae: every note lands AFTER the beat. Lay back hard. The metronome clicks and you arrive late on purpose. Strum the offbeat chop underneath.", why: "Reggae pocket is the most behind-the-beat of any genre. The laid-back feel is not laziness — it's precise rhythmic placement that creates relaxation." },
@@ -184,7 +184,7 @@ export const level10 = {
       title: "Genre Blend",
       type: "song",
       what: "Create an original that blends TWO of your genre pieces. Reggae verse → surf chorus. Or desert blues verse → soul chorus. Genre-blending is YOUR signature — the 'Coastal Psychedelic Omnivore' sound.",
-      tracks: [{ name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" }],
+      tracks: [{ name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" }, { name: "Reggae Rock 100", src: "/reggae-rock-100.mp3" }, { name: "Afrobeat 100", src: "/afrobeat-100.mp3" }],
       steps: [
         { text: "Pick two genres from ss-9-1 through ss-9-4. Use one genre's feel for the verse and the other for the chorus.", why: "Genre-blending creates a sound that belongs to no category — which means it belongs to YOU. Khruangbin does exactly this." },
         { text: "The strum pattern must change between sections. Reggae chop → surf jangle. Or sparse desert → soul groove. Let the guitar transformation signal the genre shift.", why: "The strum change IS the section change. Your audience feels the genre shift through the guitar texture, even unconsciously." },
@@ -284,7 +284,7 @@ export const level10 = {
       title: "Complete Original",
       type: "song",
       what: "Write a complete original song with: intro (4 bars), verse (8 bars), chorus (8 bars), verse (8 bars), chorus (8 bars), outro (4 bars). Melody, lyrics, dynamics. This is your first 'finished' song — not a sketch, but a complete piece you could perform.",
-      tracks: [{ name: "Cinematic Western 80", src: "/cinematic-western-80.mp3" }],
+      tracks: [{ name: "Cinematic Western 80", src: "/cinematic-western-80.mp3" }, { name: "Afrobeat 100", src: "/afrobeat-100.mp3" }],
       steps: [
         { text: "Choose your genre feel, chord progression, and tempo. Set up the guitar part until it's on autopilot.", why: "The foundation must be automatic. You need all your cognitive bandwidth for melody and lyrics." },
         { text: "Compose the verse melody: lower range, storytelling delivery, arch or valley contour. Write lyrics that describe a scene.", why: "Verses paint pictures. Low range and descriptive lyrics set the scene before the chorus lifts." },
