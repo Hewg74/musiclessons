@@ -664,7 +664,7 @@ function FlowStepView({ steps, accentColor }) {
         {/* Step dots */}
         <div style={{ display: "flex", gap: 4 }}>
           {steps.map((_, i) => (
-            <div key={i} onClick={() => setStepIndex(i)} style={{
+            <div key={i} onClick={() => { setStepIndex(i); setShowWhy(false); }} style={{
               width: 6, height: 6, borderRadius: "50%", cursor: "pointer",
               background: i === stepIndex ? (accentColor || T.gold) : T.border,
               transition: "background 0.2s"
@@ -891,19 +891,9 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
       )}
 
       {/* Pitch detector */}
-      {ex.metronome && ex.referencePitches && ex.referencePitches.length > 0 && (
+      {ex.referencePitches && ex.referencePitches.length > 0 && (
         <div style={{ marginBottom: 16 }}>
           <LivePitchDetector theme={T} referencePitches={ex.referencePitches} inline={true} pitchContour={!!ex.pitchContour} />
-        </div>
-      )}
-      {!ex.metronome && !ex.pitchContour && ex.referencePitches && ex.referencePitches.length > 0 && (
-        <div style={{ marginBottom: 16 }}>
-          <LivePitchDetector theme={T} referencePitches={ex.referencePitches} inline={true} />
-        </div>
-      )}
-      {!ex.metronome && ex.pitchContour && ex.referencePitches && ex.referencePitches.length > 0 && (
-        <div style={{ marginBottom: 16 }}>
-          <LivePitchDetector theme={T} referencePitches={ex.referencePitches} inline={true} pitchContour={true} />
         </div>
       )}
 
@@ -1143,6 +1133,7 @@ function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor
           exerciseIds: exercises.map(e => e.id),
           duration: Math.floor(Date.now() / 1000) - sessionStartRef.current
         });
+        if (sessions.length > 100) sessions.splice(0, sessions.length - 100);
         localStorage.setItem("flow-sessions", JSON.stringify(sessions));
       } catch { }
       setShowSummary(true);
