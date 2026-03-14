@@ -170,6 +170,8 @@ button {
   top: 0;
   z-index: 9;
   margin: 0 -16px;
+  scroll-padding-left: 28px;
+  scroll-padding-right: 28px;
 }
 
 .sticky-pill-bar::before {
