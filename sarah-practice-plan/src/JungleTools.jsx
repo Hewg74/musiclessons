@@ -2515,6 +2515,16 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       newNodes.push(filter);
     }
 
+    // Fallback for unknown textures — default to pure sine
+    if (!synth) {
+      synth = new Tone.PolySynth(Tone.Synth, {
+        volume: -10,
+        oscillator: { type: "sine" },
+        envelope: { attack: 1, decay: 0, sustain: 1, release: 2 }
+      }).connect(masterGain);
+      synth.maxPolyphony = 32;
+    }
+
     synth.volume.value = volume;
     effectSynth = synth;
     effectNodes = newNodes;

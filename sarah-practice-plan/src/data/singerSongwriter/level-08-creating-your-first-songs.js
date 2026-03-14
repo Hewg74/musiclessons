@@ -269,7 +269,7 @@ export const level8 = {
       title: "Chord Tone Color Painting",
       type: "vocal",
       what: "Paint with chord tones as colors across a 2-chord progression. Root is earth (grounding, stable), 3rd is emotion (warm or cool depending on major/minor), 5th is sky (open, floating). Navigate Am to C feeling the palette shift as each chord's tones change role. This extends the 'notes as colors' concept from Level 3 into a songwriting context.",
-      drone: { root: "A", octave: 2, texture: "warm" },
+      drone: { root: "A", octave: 2, texture: "analog" },
       steps: [
         { text: "Strum Am. Sing the root A — feel it as earth, the ground your song stands on. Now sing the minor 3rd C — feel the emotional weight, a soft ache. Now sing the 5th E — feel the openness, looking up.", why: "Assigning sensory metaphors to intervals helps you choose notes intentionally when writing melodies. Root for grounding, 3rd for feeling, 5th for space." },
         { text: "Switch to C major. The root is now C (new ground), the 3rd is E (but now it's warm and bright — major 3rd), the 5th is G (different sky). Notice how E changed character: it was Am's floating 5th, now it's C's warm emotional center.", why: "The same pitch changes meaning depending on its harmonic context. E over Am feels open; E over C feels intimate. This awareness is what makes melodies expressive over changes." },

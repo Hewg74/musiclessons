@@ -136,7 +136,7 @@ export const level9 = {
       time: 8,
       title: "Emotional Mapping: Borrowed Chords",
       type: "song",
-      drone: { root: "G", octave: 2, texture: "warm" },
+      drone: { root: "G", octave: 2, texture: "analog" },
       what: "In the key of G major, play G then Ab (bVI). Feel the 'cinematic longing' — the chord doesn't belong to the key but creates an emotional effect nothing else can. Then try G to Bb (bVII) — 'triumphant departure.' Then iv (Cm in G major) — borrowed from the parallel minor, creates nostalgia. These are the 'color chords' that make songs emotionally rich.",
       steps: [
         { text: "Play G major for 4 bars, then Ab major (4-6-6-5-4-4). Let the Ab ring. Feel the sudden shift — cinematic, wistful, like a scene change in a film. This is the bVI chord, borrowed from G minor.", why: "The bVI is the most emotionally powerful borrowed chord. Hermanos Gutiérrez use it constantly — it creates instant cinematic weight. It works because it shares no notes with the I chord, creating maximum contrast." },

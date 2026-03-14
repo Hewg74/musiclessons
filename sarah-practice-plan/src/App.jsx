@@ -596,6 +596,720 @@ function ReviewCheckIn({ review, accentColor }) {
   );
 }
 
+// ─── FLOW MODE ──────────────────────────────────────────────────────
+
+function useWakeLock() {
+  const lockRef = useRef(null);
+  const request = useCallback(async () => {
+    try {
+      if ('wakeLock' in navigator) {
+        lockRef.current = await navigator.wakeLock.request('screen');
+      }
+    } catch { /* user denied or not supported */ }
+  }, []);
+  const release = useCallback(() => {
+    lockRef.current?.release();
+    lockRef.current = null;
+  }, []);
+  useEffect(() => () => lockRef.current?.release(), []);
+  return { request, release };
+}
+
+function FlowProgressRail({ exercises, currentIndex, completed, onJump }) {
+  return (
+    <div style={{
+      display: "flex", gap: 8, justifyContent: "center", alignItems: "center",
+      padding: "12px 16px", flexWrap: "wrap"
+    }}>
+      {exercises.map((ex, i) => {
+        const isDone = completed.has(ex.id);
+        const isCurrent = i === currentIndex;
+        return (
+          <button key={ex.id} onClick={() => onJump(i)} title={ex.title} style={{
+            width: isCurrent ? 14 : 10, height: isCurrent ? 14 : 10,
+            borderRadius: "50%", border: "none", cursor: "pointer", padding: 0,
+            background: isDone ? T.gold : (isCurrent ? T.gold : T.border),
+            boxShadow: isCurrent ? `0 0 0 3px ${T.gold}40` : "none",
+            opacity: isDone ? 1 : (isCurrent ? 1 : 0.5),
+            transition: "all 0.3s",
+            animation: isCurrent ? "pulse-ring 2s infinite" : "none"
+          }} />
+        );
+      })}
+    </div>
+  );
+}
+
+function FlowStepView({ steps, accentColor }) {
+  const [stepIndex, setStepIndex] = useState(0);
+  const [showWhy, setShowWhy] = useState(false);
+
+  if (!steps || steps.length === 0) return null;
+
+  const step = steps[stepIndex];
+  const total = steps.length;
+
+  return (
+    <div style={{ marginBottom: 16 }}>
+      {/* Step counter */}
+      <div style={{
+        display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12
+      }}>
+        <div style={{
+          fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase",
+          color: accentColor || T.gold, fontFamily: T.sans
+        }}>
+          Step {stepIndex + 1} of {total}
+        </div>
+        {/* Step dots */}
+        <div style={{ display: "flex", gap: 4 }}>
+          {steps.map((_, i) => (
+            <div key={i} onClick={() => setStepIndex(i)} style={{
+              width: 6, height: 6, borderRadius: "50%", cursor: "pointer",
+              background: i === stepIndex ? (accentColor || T.gold) : T.border,
+              transition: "background 0.2s"
+            }} />
+          ))}
+        </div>
+      </div>
+
+      {/* Step text */}
+      <div style={{
+        fontSize: 17, color: T.textDark, fontFamily: T.sans, lineHeight: 1.7, fontWeight: 500,
+        padding: "16px 20px", background: T.bgSoft, borderRadius: T.radiusMd,
+        borderLeft: `2px solid ${accentColor || T.gold}`, minHeight: 80
+      }}>
+        {step.text}
+      </div>
+
+      {/* Why (collapsible) */}
+      {step.why && (
+        <div style={{ marginTop: 8 }}>
+          <button onClick={() => setShowWhy(!showWhy)} style={{
+            background: "none", border: "none", color: T.textLight, fontSize: 12,
+            fontFamily: T.sans, cursor: "pointer", fontStyle: "italic", padding: 0,
+            display: "flex", alignItems: "center", gap: 4
+          }}>
+            <span style={{ transition: "transform 0.2s", transform: showWhy ? "rotate(90deg)" : "", display: "inline-block" }}>&#9654;</span>
+            Why this matters
+          </button>
+          {showWhy && (
+            <div style={{
+              fontSize: 13, color: T.textLight, fontFamily: T.sans, lineHeight: 1.6,
+              marginTop: 6, padding: "8px 12px", fontStyle: "italic"
+            }}>
+              {step.why}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Prev / Next step buttons */}
+      {total > 1 && (
+        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 14 }}>
+          <button onClick={() => { setStepIndex(Math.max(0, stepIndex - 1)); setShowWhy(false); }}
+            disabled={stepIndex === 0}
+            style={{
+              background: "transparent", border: `1px solid ${stepIndex === 0 ? T.borderSoft : T.border}`,
+              color: stepIndex === 0 ? T.textMuted : T.textMed,
+              padding: "8px 18px", borderRadius: T.radius, cursor: stepIndex === 0 ? "default" : "pointer",
+              fontSize: 12, fontWeight: 600, fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
+            }}>
+            Prev
+          </button>
+          <button onClick={() => { setStepIndex(Math.min(total - 1, stepIndex + 1)); setShowWhy(false); }}
+            disabled={stepIndex === total - 1}
+            style={{
+              background: stepIndex === total - 1 ? "transparent" : (accentColor || T.gold),
+              border: stepIndex === total - 1 ? `1px solid ${T.borderSoft}` : "none",
+              color: stepIndex === total - 1 ? T.textMuted : "#fff",
+              padding: "8px 18px", borderRadius: T.radius,
+              cursor: stepIndex === total - 1 ? "default" : "pointer",
+              fontSize: 12, fontWeight: 600, fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
+            }}>
+            Next
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpenTapMatch }) {
+  const timer = useTimer(ex.time || 5);
+  const [showDetails, setShowDetails] = useState(false);
+  const [showTabs, setShowTabs] = useState(false);
+  const [trackRates, setTrackRates] = useState({});
+  const [timerDone, setTimerDone] = useState(false);
+
+  // Detect timer completion
+  useEffect(() => {
+    if (timer.pct >= 100 && !timerDone) {
+      setTimerDone(true);
+      // Play a gentle chime
+      try {
+        if (Tone.context.state !== "running") Tone.context.resume();
+        const synth = new Tone.Synth({
+          oscillator: { type: "triangle" },
+          envelope: { attack: 0.1, decay: 0.3, sustain: 0.2, release: 1.5 }
+        }).toDestination();
+        synth.volume.value = -14;
+        synth.triggerAttackRelease("E5", "4n");
+        setTimeout(() => synth.dispose(), 2000);
+      } catch { }
+    }
+  }, [timer.pct, timerDone]);
+
+  const playNote = async (note) => {
+    if (Tone.context.state !== 'running') await Tone.context.resume();
+    const synth = new Tone.Synth({
+      oscillator: { type: 'triangle' },
+      envelope: { attack: 0.1, decay: 0.2, sustain: 1, release: 1 }
+    }).toDestination();
+    synth.volume.value = -8;
+    synth.triggerAttackRelease(note.replace('♭', 'b'), "2n");
+    setTimeout(() => synth.dispose(), 2000);
+  };
+
+  const tracks = ex.tracks || [];
+  const isComplete = completed.has(ex.id);
+
+  return (
+    <div style={{ animation: "fade-in-up 0.4s ease-out" }}>
+      {/* Timer ring — prominent */}
+      <div style={{
+        display: "flex", alignItems: "center", gap: 16, marginBottom: 20,
+        padding: "14px 20px", background: T.bgSoft, borderRadius: T.radiusMd,
+        border: `1px solid ${timerDone ? T.gold + "60" : T.border}`,
+        boxShadow: timerDone ? `0 0 20px ${T.gold}20` : "none",
+        transition: "all 0.5s"
+      }}>
+        <TimerRing pct={timer.pct} fmt={timer.fmt} size={56} textSize={13} />
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: 14, fontWeight: 600, fontFamily: T.sans, color: T.textDark }}>
+            {ex.time || 5} min
+          </div>
+          <div style={{ fontSize: 11, color: timerDone ? T.gold : T.textMuted, fontFamily: T.sans, fontWeight: timerDone ? 600 : 400 }}>
+            {timerDone ? "Time's up — move on when ready" : "Suggested duration"}
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: 6 }}>
+          <button onClick={timer.toggle} style={{
+            background: timer.on ? T.coral : (accentColor || T.gold), border: "none", color: "#fff",
+            padding: "8px 14px", fontSize: 11, fontWeight: 600, cursor: "pointer", borderRadius: T.radius,
+            fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
+          }}>{timer.on ? "Pause" : "Start"}</button>
+          <button onClick={timer.reset} style={{
+            background: "transparent", border: `1px solid ${T.border}`, color: T.textLight,
+            padding: "8px 10px", fontSize: 11, fontWeight: 600, cursor: "pointer", borderRadius: T.radius,
+            fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
+          }}>Reset</button>
+        </div>
+      </div>
+
+      {/* What — always visible */}
+      <div style={{
+        fontSize: 14, color: T.textMed, fontFamily: T.sans, lineHeight: 1.7,
+        marginBottom: 16, padding: "12px 16px", background: T.bgSoft, borderRadius: T.radius,
+        borderLeft: `2px solid ${accentColor || T.gold}`
+      }}>{ex.what}</div>
+
+      {/* Setup */}
+      {ex.setup && (
+        <div style={{ fontSize: 12, color: T.textLight, fontFamily: T.sans, marginBottom: 14, display: "flex", gap: 6, alignItems: "flex-start" }}>
+          <span style={{ color: accentColor || T.gold, fontWeight: 700, fontSize: 11 }}>SETUP:</span> {ex.setup}
+        </div>
+      )}
+
+      {/* Reference Pitches */}
+      <PitchRibbon pitches={ex.referencePitches} playNote={playNote} />
+
+      {/* ── TOOL DOCK ── */}
+      {/* Audio Tracks */}
+      {tracks.length > 0 && (
+        <div style={{ marginBottom: 16 }}>
+          {tracks.map((t, i) => (
+            <div key={i} style={{ marginBottom: 16 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: T.textDark, letterSpacing: 1.5, marginBottom: 8, fontFamily: T.sans, textTransform: "uppercase" }}>{t.name}</div>
+              <MiniAudioPlayer theme={T} src={t.src} playbackRate={trackRates[i] || 1} />
+              <div style={{ display: "flex", gap: 6, marginTop: 4 }}>
+                {[0.75, 1, 1.25].map(rate => (
+                  <button key={rate} onClick={() => setTrackRates(r => ({ ...r, [i]: rate }))} style={{
+                    background: (trackRates[i] || 1) === rate ? (accentColor || T.gold) : "transparent",
+                    color: (trackRates[i] || 1) === rate ? "#fff" : T.textMed,
+                    border: `1px solid ${(trackRates[i] || 1) === rate ? (accentColor || T.gold) : T.borderSoft}`,
+                    padding: "3px 10px", fontSize: 10, fontWeight: 700, cursor: "pointer",
+                    borderRadius: T.radius, fontFamily: T.sans, transition: "all 0.2s"
+                  }}>{rate === 1 ? "1x" : `${rate}x`}</button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Metronome */}
+      {ex.metronome && (
+        <div style={{ display: "flex", gap: 10, marginBottom: 16, alignItems: "center", background: T.bgSoft, padding: "10px 16px", borderRadius: T.radiusMd, border: `1px solid ${T.border}`, flexWrap: "wrap" }}>
+          <div style={{ flex: 1, display: "flex", alignItems: "center", gap: 8 }}>
+            <button onClick={() => metro.changeBpm(Math.max(40, metro.bpm - 1))} style={{ background: "transparent", border: "none", fontSize: 18, cursor: "pointer", color: T.textMed }}>-</button>
+            <div style={{ fontSize: 16, fontFamily: T.sans, color: T.textDark, fontWeight: 600, minWidth: 40, textAlign: "center" }}>{metro.bpm}</div>
+            <button onClick={() => metro.changeBpm(Math.min(280, metro.bpm + 1))} style={{ background: "transparent", border: "none", fontSize: 18, cursor: "pointer", color: T.textMed }}>+</button>
+            <button onClick={() => metro.changeBpm(ex.metronome)} style={{ marginLeft: 6, fontSize: 10, background: T.goldSoft, border: "none", padding: "4px 8px", borderRadius: T.radius, color: T.goldDark, cursor: "pointer", fontWeight: 600, textTransform: "uppercase" }}>Target: {ex.metronome}</button>
+          </div>
+          <div style={{ display: "flex", gap: 8 }}>
+            <button onClick={() => metro.playing ? metro.stop() : metro.start()} style={{
+              background: metro.playing ? T.coral : (accentColor || T.gold), border: "none", color: "#fff",
+              padding: "8px 16px", fontSize: 11, fontWeight: 600, cursor: "pointer", borderRadius: T.radius,
+              fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
+            }}>{metro.playing ? "Stop" : "Start"}</button>
+            <button onClick={() => onOpenTapMatch && onOpenTapMatch(ex.metronome)} style={{
+              background: "transparent", border: `1px solid ${T.slate}40`, color: T.slate, padding: "8px 12px", borderRadius: T.radius,
+              fontSize: 11, cursor: "pointer", fontWeight: 600, fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
+            }}>Tap</button>
+            {ex.speedLadder && (
+              <button onClick={() => {
+                if (!metro.speedBuilder) {
+                  metro.changeBpm(ex.speedLadder.start);
+                  metro.setSpeedIncrement(ex.speedLadder.increment);
+                  metro.setSpeedBars(ex.speedLadder.bars);
+                  metro.setSpeedCeiling(ex.speedLadder.end);
+                }
+                metro.setSpeedBuilder(!metro.speedBuilder);
+              }} style={{
+                background: metro.speedBuilder ? (accentColor || T.gold) : "transparent",
+                border: `1px solid ${metro.speedBuilder ? (accentColor || T.gold) : T.borderSoft}`,
+                color: metro.speedBuilder ? "#fff" : T.textMed,
+                padding: "8px 10px", borderRadius: T.radius,
+                fontSize: 11, cursor: "pointer", fontWeight: 600, fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
+              }} title={`${ex.speedLadder.start}→${ex.speedLadder.end} BPM, +${ex.speedLadder.increment} every ${ex.speedLadder.bars} bars`}>
+                Speed +
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Pitch detector */}
+      {ex.metronome && ex.referencePitches && ex.referencePitches.length > 0 && (
+        <div style={{ marginBottom: 16 }}>
+          <LivePitchDetector theme={T} referencePitches={ex.referencePitches} inline={true} pitchContour={!!ex.pitchContour} />
+        </div>
+      )}
+      {!ex.metronome && !ex.pitchContour && ex.referencePitches && ex.referencePitches.length > 0 && (
+        <div style={{ marginBottom: 16 }}>
+          <LivePitchDetector theme={T} referencePitches={ex.referencePitches} inline={true} />
+        </div>
+      )}
+      {!ex.metronome && ex.pitchContour && ex.referencePitches && ex.referencePitches.length > 0 && (
+        <div style={{ marginBottom: 16 }}>
+          <LivePitchDetector theme={T} referencePitches={ex.referencePitches} inline={true} pitchContour={true} />
+        </div>
+      )}
+
+      {/* Drone */}
+      {ex.drone && (
+        <div style={{ marginBottom: 16 }}>
+          <DroneGenerator theme={T} inline={true}
+            {...(typeof ex.drone === 'object' ? {
+              defaultRoot: ex.drone.root, defaultOctave: ex.drone.octave,
+              defaultTexture: ex.drone.texture, defaultMode: ex.drone.mode,
+              defaultPreset: ex.drone.preset, defaultProgression: ex.drone.progression,
+              defaultBpm: ex.drone.bpm, defaultStepDuration: ex.drone.stepDuration,
+            } : {})}
+          />
+        </div>
+      )}
+
+      {/* Recorder */}
+      {ex.recorder && (
+        <div style={{ marginBottom: 16 }}>
+          <AudioRecorder theme={T} inline={true} />
+        </div>
+      )}
+
+      {/* Fretboard */}
+      {ex.fretboard && (
+        <FretboardDiagram theme={T} scale={ex.fretboard.scale} position={ex.fretboard.position} highlight={ex.fretboard.highlight || []} />
+      )}
+
+      {/* Piano Keys */}
+      {ex.pianoKeys && (
+        <PianoKeysDiagram notes={ex.pianoKeys.notes} label={ex.pianoKeys.label} range={ex.pianoKeys.range} />
+      )}
+
+      {/* Volume Meter */}
+      {ex.volumeMeter && (
+        <VolumeMeter theme={T} inline={true} volumeContour={!!ex.volumeContour} />
+      )}
+
+      {/* Rhythm Cells */}
+      {ex.rhythmCells && (
+        <RhythmCellCards theme={T} cells={ex.rhythmCells} bpm={ex.metronome || 80} />
+      )}
+
+      {/* Phrase Form */}
+      {ex.phraseForm && (
+        <PhraseFormGuide theme={T} form={ex.phraseForm} />
+      )}
+
+      {/* Tabs */}
+      {ex.tabs && TAB_CONTENT[ex.tabs] && (
+        <div style={{ marginBottom: 16 }}>
+          <button onClick={() => setShowTabs(!showTabs)} style={{
+            background: "transparent", border: `1px solid ${T.border}`, color: T.textMed,
+            padding: "8px 14px", borderRadius: T.radius, cursor: "pointer", fontWeight: 600,
+            fontFamily: T.sans, fontSize: 11, letterSpacing: 1, textTransform: "uppercase",
+            width: "100%", textAlign: "left", display: "flex", justifyContent: "space-between", alignItems: "center"
+          }}>
+            <span>Tabs & Lyrics</span>
+            <span style={{ transition: "transform 0.2s", transform: showTabs ? "rotate(180deg)" : "" }}>&#9660;</span>
+          </button>
+          {showTabs && (
+            <pre style={{
+              background: T.bgSoft, padding: 16, border: `1px solid ${T.border}`, borderTop: "none",
+              borderRadius: `0 0 ${T.radiusMd} ${T.radiusMd}`, overflowX: "auto",
+              fontFamily: "monospace", fontSize: 12, color: T.textDark, lineHeight: 1.5, marginTop: 0, whiteSpace: "pre-wrap"
+            }}>{TAB_CONTENT[ex.tabs].trim()}</pre>
+          )}
+        </div>
+      )}
+
+      {/* ── STEPS ── */}
+      <FlowStepView steps={ex.steps} accentColor={accentColor} />
+
+      {/* Feel / Wrong — collapsible */}
+      {(ex.feel || ex.wrong) && (
+        <div style={{ marginBottom: 12 }}>
+          <button onClick={() => setShowDetails(!showDetails)} style={{
+            background: "none", border: "none", color: T.textLight, fontSize: 12,
+            fontFamily: T.sans, cursor: "pointer", padding: 0,
+            display: "flex", alignItems: "center", gap: 4, fontWeight: 600,
+            letterSpacing: 1, textTransform: "uppercase"
+          }}>
+            <span style={{ transition: "transform 0.2s", transform: showDetails ? "rotate(90deg)" : "", display: "inline-block" }}>&#9654;</span>
+            Feel & Pitfalls
+          </button>
+          {showDetails && (
+            <div style={{ marginTop: 8 }}>
+              {ex.feel && (
+                <div style={{
+                  fontSize: 13, color: T.success, fontFamily: T.sans, lineHeight: 1.6,
+                  padding: "8px 12px", background: T.successSoft, borderRadius: T.radius, marginBottom: 8,
+                  borderLeft: `2px solid ${T.success}`
+                }}>
+                  <span style={{ fontWeight: 700, fontSize: 10, letterSpacing: 1, textTransform: "uppercase" }}>Correct feels like: </span>
+                  {ex.feel}
+                </div>
+              )}
+              {ex.wrong && (
+                <div style={{
+                  fontSize: 13, color: T.coral, fontFamily: T.sans, lineHeight: 1.6,
+                  padding: "8px 12px", background: T.coralSoft, borderRadius: T.radius,
+                  borderLeft: `2px solid ${T.coral}`
+                }}>
+                  <span style={{ fontWeight: 700, fontSize: 10, letterSpacing: 1, textTransform: "uppercase" }}>Going wrong if: </span>
+                  {ex.wrong}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Sarah quote */}
+      {ex.sarah && <SarahQuote text={ex.sarah} />}
+
+      {/* Level up */}
+      {ex.levelUp && (
+        <div style={{
+          fontSize: 12, color: accentColor || T.gold, fontFamily: T.sans, fontWeight: 600,
+          padding: "8px 0", borderTop: `1px solid ${T.border}`, marginTop: 8
+        }}>
+          Level up: {ex.levelUp}
+        </div>
+      )}
+
+      {/* Complete button */}
+      <button onClick={() => onComplete(ex.id)} style={{
+        marginTop: 16, width: "100%",
+        background: isComplete ? "transparent" : (accentColor || T.gold),
+        border: isComplete ? `1px solid ${T.border}` : "none",
+        color: isComplete ? T.textLight : "#fff",
+        padding: "14px", fontSize: 12, fontWeight: 400,
+        cursor: "pointer", fontFamily: T.sans, letterSpacing: 2, textTransform: "uppercase"
+      }}>
+        {isComplete ? "Mark Incomplete" : "Complete Exercise"}
+      </button>
+    </div>
+  );
+}
+
+function FlowSummary({ exercises, completed, sessionDuration, onExit }) {
+  const done = exercises.filter(e => completed.has(e.id)).length;
+  const mins = Math.floor(sessionDuration / 60);
+  const secs = sessionDuration % 60;
+
+  return (
+    <div style={{
+      textAlign: "center", padding: "48px 24px",
+      animation: "fade-in-up 0.5s ease-out"
+    }}>
+      <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 3, textTransform: "uppercase", color: T.success, fontFamily: T.sans, marginBottom: 12 }}>
+        Flow Complete
+      </div>
+      <div style={{ fontSize: 36, fontWeight: 400, fontFamily: T.serif, color: T.textDark, marginBottom: 8 }}>
+        {done} exercise{done !== 1 ? "s" : ""}
+      </div>
+      <div style={{ fontSize: 16, color: T.textMuted, fontFamily: T.sans, marginBottom: 32 }}>
+        {mins > 0 ? `${mins}m ` : ""}{secs}s total session time
+      </div>
+
+      <div style={{ maxWidth: 360, margin: "0 auto", textAlign: "left" }}>
+        {exercises.map(ex => {
+          const isDone = completed.has(ex.id);
+          return (
+            <div key={ex.id} style={{
+              display: "flex", alignItems: "center", gap: 10, padding: "8px 0",
+              borderBottom: `1px solid ${T.border}`
+            }}>
+              <div style={{
+                width: 20, height: 20, borderRadius: "50%",
+                background: isDone ? T.success : "transparent",
+                border: `2px solid ${isDone ? T.success : T.border}`,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontSize: 12, color: "#fff", flexShrink: 0
+              }}>
+                {isDone && "✓"}
+              </div>
+              <div style={{ fontSize: 14, fontFamily: T.sans, color: isDone ? T.textDark : T.textMuted }}>
+                {ex.title}
+              </div>
+              <div style={{ marginLeft: "auto", fontSize: 11, color: T.textMuted, fontFamily: T.sans }}>
+                {ex.time || 5}m
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <button onClick={onExit} style={{
+        marginTop: 32, background: T.gold, border: "none", color: "#fff",
+        padding: "14px 32px", fontSize: 12, fontWeight: 600, cursor: "pointer",
+        borderRadius: T.radius, fontFamily: T.sans, letterSpacing: 2, textTransform: "uppercase"
+      }}>
+        Back to App
+      </button>
+    </div>
+  );
+}
+
+function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor, onOpenTapMatch }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [showSummary, setShowSummary] = useState(false);
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
+  const sessionStartRef = useRef(Math.floor(Date.now() / 1000));
+  const flowContainerRef = useRef(null);
+  const wakeLock = useWakeLock();
+
+  // Request wake lock on mount
+  useEffect(() => {
+    wakeLock.request();
+    return () => wakeLock.release();
+  }, []);
+
+  const currentEx = exercises[currentIndex];
+  const isLastExercise = currentIndex === exercises.length - 1;
+
+  const stopAllAudio = () => {
+    if (metro.playing) metro.stop();
+    // Stop any HTML5 audio elements
+    if (flowContainerRef.current) {
+      flowContainerRef.current.querySelectorAll('audio').forEach(a => { a.pause(); a.currentTime = 0; });
+    }
+  };
+
+  const handleCompleteAndNext = () => {
+    if (!completed.has(currentEx.id)) {
+      onComplete(currentEx.id);
+    }
+    if (isLastExercise) {
+      stopAllAudio();
+      // Log session
+      try {
+        const sessions = JSON.parse(localStorage.getItem("flow-sessions") || "[]");
+        sessions.push({
+          date: new Date().toISOString(),
+          exerciseIds: exercises.map(e => e.id),
+          duration: Math.floor(Date.now() / 1000) - sessionStartRef.current
+        });
+        localStorage.setItem("flow-sessions", JSON.stringify(sessions));
+      } catch { }
+      setShowSummary(true);
+    } else {
+      stopAllAudio();
+      setCurrentIndex(currentIndex + 1);
+    }
+  };
+
+  const handleJump = (idx) => {
+    if (idx !== currentIndex) {
+      stopAllAudio();
+      setCurrentIndex(idx);
+      setShowSummary(false);
+    }
+  };
+
+  const handleExit = () => {
+    stopAllAudio();
+    onExit();
+  };
+
+  if (showSummary) {
+    return (
+      <div style={{
+        position: "fixed", inset: 0, zIndex: 100, background: T.bg,
+        overflowY: "auto", display: "flex", flexDirection: "column"
+      }}>
+        <FlowSummary
+          exercises={exercises}
+          completed={completed}
+          sessionDuration={Math.floor(Date.now() / 1000) - sessionStartRef.current}
+          onExit={handleExit}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div ref={flowContainerRef} style={{
+      position: "fixed", inset: 0, zIndex: 100, background: T.bg,
+      overflowY: "auto", display: "flex", flexDirection: "column"
+    }}>
+      {/* Top bar */}
+      <div style={{
+        padding: "12px 16px", borderBottom: `1px solid ${T.border}`,
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        background: T.bgCard, flexShrink: 0
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <div style={{
+            fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase",
+            color: accentColor || T.gold, fontFamily: T.sans
+          }}>
+            Flow
+          </div>
+          <div style={{ fontSize: 12, color: T.textMuted, fontFamily: T.sans }}>
+            {currentIndex + 1} of {exercises.length}
+          </div>
+        </div>
+        <button onClick={() => setShowExitConfirm(true)} style={{
+          background: "transparent", border: `1px solid ${T.border}`, color: T.textMed,
+          padding: "6px 14px", borderRadius: T.radius, cursor: "pointer",
+          fontSize: 11, fontWeight: 600, fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
+        }}>
+          Exit
+        </button>
+      </div>
+
+      {/* Exit confirmation dialog */}
+      {showExitConfirm && (
+        <div style={{
+          position: "fixed", inset: 0, zIndex: 200, background: "rgba(0,0,0,0.5)",
+          display: "flex", alignItems: "center", justifyContent: "center", padding: 24
+        }}>
+          <div style={{
+            background: T.bgCard, borderRadius: T.radiusMd, padding: "24px 28px",
+            maxWidth: 320, width: "100%", boxShadow: T.md, textAlign: "center"
+          }}>
+            <div style={{ fontSize: 16, fontWeight: 600, fontFamily: T.serif, color: T.textDark, marginBottom: 8 }}>
+              Exit Flow?
+            </div>
+            <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, marginBottom: 20 }}>
+              Your progress is saved.
+            </div>
+            <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
+              <button onClick={() => setShowExitConfirm(false)} style={{
+                background: "transparent", border: `1px solid ${T.border}`, color: T.textMed,
+                padding: "10px 20px", borderRadius: T.radius, cursor: "pointer",
+                fontSize: 12, fontWeight: 600, fontFamily: T.sans
+              }}>Stay</button>
+              <button onClick={handleExit} style={{
+                background: T.coral, border: "none", color: "#fff",
+                padding: "10px 20px", borderRadius: T.radius, cursor: "pointer",
+                fontSize: 12, fontWeight: 600, fontFamily: T.sans
+              }}>Exit</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Progress rail */}
+      <FlowProgressRail exercises={exercises} currentIndex={currentIndex} completed={completed} onJump={handleJump} />
+
+      {/* Exercise content — key forces remount */}
+      <div style={{ flex: 1, maxWidth: 560, width: "100%", margin: "0 auto", padding: "16px 16px 120px", overflowY: "auto" }}>
+        {/* Exercise header */}
+        <div style={{ marginBottom: 20 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+            <TypeBadge type={currentEx.type} />
+          </div>
+          <div style={{ fontSize: 28, fontWeight: 400, fontFamily: T.serif, color: T.textDark, lineHeight: 1.3 }}>
+            {currentEx.title}
+          </div>
+        </div>
+
+        <FlowExerciseBody
+          key={currentEx.id}
+          ex={currentEx}
+          completed={completed}
+          onComplete={onComplete}
+          metro={metro}
+          accentColor={accentColor}
+          onOpenTapMatch={onOpenTapMatch}
+        />
+      </div>
+
+      {/* Bottom action bar */}
+      <div style={{
+        position: "fixed", bottom: 0, left: 0, right: 0,
+        padding: "12px 16px", background: T.bgCard,
+        borderTop: `1px solid ${T.border}`, zIndex: 101,
+        display: "flex", justifyContent: "center"
+      }}>
+        <button onClick={handleCompleteAndNext} className="interactive-btn" style={{
+          background: accentColor || T.gold, border: "none", color: "#fff",
+          padding: "14px 32px", fontSize: 12, fontWeight: 600, cursor: "pointer",
+          borderRadius: T.radius, fontFamily: T.sans, letterSpacing: 2, textTransform: "uppercase",
+          maxWidth: 560, width: "100%"
+        }}>
+          {completed.has(currentEx.id)
+            ? (isLastExercise ? "Finish Flow" : "Next")
+            : (isLastExercise ? "Complete & Finish" : "Complete & Next")
+          }
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function StartFlowButton({ onClick, accentColor }) {
+  return (
+    <button onClick={onClick} className="interactive-btn" style={{
+      background: "transparent",
+      border: `1px solid ${accentColor || T.gold}`,
+      color: accentColor || T.gold,
+      padding: "8px 18px", borderRadius: T.radius, cursor: "pointer",
+      fontSize: 11, fontWeight: 700, fontFamily: T.sans, letterSpacing: 2, textTransform: "uppercase",
+      display: "inline-flex", alignItems: "center", gap: 6, transition: "all 0.2s"
+    }}>
+      <span style={{ fontSize: 14 }}>&#9654;</span> Flow
+    </button>
+  );
+}
+
+// ─── EXERCISE CARD ──────────────────────────────────────────────────
+
 function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMatch }) {
   const [open, setOpen] = useState(false);
   const [showTimer, setShowTimer] = useState(false);
@@ -1025,7 +1739,7 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
   );
 }
 
-function DayView({ day, completed, onComplete, metro, onOpenTapMatch }) {
+function DayView({ day, completed, onComplete, metro, onOpenTapMatch, onStartFlow }) {
   const c = DAY_COLORS[(day.num - 1) % DAY_COLORS.length];
   const total = day.exercises.length;
   const done = day.exercises.filter(e => completed.has(e.id)).length;
@@ -1039,7 +1753,10 @@ function DayView({ day, completed, onComplete, metro, onOpenTapMatch }) {
           <div style={{ fontSize: 28, fontWeight: 400, color: T.textDark, fontFamily: T.serif }}>{day.name}</div>
           <div style={{ fontSize: 13, color: T.textMuted, fontFamily: T.sans, marginTop: 2, textTransform: "uppercase", letterSpacing: "0.05em" }}>{day.focus} · {day.duration}</div>
         </div>
-        <div style={{ fontSize: 32, fontWeight: 700, fontFamily: T.serif, color: pct === 100 ? T.success : T.textDark }}>{pct}%</div>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <StartFlowButton onClick={() => onStartFlow(day.exercises, c)} accentColor={c} />
+          <div style={{ fontSize: 32, fontWeight: 700, fontFamily: T.serif, color: pct === 100 ? T.success : T.textDark }}>{pct}%</div>
+        </div>
       </div>
 
       {/* Setup */}
@@ -1132,7 +1849,7 @@ function PianoKeysDiagram({ notes = [], label = "", range }) {
 
 const VOCAL_COLORS = ["#9e829c", "#8b6f89", "#d97d54", "#7f9e88", "#5b7fa5", "#d68383", "#72a8a8", "#d4a373", "#6b8e9f", "#9e829c", "#7a6f8e", "#c9815e", "#6a9e7a", "#8b7fa5"];
 
-function VoiceView({ completed, onComplete, metro, onOpenTapMatch }) {
+function VoiceView({ completed, onComplete, metro, onOpenTapMatch, onStartFlow }) {
   const [selectedLevel, setSelectedLevel] = useState(() => {
     try {
       const saved = localStorage.getItem("voice-current-level");
@@ -1240,8 +1957,11 @@ function VoiceView({ completed, onComplete, metro, onOpenTapMatch }) {
         </div>
       </div>
 
-      {/* Review check-in + Selected level exercises */}
+      {/* Flow button + Review check-in + Selected level exercises */}
       <div style={{ marginTop: 20 }}>
+        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 12 }}>
+          <StartFlowButton onClick={() => onStartFlow(selectedLevel.exercises, T.plum)} accentColor={T.plum} />
+        </div>
         <ReviewCheckIn review={selectedLevel.review} accentColor={T.plum} />
         <LevelView level={selectedLevel} completed={completed} onComplete={onComplete} metro={metro} onOpenTapMatch={onOpenTapMatch} levelColor={VOCAL_COLORS[(selectedLevel.num - 1) % VOCAL_COLORS.length]} />
       </div>
@@ -2420,7 +3140,7 @@ function LevelView({ level, completed, onComplete, metro, onOpenTapMatch, levelC
   );
 }
 
-function GuitarStudyView({ completed, onComplete, metro, onOpenTapMatch }) {
+function GuitarStudyView({ completed, onComplete, metro, onOpenTapMatch, onStartFlow }) {
   const [selectedLevel, setSelectedLevel] = useState(() => {
     try {
       const saved = localStorage.getItem("guitar-study-level");
@@ -2565,6 +3285,9 @@ function GuitarStudyView({ completed, onComplete, metro, onOpenTapMatch }) {
           </div>
         </div>
 
+        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 12 }}>
+          <StartFlowButton onClick={() => onStartFlow(selectedLevel.exercises, T.slate)} accentColor={T.slate} />
+        </div>
         <ReviewCheckIn review={selectedLevel.review} accentColor={T.slate} />
         {selectedLevel.exercises.map(ex => (
           <ExerciseCard key={ex.id} ex={ex} metro={metro}
@@ -3194,7 +3917,21 @@ export default function App() {
     localStorage.setItem("practice-completed", JSON.stringify([...completed]));
   }, [completed]);
   const [tapMatchBpm, setTapMatchBpm] = useState(null);
+  const [flowActive, setFlowActive] = useState(false);
+  const [flowExercises, setFlowExercises] = useState([]);
+  const [flowAccentColor, setFlowAccentColor] = useState(null);
   const metro = useMetronome();
+
+  const startFlow = useCallback((exercises, accentColor) => {
+    setFlowExercises(exercises);
+    setFlowAccentColor(accentColor || T.gold);
+    setFlowActive(true);
+  }, []);
+
+  const exitFlow = useCallback(() => {
+    setFlowActive(false);
+    setFlowExercises([]);
+  }, []);
 
   const toggleComplete = (id) => {
     setCompleted(prev => {
@@ -3261,6 +3998,41 @@ export default function App() {
     { id: "keys", label: "Keys", color: "#5b7fa5" },
     { id: "looper", label: "Looper", color: "#3d8b6e" }
   ];
+
+  // Flow Mode overlay — renders above everything
+  if (flowActive && flowExercises.length > 0) {
+    return (
+      <div style={{ background: T.bg, minHeight: "100vh", color: T.textDark, fontFamily: T.sans }}>
+        <style>{`
+          @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          @keyframes pulse-ring {
+            0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(0, 0, 0, 0); }
+            100% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); }
+          }
+          .interactive-btn { transition: all 0.2s ease; }
+          .interactive-btn:hover { transform: scale(1.02); opacity: 0.9; }
+          .interactive-btn:active { transform: scale(0.98); }
+        `}</style>
+        <FlowMode
+          exercises={flowExercises}
+          completed={completed}
+          onComplete={toggleComplete}
+          metro={metro}
+          onExit={exitFlow}
+          accentColor={flowAccentColor}
+          onOpenTapMatch={setTapMatchBpm}
+        />
+        {tapMatchBpm && (
+          <TapMatchModal targetBpm={tapMatchBpm} onClose={() => setTapMatchBpm(null)} metro={metro} />
+        )}
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;600;700&display=swap" rel="stylesheet" />
+      </div>
+    );
+  }
 
   return (
     <div style={{ background: T.bg, minHeight: "100vh", color: T.textDark, fontFamily: T.sans }}>
@@ -3398,7 +4170,7 @@ export default function App() {
 
             {/* Selected day exercises */}
             <div style={{ marginTop: 28 }}>
-              <DayView day={selectedDay} completed={completed} onComplete={toggleComplete} metro={metro} onOpenTapMatch={setTapMatchBpm} />
+              <DayView day={selectedDay} completed={completed} onComplete={toggleComplete} metro={metro} onOpenTapMatch={setTapMatchBpm} onStartFlow={startFlow} />
             </div>
 
             {/* Archive — exercises from LESSON_POOL by skill branch */}
@@ -3460,7 +4232,7 @@ export default function App() {
             </div>
 
             {skillTab === "voice" && (
-              <VoiceView completed={completed} onComplete={toggleComplete} metro={metro} onOpenTapMatch={setTapMatchBpm} />
+              <VoiceView completed={completed} onComplete={toggleComplete} metro={metro} onOpenTapMatch={setTapMatchBpm} onStartFlow={startFlow} />
             )}
 
             {skillTab === "guitar" && (
