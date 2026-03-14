@@ -101,7 +101,7 @@ export const level4 = {
       feel: "Five notes should feel like unlocking a door — suddenly you have enough colors to paint real pictures. The pentatonic is the sweet spot: enough notes for infinite variety, few enough that every combination sounds good. Freedom without overwhelm.",
       wrong: "If the five notes feel like too many choices, you've ramped too fast. Go back to four notes (ss-4-1) for another session, or start your five-note freestyle by walking stepwise (A-C-D-E-G) rather than leaping randomly. The structure will guide you.",
       sarah: "Gene, every artist you love lives in the pentatonic — Khruangbin, Skinshape, Allah-Las, Tinariwen, Tommy Guerrero. This five-note scale is the common language of psych-surf, desert blues, reggae, and soul. You now have the full palette. The rest of this level is about making it yours.",
-      drone: { root: "A", octave: 2, texture: "analog" },
+      drone: { root: "A", octave: 2, texture: "warm" },
       referencePitches: getPitchRange("A2", "G4"),
       pitchContour: true,
       pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Am Pentatonic", range: ["A3", "G4"] },

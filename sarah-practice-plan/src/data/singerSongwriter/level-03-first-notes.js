@@ -213,7 +213,7 @@ export const level3 = {
       feel: "Each note should feel like dipping your brush in a different color. A is grounding earth. E is expansive sky. C is the emotional blue — the one that gives the chord its character. When you land on C, you should feel a subtle ache, a pull, a depth that the root and 5th don't have.",
       wrong: "If all three notes feel the same to you, slow down even more. Hold each one for 16 beats against the drone. Close your eyes. The emotional quality will emerge — it's subtle at first but unmistakable once you feel it. Don't intellectualize; feel.",
       sarah: "Gene, this is the exercise that turns theory into feeling. The blue in the golden hour, the ache in an Allah-Las melody, the melancholy warmth of Khruangbin — it all lives in the minor 3rd. When you reach for a note because of how it FEELS instead of what it's CALLED, you're singing like an artist.",
-      drone: { root: "A", octave: 2, texture: "analog" },
+      drone: { root: "A", octave: 2, texture: "warm" },
       referencePitches: getPitchRange("A2", "E4"),
       pitchContour: true,
       pianoKeys: { notes: ["A3", "C4", "E4"], label: "Am Triad", range: ["A3", "E4"] },

@@ -2514,6 +2514,19 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       synth.maxPolyphony = 32;
       newNodes.push(filter);
     }
+    else if (texture === "warm") {
+      const reverb = new Tone.Freeverb({ roomSize: 0.6, dampening: 2500 }).connect(masterGain);
+      const chorus = new Tone.Chorus(1.5, 3, 0.4).connect(reverb).start();
+      const filter = new Tone.Filter(600, "lowpass").connect(chorus);
+      synth = new Tone.PolySynth(Tone.Synth, {
+        volume: -12,
+        oscillator: { type: "fattriangle", count: 2, spread: 15 },
+        envelope: { attack: 2, decay: 0.3, sustain: 0.9, release: 3 }
+      }).connect(filter);
+      synth.maxPolyphony = 32;
+      const lfo = new Tone.LFO(0.08, 400, 700).connect(filter.frequency).start();
+      newNodes.push(reverb, chorus, filter, lfo);
+    }
 
     // Fallback for unknown textures — default to pure sine
     if (!synth) {
@@ -2701,7 +2714,8 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
             { id: "lofi-tape", label: "Lo-Fi Tape" },
             { id: "surf-tremolo", label: "Surf Tremolo" },
             { id: "vintage-keys", label: "Vintage Keys" },
-            { id: "dub-sub", label: "Dub Sub" }
+            { id: "dub-sub", label: "Dub Sub" },
+            { id: "warm", label: "Warm Pad" }
           ].map(t => (
             <button key={t.id} onClick={() => setTexture(t.id)} style={{
               background: texture === t.id ? T.plum : T.bgSoft,

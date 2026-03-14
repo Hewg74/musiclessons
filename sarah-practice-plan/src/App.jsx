@@ -3298,7 +3298,7 @@ function GuitarStudyView({ completed, onComplete, metro, onOpenTapMatch, onStart
   );
 }
 
-function SingerSongwriterView({ completed, onComplete, metro, onOpenTapMatch }) {
+function SingerSongwriterView({ completed, onComplete, metro, onOpenTapMatch, onStartFlow }) {
   const [selectedLevel, setSelectedLevel] = useState(() => {
     try {
       const saved = localStorage.getItem("songwriter-level");
@@ -3420,6 +3420,9 @@ function SingerSongwriterView({ completed, onComplete, metro, onOpenTapMatch }) 
           </div>
         </div>
 
+        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 12 }}>
+          <StartFlowButton onClick={() => onStartFlow(selectedLevel.exercises, T.coral)} accentColor={T.coral} />
+        </div>
         <ReviewCheckIn review={selectedLevel.review} accentColor={T.coral} />
         {selectedLevel.exercises.map(ex => (
           <ExerciseCard key={ex.id} ex={ex} metro={metro}
@@ -3430,7 +3433,7 @@ function SingerSongwriterView({ completed, onComplete, metro, onOpenTapMatch }) 
   );
 }
 
-function KeysView({ completed, onComplete, metro, onOpenTapMatch }) {
+function KeysView({ completed, onComplete, metro, onOpenTapMatch, onStartFlow }) {
   const [selectedLevel, setSelectedLevel] = useState(() => {
     try {
       const saved = localStorage.getItem("keys-current-level");
@@ -3516,6 +3519,9 @@ function KeysView({ completed, onComplete, metro, onOpenTapMatch }) {
 
       {/* Selected level exercises */}
       <div style={{ marginTop: 28 }}>
+        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 12 }}>
+          <StartFlowButton onClick={() => onStartFlow(selectedLevel.exercises, "#5b7fa5")} accentColor="#5b7fa5" />
+        </div>
         <LevelView level={selectedLevel} completed={completed} onComplete={onComplete} metro={metro} onOpenTapMatch={onOpenTapMatch} />
       </div>
 
@@ -3539,7 +3545,7 @@ function KeysView({ completed, onComplete, metro, onOpenTapMatch }) {
 
 const LOOPER_COLORS = ["#3d8b6e", "#2e7d5e", "#d97d54", "#5b7fa5", "#7f9e88", "#9e829c", "#72a8a8", "#d68383", "#d4a373", "#6b8e9f"];
 
-function LooperView({ completed, onComplete, metro, onOpenTapMatch }) {
+function LooperView({ completed, onComplete, metro, onOpenTapMatch, onStartFlow }) {
   const [selectedLevel, setSelectedLevel] = useState(() => {
     try {
       const saved = localStorage.getItem("looper-current-level");
@@ -3625,6 +3631,9 @@ function LooperView({ completed, onComplete, metro, onOpenTapMatch }) {
 
       {/* Selected level exercises */}
       <div style={{ marginTop: 28 }}>
+        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 12 }}>
+          <StartFlowButton onClick={() => onStartFlow(selectedLevel.exercises, "#3d8b6e")} accentColor="#3d8b6e" />
+        </div>
         <LevelView level={selectedLevel} levelColor={LOOPER_COLORS[(selectedLevel.num - 1) % LOOPER_COLORS.length]} completed={completed} onComplete={onComplete} metro={metro} onOpenTapMatch={onOpenTapMatch} />
       </div>
 
@@ -4236,19 +4245,19 @@ export default function App() {
             )}
 
             {skillTab === "guitar" && (
-              <GuitarStudyView completed={completed} onComplete={toggleComplete} metro={metro} onOpenTapMatch={setTapMatchBpm} />
+              <GuitarStudyView completed={completed} onComplete={toggleComplete} metro={metro} onOpenTapMatch={setTapMatchBpm} onStartFlow={startFlow} />
             )}
 
             {skillTab === "keys" && (
-              <KeysView completed={completed} onComplete={toggleComplete} metro={metro} onOpenTapMatch={setTapMatchBpm} />
+              <KeysView completed={completed} onComplete={toggleComplete} metro={metro} onOpenTapMatch={setTapMatchBpm} onStartFlow={startFlow} />
             )}
 
             {skillTab === "looper" && (
-              <LooperView completed={completed} onComplete={toggleComplete} metro={metro} onOpenTapMatch={setTapMatchBpm} />
+              <LooperView completed={completed} onComplete={toggleComplete} metro={metro} onOpenTapMatch={setTapMatchBpm} onStartFlow={startFlow} />
             )}
 
             {skillTab === "songwriter" && (
-              <SingerSongwriterView completed={completed} onComplete={toggleComplete} metro={metro} onOpenTapMatch={setTapMatchBpm} />
+              <SingerSongwriterView completed={completed} onComplete={toggleComplete} metro={metro} onOpenTapMatch={setTapMatchBpm} onStartFlow={startFlow} />
             )}
           </div>
         )}
