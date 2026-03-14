@@ -174,11 +174,11 @@ button {
 
 .sticky-pill-bar::before {
   content: '';
-  flex: 0 0 20px;
+  flex: 0 0 28px;
 }
 .sticky-pill-bar::after {
   content: '';
-  flex: 0 0 16px;
+  flex: 0 0 28px;
 }
 
 @media (min-width: 641px) {
