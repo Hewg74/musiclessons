@@ -55,6 +55,7 @@ export const level3 = {
       sarah: "Gene, think of this like a reggae DJ toaster riding a riddim — one note, all groove. The rhythm IS the melody. Skinshape's vocal hooks are often just one or two notes with killer rhythm. That's what you're building here.",
       metronome: 80,
       referencePitches: getPitchRange("A2", "A3"),
+      tracks: [{ name: "Drums Only — Soul/Funk 90", src: "/drums-soul-funk-90.mp3" }],
       recorder: true
     },
     {
@@ -64,7 +65,7 @@ export const level3 = {
       type: "rhythm",
       what: "NO singing. Strum Am on autopilot. Clap rhythms over the strum. Tap foot patterns. Sway. Feel rhythm physically before adding voice. Dalcroze eurhythmics says the body must internalize rhythm before the voice can express it.",
       setup: "Guitar. Metronome at 80 BPM. Optional backing track.",
-      tracks: [{ name: "Groove Beat 90", src: "/groove-beat-90.mp3" }],
+      tracks: [{ name: "Groove Beat 90", src: "/groove-beat-90.mp3" }, { name: "Drums Only — Reggae 85", src: "/drums-reggae-85.mp3" }],
       steps: [
         { text: "Strum Am on autopilot. Start the backing track. Now clap a simple rhythm over the strum — quarter notes on beats 1, 2, 3, 4. Just clap and strum. No voice at all.", why: "Dalcroze eurhythmics research shows that the body must internalize rhythm before the voice can express it. Clapping isolates the rhythmic sense from pitch decisions entirely." },
         { text: "Change the clap pattern: clap ONLY on beats 2 and 4 (the backbeat). Feel how this simple shift changes the entire groove — suddenly it's funky, it's reggae, it swings.", why: "The backbeat is the rhythmic foundation of every genre you love — reggae, soul, psych-rock. Feeling it in your hands before your voice ensures it becomes physical, not intellectual." },

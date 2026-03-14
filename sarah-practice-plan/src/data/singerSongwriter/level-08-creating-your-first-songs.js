@@ -107,7 +107,7 @@ export const level8 = {
       type: "song",
       what: "Write a complete song in 12 minutes. It will be bad. That's the point. Verse, chorus, simple chord progression, melody, words. Do NOT edit, do NOT restart, do NOT judge. The goal is a FINISHED draft, not a good one. Creative confidence research shows that volume of output — not careful planning — closes the gap between your taste and your ability.",
       setup: "Guitar. Timer set to 12 minutes. Recorder on from the start.",
-      tracks: [{ name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }],
+      tracks: [{ name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }, { name: "Drums Only — Bossa 75", src: "/drums-bossa-75.mp3" }],
       steps: [
         { text: "Minutes 0-3: Pick two chords (any two). Start strumming. Hum until a melody fragment appears. When it does, claim it — that's your verse melody. Hum it 4 times to lock it in.", why: "Two chords removes decision paralysis. Constraint-based creativity research shows that fewer options increase both speed and originality. Don't choose 'the right' chords — choose the FIRST two that your hands find." },
         { text: "Minutes 3-6: Add words to the verse melody. They don't need to be good. They don't need to rhyme. They need to be THERE. Describe what you see right now, or felt this morning, or imagined yesterday. First words that come. No editing.", why: "The 'ugly first draft' protocol comes from professional songwriting practice: commit to finishing regardless of quality. The inner critic freezes beginners. Speed bypasses the critic." },
@@ -250,7 +250,7 @@ export const level8 = {
       title: "Ugly First Draft",
       type: "song",
       what: "Write a complete song sketch in 10 minutes flat. Timer on. Two chords, hum until a melody appears, add whatever words come, create a chorus that lifts. Do NOT edit, restart, or judge. The goal is a finished ugly draft — because finished beats perfect. Creative confidence comes from velocity, not polish.",
-      tracks: [{ name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" }],
+      tracks: [{ name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" }, { name: "Drums Only — Soul/Funk 90", src: "/drums-soul-funk-90.mp3" }],
       steps: [
         { text: "Set a 10-minute timer. Pick two chords — Am and C, or G and Em. Start strumming. Hum over the chords until a melodic shape emerges. Don't wait for inspiration — just start making sound.", why: "Constraints accelerate creativity. Two chords eliminates harmonic decisions so your brain can focus entirely on melody and words. The timer kills perfectionism." },
         { text: "Once you have a 2-bar melodic phrase (even a rough one), add words. Any words. Describe what's in front of you, narrate your morning, say nonsense syllables that feel right. Keep strumming, keep singing.", why: "Words don't need to be good — they need to exist. Placeholder lyrics often contain accidental brilliance that you'd never find by trying to be clever." },
@@ -345,7 +345,7 @@ export const level8 = {
       title: "Two-Section Song Sketch",
       type: "song",
       what: "Create a song with two contrasting sections: Section A (lower, calmer) and Section B (higher, more energy). Same chord progression, but your melody and delivery shift. This is the seed of verse-chorus structure.",
-      tracks: [{ name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }],
+      tracks: [{ name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }, { name: "Drums Only — Bossa 75", src: "/drums-bossa-75.mp3" }],
       steps: [
         { text: "Section A: strum Am-C-G-Em at 80 BPM. Sing a melody in your low-to-mid range (E3-B3). Relaxed, conversational delivery. This is your verse.", why: "Verses sit lower and calmer. They're intimate and storytelling. Your porch register lives here." },
         { text: "Section B: same chords, but sing higher (B3-E4) with more energy. Open up your vowels, push slightly more volume. This is your chorus.", why: "Choruses lift. Even a small range shift (a 3rd higher) creates contrast. The energy difference IS the structure." },
@@ -367,7 +367,7 @@ export const level8 = {
       title: "Second Song Sketch",
       type: "song",
       what: "Create a SECOND song sketch in a different feel. If your first was in Am (minor, melancholic), try G-C-D-Em (major, brighter). Different strum pattern too — if you jangled, try reggae chop. Two originals proves you have a method, not a fluke.",
-      tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }],
+      tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }, { name: "Drums Only — Afrobeat 110", src: "/drums-afrobeat-110.mp3" }],
       steps: [
         { text: "Choose a different chord progression and strum pattern from your first sketch. Variety is deliberate — it forces you to apply the method in a new context.", why: "Creating in a different context proves the skill is transferable. One sketch could be luck. Two sketches is a method." },
         { text: "Apply the same process: create melodic phrases using chord tones, string them together, add simple words. But let this one have its own personality.", why: "Each song should sound different because the chords, tempo, and strum feel different. Let the backing guide the melody." },

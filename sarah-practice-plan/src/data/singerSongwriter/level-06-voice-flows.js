@@ -143,7 +143,7 @@ export const level6 = {
       drone: { mode: "cycle", preset: "desert-blues" },
       what: "Full integration over a new chord set: Am-Dm-G-C. Soul music is rhythmic, warm, and groove-locked. Dm introduces a new note (F) you haven't improvised with. All skills applied to the soul-funk aesthetic.",
       setup: "Guitar. Strum Am-Dm-G-C with a 16th-note feel. Metronome at 90 BPM.",
-      tracks: [{ name: "Soul Funk Groove 90", src: "/soul-funk-groove-90.mp3" }],
+      tracks: [{ name: "Soul Funk Groove 90", src: "/soul-funk-groove-90.mp3" }, { name: "Drums Only — Soul/Funk 90", src: "/drums-soul-funk-90.mp3" }, { name: "Drums Only — Bossa 75", src: "/drums-bossa-75.mp3" }],
       steps: [
         { text: "Start the backing track. Strum Am-Dm-G-C. Sing chord tones: Am(A-C-E), Dm(D-F-A), G(G-B-D), C(C-E-G). Let your ear find F naturally within the Dm chord.", why: "Dm introduces F — a new note that expands your melodic vocabulary. Learning new notes in context (while improvising) is more effective than studying on paper." },
         { text: "Lock into the soul groove: shorter phrases, rhythmically precise, warm chest resonance. Your rhythmic chord navigation skills from Level 5 are essential here — soul demands rhythmic awareness.", why: "Soul singing is defined by rhythmic precision and warm tone. It sits in the middle of your dynamic range — not whispering, not projecting, just grooving." },
@@ -483,7 +483,9 @@ export const level6 = {
         { name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" },
         { name: "Surf Rock 120", src: "/surf-rock-120.mp3" },
         { name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" },
-        { name: "Ska Upbeat 95", src: "/ska-upbeat-95.mp3" }
+        { name: "Ska Upbeat 95", src: "/ska-upbeat-95.mp3" },
+        { name: "Drums Only — Surf 120", src: "/drums-surf-120.mp3" },
+        { name: "Drums Only — Afrobeat 110", src: "/drums-afrobeat-110.mp3" }
       ],
       steps: [
         { text: "Round 1 — Reggae: offbeat chop, Am-C-G, 85 BPM. Vocal style: laid-back, choppy phrases, lots of space. All skills: dynamics, emotion, vowels, chord navigation. 3 minutes, record.", why: "Reggae is your comfort zone — start here to warm up. But now integrate everything: dynamic shifts, emotional color, vowel variety, rhythmic play. Not just reggae phrasing — full expression." },
@@ -512,7 +514,9 @@ export const level6 = {
         { name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" },
         { name: "Desert Blues 75", src: "/desert-blues-75.mp3" },
         { name: "Dub Reggae 85", src: "/dub-reggae-85.mp3" },
-        { name: "Afrobeat 100", src: "/afrobeat-100.mp3" }
+        { name: "Afrobeat 100", src: "/afrobeat-100.mp3" },
+        { name: "Drums Only — Afrobeat 110", src: "/drums-afrobeat-110.mp3" },
+        { name: "Drums Only — Soul/Funk 90", src: "/drums-soul-funk-90.mp3" }
       ],
       steps: [
         { text: "Choose a backing track and a chord progression you love. Set the metronome. Start strumming. Take 8 bars of just guitar to lock into the groove.", why: "Choosing your own context is the first act of creative autonomy. You're not following instructions anymore — you're making musical decisions." },

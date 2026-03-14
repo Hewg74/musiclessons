@@ -171,9 +171,9 @@ export function MiniAudioPlayer({ src, theme: T, title, playbackRate = 1 }) {
   return (
     <div style={{
       background: T.bgCard, border: `1px solid ${T.border}`,
-      borderRadius: T.radiusMd, padding: "14px 16px", marginBottom: 12,
+      borderRadius: T.radiusMd, padding: "14px 16px", marginBottom: 16,
       display: "flex", flexDirection: "column", gap: 12,
-      boxShadow: "0 2px 8px rgba(44,40,37,0.03)"
+      boxShadow: T.sm
     }}>
       <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
         <audio
@@ -404,6 +404,11 @@ export function AudioPlayer({ theme: T }) {
     { id: 'bossanova', name: 'Bossa Nova 75 BPM', src: '/bossa-nova-75.mp3' },
     { id: 'afrobeat', name: 'Afrobeat 100 BPM', src: '/afrobeat-100.mp3' },
     { id: 'ska', name: 'Ska Upbeat 95 BPM', src: '/ska-upbeat-95.mp3' },
+    { id: 'drumsReggae', name: 'Drums Only — Reggae 85 BPM', src: '/drums-reggae-85.mp3' },
+    { id: 'drumsBossa', name: 'Drums Only — Bossa Nova 75 BPM', src: '/drums-bossa-75.mp3' },
+    { id: 'drumsSoulFunk', name: 'Drums Only — Soul Funk 90 BPM', src: '/drums-soul-funk-90.mp3' },
+    { id: 'drumsSurf', name: 'Drums Only — Surf Rock 120 BPM', src: '/drums-surf-120.mp3' },
+    { id: 'drumsAfrobeat', name: 'Drums Only — Afrobeat 110 BPM', src: '/drums-afrobeat-110.mp3' },
     { id: 'soldelsur', name: 'Sol Del Sur (Original)', src: '/sol-del-sur.mp3' },
     { id: 'iltwyw', name: 'I Like The Way You Walk', src: '/iltwyw.mp3' }
   ];

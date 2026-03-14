@@ -116,7 +116,7 @@ export const level4 = {
       type: "vocal",
       what: "All five pentatonic notes with full rhythmic freedom. Apply everything you've learned: long holds, short bursts, syncopation, silence, dynamic shifts. Five notes and infinite rhythms. This is where the scale becomes a living, breathing musical vocabulary.",
       setup: "Guitar. Metronome at 80 BPM. Backing track.",
-      tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }],
+      tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }, { name: "Drums Only — Bossa 75", src: "/drums-bossa-75.mp3" }, { name: "Drums Only — Soul/Funk 90", src: "/drums-soul-funk-90.mp3" }],
       steps: [
         { text: "Strum Am on autopilot with the backing track. Sing pentatonic notes (A-C-D-E-G) using ONLY whole notes — one note per bar. Slow, deliberate, letting each note breathe. Choose each note carefully — which color do you want next?", why: "Starting with whole notes forces intentional note choice. When each note lasts a full bar, the selection matters — you're composing in slow motion. This is how you learn to make purposeful melodic decisions." },
         { text: "Speed up to quarter notes. Now four notes per bar — the pentatonic comes alive with rhythm. Try walking stepwise, then try leaping. Feel how rhythm transforms the scale from a list of notes into a flowing melody.", why: "Quarter notes add rhythmic motion. The pentatonic stops being a 'scale' and becomes a melodic language. Your brain must now coordinate pitch choice AND rhythmic placement simultaneously — a skill you've built gradually." },
@@ -369,7 +369,7 @@ export const level4 = {
       title: "Groove Lock",
       type: "guitar",
       what: "Strum along with a backing track and LOCK into the groove. Don't just play in time — feel where the drums, bass, and guitar create a unified pulse. When you're locked in, your strum becomes part of the recording. This is 'entrainment' — your body syncing to external rhythm. Now that you own the pentatonic, you can add vocal colors while staying locked.",
-      tracks: [{ name: "Groove Beat 90", src: "/groove-beat-90.mp3" }, { name: "Dub Reggae 85", src: "/dub-reggae-85.mp3" }],
+      tracks: [{ name: "Groove Beat 90", src: "/groove-beat-90.mp3" }, { name: "Dub Reggae 85", src: "/dub-reggae-85.mp3" }, { name: "Drums Only — Reggae 85", src: "/drums-reggae-85.mp3" }],
       steps: [
         { text: "Play the Groove Beat track. Just listen for 30 seconds. Find the kick drum. Find the snare. Find the hi-hat. Know where each one lives.", why: "Identifying the drum elements lets you sync your strum to specific rhythmic anchors. The kick is beat 1, the snare is beat 2 and 4." },
         { text: "Start strumming along — simple downstrokes first. Match your strum to the hi-hat rhythm. When your strum disappears into the track, you're locked.", why: "The 'disappearing strum' test: if you can't hear your guitar as separate from the recording, your timing is perfect." },
@@ -398,7 +398,7 @@ export const level4 = {
       feel: "Each feel shift should feel like changing clothes — same body, different outfit. The chords stay familiar; only the energy and timing transform. One of these will feel like HOME.",
       wrong: "If all four feels sound the same, your right hand isn't changing enough. Reggae should sound nothing like jangle. Record yourself and compare.",
       sarah: "Gene, your playlists tell me reggae and surf are your home feels. But trying soul and desert blues might surprise you — Khruangbin lives in that soul-desert overlap.",
-      tracks: [{ name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }, { name: "Desert Blues 75", src: "/desert-blues-75.mp3" }, { name: "Ska Upbeat 95", src: "/ska-upbeat-95.mp3" }, { name: "Reggae Rock 100", src: "/reggae-rock-100.mp3" }],
+      tracks: [{ name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }, { name: "Desert Blues 75", src: "/desert-blues-75.mp3" }, { name: "Ska Upbeat 95", src: "/ska-upbeat-95.mp3" }, { name: "Reggae Rock 100", src: "/reggae-rock-100.mp3" }, { name: "Drums Only — Surf 120", src: "/drums-surf-120.mp3" }],
       metronome: 85,
       recorder: true
     },
@@ -417,6 +417,7 @@ export const level4 = {
       feel: "Syncopation should feel groovy — like your voice is dancing between the guitar beats. When it clicks, you'll feel a swing that doesn't exist when voice and guitar land together.",
       wrong: "If all your notes land on the beat with the strum, that's singing in unison with the guitar — not wrong, but not syncopated. Practice placing notes deliberately between strums.",
       sarah: "Gene, syncopation is what makes DOPE LEMON and Skinshape vocals feel so cool. They're singing between the guitar, not on top of it. This exercise teaches that feel.",
+      tracks: [{ name: "Drums Only — Reggae 85", src: "/drums-reggae-85.mp3" }],
       metronome: 80,
       referencePitches: getPitchRange("A3", "A3"),
       recorder: true
@@ -438,6 +439,7 @@ export const level4 = {
       feel: "When all four layers lock in, it should feel like you ARE a drum kit — each limb and your voice operating independently but creating one unified groove.",
       wrong: "If adding a new layer causes the previous layers to falter, the earlier layers aren't automatic yet. Spend more time on fewer layers before stacking.",
       sarah: "Gene, this is the exercise that makes everything else easier. Once your body can run 4 independent rhythm streams, singing over guitar strum patterns will feel like a vacation.",
+      tracks: [{ name: "Drums Only — Afrobeat 110", src: "/drums-afrobeat-110.mp3" }],
       metronome: 85
     },
 

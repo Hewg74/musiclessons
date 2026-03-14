@@ -98,7 +98,7 @@ export const level7 = {
       title: "Pentatonic Improv",
       type: "vocal",
       what: "Free improvisation over a backing track using only pentatonic notes. No plan, no target. Sing whatever your ear suggests for 4 minutes straight. This is Kratus Level 3: product-oriented improvisation — you're making music that sounds like music, not just exploring.",
-      tracks: [{ name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" }, { name: "Groove Beat 90", src: "/groove-beat-90.mp3" }],
+      tracks: [{ name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" }, { name: "Groove Beat 90", src: "/groove-beat-90.mp3" }, { name: "Drums Only — Surf 120", src: "/drums-surf-120.mp3" }],
       steps: [
         { text: "Play the Khruangbin backing track. Strum Am lightly or just listen. Close your eyes. Start singing pentatonic notes — whatever comes. Don't think, just sing.", why: "Removing thought engages the default mode network — the brain region associated with creativity and flow. Thinking disrupts improvisation." },
         { text: "If you get stuck on one note, jump to the opposite end of the scale. If you're on A, jump to G. If you're on G, drop to A. Big jumps create energy.", why: "Intervallic leaps break melodic ruts. They inject surprise into the improvisation and open new melodic territory." },

@@ -223,7 +223,7 @@ export const level5 = {
       type: "vocal",
       what: "Combines: REGGAE RHYTHM + CHORD CHANGES + SPACE. Strum a reggae offbeat chop over Am-C and improvise vocally with chord tones — but lock your voice to the reggae feel. Short phrases, big spaces, behind the beat. The strum pattern changes how your voice wants to move.",
       setup: "Guitar. Reggae offbeat chop. Metronome at 85 BPM.",
-      tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }, { name: "Reggae Rock 100", src: "/reggae-rock-100.mp3" }],
+      tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }, { name: "Reggae Rock 100", src: "/reggae-rock-100.mp3" }, { name: "Drums Only — Reggae 85", src: "/drums-reggae-85.mp3" }],
       steps: [
         { text: "Set up the reggae chop: mute on beats 1 and 3, strum on the 'and' of 2 and 4. Get it flowing on autopilot over Am-C (4 bars each). This is from Level 1.", why: "The reggae offbeat creates a completely different rhythmic grid for your voice. Your vocal phrases will naturally fall in the spaces between the chops." },
         { text: "Sing chord tones but respect the reggae space. Short phrases, then silence. Let the offbeat chop breathe. Think Chronixx or Protoje — the voice rides the riddim, never fights it.", why: "Reggae vocal phrasing is defined by restraint and pocket. The gaps between phrases are as important as the phrases themselves." },
@@ -244,7 +244,7 @@ export const level5 = {
       type: "vocal",
       what: "Combines: SURF FEEL + DYNAMICS + CHORD CHANGES. Strum a jangle pattern on G-Em-C-D and improvise vocally — matching the surf energy AND building intensity across 4 passes. Flowing phrases that grow from whisper to full voice over the shimmer.",
       setup: "Guitar. Jangle strum (continuous 8th-note down-up). Metronome at 90 BPM.",
-      tracks: [{ name: "Surf Rock 120", src: "/surf-rock-120.mp3" }],
+      tracks: [{ name: "Surf Rock 120", src: "/surf-rock-120.mp3" }, { name: "Drums Only — Surf 120", src: "/drums-surf-120.mp3" }],
       steps: [
         { text: "Strum G-Em-C-D with a continuous jangle strum at 90 BPM. Sing chord tones freely — longer lines that ride the jangle energy. Use bright vowels: 'la,' 'oh,' 'ay.'", why: "Surf-psych vocals tend to be continuous and floating rather than choppy. The jangle strum supports longer melodic lines because there are no rhythmic gaps." },
         { text: "Pass 1 — Whisper: sing in a breathy, barely-there voice. Float over the jangle like mist over water. Sparse notes, lots of space.", why: "Starting quiet establishes a floor. The dynamic build that follows will be more dramatic because you started low." },
@@ -390,7 +390,7 @@ export const level5 = {
       type: "vocal",
       what: "Combines: DYNAMICS + RHYTHM. Strum Am. Combine rhythmic variety with dynamic contrast simultaneously. Loud short bursts, quiet sustained notes, syncopated whispers, on-beat projections. Two independent expressive variables at once.",
       setup: "Guitar. Metronome at 90 BPM.",
-      tracks: [{ name: "Soul Funk Groove 90", src: "/soul-funk-groove-90.mp3" }],
+      tracks: [{ name: "Soul Funk Groove 90", src: "/soul-funk-groove-90.mp3" }, { name: "Drums Only — Soul/Funk 90", src: "/drums-soul-funk-90.mp3" }],
       steps: [
         { text: "Strum Am over the backing track. Sing the note A with loud, short bursts on the downbeats: 'DA! DA! DA! DA!' — forte, rhythmic, punchy. Like a horn section hitting accents.", why: "Loud + short is the most energetic dynamic-rhythm combination. It creates urgency and forward motion. Funk music lives here." },
         { text: "Now flip it: quiet, sustained A held over 4 beats. Piano, long, floating. The opposite energy. Same note, same chord, completely different effect.", why: "Quiet + sustained is the most contemplative combination. It creates space and intimacy. Moving between these extremes is dynamic range." },
