@@ -1,38 +1,38 @@
 import { getPitchRange } from "../appData.js";
 
-export const level5 = {
-  level: 5,
+export const level6 = {
+  level: 6,
   title: "Voice Flows",
   subtitle: "Everything at once. Trust the process. Trust your ear.",
   description:
-    "Level 3 isolated skills. Level 4 combined them in pairs. Now everything flows together: pitch, rhythm, dynamics, emotion, vowels, chord changes, genre feel — all at once, across multiple genres and progressions. This is full integration. Based on Csikszentmihalyi's flow research: flow states emerge when all sub-skills are automated and the challenge matches your ability. You've built the automation. Now find the flow.",
+    "Levels 3-4 isolated skills. Level 5 combined them in pairs. Now everything flows together: pitch, rhythm, dynamics, emotion, vowels, chord changes, genre feel — all at once, across multiple genres and progressions. This is full integration. Based on Csikszentmihalyi's flow research: flow states emerge when all sub-skills are automated and the challenge matches your ability. You've built the automation. Now find the flow.",
   artists: "Khruangbin, DOPE LEMON, Allah-Las, Tinariwen, Hermanos Gutiérrez, Skinshape",
-  unlocks: "Creating Your First Songs (Level 6)",
-  review: { label: "Level 4 Check-In", time: 5, exercises: ["ss-4-5", "ss-4-14"], prompt: "Do rhythmic chord navigation over Am-C-G-Em (ss-4-5). Then play through a Two-Skill Freestyle round (ss-4-14). Both fluid without strum breaks? Move on." },
+  unlocks: "Melody Building (Level 7)",
+  review: { label: "Level 5 Check-In", time: 5, exercises: ["ss-5-20", "ss-5-24"], prompt: "Do a Color Palette Freestyle (ss-5-20). Then a Strum + Vocal Rhythm Conversation (ss-5-24). Both fluid with no strum breaks? Move on." },
   exercises: [
 
-    // ─── NEW: TRIPLE-SKILL BRIDGE ───
+    // ─── TRIPLE-SKILL BRIDGE ───
 
     {
-      id: "ss-5-1",
+      id: "ss-6-1",
       time: 8,
       title: "Triple-Skill Fusion",
       type: "vocal",
-      what: "Bridge exercise: combine THREE skills at once (not two like Level 4, not everything like the rest of Level 5). Three 2-min rounds. Round 1: rhythm + dynamics + chord changes. Round 2: emotional color + vowels + genre feel. Round 3: breath phrasing + audiation + space.",
+      what: "Bridge exercise: combine THREE skills at once (not two like Level 5, not everything like the rest of Level 6). Three 2-min rounds. Round 1: rhythm + dynamics + chord changes. Round 2: emotional color + vowels + genre feel. Round 3: breath phrasing + audiation + space.",
       setup: "Guitar. Metronome at 85 BPM.",
       tracks: [
         { name: "Groove Beat 90", src: "/groove-beat-90.mp3" },
         { name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }
       ],
       steps: [
-        { text: "Round 1 — Rhythm + Dynamics + Chord Changes: strum Am-C-G-Em at 85 BPM. Sing chord tones with varied rhythms AND varied dynamics while navigating the changes. Three variables at once. 2 minutes over the groove beat.", why: "Three skills is the cognitive sweet spot between Level 4's pairs and Level 5's full integration. Your brain learns to manage three variables before being asked to manage everything." },
+        { text: "Round 1 — Rhythm + Dynamics + Chord Changes: strum Am-C-G-Em at 85 BPM. Sing chord tones with varied rhythms AND varied dynamics while navigating the changes. Three variables at once. 2 minutes over the groove beat.", why: "Three skills is the cognitive sweet spot between Level 5's pairs and Level 6's full integration. Your brain learns to manage three variables before being asked to manage everything." },
         { text: "Round 2 — Emotional Color + Vowels + Genre Feel: switch to the reggae backing. Strum Am-C with reggae chop. Match emotional color to each chord, choose vowels deliberately, and stay in the reggae pocket. Three expressive variables. 2 minutes.", why: "This triple combines three 'feel' variables — emotion, vowel, and genre. They reinforce each other: reggae feel suggests certain vowels and emotional textures." },
         { text: "Round 3 — Breath Phrasing + Audiation + Space: no backing track. Strum Am-C-G-Em quietly. Hear each phrase internally before singing it (audiation), let each phrase be one breath long (breath phrasing), and leave at least 2 bars of silence between phrases (space). 2 minutes.", why: "This triple combines three 'internal' skills — breath control, inner hearing, and restraint. These are the meditative, contemplative side of improvisation." },
         { text: "Reflect: which round felt most natural? Which felt most challenging? The challenging one reveals which skill combination needs more practice.", why: "Self-assessment identifies your weakest skill intersection. The strongest round shows where your natural abilities lie — useful intel for songwriting." }
       ],
-      feel: "Each round should feel like Level 4 with one more ball to juggle. Challenging but not overwhelming. If it feels impossible, one of the three skills isn't automated yet.",
-      wrong: "If you can only manage two of the three skills in each round, go back to the relevant Level 4 exercise and solidify the pair before adding the third.",
-      sarah: "Gene, this is the stepping stone between Level 4 and the rest of Level 5. Three skills is the bridge — it smooths the jump from combining pairs to integrating everything.",
+      feel: "Each round should feel like Level 5 with one more ball to juggle. Challenging but not overwhelming. If it feels impossible, one of the three skills isn't automated yet.",
+      wrong: "If you can only manage two of the three skills in each round, go back to the relevant Level 5 exercise and solidify the pair before adding the third.",
+      sarah: "Gene, this is the stepping stone between Level 5 and the rest of Level 6. Three skills is the bridge — it smooths the jump from combining pairs to integrating everything.",
       metronome: 85,
       referencePitches: getPitchRange("E3", "D4"),
       pitchContour: true,
@@ -43,20 +43,20 @@ export const level5 = {
     // ─── FULL-INTEGRATION IMPROV ───
 
     {
-      id: "ss-5-2",
+      id: "ss-6-2",
       time: 8,
       title: "Full Progression Improv",
       type: "vocal",
-      what: "All skills, all at once. Strum Am-C-G-Em and freely improvise using every tool from Levels 3-4: varied rhythm, dynamics, emotional color, vowel shapes, chord-tone navigation, and space. No constraints. Just play.",
+      what: "All skills, all at once. Strum Am-C-G-Em and freely improvise using every tool from Levels 3-5: varied rhythm, dynamics, emotional color, vowel shapes, chord-tone navigation, and space. No constraints. Just play.",
       setup: "Guitar. Metronome at 80 BPM.",
       steps: [
-        { text: "Strum Am-C-G-Em. Sing chord tones freely. But now consciously engage EVERYTHING: vary your rhythm (ss-3-7), shift dynamics (ss-3-15), change emotional color with each chord (ss-4-9), shape your vowels (ss-3-12). All of it, flowing.", why: "Full integration is the final stage of motor learning. When all sub-skills are automated, they can operate simultaneously. The conscious mind is free to be creative." },
+        { text: "Strum Am-C-G-Em. Sing chord tones freely. But now consciously engage EVERYTHING: vary your rhythm, shift dynamics, change emotional color with each chord, shape your vowels. All of it, flowing.", why: "Full integration is the final stage of motor learning. When all sub-skills are automated, they can operate simultaneously. The conscious mind is free to be creative." },
         { text: "Let the music breathe. Leave 2-4 bars of silence periodically. When you re-enter, come in with a different energy than when you left. Space is a skill too.", why: "Strategic silence is what separates masterful improvisation from nervous noodling. The pause resets your creative state and lets the next idea emerge fresh." },
         { text: "Try one pass where you focus on very sparse, minimal singing — 3-4 notes per bar maximum. Then one pass where you're more active — filling the bars. Both are valid musical choices.", why: "Density control — choosing how much to sing — is a compositional decision. Building fluency at both sparse and dense extremes gives you the full range." },
         { text: "5-minute freestyle. Record the whole thing. Don't stop, don't restart. Whatever happens is the music.", why: "Five uninterrupted minutes of integrated improvisation is the fluency milestone. If you can sustain this, every skill is working together." }
       ],
       feel: "This should feel like the moment when driving a car becomes automatic — you're not thinking about the pedals, the mirrors, the steering. You're just going somewhere.",
-      wrong: "If you notice one skill disappearing (e.g., dynamics go flat, or you stop navigating chord tones), it means that skill isn't automated yet. Go back to its Level 3 or 4 exercise.",
+      wrong: "If you notice one skill disappearing (e.g., dynamics go flat, or you stop navigating chord tones), it means that skill isn't automated yet. Go back to its Level 3-4 exercise.",
       sarah: "Gene, this is what every exercise has been building toward. Your voice and guitar as one instrument. All the individual skills fused into flow. Let it happen.",
       metronome: 80,
       referencePitches: getPitchRange("E3", "D4"),
@@ -64,7 +64,7 @@ export const level5 = {
       recorder: true
     },
     {
-      id: "ss-5-3",
+      id: "ss-6-3",
       time: 8,
       title: "Major Key Flow",
       type: "vocal",
@@ -90,7 +90,7 @@ export const level5 = {
     // ─── GENRE INTEGRATION ───
 
     {
-      id: "ss-5-4",
+      id: "ss-6-4",
       time: 8,
       title: "Desert Blues Flow",
       type: "song",
@@ -113,10 +113,8 @@ export const level5 = {
       recorder: true
     },
 
-    // ─── NEW: DUB REGGAE FLOW ───
-
     {
-      id: "ss-5-5",
+      id: "ss-6-5",
       time: 8,
       title: "Dub Reggae Flow",
       type: "song",
@@ -138,7 +136,7 @@ export const level5 = {
       recorder: true
     },
     {
-      id: "ss-5-6",
+      id: "ss-6-6",
       time: 8,
       title: "Soul Groove Flow",
       type: "song",
@@ -148,7 +146,7 @@ export const level5 = {
       tracks: [{ name: "Soul Funk Groove 90", src: "/soul-funk-groove-90.mp3" }],
       steps: [
         { text: "Start the backing track. Strum Am-Dm-G-C. Sing chord tones: Am(A-C-E), Dm(D-F-A), G(G-B-D), C(C-E-G). Let your ear find F naturally within the Dm chord.", why: "Dm introduces F — a new note that expands your melodic vocabulary. Learning new notes in context (while improvising) is more effective than studying on paper." },
-        { text: "Lock into the soul groove: shorter phrases, rhythmically precise, warm chest resonance. Your rhythmic chord navigation skills (ss-4-5) are essential here — soul demands rhythmic awareness.", why: "Soul singing is defined by rhythmic precision and warm tone. It sits in the middle of your dynamic range — not whispering, not projecting, just grooving." },
+        { text: "Lock into the soul groove: shorter phrases, rhythmically precise, warm chest resonance. Your rhythmic chord navigation skills from Level 5 are essential here — soul demands rhythmic awareness.", why: "Soul singing is defined by rhythmic precision and warm tone. It sits in the middle of your dynamic range — not whispering, not projecting, just grooving." },
         { text: "Apply emotional color: Am is warm and melancholic, Dm is darker and more tense (the F creates a pull), G is bright and resolved, C is settled and open. Let each chord shift your delivery.", why: "Soul music is emotionally nuanced — subtle shifts in warmth and intensity with each chord change. This is emotional color + chord navigation working together at full integration." },
         { text: "3-minute freestyle: voice and guitar locked into the soul groove. All skills flowing. Record it.", why: "Soul improv teaches your voice to prioritize feel over flash. When your voice grooves, your songs groove." }
       ],
@@ -161,7 +159,7 @@ export const level5 = {
       recorder: true
     },
     {
-      id: "ss-5-7",
+      id: "ss-6-7",
       time: 8,
       title: "Cinematic Western Flow",
       type: "song",
@@ -183,10 +181,10 @@ export const level5 = {
       recorder: true
     },
 
-    // ─── NEW: MOTIF AND VARIATION ───
+    // ─── MOTIF AND VARIATION ───
 
     {
-      id: "ss-5-8",
+      id: "ss-6-8",
       time: 8,
       title: "Motif and Variation",
       type: "vocal",
@@ -208,10 +206,10 @@ export const level5 = {
       recorder: true
     },
 
-    // ─── NEW: PHRASING ARCHITECTURE ───
+    // ─── PHRASING ARCHITECTURE ───
 
     {
-      id: "ss-5-9",
+      id: "ss-6-9",
       time: 8,
       title: "Phrasing Architecture",
       type: "vocal",
@@ -233,10 +231,10 @@ export const level5 = {
       phraseForm: { pattern: "AABA", barsPerSection: 4, labels: { A: "Phrase A", B: "Contrast B" } }
     },
 
-    // ─── NEW: VERSE-CHORUS ENERGY ───
+    // ─── VERSE-CHORUS ENERGY ───
 
     {
-      id: "ss-5-10",
+      id: "ss-6-10",
       time: 8,
       title: "Verse-Chorus Energy",
       type: "song",
@@ -261,10 +259,10 @@ export const level5 = {
       phraseForm: { pattern: "AABB", barsPerSection: 4, labels: { A: "Verse", B: "Chorus" } }
     },
 
-    // ─── NEW: RECOVERY ───
+    // ─── RECOVERY ───
 
     {
-      id: "ss-5-11",
+      id: "ss-6-11",
       time: 6,
       title: "The Recovery Move",
       type: "vocal",
@@ -289,7 +287,7 @@ export const level5 = {
     // ─── AUDIATION ───
 
     {
-      id: "ss-5-12",
+      id: "ss-6-12",
       time: 6,
       title: "Hear It First, Sing It Second",
       type: "vocal",
@@ -309,14 +307,14 @@ export const level5 = {
       recorder: true
     },
 
-    // ─── NEW: SILENT AUDIATION ───
+    // ─── SILENT AUDIATION ───
 
     {
-      id: "ss-5-13",
+      id: "ss-6-13",
       time: 6,
       title: "Silent Audiation",
       type: "vocal",
-      what: "Strum Am-C-G-Em. Hear an entire 4-bar phrase in your head before singing it. Audiate the full phrase — pitch, rhythm, dynamics, vowels — then execute. Extends ss-3-10 and ss-5-12 to full phrases.",
+      what: "Strum Am-C-G-Em. Hear an entire 4-bar phrase in your head before singing it. Audiate the full phrase — pitch, rhythm, dynamics, vowels — then execute. Extends earlier audiation work to full phrases.",
       setup: "Guitar. Metronome at 75 BPM (slower to allow full internal hearing).",
       tracks: [{ name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }],
       steps: [
@@ -327,18 +325,18 @@ export const level5 = {
       ],
       feel: "This should feel like the meditative core of your practice — quiet, internal, focused. The singing is just the external proof of rich internal musical activity.",
       wrong: "If you're singing without audiating first (just improvising freely), you're doing a different exercise. Force yourself to hear the COMPLETE phrase — start to finish — before singing any of it.",
-      sarah: "Gene, this extends your Silent Sing from Level 3 and Hear It First from earlier in this level. Now it's full phrases — entire musical thoughts heard internally before they leave your mouth. Skinshape territory — quiet, meditative, intentional.",
+      sarah: "Gene, this extends your earlier audiation exercises into full phrases — entire musical thoughts heard internally before they leave your mouth. Skinshape territory — quiet, meditative, intentional.",
       metronome: 75,
       referencePitches: getPitchRange("E3", "E4"),
       pitchContour: true,
       recorder: true
     },
     {
-      id: "ss-5-14",
+      id: "ss-6-14",
       time: 6,
       title: "Sing What You Hear",
       type: "vocal",
-      what: "Play a chord progression and let your ear find notes WITHOUT consciously thinking about which chord tones are 'allowed.' Just sing what sounds right. Trust your ear. After all the exercises in Levels 3-4, your ear knows more than you think.",
+      what: "Play a chord progression and let your ear find notes WITHOUT consciously thinking about which chord tones are 'allowed.' Just sing what sounds right. Trust your ear. After all the exercises in Levels 3-5, your ear knows more than you think.",
       setup: "Guitar. Metronome at 80 BPM. Strum Am-C-G-Em.",
       steps: [
         { text: "Strum Am-C-G-Em slowly. Don't think about chord tones. Just sing whatever note your ear wants to hear. If it sounds right, keep going. If it clashes, adjust.", why: "At this point, your ear has absorbed the chord tones through hours of practice. Trusting your ear — singing without conscious analysis — is the shift from 'knowing the theory' to 'feeling the music.'" },
@@ -347,131 +345,135 @@ export const level5 = {
         { text: "3-minute freestyle with eyes closed: strum and sing, ear-guided, no conscious analysis. Record it. Listen back — you'll be surprised how musical it sounds.", why: "This exercise proves to yourself that your ear has learned the chord tones. You don't need to think about them anymore. They're in your musical DNA." }
       ],
       feel: "This should feel like taking the training wheels off. Scary at first, then surprisingly natural. Your ear knows more than your conscious mind — let it lead.",
-      wrong: "If every note clashes, your ear hasn't absorbed the chord tones yet. Go back to Level 4 exercises and spend more time with conscious chord-tone improv before trying this ear-only approach.",
-      sarah: "Gene, this is the moment where all the Level 2-4 drilling and exploration pays off. Your ear has been quietly learning the whole time. Trust it. Sing what you hear.",
+      wrong: "If every note clashes, your ear hasn't absorbed the chord tones yet. Go back to Level 3-5 exercises and spend more time with conscious chord-tone improv before trying this ear-only approach.",
+      sarah: "Gene, this is the moment where all the Level 3-5 drilling and exploration pays off. Your ear has been quietly learning the whole time. Trust it. Sing what you hear.",
       metronome: 80,
       referencePitches: getPitchRange("E3", "E4"),
       pitchContour: true,
       recorder: true
     },
 
-    // ─── SONGWRITING READINESS ───
+    // ─── RHYTHM INTEGRATION (from Level 7) ───
 
     {
-      id: "ss-5-15",
-      time: 10,
-      title: "Song Dissection",
-      type: "listen",
-      what: "Pick a song from your playlist — something you love but have never analyzed. Listen 5 times, each time focusing on a different layer: (1) structure/sections, (2) melodic contour, (3) vocal phrasing/timing, (4) dynamics/energy arc, (5) what makes you FEEL something. Active listening with intent builds the same neural pathways as performing.",
-      setup: "Phone with a song queued up. Notebook or recorder for observations. No guitar needed.",
-      steps: [
-        { text: "Listen 1 — STRUCTURE: Play the song once. Map the sections: where does the verse start? Chorus? Bridge? How many bars is each section? Write it down: V(8)-V(8)-Ch(8)-V(8)-Ch(8)-Br(4)-Ch(8). This is the blueprint.", why: "Most songs follow predictable structures, but the details vary. Knowing how long each section lasts and where the chorus arrives teaches you pacing — arguably the most important songwriting skill." },
-        { text: "Listen 2 — MELODIC CONTOUR: Focus only on the vocal melody. Does the verse melody rise or fall? Where is the highest note in the whole song — what word does it land on? Is the verse melody narrow-range (speech-like) or wide? Is the chorus higher than the verse?", why: "Research from Hit Songs Deconstructed shows that in well-crafted songs, the single highest note almost always falls on a key emotional word. Mapping contour teaches you how professionals use pitch as architecture." },
-        { text: "Listen 3 — PHRASING & TIMING: Focus on WHEN the singer sings. Are they on the beat, behind it, ahead of it? How long are the phrases? Where do they breathe? How much SILENCE is there between phrases? Count the bars of singing vs. bars of rest.", why: "Phrasing is the fingerprint of a vocal style. DOPE LEMON phrases completely differently from Allah-Las. When you notice HOW they time their delivery, you can absorb that timing into your own singing." },
-        { text: "Listen 4 — DYNAMICS & ENERGY: How loud/soft does the singer get? Does the verse start quiet and the chorus open up? Where is the emotional peak? Where is the most intimate moment? Map the energy arc.", why: "Dynamic architecture is what makes songs feel like journeys, not loops. Mapping the energy arc teaches you that the CONTRAST between sections matters more than the absolute volume of any single moment." },
-        { text: "Listen 5 — THE FEEL: Last listen, forget the analysis. Close your eyes. Just feel. What moment in the song hits you hardest? What makes your body respond — a chill, a sway, a catch in your throat? Write that moment down. THAT is what you want to create.", why: "After four analytical listens, the fifth reconnects you to why you love the song in the first place. The moment that moves you is your target — everything else is a tool for getting there." }
-      ],
-      feel: "Each listen should reveal something you never noticed before — even in a song you've heard 100 times. The layers are always there. You just haven't looked for them yet.",
-      wrong: "If you're just vibing to the song without focusing on the specific layer, you're passive listening, not active dissection. Force yourself to focus: on listen 2, ONLY think about melody contour. Ignore everything else.",
-      sarah: "Gene, you've absorbed hundreds of songs unconsciously. This exercise makes that absorption conscious. When you know WHY a song moves you — the contour, the phrasing, the dynamics, the timing — you can build those same qualities into your own music.",
-      recorder: true
-    },
-    {
-      id: "ss-5-16",
-      time: 8,
-      title: "Prosody Check — Words Meet Melody",
+      id: "ss-6-15",
+      time: 6,
+      title: "Rhythmic Call & Response",
       type: "vocal",
-      what: "Take a simple phrase — 'driving down the coast at golden hour' — and SPEAK it naturally. Notice where your voice naturally stresses: 'DRIving DOWN the COAST at GOLDen HOUR.' Those stressed syllables MUST land on musical strong beats. Now sing it over Am-C. If the melody puts stress on 'the' or 'at,' rewrite the melody. This is prosody — the most important and least taught songwriting skill.",
-      setup: "Guitar. Metronome at 80 BPM. Strum Am-C.",
+      what: "Rhythm-ONLY call and response. Clap a 2-bar rhythm, then sing it back on one pitch (A). The pitch never changes — only the rhythm. This isolates rhythmic audiation without pitch distraction and builds rhythmic memory and reproduction.",
+      setup: "Metronome at 80 BPM. No instrument needed.",
       steps: [
-        { text: "Speak this phrase at natural conversation pace: 'driving down the coast at golden hour.' Exaggerate the stresses like you're making a point: 'DRIving DOWN the COAST at GOLDen HOUR.' Tap the table on each stressed syllable.", why: "Pat Pattison at Berklee calls this the #1 rule: spoken word stress MUST align with musical strong beats. When they don't align, the lyrics sound amateurish — even if the words are great." },
-        { text: "Now strum Am-C at 80 BPM. Sing the phrase, placing the stressed syllables (DRI-, DOWN, COAST, GOLD-, HOUR) on beats 1 and 3. The unstressed syllables (-ving, the, at, -en) fall between beats. Does it feel natural?", why: "When speech stress and musical stress align, lyrics feel effortless — like the melody was born from the words. When they clash, the listener feels something is 'off' even if they can't explain why." },
-        { text: "Now deliberately MIS-align it: put 'the' on beat 1, 'at' on beat 3. Sing it. Hear how wrong it feels? That awkwardness is bad prosody — and it's the #1 reason amateur songs sound amateur.", why: "Hearing bad prosody is as important as hearing good prosody. Once your ear catches the misalignment, you'll never un-hear it — in your own songs or anyone else's." },
-        { text: "Try your own phrase — something from your life. Speak it, find the stresses, then set it to a melody over Am-C where the stresses land on strong beats. Record it. This is your first prosody-aware lyric.", why: "Prosody should be checked on EVERY lyric line, every time. Speak it → tap the stresses → sing it → confirm alignment. This protocol becomes second nature and transforms your songwriting." },
-        { text: "Advanced: take a phrase where the stress alignment creates a choice. 'The SUN goes DOWN' vs. 'the sun GOES down' — different emphasis, different meaning, different melody. Which version serves the song better?", why: "Sometimes you can stress different syllables for different emotional effects. This isn't rule-breaking — it's advanced prosody. But you have to know the rules first to make intentional choices." }
+        { text: "Clap a simple 2-bar rhythm — maybe 'clap clap... clap-clap clap.' Then immediately sing it back on the note A: 'dah dah... dah-dah dah.' Match the rhythm exactly.", why: "Translating rhythm from hands to voice trains rhythmic audiation — hearing rhythm internally and reproducing it through a different output. This is the same skill used in melodic transcription." },
+        { text: "Make the rhythms more complex: add syncopation, rests, and 16th-note bursts. Clap it, then sing it back. If you can't sing it back, simplify.", why: "Progressively harder rhythms expand your rhythmic vocabulary. The limit of what you can reproduce is the limit of what you can compose." },
+        { text: "Reverse it: sing a 2-bar rhythm on A, then clap it back. Going voice-to-hands is a different neural pathway than hands-to-voice.", why: "Bi-directional rhythm transfer proves the pattern is stored internally, not just in one motor pathway. This is deep rhythmic learning." },
+        { text: "Partner variation (solo version): record a clapped rhythm, wait 4 beats, then sing it back while listening to the playback. The recording is your 'partner.'", why: "The 4-beat gap forces you to hold the rhythm in memory — no immediate copying allowed. This builds the rhythmic working memory that songwriting requires." },
+        { text: "Try 4-bar rhythms. Clap, then sing back. Longer patterns test your rhythmic memory and force you to chunk patterns into phrases.", why: "Four bars is the length of most vocal phrases in songs. If you can audiate and reproduce a 4-bar rhythm, you can learn any vocal rhythm by ear." }
       ],
-      feel: "Good prosody should feel like the words and melody were made for each other — the melody makes the words sound BETTER than spoken, not worse. If it feels natural, the prosody is working.",
-      wrong: "If your melody forces weird emphasis on wrong syllables ('driving DOWN the coast AT golden HOUR'), the prosody is broken. Rewrite the melody to match the speech, or rewrite the words to match the melody — but they MUST align.",
-      sarah: "Gene, this is the thing that separates 'songs that feel right' from 'songs that feel off.' Pattison says misaligned prosody is the number one reason amateur lyrics sound amateurish. This one skill will transform your songwriting overnight.",
+      feel: "This should feel like a rhythm game — playful, challenging, and satisfying when you nail a complex pattern. The one-note constraint keeps it focused on rhythm alone.",
+      wrong: "If you're changing pitch while singing back the rhythm, stop. One note only — A. The moment you add pitch variation, your brain splits attention away from rhythm.",
+      sarah: "Gene, this is how musicians with great ears learn songs — they hear the rhythm first, then add pitch. Kodály and Stoloff both use call-and-response as the primary rhythmic training tool.",
       metronome: 80,
-      referencePitches: getPitchRange("E3", "D4"),
+      referencePitches: getPitchRange("A3", "A3"),
       recorder: true
     },
     {
-      id: "ss-5-17",
+      id: "ss-6-16",
+      time: 7,
+      title: "Harmonic Rhythm Awareness",
+      type: "guitar",
+      what: "Same Am-C-G-Em progression, three versions: one chord per 2 bars (spacious, desert blues), one chord per bar (standard), and two chords per bar (urgent, driving). Sing the same melody over all three. Harmonic rhythm — how OFTEN chords change — is a compositional tool as powerful as which chords you choose.",
+      setup: "Guitar. Metronome at 80 BPM.",
+      steps: [
+        { text: "Version 1: one chord every 2 bars. Am for 8 beats, C for 8 beats, G for 8 beats, Em for 8 beats. Spacious, hypnotic, desert blues. Sing a simple melody over it.", why: "Slow harmonic rhythm creates space and hypnosis. This is the Tinariwen and Tommy Guerrero approach — let one chord breathe before moving on." },
+        { text: "Version 2: one chord per bar. Am (4 beats), C (4 beats), G (4 beats), Em (4 beats). Standard pop/rock timing. Sing the same melody.", why: "This is the default harmonic rhythm of most songs. It feels balanced — enough change to stay interesting, enough space to settle into each chord." },
+        { text: "Version 3: two chords per bar. Am-C (2 beats each), G-Em (2 beats each). Fast, urgent, driving. Sing the same melody — it will feel completely different.", why: "Fast harmonic rhythm creates urgency and forward motion. The chords rush past, and the voice has to navigate quickly. This is the feel of bridge sections and build-ups." },
+        { text: "Play all three versions back to back without stopping. Feel the shift: spacious → standard → urgent. Same chords, same melody, totally different energy.", why: "Experiencing the contrast in one continuous pass reveals harmonic rhythm as a compositional lever. You can change the energy of a song without changing a single chord or note." },
+        { text: "Pick your favorite version. Spend 3 minutes improvising freely over that harmonic rhythm. Record it.", why: "Your preferred harmonic rhythm reveals your compositional instinct. Desert blues artists prefer slow; punk prefers fast; your sweet spot is probably somewhere in the middle." }
+      ],
+      feel: "Slow harmonic rhythm should feel like a wide-open landscape. Fast should feel like a sprint. Medium should feel like walking. Your body responds differently to each.",
+      wrong: "If all three versions feel the same, you're not letting the chord durations affect your singing. In the slow version, stretch your phrases out. In the fast version, make them punchier.",
+      sarah: "Gene, this is why Khruangbin songs feel so spacious — they sit on one chord forever. And why punk feels urgent — chords fly by. You get to choose where your songs live on that spectrum.",
+      metronome: 80,
+      recorder: true
+    },
+    {
+      id: "ss-6-17",
+      time: 6,
+      title: "Genre Rhythm Transcription",
+      type: "rhythm",
+      what: "Listen to a backing track. Don't play along yet. Clap or tap the vocal rhythm you IMAGINE over it — the rhythm a singer would use. Then sing it on one note. Then add chord tones. Rhythm-first composition: the groove suggests the vocal rhythm before any melody.",
+      setup: "Backing track ready. No instrument for the first two rounds.",
+      steps: [
+        { text: "Play the Desert Blues track. Just listen for 30 seconds. Don't tap, don't hum. Let the groove sink in. Where does it want a voice to land?", why: "Active listening before playing trains your musical imagination. The groove has a built-in suggestion for where vocals belong — you just need to hear it." },
+        { text: "Now clap or tap the vocal rhythm you hear in your head. Not the drum pattern — the rhythm a SINGER would use over this groove. Tap it out for 4 bars.", why: "Tapping an imagined vocal rhythm is rhythmic audiation at its purest. You're composing rhythm before sound — which is exactly how great songwriters work." },
+        { text: "Sing your tapped rhythm on one note (A). Same rhythm, now with voice. Does it feel natural over the groove? Adjust if needed.", why: "Translating from hands to voice tests whether the rhythm works vocally. Some rhythms feel great to tap but awkward to sing — this step filters for singable rhythms." },
+        { text: "Now add chord tones: sing your rhythm, but vary the pitch using A, C, E (Am chord tones). The rhythm stays the same; pitch adds color.", why: "Adding pitch to an established rhythm is melody writing. You've composed the rhythm first, then decorated it with pitch — the professional approach." },
+        { text: "Record your final version. You've just composed a vocal line rhythm-first — the way Khruangbin, Skinshape, and most groove-based artists actually write.", why: "This rhythm-first process is the opposite of how most beginners write (melody first, then try to fit it to a groove). Starting with rhythm guarantees your vocal line grooves." }
+      ],
+      feel: "This should feel like the groove is telling you where to sing. You're not imposing a melody on the track — you're discovering the melody that's already hidden in the rhythm.",
+      wrong: "If you're clapping the drum pattern instead of an imagined vocal rhythm, reset. The drum pattern already exists — you're creating something new that complements it.",
+      sarah: "Gene, this is how groove-based music is actually written. The beat comes first, and the vocal rhythm emerges from it. Your desert blues and reggae playlists were all made this way.",
+      tracks: [{ name: "Desert Blues 75", src: "/desert-blues-75.mp3" }],
+      recorder: true
+    },
+
+    // ─── BRIDGING EXERCISES ───
+
+    {
+      id: "ss-6-18",
       time: 8,
-      title: "Self-Recording Protocol",
+      title: "Genre Feel Diagnostic",
       type: "song",
-      what: "Record a 2-minute freestyle, then listen back with a structured framework. Four passes: (1) overall feel, (2) pitch accuracy, (3) timing placement, (4) dynamics/expression. This turns 'record it' from a habit into a learning tool. You can't improve what you can't hear — and you can't hear yourself accurately while performing.",
-      setup: "Guitar. Backing track of your choice. Metronome at 80-85 BPM.",
+      what: "Play a 2-minute freestyle over each of 3 backing tracks (reggae, surf, desert blues). Don't plan — just play. Which genre does your integrated playing naturally gravitate toward? Which feels most like home? This self-knowledge becomes your songwriting compass. Your default genre IS your artistic identity emerging.",
+      setup: "Guitar. Three backing tracks queued up. Recorder on from the start.",
       tracks: [
-        { name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" },
-        { name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }
+        { name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" },
+        { name: "Surf Rock 120", src: "/surf-rock-120.mp3" },
+        { name: "Desert Blues 75", src: "/desert-blues-75.mp3" }
       ],
       steps: [
-        { text: "Record a 2-minute freestyle: strum Am-C-G-Em over a backing track, sing freely with all your Level 3-5 skills. Don't try to be perfect — just play. This is the raw material.", why: "The performance must be genuine, not self-conscious. If you're performing 'for the recording,' you'll play it safe. Play like no one is listening — then use the recording to learn." },
-        { text: "Listen 1 — OVERALL FEEL: Play the recording once without stopping. Don't analyze — just feel. Does the overall vibe match what you intended? Does it sound like YOUR voice, YOUR style? Rate it 1-10 on 'does this feel like me?'", why: "The gut check comes first. Research shows that overall musical impression captures quality more accurately than technical analysis. If it FEELS right, the details can be refined." },
-        { text: "Listen 2 — PITCH: Focus only on intonation. Are your note arrivals accurate? Do you drift sharp or flat on longer notes? Are there specific notes that consistently miss? Don't judge — just notice.", why: "Pitch accuracy is nearly impossible to self-assess in real time because your brain auto-corrects what it hears. The recording bypasses this illusion and shows you the truth." },
-        { text: "Listen 3 — TIMING: Are you behind the beat (good in reggae/soul), on it, or rushing? Are some phrases ahead and some behind? Is the timing consistent or erratic? Compare your timing to the backing track.", why: "Timing is the other dimension your brain distorts during performance. You THINK you're in the pocket, but the recording reveals whether that's true." },
-        { text: "Listen 4 — EXPRESSION: Dynamics, vowel variety, emotional color, use of silence. Are you varying volume? Using different vowels? Does the energy change across the 2 minutes or stay flat? This is the 'artistry' pass.", why: "Expression is where good becomes great. Most developing singers are focused on pitch and timing — but expression is what makes listeners lean in. Rating your expression teaches you to prioritize it." }
+        { text: "Round 1 — Reggae: play the Reggae One Drop track. Strum and sing freely for 2 minutes. Don't try to be 'reggae' — just play naturally over the groove. Let the track guide you.", why: "Your natural response to a genre groove reveals your instincts. When you're not trying to play a genre, what comes out IS your authentic voice in that genre." },
+        { text: "Round 2 — Surf: play the Surf Rock track. Same deal — 2 minutes of freestyle. Notice how your strumming, phrasing, and energy shift (or don't) with the faster, brighter groove.", why: "Different tempos and feels pull different things from your voice. The contrast between your reggae and surf responses reveals where your natural tendencies live." },
+        { text: "Round 3 — Desert Blues: play the Desert Blues track. 2 minutes. This is the slowest, sparsest groove. Does your voice go sparse and hypnotic, or does it fight the space?", why: "Desert blues demands restraint. How comfortable you are with space and repetition tells you a lot about your compositional instincts." },
+        { text: "Listen to all three recordings. Which one sounds most like YOU — not performing a genre, but naturally inhabiting it? That's your home genre. Which one felt most natural to play? Which surprised you?", why: "Your home genre is where your songwriting will be most authentic. Knowing it consciously means you can lean into it when writing and step outside it when you want creative growth." },
+        { text: "Spend 2 more minutes in your home genre. This time, notice what specific skills feel most natural: is it the rhythm, the dynamics, the vowel choices, the phrasing? Your strongest dimension in your home genre is your artistic signature.", why: "Your artistic identity is the intersection of your home genre and your strongest expressive dimension. Knowing both gives you a compass for everything that follows." }
       ],
-      feel: "The first time you hear yourself back, it's uncomfortable — everyone hates their recorded voice at first. By the fifth time, you start hearing what's ACTUALLY there, not what you feared. That's when the learning begins.",
-      wrong: "If you're only listening for mistakes (what went wrong), you're missing half the value. Also listen for STRENGTHS (what sounded great). Build on strengths as much as you fix weaknesses.",
-      sarah: "Gene, recording + structured listen-back is the fastest feedback loop available to a solo learner. Professional vocal coaches do exactly this — record, listen, assess, adjust. You're being your own coach.",
-      metronome: 85,
+      feel: "One of these three genres should feel like putting on your favorite shirt — comfortable, natural, YOU. The others might feel fun but slightly borrowed. That difference is important information.",
+      wrong: "If all three feel identical, you're not responding to the groove — you're playing the same thing over everything. Let each backing track CHANGE your approach.",
+      sarah: "Gene, your playlists already tell me your home genre is somewhere in the reggae-surf-desert triangle. But hearing it from your own playing — not just your listening — confirms it. This diagnostic becomes your songwriting compass.",
+      referencePitches: getPitchRange("E3", "E4"),
+      pitchContour: true,
+      recorder: true
+    },
+    {
+      id: "ss-6-19",
+      time: 8,
+      title: "Integration Self-Assessment",
+      type: "song",
+      what: "Record a 3-minute freestyle: strum and sing freely with all your Level 3-6 skills. Then listen back with the structured protocol: (1) overall feel — does this sound like you? (2) pitch — are note arrivals accurate? (3) timing — behind the beat or rushing? (4) expression — dynamics, vowels, silence, emotional range? Rate yourself. Identify your strongest and weakest dimension.",
+      setup: "Guitar. Backing track. Recorder on from the start.",
+      tracks: [{ name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" }],
+      steps: [
+        { text: "Record a 3-minute freestyle: strum and sing over the backing track. Use everything — chord navigation, dynamics, emotional color, vowels, rhythm, space. Don't perform for the recording. Just play.", why: "The recording must capture your natural playing, not a self-conscious performance. The assessment only works if it reflects your actual level." },
+        { text: "Listen back — Pass 1, OVERALL FEEL: does this sound like you? Does it sound like music you'd want to listen to? Rate it 1-10 on 'this sounds like me.'", why: "The gut check comes first. Your overall impression captures quality more holistically than any technical measure." },
+        { text: "Listen back — Pass 2, PITCH: are your note arrivals accurate? Do you drift sharp or flat on longer notes? Are there specific chord changes where you lose the pitch?", why: "Pitch accuracy is nearly impossible to self-assess while playing. The recording bypasses your brain's auto-correction and reveals the truth." },
+        { text: "Listen back — Pass 3, TIMING: are you behind the beat (laid-back, good for reggae), on it, or rushing? Is timing consistent or does it vary with difficulty?", why: "Timing is the other dimension your brain distorts during performance. The recording reveals whether you're in the pocket or drifting." },
+        { text: "Listen back — Pass 4, EXPRESSION: dynamics (loud/soft contrast?), vowel variety, emotional color, use of silence. Is there expressive range, or does it stay flat?", why: "Expression is where good becomes great. Rating your expressiveness teaches you to prioritize the dimensions that make listeners lean in." },
+        { text: "Write down your scores. Identify your strongest dimension (highest score) and weakest (lowest). Your strongest is your signature. Your weakest is your growth edge for Level 7.", why: "Self-assessment with a structured protocol turns subjective 'how'd that go?' into actionable data. Your strongest dimension is what you lead with. Your weakest is what you practice." }
+      ],
+      feel: "The freestyle should feel natural and free. The listen-back should feel like being your own teacher — honest, specific, constructive.",
+      wrong: "If you skip the structured listen-back and just vibe to the recording, you're missing the exercise. Each pass focuses on ONE dimension. That discipline reveals things casual listening misses.",
+      sarah: "Gene, this is the self-coaching protocol that professional vocal coaches use. Record, listen, assess, adjust. You're building the skill of honest self-evaluation — one of the most valuable tools a solo musician can have.",
       referencePitches: getPitchRange("E3", "E4"),
       pitchContour: true,
       volumeMeter: true,
       recorder: true
     },
-    {
-      id: "ss-5-18",
-      time: 6,
-      title: "Song Seed Capture",
-      type: "record",
-      what: "Build the capture habit. In this exercise, you'll generate 5 song seeds in 10 minutes — tiny musical fragments recorded on your phone. A 4-note melody. A chord change that feels good. A lyric phrase. A rhythm. A feeling. Prolific songwriters capture 5-10x more ideas than they finish. The habit of capturing is more important than the quality of any single seed.",
-      setup: "Phone voice recorder. Guitar optional. Timer set to 2 minutes per seed.",
-      steps: [
-        { text: "Seed 1 — MELODY: Hum or sing a short melody fragment (4-8 notes). Don't think about it — just let something come out. Record it immediately. Tag it: 'melody seed, [mood word], [date].' Done. Under 30 seconds.", why: "Speed matters more than quality. Professional songwriters like Dan Wilson (Semisonic, co-writer with Adele) maintain thousands of voice memos. The discipline is CAPTURE, not perfection." },
-        { text: "Seed 2 — GROOVE: Strum a chord or two with a rhythm that feels good. No melody, no lyrics — just a groove fragment. Record 15 seconds of it. Tag: 'groove seed, [feel], [date].'", why: "Groove seeds are a different species than melody seeds. They develop differently — a groove becomes a song's foundation, while a melody becomes its identity. Classifying at capture helps future-you assemble them." },
-        { text: "Seed 3 — LYRIC: Say a phrase that's been in your head — or object-write for 60 seconds and grab the best line. Record it spoken, not sung. Tag: 'lyric seed, [image], [date].'", why: "Lyric seeds capture language — an image, a turn of phrase, a title idea. Speaking them (not singing) keeps the melody open for later. Some of the best songs start with a single line that demanded a song around it." },
-        { text: "Seed 4 — CHORD CHANGE: Find a two-chord transition that feels emotionally charged — Am to F, Em to C, whatever moves you. Play it 4 times. Record. Tag: 'chord seed, [emotion], [date].'", why: "A single chord change can contain an entire emotional world. The Am→F move feels completely different from Am→G. Capturing these emotional moments means you have them when you need them." },
-        { text: "Seed 5 — WILD CARD: Record ANYTHING musical that comes to you. A beat tapped on the table. A vocal texture. A sound you want to recreate. The unexpected seeds are often the most valuable.", why: "The wild card teaches you that EVERYTHING is a potential song seed. The sound of rain, a conversation rhythm, a horn honking — prolific writers hear music everywhere." },
-        { text: "Review: you now have 5 seeds. Listen to each one. Does any pair want to be combined — a melody seed over a groove seed? A lyric seed with a chord change? Mark any connections. This is how songs assemble themselves.", why: "Cross-pollination between seeds is how professional writers break creative blocks. They don't wait for a complete song to arrive — they combine fragments from different sessions. Your archive IS your songwriting engine." }
-      ],
-      feel: "This should feel fast and low-pressure — capture speed, not recording quality. A voice memo recorded in a parking lot is more valuable than a perfect idea you forgot because you didn't record it.",
-      wrong: "If you're spending more than 2 minutes per seed, you're overthinking. The point is VOLUME and SPEED. Bad seeds are fine — you'll delete 80% of them. The 20% that survive become songs.",
-      sarah: "Gene, Ed Sheeran has thousands of voice memos. Tom Waits carries a notebook everywhere. The difference between songwriters who write 2 songs a year and songwriters who write 50 is the capture habit. Start today. Never stop.",
-      recorder: true
-    },
-    {
-      id: "ss-5-19",
-      time: 12,
-      title: "The Ugly First Draft",
-      type: "song",
-      what: "Write a complete song in 12 minutes. It will be bad. That's the point. Verse, chorus, simple chord progression, melody, words. Do NOT edit, do NOT restart, do NOT judge. The goal is a FINISHED draft, not a good one. Creative confidence research shows that volume of output — not careful planning — closes the gap between your taste and your ability.",
-      setup: "Guitar. Timer set to 12 minutes. Recorder on from the start.",
-      tracks: [{ name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }],
-      steps: [
-        { text: "Minutes 0-3: Pick two chords (any two). Start strumming. Hum until a melody fragment appears. When it does, claim it — that's your verse melody. Hum it 4 times to lock it in.", why: "Two chords removes decision paralysis. Constraint-based creativity research shows that fewer options increase both speed and originality. Don't choose 'the right' chords — choose the FIRST two that your hands find." },
-        { text: "Minutes 3-6: Add words to the verse melody. They don't need to be good. They don't need to rhyme. They need to be THERE. Describe what you see right now, or felt this morning, or imagined yesterday. First words that come. No editing.", why: "The 'ugly first draft' protocol comes from professional songwriting practice: commit to finishing regardless of quality. The inner critic freezes beginners. Speed bypasses the critic." },
-        { text: "Minutes 6-9: Create a chorus — slightly higher energy, different chords or same chords with a different strum. Sing a hook phrase — something that could be a title. Repeat it. Done.", why: "The chorus doesn't need to be brilliant. It needs to EXIST. A mediocre chorus that exists is infinitely more useful than a perfect chorus that never gets written." },
-        { text: "Minutes 9-12: Play through the whole song: verse → verse → chorus → verse → chorus. It's rough. It's imperfect. It's a SONG. You wrote a song in 12 minutes. Record the final pass.", why: "A finished draft — any finished draft — gives you something to IMPROVE. You can't edit a blank page. The ugly first draft is the raw material that becomes a real song through revision." },
-        { text: "After the timer: listen to the recording once. Don't judge. Just notice: was there ONE moment — one phrase, one chord change, one melody turn — that surprised you? Circle that. That's the seed of something real.", why: "Every ugly draft contains at least one genuine moment. Finding it and building from it is the revision process. You're not writing a song from nothing — you're excavating a song from a rough draft." }
-      ],
-      feel: "This should feel uncomfortable and freeing at the same time — uncomfortable because it's imperfect, freeing because you're creating without judgment. The timer is your permission slip to be bad.",
-      wrong: "If you restart, you've broken the exercise. If you stop to 'think of something better,' you've broken the exercise. If you judge a line and discard it, you've broken the exercise. KEEP GOING. Ugly is the goal. Edit LATER.",
-      sarah: "Gene, Ira Glass said it best: 'Your taste is good enough to tell that what you're making isn't great yet. The gap closes through VOLUME of work, not through being more careful.' This exercise is volume. Write ugly songs every week. Watch what happens.",
-      metronome: 80,
-      referencePitches: getPitchRange("E3", "A4"),
-      recorder: true,
-      phraseForm: { pattern: ["V", "V", "Ch", "V", "Ch"], barsPerSection: [4, 4, 4, 4, 4], labels: { V: "Verse", Ch: "Chorus" } }
-    },
 
     // ─── GRADUATION ───
 
     {
-      id: "ss-5-20",
+      id: "ss-6-20",
       time: 10,
       title: "Genre Freestyle Round",
       type: "song",
@@ -497,11 +499,11 @@ export const level5 = {
       recorder: true
     },
     {
-      id: "ss-5-21",
+      id: "ss-6-21",
       time: 10,
       title: "5-Minute Freestyle",
       type: "song",
-      what: "The graduation test. Choose any backing track, any chord progression, any genre feel. Strum and sing freely for 5 minutes without stopping. Every skill from Levels 3-5 integrated into one sustained performance. This is the fluency proof.",
+      what: "The graduation test. Choose any backing track, any chord progression, any genre feel. Strum and sing freely for 5 minutes without stopping. Every skill from Levels 3-6 integrated into one sustained performance. This is the fluency proof.",
       setup: "Guitar. Choose your backing track and chord progression. This is YOUR choice — pick what feels best.",
       tracks: [
         { name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" },
@@ -518,12 +520,12 @@ export const level5 = {
       ],
       feel: "By minute three, you should stop thinking about skills and start feeling the music. Everything becomes automatic. That's flow. That's fluency.",
       wrong: "If you can't sustain 5 minutes without the strum breaking down or the voice going silent for more than 8 beats, revisit the specific skill that's weakest.",
-      sarah: "Gene, this is the real graduation. Five minutes of free vocal improvisation over your own guitar with every tool at your disposal. When this feels like breathing — natural, effortless, inevitable — you're ready to channel that flow into songs. Everything from Level 6 onward builds on this moment.",
+      sarah: "Gene, this is the real graduation. Five minutes of free vocal improvisation over your own guitar with every tool at your disposal. When this feels like breathing — natural, effortless, inevitable — you're ready to channel that flow into songs. Everything from Level 7 onward builds on this moment.",
       metronome: 85,
       referencePitches: getPitchRange("E3", "E4"),
       pitchContour: true,
       recorder: true,
-      levelUp: "Can sustain 5 minutes of fully integrated vocal improvisation over a backing track while strumming — varied rhythm, dynamics, emotional color, vowel shapes, and chord-tone navigation — across multiple genre feels without stopping or losing the groove. Can also dissect songs for structure/contour/phrasing/dynamics, check prosody alignment between speech and melody, assess recordings with a structured protocol, capture song seeds habitually, and write complete ugly first drafts under time pressure."
+      levelUp: "Can sustain 5 minutes of fully integrated vocal improvisation over a backing track while strumming — varied rhythm, dynamics, emotional color, vowel shapes, chord-tone navigation, and genre-specific micro-timing — across multiple genre feels without stopping or losing the groove. Can identify your default genre instinct, self-assess using structured recording protocol, and use harmonic rhythm and genre rhythm transcription as creative tools."
     }
   ]
 };

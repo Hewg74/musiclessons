@@ -1,27 +1,109 @@
 import { getPitchRange } from "../appData.js";
 
-export const level4 = {
-  level: 4,
+export const level5 = {
+  level: 5,
   title: "Voice Combines",
   subtitle: "Two skills at once. This is where it starts to feel like music.",
   description:
-    "Level 3 isolated each skill individually. Now combine them in pairs: rhythm + chord changes, genre feel + dynamics, conversation + harmony, dual-task independence. Motor learning research is clear — combining two automated sub-skills is a distinct cognitive stage that must be practiced deliberately before full integration. Each exercise here takes two skills from Level 3 and fuses them.",
+    "Levels 3-4 isolated each skill individually. Now combine them in pairs: rhythm + chord changes, genre feel + dynamics, conversation + harmony, dual-task independence. Motor learning research is clear — combining two automated sub-skills is a distinct cognitive stage that must be practiced deliberately before full integration. Each exercise here takes two skills from Levels 3-4 and fuses them.",
   artists: "Khruangbin, Skinshape, DOPE LEMON, Allah-Las, Pepper",
-  unlocks: "Voice Flows (Level 5)",
-  review: { label: "Level 3 Check-In", time: 5, exercises: ["ss-3-7", "ss-3-11"], prompt: "Do 2 minutes of one-note rhythm play (ss-3-7). Then sing Am chord tones in three emotional colors (ss-3-11). Both fluid without the strum breaking? Move on." },
+  unlocks: "Voice Flows (Level 6)",
+  review: { label: "Level 4 Check-In", time: 5, exercises: ["ss-4-17", "ss-4-20"], prompt: "Play Am-C-G-Em in 4 genre feels (ss-4-17). Then do Whisper to Full Voice with pentatonic freedom (ss-4-20). Both fluid? Move on." },
   exercises: [
+
+    // ─── DUAL-TASK RAMP ───
+
+    {
+      id: "ss-5-1",
+      time: 5,
+      title: "The TV Test",
+      type: "guitar",
+      what: "Can you play Am-C-G-Em while watching a video with comprehension? If yes, the guitar is autonomous enough for voice work. If not, practice until it is. This is the prerequisite check from motor learning research: the 'associative-to-autonomous' transition test. Your strum should be like breathing — you don't think about it.",
+      setup: "Guitar. Metronome at 80 BPM. A video or podcast playing on your phone or laptop.",
+      steps: [
+        { text: "Set a metronome at 80 BPM. Start strumming Am-C-G-Em with a simple quarter-note pattern. Now turn on a short video — something with dialogue you need to follow. Keep strumming.", why: "The TV Test is the gold standard for motor autonomy. If a secondary cognitive task (watching a video) disrupts the primary motor task (strumming), the strum isn't automatic yet." },
+        { text: "Watch for 2 minutes. Can you follow the story? Can you answer questions about what you just watched? If yes, your chord changes have reached the autonomous stage.", why: "Comprehension proves cognitive resources are free. If you can understand dialogue while strumming, your hands are on autopilot — which means those resources are available for singing." },
+        { text: "If the strum breaks down or you lose the video thread, that's useful information. Note which chord change disrupts you (usually G→Em or Em→Am) and drill that transition.", why: "The failure point reveals which transition still requires conscious attention. Targeted practice on that one change is more efficient than running the whole progression again." },
+        { text: "Repeat the test daily until you pass it. This is the gateway to everything in this level. No rushing — autonomous guitar is the foundation of singing while playing.", why: "Motor learning research shows the associative-to-autonomous transition takes repetition over days, not hours. Each day's practice moves the skill deeper into procedural memory." }
+      ],
+      feel: "When you pass this test, the guitar should feel like it's playing itself. Your conscious mind is free — free to watch TV, free to sing, free to improvise. That freedom is the whole point.",
+      wrong: "If you're faking it — staring at the video but not actually following the story — the test doesn't count. Genuine comprehension is the metric. Be honest with yourself.",
+      sarah: "Gene, your strum should be like breathing — you don't think about it. This test proves whether it is. Every exercise in this level assumes you pass it.",
+      metronome: 80
+    },
+    {
+      id: "ss-5-2",
+      time: 6,
+      title: "Hum + Strum",
+      type: "vocal",
+      what: "Strum Am-C-G-Em at 80 BPM. Hum the root of each chord as it passes (A over Am, C over C, G over G, E over Em). Humming requires almost zero vocal working memory — it's the easiest dual-task entry point. Once humming is stable over chord changes, the voice-guitar foundation is laid.",
+      setup: "Guitar. Metronome at 80 BPM.",
+      steps: [
+        { text: "Strum Am-C-G-Em with a simple quarter-note pattern at 80 BPM. Hum a sustained A over Am — just a low, relaxed hum. Mouth closed, no vowel shaping needed. Let the hum sit on top of the strum.", why: "Humming is the lowest-demand vocal task: no articulation, no vowel choices, no projection decisions. It isolates the core dual-task question: can voice and guitar coexist?" },
+        { text: "When C arrives, shift your hum to C. Then G over G, E over Em. One root per chord, sustained hum. The chord changes guide your pitch — just follow the gravity of each chord.", why: "Tracking chord roots with a hum builds the voice-following-harmony reflex. Your voice learns to respond to chord changes without conscious pitch calculation." },
+        { text: "Check: is your strum perfectly steady through the hum changes? If the strum hitches when your pitch shifts, the guitar isn't autonomous enough yet. Go back to ss-5-1.", why: "Any strum disruption during a hum means the dual-task is overloading working memory. Humming is the easiest vocal task — if it disrupts the strum, singing definitely will." },
+        { text: "Once stable, try humming chord tones other than the root: hum E over Am (the 5th), hum G over C (the 5th). Same chord changes, different hum targets. 2 minutes, record it.", why: "Varying the hum target while maintaining the strum adds a small pitch-decision layer on top of the dual-task. This is the bridge between humming roots and singing freely." }
+      ],
+      feel: "The hum should feel effortless — like a quiet soundtrack running underneath your guitar. When both layers are relaxed and steady, you've found the dual-task sweet spot.",
+      wrong: "If you're straining to hum or your strum is irregular, you're working too hard. Drop to just Am (one chord) and hum A until both are relaxed. Then add chord changes one at a time.",
+      sarah: "Gene, humming is the gentlest way to introduce your voice to the guitar. No pressure, no performance — just a quiet sound layered on top of a familiar strum. Start here.",
+      metronome: 80,
+      recorder: true,
+      referencePitches: getPitchRange("E3", "G4")
+    },
+    {
+      id: "ss-5-3",
+      time: 7,
+      title: "Speak + Strum",
+      type: "vocal",
+      what: "Strum Am-C-G-Em. Speak a simple phrase in rhythm ('sun goes down, tide rolls in') while strumming. No pitch — just rhythmic speech over chord changes. This is Berklee's 'rhythmic anchor method': introduce the rhythmic coordination layer without pitch demands on the voice.",
+      setup: "Guitar. Metronome at 80 BPM.",
+      steps: [
+        { text: "Strum Am-C-G-Em at 80 BPM. Speak a simple phrase in rhythm: 'sun goes down, tide rolls in.' Place 'sun' on beat 1, 'goes' on beat 2, 'down' on beat 3. The words have rhythm but no melody.", why: "Rhythmic speech adds the coordination layer (voice rhythm vs guitar rhythm) without the pitch layer. It's the Berklee approach: isolate one variable at a time." },
+        { text: "Try different phrases: 'waves are rolling, sky turns gold' or 'walking down the shore again.' Each phrase has its own natural rhythm. Let the words find their place in the strum.", why: "Different phrases have different rhythmic shapes. Practicing with varied phrases builds flexible speech-over-strum coordination, not just one memorized pattern." },
+        { text: "Now speak on the offbeats — between the strums. 'And-sun-and-goes-and-down.' The words land in the gaps. This is harder because speech and strum are rhythmically independent.", why: "Offbeat speech is the precursor to syncopated singing. When your voice can land between strums consistently, you've built the independence that melodic singing requires." },
+        { text: "Free-form: speak any words, any rhythm, over the chord changes. Have a conversation with someone while strumming. If you can talk naturally while playing, the strum is truly autonomous. Record 2 minutes.", why: "Natural speech over strumming is the ultimate autonomy test for this stage. If you can hold a real conversation while playing Am-C-G-Em, your hands are completely free from conscious control." }
+      ],
+      feel: "This should feel like talking while driving — your hands do their thing automatically while your voice is free. If it feels like juggling, the strum needs more autonomy work.",
+      wrong: "If you're speaking in a monotone robot voice to avoid disrupting the strum, that's a sign the dual-task is still taxing. Speak naturally — inflection, emphasis, pauses. The strum must survive real speech.",
+      sarah: "Gene, this is the bridge between the TV Test and actual singing. Your voice is active, your hands are strumming, but there's no pitch pressure yet. One step at a time.",
+      metronome: 80,
+      recorder: true
+    },
+    {
+      id: "ss-5-4",
+      time: 7,
+      title: "Sustained Note + Changing Chords",
+      type: "vocal",
+      what: "Strum Am-C-G-Em. Hold ONE note (E — it works over all 4 chords as a common tone) while the chords change underneath. The voice stays perfectly still; only the hands move. This isolates harmonic independence: hearing the chord context shift around a static voice.",
+      setup: "Guitar. Metronome at 80 BPM. Drone on E for pitch reference.",
+      steps: [
+        { text: "Strum Am-C-G-Em at 80 BPM. Sing and sustain the note E through all four chords. Don't move your voice at all — just hold E while the chords change underneath.", why: "E is a common tone across the progression: it's the 5th of Am, the 3rd of C, the 6th of G (a color tone), and the root of Em. One note, four different harmonic meanings." },
+        { text: "Listen to how E changes character over each chord. Over Am it sounds stable and open. Over C it sounds warm and sweet (major 3rd). Over G it sounds floating and colorful. Over Em it sounds like home (root). Same note, four feelings.", why: "This is the core lesson of harmonic context: a note's emotional meaning changes with the chord underneath. Your ear learns to hear FUNCTION, not just pitch." },
+        { text: "Now try holding A instead of E. A is the root of Am, the 6th of C, the 2nd of G, and the 4th of Em. Notice how it sounds consonant over Am but creates tension over G and Em.", why: "Different sustained notes create different levels of tension and resolution across the progression. Some combinations are smooth; others are gritty. Both are useful in songwriting." },
+        { text: "Alternate: hold E for one full cycle, then hold A for one full cycle, then hold G for one full cycle. Each sustained note paints the progression in a different color. Record all three.", why: "Three different common-tone experiences give you a visceral understanding of how single notes interact with chord progressions. This is harmonic ear training at its most direct." }
+      ],
+      feel: "Your voice should feel like a still point in a turning world. The chords move, the harmony shifts, but your note is an anchor. The changing feelings come FROM the chords, not from your voice.",
+      wrong: "If you're unconsciously adjusting your pitch when the chords change, that's your ear trying to 'fix' the harmony. Resist. Hold the note perfectly steady — the drone will help you stay locked.",
+      sarah: "Gene, this exercise is sneaky powerful. By holding still while the chords move, you're training your ear to hear how harmony WORKS — how the same note means different things in different contexts. This is the foundation of writing melodies that interact with chords.",
+      metronome: 80,
+      referencePitches: getPitchRange("E3", "E4"),
+      pitchContour: true,
+      drone: { root: "E", octave: 3, texture: "pure" },
+      recorder: true
+    },
 
     // ─── DUAL-TASK FOUNDATION ───
 
     {
-      id: "ss-4-1",
+      id: "ss-5-5",
       time: 8,
       title: "Simultaneous Voice & Strum",
       type: "vocal",
       what: "Combines: STRUM INDEPENDENCE + PITCH. Unlike call-and-response where you alternate, now sing AND strum at the same time — with your voice doing something different from your guitar rhythm. Two independent musical streams from one person.",
       setup: "Guitar. Metronome at 80 BPM.",
       steps: [
-        { text: "Strum Am with a steady quarter-note downstroke. Sing a long, sustained A over the strum. Just hold the note while your hand keeps the rhythm. Get comfortable with both happening at once.", why: "The simplest dual-task: sustained voice + steady strum. If this wobbles, the strum isn't automatic enough yet. Go back to Level 1." },
+        { text: "Strum Am with a steady quarter-note downstroke. Sing a long, sustained A over the strum. Just hold the note while your hand keeps the rhythm. Get comfortable with both happening at once.", why: "The simplest dual-task: sustained voice + steady strum. If this wobbles, the strum isn't automatic enough yet. Go back to ss-5-1." },
         { text: "Keep strumming. Now change your vocal note: A... hold... C... hold... E... hold. Move between chord tones slowly while the strum stays steady. The strum must NOT change when your voice moves.", why: "When the voice changes pitch, the brain wants the hands to react. Training independence means the strum stays perfectly steady regardless of what the voice does." },
         { text: "Now try vocal rhythms that differ from the strum. Strum quarter notes but sing half notes. Then strum quarter notes but sing syncopated patterns. The two rhythms coexist independently.", why: "Rhythmic independence is the core of the singer-songwriter dual-task. When your voice and guitar have different rhythms, you sound like a full arrangement, not a solo act." },
         { text: "2-minute free improv: strum autopilot, voice improvises chord tones in any rhythm. The voice moves freely while the strum holds steady. Record it.", why: "This is the dual-task payoff. When you can improvise vocally while maintaining an independent strum, you've crossed the coordination threshold that makes songwriting possible." }
@@ -37,7 +119,7 @@ export const level4 = {
     // ─── RHYTHM + CHORD CHANGES ───
 
     {
-      id: "ss-4-2",
+      id: "ss-5-6",
       time: 8,
       title: "Two-Chord Deep Dive",
       type: "vocal",
@@ -59,10 +141,10 @@ export const level4 = {
       recorder: true
     },
 
-    // ─── NEW: THREE-CHORD BRIDGE ───
+    // ─── THREE-CHORD BRIDGE ───
 
     {
-      id: "ss-4-3",
+      id: "ss-5-7",
       time: 8,
       title: "Three-Chord Bridge",
       type: "vocal",
@@ -85,10 +167,10 @@ export const level4 = {
       recorder: true
     },
 
-    // ─── NEW: STEPPING BETWEEN CHORDS ───
+    // ─── STEPPING BETWEEN CHORDS ───
 
     {
-      id: "ss-4-4",
+      id: "ss-5-8",
       time: 8,
       title: "Stepping Between Chords",
       type: "vocal",
@@ -111,7 +193,7 @@ export const level4 = {
       recorder: true
     },
     {
-      id: "ss-4-5",
+      id: "ss-5-9",
       time: 8,
       title: "Rhythmic Chord Navigation",
       type: "vocal",
@@ -135,7 +217,7 @@ export const level4 = {
     // ─── GENRE FEEL + SKILLS ───
 
     {
-      id: "ss-4-6",
+      id: "ss-5-10",
       time: 8,
       title: "Reggae Groove + Chord Tones",
       type: "vocal",
@@ -156,7 +238,7 @@ export const level4 = {
       recorder: true
     },
     {
-      id: "ss-4-7",
+      id: "ss-5-11",
       time: 8,
       title: "Surf Jangle + Dynamics",
       type: "vocal",
@@ -180,10 +262,10 @@ export const level4 = {
       recorder: true
     },
 
-    // ─── NEW: DESERT BLUES + DYNAMICS ───
+    // ─── DESERT BLUES + DYNAMICS ───
 
     {
-      id: "ss-4-8",
+      id: "ss-5-12",
       time: 8,
       title: "Desert Blues + Dynamics",
       type: "vocal",
@@ -209,7 +291,7 @@ export const level4 = {
     // ─── EXPRESSION + HARMONY ───
 
     {
-      id: "ss-4-9",
+      id: "ss-5-13",
       time: 8,
       title: "Chord Change = Mood Change",
       type: "vocal",
@@ -230,7 +312,7 @@ export const level4 = {
       recorder: true
     },
     {
-      id: "ss-4-10",
+      id: "ss-5-14",
       time: 8,
       title: "Conversation Over Changes",
       type: "vocal",
@@ -252,10 +334,10 @@ export const level4 = {
       phraseForm: { pattern: "AB", barsPerSection: 2, labels: { A: "Call", B: "Response" } }
     },
 
-    // ─── NEW: BREATH + HARMONY ───
+    // ─── BREATH + HARMONY ───
 
     {
-      id: "ss-4-11",
+      id: "ss-5-15",
       time: 8,
       title: "Breath Shapes the Phrase",
       type: "vocal",
@@ -279,7 +361,7 @@ export const level4 = {
     // ─── VOWEL + RHYTHM ───
 
     {
-      id: "ss-4-12",
+      id: "ss-5-16",
       time: 8,
       title: "Vowel Rhythm Patterns",
       type: "vocal",
@@ -299,10 +381,10 @@ export const level4 = {
       recorder: true
     },
 
-    // ─── NEW: DYNAMICS + RHYTHM ───
+    // ─── DYNAMICS + RHYTHM ───
 
     {
-      id: "ss-4-13",
+      id: "ss-5-17",
       time: 8,
       title: "Dynamics + Rhythm Pair",
       type: "vocal",
@@ -313,7 +395,7 @@ export const level4 = {
         { text: "Strum Am over the backing track. Sing the note A with loud, short bursts on the downbeats: 'DA! DA! DA! DA!' — forte, rhythmic, punchy. Like a horn section hitting accents.", why: "Loud + short is the most energetic dynamic-rhythm combination. It creates urgency and forward motion. Funk music lives here." },
         { text: "Now flip it: quiet, sustained A held over 4 beats. Piano, long, floating. The opposite energy. Same note, same chord, completely different effect.", why: "Quiet + sustained is the most contemplative combination. It creates space and intimacy. Moving between these extremes is dynamic range." },
         { text: "Mix freely: loud short burst, then quiet sustained, then medium syncopated, then whispered offbeat. Change BOTH rhythm and dynamics with every phrase.", why: "Managing two expressive variables simultaneously is the cognitive challenge. When both are fluid, your single-note improvisation sounds like a complete musical performance." },
-        { text: "2-minute freestyle: any chord tones (A, C, E), any rhythm, any dynamic level. The combination of rhythm and dynamics is your focus. Record it.", why: "This pairing was missing from the Level 4 skill matrix. Dynamics and rhythm are independent variables — training them together fills a gap in your expressive toolkit." }
+        { text: "2-minute freestyle: any chord tones (A, C, E), any rhythm, any dynamic level. The combination of rhythm and dynamics is your focus. Record it.", why: "This pairing completes the skill matrix. Dynamics and rhythm are independent variables — training them together fills a gap in your expressive toolkit." }
       ],
       feel: "This should feel like being both a drummer and a singer — your rhythmic choices and your dynamic choices are both conscious, both varied, both expressive.",
       wrong: "If your dynamics are constant (everything at the same volume) while your rhythms vary, you're only engaging one variable. Exaggerate the dynamic shifts until they're impossible to miss.",
@@ -328,7 +410,7 @@ export const level4 = {
     // ─── TIMING, ROOTS & COLORS ───
 
     {
-      id: "ss-4-15",
+      id: "ss-5-18",
       time: 8,
       title: "Behind-the-Beat Feel",
       type: "vocal",
@@ -351,7 +433,7 @@ export const level4 = {
       recorder: true
     },
     {
-      id: "ss-4-16",
+      id: "ss-5-19",
       time: 8,
       title: "Root Singing — Feel the Function",
       type: "vocal",
@@ -376,7 +458,7 @@ export const level4 = {
       recorder: true
     },
     {
-      id: "ss-4-17",
+      id: "ss-5-20",
       time: 10,
       title: "Color Palette Freestyle",
       type: "vocal",
@@ -402,10 +484,75 @@ export const level4 = {
       recorder: true
     },
 
+    // ─── RHYTHM EXERCISES (from Level 7) ───
+
+    {
+      id: "ss-5-21",
+      time: 7,
+      title: "Swing vs Straight",
+      type: "rhythm",
+      what: "Same chord progression (Am-C-G-Em) strummed two ways: straight 8th notes (even, rock/surf) vs swung 8ths (bouncy, jazz/soul/blues). Then sing the same melody over both. Notice how swing changes the vocal feel entirely. Each rhythmic approach is a genre door.",
+      setup: "Guitar. Metronome at 85 BPM. Backing tracks ready.",
+      steps: [
+        { text: "Strum Am-C-G-Em with straight 8th notes — perfectly even down-up strumming. 2 minutes. This is the surf/rock/punk feel. Even, driving, forward.", why: "Straight 8ths are the default feel of rock, surf, punk, and most pop. Every down and up stroke is exactly equal in duration." },
+        { text: "Same chords, but now swing the 8ths — the downstroke is longer, the upstroke is shorter. 'Long-short, long-short.' Bouncy, relaxed, bluesy. 2 minutes.", why: "Swing is the feel of jazz, blues, soul, and reggae-influenced music. The uneven 8ths create a natural 'lean' that sounds and feels completely different from straight time." },
+        { text: "Sing a simple melody (A-C-E-C, one note per bar) over the straight feel. Then sing the exact same melody over the swung feel. Record both.", why: "The same melody feels completely different over swing vs straight. Straight feels urgent and bright; swing feels laid-back and warm. This is how rhythm defines genre." },
+        { text: "Play the Groove Beat track (straight feel). Strum and sing over it. Then switch to Deep Soul Groove (swing feel). Same melody, different world.", why: "Backing tracks make the swing vs straight contrast visceral. The groove pulls your voice into its pocket — you don't have to think about it." },
+        { text: "Which feel suits your voice better? Spend 2 more minutes in that feel, improvising freely. Your preference reveals your genre instinct.", why: "Most singer-songwriters default to one feel without knowing it. Making it conscious gives you the choice to switch genres deliberately." }
+      ],
+      feel: "Straight should feel like surfing — forward momentum, clean energy. Swing should feel like a porch swing — rocking, lazy, warm. Both are valid; both are powerful.",
+      wrong: "If your swing sounds like straight 8ths with a hiccup, you're not committing to the feel. Exaggerate the long-short pattern until it feels natural, then dial it back.",
+      sarah: "Gene, your playlists live at the border of swing and straight — Khruangbin swings subtly, Allah-Las play straight, Skinshape swings hard. Knowing both lets you navigate your whole taste map.",
+      metronome: 85,
+      tracks: [{ name: "Groove Beat 90", src: "/groove-beat-90.mp3" }, { name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }],
+      recorder: true
+    },
+    {
+      id: "ss-5-22",
+      time: 6,
+      title: "Rhythmic Density as Color",
+      type: "vocal",
+      what: "Sing one note (A) over an Am strum. Round 1: pack 8 syllables into one bar (dense, storytelling energy). Round 2: sing 2 syllables per bar (sparse, declarative). Round 3: alternate dense and sparse bars. Syllable density is a section-contrast tool — busy verse vs sparse chorus or vice versa.",
+      setup: "Guitar strumming Am. Metronome at 80 BPM.",
+      steps: [
+        { text: "Strum Am at 80 BPM. Sing 'da' on the note A, packing 8 syllables into each bar — 'da-da-da-da-da-da-da-da.' Dense, rapid, storytelling energy. Do this for 4 bars.", why: "Dense syllable packing is the rhythm of verses that tell stories — lots of words, lots of information. Bob Marley, Sublime, and Pepper all use this in their verses." },
+        { text: "Same strum, same note. Now sing only 2 syllables per bar — 'daaaa... da.' Long, spacious, declarative. 4 bars.", why: "Sparse delivery is the rhythm of choruses and hooks — few words, maximum impact. The space between notes creates emphasis." },
+        { text: "Alternate: 2 bars dense, 2 bars sparse. Feel the contrast. The dense bars create tension and momentum; the sparse bars release it.", why: "This density contrast is how professional songwriters create section contrast without changing chords or melody. The rhythm alone signals verse vs chorus." },
+        { text: "Now improvise your own density pattern over 8 bars. Maybe start sparse and build to dense, or create your own rhythm. Record it.", why: "Choosing density is a compositional decision. You're writing rhythm — the skeleton that lyrics and melody will eventually hang on." },
+        { text: "Listen back. Notice how density changes feel like different sections of a song, even though the note and chord never changed.", why: "This proves that rhythm alone can create song structure. When you add pitch changes later, the structural contrast will be even more dramatic." }
+      ],
+      feel: "Dense bars should feel chatty and urgent — like you have a lot to say. Sparse bars should feel like a deep exhale — confident, unhurried, letting the words land.",
+      wrong: "If your dense syllables are uneven or rushed, slow the metronome. Every syllable should land on a subdivision. If your sparse notes feel empty rather than powerful, commit more — sing louder and sustain longer.",
+      sarah: "Gene, think about how Tommy Guerrero's instrumentals use this — sparse melodic lines over busy rhythm, then the reverse. Density is a texture knob you can turn.",
+      metronome: 80,
+      referencePitches: getPitchRange("A3", "A3"),
+      recorder: true
+    },
+    {
+      id: "ss-5-23",
+      time: 6,
+      title: "Strum + Vocal Rhythm Conversation",
+      type: "song",
+      what: "Strum a groove and create a vocal rhythm that COMPLEMENTS (not duplicates) the guitar. When the guitar is busy, the voice rests. When the guitar rests, the voice fills. Guitar and voice become two parts of one rhythm — like a conversation.",
+      steps: [
+        { text: "Strum the reggae offbeat chop on Am. Notice where the GAPS are in the strum (on the beats). Now sing short notes in those gaps.", why: "Filling gaps creates interlocking rhythm — voice and guitar fit together like puzzle pieces. This is the foundation of groove-based singing." },
+        { text: "Switch to surf jangle (continuous 8ths). The gaps are smaller. Sing longer, sustained notes that ride on top of the strum.", why: "Over busy guitar, the voice simplifies. Over sparse guitar, the voice can be busier. This balance is instinctive in great singers." },
+        { text: "Try this: strum for 2 bars, then stop and sing for 2 bars (no guitar). Then overlap for 2 bars. The contrast reveals how voice and guitar relate.", why: "Alternating solo and overlap reveals which textures you prefer. Some songs work best with voice + guitar interlocking; others work best with trading off." },
+        { text: "Create a 16-bar piece where voice and guitar have a conversation — sometimes together, sometimes taking turns. Record it.", why: "A 16-bar voice-guitar conversation is a complete musical statement. This is the rhythmic foundation of your songwriting style." }
+      ],
+      feel: "Voice and guitar in conversation should feel like a duo — two musicians listening to each other. When they interlock perfectly, the whole thing grooves harder than either alone.",
+      wrong: "If voice and guitar are always landing at the same time, they're not conversing — they're shouting together. Create space for each to breathe.",
+      sarah: "Gene, this conversational approach is exactly what Khruangbin does — Mark Speer's guitar fills the spaces around Laura Lee's bass and vice versa. Apply the same principle to your voice and guitar.",
+      metronome: 85,
+      referencePitches: getPitchRange("A3", "A3"),
+      tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }],
+      recorder: true
+    },
+
     // ─── COMBINATION CAPSTONE ───
 
     {
-      id: "ss-4-18",
+      id: "ss-5-24",
       time: 10,
       title: "Two-Skill Freestyle",
       type: "song",
@@ -419,17 +566,17 @@ export const level4 = {
         { text: "Round 1 — Rhythm + Dynamics: strum Am at 80 BPM. Sing one chord tone (A) with varied rhythms AND varied dynamics simultaneously. Loud bursts, quiet sustained notes, syncopated whispers, on-beat shouts. 2 minutes.", why: "Combining rhythm and dynamics means managing two expressive variables at once. When both are fluid, your single-chord improvisation sounds like a complete musical performance." },
         { text: "Round 2 — Changes + Emotion: strum Am-C-G-Em at 80 BPM. Sing chord tones while matching emotional color to each chord. Am=melancholic, C=warm, G=bright, Em=dark. 2 minutes.", why: "Combining chord navigation with emotional expression is the core of expressive singing. Your voice tracks both the harmony AND the feeling simultaneously." },
         { text: "Round 3 — Genre + Vowels: reggae offbeat chop at 85 BPM over Am-C. Sing chord tones with deliberate vowel choices — 'ooh' for quiet moments, 'ahh' for projecting moments, vowel morphs on sustained notes. 2 minutes.", why: "Genre feel + vowel awareness produces a fully textured vocal performance. This is what separates 'singing notes' from 'having a vocal style.'" },
-        { text: "Listen to all three recordings. Each round combined two skills. In Level 5, everything combines at once. How close are you?", why: "Self-assessment through recording playback is one of the most effective practice techniques. You hear things in playback that you can't hear while performing." }
+        { text: "Listen to all three recordings. Each round combined two skills. In Level 6, everything combines at once. How close are you?", why: "Self-assessment through recording playback is one of the most effective practice techniques. You hear things in playback that you can't hear while performing." }
       ],
-      feel: "Each round should feel like juggling two balls — challenging but possible. In Level 5, you'll juggle all of them at once.",
-      wrong: "If one skill disappears when you focus on the other (e.g., dynamics go flat when you focus on chord changes), the weaker skill needs more isolated practice from Level 3.",
-      sarah: "Gene, this is the checkpoint. If you can combine any two skills fluently, you're ready for Level 5 where everything flows together. These recordings are your proof.",
+      feel: "Each round should feel like juggling two balls — challenging but possible. In Level 6, you'll juggle all of them at once.",
+      wrong: "If one skill disappears when you focus on the other (e.g., dynamics go flat when you focus on chord changes), the weaker skill needs more isolated practice from Levels 3-4.",
+      sarah: "Gene, this is the checkpoint. If you can combine any two skills fluently, you're ready for Level 6 where everything flows together. These recordings are your proof.",
       metronome: 85,
       referencePitches: getPitchRange("E3", "E4"),
       pitchContour: true,
       volumeMeter: true,
       recorder: true,
-      levelUp: "Can fluently combine any two improvisation skills — rhythm + dynamics, chord changes + emotion, genre feel + vowel shapes — navigate chord changes by feeling root gravity, place voice behind/on/ahead of the beat deliberately, and paint with notes as emotional colors across changing harmonic palettes — while strumming, without either skill degrading when the other is added."
+      levelUp: "Can pass the TV Test for guitar autonomy, hum/speak/sustain over chord changes, combine any two improvisation skills — rhythm + dynamics, chord changes + emotion, genre feel + vowel shapes — navigate chord changes by feeling root gravity, place voice behind/on/ahead of the beat deliberately, paint with notes as emotional colors across changing harmonic palettes, distinguish swing from straight feel, vary rhythmic density as a compositional tool, and create complementary vocal rhythms that interlock with guitar grooves — while strumming, without either skill degrading when the other is added."
     }
   ]
 };

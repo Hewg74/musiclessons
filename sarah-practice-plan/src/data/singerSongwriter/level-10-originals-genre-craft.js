@@ -1,17 +1,17 @@
 import { getPitchRange } from "../appData.js";
 
-export const level9 = {
-  level: 9,
+export const level10 = {
+  level: 10,
   title: "Originals & Genre Craft",
   subtitle: "Every genre is a toolkit. Build songs in each one.",
   description:
     "Apply your melodic and rhythmic skills to create original pieces in specific genres — reggae, surf-psych, desert blues, and soul. Each genre has its own strum feel, tempo pocket, and melodic personality. You'll create one original per genre, then blend them. Based on Lucy Green's 'create within a style' approach: genre constraints channel creativity productively.",
   artists: "DOPE LEMON, Allah-Las, Khruangbin, Skinshape, Tinariwen, Tommy Guerrero",
-  unlocks: "Hearing Harmony (Level 10)",
+  unlocks: "Song Architecture (Level 11)",
   review: { label: "Level 7-8 Check-In", time: 5, exercises: ["ss-7-4", "ss-8-5"], prompt: "Play Am-C-G-Em in 3 different feels (ss-7-4). Then improvise pentatonic melody for 2 minutes over a backing track (ss-8-5). Both fluid? Move on." },
   exercises: [
     {
-      id: "ss-9-1",
+      id: "ss-10-1",
       time: 10,
       title: "Reggae Original",
       type: "song",
@@ -32,7 +32,7 @@ export const level9 = {
       recorder: true
     },
     {
-      id: "ss-9-2",
+      id: "ss-10-2",
       time: 10,
       title: "Surf-Psych Original",
       type: "song",
@@ -53,7 +53,7 @@ export const level9 = {
       recorder: true
     },
     {
-      id: "ss-9-3",
+      id: "ss-10-3",
       time: 10,
       title: "Desert Blues Original",
       type: "song",
@@ -74,7 +74,7 @@ export const level9 = {
       recorder: true
     },
     {
-      id: "ss-9-4",
+      id: "ss-10-4",
       time: 10,
       title: "Soul Groove Original",
       type: "song",
@@ -96,7 +96,7 @@ export const level9 = {
       recorder: true
     },
     {
-      id: "ss-9-5",
+      id: "ss-10-5",
       time: 10,
       title: "Global Fusion Original",
       type: "song",
@@ -118,7 +118,7 @@ export const level9 = {
       recorder: true
     },
     {
-      id: "ss-9-6",
+      id: "ss-10-6",
       time: 7,
       title: "Genre Micro-Timing Deep Dive",
       type: "rhythm",
@@ -134,12 +134,12 @@ export const level9 = {
       ],
       feel: "Each version should feel genuinely different — like four different songs. If they all sound the same, you're not exaggerating the timing differences enough.",
       wrong: "If you can't hear the difference between versions, your timing shifts aren't big enough. Exaggerate. Make the reggae version absurdly late. Make the surf version push hard. Subtlety comes after you can do the extremes.",
-      sarah: "Gene, this is the most ear-opening exercise in Level 9. Once you hear that the same melody becomes four genres just by shifting timing, you'll never hear music the same way.",
+      sarah: "Gene, this is the most ear-opening exercise in Level 11. Once you hear that the same melody becomes four genres just by shifting timing, you'll never hear music the same way.",
       metronome: 85,
       recorder: true
     },
     {
-      id: "ss-9-7",
+      id: "ss-10-7",
       time: 10,
       title: "Song Deconstruction II",
       type: "listen",
@@ -160,7 +160,7 @@ export const level9 = {
       recorder: true
     },
     {
-      id: "ss-9-8",
+      id: "ss-10-8",
       time: 7,
       title: "Strum Pattern as Signature",
       type: "guitar",
@@ -179,7 +179,7 @@ export const level9 = {
       recorder: true
     },
     {
-      id: "ss-9-9",
+      id: "ss-10-9",
       time: 8,
       title: "Genre Blend",
       type: "song",
@@ -200,7 +200,7 @@ export const level9 = {
       recorder: true
     },
     {
-      id: "ss-9-10",
+      id: "ss-10-10",
       time: 7,
       title: "Tempo as Mood",
       type: "song",
@@ -220,7 +220,7 @@ export const level9 = {
       recorder: true
     },
     {
-      id: "ss-9-11",
+      id: "ss-10-11",
       time: 7,
       title: "Capo as Catalyst",
       type: "guitar",
@@ -239,7 +239,7 @@ export const level9 = {
       recorder: true
     },
     {
-      id: "ss-9-12",
+      id: "ss-10-12",
       time: 8,
       title: "Loop Thinking",
       type: "song",
@@ -259,7 +259,7 @@ export const level9 = {
       recorder: true
     },
     {
-      id: "ss-9-13",
+      id: "ss-10-13",
       time: 8,
       title: "Parasitic Songwriting",
       type: "song",
@@ -279,7 +279,7 @@ export const level9 = {
       recorder: true
     },
     {
-      id: "ss-9-14",
+      id: "ss-10-14",
       time: 10,
       title: "Complete Original",
       type: "song",
