@@ -24,8 +24,8 @@ let T = {
   radius: "2px",
   radiusMd: "6px",
 
-  sm: "0 4px 16px rgba(0, 0, 0, 0.04)",
-  md: "0 12px 40px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04)",
+  sm: "0 4px 12px rgba(44, 40, 37, 0.03)",
+  md: "0 12px 32px rgba(44, 40, 37, 0.06), 0 4px 12px rgba(44, 40, 37, 0.02)",
 };
 
 const LIGHT_THEME = { ...T };
@@ -40,8 +40,8 @@ const DARK_THEME = {
   coralSoft: "#3b1f1f",
   plumSoft: "#2e202d",
   slateSoft: "#1e2a30",
-  sm: "0 4px 16px rgba(0,0,0,0.4)",
-  md: "0 12px 40px rgba(0,0,0,0.6), 0 4px 12px rgba(0,0,0,0.3)",
+  sm: "0 4px 12px rgba(0,0,0,0.3)",
+  md: "0 12px 32px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.2)",
 };
 
 let ACCENT_CONFIG = {}; // Will be initialized below
@@ -649,14 +649,9 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
     <div className={`exercise-card exercise-card-${ex.id}`} style={{
       background: completed ? T.successSoft : T.bgCard,
       border: `1px solid ${completed ? T.success + "40" : T.border}`,
-      borderLeft: `4px solid ${completed ? T.success : dayColor || T.gold}`,
-      marginBottom: 16, overflow: "hidden", borderRadius: T.radiusMd,
-      boxShadow: open ? T.md : T.sm,
-      transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
-    }}
-    onMouseEnter={e => { if (!open) { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = T.md; } }}
-    onMouseLeave={e => { if (!open) { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = T.sm; } }}
-    >
+      borderLeft: `1px solid ${completed ? T.success : dayColor || T.gold}`,
+      marginBottom: 12, overflow: "hidden", borderRadius: T.radius
+    }}>
       <div onClick={handleToggle} style={{
         display: "flex", alignItems: "center", gap: 12, padding: "16px", cursor: "pointer"
       }}>
@@ -2171,26 +2166,22 @@ function ToolCard({ title, icon, defaultOpen = false, children }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
     <div style={{
-      background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: T.radiusMd,
-      marginBottom: 16, overflow: "hidden", transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-      boxShadow: open ? T.md : T.sm
-    }}
-    onMouseEnter={e => { if (!open) { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = T.md; } }}
-    onMouseLeave={e => { if (!open) { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = T.sm; } }}
-    >
+      background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: T.radius,
+      marginBottom: 12, overflow: "hidden", transition: "all 0.2s"
+    }}>
       <div onClick={() => setOpen(!open)} style={{
-        display: "flex", alignItems: "center", gap: 16, padding: "18px 20px", cursor: "pointer"
+        display: "flex", alignItems: "center", gap: 14, padding: "16px", cursor: "pointer"
       }}>
         <div style={{ fontSize: 24, flexShrink: 0, width: 32, textAlign: "center" }}>{icon}</div>
         <div style={{ flex: 1 }}>
           <div style={{ fontWeight: 600, fontSize: 18, color: T.textDark, fontFamily: T.serif }}>{title}</div>
         </div>
-        <div style={{ color: T.textMuted, display: "flex", transition: "transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)", transform: open ? "rotate(180deg)" : "" }}>
+        <div style={{ color: T.textMuted, display: "flex", transition: "transform 0.2s", transform: open ? "rotate(180deg)" : "" }}>
           <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7 10l5 5 5-5z" /></svg>
         </div>
       </div>
       {open && (
-        <div style={{ padding: "0 20px 20px", borderTop: `1px solid ${T.borderSoft}`, paddingTop: 20 }}>
+        <div style={{ padding: "0 16px 16px", borderTop: `1px solid ${T.borderSoft}`, paddingTop: 16 }}>
           {children}
         </div>
       )}
@@ -2353,33 +2344,25 @@ function ArchiveBranch({ type, exercises, completed, onComplete, metro, onOpenTa
   const t = TYPE[type] || TYPE.rhythm;
 
   return (
-    <div style={{
-      marginBottom: 16, background: T.bgCard, border: `1px solid ${T.border}`,
-      borderRadius: T.radiusMd, overflow: "hidden",
-      boxShadow: open ? T.md : T.sm,
-      transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
-    }}
-    onMouseEnter={e => { if (!open) { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = T.md; } }}
-    onMouseLeave={e => { if (!open) { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = T.sm; } }}
-    >
+    <div style={{ marginBottom: 16 }}>
       <div onClick={() => setOpen(!open)} style={{
         display: "flex", alignItems: "center", justifyContent: "space-between",
-        borderLeft: `4px solid ${t.color}`,
-        padding: "16px 20px", cursor: "pointer"
+        background: T.bgCard, border: `1px solid ${T.border}`, borderLeft: `3px solid ${t.color}`,
+        padding: "14px 18px", cursor: "pointer", transition: "all 0.2s"
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
           <span style={{ fontSize: 24, width: 32, textAlign: "center" }}>{t.icon}</span>
           <div>
             <div style={{ fontSize: 18, fontWeight: 600, color: T.textDark, fontFamily: T.serif, marginBottom: 2 }}>{t.label}</div>
             <div style={{ fontSize: 13, color: T.textMuted, fontFamily: T.sans, marginTop: 1 }}>{exercises.length} exercise{exercises.length !== 1 ? "s" : ""} from lessons</div>
           </div>
         </div>
-        <div style={{ color: T.textMuted, display: "flex", transition: "transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)", transform: open ? "rotate(180deg)" : "" }}>
+        <div style={{ color: T.textMuted, display: "flex", transition: "transform 0.2s", transform: open ? "rotate(180deg)" : "" }}>
           <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7 10l5 5 5-5z" /></svg>
         </div>
       </div>
       {open && (
-        <div style={{ padding: "0 20px 20px", borderTop: `1px solid ${T.borderSoft}`, paddingTop: 20 }}>
+        <div style={{ marginTop: 6 }}>
           {exercises.map(ex => (
             <div key={ex.id}>
               <div style={{ fontSize: 10, color: T.textMuted, fontFamily: T.sans, padding: "6px 4px 2px", letterSpacing: "0.05em", textTransform: "uppercase" }}>

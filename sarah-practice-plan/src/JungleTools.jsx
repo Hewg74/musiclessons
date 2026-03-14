@@ -171,9 +171,9 @@ export function MiniAudioPlayer({ src, theme: T, title, playbackRate = 1 }) {
   return (
     <div style={{
       background: T.bgCard, border: `1px solid ${T.border}`,
-      borderRadius: T.radiusMd, padding: "14px 16px", marginBottom: 16,
+      borderRadius: T.radiusMd, padding: "14px 16px", marginBottom: 12,
       display: "flex", flexDirection: "column", gap: 12,
-      boxShadow: T.sm
+      boxShadow: "0 2px 8px rgba(44,40,37,0.03)"
     }}>
       <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
         <audio

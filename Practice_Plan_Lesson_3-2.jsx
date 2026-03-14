@@ -14,7 +14,7 @@ const T = {
   slate:"#6b7b8f", slateSoft:"#6b7b8f18",
   serif:"'Playfair Display','Georgia',serif",
   sans:"'Lato',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",
-  sm:"0 4px 16px rgba(0,0,0,0.04)", md:"0 12px 40px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04)",
+  sm:"0 1px 3px rgba(28,25,23,0.06)", md:"0 4px 12px rgba(28,25,23,0.08)",
 };
 
 // Exercise type config
@@ -983,13 +983,9 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor }) {
     <div style={{
       background:completed?T.successSoft:T.bgCard,
       border:`1px solid ${completed?T.success+"40":T.border}`,
-      borderLeft:`4px solid ${completed?T.success:dayColor||T.gold}`,
-      borderRadius:14, marginBottom:16, overflow:"hidden",
-      transition:"all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)", boxShadow:open?T.md:T.sm
-    }}
-    onMouseEnter={e => { if (!open) { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = T.md; } }}
-    onMouseLeave={e => { if (!open) { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = T.sm; } }}
-    >
+      borderRadius:14, marginBottom:10, overflow:"hidden",
+      transition:"all 0.2s", boxShadow:open?T.md:T.sm
+    }}>
       <div onClick={()=>setOpen(!open)} style={{
         display:"flex", alignItems:"center", gap:12, padding:"14px 18px", cursor:"pointer"
       }}>
