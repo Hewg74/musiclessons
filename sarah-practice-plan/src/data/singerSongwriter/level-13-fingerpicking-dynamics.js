@@ -182,7 +182,7 @@ export const level13 = {
       sarah: "Gene, this is how you create the warm, layered vocal sound you love in DOPE LEMON and Skinshape. One voice, recorded three times, becomes a choir. Lo-fi vocal production starts here.",
       recorder: true,
       referencePitches: getPitchRange("E3", "A4"),
-      pianoKeys: true
+      pianoKeys: { notes: ["A3", "C4", "E4", "A4"], label: "Harmony Notes", range: ["A3", "A4"] }
     },
 
     // ─── NEW: DYNAMIC PHRASING ───

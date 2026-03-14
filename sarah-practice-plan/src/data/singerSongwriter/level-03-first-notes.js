@@ -122,7 +122,7 @@ export const level3 = {
       drone: { root: "A", octave: 2, texture: "pure" },
       referencePitches: getPitchRange("A2", "E4"),
       pitchContour: true,
-      pianoKeys: true,
+      pianoKeys: { notes: ["A3", "E4"], label: "Root & 5th", range: ["A3", "E4"] },
       metronome: 75,
       recorder: true
     },
@@ -216,7 +216,7 @@ export const level3 = {
       drone: { root: "A", octave: 2, texture: "warm" },
       referencePitches: getPitchRange("A2", "E4"),
       pitchContour: true,
-      pianoKeys: true,
+      pianoKeys: { notes: ["A3", "C4", "E4"], label: "Am Triad", range: ["A3", "E4"] },
       metronome: 70,
       recorder: true
     },

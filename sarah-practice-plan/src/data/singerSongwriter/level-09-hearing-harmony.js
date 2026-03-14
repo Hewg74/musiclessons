@@ -127,7 +127,7 @@ export const level9 = {
       feel: "Numbers should start replacing chord names in your head. When someone says 'go to the four chord,' you should feel the departure energy before your fingers even move.",
       wrong: "If you keep thinking in chord names, slow down. Say the numbers out loud every time you change chords. It takes repetition to rewire your brain from names to functions.",
       sarah: "Gene, Nashville numbers are the shortcut every pro uses. When you jam with other musicians, numbers are how you communicate. This skill makes you fluent in the universal language of harmony.",
-      pianoKeys: true,
+      pianoKeys: { notes: ["A3", "C4", "E3", "G3"], label: "Nashville Roots", range: ["E3", "C4"] },
       recorder: true,
       metronome: 80
     },
@@ -148,7 +148,7 @@ export const level9 = {
       wrong: "If the borrowed chords just sound 'wrong,' you haven't established the key firmly enough. Play I-IV-V-I several times first to set up G major as home. Then introduce the borrowed chord — the contrast is what creates the effect.",
       sarah: "Gene, borrowed chords are the secret sauce of your favorite artists. Hermanos Gutiérrez's entire sound is built on bVI. Once you hear it, you'll hear it everywhere — and you'll start using it in your own songs.",
       referencePitches: getPitchRange("G3", "D4"),
-      pianoKeys: true,
+      pianoKeys: { notes: ["G3", "Ab3", "Bb3", "B3", "C4", "D4"], label: "G + Borrowed Chords", range: ["G3", "D4"] },
       recorder: true
     },
     {
@@ -224,7 +224,7 @@ export const level9 = {
       feel: "The deceptive cadence should feel like reaching for a doorknob and finding the door slightly further away than expected. Not wrong — just surprising. That surprise is pure emotional power.",
       wrong: "If D→Em doesn't feel surprising, you haven't set up the expectation strongly enough. Play D→G five or six times first. Really let your ear settle into the expected resolution. Then the deception will land.",
       sarah: "Gene, the deceptive cadence is everywhere in the music you love. It's the moment in a song where you think it's going to resolve and it goes somewhere more interesting instead. Now you can write those moments.",
-      pianoKeys: true,
+      pianoKeys: { notes: ["D3", "E3", "G3", "B3"], label: "Deceptive Cadence", range: ["D3", "B3"] },
       recorder: true
     },
     {

@@ -454,7 +454,7 @@ export const level5 = {
       metronome: 80,
       referencePitches: getPitchRange("E3", "G4"),
       pitchContour: true,
-      pianoKeys: true,
+      pianoKeys: { notes: ["E3", "G3", "A3", "C4"], label: "Chord Roots", range: ["E3", "C4"] },
       recorder: true
     },
     {

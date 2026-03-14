@@ -104,7 +104,7 @@ export const level4 = {
       drone: { root: "A", octave: 2, texture: "warm" },
       referencePitches: getPitchRange("A2", "G4"),
       pitchContour: true,
-      pianoKeys: true,
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Am Pentatonic", range: ["A3", "G4"] },
       fretboard: { scale: "am-pentatonic", position: 1 },
       metronome: 80,
       recorder: true

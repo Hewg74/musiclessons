@@ -219,7 +219,7 @@ export const level7 = {
       wrong: "If all intervals sound the same to you, slow down. Sing each one 10 times with eyes closed. The emotional colors emerge with repetition — they're subtle but real.",
       sarah: "Gene, this is the secret behind your favorite singers. They're not choosing notes randomly — they're choosing feelings. That ache in a Skinshape melody? Minor 3rds. That openness in Khruangbin? Perfect 5ths. Now you know why.",
       drone: { root: "A", octave: 2, texture: "pure" },
-      pianoKeys: true,
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Intervals from A", range: ["A3", "G4"] },
       referencePitches: getPitchRange("A3", "G4"),
       recorder: true
     },

@@ -128,7 +128,7 @@ export const level14 = {
       wrong: "If you're always singing the melody and hoping Court will 'figure out a harmony,' that's not an arrangement — that's avoidance. Do the work of mapping who sings what.",
       sarah: "Gene, singing with Court on the lanai is exactly what this curriculum was building toward. Two voices, one guitar, golden hour light. Prepare the arrangement so the moment can be effortless.",
       referencePitches: getPitchRange("E3", "A4"),
-      pianoKeys: true,
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Duo Harmony", range: ["E3", "E4"] },
       recorder: true
     },
     {
