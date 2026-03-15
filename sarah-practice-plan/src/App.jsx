@@ -8,8 +8,8 @@ import { GUITAR_STUDY } from './data/guitarStudy/index.js';
 import { SINGER_SONGWRITER_LEVELS } from './data/singerSongwriter/index.js';
 
 // ─── AUDIO CONTEXT CONFIG ──
-// Small lookAhead buffers against main-thread jank without perceptible latency
-try { Tone.getContext().lookAhead = 0.05; } catch { }
+// lookAhead 0.1s buffers against main-thread jank (React re-renders) without perceptible latency
+try { Tone.getContext().lookAhead = 0.1; } catch { }
 
 // ─── DESIGN SYSTEM (sarahglassmusic.com) ────────────────────────────
 let T = {

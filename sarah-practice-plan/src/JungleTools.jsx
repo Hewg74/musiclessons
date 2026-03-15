@@ -2444,20 +2444,18 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     let synth;
     let newNodes = [];
 
-    // Master bus — proper gain staging: fixed synth levels → effects → compress → user volume → limit
-    const masterGain = new Tone.Gain(0.85);
-    // Soft compressor tames peaks from polyphonic voice summation + effect amplification
-    const softComp = new Tone.Compressor({ threshold: -15, ratio: 4, knee: 12, attack: 0.1, release: 0.5 });
-    // User volume control — AFTER effects and compression, so signal is already clean
+    // Master bus — static gain staging, no dynamic compression (compressors pump on sustained drones)
+    const masterGain = new Tone.Gain(0.35);
+    // User volume control — AFTER effects, signal is already at safe levels
     const userGain = new Tone.Gain(Tone.dbToGain(volume));
     // Highpass to kill sub-rumble
     const lowcut = new Tone.Filter(40, "highpass");
-    // Safety limiter — -3dB threshold gives headroom, rarely engages hard
+    // Safety limiter — true safety net only, should rarely engage
     const limiter = new Tone.Limiter(-3).toDestination();
 
-    masterGain.chain(softComp, userGain, lowcut, limiter);
+    masterGain.chain(userGain, lowcut, limiter);
     userGainRef.current = userGain;
-    newNodes.push(masterGain, softComp, userGain, lowcut, limiter);
+    newNodes.push(masterGain, userGain, lowcut, limiter);
 
     // FIX: Replaced async Tone.Reverb with synchronous Tone.Freeverb to prevent Web Audio crashes on rapid switching
     if (texture === "analog") {
@@ -2637,14 +2635,23 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     }
 
     return () => {
+      // Fade out the old chain smoothly before disposing to prevent clicks
+      const oldUserGain = userGainRef.current;
+      if (oldUserGain) {
+        try { oldUserGain.gain.rampTo(0, 0.05); } catch {}
+      }
       if (effectSynth) {
-        try { effectSynth.releaseAll(); } catch (e) {}
+        // Wait for fade, then release voices
         setTimeout(() => {
-          try { effectSynth.dispose(); } catch(e) {}
+          try { effectSynth.releaseAll(); } catch {}
+        }, 80);
+        // Wait for release tails to decay, then dispose everything
+        setTimeout(() => {
+          try { effectSynth.dispose(); } catch {}
           effectNodes.forEach(node => {
-            try { node.dispose(); } catch(e) {}
+            try { node.dispose(); } catch {}
           });
-        }, 2000);
+        }, 2500);
       }
     };
   }, [texture]); // re-run only when texture changes
@@ -2665,13 +2672,19 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
 
     if (playing) {
       stoppedRef.current = true;
-      synthRef.current.releaseAll();
-      previousNotesRef.current = [];
       // Clear sequence interval (NOT Tone.Transport — drone uses its own timer)
       if (loopRef.current) {
         clearInterval(loopRef.current);
         loopRef.current = null;
       }
+      // Smooth fade out to prevent click, then release voices
+      if (userGainRef.current) {
+        try { userGainRef.current.gain.rampTo(0, 0.1); } catch {}
+      }
+      setTimeout(() => {
+        try { synthRef.current?.releaseAll(); } catch {}
+        previousNotesRef.current = [];
+      }, 120);
       setPlaying(false);
       onActiveNotesChangeRef.current?.({ notes: [], label: "" });
       setActiveStep(-1);
@@ -2718,14 +2731,20 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
           stepCountRef.current++;
         };
 
+        // Smooth fade in to prevent click
+        if (userGainRef.current) { userGainRef.current.gain.value = 0; }
         // Play first chord immediately
         playStep();
+        if (userGainRef.current) { userGainRef.current.gain.rampTo(Tone.dbToGain(volume), 0.05); }
         // Then repeat on interval — completely independent of Tone.Transport
         loopRef.current = setInterval(playStep, stepToMs(stepDurationRef.current));
 
       } else {
+        // Smooth fade in to prevent click
+        if (userGainRef.current) { userGainRef.current.gain.value = 0; }
         const chordNotes = parseChordToNotes(root, octaveRef.current, mode === "single" ? "single" : "chord");
         if (chordNotes) synthRef.current.triggerAttack(chordNotes);
+        if (userGainRef.current) { userGainRef.current.gain.rampTo(Tone.dbToGain(volume), 0.05); }
         previousNotesRef.current = chordNotes || [];
         onActiveNotesChangeRef.current?.({ notes: chordNotes || [], label: root });
       }
