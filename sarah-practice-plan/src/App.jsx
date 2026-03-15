@@ -530,17 +530,22 @@ function SarahQuote({ text }) {
   );
 }
 
-function DetailSection({ label, color, children }) {
+function DetailSection({ label, color, children, icon }) {
+  if (!children) return null;
   return (
     <div style={{
       background: color + "08", border: `1px solid ${color}18`,
-      borderRadius: T.radius, padding: "16px", marginBottom: 12,
-      borderLeft: `1px solid ${color}`
+      borderRadius: T.radiusMd, padding: "14px 16px", marginBottom: 12,
+      borderLeft: `3px solid ${color}`,
+      boxShadow: "0 1px 2px rgba(0,0,0,0.02)"
     }}>
-      <div style={{ fontSize: 10, fontWeight: 700, color, letterSpacing: 1.5, marginBottom: 6, fontFamily: T.sans, textTransform: "uppercase" }}>
-        {label}
+      <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
+        {icon && <span style={{ fontSize: 14 }}>{icon}</span>}
+        <div style={{ fontSize: 10, fontWeight: 700, color, letterSpacing: 1.5, fontFamily: T.sans, textTransform: "uppercase" }}>
+          {label}
+        </div>
       </div>
-      <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, lineHeight: 1.7 }}>
+      <div style={{ fontSize: 13, color: T.textDark, fontFamily: T.sans, lineHeight: 1.6 }}>
         {children}
       </div>
     </div>
@@ -653,22 +658,29 @@ function FlowStepView({ steps, accentColor }) {
   const total = steps.length;
 
   return (
-    <div style={{ marginBottom: 16 }}>
-      {/* Step counter */}
+    <div style={{ 
+      marginBottom: 20, 
+      border: `1px solid ${T.border}`, 
+      borderRadius: T.radiusMd,
+      background: T.bgCard,
+      overflow: "hidden" 
+    }}>
+      {/* Header */}
       <div style={{
-        display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12
+        display: "flex", justifyContent: "space-between", alignItems: "center",
+        padding: "12px 16px", background: T.bgSoft, borderBottom: `1px solid ${T.border}`
       }}>
         <div style={{
-          fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase",
+          fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase",
           color: accentColor || T.gold, fontFamily: T.sans
         }}>
-          Step {stepIndex + 1} of {total}
+          Step {stepIndex + 1} <span style={{color: T.textMuted}}>of {total}</span>
         </div>
         {/* Step dots */}
         <div style={{ display: "flex", gap: 4 }}>
           {steps.map((_, i) => (
-            <div key={i} onClick={() => { setStepIndex(i); setShowWhy(false); }} style={{
-              width: 6, height: 6, borderRadius: "50%", cursor: "pointer",
+            <div key={i} onClick={() => { setStepIndex(i); setShowWhy(true); }} style={{
+              width: 24, height: 4, borderRadius: 2, cursor: "pointer",
               background: i === stepIndex ? (accentColor || T.gold) : T.border,
               transition: "background 0.2s"
             }} />
@@ -676,65 +688,71 @@ function FlowStepView({ steps, accentColor }) {
         </div>
       </div>
 
-      {/* Step text */}
-      <div style={{
-        fontSize: 17, color: T.textDark, fontFamily: T.sans, lineHeight: 1.7, fontWeight: 500,
-        padding: "16px 20px", background: T.bgSoft,
-        borderLeft: `1px solid ${accentColor || T.gold}`, minHeight: 80
-      }}>
-        {step.text}
-      </div>
-
-      {/* Why (collapsible) */}
-      {step.why && (
-        <div style={{ marginTop: 8 }}>
-          <button onClick={() => setShowWhy(!showWhy)} style={{
-            background: "none", border: "none", color: T.textLight, fontSize: 12,
-            fontFamily: T.sans, cursor: "pointer", fontStyle: "italic", padding: 0,
-            display: "flex", alignItems: "center", gap: 4
-          }}>
-            <span style={{ transition: "transform 0.2s", transform: showWhy ? "rotate(90deg)" : "", display: "inline-block" }}>&#9654;</span>
-            Why this matters
-          </button>
-          {showWhy && (
-            <div style={{
-              fontSize: 13, color: T.textLight, fontFamily: T.sans, lineHeight: 1.6,
-              marginTop: 6, padding: "8px 12px", fontStyle: "italic"
-            }}>
-              {step.why}
-            </div>
-          )}
+      {/* Content */}
+      <div style={{ padding: "20px" }}>
+        <div style={{
+          fontSize: 16, color: T.textDark, fontFamily: T.sans, lineHeight: 1.6, fontWeight: 500,
+          minHeight: 60
+        }}>
+          {step.text}
         </div>
-      )}
+
+        {/* Why */}
+        {step.why && (
+          <div style={{ marginTop: 16 }}>
+            <button onClick={() => setShowWhy(!showWhy)} style={{
+              background: "none", border: "none", color: T.textLight, fontSize: 11,
+              fontFamily: T.sans, cursor: "pointer", padding: 0,
+              display: "flex", alignItems: "center", gap: 6,
+              fontWeight: 600, letterSpacing: 1, textTransform: "uppercase"
+            }}>
+              <span style={{ 
+                display: "inline-flex", alignItems: "center", justifyContent: "center",
+                width: 16, height: 16, border: `1px solid ${T.borderSoft}`, borderRadius: 4,
+                transition: "all 0.2s", background: showWhy ? T.borderSoft : "transparent",
+                color: showWhy ? T.textDark : T.textLight
+              }}>
+                {showWhy ? "−" : "+"}
+              </span>
+              Why this matters
+            </button>
+            {showWhy && (
+              <div style={{
+                fontSize: 13, color: T.textMed, fontFamily: T.sans, lineHeight: 1.6,
+                marginTop: 10, padding: "12px 14px", background: T.bgSoft,
+                borderLeft: `2px solid ${T.border}`, borderRadius: `0 ${T.radius} ${T.radius} 0`
+              }}>
+                {step.why}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
 
       {/* Prev / Next step buttons */}
       {total > 1 && (
-        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 14 }}>
-          <button onClick={() => { setStepIndex(Math.max(0, stepIndex - 1)); setShowWhy(false); }}
-            disabled={stepIndex === 0} className={stepIndex > 0 ? "interactive-btn" : ""}
+        <div style={{ display: "flex", borderTop: `1px solid ${T.border}` }}>
+          <button onClick={() => { setStepIndex(Math.max(0, stepIndex - 1)); setShowWhy(true); }}
+            disabled={stepIndex === 0} 
             style={{
-              background: "transparent", border: `1px solid ${stepIndex === 0 ? T.borderSoft : T.border}`,
-              color: stepIndex === 0 ? T.textMuted : T.textMed,
-              padding: "8px 18px", borderRadius: T.radius, cursor: stepIndex === 0 ? "default" : "pointer",
-              fontSize: 12, fontWeight: 600, fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase",
-              transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
-              WebkitTapHighlightColor: "transparent"
+              flex: 1, background: "transparent", border: "none", borderRight: `1px solid ${T.border}`,
+              color: stepIndex === 0 ? T.borderSoft : T.textMed,
+              padding: "12px", cursor: stepIndex === 0 ? "default" : "pointer",
+              fontSize: 11, fontWeight: 600, fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase",
+              transition: "all 0.2s", WebkitTapHighlightColor: "transparent"
             }}>
-            ← Prev
+            Prev
           </button>
-          <button onClick={() => { setStepIndex(Math.min(total - 1, stepIndex + 1)); setShowWhy(false); }}
-            disabled={stepIndex === total - 1} className={stepIndex < total - 1 ? "interactive-btn" : ""}
+          <button onClick={() => { setStepIndex(Math.min(total - 1, stepIndex + 1)); setShowWhy(true); }}
+            disabled={stepIndex === total - 1} 
             style={{
-              background: stepIndex === total - 1 ? "transparent" : (accentColor || T.gold),
-              border: stepIndex === total - 1 ? `1px solid ${T.borderSoft}` : "none",
-              color: stepIndex === total - 1 ? T.textMuted : "#fff",
-              padding: "8px 18px", borderRadius: T.radius,
-              cursor: stepIndex === total - 1 ? "default" : "pointer",
-              fontSize: 12, fontWeight: 600, fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase",
-              transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
-              WebkitTapHighlightColor: "transparent"
+              flex: 1, background: "transparent", border: "none",
+              color: stepIndex === total - 1 ? T.borderSoft : T.textMed,
+              padding: "12px", cursor: stepIndex === total - 1 ? "default" : "pointer",
+              fontSize: 11, fontWeight: 600, fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase",
+              transition: "all 0.2s", WebkitTapHighlightColor: "transparent"
             }}>
-            Next →
+            Next
           </button>
         </div>
       )}
@@ -909,7 +927,7 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
       {/* Drone */}
       {ex.drone && (
         <div style={{ marginBottom: 16 }}>
-          <DroneGenerator theme={T} inline={true}
+          <DroneGenerator theme={T} inline={true} onActiveNotesChange={setDroneActiveNotes}
             {...(typeof ex.drone === 'object' ? {
               defaultRoot: ex.drone.root, defaultOctave: ex.drone.octave,
               defaultTexture: ex.drone.texture, defaultMode: ex.drone.mode,
@@ -934,7 +952,7 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
 
       {/* Piano Keys */}
       {ex.pianoKeys && (
-        <PianoKeysDiagram notes={ex.pianoKeys.notes} label={ex.pianoKeys.label} range={ex.pianoKeys.range} />
+        <PianoKeysDiagram notes={droneActiveNotes.length > 0 ? droneActiveNotes : ex.pianoKeys.notes} label={droneActiveNotes.length > 0 ? "Playing Now" : ex.pianoKeys.label} range={ex.pianoKeys.range} />
       )}
 
       {/* Volume Meter */}
@@ -981,36 +999,26 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
       {(ex.feel || ex.wrong) && (
         <div style={{ marginBottom: 12 }}>
           <button onClick={() => setShowDetails(!showDetails)} style={{
-            background: "none", border: "none", color: T.textLight, fontSize: 12,
-            fontFamily: T.sans, cursor: "pointer", padding: 0,
-            display: "flex", alignItems: "center", gap: 4, fontWeight: 600,
-            letterSpacing: 1, textTransform: "uppercase"
+            background: showDetails ? T.bgSoft : "transparent",
+            border: `1px solid ${T.border}`,
+            color: T.textMed, fontSize: 11,
+            fontFamily: T.sans, cursor: "pointer", 
+            padding: "10px 14px", borderRadius: T.radiusMd, width: "100%",
+            display: "flex", alignItems: "center", justifyContent: "space-between",
+            fontWeight: 600, letterSpacing: 1, textTransform: "uppercase",
+            transition: "all 0.2s"
           }}>
-            <span style={{ transition: "transform 0.2s", transform: showDetails ? "rotate(90deg)" : "", display: "inline-block" }}>&#9654;</span>
-            Feel & Pitfalls
+            <span style={{display: "flex", gap: 8, alignItems: "center"}}>
+              <span style={{ fontSize: 14 }}>💡</span>
+              Feel & Pitfalls
+            </span>
+            <span style={{ fontSize: 14, fontWeight: 400 }}>{showDetails ? "−" : "+"}</span>
           </button>
+          
           {showDetails && (
-            <div style={{ marginTop: 8 }}>
-              {ex.feel && (
-                <div style={{
-                  fontSize: 13, color: T.success, fontFamily: T.sans, lineHeight: 1.6,
-                  padding: "8px 12px", background: T.successSoft, borderRadius: T.radius, marginBottom: 8,
-                  borderLeft: `2px solid ${T.success}`
-                }}>
-                  <span style={{ fontWeight: 700, fontSize: 10, letterSpacing: 1, textTransform: "uppercase" }}>Correct feels like: </span>
-                  {ex.feel}
-                </div>
-              )}
-              {ex.wrong && (
-                <div style={{
-                  fontSize: 13, color: T.coral, fontFamily: T.sans, lineHeight: 1.6,
-                  padding: "8px 12px", background: T.coralSoft, borderRadius: T.radius,
-                  borderLeft: `2px solid ${T.coral}`
-                }}>
-                  <span style={{ fontWeight: 700, fontSize: 10, letterSpacing: 1, textTransform: "uppercase" }}>Going wrong if: </span>
-                  {ex.wrong}
-                </div>
-              )}
+            <div style={{ marginTop: 12, animation: "fade-in-up 0.2s ease-out" }}>
+              {ex.feel && <DetailSection label="What correct feels like" color={T.success} icon="✨">{ex.feel}</DetailSection>}
+              {ex.wrong && <DetailSection label="What's going wrong if" color={T.coral} icon="⚠️">{ex.wrong}</DetailSection>}
             </div>
           )}
         </div>
@@ -1349,6 +1357,7 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
   const [showTabs, setShowTabs] = useState(false);
   const [stepDone, setStepDone] = useState({});
   const [trackRates, setTrackRates] = useState({});
+  const [droneActiveNotes, setDroneActiveNotes] = useState([]);
   const audioRefs = useRef({});
   const timer = useTimer(ex.time);
 
@@ -1708,41 +1717,46 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
           )}
 
           {/* Steps */}
-          <div style={{ marginBottom: 14 }}>
+          <div style={{ marginBottom: 16, border: `1px solid ${T.border}`, borderRadius: T.radiusMd, background: T.bgCard, overflow: "hidden" }}>
             {ex.steps.map((s, i) => (
-              <div key={i}>
+              <div key={i} style={{ borderBottom: i < ex.steps.length - 1 ? `1px solid ${T.border}` : "none" }}>
                 {s.visual === "lyricGrid" && <LyricGrid />}
                 <div style={{
-                  display: "flex", gap: 12, padding: "8px 0",
-                  borderBottom: i < ex.steps.length - 1 ? `1px solid ${T.border}` : "none",
-                  opacity: ex.checklist && stepDone[i] ? 0.5 : 1,
-                  transition: "opacity 0.2s"
+                  display: "flex", gap: 14, padding: "14px 16px",
+                  background: ex.checklist && stepDone[i] ? T.bgSoft : "transparent",
+                  transition: "background 0.2s"
                 }}>
                   {ex.checklist ? (
                     <div onClick={() => setStepDone(d => ({ ...d, [i]: !d[i] }))} style={{
-                      width: 24, height: 24, borderRadius: 4, border: `2px solid ${stepDone[i] ? T.success : dayColor}`,
+                      width: 22, height: 22, borderRadius: 6, border: `2px solid ${stepDone[i] ? T.success : dayColor}`,
                       background: stepDone[i] ? T.success : "transparent",
                       display: "flex", alignItems: "center", justifyContent: "center",
-                      cursor: "pointer", flexShrink: 0, marginTop: 1, transition: "all 0.15s"
+                      cursor: "pointer", flexShrink: 0, marginTop: 2, transition: "all 0.15s",
+                      boxShadow: stepDone[i] ? `0 0 0 3px ${T.success}20` : "none"
                     }}>
-                      {stepDone[i] && <span style={{ color: "#fff", fontSize: 14, fontWeight: 700 }}>&#10003;</span>}
+                      {stepDone[i] && <span style={{ color: "#fff", fontSize: 12, fontWeight: 700 }}>&#10003;</span>}
                     </div>
                   ) : (
                     <div style={{
-                      width: 24, height: 24, borderRadius: "50%", background: dayColor + "10", border: `1px solid ${dayColor}30`,
+                      width: 24, height: 24, borderRadius: 6, background: dayColor + "15", border: `1px solid ${dayColor}30`,
                       display: "flex", alignItems: "center", justifyContent: "center",
-                      fontSize: 12, fontWeight: 600, color: dayColor, flexShrink: 0, fontFamily: T.sans, marginTop: 1
+                      fontSize: 11, fontWeight: 700, color: dayColor, flexShrink: 0, fontFamily: T.sans, marginTop: 1
                     }}>{i + 1}</div>
                   )}
                   <div style={{ flex: 1 }}>
                     <div style={{
-                      fontSize: 14, color: T.textDark, fontFamily: T.sans, lineHeight: 1.6, fontWeight: 500,
-                      textDecoration: ex.checklist && stepDone[i] ? "line-through" : "none"
+                      fontSize: 14, color: ex.checklist && stepDone[i] ? T.textLight : T.textDark, fontFamily: T.sans, lineHeight: 1.6, fontWeight: 500,
+                      textDecoration: ex.checklist && stepDone[i] ? "line-through" : "none",
+                      transition: "color 0.2s"
                     }}>
                       {s.text}
                     </div>
                     {s.why && (
-                      <div style={{ fontSize: 12, color: T.textLight, fontFamily: T.sans, lineHeight: 1.5, marginTop: 3, fontStyle: "italic" }}>
+                      <div style={{ 
+                        fontSize: 12, color: T.textMed, fontFamily: T.sans, lineHeight: 1.5, marginTop: 8, 
+                        padding: "10px 12px", background: T.bgSoft, borderLeft: `2px solid ${T.border}`, borderRadius: `0 ${T.radius} ${T.radius} 0`
+                      }}>
+                        <span style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, color: T.textLight, display: "block", marginBottom: 4 }}>Why this matters</span>
                         {s.why}
                       </div>
                     )}
@@ -1753,8 +1767,10 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
           </div>
 
           {/* Feel / Wrong */}
-          <DetailSection label="What correct feels like" color={T.success}>{ex.feel}</DetailSection>
-          <DetailSection label="What's going wrong if" color={T.coral}>{ex.wrong}</DetailSection>
+          <div style={{ display: "flex", flexDirection: "column", gap: 0, marginBottom: 16 }}>
+            {ex.feel && <DetailSection label="What correct feels like" color={T.success} icon="✨">{ex.feel}</DetailSection>}
+            {ex.wrong && <DetailSection label="What's going wrong if" color={T.coral} icon="⚠️">{ex.wrong}</DetailSection>}
+          </div>
 
           {/* Sarah quote */}
           {ex.sarah && <SarahQuote text={ex.sarah} />}

@@ -2309,7 +2309,7 @@ const parseChordToNotes = (chordStr, baseOct, type = "chord") => {
 };
 
 // --- Drone Generator Component ---
-export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTexture, defaultMode, defaultPreset, defaultProgression, defaultBpm, defaultStepDuration, inline }) {
+export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTexture, defaultMode, defaultPreset, defaultProgression, defaultBpm, defaultStepDuration, inline, onActiveNotesChange }) {
   // Resolve preset defaults
   const preset = defaultPreset ? DRONE_PRESETS.find(p => p.id === defaultPreset) : null;
 
@@ -2613,6 +2613,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         loopRef.current = null;
       }
       setPlaying(false);
+      if (onActiveNotesChange) onActiveNotesChange([]);
       setActiveStep(-1);
     } else {
       setEditingIndex(null); // Close editor when starting
@@ -2634,18 +2635,19 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
           Tone.Draw.schedule(() => {
             setRoot(r);
             setActiveStep(step % currentProg.length);
+            if (onActiveNotesChange) onActiveNotesChange(parseChordToNotes(rawChord, octaveRef.current, "chord") || []);
           }, time);
 
           const chordNotes = parseChordToNotes(rawChord, octaveRef.current, "chord"); // Full Chord
-          
+
           if (chordNotes) {
             const currentNotes = previousNotesRef.current;
             const notesToRelease = currentNotes.filter(n => !chordNotes.includes(n));
             const notesToAttack = chordNotes.filter(n => !currentNotes.includes(n));
-            
+
             if (notesToRelease.length > 0) synthRef.current.triggerRelease(notesToRelease, time);
             if (notesToAttack.length > 0) synthRef.current.triggerAttack(notesToAttack, time + 0.05); // Crossfade envelope
-            
+
             previousNotesRef.current = chordNotes;
           } else {
             synthRef.current.releaseAll(time);
@@ -2659,6 +2661,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         const chordNotes = parseChordToNotes(root, octaveRef.current, mode === "single" ? "single" : "chord");
         if (chordNotes) synthRef.current.triggerAttack(chordNotes);
         previousNotesRef.current = chordNotes || [];
+        if (onActiveNotesChange) onActiveNotesChange(chordNotes || []);
       }
       setPlaying(true);
     }
@@ -2676,6 +2679,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         if (notesToAttack.length > 0) synthRef.current.triggerAttack(notesToAttack, "+0.05"); // slight delay for crossfade
         
         previousNotesRef.current = chordNotes;
+        if (onActiveNotesChange) onActiveNotesChange(chordNotes);
       }
     }
     setRoot(n);
