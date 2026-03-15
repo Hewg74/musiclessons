@@ -2356,25 +2356,36 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     }
   }, [stepDuration, playing]);
 
-  // Handle screen off / app switch — fade out on hide, fade in on show
+  // Handle screen off / app switch — mute immediately, unmute after context stabilizes
+  const wasPlayingRef = useRef(false);
   useEffect(() => {
     const handleVisibility = async () => {
       try {
         if (document.hidden) {
-          // Ramp volume down quickly to avoid pop
-          if (synthRef.current && playing) {
-            synthRef.current.volume.rampTo(-60, 0.1);
+          // Screen off: immediately silence (not ramp — audio thread may already be frozen)
+          if (synthRef.current) {
+            synthRef.current.volume.value = -Infinity;
+          }
+          // Pause Transport to prevent it accumulating time while frozen
+          if (Tone.Transport.state === "started") {
+            wasPlayingRef.current = true;
+            Tone.Transport.pause();
           }
         } else {
-          // Resume context if suspended by browser
+          // Screen on: resume context first
           if (Tone.getContext().state === "suspended") {
             await Tone.getContext().rawContext.resume();
           }
-          // Ramp volume back up after audio thread stabilizes
+          // Restart Transport if it was paused by us
+          if (wasPlayingRef.current && playing) {
+            wasPlayingRef.current = false;
+            Tone.Transport.start();
+          }
+          // Restore volume after a delay for audio thread to stabilize
           if (synthRef.current && playing) {
             setTimeout(() => {
-              try { synthRef.current.volume.rampTo(volume, 0.3); } catch {}
-            }, 300);
+              try { synthRef.current.volume.value = volume; } catch {}
+            }, 200);
           }
         }
       } catch { }
@@ -2412,11 +2423,11 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
 
     // FIX: Replaced async Tone.Reverb with synchronous Tone.Freeverb to prevent Web Audio crashes on rapid switching
     if (texture === "analog") {
-      const chorus = new Tone.Chorus(4, 2.5, 0.5).connect(masterGain).start();
+      const chorus = new Tone.Chorus({ frequency: 2, delayTime: 3, depth: 0.6 }).connect(masterGain).start();
       const filter = new Tone.Filter(800, "lowpass").connect(chorus);
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -12,
-        oscillator: { type: "fatsawtooth", count: 3, spread: 25 },
+        volume: -10,
+        oscillator: { type: "sawtooth" },
         envelope: { attack: 2.5, decay: 0.1, sustain: 1, release: 2 }
       }).connect(filter);
       synth.maxPolyphony = 6;
@@ -2460,12 +2471,12 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       synth.maxPolyphony = 6;
     }
     else if (texture === "strings") {
-      const reverb = new Tone.Freeverb({ roomSize: 0.8, dampening: 3000 }).connect(masterGain);
-      const chorus = new Tone.Chorus(2, 2.5, 0.6).connect(reverb).start();
+      const reverb = new Tone.Freeverb({ roomSize: 0.7, dampening: 3000 }).connect(masterGain);
+      const chorus = new Tone.Chorus({ frequency: 1.5, delayTime: 3, depth: 0.7 }).connect(reverb).start();
       const filter = new Tone.Filter(1200, "lowpass").connect(chorus);
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -12,
-        oscillator: { type: "fatsawtooth", count: 3, spread: 20 },
+        volume: -10,
+        oscillator: { type: "sawtooth" },
         envelope: { attack: 3, decay: 0.1, sustain: 1, release: 2 }
       }).connect(filter);
       synth.maxPolyphony = 6;
