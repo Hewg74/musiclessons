@@ -2353,23 +2353,27 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     }
   }, [stepDuration, playing]);
 
-  // Handle screen off / visibility change — keep audio alive without crackling
+  // Handle screen off / app switch — mute output to prevent crackling on resume
   useEffect(() => {
     const handleVisibility = async () => {
-      if (!document.hidden && playing) {
-        // Screen back on: ensure audio context is running
-        try {
+      try {
+        const dest = Tone.getDestination();
+        if (document.hidden) {
+          // Mute output immediately — browser may glitch the audio thread
+          dest.volume.value = -Infinity;
+        } else {
+          // Screen back: resume context if needed, then restore volume
           if (Tone.getContext().state === "suspended") {
             await Tone.getContext().rawContext.resume();
           }
-        } catch { }
-      }
-      // Don't suspend on screen off — let Web Audio continue in background
-      // Suspending causes crackling on resume; keeping it running is smoother
+          // Small delay to let audio thread stabilize before unmuting
+          setTimeout(() => { dest.volume.value = 0; }, 150);
+        }
+      } catch { }
     };
     document.addEventListener("visibilitychange", handleVisibility);
     return () => document.removeEventListener("visibilitychange", handleVisibility);
-  }, [playing]);
+  }, []);
 
   // Cleanup loop on unmount
   useEffect(() => {
@@ -2547,16 +2551,17 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       newNodes.push(filter);
     }
     else if (texture === "warm") {
-      const reverb = new Tone.Freeverb({ roomSize: 0.5, dampening: 2000 }).connect(masterGain);
-      const filter = new Tone.Filter(500, "lowpass").connect(reverb);
+      const reverb = new Tone.Freeverb({ roomSize: 0.6, dampening: 2500 }).connect(masterGain);
+      const chorus = new Tone.Chorus(1.5, 3, 0.4).connect(reverb).start();
+      const filter = new Tone.Filter(600, "lowpass").connect(chorus);
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -14,
-        oscillator: { type: "triangle" },
-        envelope: { attack: 1.5, decay: 0.2, sustain: 0.85, release: 2 }
+        volume: -12,
+        oscillator: { type: "fattriangle", count: 2, spread: 15 },
+        envelope: { attack: 2, decay: 0.3, sustain: 0.9, release: 3 }
       }).connect(filter);
       synth.maxPolyphony = 8;
-      const lfo = new Tone.LFO(0.06, 350, 600).connect(filter.frequency).start();
-      newNodes.push(reverb, filter, lfo);
+      const lfo = new Tone.LFO(0.08, 400, 700).connect(filter.frequency).start();
+      newNodes.push(reverb, chorus, filter, lfo);
     }
 
     // Fallback for unknown textures — default to pure sine
