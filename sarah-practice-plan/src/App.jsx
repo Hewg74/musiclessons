@@ -1109,8 +1109,8 @@ class FlowErrorBoundary extends React.Component {
   }
 }
 
-function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor, onOpenTapMatch }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
+function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor, startIndex = 0, onOpenTapMatch }) {
+  const [currentIndex, setCurrentIndex] = useState(startIndex);
   const [showSummary, setShowSummary] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const sessionStartRef = useRef(Math.floor(Date.now() / 1000));
@@ -1436,15 +1436,23 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
         <div style={{ padding: "0 18px 18px" }}>
           {/* Flow button */}
           {onStartFlow && (
-            <button onClick={() => onStartFlow(levelExercises || [ex], dayColor)} className="interactive-btn" style={{
-              background: "transparent", border: `1px solid ${dayColor || T.gold}`,
-              color: dayColor || T.gold, padding: "6px 14px", borderRadius: T.radius,
+            <button onClick={() => {
+              const exercises = levelExercises || [ex];
+              const startIdx = levelExercises ? levelExercises.findIndex(e => e.id === ex.id) : 0;
+              onStartFlow(exercises, dayColor, Math.max(0, startIdx));
+            }} className="interactive-btn" style={{
+              background: dayColor || T.gold, border: "none",
+              color: "#fff", padding: "8px 18px", borderRadius: T.radius,
               cursor: "pointer", fontSize: 10, fontWeight: 700, fontFamily: T.sans,
               letterSpacing: 2, textTransform: "uppercase", display: "inline-flex",
-              alignItems: "center", gap: 6, marginBottom: 12,
-              WebkitTapHighlightColor: "transparent"
-            }}>
-              <span style={{ fontSize: 12 }}>&#9654;</span> Flow
+              alignItems: "center", gap: 8, marginTop: 4, marginBottom: 16,
+              boxShadow: `0 2px 8px ${dayColor || T.gold}40`,
+              WebkitTapHighlightColor: "transparent", transition: "all 0.2s"
+            }}
+            onMouseOver={e => e.currentTarget.style.filter = "brightness(1.1)"}
+            onMouseOut={e => e.currentTarget.style.filter = "brightness(1)"}
+            >
+              <span style={{ fontSize: 12 }}>&#9654;</span> Flow from here
             </button>
           )}
 
@@ -4038,9 +4046,11 @@ export default function App() {
   const [flowAccentColor, setFlowAccentColor] = useState(null);
   const metro = useMetronome();
 
-  const startFlow = useCallback((exercises, accentColor) => {
+  const [flowStartIndex, setFlowStartIndex] = useState(0);
+  const startFlow = useCallback((exercises, accentColor, startIndex = 0) => {
     setFlowExercises(exercises);
     setFlowAccentColor(accentColor || T.gold);
+    setFlowStartIndex(startIndex);
     setFlowActive(true);
   }, []);
 
@@ -4126,6 +4136,7 @@ export default function App() {
           metro={metro}
           onExit={exitFlow}
           accentColor={flowAccentColor}
+          startIndex={flowStartIndex}
           onOpenTapMatch={setTapMatchBpm}
         />
         {tapMatchBpm && (

@@ -197,7 +197,7 @@ export const level4 = {
       feel: "The G major palette should feel like stepping from a moody evening into warm afternoon sunlight. Same framework (root, 3rd, 5th), completely different emotional temperature. Gold instead of blue.",
       wrong: "If G major and Am feel the same emotionally, spend more time on the 3rd. Hold B (major 3rd) for 16 beats, then switch to C (minor 3rd over Am). The difference is the emotional hinge — everything else is similar. Keep switching until the contrast is visceral.",
       sarah: "Gene, your playlist has both colors — the golden warmth of surf-rock and the blue melancholy of desert blues. Now you can choose which palette to sing in. G major is your sunshine sound; Am is your golden-hour sound. Both are you.",
-      drone: { root: "G", octave: 2, texture: "pure" },
+      drone: { root: "G", octave: 3, texture: "pure" },
       pitchContour: true,
       metronome: 80,
       referencePitches: getPitchRange("G2", "D4"),

@@ -93,7 +93,7 @@ export const level2 = {
       time: 6,
       title: "Root Note Singing",
       type: "vocal",
-      drone: { root: "G", octave: 2, texture: "pure" },
+      drone: { root: "G", octave: 3, texture: "pure" },
       referencePitches: getPitchRange("C3", "G3"),
       what: "Strum your chord progression and sing only the root note of each chord as it changes. One note per chord. This is the absolute minimum vocal demand — and it teaches your ear to hear which note 'belongs' to each chord.",
       setup: "Guitar. Metronome at 85 BPM. Know the root notes: G chord = sing G, C chord = sing C, D chord = sing D, Em = sing E, Am = sing A.",
@@ -114,7 +114,7 @@ export const level2 = {
       time: 6,
       title: "Two-Note Singing",
       type: "vocal",
-      drone: { root: "G", octave: 2, texture: "pure" },
+      drone: { root: "G", octave: 3, texture: "pure" },
       what: "Sing the root AND the 5th of each chord while strumming. G chord = sing G then D. C chord = sing C then G. Two notes per chord doubles your melodic vocabulary while staying harmonically safe — the 5th always sounds consonant.",
       setup: "Guitar. Metronome at 85 BPM. Reference: G chord root=G, 5th=D. C chord root=C, 5th=G. D chord root=D, 5th=A. Em root=E, 5th=B. Am root=A, 5th=E.",
       steps: [
@@ -135,7 +135,7 @@ export const level2 = {
       time: 6,
       title: "Walk the Chord Tones",
       type: "vocal",
-      drone: { root: "G", octave: 2, texture: "pure" },
+      drone: { root: "G", octave: 3, texture: "pure" },
       what: "Sing root, 3rd, and 5th of each chord slowly while strumming. G chord = G-B-D. Am = A-C-E. Singing the full triad is the bridge to melody — three notes per chord gives you enough vocabulary for real melodic phrases.",
       setup: "Guitar. Metronome at 80 BPM. Reference: G=G-B-D, C=C-E-G, D=D-F#-A, Em=E-G-B, Am=A-C-E.",
       steps: [
