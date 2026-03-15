@@ -2613,7 +2613,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         loopRef.current = null;
       }
       setPlaying(false);
-      if (onActiveNotesChange) onActiveNotesChange([]);
+      if (onActiveNotesChange) onActiveNotesChange({ notes: [], label: "" });
       setActiveStep(-1);
     } else {
       setEditingIndex(null); // Close editor when starting
@@ -2635,7 +2635,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
           Tone.Draw.schedule(() => {
             setRoot(r);
             setActiveStep(step % currentProg.length);
-            if (onActiveNotesChange) onActiveNotesChange(parseChordToNotes(rawChord, octaveRef.current, "chord") || []);
+            if (onActiveNotesChange) onActiveNotesChange({ notes: parseChordToNotes(rawChord, octaveRef.current, "chord") || [], label: rawChord });
           }, time);
 
           const chordNotes = parseChordToNotes(rawChord, octaveRef.current, "chord"); // Full Chord
@@ -2661,7 +2661,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         const chordNotes = parseChordToNotes(root, octaveRef.current, mode === "single" ? "single" : "chord");
         if (chordNotes) synthRef.current.triggerAttack(chordNotes);
         previousNotesRef.current = chordNotes || [];
-        if (onActiveNotesChange) onActiveNotesChange(chordNotes || []);
+        if (onActiveNotesChange) onActiveNotesChange({ notes: chordNotes || [], label: root });
       }
       setPlaying(true);
     }
@@ -2679,7 +2679,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         if (notesToAttack.length > 0) synthRef.current.triggerAttack(notesToAttack, "+0.05"); // slight delay for crossfade
         
         previousNotesRef.current = chordNotes;
-        if (onActiveNotesChange) onActiveNotesChange(chordNotes);
+        if (onActiveNotesChange) onActiveNotesChange({ notes: chordNotes || [], label: root });
       }
     }
     setRoot(n);

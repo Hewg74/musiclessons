@@ -744,7 +744,7 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
   const [showTabs, setShowTabs] = useState(false);
   const [trackRates, setTrackRates] = useState({});
   const [timerDone, setTimerDone] = useState(false);
-  const [droneActiveNotes, setDroneActiveNotes] = useState([]);
+  const [droneActiveNotes, setDroneActiveNotes] = useState({ notes: [], label: "" });
 
   // Detect timer completion
   useEffect(() => {
@@ -931,7 +931,7 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
 
       {/* Piano Keys */}
       {ex.pianoKeys && (
-        <PianoKeysDiagram notes={droneActiveNotes.length > 0 ? droneActiveNotes : ex.pianoKeys.notes} label={droneActiveNotes.length > 0 ? "Playing Now" : ex.pianoKeys.label} range={ex.pianoKeys.range} />
+        <PianoKeysDiagram notes={droneActiveNotes.notes.length > 0 ? droneActiveNotes.notes : ex.pianoKeys.notes} label={droneActiveNotes.notes.length > 0 ? droneActiveNotes.label : ex.pianoKeys.label} range={ex.pianoKeys.range} />
       )}
 
       {/* Volume Meter */}
@@ -1119,6 +1119,11 @@ function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor
   const touchRef = useRef(null);
 
   const onTouchStart = (e) => {
+    // Don't capture swipes that start on interactive elements (keyboards, sliders, buttons, inputs)
+    const tag = e.target.tagName;
+    const isInteractive = tag === "BUTTON" || tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA" ||
+      e.target.closest("button, input, select, [role='slider'], .hide-scrollbar, svg, canvas");
+    if (isInteractive) { touchRef.current = null; return; }
     touchRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
   };
   const onTouchEnd = (e) => {
@@ -1126,7 +1131,8 @@ function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor
     const dx = e.changedTouches[0].clientX - touchRef.current.x;
     const dy = e.changedTouches[0].clientY - touchRef.current.y;
     touchRef.current = null;
-    if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return;
+    // Require larger horizontal swipe (120px) and must be clearly horizontal (3:1 ratio)
+    if (Math.abs(dx) < 120 || Math.abs(dx) < Math.abs(dy) * 3) return;
     if (dx < 0 && currentIndex < exercises.length - 1) handleJump(currentIndex + 1);
     if (dx > 0 && currentIndex > 0) handleJump(currentIndex - 1);
   };
@@ -1346,7 +1352,7 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
   const [showTabs, setShowTabs] = useState(false);
   const [stepDone, setStepDone] = useState({});
   const [trackRates, setTrackRates] = useState({});
-  const [droneActiveNotes, setDroneActiveNotes] = useState([]);
+  const [droneActiveNotes, setDroneActiveNotes] = useState({ notes: [], label: "" });
   const audioRefs = useRef({});
   const timer = useTimer(ex.time);
 
@@ -1653,8 +1659,8 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
           {/* Piano Keys Diagram — linked to drone active notes */}
           {ex.pianoKeys && (
             <PianoKeysDiagram
-              notes={droneActiveNotes.length > 0 ? droneActiveNotes : ex.pianoKeys.notes}
-              label={droneActiveNotes.length > 0 ? "Playing Now" : ex.pianoKeys.label}
+              notes={droneActiveNotes.notes.length > 0 ? droneActiveNotes.notes : ex.pianoKeys.notes}
+              label={droneActiveNotes.notes.length > 0 ? droneActiveNotes.label : ex.pianoKeys.label}
               range={ex.pianoKeys.range}
             />
           )}
