@@ -1357,7 +1357,7 @@ function StartFlowButton({ onClick, accentColor }) {
 
 // ─── EXERCISE CARD ──────────────────────────────────────────────────
 
-function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMatch, onStartFlow }) {
+function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMatch, onStartFlow, levelExercises }) {
   const [open, setOpen] = useState(false);
   const [showTimer, setShowTimer] = useState(false);
   const [showTabs, setShowTabs] = useState(false);
@@ -1437,7 +1437,7 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
         <div style={{ padding: "0 18px 18px" }}>
           {/* Flow button */}
           {onStartFlow && (
-            <button onClick={() => onStartFlow([ex], dayColor)} className="interactive-btn" style={{
+            <button onClick={() => onStartFlow(levelExercises || [ex], dayColor)} className="interactive-btn" style={{
               background: "transparent", border: `1px solid ${dayColor || T.gold}`,
               color: dayColor || T.gold, padding: "6px 14px", borderRadius: T.radius,
               cursor: "pointer", fontSize: 10, fontWeight: 700, fontFamily: T.sans,
@@ -1850,7 +1850,7 @@ function DayView({ day, completed, onComplete, metro, onOpenTapMatch, onStartFlo
 
       {day.exercises.map(ex => (
         <ExerciseCard key={ex.id} ex={ex} metro={metro}
-          completed={completed.has(ex.id)} onComplete={onComplete} dayColor={c} onOpenTapMatch={onOpenTapMatch} onStartFlow={onStartFlow} />
+          completed={completed.has(ex.id)} onComplete={onComplete} dayColor={c} onOpenTapMatch={onOpenTapMatch} onStartFlow={onStartFlow} levelExercises={day.exercises} />
       ))}
     </div>
   );
@@ -3242,7 +3242,7 @@ function LevelView({ level, completed, onComplete, metro, onOpenTapMatch, levelC
 
       {level.exercises.map(ex => (
         <ExerciseCard key={ex.id} ex={ex} metro={metro}
-          completed={completed.has(ex.id)} onComplete={onComplete} dayColor={c} onOpenTapMatch={onOpenTapMatch} onStartFlow={onStartFlow} />
+          completed={completed.has(ex.id)} onComplete={onComplete} dayColor={c} onOpenTapMatch={onOpenTapMatch} onStartFlow={onStartFlow} levelExercises={level.exercises} />
       ))}
     </div>
   );
@@ -3399,7 +3399,7 @@ function GuitarStudyView({ completed, onComplete, metro, onOpenTapMatch, onStart
         <ReviewCheckIn review={selectedLevel.review} accentColor={T.slate} />
         {selectedLevel.exercises.map(ex => (
           <ExerciseCard key={ex.id} ex={ex} metro={metro}
-            completed={completed.has(ex.id)} onComplete={onComplete} dayColor={T.slate} onOpenTapMatch={onOpenTapMatch} onStartFlow={onStartFlow} />
+            completed={completed.has(ex.id)} onComplete={onComplete} dayColor={T.slate} onOpenTapMatch={onOpenTapMatch} onStartFlow={onStartFlow} levelExercises={selectedLevel.exercises} />
         ))}
       </div>
     </div>
@@ -3534,7 +3534,7 @@ function SingerSongwriterView({ completed, onComplete, metro, onOpenTapMatch, on
         <ReviewCheckIn review={selectedLevel.review} accentColor={T.coral} />
         {selectedLevel.exercises.map(ex => (
           <ExerciseCard key={ex.id} ex={ex} metro={metro}
-            completed={completed.has(ex.id)} onComplete={onComplete} dayColor={T.coral} onOpenTapMatch={onOpenTapMatch} onStartFlow={onStartFlow} />
+            completed={completed.has(ex.id)} onComplete={onComplete} dayColor={T.coral} onOpenTapMatch={onOpenTapMatch} onStartFlow={onStartFlow} levelExercises={selectedLevel.exercises} />
         ))}
       </div>
     </div>

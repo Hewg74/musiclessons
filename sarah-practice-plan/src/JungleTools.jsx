@@ -2400,22 +2400,15 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     let synth;
     let newNodes = [];
 
-    // Master bus to prevent clipping and manage dynamics
-    const masterGain = new Tone.Gain(0.4);
-    // Highpass filter to kill sub-rumble below 30Hz that eats headroom
-    const lowcut = new Tone.Filter(30, "highpass");
-    // Gentle compression — just tame peaks, don't pump
-    const compressor = new Tone.Compressor({
-      threshold: -18,
-      ratio: 2,
-      attack: 0.3,
-      release: 0.8
-    });
-    // Final safety limiter to guarantee no digital clipping 
-    const limiter = new Tone.Limiter(-3).toDestination();
-    
-    masterGain.chain(lowcut, compressor, limiter);
-    newNodes.push(masterGain, lowcut, compressor, limiter);
+    // Master bus — clean signal path, no compressor (causes pumping artifacts on sustained drones)
+    const masterGain = new Tone.Gain(0.7);
+    // Highpass to kill sub-rumble
+    const lowcut = new Tone.Filter(40, "highpass");
+    // Safety limiter only — prevents clipping without coloring the sound
+    const limiter = new Tone.Limiter(-1).toDestination();
+
+    masterGain.chain(lowcut, limiter);
+    newNodes.push(masterGain, lowcut, limiter);
 
     // FIX: Replaced async Tone.Reverb with synchronous Tone.Freeverb to prevent Web Audio crashes on rapid switching
     if (texture === "analog") {
@@ -2637,7 +2630,12 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         if (pRef.length === 0) return;
 
         let step = 0;
+        // Reset transport to avoid stale time position from previous playback
+        Tone.Transport.stop();
+        Tone.Transport.position = 0;
         Tone.Transport.bpm.value = bpm;
+        // Clear any lingering notes from previous session
+        previousNotesRef.current = [];
 
         loopRef.current = new Tone.Loop((time) => {
           const currentProg = progressionRef.current;
@@ -2649,14 +2647,16 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
           const r = match ? match[0].replace('b', '♭') : "C";
           const chordNotes = parseChordToNotes(rawChord, octaveRef.current, "chord");
 
-          // Audio: crossfade to new chord
+          // Audio: transition to new chord
           if (chordNotes) {
             const currentNotes = previousNotesRef.current;
+            // Only change notes that are actually different (smooth voice leading)
             const notesToRelease = currentNotes.filter(n => !chordNotes.includes(n));
             const notesToAttack = chordNotes.filter(n => !currentNotes.includes(n));
 
+            // Stagger release and attack to avoid CPU spike from overlapping voices
             if (notesToRelease.length > 0) synthRef.current.triggerRelease(notesToRelease, time);
-            if (notesToAttack.length > 0) synthRef.current.triggerAttack(notesToAttack, time + 0.1);
+            if (notesToAttack.length > 0) synthRef.current.triggerAttack(notesToAttack, time + 0.15);
 
             previousNotesRef.current = chordNotes;
           } else {
@@ -2670,7 +2670,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
             setRoot(r);
             setActiveStep(idx);
             onActiveNotesChangeRef.current?.({ notes: chordNotes || [], label: rawChord });
-          }, time + 0.1); // Match the audio attack offset so visual and audio sync
+          }, time + 0.15); // Match the audio attack offset so visual and audio sync
 
           step++;
         }, stepDuration).start(0);
@@ -2695,7 +2695,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         const notesToAttack = chordNotes.filter(note => !currentNotes.includes(note));
         
         if (notesToRelease.length > 0) synthRef.current.triggerRelease(notesToRelease);
-        if (notesToAttack.length > 0) synthRef.current.triggerAttack(notesToAttack, "+0.1"); // slight delay for crossfade
+        if (notesToAttack.length > 0) synthRef.current.triggerAttack(notesToAttack, "+0.15"); // slight delay for crossfade
         
         previousNotesRef.current = chordNotes;
         onActiveNotesChangeRef.current?.({ notes: chordNotes || [], label: n });
@@ -2714,7 +2714,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         const notesToAttack = chordNotes.filter(note => !currentNotes.includes(note));
 
         if (notesToRelease.length > 0) synthRef.current.triggerRelease(notesToRelease);
-        if (notesToAttack.length > 0) synthRef.current.triggerAttack(notesToAttack, "+0.1");
+        if (notesToAttack.length > 0) synthRef.current.triggerAttack(notesToAttack, "+0.15");
 
         previousNotesRef.current = chordNotes;
         onActiveNotesChangeRef.current?.({ notes: chordNotes || [], label: root });
