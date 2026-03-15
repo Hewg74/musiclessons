@@ -1949,7 +1949,6 @@ function PianoKeysDiagram({ notes = [], label = "", range }) {
       range={actualRange}
       highlightNotes={notes}
       label={label}
-      theme="light"
     />
   );
 }

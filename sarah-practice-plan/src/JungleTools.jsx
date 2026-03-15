@@ -2356,27 +2356,32 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     }
   }, [stepDuration, playing]);
 
-  // Handle screen off / app switch — mute output to prevent crackling on resume
+  // Handle screen off / app switch — fade out on hide, fade in on show
   useEffect(() => {
     const handleVisibility = async () => {
       try {
-        const dest = Tone.getDestination();
         if (document.hidden) {
-          // Mute output immediately — browser may glitch the audio thread
-          dest.volume.value = -Infinity;
+          // Ramp volume down quickly to avoid pop
+          if (synthRef.current && playing) {
+            synthRef.current.volume.rampTo(-60, 0.1);
+          }
         } else {
-          // Screen back: resume context if needed, then restore volume
+          // Resume context if suspended by browser
           if (Tone.getContext().state === "suspended") {
             await Tone.getContext().rawContext.resume();
           }
-          // Small delay to let audio thread stabilize before unmuting
-          setTimeout(() => { dest.volume.value = 0; }, 150);
+          // Ramp volume back up after audio thread stabilizes
+          if (synthRef.current && playing) {
+            setTimeout(() => {
+              try { synthRef.current.volume.rampTo(volume, 0.3); } catch {}
+            }, 300);
+          }
         }
       } catch { }
     };
     document.addEventListener("visibilitychange", handleVisibility);
     return () => document.removeEventListener("visibilitychange", handleVisibility);
-  }, []);
+  }, [playing, volume]);
 
   // Cleanup loop on unmount
   useEffect(() => {
