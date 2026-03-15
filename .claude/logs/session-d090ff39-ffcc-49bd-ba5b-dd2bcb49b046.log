@@ -1528,3 +1528,4 @@ ReferenceError: setDroneActiveNotes is not defined
 [2026-03-15T05:17:07.464Z] NO  it needs to play a chord!!! theres a single note mode that exists... what i am asying is that instead of it starting at Am it starts at A, also if its Am, all 3 Am notes need to be hihglighted  on the keyboard below! and then if we swap chords, the NEW notes need to be highlighted on the keyboard below!!!!
 [2026-03-15T05:21:40.658Z] also lets make sure that the drone and all sounds can work with =out crackles and glitchs with the phone screen off
 [2026-03-15T05:21:56.059Z] try again
+[2026-03-15T05:31:34.329Z] Swiping left and right still won't let me choose different exercises in flow mode. Also, it looks like we are one chord behind on the keyboard displaying. Also, the keyboard doesn't really display the new keys. And on top of that, if it's A minor, it only shows the first and the fifth and doesn't show the minor third. Please fix these issues from the root.

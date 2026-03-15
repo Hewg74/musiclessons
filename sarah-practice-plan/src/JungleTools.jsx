@@ -2625,9 +2625,14 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       if (mode === "cycle") {
         const pRef = progressionRef.current;
         if (pRef.length === 0) return;
-        
+
         let step = 0;
         Tone.Transport.bpm.value = bpm;
+
+        // Immediately update visual for the first chord
+        const firstChord = pRef[0];
+        setActiveStep(0);
+        if (onActiveNotesChange) onActiveNotesChange({ notes: parseChordToNotes(firstChord, octaveRef.current, "chord") || [], label: firstChord });
         
         loopRef.current = new Tone.Loop((time) => {
           const currentProg = progressionRef.current;

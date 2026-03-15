@@ -934,7 +934,7 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
 
       {/* Piano Keys */}
       {ex.pianoKeys && (
-        <PianoKeysDiagram notes={droneActiveNotes.notes.length > 0 ? droneActiveNotes.notes : ex.pianoKeys.notes} label={droneActiveNotes.notes.length > 0 ? droneActiveNotes.label : ex.pianoKeys.label} range={ex.pianoKeys.range} />
+        <PianoKeysDiagram notes={droneActiveNotes.notes.length > 0 ? normalizeDroneNotes(droneActiveNotes.notes, ex.pianoKeys.range) : ex.pianoKeys.notes} label={droneActiveNotes.notes.length > 0 ? droneActiveNotes.label : ex.pianoKeys.label} range={ex.pianoKeys.range} />
       )}
 
       {/* Volume Meter */}
@@ -1122,11 +1122,13 @@ function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor
   const touchRef = useRef(null);
 
   const onTouchStart = (e) => {
-    // Don't capture swipes that start on interactive elements (keyboards, sliders, buttons, inputs)
-    const tag = e.target.tagName;
-    const isInteractive = tag === "BUTTON" || tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA" ||
-      e.target.closest("button, input, select, [role='slider'], .hide-scrollbar, svg, canvas");
-    if (isInteractive) { touchRef.current = null; return; }
+    // Don't capture swipes that start on interactive elements
+    const el = e.target;
+    const tag = el.tagName;
+    if (tag === "BUTTON" || tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA" || tag === "CANVAS" ||
+      el.closest("button, input, select, [role='slider'], svg")) {
+      touchRef.current = null; return;
+    }
     touchRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
   };
   const onTouchEnd = (e) => {
@@ -1134,7 +1136,6 @@ function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor
     const dx = e.changedTouches[0].clientX - touchRef.current.x;
     const dy = e.changedTouches[0].clientY - touchRef.current.y;
     touchRef.current = null;
-    // Require larger horizontal swipe (120px) and must be clearly horizontal (3:1 ratio)
     if (Math.abs(dx) < 80 || Math.abs(dx) < Math.abs(dy) * 2) return;
     if (dx < 0 && currentIndex < exercises.length - 1) handleJump(currentIndex + 1);
     if (dx > 0 && currentIndex > 0) handleJump(currentIndex - 1);
@@ -1662,7 +1663,7 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
           {/* Piano Keys Diagram — linked to drone active notes */}
           {ex.pianoKeys && (
             <PianoKeysDiagram
-              notes={droneActiveNotes.notes.length > 0 ? droneActiveNotes.notes : ex.pianoKeys.notes}
+              notes={droneActiveNotes.notes.length > 0 ? normalizeDroneNotes(droneActiveNotes.notes, ex.pianoKeys.range) : ex.pianoKeys.notes}
               label={droneActiveNotes.notes.length > 0 ? droneActiveNotes.label : ex.pianoKeys.label}
               range={ex.pianoKeys.range}
             />
@@ -1883,6 +1884,27 @@ function VowelMap() {
     </div>
   );
 }
+// Normalize drone voicing notes (spread across octaves like A2,A3,E4,C5)
+// into pitch classes placed within a target octave range for keyboard display
+function normalizeDroneNotes(droneNotes, range) {
+  if (!droneNotes || droneNotes.length === 0 || !range) return droneNotes;
+  const startOct = parseInt(range[0].slice(-1));
+  const endOct = parseInt(range[1].slice(-1));
+  // Extract unique pitch classes, place each in the keyboard range
+  const seen = new Set();
+  const result = [];
+  for (const note of droneNotes) {
+    const pitchClass = note.replace(/\d+$/, '');
+    if (seen.has(pitchClass)) continue;
+    seen.add(pitchClass);
+    // Place in the middle octave of the range
+    for (let oct = startOct; oct <= endOct; oct++) {
+      result.push(`${pitchClass}${oct}`);
+    }
+  }
+  return result;
+}
+
 function PianoKeysDiagram({ notes = [], label = "", range }) {
   // Use the new shared InlineKeyboard component
   let actualRange = range;
