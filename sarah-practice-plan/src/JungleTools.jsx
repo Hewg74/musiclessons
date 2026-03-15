@@ -2393,17 +2393,18 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     let newNodes = [];
 
     // Master bus to prevent clipping and manage dynamics
-    const masterGain = new Tone.Gain(0.5);
-    // Highpass filter to kill sub-rumble below 30Hz that eats headroom and causes compressor distortion
+    const masterGain = new Tone.Gain(0.4);
+    // Highpass filter to kill sub-rumble below 30Hz that eats headroom
     const lowcut = new Tone.Filter(30, "highpass");
+    // Gentle compression — just tame peaks, don't pump
     const compressor = new Tone.Compressor({
-      threshold: -24,
-      ratio: 4,
-      attack: 0.1,
-      release: 0.5
+      threshold: -18,
+      ratio: 2,
+      attack: 0.3,
+      release: 0.8
     });
     // Final safety limiter to guarantee no digital clipping 
-    const limiter = new Tone.Limiter(-1).toDestination();
+    const limiter = new Tone.Limiter(-3).toDestination();
     
     masterGain.chain(lowcut, compressor, limiter);
     newNodes.push(masterGain, lowcut, compressor, limiter);
@@ -2628,41 +2629,38 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         let step = 0;
         Tone.Transport.bpm.value = bpm;
 
-        // Immediately update visual for the first chord
-        const firstChord = pRef[0];
-        setActiveStep(0);
-        if (onActiveNotesChange) onActiveNotesChange({ notes: parseChordToNotes(firstChord, octaveRef.current, "chord") || [], label: firstChord });
-        
         loopRef.current = new Tone.Loop((time) => {
           const currentProg = progressionRef.current;
           if (currentProg.length === 0) return;
-          
-          const rawChord = currentProg[step % currentProg.length];
+
+          const idx = step % currentProg.length;
+          const rawChord = currentProg[idx];
           const match = rawChord.match(/^[A-G][#♭b]?/);
           const r = match ? match[0].replace('b', '♭') : "C";
           const chordNotes = parseChordToNotes(rawChord, octaveRef.current, "chord");
 
-          // Visual updates in Draw.schedule (synced to animation frame)
-          Tone.Draw.schedule(() => {
-            setRoot(r);
-            setActiveStep(step % currentProg.length);
-            // Update piano keys HERE — same frame as visual chord highlight
-            if (onActiveNotesChange) onActiveNotesChange({ notes: chordNotes || [], label: rawChord });
-          }, time);
-
+          // Audio: crossfade to new chord
           if (chordNotes) {
             const currentNotes = previousNotesRef.current;
             const notesToRelease = currentNotes.filter(n => !chordNotes.includes(n));
             const notesToAttack = chordNotes.filter(n => !currentNotes.includes(n));
 
             if (notesToRelease.length > 0) synthRef.current.triggerRelease(notesToRelease, time);
-            if (notesToAttack.length > 0) synthRef.current.triggerAttack(notesToAttack, time + 0.1); // Crossfade envelope
+            if (notesToAttack.length > 0) synthRef.current.triggerAttack(notesToAttack, time + 0.1);
 
             previousNotesRef.current = chordNotes;
           } else {
             synthRef.current.releaseAll(time);
             previousNotesRef.current = [];
           }
+
+          // Visual: update UI in sync with audio via Draw.schedule
+          Tone.Draw.schedule(() => {
+            setRoot(r);
+            setActiveStep(idx);
+            if (onActiveNotesChange) onActiveNotesChange({ notes: chordNotes || [], label: rawChord });
+          }, time + 0.1); // Match the audio attack offset so visual and audio sync
+
           step++;
         }, stepDuration).start(0);
         

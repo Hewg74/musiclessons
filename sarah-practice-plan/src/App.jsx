@@ -932,10 +932,12 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
         <FretboardDiagram theme={T} scale={ex.fretboard.scale} position={ex.fretboard.position} highlight={ex.fretboard.highlight || []} />
       )}
 
-      {/* Piano Keys */}
-      {ex.pianoKeys && (
+      {/* Piano Keys — shows exercise pianoKeys or drone active chord */}
+      {ex.pianoKeys ? (
         <PianoKeysDiagram notes={droneActiveNotes.notes.length > 0 ? normalizeDroneNotes(droneActiveNotes.notes, ex.pianoKeys.range) : ex.pianoKeys.notes} label={droneActiveNotes.notes.length > 0 ? droneActiveNotes.label : ex.pianoKeys.label} range={ex.pianoKeys.range} />
-      )}
+      ) : droneActiveNotes.notes.length > 0 ? (
+        <PianoKeysDiagram notes={normalizeDroneNotes(droneActiveNotes.notes, ["C3", "C5"])} label={droneActiveNotes.label} range={["C3", "C5"]} />
+      ) : null}
 
       {/* Volume Meter */}
       {ex.volumeMeter && (
@@ -1660,14 +1662,20 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
             />
           )}
 
-          {/* Piano Keys Diagram — linked to drone active notes */}
-          {ex.pianoKeys && (
+          {/* Piano Keys Diagram — shows exercise pianoKeys or drone active chord */}
+          {ex.pianoKeys ? (
             <PianoKeysDiagram
               notes={droneActiveNotes.notes.length > 0 ? normalizeDroneNotes(droneActiveNotes.notes, ex.pianoKeys.range) : ex.pianoKeys.notes}
               label={droneActiveNotes.notes.length > 0 ? droneActiveNotes.label : ex.pianoKeys.label}
               range={ex.pianoKeys.range}
             />
-          )}
+          ) : droneActiveNotes.notes.length > 0 ? (
+            <PianoKeysDiagram
+              notes={normalizeDroneNotes(droneActiveNotes.notes, ["C3", "C5"])}
+              label={droneActiveNotes.label}
+              range={["C3", "C5"]}
+            />
+          ) : null}
 
           {/* Volume Meter / Volume Contour */}
           {ex.volumeMeter && (
