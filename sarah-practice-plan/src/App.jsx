@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import * as Tone from "tone";
 import confetti from "canvas-confetti";
 import { MiniAudioPlayer, AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, VolumeMeter, DroneGenerator, TAB_CONTENT, InlineKeyboard, RhythmCellCards, PhraseFormGuide } from './JungleTools.jsx';
@@ -1081,6 +1081,24 @@ function FlowSummary({ exercises, completed, sessionDuration, onExit }) {
   );
 }
 
+class FlowErrorBoundary extends React.Component {
+  constructor(props) { super(props); this.state = { hasError: false, error: null }; }
+  static getDerivedStateFromError(error) { return { hasError: true, error }; }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: 24, background: "#fff3f3", borderRadius: 12, margin: 16, border: "1px solid #fcc" }}>
+          <div style={{ fontWeight: 700, color: "#c33", marginBottom: 8 }}>Flow Error</div>
+          <div style={{ fontSize: 13, color: "#633", fontFamily: "monospace", whiteSpace: "pre-wrap" }}>{this.state.error?.message || "Unknown error"}</div>
+          <div style={{ fontSize: 12, color: "#966", marginTop: 8, fontFamily: "monospace", whiteSpace: "pre-wrap", maxHeight: 200, overflow: "auto" }}>{this.state.error?.stack}</div>
+          <button onClick={() => this.setState({ hasError: false, error: null })} style={{ marginTop: 12, padding: "8px 16px", background: "#c33", color: "#fff", border: "none", borderRadius: 8, cursor: "pointer" }}>Try Again</button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor, onOpenTapMatch }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showSummary, setShowSummary] = useState(false);
@@ -1265,8 +1283,9 @@ function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor
           </div>
         </div>
 
+        <FlowErrorBoundary key={currentEx.id}>
         <FlowExerciseBody
-          key={currentEx.id}
+          key={currentEx.id + "-body"}
           ex={currentEx}
           completed={completed}
           onComplete={onComplete}
@@ -1274,6 +1293,7 @@ function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor
           accentColor={accentColor}
           onOpenTapMatch={onOpenTapMatch}
         />
+        </FlowErrorBoundary>
       </div>
 
       {/* Bottom action bar */}
