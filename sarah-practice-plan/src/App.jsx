@@ -7,6 +7,11 @@ import { VOCAL_LEVELS } from './data/vocalLevels/index.js';
 import { GUITAR_STUDY } from './data/guitarStudy/index.js';
 import { SINGER_SONGWRITER_LEVELS } from './data/singerSongwriter/index.js';
 
+// ─── AUDIO CONTEXT — larger buffer for mobile to prevent crackling ──
+// "playback" latencyHint tells the browser to prioritize smooth audio
+// over low latency. Drones and backing tracks don't need <10ms response.
+Tone.setContext(new Tone.Context({ latencyHint: "playback", lookAhead: 0.5 }));
+
 // ─── DESIGN SYSTEM (sarahglassmusic.com) ────────────────────────────
 let T = {
   bg: "#ffffff", bgSoft: "#fdfbf9", bgCard: "#ffffff",

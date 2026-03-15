@@ -2333,6 +2333,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
   const progressionRef = useRef(progression);
   const stepDurationRef = useRef(stepDuration);
   const previousNotesRef = useRef([]);
+  const stoppedRef = useRef(false);
 
   const notes = ["C", "C#", "D", "E♭", "E", "F", "F#", "G", "A♭", "A", "B♭", "B"];
 
@@ -2610,6 +2611,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     if (Tone.context.state !== "running") await Tone.context.resume();
 
     if (playing) {
+      stoppedRef.current = true;
       synthRef.current.releaseAll();
       previousNotesRef.current = [];
       if (loopRef.current) {
@@ -2621,6 +2623,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       if (onActiveNotesChange) onActiveNotesChange({ notes: [], label: "" });
       setActiveStep(-1);
     } else {
+      stoppedRef.current = false;
       setEditingIndex(null); // Close editor when starting
       if (mode === "cycle") {
         const pRef = progressionRef.current;
@@ -2656,6 +2659,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
 
           // Visual: update UI in sync with audio via Draw.schedule
           Tone.Draw.schedule(() => {
+            if (stoppedRef.current) return; // Ignore stale callbacks after stop
             setRoot(r);
             setActiveStep(idx);
             if (onActiveNotesChange) onActiveNotesChange({ notes: chordNotes || [], label: rawChord });
