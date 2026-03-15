@@ -744,6 +744,7 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
   const [showTabs, setShowTabs] = useState(false);
   const [trackRates, setTrackRates] = useState({});
   const [timerDone, setTimerDone] = useState(false);
+  const [droneActiveNotes, setDroneActiveNotes] = useState([]);
 
   // Detect timer completion
   useEffect(() => {
@@ -1617,6 +1618,7 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
               <DroneGenerator
                 theme={T}
                 inline={true}
+                onActiveNotesChange={setDroneActiveNotes}
                 {...(typeof ex.drone === 'object' ? {
                   defaultRoot: ex.drone.root,
                   defaultOctave: ex.drone.octave,
@@ -1648,11 +1650,11 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
             />
           )}
 
-          {/* Piano Keys Diagram */}
+          {/* Piano Keys Diagram — linked to drone active notes */}
           {ex.pianoKeys && (
             <PianoKeysDiagram
-              notes={ex.pianoKeys.notes}
-              label={ex.pianoKeys.label}
+              notes={droneActiveNotes.length > 0 ? droneActiveNotes : ex.pianoKeys.notes}
+              label={droneActiveNotes.length > 0 ? "Playing Now" : ex.pianoKeys.label}
               range={ex.pianoKeys.range}
             />
           )}

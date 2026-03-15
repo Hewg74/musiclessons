@@ -1508,3 +1508,18 @@ Read the output file to retrieve the result: C:\Users\hewg7\AppData\Local\Temp\c
 [2026-03-15T04:36:36.042Z] also for the AM triad keyboard say in the adding the blue minor 3rd, where is that coming from? whats linked to that? you think we should link it to the drone tool?
 [2026-03-15T04:39:53.449Z] yes i think for the drone triad I am currenty on in chord mode or sequence the keys should be linked and light up the keys that are currently in drone mode right? or what the excercise requires?
 [2026-03-15T04:56:29.583Z] flow mode doesnt work level 3 singer songwriter, i just get a white screen please fix at the root for all issues
+[2026-03-15T05:01:57.047Z] also BTW with the drone fix with the right starting chord i think you only did it for flow mode and not normal use. same with making sure the highlighted chords in the keyboard change when we change the chords in the drone
+
+Flow Error
+setDroneActiveNotes is not defined
+ReferenceError: setDroneActiveNotes is not defined
+    at pC (https://sarah-practice-plan.vercel.app/assets/index-BlZjGQjh.js:326:2129880)
+    at qc (https://sarah-practice-plan.vercel.app/assets/index-BlZjGQjh.js:8:48271)
+    at lu (https://sarah-practice-plan.vercel.app/assets/index-BlZjGQjh.js:8:71100)
+    at Qp (https://sarah-practice-plan.vercel.app/assets/index-BlZjGQjh.js:8:81472)
+    at Ay (https://sarah-practice-plan.vercel.app/assets/index-BlZjGQjh.js:8:117287)
+    at rk (https://sarah-practice-plan.vercel.app/assets/index-BlZjGQjh.js:8:116331)
+    at Ru (https://sarah-practice-plan.vercel.app/assets/index-BlZjGQjh.js:8:116161)
+    at by (https://sarah-practice-plan.vercel.app/assets/index-BlZjGQjh.js:8:112940)
+    at Gy (https://sarah-practice-plan.vercel.app/assets/index-BlZjGQjh.js:8:124917)
+    at Wa (https://sarah-practice-plan.vercel.app/assets/index-BlZjGQjh.js:8:123465)
