@@ -1132,7 +1132,7 @@ function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor
     const dy = e.changedTouches[0].clientY - touchRef.current.y;
     touchRef.current = null;
     // Require larger horizontal swipe (120px) and must be clearly horizontal (3:1 ratio)
-    if (Math.abs(dx) < 120 || Math.abs(dx) < Math.abs(dy) * 3) return;
+    if (Math.abs(dx) < 80 || Math.abs(dx) < Math.abs(dy) * 2) return;
     if (dx < 0 && currentIndex < exercises.length - 1) handleJump(currentIndex + 1);
     if (dx > 0 && currentIndex > 0) handleJump(currentIndex - 1);
   };

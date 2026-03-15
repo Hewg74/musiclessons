@@ -3354,7 +3354,8 @@ export function InlineKeyboard({
   const octaves = [];
   for (let o = startOct; o <= endOct; o++) octaves.push(o);
 
-  const highlightSet = new Set(highlightNotes);
+  // Normalize both "Eb4" (ASCII) and "E♭4" (unicode) formats for matching
+  const highlightSet = new Set(highlightNotes.flatMap(n => [n, n.replace('b', '♭'), n.replace('♭', 'b')]));
 
   const playNote = async (n) => {
     if (Tone.context.state !== 'running') await Tone.context.resume();

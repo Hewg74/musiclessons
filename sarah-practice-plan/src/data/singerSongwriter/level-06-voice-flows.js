@@ -94,7 +94,7 @@ export const level6 = {
       time: 8,
       title: "Desert Blues Flow",
       type: "song",
-      drone: { root: "A", octave: 2, texture: "tanpura" },
+      drone: { root: "A", octave: 2, texture: "tanpura", mode: "single" },
       what: "Full integration in the desert blues context. Sparse, repetitive, hypnotic — the same small melodic ideas repeated with subtle variation. All your skills applied to the aesthetic of less-is-more. Think Tinariwen, Ali Farka Touré, Bombino.",
       setup: "Guitar. Strum Am with a sparse, repetitive pattern. Let the backing track carry the groove.",
       tracks: [{ name: "Desert Blues 75", src: "/desert-blues-75.mp3" }],
