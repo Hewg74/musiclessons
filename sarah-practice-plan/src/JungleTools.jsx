@@ -2337,6 +2337,28 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
   const onActiveNotesChangeRef = useRef(onActiveNotesChange);
   const stepCountRef = useRef(0);
   const userGainRef = useRef(null);
+  const keepaliveRef = useRef(null);
+
+  // Silent audio keepalive — keeps AudioContext alive when screen is off (like YouTube Premium)
+  const SILENT_MP3 = "data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAABhgC7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7//////////////////////////////////////////////////////////////////8AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAAAAAAAAAAAAYYoRBqmAAAAAAD/+1DEAAAHAAGf9AAAIgAANIAAAAQAAANIAAAASEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7UMQbA8AAAaQAAAAgAAA0gAAABFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVQ==";
+
+  const startKeepalive = useCallback(() => {
+    if (keepaliveRef.current) return;
+    try {
+      const audio = new Audio(SILENT_MP3);
+      audio.loop = true;
+      audio.volume = 0.01;
+      audio.play().catch(() => {});
+      keepaliveRef.current = audio;
+    } catch {}
+  }, []);
+
+  const stopKeepalive = useCallback(() => {
+    if (keepaliveRef.current) {
+      keepaliveRef.current.pause();
+      keepaliveRef.current = null;
+    }
+  }, []);
 
   const notes = ["C", "C#", "D", "E♭", "E", "F", "F#", "G", "A♭", "A", "B♭", "B"];
 
@@ -2390,50 +2412,64 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     }
   }, [stepDuration]);
 
-  // Handle screen off / app switch — mute on hide, recover on show
+  // Handle screen off / app switch — keep playing via keepalive, graceful fallback if context suspends
   useEffect(() => {
     const handleVisibility = async () => {
+      if (!playing) return;
       try {
         if (document.hidden) {
-          // Mute immediately — can't ramp on a frozen audio thread
+          // Screen off — keepalive audio should prevent context suspension.
+          // But as a safety net, do a SMOOTH ramp to near-zero (not abrupt mute)
+          // so if the context DOES freeze, the waveform is near silence = no pop on resume.
+          // Don't set to exactly 0 — leave a tiny signal so the context stays "active".
           if (userGainRef.current) {
-            try { userGainRef.current.gain.value = 0; } catch {}
+            try { userGainRef.current.gain.rampTo(0.001, 0.05); } catch {}
           }
         } else {
-          // Screen back on — recover audio no matter what
-          // Step 1: Try to resume existing context
+          // Screen back on — recover audio
           try { await Tone.getContext().rawContext.resume(); } catch {}
-          // Step 2: If that didn't work, force-start Tone
           if (Tone.getContext().state !== "running") {
             try { await Tone.start(); } catch {}
-            // Wait for it to actually resume
             await new Promise(r => setTimeout(r, 300));
             try { await Tone.getContext().rawContext.resume(); } catch {}
           }
-          // Step 3: Restore synth volume and re-trigger current notes
-          if (playing) {
-            setTimeout(() => {
-              try {
-                if (userGainRef.current) userGainRef.current.gain.rampTo(Tone.dbToGain(volume), 0.1);
-                // Re-trigger the current chord to ensure sound is playing
-                if (synthRef.current && previousNotesRef.current.length > 0) {
-                  synthRef.current.releaseAll();
-                  synthRef.current.triggerAttack(previousNotesRef.current);
-                }
-              } catch {}
-            }, 400);
-          }
+          // Restore volume and re-trigger chord if it died
+          setTimeout(() => {
+            try {
+              if (userGainRef.current) userGainRef.current.gain.rampTo(Tone.dbToGain(volume), 0.15);
+              if (synthRef.current && previousNotesRef.current.length > 0) {
+                synthRef.current.releaseAll();
+                synthRef.current.triggerAttack(previousNotesRef.current);
+              }
+            } catch {}
+          }, 200);
         }
-      } catch { }
+      } catch {}
     };
     document.addEventListener("visibilitychange", handleVisibility);
     return () => document.removeEventListener("visibilitychange", handleVisibility);
   }, [playing, volume]);
 
-  // Cleanup loop on unmount
+  // Cleanup on unmount — immediate silence + dispose
   useEffect(() => {
     return () => {
+      // Immediate fade-out so navigating exercises doesn't leave audio hanging
+      if (userGainRef.current) {
+        try { userGainRef.current.gain.rampTo(0, 0.05); } catch {}
+      }
+      if (synthRef.current) {
+        setTimeout(() => { try { synthRef.current.releaseAll(); } catch {} }, 80);
+      }
       if (loopRef.current) clearInterval(loopRef.current);
+      // Stop keepalive audio if running
+      if (keepaliveRef.current) {
+        keepaliveRef.current.pause();
+        keepaliveRef.current = null;
+      }
+      // Clear media session
+      if ('mediaSession' in navigator) {
+        try { navigator.mediaSession.metadata = null; } catch {}
+      }
     };
   }, []);
 
@@ -2685,6 +2721,11 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         try { synthRef.current?.releaseAll(); } catch {}
         previousNotesRef.current = [];
       }, 120);
+      // Stop background audio keepalive and clear media session
+      stopKeepalive();
+      if ('mediaSession' in navigator) {
+        try { navigator.mediaSession.metadata = null; } catch {}
+      }
       setPlaying(false);
       onActiveNotesChangeRef.current?.({ notes: [], label: "" });
       setActiveStep(-1);
@@ -2747,6 +2788,16 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         if (userGainRef.current) { userGainRef.current.gain.rampTo(Tone.dbToGain(volume), 0.05); }
         previousNotesRef.current = chordNotes || [];
         onActiveNotesChangeRef.current?.({ notes: chordNotes || [], label: root });
+      }
+      // Start background audio keepalive so screen-off doesn't kill the AudioContext
+      startKeepalive();
+      // Register with OS media session so audio persists in background
+      if ('mediaSession' in navigator) {
+        try {
+          navigator.mediaSession.metadata = new MediaMetadata({ title: 'Harmonic Drone', artist: 'Practice' });
+          navigator.mediaSession.setActionHandler('pause', () => toggleDrone());
+          navigator.mediaSession.setActionHandler('play', () => toggleDrone());
+        } catch {}
       }
       setPlaying(true);
     }
