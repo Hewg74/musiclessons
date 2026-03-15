@@ -89,7 +89,7 @@ export const level5 = {
       metronome: 80,
       referencePitches: getPitchRange("E3", "E4"),
       pitchContour: true,
-      drone: { root: "Em", octave: 3, texture: "pure" },
+      drone: { root: "Em", octave: 2, texture: "pure" },
       recorder: true
     },
 

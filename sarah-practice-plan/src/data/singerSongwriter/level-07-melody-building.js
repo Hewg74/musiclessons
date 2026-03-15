@@ -218,7 +218,7 @@ export const level7 = {
       feel: "This exercise should feel like learning emotional vocabulary — each interval is a word with a specific meaning. When you can 'say' what you feel with intervals, your melodies become genuinely expressive.",
       wrong: "If all intervals sound the same to you, slow down. Sing each one 10 times with eyes closed. The emotional colors emerge with repetition — they're subtle but real.",
       sarah: "Gene, this is the secret behind your favorite singers. They're not choosing notes randomly — they're choosing feelings. That ache in a Skinshape melody? Minor 3rds. That openness in Khruangbin? Perfect 5ths. Now you know why.",
-      drone: { root: "Am", octave: 3, texture: "pure" },
+      drone: { root: "Am", octave: 2, texture: "pure" },
       pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Intervals from A", range: ["A3", "G4"] },
       referencePitches: getPitchRange("A3", "G4"),
       recorder: true

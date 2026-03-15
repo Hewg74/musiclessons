@@ -2703,17 +2703,17 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
   };
 
   const changeRoot = (n) => {
-    if (playing && (mode === "manual" || mode === "single") && root !== n) {
+    if (playing && (mode === "manual" || mode === "single")) {
       const chordNotes = parseChordToNotes(n, octaveRef.current, mode === "single" ? "single" : "chord");
       if (chordNotes) {
-        const currentNotes = previousNotesRef.current || [];
-        const notesToRelease = currentNotes.filter(note => !chordNotes.includes(note));
-        const notesToAttack = chordNotes.filter(note => !currentNotes.includes(note));
-        
-        if (notesToRelease.length > 0) synthRef.current.triggerRelease(notesToRelease);
-        if (notesToAttack.length > 0) synthRef.current.triggerAttack(notesToAttack, "+0.15"); // slight delay for crossfade
-        
-        previousNotesRef.current = chordNotes;
+        // Release everything, then attack the new chord — clean transition
+        synthRef.current.releaseAll();
+        setTimeout(() => {
+          try {
+            synthRef.current.triggerAttack(chordNotes);
+            previousNotesRef.current = chordNotes;
+          } catch {}
+        }, 80);
         onActiveNotesChangeRef.current?.({ notes: chordNotes || [], label: n });
       }
     }
@@ -2725,14 +2725,13 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     if (playing && (mode === "manual" || mode === "single")) {
       const chordNotes = parseChordToNotes(root, oct, mode === "single" ? "single" : "chord");
       if (chordNotes) {
-        const currentNotes = previousNotesRef.current || [];
-        const notesToRelease = currentNotes.filter(note => !chordNotes.includes(note));
-        const notesToAttack = chordNotes.filter(note => !currentNotes.includes(note));
-
-        if (notesToRelease.length > 0) synthRef.current.triggerRelease(notesToRelease);
-        if (notesToAttack.length > 0) synthRef.current.triggerAttack(notesToAttack, "+0.15");
-
-        previousNotesRef.current = chordNotes;
+        synthRef.current.releaseAll();
+        setTimeout(() => {
+          try {
+            synthRef.current.triggerAttack(chordNotes);
+            previousNotesRef.current = chordNotes;
+          } catch {}
+        }, 80);
         onActiveNotesChangeRef.current?.({ notes: chordNotes || [], label: root });
       }
     }
