@@ -1898,25 +1898,35 @@ function VowelMap() {
   );
 }
 // Normalize drone voicing notes (spread across octaves like A2,A3,E4,C5)
-// into pitch classes placed within a target octave range for keyboard display
+// into pitch classes placed within a target keyboard range for display
 function normalizeDroneNotes(droneNotes, range) {
-  if (!droneNotes || droneNotes.length === 0 || !range) return droneNotes;
-  const startOct = parseInt(range[0].slice(-1));
-  const endOct = parseInt(range[1].slice(-1));
-  // Extract unique pitch classes, normalize flats to both formats
+  if (!Array.isArray(droneNotes) || droneNotes.length === 0) return [];
+
+  const parseOct = (note, fallback) => {
+    const m = String(note || "").match(/\d+/);
+    return m ? parseInt(m[0], 10) : fallback;
+  };
+
+  const startOct = parseOct(range?.[0], 3);
+  const endOct = parseOct(range?.[1], 5);
+
+  // Extract unique pitch classes from drone voicing
   const seen = new Set();
-  const result = [];
+  const pitchClasses = [];
   for (const note of droneNotes) {
-    // Strip octave to get pitch class, normalize 'b' → '♭' for keyboard matching
-    const raw = note.replace(/\d+$/, '');
-    const normalized = raw.replace('b', '\u266D'); // ASCII b → unicode ♭
-    if (seen.has(normalized)) continue;
-    seen.add(normalized);
-    // Place in every octave within the keyboard range
+    const pc = note.replace(/\d+$/, '').replace('\u266D', 'b'); // normalize to ASCII
+    if (!pc || seen.has(pc)) continue;
+    seen.add(pc);
+    pitchClasses.push(pc);
+  }
+
+  // Place each pitch class at every octave in the keyboard range, in both flat formats
+  const result = [];
+  for (const pc of pitchClasses) {
     for (let oct = startOct; oct <= endOct; oct++) {
-      result.push(`${normalized}${oct}`);
-      // Also push ASCII variant for matching flexibility
-      if (normalized !== raw) result.push(`${raw}${oct}`);
+      result.push(`${pc}${oct}`);
+      if (pc.includes('b')) result.push(`${pc.replace(/b/g, '\u266D')}${oct}`);
+      else if (pc.includes('\u266D')) result.push(`${pc.replace(/\u266D/g, 'b')}${oct}`);
     }
   }
   return result;
