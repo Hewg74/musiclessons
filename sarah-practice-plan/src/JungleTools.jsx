@@ -2377,12 +2377,8 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         const r = match ? match[0].replace('b', '♭') : "C";
         const chordNotes = parseChordToNotes(rawChord, octaveRef.current, "chord");
         if (chordNotes) {
-          const cn = previousNotesRef.current;
-          const rel = cn.filter(n => !chordNotes.includes(n));
-          const atk = chordNotes.filter(n => !cn.includes(n));
-          const now = Tone.now();
-          if (rel.length > 0) synthRef.current.triggerRelease(rel, now);
-          if (atk.length > 0) synthRef.current.triggerAttack(atk, now + 0.02);
+          synthRef.current.releaseAll();
+          synthRef.current.triggerAttack(chordNotes);
           previousNotesRef.current = chordNotes;
         }
         setRoot(r);
@@ -2398,23 +2394,33 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     const handleVisibility = async () => {
       try {
         if (document.hidden) {
-          if (synthRef.current) synthRef.current.volume.value = -Infinity;
-        } else {
-          // Aggressively recover audio context — browsers kill it after long background
-          const ctx = Tone.getContext();
-          if (ctx.state !== "running") {
-            try { await ctx.rawContext.resume(); } catch {}
-            // If still not running after 500ms, the context is dead
-            await new Promise(r => setTimeout(r, 500));
-            if (ctx.state !== "running") {
-              try { await Tone.start(); } catch {}
-            }
+          // Mute immediately — can't ramp on a frozen audio thread
+          if (synthRef.current) {
+            try { synthRef.current.volume.value = -Infinity; } catch {}
           }
-          // Restore volume
+        } else {
+          // Screen back on — recover audio no matter what
+          // Step 1: Try to resume existing context
+          try { await Tone.getContext().rawContext.resume(); } catch {}
+          // Step 2: If that didn't work, force-start Tone
+          if (Tone.getContext().state !== "running") {
+            try { await Tone.start(); } catch {}
+            // Wait for it to actually resume
+            await new Promise(r => setTimeout(r, 300));
+            try { await Tone.getContext().rawContext.resume(); } catch {}
+          }
+          // Step 3: Restore synth volume and re-trigger current notes
           if (synthRef.current && playing) {
             setTimeout(() => {
-              try { synthRef.current.volume.value = volume; } catch {}
-            }, 300);
+              try {
+                synthRef.current.volume.value = volume;
+                // Re-trigger the current chord to ensure sound is playing
+                if (previousNotesRef.current.length > 0) {
+                  synthRef.current.releaseAll();
+                  synthRef.current.triggerAttack(previousNotesRef.current);
+                }
+              } catch {}
+            }, 400);
           }
         }
       } catch { }
@@ -2688,14 +2694,11 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
           const chordNotes = parseChordToNotes(rawChord, octaveRef.current, "chord");
 
           if (chordNotes) {
-            const currentNotes = previousNotesRef.current;
-            const notesToRelease = currentNotes.filter(n => !chordNotes.includes(n));
-            const notesToAttack = chordNotes.filter(n => !currentNotes.includes(n));
-            const now = Tone.now();
-
-            // Smooth crossfade — release changed notes, attack new ones with minimal gap
-            if (notesToRelease.length > 0) synthRef.current.triggerRelease(notesToRelease, now);
-            if (notesToAttack.length > 0) synthRef.current.triggerAttack(notesToAttack, now + 0.02);
+            // Release all → immediately attack new chord. The envelope handles
+            // the crossfade: old notes fade via release tail, new notes ramp via attack.
+            // Works for ANY chord combination — no note diffing needed.
+            synthRef.current.releaseAll();
+            synthRef.current.triggerAttack(chordNotes);
             previousNotesRef.current = chordNotes;
           } else {
             synthRef.current.releaseAll();
