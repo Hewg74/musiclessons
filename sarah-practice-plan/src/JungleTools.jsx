@@ -2331,6 +2331,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
   const octaveRef = useRef(octave);
   const textureRef = useRef(texture);
   const progressionRef = useRef(progression);
+  const stepDurationRef = useRef(stepDuration);
   const previousNotesRef = useRef([]);
 
   const notes = ["C", "C#", "D", "E♭", "E", "F", "F#", "G", "A♭", "A", "B♭", "B"];
@@ -2349,6 +2350,13 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
   useEffect(() => { octaveRef.current = octave; }, [octave]);
   useEffect(() => { textureRef.current = texture; }, [texture]);
   useEffect(() => { progressionRef.current = progression; }, [progression]);
+  useEffect(() => {
+    stepDurationRef.current = stepDuration;
+    // Update running loop interval when step duration changes
+    if (loopRef.current && playing) {
+      loopRef.current.interval = stepDuration;
+    }
+  }, [stepDuration, playing]);
 
   // Handle screen off / visibility change — pause audio context to prevent crackling
   useEffect(() => {
@@ -3012,6 +3020,21 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
             >+ Add</button>
 
             {progression.length > 0 && (
+              <button onClick={() => {
+                setProgression([]);
+                setEditingIndex(null);
+                setActivePreset(null);
+              }} style={{
+                padding: "10px 16px", borderRadius: T.radius, fontSize: 12, fontWeight: 800, fontFamily: T.sans,
+                background: "transparent", color: T.coral, border: `1px solid ${T.coral}40`, cursor: "pointer",
+                transition: "all 0.2s", letterSpacing: 1, textTransform: "uppercase"
+              }}
+              onMouseOver={e => { e.currentTarget.style.background = T.coral + "10"; e.currentTarget.style.borderColor = T.coral; }}
+              onMouseOut={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = T.coral + "40"; }}
+              >Clear</button>
+            )}
+
+            {progression.length > 0 && (
               <div style={{ display: "flex", gap: 4, marginLeft: "auto", alignSelf: "center", borderLeft: `1px solid ${T.border}`, paddingLeft: 12 }}>
                 <button onClick={() => {
                   setProgression(progression.map(c => transposeChord(c, -1)));
@@ -3041,7 +3064,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
 
           {/* Inline Chord Editor Modal */}
           {editingIndex !== null && (
-            <div style={{ marginBottom: 24, background: T.bgSoft, padding: "24px", borderRadius: T.radiusLg, border: `1px solid ${T.borderSoft}`, boxShadow: T.shadow }}>
+            <div ref={el => { if (el) setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "nearest" }), 100); }} style={{ marginBottom: 24, background: T.bgSoft, padding: "24px", borderRadius: T.radiusLg, border: `1px solid ${T.borderSoft}`, boxShadow: T.shadow }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
                 <div style={{ fontSize: 12, color: T.textMuted, fontWeight: 800, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 2 }}>
                   Editing Step {editingIndex + 1}

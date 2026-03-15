@@ -645,7 +645,7 @@ function FlowProgressRail({ exercises, currentIndex, completed, onJump, accentCo
 
 function FlowStepView({ steps, accentColor }) {
   const [stepIndex, setStepIndex] = useState(0);
-  const [showWhy, setShowWhy] = useState(false);
+  const [showWhy, setShowWhy] = useState(true);
 
   if (!steps || steps.length === 0) return null;
 
@@ -679,7 +679,7 @@ function FlowStepView({ steps, accentColor }) {
       {/* Step text */}
       <div style={{
         fontSize: 17, color: T.textDark, fontFamily: T.sans, lineHeight: 1.7, fontWeight: 500,
-        padding: "16px 20px", background: T.bgSoft, borderRadius: T.radiusMd,
+        padding: "16px 20px", background: T.bgSoft,
         borderLeft: `1px solid ${accentColor || T.gold}`, minHeight: 80
       }}>
         {step.text}
@@ -1121,6 +1121,20 @@ function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor
 
   const currentEx = exercises[currentIndex];
   const isLastExercise = currentIndex === exercises.length - 1;
+  const touchRef = useRef(null);
+
+  const onTouchStart = (e) => {
+    touchRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  };
+  const onTouchEnd = (e) => {
+    if (!touchRef.current) return;
+    const dx = e.changedTouches[0].clientX - touchRef.current.x;
+    const dy = e.changedTouches[0].clientY - touchRef.current.y;
+    touchRef.current = null;
+    if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return;
+    if (dx < 0 && currentIndex < exercises.length - 1) handleJump(currentIndex + 1);
+    if (dx > 0 && currentIndex > 0) handleJump(currentIndex - 1);
+  };
 
   const stopAllAudio = () => {
     if (metro.playing) metro.stop();
@@ -1187,7 +1201,7 @@ function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor
   }
 
   return (
-    <div ref={flowContainerRef} className="hide-scrollbar" style={{
+    <div ref={flowContainerRef} className="hide-scrollbar" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} style={{
       position: "fixed", inset: 0, zIndex: 100, background: T.bg,
       overflowY: "auto", display: "flex", flexDirection: "column",
       WebkitOverflowScrolling: "touch"
@@ -1329,7 +1343,7 @@ function StartFlowButton({ onClick, accentColor }) {
 
 // ─── EXERCISE CARD ──────────────────────────────────────────────────
 
-function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMatch }) {
+function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMatch, onStartFlow }) {
   const [open, setOpen] = useState(false);
   const [showTimer, setShowTimer] = useState(false);
   const [showTabs, setShowTabs] = useState(false);
@@ -1406,6 +1420,20 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
 
       {open && (
         <div style={{ padding: "0 18px 18px" }}>
+          {/* Flow button */}
+          {onStartFlow && (
+            <button onClick={() => onStartFlow([ex], dayColor)} className="interactive-btn" style={{
+              background: "transparent", border: `1px solid ${dayColor || T.gold}`,
+              color: dayColor || T.gold, padding: "6px 14px", borderRadius: T.radius,
+              cursor: "pointer", fontSize: 10, fontWeight: 700, fontFamily: T.sans,
+              letterSpacing: 2, textTransform: "uppercase", display: "inline-flex",
+              alignItems: "center", gap: 6, marginBottom: 12,
+              WebkitTapHighlightColor: "transparent"
+            }}>
+              <span style={{ fontSize: 12 }}>&#9654;</span> Flow
+            </button>
+          )}
+
           {/* Reference Pitches */}
           <PitchRibbon pitches={ex.referencePitches} playNote={playNote} />
 
@@ -1795,7 +1823,7 @@ function DayView({ day, completed, onComplete, metro, onOpenTapMatch, onStartFlo
 
       {day.exercises.map(ex => (
         <ExerciseCard key={ex.id} ex={ex} metro={metro}
-          completed={completed.has(ex.id)} onComplete={onComplete} dayColor={c} onOpenTapMatch={onOpenTapMatch} />
+          completed={completed.has(ex.id)} onComplete={onComplete} dayColor={c} onOpenTapMatch={onOpenTapMatch} onStartFlow={onStartFlow} />
       ))}
     </div>
   );
@@ -1982,7 +2010,7 @@ function VoiceView({ completed, onComplete, metro, onOpenTapMatch, onStartFlow }
           <StartFlowButton onClick={() => onStartFlow(selectedLevel.exercises, T.plum)} accentColor={T.plum} />
         </div>
         <ReviewCheckIn review={selectedLevel.review} accentColor={T.plum} />
-        <LevelView level={selectedLevel} completed={completed} onComplete={onComplete} metro={metro} onOpenTapMatch={onOpenTapMatch} levelColor={VOCAL_COLORS[(selectedLevel.num - 1) % VOCAL_COLORS.length]} />
+        <LevelView level={selectedLevel} completed={completed} onComplete={onComplete} metro={metro} onOpenTapMatch={onOpenTapMatch} levelColor={VOCAL_COLORS[(selectedLevel.num - 1) % VOCAL_COLORS.length]} onStartFlow={onStartFlow} />
       </div>
 
       {/* Milestone message for Levels 1-2 */}
@@ -3120,7 +3148,7 @@ function ArchiveBranch({ type, exercises, completed, onComplete, metro, onOpenTa
 
 const LEVEL_COLORS = ["#5b7fa5", "#d97d54", "#7f9e88", "#9e829c", "#72a8a8", "#d68383", "#d4a373"];
 
-function LevelView({ level, completed, onComplete, metro, onOpenTapMatch, levelColor }) {
+function LevelView({ level, completed, onComplete, metro, onOpenTapMatch, levelColor, onStartFlow }) {
   const c = levelColor || LEVEL_COLORS[(level.num - 1) % LEVEL_COLORS.length];
   const total = level.exercises.length;
   const done = level.exercises.filter(e => completed.has(e.id)).length;
@@ -3153,7 +3181,7 @@ function LevelView({ level, completed, onComplete, metro, onOpenTapMatch, levelC
 
       {level.exercises.map(ex => (
         <ExerciseCard key={ex.id} ex={ex} metro={metro}
-          completed={completed.has(ex.id)} onComplete={onComplete} dayColor={c} onOpenTapMatch={onOpenTapMatch} />
+          completed={completed.has(ex.id)} onComplete={onComplete} dayColor={c} onOpenTapMatch={onOpenTapMatch} onStartFlow={onStartFlow} />
       ))}
     </div>
   );
@@ -3310,7 +3338,7 @@ function GuitarStudyView({ completed, onComplete, metro, onOpenTapMatch, onStart
         <ReviewCheckIn review={selectedLevel.review} accentColor={T.slate} />
         {selectedLevel.exercises.map(ex => (
           <ExerciseCard key={ex.id} ex={ex} metro={metro}
-            completed={completed.has(ex.id)} onComplete={onComplete} dayColor={T.slate} onOpenTapMatch={onOpenTapMatch} />
+            completed={completed.has(ex.id)} onComplete={onComplete} dayColor={T.slate} onOpenTapMatch={onOpenTapMatch} onStartFlow={onStartFlow} />
         ))}
       </div>
     </div>
@@ -3445,7 +3473,7 @@ function SingerSongwriterView({ completed, onComplete, metro, onOpenTapMatch, on
         <ReviewCheckIn review={selectedLevel.review} accentColor={T.coral} />
         {selectedLevel.exercises.map(ex => (
           <ExerciseCard key={ex.id} ex={ex} metro={metro}
-            completed={completed.has(ex.id)} onComplete={onComplete} dayColor={T.coral} onOpenTapMatch={onOpenTapMatch} />
+            completed={completed.has(ex.id)} onComplete={onComplete} dayColor={T.coral} onOpenTapMatch={onOpenTapMatch} onStartFlow={onStartFlow} />
         ))}
       </div>
     </div>
@@ -3541,7 +3569,7 @@ function KeysView({ completed, onComplete, metro, onOpenTapMatch, onStartFlow })
         <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 12 }}>
           <StartFlowButton onClick={() => onStartFlow(selectedLevel.exercises, "#5b7fa5")} accentColor="#5b7fa5" />
         </div>
-        <LevelView level={selectedLevel} completed={completed} onComplete={onComplete} metro={metro} onOpenTapMatch={onOpenTapMatch} />
+        <LevelView level={selectedLevel} completed={completed} onComplete={onComplete} metro={metro} onOpenTapMatch={onOpenTapMatch} onStartFlow={onStartFlow} />
       </div>
 
       {/* Band-ready milestone */}
@@ -3653,7 +3681,7 @@ function LooperView({ completed, onComplete, metro, onOpenTapMatch, onStartFlow 
         <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 12 }}>
           <StartFlowButton onClick={() => onStartFlow(selectedLevel.exercises, "#3d8b6e")} accentColor="#3d8b6e" />
         </div>
-        <LevelView level={selectedLevel} levelColor={LOOPER_COLORS[(selectedLevel.num - 1) % LOOPER_COLORS.length]} completed={completed} onComplete={onComplete} metro={metro} onOpenTapMatch={onOpenTapMatch} />
+        <LevelView level={selectedLevel} levelColor={LOOPER_COLORS[(selectedLevel.num - 1) % LOOPER_COLORS.length]} completed={completed} onComplete={onComplete} metro={metro} onOpenTapMatch={onOpenTapMatch} onStartFlow={onStartFlow} />
       </div>
 
       {/* Settings quick reference */}
