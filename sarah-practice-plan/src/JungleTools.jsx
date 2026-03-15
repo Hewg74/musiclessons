@@ -2337,15 +2337,10 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
   const notes = ["C", "C#", "D", "E♭", "E", "F", "F#", "G", "A♭", "A", "B♭", "B"];
 
   // Sync props → state when exercise changes (React reuses component, doesn't remount)
-  useEffect(() => {
-    if (defaultRoot && defaultRoot !== root) setRoot(defaultRoot);
-  }, [defaultRoot]);
-  useEffect(() => {
-    if (defaultOctave && defaultOctave !== octave) setOctave(defaultOctave);
-  }, [defaultOctave]);
-  useEffect(() => {
-    if (defaultTexture && defaultTexture !== texture) setTexture(defaultTexture);
-  }, [defaultTexture]);
+  // Intentionally only depends on the prop — setting same value is a React no-op
+  useEffect(() => { if (defaultRoot) setRoot(defaultRoot); }, [defaultRoot]);
+  useEffect(() => { if (defaultOctave) setOctave(defaultOctave); }, [defaultOctave]);
+  useEffect(() => { if (defaultTexture) setTexture(defaultTexture); }, [defaultTexture]);
 
   useEffect(() => { octaveRef.current = octave; }, [octave]);
   useEffect(() => { textureRef.current = texture; }, [texture]);
@@ -2418,7 +2413,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         oscillator: { type: "fatsawtooth", count: 3, spread: 25 },
         envelope: { attack: 2.5, decay: 0.1, sustain: 1, release: 2 }
       }).connect(filter);
-      synth.maxPolyphony = 32;
+      synth.maxPolyphony = 8;
       const lfo = new Tone.LFO(0.1, 400, 1200).connect(filter.frequency).start();
       newNodes.push(chorus, filter, lfo);
     } 
@@ -2433,7 +2428,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         envelope: { attack: 3, decay: 0.1, sustain: 1, release: 2 },
         modulationEnvelope: { attack: 3, decay: 0.1, sustain: 1, release: 2 }
       }).connect(filter);
-      synth.maxPolyphony = 32;
+      synth.maxPolyphony = 8;
       newNodes.push(reverb, filter);
     }
     else if (texture === "organ") {
@@ -2447,7 +2442,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         envelope: { attack: 0.5, decay: 0.1, sustain: 1, release: 1 },
         modulationEnvelope: { attack: 0.5, decay: 0.1, sustain: 1, release: 1 }
       }).connect(eq);
-      synth.maxPolyphony = 32;
+      synth.maxPolyphony = 8;
       newNodes.push(chorus, eq);
     }
     else if (texture === "pure") {
@@ -2456,7 +2451,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         oscillator: { type: "sine" },
         envelope: { attack: 1, decay: 0, sustain: 1, release: 2 }
       }).connect(masterGain);
-      synth.maxPolyphony = 32;
+      synth.maxPolyphony = 8;
     }
     else if (texture === "strings") {
       const reverb = new Tone.Freeverb({ roomSize: 0.8, dampening: 3000 }).connect(masterGain);
@@ -2467,7 +2462,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         oscillator: { type: "fatsawtooth", count: 3, spread: 20 },
         envelope: { attack: 3, decay: 0.1, sustain: 1, release: 2 }
       }).connect(filter);
-      synth.maxPolyphony = 32;
+      synth.maxPolyphony = 8;
       const lfo = new Tone.LFO(0.1, 800, 1500).connect(filter.frequency).start();
       newNodes.push(reverb, chorus, filter, lfo);
     }
@@ -2482,7 +2477,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         envelope: { attack: 2, decay: 0.1, sustain: 1, release: 2 },
         modulationEnvelope: { attack: 2, decay: 0.1, sustain: 1, release: 2 }
       }).connect(filter);
-      synth.maxPolyphony = 32;
+      synth.maxPolyphony = 8;
       newNodes.push(phaser, filter);
     }
     else if (texture === "crystal") {
@@ -2495,7 +2490,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         envelope: { attack: 4, decay: 0.1, sustain: 1, release: 2 },
         modulationEnvelope: { attack: 4, decay: 0.1, sustain: 1, release: 2 }
       }).connect(reverb);
-      synth.maxPolyphony = 32;
+      synth.maxPolyphony = 8;
       newNodes.push(reverb);
     }
     else if (texture === "lofi-tape") {
@@ -2507,7 +2502,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         oscillator: { type: "triangle" },
         envelope: { attack: 1.5, decay: 0.5, sustain: 0.8, release: 2 }
       }).connect(chorus);
-      synth.maxPolyphony = 32;
+      synth.maxPolyphony = 8;
       newNodes.push(vibrato, filter, chorus);
     }
     else if (texture === "surf-tremolo") {
@@ -2519,7 +2514,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         oscillator: { type: "triangle" },
         envelope: { attack: 0.8, decay: 0.2, sustain: 0.8, release: 2 }
       }).connect(filter);
-      synth.maxPolyphony = 32;
+      synth.maxPolyphony = 8;
       newNodes.push(reverb, tremolo, filter);
     }
     else if (texture === "vintage-keys") {
@@ -2535,7 +2530,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         envelope: { attack: 0.1, decay: 0.2, sustain: 0.8, release: 1.5 },
         modulationEnvelope: { attack: 0.1, decay: 0.2, sustain: 0.8, release: 1.5 }
       }).connect(filter);
-      synth.maxPolyphony = 32;
+      synth.maxPolyphony = 8;
       newNodes.push(phaser, chorus, filter);
     }
     else if (texture === "dub-sub") {
@@ -2548,21 +2543,20 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         envelope: { attack: 0.5, decay: 0.2, sustain: 1, release: 1 },
         modulationEnvelope: { attack: 0.5, decay: 0.2, sustain: 1, release: 1 }
       }).connect(filter);
-      synth.maxPolyphony = 32;
+      synth.maxPolyphony = 8;
       newNodes.push(filter);
     }
     else if (texture === "warm") {
-      const reverb = new Tone.Freeverb({ roomSize: 0.6, dampening: 2500 }).connect(masterGain);
-      const chorus = new Tone.Chorus(1.5, 3, 0.4).connect(reverb).start();
-      const filter = new Tone.Filter(600, "lowpass").connect(chorus);
+      const reverb = new Tone.Freeverb({ roomSize: 0.5, dampening: 2000 }).connect(masterGain);
+      const filter = new Tone.Filter(500, "lowpass").connect(reverb);
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -12,
-        oscillator: { type: "fattriangle", count: 2, spread: 15 },
-        envelope: { attack: 2, decay: 0.3, sustain: 0.9, release: 3 }
+        volume: -14,
+        oscillator: { type: "triangle" },
+        envelope: { attack: 1.5, decay: 0.2, sustain: 0.85, release: 2 }
       }).connect(filter);
-      synth.maxPolyphony = 32;
-      const lfo = new Tone.LFO(0.08, 400, 700).connect(filter.frequency).start();
-      newNodes.push(reverb, chorus, filter, lfo);
+      synth.maxPolyphony = 8;
+      const lfo = new Tone.LFO(0.06, 350, 600).connect(filter.frequency).start();
+      newNodes.push(reverb, filter, lfo);
     }
 
     // Fallback for unknown textures — default to pure sine
@@ -2572,7 +2566,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         oscillator: { type: "sine" },
         envelope: { attack: 1, decay: 0, sustain: 1, release: 2 }
       }).connect(masterGain);
-      synth.maxPolyphony = 32;
+      synth.maxPolyphony = 8;
     }
 
     synth.volume.value = volume;
@@ -2641,14 +2635,15 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
           const rawChord = currentProg[step % currentProg.length];
           const match = rawChord.match(/^[A-G][#♭b]?/);
           const r = match ? match[0].replace('b', '♭') : "C";
-          
+          const chordNotes = parseChordToNotes(rawChord, octaveRef.current, "chord");
+
+          // Visual updates in Draw.schedule (synced to animation frame)
           Tone.Draw.schedule(() => {
             setRoot(r);
             setActiveStep(step % currentProg.length);
-            if (onActiveNotesChange) onActiveNotesChange({ notes: parseChordToNotes(rawChord, octaveRef.current, "chord") || [], label: rawChord });
+            // Update piano keys HERE — same frame as visual chord highlight
+            if (onActiveNotesChange) onActiveNotesChange({ notes: chordNotes || [], label: rawChord });
           }, time);
-
-          const chordNotes = parseChordToNotes(rawChord, octaveRef.current, "chord"); // Full Chord
 
           if (chordNotes) {
             const currentNotes = previousNotesRef.current;
@@ -2656,7 +2651,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
             const notesToAttack = chordNotes.filter(n => !currentNotes.includes(n));
 
             if (notesToRelease.length > 0) synthRef.current.triggerRelease(notesToRelease, time);
-            if (notesToAttack.length > 0) synthRef.current.triggerAttack(notesToAttack, time + 0.05); // Crossfade envelope
+            if (notesToAttack.length > 0) synthRef.current.triggerAttack(notesToAttack, time + 0.1); // Crossfade envelope
 
             previousNotesRef.current = chordNotes;
           } else {
@@ -2686,10 +2681,10 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         const notesToAttack = chordNotes.filter(note => !currentNotes.includes(note));
         
         if (notesToRelease.length > 0) synthRef.current.triggerRelease(notesToRelease);
-        if (notesToAttack.length > 0) synthRef.current.triggerAttack(notesToAttack, "+0.05"); // slight delay for crossfade
+        if (notesToAttack.length > 0) synthRef.current.triggerAttack(notesToAttack, "+0.1"); // slight delay for crossfade
         
         previousNotesRef.current = chordNotes;
-        if (onActiveNotesChange) onActiveNotesChange({ notes: chordNotes || [], label: root });
+        if (onActiveNotesChange) onActiveNotesChange({ notes: chordNotes || [], label: n });
       }
     }
     setRoot(n);
@@ -2703,11 +2698,12 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         const currentNotes = previousNotesRef.current || [];
         const notesToRelease = currentNotes.filter(note => !chordNotes.includes(note));
         const notesToAttack = chordNotes.filter(note => !currentNotes.includes(note));
-        
+
         if (notesToRelease.length > 0) synthRef.current.triggerRelease(notesToRelease);
-        if (notesToAttack.length > 0) synthRef.current.triggerAttack(notesToAttack, "+0.05");
-        
+        if (notesToAttack.length > 0) synthRef.current.triggerAttack(notesToAttack, "+0.1");
+
         previousNotesRef.current = chordNotes;
+        if (onActiveNotesChange) onActiveNotesChange({ notes: chordNotes || [], label: root });
       }
     }
   };

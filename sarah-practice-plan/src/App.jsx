@@ -1890,16 +1890,20 @@ function normalizeDroneNotes(droneNotes, range) {
   if (!droneNotes || droneNotes.length === 0 || !range) return droneNotes;
   const startOct = parseInt(range[0].slice(-1));
   const endOct = parseInt(range[1].slice(-1));
-  // Extract unique pitch classes, place each in the keyboard range
+  // Extract unique pitch classes, normalize flats to both formats
   const seen = new Set();
   const result = [];
   for (const note of droneNotes) {
-    const pitchClass = note.replace(/\d+$/, '');
-    if (seen.has(pitchClass)) continue;
-    seen.add(pitchClass);
-    // Place in the middle octave of the range
+    // Strip octave to get pitch class, normalize 'b' → '♭' for keyboard matching
+    const raw = note.replace(/\d+$/, '');
+    const normalized = raw.replace('b', '\u266D'); // ASCII b → unicode ♭
+    if (seen.has(normalized)) continue;
+    seen.add(normalized);
+    // Place in every octave within the keyboard range
     for (let oct = startOct; oct <= endOct; oct++) {
-      result.push(`${pitchClass}${oct}`);
+      result.push(`${normalized}${oct}`);
+      // Also push ASCII variant for matching flexibility
+      if (normalized !== raw) result.push(`${raw}${oct}`);
     }
   }
   return result;
