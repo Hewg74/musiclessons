@@ -2447,13 +2447,13 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     // Master bus — proper gain staging: fixed synth levels → effects → compress → user volume → limit
     const masterGain = new Tone.Gain(0.85);
     // Soft compressor tames peaks from polyphonic voice summation + effect amplification
-    const softComp = new Tone.Compressor({ threshold: -12, ratio: 3, knee: 12, attack: 0.1, release: 0.5 });
+    const softComp = new Tone.Compressor({ threshold: -15, ratio: 4, knee: 12, attack: 0.1, release: 0.5 });
     // User volume control — AFTER effects and compression, so signal is already clean
     const userGain = new Tone.Gain(Tone.dbToGain(volume));
     // Highpass to kill sub-rumble
     const lowcut = new Tone.Filter(40, "highpass");
-    // Safety limiter — rarely engages now that gain staging is correct
-    const limiter = new Tone.Limiter(-1).toDestination();
+    // Safety limiter — -3dB threshold gives headroom, rarely engages hard
+    const limiter = new Tone.Limiter(-3).toDestination();
 
     masterGain.chain(softComp, userGain, lowcut, limiter);
     userGainRef.current = userGain;
@@ -3328,13 +3328,13 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
               </div>
               <div style={{ flex: 1, display: "flex", alignItems: "center", position: "relative" }}>
                 <div style={{ position: "absolute", left: 0, right: 0, height: 6, background: T.bgSoft, borderRadius: 3, border: `1px solid ${T.borderSoft}`, pointerEvents: "none" }} />
-                <div style={{ position: "absolute", left: 0, width: `${(volume + 40) / 43 * 100}%`, height: 6, background: playing ? T.plum : T.textMed, borderRadius: 3, pointerEvents: "none", transition: "background 0.4s" }} />
-                <input type="range" min={-40} max={3} value={volume}
+                <div style={{ position: "absolute", left: 0, width: `${(volume + 40) / 40 * 100}%`, height: 6, background: playing ? T.plum : T.textMed, borderRadius: 3, pointerEvents: "none", transition: "background 0.4s" }} />
+                <input type="range" min={-40} max={0} value={volume}
                   onChange={e => setVolume(Number(e.target.value))}
                   style={{ width: "100%", opacity: 0, height: 24, cursor: "pointer", position: "relative", zIndex: 10 }} />
                 {/* Custom Thumb */}
                 <div style={{
-                  position: "absolute", left: `calc(${(volume + 40) / 43 * 100}% - 8px)`, width: 16, height: 16,
+                  position: "absolute", left: `calc(${(volume + 40) / 40 * 100}% - 8px)`, width: 16, height: 16,
                   background: "#fff", border: `2px solid ${playing ? T.plum : T.textMed}`, borderRadius: "50%", 
                   pointerEvents: "none", boxShadow: "0 2px 4px rgba(0,0,0,0.1)", transition: "border-color 0.4s"
                 }} />
@@ -3454,7 +3454,7 @@ export function InlineKeyboard({
       oscillator: { type: 'triangle' },
       envelope: { attack: 0.1, decay: 0.2, sustain: 1, release: 1 }
     }).toDestination();
-    synth.volume.value = -8;
+    synth.volume.value = -18;
     synth.triggerAttackRelease(n.replace('♭', 'b'), "2n");
     setTimeout(() => synth.dispose(), 2000);
   };
@@ -3497,7 +3497,7 @@ export function InlineKeyboard({
 
   // Black Key styling
   const blackGradNormal = "linear-gradient(180deg, #383330 0%, #2a2725 90%, #221f1d 100%)";
-  const blackGradActive = `linear-gradient(180deg, #4a423e 0%, #38312e 100%)`;
+  const blackGradActive = `linear-gradient(180deg, ${Th.goldDark} 0%, ${Th.gold} 100%)`;
   const blackBorder = `1px solid #1a1817`;
 
   return (
@@ -3568,6 +3568,7 @@ export function InlineKeyboard({
                 background: isHighlight ? blackGradActive : (zone ? zone.color : blackGradNormal),
                 border: blackBorder,
                 borderTop: "none",
+                borderBottom: isHighlight ? `3px solid ${Th.gold}` : blackBorder,
                 borderRadius: "0 0 4px 4px",
                 zIndex: 2, cursor: "pointer",
                 boxShadow: isHighlight
