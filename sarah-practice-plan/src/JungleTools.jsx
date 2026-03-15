@@ -2334,6 +2334,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
   const stepDurationRef = useRef(stepDuration);
   const previousNotesRef = useRef([]);
   const stoppedRef = useRef(false);
+  const onActiveNotesChangeRef = useRef(onActiveNotesChange);
 
   const notes = ["C", "C#", "D", "E♭", "E", "F", "F#", "G", "A♭", "A", "B♭", "B"];
 
@@ -2346,6 +2347,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
   useEffect(() => { octaveRef.current = octave; }, [octave]);
   useEffect(() => { textureRef.current = texture; }, [texture]);
   useEffect(() => { progressionRef.current = progression; }, [progression]);
+  useEffect(() => { onActiveNotesChangeRef.current = onActiveNotesChange; });
   useEffect(() => {
     stepDurationRef.current = stepDuration;
     // Update running loop interval when step duration changes
@@ -2620,7 +2622,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         loopRef.current = null;
       }
       setPlaying(false);
-      if (onActiveNotesChange) onActiveNotesChange({ notes: [], label: "" });
+      onActiveNotesChangeRef.current?.({ notes: [], label: "" });
       setActiveStep(-1);
     } else {
       stoppedRef.current = false;
@@ -2662,7 +2664,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
             if (stoppedRef.current) return; // Ignore stale callbacks after stop
             setRoot(r);
             setActiveStep(idx);
-            if (onActiveNotesChange) onActiveNotesChange({ notes: chordNotes || [], label: rawChord });
+            onActiveNotesChangeRef.current?.({ notes: chordNotes || [], label: rawChord });
           }, time + 0.1); // Match the audio attack offset so visual and audio sync
 
           step++;
@@ -2673,7 +2675,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         const chordNotes = parseChordToNotes(root, octaveRef.current, mode === "single" ? "single" : "chord");
         if (chordNotes) synthRef.current.triggerAttack(chordNotes);
         previousNotesRef.current = chordNotes || [];
-        if (onActiveNotesChange) onActiveNotesChange({ notes: chordNotes || [], label: root });
+        onActiveNotesChangeRef.current?.({ notes: chordNotes || [], label: root });
       }
       setPlaying(true);
     }
@@ -2691,7 +2693,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         if (notesToAttack.length > 0) synthRef.current.triggerAttack(notesToAttack, "+0.1"); // slight delay for crossfade
         
         previousNotesRef.current = chordNotes;
-        if (onActiveNotesChange) onActiveNotesChange({ notes: chordNotes || [], label: n });
+        onActiveNotesChangeRef.current?.({ notes: chordNotes || [], label: n });
       }
     }
     setRoot(n);
@@ -2710,7 +2712,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         if (notesToAttack.length > 0) synthRef.current.triggerAttack(notesToAttack, "+0.1");
 
         previousNotesRef.current = chordNotes;
-        if (onActiveNotesChange) onActiveNotesChange({ notes: chordNotes || [], label: root });
+        onActiveNotesChangeRef.current?.({ notes: chordNotes || [], label: root });
       }
     }
   };
