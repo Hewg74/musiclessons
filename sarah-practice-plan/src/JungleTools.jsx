@@ -2419,7 +2419,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         oscillator: { type: "fatsawtooth", count: 3, spread: 25 },
         envelope: { attack: 2.5, decay: 0.1, sustain: 1, release: 2 }
       }).connect(filter);
-      synth.maxPolyphony = 8;
+      synth.maxPolyphony = 6;
       const lfo = new Tone.LFO(0.1, 400, 1200).connect(filter.frequency).start();
       newNodes.push(chorus, filter, lfo);
     } 
@@ -2434,7 +2434,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         envelope: { attack: 3, decay: 0.1, sustain: 1, release: 2 },
         modulationEnvelope: { attack: 3, decay: 0.1, sustain: 1, release: 2 }
       }).connect(filter);
-      synth.maxPolyphony = 8;
+      synth.maxPolyphony = 6;
       newNodes.push(reverb, filter);
     }
     else if (texture === "organ") {
@@ -2448,7 +2448,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         envelope: { attack: 0.5, decay: 0.1, sustain: 1, release: 1 },
         modulationEnvelope: { attack: 0.5, decay: 0.1, sustain: 1, release: 1 }
       }).connect(eq);
-      synth.maxPolyphony = 8;
+      synth.maxPolyphony = 6;
       newNodes.push(chorus, eq);
     }
     else if (texture === "pure") {
@@ -2457,7 +2457,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         oscillator: { type: "sine" },
         envelope: { attack: 1, decay: 0, sustain: 1, release: 2 }
       }).connect(masterGain);
-      synth.maxPolyphony = 8;
+      synth.maxPolyphony = 6;
     }
     else if (texture === "strings") {
       const reverb = new Tone.Freeverb({ roomSize: 0.8, dampening: 3000 }).connect(masterGain);
@@ -2468,7 +2468,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         oscillator: { type: "fatsawtooth", count: 3, spread: 20 },
         envelope: { attack: 3, decay: 0.1, sustain: 1, release: 2 }
       }).connect(filter);
-      synth.maxPolyphony = 8;
+      synth.maxPolyphony = 6;
       const lfo = new Tone.LFO(0.1, 800, 1500).connect(filter.frequency).start();
       newNodes.push(reverb, chorus, filter, lfo);
     }
@@ -2483,7 +2483,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         envelope: { attack: 2, decay: 0.1, sustain: 1, release: 2 },
         modulationEnvelope: { attack: 2, decay: 0.1, sustain: 1, release: 2 }
       }).connect(filter);
-      synth.maxPolyphony = 8;
+      synth.maxPolyphony = 6;
       newNodes.push(phaser, filter);
     }
     else if (texture === "crystal") {
@@ -2496,7 +2496,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         envelope: { attack: 4, decay: 0.1, sustain: 1, release: 2 },
         modulationEnvelope: { attack: 4, decay: 0.1, sustain: 1, release: 2 }
       }).connect(reverb);
-      synth.maxPolyphony = 8;
+      synth.maxPolyphony = 6;
       newNodes.push(reverb);
     }
     else if (texture === "lofi-tape") {
@@ -2508,7 +2508,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         oscillator: { type: "triangle" },
         envelope: { attack: 1.5, decay: 0.5, sustain: 0.8, release: 2 }
       }).connect(chorus);
-      synth.maxPolyphony = 8;
+      synth.maxPolyphony = 6;
       newNodes.push(vibrato, filter, chorus);
     }
     else if (texture === "surf-tremolo") {
@@ -2520,7 +2520,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         oscillator: { type: "triangle" },
         envelope: { attack: 0.8, decay: 0.2, sustain: 0.8, release: 2 }
       }).connect(filter);
-      synth.maxPolyphony = 8;
+      synth.maxPolyphony = 6;
       newNodes.push(reverb, tremolo, filter);
     }
     else if (texture === "vintage-keys") {
@@ -2536,7 +2536,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         envelope: { attack: 0.1, decay: 0.2, sustain: 0.8, release: 1.5 },
         modulationEnvelope: { attack: 0.1, decay: 0.2, sustain: 0.8, release: 1.5 }
       }).connect(filter);
-      synth.maxPolyphony = 8;
+      synth.maxPolyphony = 6;
       newNodes.push(phaser, chorus, filter);
     }
     else if (texture === "dub-sub") {
@@ -2549,20 +2549,21 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         envelope: { attack: 0.5, decay: 0.2, sustain: 1, release: 1 },
         modulationEnvelope: { attack: 0.5, decay: 0.2, sustain: 1, release: 1 }
       }).connect(filter);
-      synth.maxPolyphony = 8;
+      synth.maxPolyphony = 6;
       newNodes.push(filter);
     }
     else if (texture === "warm") {
+      // Warm pad: rich sound with minimal CPU — single oscillator + chorus for width
       const reverb = new Tone.Freeverb({ roomSize: 0.6, dampening: 2500 }).connect(masterGain);
-      const chorus = new Tone.Chorus(1.5, 3, 0.4).connect(reverb).start();
-      const filter = new Tone.Filter(600, "lowpass").connect(chorus);
+      const chorus = new Tone.Chorus({ frequency: 0.8, delayTime: 4, depth: 0.6 }).connect(reverb).start();
+      const filter = new Tone.Filter(700, "lowpass").connect(chorus);
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -12,
-        oscillator: { type: "fattriangle", count: 2, spread: 15 },
-        envelope: { attack: 2, decay: 0.3, sustain: 0.9, release: 3 }
+        volume: -10,
+        oscillator: { type: "triangle" },
+        envelope: { attack: 2.5, decay: 0.3, sustain: 0.9, release: 2.5 }
       }).connect(filter);
-      synth.maxPolyphony = 8;
-      const lfo = new Tone.LFO(0.08, 400, 700).connect(filter.frequency).start();
+      synth.maxPolyphony = 6;
+      const lfo = new Tone.LFO(0.06, 400, 800).connect(filter.frequency).start();
       newNodes.push(reverb, chorus, filter, lfo);
     }
 
@@ -2573,7 +2574,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         oscillator: { type: "sine" },
         envelope: { attack: 1, decay: 0, sustain: 1, release: 2 }
       }).connect(masterGain);
-      synth.maxPolyphony = 8;
+      synth.maxPolyphony = 6;
     }
 
     synth.volume.value = volume;
@@ -2608,7 +2609,11 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
 
   const toggleDrone = async () => {
     if (!synthRef.current) return;
-    if (Tone.context.state !== "running") await Tone.context.resume();
+    // Ensure audio context is running (may need user gesture on mobile)
+    if (Tone.context.state !== "running") {
+      try { await Tone.start(); } catch {}
+      try { await Tone.context.resume(); } catch {}
+    }
 
     if (playing) {
       stoppedRef.current = true;

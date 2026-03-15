@@ -8,9 +8,8 @@ import { GUITAR_STUDY } from './data/guitarStudy/index.js';
 import { SINGER_SONGWRITER_LEVELS } from './data/singerSongwriter/index.js';
 
 // ─── AUDIO CONTEXT CONFIG ──
-// Set latencyHint on the existing context for smoother audio on mobile.
-// Don't create a new context — that breaks user-gesture AudioContext activation.
-try { Tone.getContext().lookAhead = 0.5; } catch { }
+// Increase lookAhead for smoother scheduling (reduces glitches from main thread jank)
+try { Tone.getContext().lookAhead = 1.0; } catch { }
 
 // ─── DESIGN SYSTEM (sarahglassmusic.com) ────────────────────────────
 let T = {
