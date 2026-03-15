@@ -3367,8 +3367,28 @@ export function InlineKeyboard({
   const octaves = [];
   for (let o = startOct; o <= endOct; o++) octaves.push(o);
 
-  // Normalize both "Eb4" (ASCII) and "E♭4" (unicode) formats for matching
-  const highlightSet = new Set(highlightNotes.flatMap(n => [n, n.replace('b', '♭'), n.replace('♭', 'b')]));
+  // Build highlight matching using pitch classes — matches regardless of octave or flat format
+  const normalizeToken = (n) => (n || "").trim().replace(/\u266D/g, 'b').replace(/\u266F/g, '#');
+  const getPitchClass = (n) => { const m = normalizeToken(n).match(/^([A-Ga-g][#b]?)/); return m ? m[1].toUpperCase() : ""; };
+
+  const highlightNoteSet = new Set();
+  const highlightPCSet = new Set();
+  (highlightNotes || []).forEach(n => {
+    const norm = normalizeToken(n);
+    highlightNoteSet.add(norm);
+    // Also add unicode variant
+    if (norm.includes('b')) highlightNoteSet.add(norm.replace(/b/g, '\u266D'));
+    else if (norm.includes('\u266D')) highlightNoteSet.add(norm.replace(/\u266D/g, 'b'));
+    // Add pitch class for octave-independent matching
+    const pc = getPitchClass(n);
+    if (pc) highlightPCSet.add(pc);
+  });
+  const isHighlighted = (note) => {
+    const norm = normalizeToken(note);
+    if (highlightNoteSet.has(norm)) return true;
+    const pc = getPitchClass(note);
+    return pc && highlightPCSet.has(pc);
+  };
 
   const playNote = async (n) => {
     if (Tone.context.state !== 'running') await Tone.context.resume();
@@ -3437,7 +3457,7 @@ export function InlineKeyboard({
           padding: "0 2px 3px", boxShadow: "inset 0 2px 4px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.05)"
         }}>
           {whiteKeys.map(({ note, index }) => {
-            const isHighlight = highlightSet.has(note);
+            const isHighlight = isHighlighted(note);
             const isC = note.startsWith("C") && !note.startsWith("C#");
             const zone = zoneMap.find(z => index >= z.range[0] && index < z.range[1]);
 
@@ -3480,7 +3500,7 @@ export function InlineKeyboard({
             );
           })}
           {blackKeys.map(({ note, index, afterWhite }) => {
-            const isHighlight = highlightSet.has(note);
+            const isHighlight = isHighlighted(note);
             const left = (afterWhite + 1) * 44 - 15;
             const zone = zoneMap.find(z => index >= z.range[0] && index < z.range[1]);
 
