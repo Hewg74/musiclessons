@@ -15,7 +15,7 @@ export const level9 = {
       time: 6,
       title: "Interval Feeling",
       type: "vocal",
-      drone: { root: "A", octave: 2, texture: "pure", mode: "single" },
+      drone: { root: "Am", octave: 3, texture: "pure" },
       what: "Sing the basic intervals and associate each with an emotional quality. Minor 2nd = tension. Major 3rd = brightness. Perfect 5th = strength. Perfect 4th = openness. Each interval has a 'personality' — learning to feel them is how you navigate harmony by instinct.",
       steps: [
         { text: "Sing A, then B (major 2nd — a step up). Then A to C (minor 3rd — sad). Then A to C# (major 3rd — happy). Notice how each interval FEELS different.", why: "Intervals are the atoms of melody. Every melodic movement is an interval. Hearing them emotionally makes them intuitive." },
@@ -96,7 +96,7 @@ export const level9 = {
       time: 8,
       title: "Modal Colors",
       type: "song",
-      drone: { root: "A", octave: 2, texture: "tanpura", mode: "single" },
+      drone: { root: "Am", octave: 3, texture: "tanpura" },
       what: "Beyond major and minor, modes give you 5 more emotional colors. Dorian = jazzy minor. Mixolydian = bluesy major. Phrygian = Spanish/dark. Play the same root chord but change the scale, and the entire mood transforms. Modes are the advanced color palette of melody.",
       steps: [
         { text: "Play Am and sing A natural minor: A-B-C-D-E-F-G. This is the standard minor sound. Melancholic, familiar.", why: "Natural minor is your reference point. Every mode is defined by how it differs from natural minor or major." },
@@ -136,7 +136,7 @@ export const level9 = {
       time: 8,
       title: "Emotional Mapping: Borrowed Chords",
       type: "song",
-      drone: { root: "G", octave: 2, texture: "warm", mode: "single" },
+      drone: { root: "G", octave: 2, texture: "warm" },
       what: "In the key of G major, play G then Ab (bVI). Feel the 'cinematic longing' — the chord doesn't belong to the key but creates an emotional effect nothing else can. Then try G to Bb (bVII) — 'triumphant departure.' Then iv (Cm in G major) — borrowed from the parallel minor, creates nostalgia. These are the 'color chords' that make songs emotionally rich.",
       steps: [
         { text: "Play G major for 4 bars, then Ab major (4-6-6-5-4-4). Let the Ab ring. Feel the sudden shift — cinematic, wistful, like a scene change in a film. This is the bVI chord, borrowed from G minor.", why: "The bVI is the most emotionally powerful borrowed chord. Hermanos Gutiérrez use it constantly — it creates instant cinematic weight. It works because it shares no notes with the I chord, creating maximum contrast." },
@@ -213,7 +213,7 @@ export const level9 = {
       time: 6,
       title: "The Deceptive Cadence",
       type: "song",
-      drone: { root: "G", octave: 2, texture: "pure", mode: "single" },
+      drone: { root: "G", octave: 2, texture: "pure" },
       what: "Set up V→I (D→G) resolution. Play it 3 times to set the expectation. Then on the 4th time: V→vi (D→Em). The 'surprise landing' that pulls the ground out — the chord SHOULD resolve to G but lands on Em instead. Feel how it creates emotional depth, delayed satisfaction.",
       steps: [
         { text: "Play D→G three times. Sing the resolution each time: D... G. Feel how satisfying V→I is. Your ear expects it. Your body relaxes into it.", why: "Setting up the expectation is essential. The deceptive cadence only works because V→I is so deeply ingrained. You need to feel the 'normal' resolution before you can feel the surprise." },
@@ -233,7 +233,7 @@ export const level9 = {
       title: "Dark Modal Colors",
       type: "song",
       fretboard: { scale: "e-phrygian", position: 1 },
-      drone: { root: "E", octave: 2, texture: "tanpura", mode: "single" },
+      drone: { root: "Em", octave: 2, texture: "tanpura" },
       what: "Explore Phrygian mode (E-F-G-A-B-C-D) for dark/Spanish/cinematic feel. Play Em with F major as the bII chord. Then try harmonic minor (Am with G# leading tone) for tension. Two more colors for the palette. Hermanos Gutiérrez and Tinariwen use these constantly.",
       steps: [
         { text: "Play Em, then F major (1-3-3-2-1-1). Let the F ring. That half-step movement E→F is the sound of Phrygian — dark, exotic, ancient. Strum Em-F-Em-F and sing over it.", why: "The bII chord (F major in E) is the signature sound of Phrygian mode. That half-step root motion creates a gravity and darkness that no other mode has. It's the sound of flamenco, desert blues, and cinematic tension." },

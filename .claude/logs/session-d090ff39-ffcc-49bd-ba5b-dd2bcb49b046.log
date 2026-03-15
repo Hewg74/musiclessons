@@ -1525,3 +1525,6 @@ ReferenceError: setDroneActiveNotes is not defined
     at Wa (https://sarah-practice-plan.vercel.app/assets/index-BlZjGQjh.js:8:123465)
 [2026-03-15T05:07:29.270Z] ok the swipe is too aggressive especially if i am on a keyboard, during flow mode if i swipe a keyboard it moves me on excercises, also the drone isnt really showing the actual chord, ex i get A instead of Am, also the keyboard below is not linked to the active chord, it can be in chord mode or sequence mode and it needs to match both
 [2026-03-15T05:10:04.918Z] the keys were not showing ANY chords at all, also i am saying the drone was starting at A instead of Am off the jump for the excercise. did you fix taht above? if so cool
+[2026-03-15T05:17:07.464Z] NO  it needs to play a chord!!! theres a single note mode that exists... what i am asying is that instead of it starting at Am it starts at A, also if its Am, all 3 Am notes need to be hihglighted  on the keyboard below! and then if we swap chords, the NEW notes need to be highlighted on the keyboard below!!!!
+[2026-03-15T05:21:40.658Z] also lets make sure that the drone and all sounds can work with =out crackles and glitchs with the phone screen off
+[2026-03-15T05:21:56.059Z] try again

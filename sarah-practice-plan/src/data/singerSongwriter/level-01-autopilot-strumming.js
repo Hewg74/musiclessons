@@ -162,7 +162,7 @@ export const level1 = {
       time: 5,
       title: "Drone Singing",
       type: "vocal",
-      drone: { root: "G", octave: 2, texture: "analog", mode: "single" },
+      drone: { root: "G", octave: 2, texture: "analog" },
       what: "Hold a single G note (hum or 'ooh') while strumming a G chord. The absolute simplest voice+guitar combination — one sustained note over one chord. Based on Orff's 'sing on one pitch' principle: isolate voice integration to the bare minimum before adding any complexity.",
       setup: "Guitar. Metronome at 90 BPM.",
       steps: [

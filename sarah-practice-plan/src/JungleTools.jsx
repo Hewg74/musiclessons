@@ -2358,14 +2358,19 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     }
   }, [stepDuration, playing]);
 
-  // Handle screen off / visibility change — pause audio context to prevent crackling
+  // Handle screen off / visibility change — keep audio alive without crackling
   useEffect(() => {
-    const handleVisibility = () => {
-      if (document.hidden && Tone.getContext().state === "running") {
-        Tone.getContext().rawContext.suspend();
-      } else if (!document.hidden && playing) {
-        Tone.getContext().rawContext.resume();
+    const handleVisibility = async () => {
+      if (!document.hidden && playing) {
+        // Screen back on: ensure audio context is running
+        try {
+          if (Tone.getContext().state === "suspended") {
+            await Tone.getContext().rawContext.resume();
+          }
+        } catch { }
       }
+      // Don't suspend on screen off — let Web Audio continue in background
+      // Suspending causes crackling on resume; keeping it running is smoother
     };
     document.addEventListener("visibilitychange", handleVisibility);
     return () => document.removeEventListener("visibilitychange", handleVisibility);

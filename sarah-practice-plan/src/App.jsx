@@ -654,86 +654,89 @@ function FlowStepView({ steps, accentColor }) {
 
   return (
     <div style={{ marginBottom: 20 }}>
-      {/* Header */}
-      <div style={{
-        display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12
-      }}>
-        <div style={{
-          fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase",
-          color: accentColor || T.gold, fontFamily: T.sans
-        }}>
-          Step {stepIndex + 1} <span style={{color: T.textMuted}}>of {total}</span>
-        </div>
-        {/* Step dots */}
-        <div style={{ display: "flex", gap: 6 }}>
-          {steps.map((_, i) => (
-            <div key={i} onClick={() => { setStepIndex(i); }} style={{
-              width: i === stepIndex ? 16 : 6, height: 6, borderRadius: i === stepIndex ? 3 : "50%", cursor: "pointer",
-              background: i === stepIndex ? (accentColor || T.gold) : T.border,
-              transition: "all 0.3s"
-            }} />
-          ))}
-        </div>
-      </div>
-
-      {/* Content */}
-      <div style={{
-        fontSize: 16, color: T.textDark, fontFamily: T.sans, lineHeight: 1.6, fontWeight: 500,
-        padding: "16px 20px", background: T.bgSoft, border: `1px solid ${T.borderSoft}`,
-        borderLeft: `2px solid ${accentColor || T.gold}`, borderRadius: T.radius,
-        minHeight: 60
-      }}>
-        {step.text}
-      </div>
-
-      {/* Why */}
-      {step.why && (
-        <div style={{ marginTop: 10 }}>
-          <div style={{
-            fontSize: 11, color: T.textLight, fontFamily: T.sans, padding: 0,
-            display: "flex", alignItems: "center", gap: 6, fontStyle: "italic",
-            fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase"
-          }}>
-            Why this matters
-          </div>
-          <div style={{
-            fontSize: 13, color: T.textMed, fontFamily: T.sans, lineHeight: 1.6,
-            marginTop: 6, padding: "10px 16px", background: T.bgSoft,
-            borderLeft: `1px solid ${T.border}`, fontStyle: "italic"
-          }}>
-            {step.why}
-          </div>
-        </div>
-      )}
-
-      {/* Prev / Next step buttons */}
+      {/* Navigation & Counter Header */}
       {total > 1 && (
-        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 16 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
           <button onClick={() => { setStepIndex(Math.max(0, stepIndex - 1)); }}
             disabled={stepIndex === 0} 
             style={{
               background: "transparent", border: `1px solid ${stepIndex === 0 ? T.borderSoft : T.border}`,
               color: stepIndex === 0 ? T.textMuted : T.textMed,
-              padding: "8px 16px", cursor: stepIndex === 0 ? "default" : "pointer",
-              fontSize: 11, fontWeight: 600, fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase",
+              padding: "6px 12px", cursor: stepIndex === 0 ? "default" : "pointer",
+              fontSize: 10, fontWeight: 700, fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase",
               borderRadius: T.radius, transition: "all 0.2s", WebkitTapHighlightColor: "transparent"
             }}>
             ← Prev
           </button>
+          
+          <div style={{
+            fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase",
+            color: accentColor || T.gold, fontFamily: T.sans
+          }}>
+            Step {stepIndex + 1} <span style={{color: T.textMuted}}>of {total}</span>
+          </div>
+
           <button onClick={() => { setStepIndex(Math.min(total - 1, stepIndex + 1)); }}
             disabled={stepIndex === total - 1} 
             style={{
               background: stepIndex === total - 1 ? "transparent" : (accentColor || T.gold),
               border: stepIndex === total - 1 ? `1px solid ${T.borderSoft}` : "none",
               color: stepIndex === total - 1 ? T.textMuted : "#fff",
-              padding: "8px 16px", cursor: stepIndex === total - 1 ? "default" : "pointer",
-              fontSize: 11, fontWeight: 600, fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase",
+              padding: "6px 12px", cursor: stepIndex === total - 1 ? "default" : "pointer",
+              fontSize: 10, fontWeight: 700, fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase",
               borderRadius: T.radius, transition: "all 0.2s", WebkitTapHighlightColor: "transparent"
             }}>
             Next →
           </button>
         </div>
       )}
+
+      {/* Single Step Card */}
+      <div style={{
+        background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: T.radiusMd, overflow: "hidden"
+      }}>
+        {/* Step Progress Bar Header */}
+        <div style={{ display: "flex", width: "100%" }}>
+          {steps.map((_, i) => (
+            <div key={i} onClick={() => { setStepIndex(i); }} style={{
+              flex: 1, height: 4, cursor: "pointer",
+              background: i <= stepIndex ? (accentColor || T.gold) : T.borderSoft,
+              transition: "background 0.3s",
+              borderRight: i < total - 1 ? `1px solid ${T.bgCard}` : "none"
+            }} />
+          ))}
+        </div>
+
+        <div style={{ padding: "20px" }}>
+          {/* Main Step Text */}
+          <div style={{
+            fontSize: 16, color: T.textDark, fontFamily: T.sans, lineHeight: 1.6, fontWeight: 500,
+            marginBottom: step.why ? 20 : 0
+          }}>
+            {step.text}
+          </div>
+
+          {/* Why this matters (Inline Callout) */}
+          {step.why && (
+            <div style={{
+              padding: "12px 16px", background: T.bgSoft,
+              borderLeft: `2px solid ${T.border}`
+            }}>
+              <div style={{
+                fontSize: 10, color: T.textLight, fontFamily: T.sans, marginBottom: 4,
+                fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase"
+              }}>
+                Why this matters
+              </div>
+              <div style={{
+                fontSize: 13, color: T.textMed, fontFamily: T.sans, lineHeight: 1.6, fontStyle: "italic"
+              }}>
+                {step.why}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
