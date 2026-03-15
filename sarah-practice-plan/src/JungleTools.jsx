@@ -2335,9 +2335,33 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
 
   const notes = ["C", "C#", "D", "E♭", "E", "F", "F#", "G", "A♭", "A", "B♭", "B"];
 
+  // Sync props → state when exercise changes (React reuses component, doesn't remount)
+  useEffect(() => {
+    if (defaultRoot && defaultRoot !== root) setRoot(defaultRoot);
+  }, [defaultRoot]);
+  useEffect(() => {
+    if (defaultOctave && defaultOctave !== octave) setOctave(defaultOctave);
+  }, [defaultOctave]);
+  useEffect(() => {
+    if (defaultTexture && defaultTexture !== texture) setTexture(defaultTexture);
+  }, [defaultTexture]);
+
   useEffect(() => { octaveRef.current = octave; }, [octave]);
   useEffect(() => { textureRef.current = texture; }, [texture]);
   useEffect(() => { progressionRef.current = progression; }, [progression]);
+
+  // Handle screen off / visibility change — pause audio context to prevent crackling
+  useEffect(() => {
+    const handleVisibility = () => {
+      if (document.hidden && Tone.getContext().state === "running") {
+        Tone.getContext().rawContext.suspend();
+      } else if (!document.hidden && playing) {
+        Tone.getContext().rawContext.resume();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => document.removeEventListener("visibilitychange", handleVisibility);
+  }, [playing]);
 
   // Cleanup loop on unmount
   useEffect(() => {

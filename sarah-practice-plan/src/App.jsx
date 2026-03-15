@@ -615,24 +615,27 @@ function useWakeLock() {
   return { request, release };
 }
 
-function FlowProgressRail({ exercises, currentIndex, completed, onJump }) {
+function FlowProgressRail({ exercises, currentIndex, completed, onJump, accentColor }) {
   return (
     <div style={{
-      display: "flex", gap: 8, justifyContent: "center", alignItems: "center",
-      padding: "12px 16px", flexWrap: "wrap"
+      display: "flex", gap: 6, justifyContent: "center", alignItems: "center",
+      padding: "10px 16px", flexWrap: "wrap", borderBottom: `1px solid ${T.borderSoft}`
     }}>
       {exercises.map((ex, i) => {
         const isDone = completed.has(ex.id);
         const isCurrent = i === currentIndex;
+        const color = accentColor || T.gold;
         return (
           <button key={ex.id} onClick={() => onJump(i)} title={ex.title} style={{
-            width: isCurrent ? 14 : 10, height: isCurrent ? 14 : 10,
+            width: isCurrent ? 12 : 8, height: isCurrent ? 12 : 8,
             borderRadius: "50%", border: "none", cursor: "pointer", padding: 0,
-            background: isDone ? T.gold : (isCurrent ? T.gold : T.border),
-            boxShadow: isCurrent ? `0 0 0 3px ${T.gold}40` : "none",
-            opacity: isDone ? 1 : (isCurrent ? 1 : 0.5),
-            transition: "all 0.3s",
-            animation: isCurrent ? "pulse-ring 2s infinite" : "none"
+            minWidth: isCurrent ? 12 : 8,
+            background: isDone ? T.success : (isCurrent ? color : T.border),
+            boxShadow: isCurrent ? `0 0 0 3px ${color}30` : "none",
+            opacity: isDone ? 1 : (isCurrent ? 1 : 0.4),
+            transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+            animation: isCurrent ? "pulse-ring 2s infinite" : "none",
+            WebkitTapHighlightColor: "transparent"
           }} />
         );
       })}
@@ -677,7 +680,7 @@ function FlowStepView({ steps, accentColor }) {
       <div style={{
         fontSize: 17, color: T.textDark, fontFamily: T.sans, lineHeight: 1.7, fontWeight: 500,
         padding: "16px 20px", background: T.bgSoft, borderRadius: T.radiusMd,
-        borderLeft: `2px solid ${accentColor || T.gold}`, minHeight: 80
+        borderLeft: `1px solid ${accentColor || T.gold}`, minHeight: 80
       }}>
         {step.text}
       </div>
@@ -708,26 +711,30 @@ function FlowStepView({ steps, accentColor }) {
       {total > 1 && (
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: 14 }}>
           <button onClick={() => { setStepIndex(Math.max(0, stepIndex - 1)); setShowWhy(false); }}
-            disabled={stepIndex === 0}
+            disabled={stepIndex === 0} className={stepIndex > 0 ? "interactive-btn" : ""}
             style={{
               background: "transparent", border: `1px solid ${stepIndex === 0 ? T.borderSoft : T.border}`,
               color: stepIndex === 0 ? T.textMuted : T.textMed,
               padding: "8px 18px", borderRadius: T.radius, cursor: stepIndex === 0 ? "default" : "pointer",
-              fontSize: 12, fontWeight: 600, fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
+              fontSize: 12, fontWeight: 600, fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase",
+              transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+              WebkitTapHighlightColor: "transparent"
             }}>
-            Prev
+            ← Prev
           </button>
           <button onClick={() => { setStepIndex(Math.min(total - 1, stepIndex + 1)); setShowWhy(false); }}
-            disabled={stepIndex === total - 1}
+            disabled={stepIndex === total - 1} className={stepIndex < total - 1 ? "interactive-btn" : ""}
             style={{
               background: stepIndex === total - 1 ? "transparent" : (accentColor || T.gold),
               border: stepIndex === total - 1 ? `1px solid ${T.borderSoft}` : "none",
               color: stepIndex === total - 1 ? T.textMuted : "#fff",
               padding: "8px 18px", borderRadius: T.radius,
               cursor: stepIndex === total - 1 ? "default" : "pointer",
-              fontSize: 12, fontWeight: 600, fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
+              fontSize: 12, fontWeight: 600, fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase",
+              transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+              WebkitTapHighlightColor: "transparent"
             }}>
-            Next
+            Next →
           </button>
         </div>
       )}
@@ -794,15 +801,17 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
           </div>
         </div>
         <div style={{ display: "flex", gap: 6 }}>
-          <button onClick={timer.toggle} style={{
+          <button onClick={timer.toggle} className="interactive-btn" style={{
             background: timer.on ? T.coral : (accentColor || T.gold), border: "none", color: "#fff",
             padding: "8px 14px", fontSize: 11, fontWeight: 600, cursor: "pointer", borderRadius: T.radius,
-            fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
+            fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase",
+            WebkitTapHighlightColor: "transparent"
           }}>{timer.on ? "Pause" : "Start"}</button>
-          <button onClick={timer.reset} style={{
+          <button onClick={timer.reset} className="interactive-btn" style={{
             background: "transparent", border: `1px solid ${T.border}`, color: T.textLight,
             padding: "8px 10px", fontSize: 11, fontWeight: 600, cursor: "pointer", borderRadius: T.radius,
-            fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
+            fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase",
+            WebkitTapHighlightColor: "transparent"
           }}>Reset</button>
         </div>
       </div>
@@ -811,7 +820,7 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
       <div style={{
         fontSize: 14, color: T.textMed, fontFamily: T.sans, lineHeight: 1.7,
         marginBottom: 16, padding: "12px 16px", background: T.bgSoft, borderRadius: T.radius,
-        borderLeft: `2px solid ${accentColor || T.gold}`
+        borderLeft: `1px solid ${accentColor || T.gold}`
       }}>{ex.what}</div>
 
       {/* Setup */}
@@ -1021,13 +1030,14 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
       )}
 
       {/* Complete button */}
-      <button onClick={() => onComplete(ex.id)} style={{
+      <button onClick={() => onComplete(ex.id)} className="interactive-btn" style={{
         marginTop: 16, width: "100%",
         background: isComplete ? "transparent" : (accentColor || T.gold),
         border: isComplete ? `1px solid ${T.border}` : "none",
         color: isComplete ? T.textLight : "#fff",
-        padding: "14px", fontSize: 12, fontWeight: 400,
-        cursor: "pointer", fontFamily: T.sans, letterSpacing: 2, textTransform: "uppercase"
+        padding: "14px", fontSize: 12, fontWeight: 600,
+        cursor: "pointer", fontFamily: T.sans, letterSpacing: 2, textTransform: "uppercase",
+        borderRadius: T.radius, WebkitTapHighlightColor: "transparent"
       }}>
         {isComplete ? "Mark Incomplete" : "Complete Exercise"}
       </button>
@@ -1083,10 +1093,11 @@ function FlowSummary({ exercises, completed, sessionDuration, onExit }) {
         })}
       </div>
 
-      <button onClick={onExit} style={{
+      <button onClick={onExit} className="interactive-btn" style={{
         marginTop: 32, background: T.gold, border: "none", color: "#fff",
         padding: "14px 32px", fontSize: 12, fontWeight: 600, cursor: "pointer",
-        borderRadius: T.radius, fontFamily: T.sans, letterSpacing: 2, textTransform: "uppercase"
+        borderRadius: T.radius, fontFamily: T.sans, letterSpacing: 2, textTransform: "uppercase",
+        WebkitTapHighlightColor: "transparent"
       }}>
         Back to App
       </button>
@@ -1140,6 +1151,7 @@ function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor
     } else {
       stopAllAudio();
       setCurrentIndex(currentIndex + 1);
+      flowContainerRef.current?.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
@@ -1148,6 +1160,7 @@ function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor
       stopAllAudio();
       setCurrentIndex(idx);
       setShowSummary(false);
+      flowContainerRef.current?.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
@@ -1158,9 +1171,10 @@ function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor
 
   if (showSummary) {
     return (
-      <div style={{
+      <div className="hide-scrollbar" style={{
         position: "fixed", inset: 0, zIndex: 100, background: T.bg,
-        overflowY: "auto", display: "flex", flexDirection: "column"
+        overflowY: "auto", display: "flex", flexDirection: "column",
+        WebkitOverflowScrolling: "touch"
       }}>
         <FlowSummary
           exercises={exercises}
@@ -1173,15 +1187,19 @@ function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor
   }
 
   return (
-    <div ref={flowContainerRef} style={{
+    <div ref={flowContainerRef} className="hide-scrollbar" style={{
       position: "fixed", inset: 0, zIndex: 100, background: T.bg,
-      overflowY: "auto", display: "flex", flexDirection: "column"
+      overflowY: "auto", display: "flex", flexDirection: "column",
+      WebkitOverflowScrolling: "touch"
     }}>
       {/* Top bar */}
-      <div style={{
-        padding: "12px 16px", borderBottom: `1px solid ${T.border}`,
+      <div className="flow-top-bar" style={{
+        padding: "12px 16px", paddingTop: "calc(12px + env(safe-area-inset-top, 0px))",
+        borderBottom: `1px solid ${T.border}`,
         display: "flex", alignItems: "center", justifyContent: "space-between",
-        background: T.bgCard, flexShrink: 0
+        background: `${T.bgCard}b8`, backdropFilter: "blur(16px) saturate(140%)",
+        WebkitBackdropFilter: "blur(16px) saturate(140%)",
+        flexShrink: 0, position: "sticky", top: 0, zIndex: 10
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <div style={{
@@ -1194,10 +1212,11 @@ function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor
             {currentIndex + 1} of {exercises.length}
           </div>
         </div>
-        <button onClick={() => setShowExitConfirm(true)} style={{
+        <button onClick={() => setShowExitConfirm(true)} className="interactive-btn" style={{
           background: "transparent", border: `1px solid ${T.border}`, color: T.textMed,
           padding: "6px 14px", borderRadius: T.radius, cursor: "pointer",
-          fontSize: 11, fontWeight: 600, fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
+          fontSize: 11, fontWeight: 600, fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase",
+          WebkitTapHighlightColor: "transparent"
         }}>
           Exit
         </button>
@@ -1206,12 +1225,16 @@ function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor
       {/* Exit confirmation dialog */}
       {showExitConfirm && (
         <div style={{
-          position: "fixed", inset: 0, zIndex: 200, background: "rgba(0,0,0,0.5)",
-          display: "flex", alignItems: "center", justifyContent: "center", padding: 24
+          position: "fixed", inset: 0, zIndex: 200,
+          background: `${T.bg === "#ffffff" ? "rgba(253,251,249,0.6)" : "rgba(18,18,18,0.6)"}`,
+          backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
+          display: "flex", alignItems: "center", justifyContent: "center", padding: 24,
+          animation: "fade-in-up 0.2s ease-out"
         }}>
           <div style={{
             background: T.bgCard, borderRadius: T.radiusMd, padding: "24px 28px",
-            maxWidth: 320, width: "100%", boxShadow: T.md, textAlign: "center"
+            maxWidth: 320, width: "100%", boxShadow: T.md, textAlign: "center",
+            border: `1px solid ${T.border}`
           }}>
             <div style={{ fontSize: 16, fontWeight: 600, fontFamily: T.serif, color: T.textDark, marginBottom: 8 }}>
               Exit Flow?
@@ -1220,15 +1243,17 @@ function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor
               Your progress is saved.
             </div>
             <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
-              <button onClick={() => setShowExitConfirm(false)} style={{
+              <button onClick={() => setShowExitConfirm(false)} className="interactive-btn" style={{
                 background: "transparent", border: `1px solid ${T.border}`, color: T.textMed,
                 padding: "10px 20px", borderRadius: T.radius, cursor: "pointer",
-                fontSize: 12, fontWeight: 600, fontFamily: T.sans
+                fontSize: 12, fontWeight: 600, fontFamily: T.sans, letterSpacing: 1,
+                WebkitTapHighlightColor: "transparent"
               }}>Stay</button>
-              <button onClick={handleExit} style={{
+              <button onClick={handleExit} className="interactive-btn" style={{
                 background: T.coral, border: "none", color: "#fff",
                 padding: "10px 20px", borderRadius: T.radius, cursor: "pointer",
-                fontSize: 12, fontWeight: 600, fontFamily: T.sans
+                fontSize: 12, fontWeight: 600, fontFamily: T.sans, letterSpacing: 1,
+                WebkitTapHighlightColor: "transparent"
               }}>Exit</button>
             </div>
           </div>
@@ -1236,7 +1261,7 @@ function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor
       )}
 
       {/* Progress rail */}
-      <FlowProgressRail exercises={exercises} currentIndex={currentIndex} completed={completed} onJump={handleJump} />
+      <FlowProgressRail exercises={exercises} currentIndex={currentIndex} completed={completed} onJump={handleJump} accentColor={accentColor} />
 
       {/* Exercise content — key forces remount */}
       <div style={{ flex: 1, maxWidth: 560, width: "100%", margin: "0 auto", padding: "16px 16px 120px", overflowY: "auto" }}>
@@ -1262,11 +1287,14 @@ function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor
       </div>
 
       {/* Bottom action bar */}
-      <div style={{
+      <div className="flow-bottom-bar" style={{
         position: "fixed", bottom: 0, left: 0, right: 0,
-        padding: "12px 16px", background: T.bgCard,
-        borderTop: `1px solid ${T.border}`, zIndex: 101,
-        display: "flex", justifyContent: "center"
+        padding: "12px 16px", paddingBottom: "calc(12px + env(safe-area-inset-bottom, 0px))",
+        background: `${T.bgCard}b8`, backdropFilter: "blur(24px) saturate(140%)",
+        WebkitBackdropFilter: "blur(24px) saturate(140%)",
+        borderTop: `1px solid ${T.border}`,
+        boxShadow: `0 -4px 32px ${T.bg === "#ffffff" ? "rgba(44,40,37,0.04)" : "rgba(0,0,0,0.3)"}`,
+        zIndex: 101, display: "flex", justifyContent: "center"
       }}>
         <button onClick={handleCompleteAndNext} className="interactive-btn" style={{
           background: accentColor || T.gold, border: "none", color: "#fff",
@@ -4003,20 +4031,6 @@ export default function App() {
   if (flowActive && flowExercises.length > 0) {
     return (
       <div style={{ background: T.bg, minHeight: "100vh", color: T.textDark, fontFamily: T.sans }}>
-        <style>{`
-          @keyframes fade-in-up {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-          }
-          @keyframes pulse-ring {
-            0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4); }
-            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(0, 0, 0, 0); }
-            100% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); }
-          }
-          .interactive-btn { transition: all 0.2s ease; }
-          .interactive-btn:hover { transform: scale(1.02); opacity: 0.9; }
-          .interactive-btn:active { transform: scale(0.98); }
-        `}</style>
         <FlowMode
           exercises={flowExercises}
           completed={completed}
