@@ -2336,6 +2336,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
   const stoppedRef = useRef(false);
   const onActiveNotesChangeRef = useRef(onActiveNotesChange);
   const changeTimeoutRef = useRef(null);
+  const stepCountRef = useRef(0);
 
   const notes = ["C", "C#", "D", "E♭", "E", "F", "F#", "G", "A♭", "A", "B♭", "B"];
 
@@ -2349,28 +2350,71 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
   useEffect(() => { textureRef.current = texture; }, [texture]);
   useEffect(() => { progressionRef.current = progression; }, [progression]);
   useEffect(() => { onActiveNotesChangeRef.current = onActiveNotesChange; });
+  // Convert step duration string to milliseconds
+  const stepToMs = (sd) => {
+    const bpmVal = bpm || 80;
+    const beatMs = 60000 / bpmVal;
+    if (sd === "4m") return beatMs * 16;
+    if (sd === "2m") return beatMs * 8;
+    if (sd === "1m") return beatMs * 4;
+    if (sd === "2n") return beatMs * 2;
+    if (sd === "4n") return beatMs;
+    return beatMs * 4;
+  };
+
   useEffect(() => {
     stepDurationRef.current = stepDuration;
-    // No live update needed — setInterval uses stepDurationRef on next restart
-  }, [stepDuration, playing]);
+    // Restart interval with new timing if sequence is playing
+    if (loopRef.current && playing && mode === "cycle") {
+      clearInterval(loopRef.current);
+      loopRef.current = setInterval(() => {
+        if (stoppedRef.current || !synthRef.current) return;
+        const currentProg = progressionRef.current;
+        if (currentProg.length === 0) return;
+        const idx = stepCountRef.current % currentProg.length;
+        const rawChord = currentProg[idx];
+        const match = rawChord.match(/^[A-G][#♭b]?/);
+        const r = match ? match[0].replace('b', '♭') : "C";
+        const chordNotes = parseChordToNotes(rawChord, octaveRef.current, "chord");
+        if (chordNotes) {
+          const cn = previousNotesRef.current;
+          const rel = cn.filter(n => !chordNotes.includes(n));
+          const atk = chordNotes.filter(n => !cn.includes(n));
+          const now = Tone.now();
+          if (rel.length > 0) synthRef.current.triggerRelease(rel, now);
+          if (atk.length > 0) synthRef.current.triggerAttack(atk, now + 0.02);
+          previousNotesRef.current = chordNotes;
+        }
+        setRoot(r);
+        setActiveStep(idx);
+        onActiveNotesChangeRef.current?.({ notes: chordNotes || [], label: rawChord });
+        stepCountRef.current++;
+      }, stepToMs(stepDuration));
+    }
+  }, [stepDuration]);
 
-  // Handle screen off / app switch — mute on hide, unmute on show
+  // Handle screen off / app switch — mute on hide, recover on show
   useEffect(() => {
     const handleVisibility = async () => {
       try {
         if (document.hidden) {
-          // Immediately silence — audio thread may be frozen, ramps won't work
           if (synthRef.current) synthRef.current.volume.value = -Infinity;
         } else {
-          // Resume audio context if browser suspended it
-          if (Tone.getContext().state === "suspended") {
-            await Tone.getContext().rawContext.resume();
+          // Aggressively recover audio context — browsers kill it after long background
+          const ctx = Tone.getContext();
+          if (ctx.state !== "running") {
+            try { await ctx.rawContext.resume(); } catch {}
+            // If still not running after 500ms, the context is dead
+            await new Promise(r => setTimeout(r, 500));
+            if (ctx.state !== "running") {
+              try { await Tone.start(); } catch {}
+            }
           }
-          // Restore volume after audio thread stabilizes
+          // Restore volume
           if (synthRef.current && playing) {
             setTimeout(() => {
               try { synthRef.current.volume.value = volume; } catch {}
-            }, 250);
+            }, 300);
           }
         }
       } catch { }
@@ -2629,27 +2673,15 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         if (pRef.length === 0) return;
 
         previousNotesRef.current = [];
-        let step = 0;
+        stepCountRef.current = 0;
 
-        // Convert step duration to milliseconds
-        const stepToMs = (sd) => {
-          const bpmVal = bpm || 80;
-          const beatMs = 60000 / bpmVal;
-          if (sd === "4m") return beatMs * 16;
-          if (sd === "2m") return beatMs * 8;
-          if (sd === "1m") return beatMs * 4;
-          if (sd === "2n") return beatMs * 2;
-          if (sd === "4n") return beatMs;
-          return beatMs * 4; // default 1 bar
-        };
-
-        // Play a chord at the current step
+        // Play a chord at the current step (reads from refs, always current)
         const playStep = () => {
           if (stoppedRef.current || !synthRef.current) return;
           const currentProg = progressionRef.current;
           if (currentProg.length === 0) return;
 
-          const idx = step % currentProg.length;
+          const idx = stepCountRef.current % currentProg.length;
           const rawChord = currentProg[idx];
           const match = rawChord.match(/^[A-G][#♭b]?/);
           const r = match ? match[0].replace('b', '♭') : "C";
@@ -2659,24 +2691,23 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
             const currentNotes = previousNotesRef.current;
             const notesToRelease = currentNotes.filter(n => !chordNotes.includes(n));
             const notesToAttack = chordNotes.filter(n => !currentNotes.includes(n));
+            const now = Tone.now();
 
-            if (notesToRelease.length > 0) synthRef.current.triggerRelease(notesToRelease);
-            if (notesToAttack.length > 0) {
-              const now = Tone.now();
-              synthRef.current.triggerAttack(notesToAttack, now + 0.1);
-            }
+            // Smooth crossfade — release changed notes, attack new ones with minimal gap
+            if (notesToRelease.length > 0) synthRef.current.triggerRelease(notesToRelease, now);
+            if (notesToAttack.length > 0) synthRef.current.triggerAttack(notesToAttack, now + 0.02);
             previousNotesRef.current = chordNotes;
           } else {
             synthRef.current.releaseAll();
             previousNotesRef.current = [];
           }
 
-          // Visual update — direct setState, no Draw.schedule needed
+          // Visual update
           setRoot(r);
           setActiveStep(idx);
           onActiveNotesChangeRef.current?.({ notes: chordNotes || [], label: rawChord });
 
-          step++;
+          stepCountRef.current++;
         };
 
         // Play first chord immediately
@@ -3320,20 +3351,30 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
                 {/* Step Duration */}
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 11, color: T.textMuted, fontWeight: 800, fontFamily: T.sans, marginBottom: 10, textTransform: "uppercase", letterSpacing: 2 }}>Step Length</div>
-                  <select value={stepDuration} onChange={e => setStepDuration(e.target.value)}
-                    style={{ width: "100%", padding: "10px 12px", borderRadius: T.radius, border: `1px solid ${T.borderSoft}`, background: T.bgSoft, color: T.textDark, fontFamily: T.sans, fontSize: 13, outline: "none", cursor: "pointer", fontWeight: 700, appearance: "none", boxShadow: "inset 0 1px 2px rgba(0,0,0,0.02)" }}>
-                    <option value="4m">4 Bars</option>
-                    <option value="2m">2 Bars</option>
-                    <option value="1m">1 Bar</option>
-                    <option value="2n">1/2 Bar</option>
-                    <option value="4n">1 Beat</option>
-                  </select>
+                  <div style={{ display: "flex", background: T.bgSoft, borderRadius: T.radius, padding: 3, border: `1px solid ${T.borderSoft}`, gap: 2 }}>
+                    {[
+                      { value: "4n", label: "Beat" },
+                      { value: "2n", label: "½ Bar" },
+                      { value: "1m", label: "1 Bar" },
+                      { value: "2m", label: "2 Bar" },
+                      { value: "4m", label: "4 Bar" }
+                    ].map(opt => (
+                      <button key={opt.value} onClick={() => setStepDuration(opt.value)} style={{
+                        flex: 1, background: stepDuration === opt.value ? T.plum : "transparent",
+                        color: stepDuration === opt.value ? "#fff" : T.textMed,
+                        border: "none", borderRadius: T.radius - 2, padding: "7px 2px",
+                        fontSize: 10, fontWeight: 800, cursor: "pointer", fontFamily: T.sans,
+                        letterSpacing: 0.5, transition: "all 0.2s",
+                        boxShadow: stepDuration === opt.value ? `0 2px 8px ${T.plum}40` : "none"
+                      }}>{opt.label}</button>
+                    ))}
+                  </div>
                 </div>
                 {/* Tempo */}
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 11, color: T.textMuted, fontWeight: 800, fontFamily: T.sans, marginBottom: 10, textTransform: "uppercase", letterSpacing: 2 }}>Tempo</div>
                   <div style={{ position: "relative" }}>
-                    <input type="number" min={40} max={240} value={bpm} onChange={e => { setBpm(Number(e.target.value)); if (playing) Tone.Transport.bpm.value = Number(e.target.value); }} 
+                    <input type="number" min={40} max={240} value={bpm} onChange={e => setBpm(Number(e.target.value))}
                       style={{ width: "100%", padding: "10px 12px", borderRadius: T.radius, border: `1px solid ${T.borderSoft}`, background: T.bgSoft, color: T.textDark, fontFamily: T.sans, fontSize: 13, outline: "none", fontWeight: 700, boxShadow: "inset 0 1px 2px rgba(0,0,0,0.02)", paddingRight: 40 }} />
                     <span style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", fontSize: 10, fontWeight: 800, color: T.textMuted, pointerEvents: "none" }}>BPM</span>
                   </div>
