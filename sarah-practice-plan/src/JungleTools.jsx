@@ -2316,7 +2316,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
   const [playing, setPlaying] = useState(false);
   const [root, setRoot] = useState(defaultRoot || "C");
   const [octave, setOctave] = useState(defaultOctave || 2);
-  const [volume, setVolume] = useState(-12);
+  const [volume, setVolume] = useState(-6);
   const [texture, setTexture] = useState(defaultTexture || "analog");
   const [mode, setMode] = useState(defaultMode || (preset ? "cycle" : "manual"));
   const [progression, setProgression] = useState(defaultProgression || (preset ? preset.chords : ["C", "C", "F", "G", "Am", "Am", "F", "G"]));
@@ -2335,8 +2335,8 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
   const previousNotesRef = useRef([]);
   const stoppedRef = useRef(false);
   const onActiveNotesChangeRef = useRef(onActiveNotesChange);
-  const changeTimeoutRef = useRef(null);
   const stepCountRef = useRef(0);
+  const userGainRef = useRef(null);
 
   const notes = ["C", "C#", "D", "E♭", "E", "F", "F#", "G", "A♭", "A", "B♭", "B"];
 
@@ -2369,6 +2369,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       clearInterval(loopRef.current);
       loopRef.current = setInterval(() => {
         if (stoppedRef.current || !synthRef.current) return;
+        try { synthRef.current.volume; } catch { return; }
         const currentProg = progressionRef.current;
         if (currentProg.length === 0) return;
         const idx = stepCountRef.current % currentProg.length;
@@ -2395,8 +2396,8 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       try {
         if (document.hidden) {
           // Mute immediately — can't ramp on a frozen audio thread
-          if (synthRef.current) {
-            try { synthRef.current.volume.value = -Infinity; } catch {}
+          if (userGainRef.current) {
+            try { userGainRef.current.gain.value = 0; } catch {}
           }
         } else {
           // Screen back on — recover audio no matter what
@@ -2410,12 +2411,12 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
             try { await Tone.getContext().rawContext.resume(); } catch {}
           }
           // Step 3: Restore synth volume and re-trigger current notes
-          if (synthRef.current && playing) {
+          if (playing) {
             setTimeout(() => {
               try {
-                synthRef.current.volume.value = volume;
+                if (userGainRef.current) userGainRef.current.gain.rampTo(Tone.dbToGain(volume), 0.1);
                 // Re-trigger the current chord to ensure sound is playing
-                if (previousNotesRef.current.length > 0) {
+                if (synthRef.current && previousNotesRef.current.length > 0) {
                   synthRef.current.releaseAll();
                   synthRef.current.triggerAttack(previousNotesRef.current);
                 }
@@ -2433,7 +2434,6 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
   useEffect(() => {
     return () => {
       if (loopRef.current) clearInterval(loopRef.current);
-      if (changeTimeoutRef.current) clearTimeout(changeTimeoutRef.current);
     };
   }, []);
 
@@ -2444,34 +2444,39 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     let synth;
     let newNodes = [];
 
-    // Master bus — clean signal path, no compressor (causes pumping artifacts on sustained drones)
-    const masterGain = new Tone.Gain(0.7);
+    // Master bus — proper gain staging: fixed synth levels → effects → compress → user volume → limit
+    const masterGain = new Tone.Gain(0.85);
+    // Soft compressor tames peaks from polyphonic voice summation + effect amplification
+    const softComp = new Tone.Compressor({ threshold: -12, ratio: 3, knee: 12, attack: 0.1, release: 0.5 });
+    // User volume control — AFTER effects and compression, so signal is already clean
+    const userGain = new Tone.Gain(Tone.dbToGain(volume));
     // Highpass to kill sub-rumble
     const lowcut = new Tone.Filter(40, "highpass");
-    // Safety limiter only — prevents clipping without coloring the sound
+    // Safety limiter — rarely engages now that gain staging is correct
     const limiter = new Tone.Limiter(-1).toDestination();
 
-    masterGain.chain(lowcut, limiter);
-    newNodes.push(masterGain, lowcut, limiter);
+    masterGain.chain(softComp, userGain, lowcut, limiter);
+    userGainRef.current = userGain;
+    newNodes.push(masterGain, softComp, userGain, lowcut, limiter);
 
     // FIX: Replaced async Tone.Reverb with synchronous Tone.Freeverb to prevent Web Audio crashes on rapid switching
     if (texture === "analog") {
       const chorus = new Tone.Chorus({ frequency: 2, delayTime: 3, depth: 0.6 }).connect(masterGain).start();
       const filter = new Tone.Filter(800, "lowpass").connect(chorus);
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -10,
+        volume: -14,
         oscillator: { type: "sawtooth" },
         envelope: { attack: 2.5, decay: 0.1, sustain: 1, release: 2 }
       }).connect(filter);
       synth.maxPolyphony = 10;
       const lfo = new Tone.LFO(0.1, 400, 1200).connect(filter.frequency).start();
       newNodes.push(chorus, filter, lfo);
-    } 
+    }
     else if (texture === "choir") {
       const reverb = new Tone.Freeverb({ roomSize: 0.9, dampening: 2000 }).connect(masterGain);
       const filter = new Tone.Filter(1500, "lowpass").connect(reverb);
       synth = new Tone.PolySynth(Tone.FMSynth, {
-        volume: -12,
+        volume: -14,
         harmonicity: 1.01, modulationIndex: 2,
         oscillator: { type: "sine" },
         modulation: { type: "triangle" },
@@ -2485,7 +2490,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       const chorus = new Tone.Chorus(2, 4, 0.8).connect(masterGain).start();
       const eq = new Tone.EQ3(2, -2, -6).connect(chorus);
       synth = new Tone.PolySynth(Tone.AMSynth, {
-        volume: -12,
+        volume: -14,
         harmonicity: 1.005,
         oscillator: { type: "square" },
         modulation: { type: "square" },
@@ -2497,7 +2502,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     }
     else if (texture === "pure") {
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -10,
+        volume: -14,
         oscillator: { type: "sine" },
         envelope: { attack: 1, decay: 0, sustain: 1, release: 2 }
       }).connect(masterGain);
@@ -2508,7 +2513,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       const chorus = new Tone.Chorus({ frequency: 1.5, delayTime: 3, depth: 0.7 }).connect(reverb).start();
       const filter = new Tone.Filter(1200, "lowpass").connect(chorus);
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -10,
+        volume: -14,
         oscillator: { type: "sawtooth" },
         envelope: { attack: 3, decay: 0.1, sustain: 1, release: 2 }
       }).connect(filter);
@@ -2548,7 +2553,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       const filter = new Tone.Filter(1000, "lowpass").connect(vibrato);
       const chorus = new Tone.Chorus(4, 2.5, 0.4).connect(filter).start();
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -12,
+        volume: -14,
         oscillator: { type: "triangle" },
         envelope: { attack: 1.5, decay: 0.5, sustain: 0.8, release: 2 }
       }).connect(chorus);
@@ -2560,7 +2565,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       const tremolo = new Tone.Tremolo(4, 0.8).connect(reverb).start();
       const filter = new Tone.Filter(1500, "lowpass").connect(tremolo);
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -12,
+        volume: -14,
         oscillator: { type: "triangle" },
         envelope: { attack: 0.8, decay: 0.2, sustain: 0.8, release: 2 }
       }).connect(filter);
@@ -2572,7 +2577,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       const chorus = new Tone.Chorus(2, 3, 0.6).connect(phaser).start();
       const filter = new Tone.Filter(800, "lowpass").connect(chorus);
       synth = new Tone.PolySynth(Tone.FMSynth, {
-        volume: -12,
+        volume: -14,
         harmonicity: 2,
         modulationIndex: 1.5,
         oscillator: { type: "sine" },
@@ -2586,7 +2591,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     else if (texture === "dub-sub") {
       const filter = new Tone.Filter(150, "lowpass", -24).connect(masterGain);
       synth = new Tone.PolySynth(Tone.FMSynth, {
-        volume: -8,
+        volume: -14,
         harmonicity: 1, modulationIndex: 0.5,
         oscillator: { type: "sine" },
         modulation: { type: "triangle" },
@@ -2602,7 +2607,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       const chorus = new Tone.Chorus({ frequency: 0.8, delayTime: 4, depth: 0.6 }).connect(reverb).start();
       const filter = new Tone.Filter(700, "lowpass").connect(chorus);
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -10,
+        volume: -14,
         oscillator: { type: "triangle" },
         envelope: { attack: 2.5, decay: 0.3, sustain: 0.9, release: 2.5 }
       }).connect(filter);
@@ -2614,14 +2619,13 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     // Fallback for unknown textures — default to pure sine
     if (!synth) {
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -10,
+        volume: -14,
         oscillator: { type: "sine" },
         envelope: { attack: 1, decay: 0, sustain: 1, release: 2 }
       }).connect(masterGain);
       synth.maxPolyphony = 10;
     }
 
-    synth.volume.value = volume;
     effectSynth = synth;
     effectNodes = newNodes;
     synthRef.current = synth;
@@ -2646,8 +2650,8 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
   }, [texture]); // re-run only when texture changes
 
   useEffect(() => {
-    if (synthRef.current) {
-      synthRef.current.volume.rampTo(volume, 0.1);
+    if (userGainRef.current) {
+      userGainRef.current.gain.rampTo(Tone.dbToGain(volume), 0.1);
     }
   }, [volume]);
 
@@ -2684,6 +2688,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         // Play a chord at the current step (reads from refs, always current)
         const playStep = () => {
           if (stoppedRef.current || !synthRef.current) return;
+          try { synthRef.current.volume; } catch { return; }
           const currentProg = progressionRef.current;
           if (currentProg.length === 0) return;
 
@@ -2730,19 +2735,14 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
 
   const changeRoot = (n) => {
     if (playing && (mode === "manual" || mode === "single")) {
-      if (changeTimeoutRef.current) clearTimeout(changeTimeoutRef.current);
       const chordNotes = parseChordToNotes(n, octaveRef.current, mode === "single" ? "single" : "chord");
       if (chordNotes && synthRef.current) {
-        synthRef.current.releaseAll();
-        changeTimeoutRef.current = setTimeout(() => {
-          try {
-            if (!synthRef.current || stoppedRef.current) return;
-            synthRef.current.triggerAttack(chordNotes);
-            previousNotesRef.current = chordNotes;
-          } catch {}
-          changeTimeoutRef.current = null;
-        }, 80);
-        onActiveNotesChangeRef.current?.({ notes: chordNotes || [], label: n });
+        try {
+          synthRef.current.releaseAll();
+          synthRef.current.triggerAttack(chordNotes);
+          previousNotesRef.current = chordNotes;
+        } catch {}
+        onActiveNotesChangeRef.current?.({ notes: chordNotes, label: n });
       }
     }
     setRoot(n);
@@ -2751,19 +2751,14 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
   const changeOctave = (oct) => {
     setOctave(oct);
     if (playing && (mode === "manual" || mode === "single")) {
-      if (changeTimeoutRef.current) clearTimeout(changeTimeoutRef.current);
       const chordNotes = parseChordToNotes(root, oct, mode === "single" ? "single" : "chord");
       if (chordNotes && synthRef.current) {
-        synthRef.current.releaseAll();
-        changeTimeoutRef.current = setTimeout(() => {
-          try {
-            if (!synthRef.current || stoppedRef.current) return;
-            synthRef.current.triggerAttack(chordNotes);
-            previousNotesRef.current = chordNotes;
-          } catch {}
-          changeTimeoutRef.current = null;
-        }, 80);
-        onActiveNotesChangeRef.current?.({ notes: chordNotes || [], label: root });
+        try {
+          synthRef.current.releaseAll();
+          synthRef.current.triggerAttack(chordNotes);
+          previousNotesRef.current = chordNotes;
+        } catch {}
+        onActiveNotesChangeRef.current?.({ notes: chordNotes, label: root });
       }
     }
   };
@@ -3333,13 +3328,13 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
               </div>
               <div style={{ flex: 1, display: "flex", alignItems: "center", position: "relative" }}>
                 <div style={{ position: "absolute", left: 0, right: 0, height: 6, background: T.bgSoft, borderRadius: 3, border: `1px solid ${T.borderSoft}`, pointerEvents: "none" }} />
-                <div style={{ position: "absolute", left: 0, width: `${(volume + 40) / 40 * 100}%`, height: 6, background: playing ? T.plum : T.textMed, borderRadius: 3, pointerEvents: "none", transition: "background 0.4s" }} />
-                <input type="range" min={-40} max={0} value={volume}
+                <div style={{ position: "absolute", left: 0, width: `${(volume + 40) / 43 * 100}%`, height: 6, background: playing ? T.plum : T.textMed, borderRadius: 3, pointerEvents: "none", transition: "background 0.4s" }} />
+                <input type="range" min={-40} max={3} value={volume}
                   onChange={e => setVolume(Number(e.target.value))}
                   style={{ width: "100%", opacity: 0, height: 24, cursor: "pointer", position: "relative", zIndex: 10 }} />
                 {/* Custom Thumb */}
-                <div style={{ 
-                  position: "absolute", left: `calc(${(volume + 40) / 40 * 100}% - 8px)`, width: 16, height: 16, 
+                <div style={{
+                  position: "absolute", left: `calc(${(volume + 40) / 43 * 100}% - 8px)`, width: 16, height: 16,
                   background: "#fff", border: `2px solid ${playing ? T.plum : T.textMed}`, borderRadius: "50%", 
                   pointerEvents: "none", boxShadow: "0 2px 4px rgba(0,0,0,0.1)", transition: "border-color 0.4s"
                 }} />
@@ -3506,7 +3501,7 @@ export function InlineKeyboard({
   const blackBorder = `1px solid #1a1817`;
 
   return (
-    <div style={{
+    <div data-keyboard="true" style={{
       background: bg, border: containerBorder, borderRadius: Th.radiusMd,
       padding: "16px 16px 20px", marginBottom: 16,
       boxShadow: "0 4px 16px rgba(44,40,37,0.04)"
@@ -3602,61 +3597,42 @@ export function InlineKeyboard({
 
 export function RhythmCellCards({ theme: T, cells = [], bpm = 80 }) {
   const [playingIdx, setPlayingIdx] = useState(null);
-  const [loopingIdx, setLoopingIdx] = useState(null);
   const [localBpm, setLocalBpm] = useState(bpm);
-  const [clickEnabled, setClickEnabled] = useState(false);
   const [currentNoteIdx, setCurrentNoteIdx] = useState(-1);
+  const [isMetroRunning, setIsMetroRunning] = useState(false);
+  const [metroBeatVisual, setMetroBeatVisual] = useState(-1);
   const timeoutsRef = useRef([]);
   const synthsRef = useRef([]);
-  const loopTimeoutRef = useRef(null);
-  const clickSynthRef = useRef(null);
-  const isLoopingRef = useRef(false);
-  const playCellRef = useRef(null);
+  const metroIntervalRef = useRef(null);
+  const metroBeatRef = useRef(0);
+  const metroStartTimeRef = useRef(null);
+  const metroClickSynthRef = useRef(null);
+  const activeCellRef = useRef(null); // { cell, idx, totalBeats }
 
-  const stopAll = useCallback(() => {
-    isLoopingRef.current = false;
+  const clearPatternTimeouts = useCallback(() => {
     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current = [];
-    if (loopTimeoutRef.current) { clearTimeout(loopTimeoutRef.current); loopTimeoutRef.current = null; }
     synthsRef.current.forEach(s => { try { s.dispose(); } catch (_) {} });
     synthsRef.current = [];
-    setPlayingIdx(null);
-    setLoopingIdx(null);
     setCurrentNoteIdx(-1);
   }, []);
 
-  const playCell = useCallback((cell, idx, loop = false) => {
-    // Clear any existing playback
-    timeoutsRef.current.forEach(clearTimeout);
-    timeoutsRef.current = [];
-    if (loopTimeoutRef.current) { clearTimeout(loopTimeoutRef.current); loopTimeoutRef.current = null; }
-    synthsRef.current.forEach(s => { try { s.dispose(); } catch (_) {} });
-    synthsRef.current = [];
-    setPlayingIdx(idx);
-    if (loop) { setLoopingIdx(idx); isLoopingRef.current = true; }
-    setCurrentNoteIdx(0);
+  const stopAll = useCallback(() => {
+    clearPatternTimeouts();
+    activeCellRef.current = null;
+    setPlayingIdx(null);
+    setIsMetroRunning(false);
+    setMetroBeatVisual(-1);
+    metroBeatRef.current = 0;
+    metroStartTimeRef.current = null;
+  }, [clearPatternTimeouts]);
 
+  // Schedule a cell's pattern notes from now
+  const schedulePattern = useCallback((cell) => {
+    clearPatternTimeouts();
     const beatMs = 60000 / localBpm;
     let offset = 0;
-    const totalBeats = cell.pattern.reduce((a, b) => a + b, 0);
 
-    // Schedule click track on beat boundaries
-    if (clickEnabled || loop) {
-      const numBeats = Math.ceil(totalBeats);
-      for (let b = 0; b < numBeats; b++) {
-        const ct = setTimeout(async () => {
-          if (Tone.context.state !== 'running') await Tone.context.resume();
-          if (!clickSynthRef.current) {
-            clickSynthRef.current = new Tone.Synth({ oscillator: { type: 'sine' }, envelope: { attack: 0.001, decay: 0.05, sustain: 0, release: 0.05 } }).toDestination();
-            clickSynthRef.current.volume.value = -12;
-          }
-          try { clickSynthRef.current.triggerAttackRelease("C5", "32n", Tone.now()); } catch (_) {}
-        }, b * beatMs);
-        timeoutsRef.current.push(ct);
-      }
-    }
-
-    // Schedule pattern notes
     cell.pattern.forEach((dur, i) => {
       const t = setTimeout(async () => {
         if (Tone.context.state !== 'running') await Tone.context.resume();
@@ -3674,42 +3650,110 @@ export function RhythmCellCards({ theme: T, cells = [], bpm = 80 }) {
       offset += dur * beatMs;
     });
 
-    // After pattern ends: loop or stop
-    const endTimeout = setTimeout(() => {
-      setCurrentNoteIdx(-1);
-      if (isLoopingRef.current) {
-        // 1-beat rest gap then re-trigger
-        loopTimeoutRef.current = setTimeout(() => {
-          if (isLoopingRef.current && playCellRef.current) playCellRef.current(cell, idx, true);
-        }, beatMs);
-      } else {
-        setPlayingIdx(null);
-      }
-    }, offset + 100);
+    // Reset visual after pattern ends
+    const endTimeout = setTimeout(() => setCurrentNoteIdx(-1), offset + 50);
     timeoutsRef.current.push(endTimeout);
-  }, [localBpm, clickEnabled]);
-  playCellRef.current = playCell;
+  }, [localBpm, clearPatternTimeouts]);
+
+  // Start a cell: begin metronome + quantize first pattern to next beat
+  const startCell = useCallback(async (cell, idx) => {
+    if (Tone.context.state !== 'running') {
+      try { await Tone.start(); } catch {}
+      try { await Tone.context.resume(); } catch {}
+    }
+    const totalBeats = cell.pattern.reduce((a, b) => a + b, 0);
+    activeCellRef.current = { cell, idx, totalBeats };
+    setPlayingIdx(idx);
+
+    if (!isMetroRunning) {
+      // Start fresh — metronome will play first beat + trigger pattern immediately
+      setIsMetroRunning(true);
+    } else {
+      // Metronome already running — quantize to next beat
+      const beatMs = 60000 / localBpm;
+      const elapsed = performance.now() - (metroStartTimeRef.current || performance.now());
+      const msIntoCurrentBeat = elapsed % beatMs;
+      const msUntilNextBeat = beatMs - msIntoCurrentBeat;
+      const t = setTimeout(() => {
+        if (activeCellRef.current?.idx === idx) schedulePattern(cell);
+      }, msUntilNextBeat);
+      timeoutsRef.current.push(t);
+    }
+  }, [isMetroRunning, localBpm, schedulePattern]);
 
   const handleCellTap = useCallback((cell, idx) => {
-    if (loopingIdx === idx) {
-      // Currently looping this cell — stop
+    if (activeCellRef.current?.idx === idx) {
+      // Tap active cell → stop everything
       stopAll();
-    } else if (playingIdx === idx) {
-      // Currently playing once — switch to loop
-      playCell(cell, idx, true);
     } else {
-      // Not playing — start single play (playCell already clears previous)
-      playCell(cell, idx, false);
+      // Tap new cell → start or swap
+      startCell(cell, idx);
     }
-  }, [playingIdx, loopingIdx, playCell, stopAll]);
+  }, [stopAll, startCell]);
 
+  // Metronome engine — runs when isMetroRunning is true
+  useEffect(() => {
+    if (!isMetroRunning) {
+      if (metroIntervalRef.current) { clearInterval(metroIntervalRef.current); metroIntervalRef.current = null; }
+      setMetroBeatVisual(-1);
+      metroBeatRef.current = 0;
+      metroStartTimeRef.current = null;
+      return;
+    }
+
+    const beatMs = 60000 / localBpm;
+    metroStartTimeRef.current = performance.now();
+    metroBeatRef.current = 0;
+
+    // Create dedicated click synth
+    const clickSynth = new Tone.Synth({
+      oscillator: { type: 'sine' },
+      envelope: { attack: 0.001, decay: 0.05, sustain: 0, release: 0.05 }
+    }).toDestination();
+    clickSynth.volume.value = -10;
+    metroClickSynthRef.current = clickSynth;
+
+    const tick = () => {
+      const beat = metroBeatRef.current;
+      const beatInBar = beat % 4;
+      setMetroBeatVisual(beatInBar);
+
+      // Click — accent on beat 1
+      try {
+        const pitch = beatInBar === 0 ? "G5" : "C5";
+        clickSynth.triggerAttackRelease(pitch, "32n", Tone.now());
+      } catch {}
+
+      // Re-trigger active cell pattern on its cycle boundary
+      const ac = activeCellRef.current;
+      if (ac) {
+        const patternBeats = Math.ceil(ac.totalBeats);
+        if (beat % patternBeats === 0) {
+          schedulePattern(ac.cell);
+        }
+      }
+
+      metroBeatRef.current++;
+    };
+
+    // First tick immediately
+    tick();
+    metroIntervalRef.current = setInterval(tick, beatMs);
+
+    return () => {
+      if (metroIntervalRef.current) { clearInterval(metroIntervalRef.current); metroIntervalRef.current = null; }
+      try { clickSynth.dispose(); } catch {}
+      metroClickSynthRef.current = null;
+    };
+  }, [isMetroRunning, localBpm, schedulePattern]);
+
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
-      isLoopingRef.current = false;
       timeoutsRef.current.forEach(clearTimeout);
-      if (loopTimeoutRef.current) clearTimeout(loopTimeoutRef.current);
+      if (metroIntervalRef.current) clearInterval(metroIntervalRef.current);
       synthsRef.current.forEach(s => { try { s.dispose(); } catch (_) {} });
-      if (clickSynthRef.current) { try { clickSynthRef.current.dispose(); } catch (_) {} }
+      if (metroClickSynthRef.current) { try { metroClickSynthRef.current.dispose(); } catch (_) {} }
     };
   }, []);
 
@@ -3806,45 +3850,44 @@ export function RhythmCellCards({ theme: T, cells = [], bpm = 80 }) {
           >Target: {bpm}</button>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ fontSize: 11, fontWeight: 600, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1 }}>Click Track</span>
-          <button onClick={() => setClickEnabled(!clickEnabled)} style={{
-              background: clickEnabled ? T.success : T.border, border: "none",
-              width: 44, height: 24, borderRadius: 12, position: "relative",
-              cursor: "pointer", transition: "background 0.3s ease"
-          }}>
-              <div style={{
-                  position: "absolute", top: 2, left: clickEnabled ? 22 : 2,
-                  width: 20, height: 20, borderRadius: "50%", background: "#fff",
-                  boxShadow: "0 1px 3px rgba(0,0,0,0.2)", transition: "left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
-              }} />
-          </button>
-        </div>
       </div>
+
+      {/* Beat indicator — visible when metronome is running */}
+      {isMetroRunning && (
+        <div style={{ display: "flex", justifyContent: "center", gap: 12, marginBottom: 12 }}>
+          {[0, 1, 2, 3].map(i => (
+            <div key={i} style={{
+              width: 12, height: 12, borderRadius: "50%",
+              background: metroBeatVisual === i ? T.gold : T.borderSoft,
+              transition: "background 0.08s",
+              boxShadow: metroBeatVisual === i ? `0 0 8px ${T.gold}80` : "none"
+            }} />
+          ))}
+        </div>
+      )}
 
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
         {cells.map((cell, i) => {
-          const isPlaying = playingIdx === i;
-          const isLooping = loopingIdx === i;
+          const isActive = playingIdx === i;
           return (
             <div key={i} onClick={() => handleCellTap(cell, i)} style={{
               flex: "1 1 140px", maxWidth: 200, cursor: "pointer",
-              background: isPlaying || isLooping ? T.goldSoft : T.bgCard,
-              border: `1px solid ${isLooping ? T.gold : isPlaying ? T.gold + "80" : T.border}`,
+              background: isActive ? T.goldSoft : T.bgCard,
+              border: `1px solid ${isActive ? T.gold : T.border}`,
               borderRadius: T.radiusMd || 8, padding: "14px",
-              boxShadow: isPlaying || isLooping ? `0 0 0 1px ${T.gold}40, ${T.sm}` : T.sm,
+              boxShadow: isActive ? `0 0 0 1px ${T.gold}40, ${T.sm}` : T.sm,
               transition: "all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-              transform: isPlaying || isLooping ? "translateY(-2px)" : "translateY(0)"
+              transform: isActive ? "translateY(-2px)" : "translateY(0)"
             }}
             onPointerEnter={e => {
-              if (!isPlaying && !isLooping) {
+              if (!isActive) {
                 e.currentTarget.style.transform = "translateY(-2px)";
                 e.currentTarget.style.boxShadow = `0 4px 12px rgba(44, 40, 37, 0.06)`;
                 e.currentTarget.style.borderColor = T.borderSoft;
               }
             }}
             onPointerLeave={e => {
-              if (!isPlaying && !isLooping) {
+              if (!isActive) {
                 e.currentTarget.style.transform = "translateY(0)";
                 e.currentTarget.style.boxShadow = T.sm;
                 e.currentTarget.style.borderColor = T.border;
@@ -3854,30 +3897,28 @@ export function RhythmCellCards({ theme: T, cells = [], bpm = 80 }) {
               e.currentTarget.style.transform = "scale(0.98)";
             }}
             onPointerUp={e => {
-              e.currentTarget.style.transform = isPlaying || isLooping ? "translateY(-2px)" : "translateY(0)";
+              e.currentTarget.style.transform = isActive ? "translateY(-2px)" : "translateY(0)";
             }}
             >
-              <div style={{ fontSize: 15, fontWeight: 700, color: (isPlaying || isLooping) ? T.goldDark : T.textDark, fontFamily: T.serif, marginBottom: 4, transition: "color 0.2s" }}>{cell.name}</div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: isActive ? T.goldDark : T.textDark, fontFamily: T.serif, marginBottom: 4, transition: "color 0.2s" }}>{cell.name}</div>
               <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans, marginBottom: 10, lineHeight: 1.4 }}>{cell.description}</div>
               <div style={{ marginBottom: 6 }}>
-                {renderPattern(cell.pattern, isPlaying ? currentNoteIdx : -1)}
+                {renderPattern(cell.pattern, isActive ? currentNoteIdx : -1)}
               </div>
-              <div style={{ 
-                fontSize: 9, 
-                color: isLooping ? T.goldDark : isPlaying ? T.textMed : T.textMuted, 
-                fontFamily: T.sans, 
-                marginTop: 8, 
-                textTransform: "uppercase", 
+              <div style={{
+                fontSize: 9,
+                color: isActive ? T.goldDark : T.textMuted,
+                fontFamily: T.sans,
+                marginTop: 8,
+                textTransform: "uppercase",
                 letterSpacing: 1,
-                fontWeight: isLooping || isPlaying ? 700 : 600,
+                fontWeight: isActive ? 700 : 600,
                 display: "flex",
                 alignItems: "center",
                 gap: 4
               }}>
-                {isLooping ? (
-                  <><span style={{ width: 6, height: 6, borderRadius: "50%", background: T.goldDark, display: "inline-block", animation: "pulse-ring 2s infinite" }} /> Looping &middot; tap to stop</>
-                ) : isPlaying ? (
-                  <><span style={{ width: 6, height: 6, borderRadius: "50%", background: T.textMed, display: "inline-block" }} /> Playing &middot; tap to loop</>
+                {isActive ? (
+                  <><span style={{ width: 6, height: 6, borderRadius: "50%", background: T.goldDark, display: "inline-block", animation: "pulse-ring 2s infinite" }} /> Playing &middot; tap to stop</>
                 ) : "Tap to hear"}
               </div>
             </div>

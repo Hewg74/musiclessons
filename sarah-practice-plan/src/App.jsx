@@ -8,8 +8,8 @@ import { GUITAR_STUDY } from './data/guitarStudy/index.js';
 import { SINGER_SONGWRITER_LEVELS } from './data/singerSongwriter/index.js';
 
 // ─── AUDIO CONTEXT CONFIG ──
-// Increase lookAhead for smoother scheduling (reduces glitches from main thread jank)
-try { Tone.getContext().lookAhead = 1.0; } catch { }
+// Small lookAhead buffers against main-thread jank without perceptible latency
+try { Tone.getContext().lookAhead = 0.05; } catch { }
 
 // ─── DESIGN SYSTEM (sarahglassmusic.com) ────────────────────────────
 let T = {
@@ -1132,7 +1132,7 @@ function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor
     const el = e.target;
     const tag = el.tagName;
     if (tag === "BUTTON" || tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA" || tag === "CANVAS" ||
-      el.closest("button, input, select, [role='slider'], svg")) {
+      el.closest("button, input, select, [role='slider'], svg, [data-keyboard]")) {
       touchRef.current = null; return;
     }
     touchRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
