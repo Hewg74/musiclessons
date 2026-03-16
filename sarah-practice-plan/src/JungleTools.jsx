@@ -3698,17 +3698,18 @@ export function RhythmCellCards({ theme: T, cells = [], bpm = 80 }) {
     metroStartTimeRef.current = null;
   }, [clearPatternTimeouts]);
 
-  // Schedule a cell's pattern notes using audio-thread timing (sample-accurate)
-  const schedulePattern = useCallback((cell) => {
+  // Schedule a cell's pattern notes at an absolute audio-thread time
+  // startTime = exact audio-context time for beat 0 of this pattern cycle
+  const schedulePattern = useCallback((cell, startTime) => {
     clearPatternTimeouts();
     const beatSec = 60 / localBpm;
     const beatMs = 60000 / localBpm;
     const now = Tone.now();
+    // How far in the future is startTime from now (for setTimeout visual updates)
+    const startDelayMs = Math.max(0, (startTime - now) * 1000);
     let offsetSec = 0;
     let offsetMs = 0;
 
-    // Pre-create one synth per note and schedule on the audio thread
-    // Audio thread timing is sample-accurate — no event-loop drift
     cell.pattern.forEach((dur, i) => {
       const noteDur = dur * beatSec;
       const synth = new Tone.Synth({
@@ -3717,23 +3718,22 @@ export function RhythmCellCards({ theme: T, cells = [], bpm = 80 }) {
       }).toDestination();
       synth.volume.value = -6;
       synthsRef.current.push(synth);
-      // Schedule note at exact audio-thread time — locked to same clock as metronome click
-      synth.triggerAttackRelease("A3", noteDur, now + offsetSec);
-      // Visual highlight via setTimeout (slight drift is fine for UI)
-      const t = setTimeout(() => setCurrentNoteIdx(i), offsetMs);
+      // Schedule at absolute audio-thread time — immune to setInterval drift
+      synth.triggerAttackRelease("A3", noteDur, startTime + offsetSec);
+      // Visual highlight via setTimeout (approximate is fine for UI)
+      const t = setTimeout(() => setCurrentNoteIdx(i), startDelayMs + offsetMs);
       timeoutsRef.current.push(t);
-      // Dispose after note finishes + release tail
-      const disposeMs = offsetMs + dur * beatMs + 2000;
+      // Dispose after note finishes
       setTimeout(() => {
         try { synth.dispose(); } catch {}
         synthsRef.current = synthsRef.current.filter(s => s !== synth);
-      }, disposeMs);
+      }, startDelayMs + offsetMs + dur * beatMs + 2000);
       offsetSec += noteDur;
       offsetMs += dur * beatMs;
     });
 
     // Reset visual after pattern ends
-    const endTimeout = setTimeout(() => setCurrentNoteIdx(-1), offsetMs + 50);
+    const endTimeout = setTimeout(() => setCurrentNoteIdx(-1), startDelayMs + offsetMs + 50);
     timeoutsRef.current.push(endTimeout);
   }, [localBpm, clearPatternTimeouts]);
 
@@ -3751,15 +3751,17 @@ export function RhythmCellCards({ theme: T, cells = [], bpm = 80 }) {
       // Start fresh — metronome will play first beat + trigger pattern immediately
       setIsMetroRunning(true);
     } else {
-      // Metronome already running — quantize to next beat
+      // Metronome already running — quantize to next beat boundary
+      // Calculate the next beat time on the audio thread for precise alignment
+      const beatSec = 60 / localBpm;
       const beatMs = 60000 / localBpm;
       const elapsed = performance.now() - (metroStartTimeRef.current || performance.now());
       const msIntoCurrentBeat = elapsed % beatMs;
       const msUntilNextBeat = beatMs - msIntoCurrentBeat;
-      const t = setTimeout(() => {
-        if (activeCellRef.current?.idx === idx) schedulePattern(cell);
-      }, msUntilNextBeat);
-      timeoutsRef.current.push(t);
+      // The ideal audio-thread time for that next beat
+      const nextBeatAudioTime = Tone.now() + msUntilNextBeat / 1000;
+      // Schedule pattern at that exact audio time
+      schedulePattern(cell, nextBeatAudioTime);
     }
   }, [isMetroRunning, localBpm, schedulePattern]);
 
@@ -3773,7 +3775,9 @@ export function RhythmCellCards({ theme: T, cells = [], bpm = 80 }) {
     }
   }, [stopAll, startCell]);
 
-  // Metronome engine — runs when isMetroRunning is true
+  // Metronome engine — absolute-time scheduling (no drift)
+  // Uses the "two clocks" pattern: setInterval for coarse timing, audio-thread for precision.
+  // Even if setInterval fires late, beats land on the exact grid.
   useEffect(() => {
     if (!isMetroRunning) {
       if (metroIntervalRef.current) { clearInterval(metroIntervalRef.current); metroIntervalRef.current = null; }
@@ -3783,7 +3787,10 @@ export function RhythmCellCards({ theme: T, cells = [], bpm = 80 }) {
       return;
     }
 
+    const beatSec = 60 / localBpm;
     const beatMs = 60000 / localBpm;
+    // Absolute audio-context time of beat 0
+    let nextBeatTime = Tone.now();
     metroStartTimeRef.current = performance.now();
     metroBeatRef.current = 0;
 
@@ -3800,10 +3807,10 @@ export function RhythmCellCards({ theme: T, cells = [], bpm = 80 }) {
       const beatInBar = beat % 4;
       setMetroBeatVisual(beatInBar);
 
-      // Click — accent on beat 1
+      // Schedule click at the IDEAL beat time (not Tone.now() which may be late)
       try {
         const pitch = beatInBar === 0 ? "G5" : "C5";
-        clickSynth.triggerAttackRelease(pitch, "32n", Tone.now());
+        clickSynth.triggerAttackRelease(pitch, "32n", nextBeatTime);
       } catch {}
 
       // Re-trigger active cell pattern on its cycle boundary
@@ -3811,10 +3818,13 @@ export function RhythmCellCards({ theme: T, cells = [], bpm = 80 }) {
       if (ac) {
         const patternBeats = Math.ceil(ac.totalBeats);
         if (beat % patternBeats === 0) {
-          schedulePattern(ac.cell);
+          // Pass the ideal beat time so pattern notes are grid-locked
+          schedulePattern(ac.cell, nextBeatTime);
         }
       }
 
+      // Advance to next beat — absolute, no drift accumulation
+      nextBeatTime += beatSec;
       metroBeatRef.current++;
     };
 
