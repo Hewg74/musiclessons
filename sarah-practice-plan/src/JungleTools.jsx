@@ -3714,12 +3714,14 @@ export function RhythmCellCards({ theme: T, cells = [], bpm = 80 }) {
       const noteDur = dur * beatSec;
       const synth = new Tone.Synth({
         oscillator: { type: 'triangle' },
-        envelope: { attack: 0.01, decay: 0.1, sustain: 0.3, release: 0.2 }
+        // High sustain + short release = notes fill their full duration with no gap
+        envelope: { attack: 0.005, decay: 0.02, sustain: 0.9, release: 0.03 }
       }).toDestination();
       synth.volume.value = -6;
       synthsRef.current.push(synth);
       // Schedule at absolute audio-thread time — immune to setInterval drift
-      synth.triggerAttackRelease("A3", noteDur, startTime + offsetSec);
+      // Subtract a tiny amount from duration so release completes before next note attacks
+      synth.triggerAttackRelease("A3", Math.max(0.02, noteDur - 0.02), startTime + offsetSec);
       // Visual highlight via setTimeout (approximate is fine for UI)
       const t = setTimeout(() => setCurrentNoteIdx(i), startDelayMs + offsetMs);
       timeoutsRef.current.push(t);
