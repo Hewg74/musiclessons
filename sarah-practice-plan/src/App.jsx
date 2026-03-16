@@ -1995,20 +1995,22 @@ function VoiceView({ completed, onComplete, metro, onOpenTapMatch, onStartFlow }
   const overallPct = Math.round((totalDone / totalEx) * 100);
 
   return (
-    <div style={{ animation: "fade-in-up 0.4s ease-out" }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 32, borderBottom: `1px solid ${T.borderSoft}`, paddingBottom: 24 }}>
-        <div>
-          <div style={{ fontSize: 9, fontWeight: 900, letterSpacing: 2.5, textTransform: "uppercase", color: T.plum, fontFamily: T.sans, marginBottom: 8 }}>Curriculum</div>
-          <div style={{ fontSize: 40, fontWeight: 400, fontFamily: T.serif, color: T.textDark, lineHeight: 1 }}>Voice</div>
-          <div style={{ fontSize: 11, color: T.textMuted, fontFamily: T.sans, marginTop: 12, textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 700, display: "flex", alignItems: "center", gap: 10 }}>
-            Breath to Performance <span style={{ opacity: 0.3 }}>|</span> <Mic size={12} /> {totalDone}/{totalEx} Done
-          </div>
+    <div>
+      <div style={{ textAlign: "center", marginBottom: 24 }}>
+        <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: "#9e829c", fontFamily: T.sans, marginBottom: 6 }}>
+          Singer-Songwriter Curriculum
         </div>
-        <div style={{ textAlign: "right" }}>
-          <div style={{ fontSize: 32, fontWeight: 700, fontFamily: T.serif, color: overallPct === 100 ? T.success : T.textDark, lineHeight: 1, display: "flex", alignItems: "center", gap: 10 }}>
-            {overallPct}%
-            {overallPct === 100 && <CheckCircle2 size={24} color={T.success} strokeWidth={2.5} />}
+        <div style={{ fontSize: 32, fontWeight: 400, fontFamily: T.serif, color: T.textDark }}>Voice</div>
+        <div style={{ fontSize: 13, color: T.textMuted, fontFamily: T.sans, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+          Breath to Performance · Psych-Surf-Reggae · {totalDone}/{totalEx} exercises
+        </div>
+        <div style={{ width: "100%", maxWidth: 320, margin: "16px auto 0", display: "flex", alignItems: "center", gap: 14 }}>
+          <div style={{ flex: 1 }}>
+            <div style={{ height: 2, background: T.border, overflow: "hidden" }}>
+              <div style={{ height: "100%", width: `${overallPct}%`, background: overallPct === 100 ? T.success : T.gold, transition: "width 0.5s" }} />
+            </div>
           </div>
+          <div style={{ fontSize: 14, fontWeight: 400, fontFamily: T.serif, color: overallPct === 100 ? T.success : T.gold, minWidth: 36 }}>{overallPct}%</div>
         </div>
       </div>
 
@@ -2016,11 +2018,11 @@ function VoiceView({ completed, onComplete, metro, onOpenTapMatch, onStartFlow }
 
       {/* Level pills — horizontal scroll */}
       <div className="hide-scrollbar sticky-pill-bar" style={{
-        display: "flex", gap: 12, overflowX: "auto", padding: "8px 0 24px",
-        background: T.bg + "f2", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
+        display: "flex", gap: 0, overflowX: "auto", padding: "16px 0 0",
+        background: T.bg + "e6", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
         WebkitOverflowScrolling: "touch", scrollSnapType: "x mandatory",
         msOverflowStyle: "none", scrollbarWidth: "none",
-        borderBottom: `1px solid ${T.borderSoft}`,
+        borderBottom: `1px solid ${T.border}`,
       }}>
         {VOCAL_LEVELS.map((level, idx) => {
           const c = VOCAL_COLORS[idx % VOCAL_COLORS.length];
@@ -2029,28 +2031,25 @@ function VoiceView({ completed, onComplete, metro, onOpenTapMatch, onStartFlow }
           const pct = Math.round((done / total) * 100);
           const active = selectedLevel.num === level.num;
           const isUnlocked = unlocked.has(level.num);
-          
           return (
             <button key={level.num} onClick={() => isUnlocked && setSelectedLevel(level)} style={{
               flex: "0 0 auto", scrollSnapAlign: "start",
-              background: active ? T.getTint(c, 0.1) : T.bgCard,
-              border: `1px solid ${active ? c : T.border}`,
-              borderRadius: T.radiusMd, padding: "12px 20px",
-              cursor: isUnlocked ? "pointer" : "default", textAlign: "left", transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+              background: isUnlocked ? (active ? c : T.bgCard) : "transparent",
+              border: `1px solid ${isUnlocked && active ? c : T.border}`,
+              borderRadius: 24, padding: "8px 20px", margin: "4px 8px 12px 0px",
+              cursor: isUnlocked ? "pointer" : "default", textAlign: "center", transition: "all 0.2s",
               opacity: isUnlocked ? 1 : 0.4,
-              boxShadow: active ? T.getShadow(c, 'sm') : "none",
-              minWidth: 120
+              boxShadow: active ? `0 4px 10px ${c}40` : "none"
             }}>
-              <div style={{ fontSize: 9, fontWeight: 900, letterSpacing: 1.5, textTransform: "uppercase", color: active ? c : T.textMuted, fontFamily: T.sans, marginBottom: 4 }}>
-                Level {level.num}
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: active ? "#fff" : c, fontFamily: T.sans }}>
+                LVL {level.num}
               </div>
-              <div style={{ fontSize: 15, fontWeight: active ? 600 : 400, color: active ? T.textDark : T.textMed, fontFamily: T.serif, whiteSpace: "nowrap" }}>
-                {isUnlocked ? level.name : "Locked"}
+              <div style={{ fontSize: 13, fontWeight: active ? 600 : 400, color: active ? "#fff" : T.textDark, fontFamily: T.serif, marginTop: 2, whiteSpace: "nowrap" }}>
+                {isUnlocked ? level.name : "🔒"}
               </div>
               {isUnlocked && pct > 0 && (
-                <div style={{ fontSize: 9, color: pct === 100 ? T.success : c, fontFamily: T.sans, fontWeight: 900, marginTop: 8, textTransform: "uppercase", letterSpacing: 1, display: "flex", alignItems: "center", gap: 4 }}>
-                  {pct === 100 ? <Check size={10} strokeWidth={3} /> : null}
-                  {pct === 100 ? "Done" : `${done}/${total}`}
+                <div style={{ fontSize: 9, color: active ? "rgba(255,255,255,0.8)" : (pct === 100 ? T.success : c), fontFamily: T.sans, fontWeight: 600, marginTop: 2 }}>
+                  {pct === 100 ? "done" : `${done}/${total}`}
                 </div>
               )}
             </button>
@@ -2060,23 +2059,21 @@ function VoiceView({ completed, onComplete, metro, onOpenTapMatch, onStartFlow }
 
       {/* Level description */}
       <div style={{
-        background: T.getTint(T.plum, 0.04), border: `1px solid ${T.plum}15`, borderRadius: T.radiusMd,
-        padding: "24px", marginTop: 24, marginBottom: 16, boxShadow: `0 4px 12px ${T.plum}08`
+        background: T.plumSoft, border: `1px solid ${T.plum}20`, borderRadius: T.radiusMd,
+        padding: "16px 20px", marginTop: 20, marginBottom: 4
       }}>
-        <div style={{ fontSize: 18, fontWeight: 600, fontFamily: T.serif, color: T.textDark, marginBottom: 12 }}>
+        <div style={{ fontSize: 15, fontWeight: 400, fontFamily: T.serif, color: T.textDark, marginBottom: 6 }}>
           {selectedLevel.subtitle}
         </div>
-        <div style={{ fontSize: 14, color: T.textMed, fontFamily: T.sans, lineHeight: 1.7, marginBottom: 16 }}>
+        <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, lineHeight: 1.6, marginBottom: 8 }}>
           {selectedLevel.description}
         </div>
-        <div style={{ display: "flex", gap: 24, flexWrap: "wrap", borderTop: `1px solid ${T.plum}10`, paddingTop: 16 }}>
+        <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
           <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans }}>
-            <span style={{ fontWeight: 800, color: T.plum, textTransform: "uppercase", letterSpacing: 1.5, fontSize: 9 }}>Artists: </span>
-            <span style={{ marginLeft: 8 }}>{selectedLevel.artists}</span>
+            <span style={{ fontWeight: 700, color: T.plum, textTransform: "uppercase", letterSpacing: 1 }}>Artists: </span>{selectedLevel.artists}
           </div>
           <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans }}>
-            <span style={{ fontWeight: 800, color: T.plum, textTransform: "uppercase", letterSpacing: 1.5, fontSize: 9 }}>Unlocks: </span>
-            <span style={{ marginLeft: 8 }}>{selectedLevel.unlocks}</span>
+            <span style={{ fontWeight: 700, color: T.plum, textTransform: "uppercase", letterSpacing: 1 }}>Unlocks: </span>{selectedLevel.unlocks}
           </div>
         </div>
       </div>
@@ -3449,30 +3446,32 @@ function SingerSongwriterView({ completed, onComplete, metro, onOpenTapMatch, on
   const levelPct = Math.round((levelDone / levelTotal) * 100);
 
   return (
-    <div style={{ animation: "fade-in-up 0.4s ease-out" }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 32, borderBottom: `1px solid ${T.borderSoft}`, paddingBottom: 24 }}>
-        <div>
-          <div style={{ fontSize: 9, fontWeight: 900, letterSpacing: 2.5, textTransform: "uppercase", color: T.coral, fontFamily: T.sans, marginBottom: 8 }}>Integration</div>
-          <div style={{ fontSize: 40, fontWeight: 400, fontFamily: T.serif, color: T.textDark, lineHeight: 1 }}>Singer-Songwriter</div>
-          <div style={{ fontSize: 11, color: T.textMuted, fontFamily: T.sans, marginTop: 12, textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 700, display: "flex", alignItems: "center", gap: 10 }}>
-            Psych-Surf-Reggae-Desert <span style={{ opacity: 0.3 }}>|</span> <Music size={12} /> {totalDone}/{totalEx} Done
-          </div>
+    <div>
+      <div style={{ textAlign: "center", marginBottom: 24 }}>
+        <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.coral, fontFamily: T.sans, marginBottom: 6 }}>
+          Voice + Guitar Integration
         </div>
-        <div style={{ textAlign: "right" }}>
-          <div style={{ fontSize: 32, fontWeight: 700, fontFamily: T.serif, color: overallPct === 100 ? T.success : T.textDark, lineHeight: 1, display: "flex", alignItems: "center", gap: 10 }}>
-            {overallPct}%
-            {overallPct === 100 && <CheckCircle2 size={24} color={T.success} strokeWidth={2.5} />}
+        <div style={{ fontSize: 32, fontWeight: 400, fontFamily: T.serif, color: T.textDark }}>Singer-Songwriter</div>
+        <div style={{ fontSize: 13, color: T.textMuted, fontFamily: T.sans, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+          Psych-Surf · Reggae · Desert Blues · {totalDone}/{totalEx} exercises
+        </div>
+        <div style={{ width: "100%", maxWidth: 320, margin: "16px auto 0", display: "flex", alignItems: "center", gap: 14 }}>
+          <div style={{ flex: 1 }}>
+            <div style={{ height: 2, background: T.border, overflow: "hidden" }}>
+              <div style={{ height: "100%", width: `${overallPct}%`, background: overallPct === 100 ? T.success : T.coral, transition: "width 0.5s" }} />
+            </div>
           </div>
+          <div style={{ fontSize: 14, fontWeight: 400, fontFamily: T.serif, color: overallPct === 100 ? T.success : T.coral, minWidth: 36 }}>{overallPct}%</div>
         </div>
       </div>
 
       {/* Level pills — horizontal scroll */}
       <div className="hide-scrollbar sticky-pill-bar" style={{
-        display: "flex", gap: 12, overflowX: "auto", padding: "8px 0 24px",
-        background: T.bg + "f2", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
+        display: "flex", gap: 0, overflowX: "auto", padding: "16px 0 0",
+        background: T.bg + "e6", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
         WebkitOverflowScrolling: "touch", scrollSnapType: "x mandatory",
         msOverflowStyle: "none", scrollbarWidth: "none",
-        borderBottom: `1px solid ${T.borderSoft}`,
+        borderBottom: `1px solid ${T.border}`,
       }}>
         {SINGER_SONGWRITER_LEVELS.map(level => {
           const done = level.exercises.filter(e => completed.has(e.id)).length;
@@ -3483,24 +3482,22 @@ function SingerSongwriterView({ completed, onComplete, metro, onOpenTapMatch, on
           return (
             <button key={level.level} onClick={() => isUnlocked && setSelectedLevel(level)} style={{
               flex: "0 0 auto", scrollSnapAlign: "start",
-              background: active ? T.getTint(T.coral, 0.1) : T.bgCard,
-              border: `1px solid ${active ? T.coral : T.border}`,
-              borderRadius: T.radiusMd, padding: "12px 20px",
-              cursor: isUnlocked ? "pointer" : "default", textAlign: "left", transition: "all 0.3s ease",
+              background: isUnlocked ? (active ? T.coral : T.bgCard) : "transparent",
+              border: `1px solid ${isUnlocked && active ? T.coral : T.border}`,
+              borderRadius: 24, padding: "8px 20px", margin: "4px 8px 12px 0px",
+              cursor: isUnlocked ? "pointer" : "default", textAlign: "center", transition: "all 0.2s",
               opacity: isUnlocked ? 1 : 0.4,
-              boxShadow: active ? T.getShadow(T.coral, 'sm') : "none",
-              minWidth: 120
+              boxShadow: active ? `0 4px 10px ${T.coral}40` : "none"
             }}>
-              <div style={{ fontSize: 9, fontWeight: 900, letterSpacing: 1.5, textTransform: "uppercase", color: active ? T.coral : T.textMuted, fontFamily: T.sans, marginBottom: 4 }}>
-                Level {level.level}
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: active ? "#fff" : T.coral, fontFamily: T.sans }}>
+                LVL {level.level}
               </div>
-              <div style={{ fontSize: 15, fontWeight: active ? 600 : 400, color: active ? T.textDark : T.textMed, fontFamily: T.serif, whiteSpace: "nowrap" }}>
-                {isUnlocked ? level.title : "Locked"}
+              <div style={{ fontSize: 13, fontWeight: active ? 600 : 400, color: active ? "#fff" : T.textDark, fontFamily: T.serif, marginTop: 2, whiteSpace: "nowrap" }}>
+                {isUnlocked ? level.title : "🔒"}
               </div>
               {isUnlocked && pct > 0 && (
-                <div style={{ fontSize: 9, color: pct === 100 ? T.success : T.coral, fontFamily: T.sans, fontWeight: 900, marginTop: 8, textTransform: "uppercase", letterSpacing: 1, display: "flex", alignItems: "center", gap: 4 }}>
-                  {pct === 100 ? <Check size={10} strokeWidth={3} /> : null}
-                  {pct === 100 ? "Done" : `${done}/${total}`}
+                <div style={{ fontSize: 9, color: active ? "rgba(255,255,255,0.8)" : (pct === 100 ? T.success : T.coral), fontFamily: T.sans, fontWeight: 600, marginTop: 2 }}>
+                  {pct === 100 ? "done" : `${done}/${total}`}
                 </div>
               )}
             </button>
@@ -3509,15 +3506,17 @@ function SingerSongwriterView({ completed, onComplete, metro, onOpenTapMatch, on
       </div>
 
       {/* Level header + progress + exercises */}
-      <div style={{ marginTop: 24 }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
+      <div style={{ marginTop: 20 }}>
+        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 12 }}>
           <div>
-            <div style={{ fontSize: 9, fontWeight: 900, letterSpacing: 2, textTransform: "uppercase", color: T.coral, fontFamily: T.sans, marginBottom: 4 }}>Current Level</div>
-            <div style={{ fontSize: 32, fontWeight: 400, color: T.textDark, fontFamily: T.serif, lineHeight: 1 }}>{selectedLevel.title}</div>
+            <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.coral, fontFamily: T.sans, marginBottom: 4 }}>Level {selectedLevel.level}</div>
+            <div style={{ fontSize: 28, fontWeight: 400, color: T.textDark, fontFamily: T.serif }}>{selectedLevel.title}</div>
           </div>
-          <div style={{ fontSize: 28, fontWeight: 700, fontFamily: T.serif, color: levelPct === 100 ? T.success : T.textDark, display: "flex", alignItems: "center", gap: 8 }}>
-            {levelPct === 100 ? <CheckCircle2 size={24} color={T.success} strokeWidth={2.5} /> : `${levelPct}%`}
-          </div>
+          <div style={{ fontSize: 32, fontWeight: 700, fontFamily: T.serif, color: levelPct === 100 ? T.success : T.textDark }}>{levelPct}%</div>
+        </div>
+
+        <div style={{ height: 3, background: T.border, borderRadius: 2, marginBottom: 12, overflow: "hidden" }}>
+          <div style={{ height: "100%", width: `${levelPct}%`, background: levelPct === 100 ? T.success : T.coral, borderRadius: 2, transition: "width 0.5s" }} />
         </div>
 
         {/* Level description */}
