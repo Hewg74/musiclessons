@@ -3681,7 +3681,12 @@ export function RhythmCellCards({ theme: T, cells = [], bpm = 80 }) {
   const clearPatternTimeouts = useCallback(() => {
     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current = [];
-    synthsRef.current.forEach(s => { try { s.dispose(); } catch (_) {} });
+    synthsRef.current.forEach(s => {
+      try {
+        if (s.osc) { s.osc.stop(); s.osc.disconnect(); s.gainNode.disconnect(); }
+        else if (s.dispose) { s.dispose(); }
+      } catch (_) {}
+    });
     synthsRef.current = [];
     setCurrentNoteIdx(-1);
   }, []);
@@ -3697,49 +3702,67 @@ export function RhythmCellCards({ theme: T, cells = [], bpm = 80 }) {
   }, [clearPatternTimeouts]);
 
   // Schedule a cell's pattern notes at an absolute audio-thread time
-  // Uses a SINGLE synth with re-attacks — the oscillator keeps running between notes
-  // so there's zero silence gap. Each triggerAttack restarts the envelope (articulation)
-  // without stopping the sound. Like saying "tikatikatika" — tongue articulates, air never stops.
+  // Schedule a cell's pattern using raw Web Audio for sample-accurate gapless playback.
+  // Single oscillator runs continuously — gain automation creates articulation between notes.
   const schedulePattern = useCallback((cell, startTime) => {
     clearPatternTimeouts();
     const beatSec = 60 / localBpm;
     const beatMs = 60000 / localBpm;
     const now = Tone.now();
     const startDelayMs = Math.max(0, (startTime - now) * 1000);
-
-    // Single synth for the whole pattern — re-attacks create articulation, not gaps
-    const synth = new Tone.Synth({
-      oscillator: { type: 'triangle' },
-      envelope: { attack: 0.005, decay: 0.02, sustain: 0.9, release: 0.05 }
-    }).toDestination();
-    synth.volume.value = -6;
-    synthsRef.current.push(synth);
-
-    let offsetSec = 0;
-    let offsetMs = 0;
+    const ctx = Tone.getContext().rawContext;
     const totalDurSec = cell.pattern.reduce((a, b) => a + b, 0) * beatSec;
 
+    // Raw Web Audio: one oscillator + one gain node — no Tone.js envelope conflicts
+    const osc = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.value = 220; // A3
+    osc.connect(gainNode);
+    gainNode.connect(ctx.destination);
+    gainNode.gain.setValueAtTime(0, startTime);
+
+    // Schedule gain automation: dip → ramp up → hold for each note
+    let offsetSec = 0;
+    let offsetMs = 0;
+    const vol = 0.15; // linear gain (≈ -16dB, audible but not overpowering)
+    const articMs = 5; // 5ms articulation dip between notes
+    const articSec = articMs / 1000;
+
     cell.pattern.forEach((dur, i) => {
-      // Re-attack at each note boundary — envelope restarts, oscillator stays running
-      synth.triggerAttack("A3", startTime + offsetSec);
+      const noteStart = startTime + offsetSec;
+      const noteDur = dur * beatSec;
+      // Dip to near-zero then ramp back = articulation without silence
+      gainNode.gain.setValueAtTime(0.005, noteStart);
+      gainNode.gain.linearRampToValueAtTime(vol, noteStart + articSec);
       // Visual highlight
       const t = setTimeout(() => setCurrentNoteIdx(i), startDelayMs + offsetMs);
       timeoutsRef.current.push(t);
-      offsetSec += dur * beatSec;
+      offsetSec += noteDur;
       offsetMs += dur * beatMs;
     });
 
-    // Release only after the LAST note's full duration
-    synth.triggerRelease(startTime + totalDurSec);
+    // Release after last note
+    const endTime = startTime + totalDurSec;
+    gainNode.gain.setValueAtTime(vol, endTime);
+    gainNode.gain.linearRampToValueAtTime(0, endTime + 0.05);
+
+    // Start/stop oscillator to match the pattern window
+    osc.start(startTime);
+    osc.stop(endTime + 0.1);
+
+    // Track for cleanup
+    const nodeRef = { osc, gainNode };
+    synthsRef.current.push(nodeRef);
 
     // Reset visual after pattern ends
     const endTimeout = setTimeout(() => setCurrentNoteIdx(-1), startDelayMs + offsetMs + 50);
     timeoutsRef.current.push(endTimeout);
 
-    // Dispose synth after everything finishes
+    // Cleanup after oscillator stops
     setTimeout(() => {
-      try { synth.dispose(); } catch {}
-      synthsRef.current = synthsRef.current.filter(s => s !== synth);
+      try { osc.disconnect(); gainNode.disconnect(); } catch {}
+      synthsRef.current = synthsRef.current.filter(s => s !== nodeRef);
     }, startDelayMs + offsetMs + 2000);
   }, [localBpm, clearPatternTimeouts]);
 
