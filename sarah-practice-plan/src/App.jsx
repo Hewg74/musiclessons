@@ -520,10 +520,10 @@ function LyricGrid() {
 function SarahQuote({ text }) {
   return (
     <div style={{
-      borderLeft: `3px solid ${T.gold}40`,
       padding: "12px 20px", margin: "16px 0",
       background: T.bgSoft,
-      borderRadius: T.radius
+      borderRadius: T.radius,
+      border: `1px solid ${T.gold}20`
     }}>
       <div style={{ fontSize: 10, fontWeight: 700, color: T.gold, letterSpacing: 1.5, marginBottom: 4, fontFamily: T.sans }}>
         TEACHER'S NOTE
@@ -541,7 +541,7 @@ function DetailSection({ label, color, children }) {
     <div style={{
       background: color + "08", border: `1px solid ${color}18`,
       borderRadius: T.radius, padding: "16px 20px", marginBottom: 16,
-      borderLeft: `3px solid ${color}40`, boxShadow: T.sm
+      boxShadow: T.sm
     }}>
       <div style={{ fontSize: 10, fontWeight: 800, color, letterSpacing: 2, marginBottom: 8, fontFamily: T.sans, textTransform: "uppercase" }}>
         {label}
@@ -822,7 +822,7 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
         <div style={{
           fontSize: 16, color: T.textDark, fontFamily: T.sans, lineHeight: 1.7,
           padding: "16px 20px", background: T.bgSoft, borderRadius: T.radius,
-          borderLeft: `3px solid ${accentColor || T.gold}40`, marginBottom: ex.setup ? 16 : 0
+          marginBottom: ex.setup ? 16 : 0
         }}>{ex.what}</div>
 
         {ex.setup && (
@@ -1414,7 +1414,7 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
     <div className={`exercise-card exercise-card-${ex.id}`} style={{
       background: completed ? T.successSoft : T.bgCard,
       border: `1px solid ${completed ? T.success + "40" : T.border}`,
-      borderLeft: `3px solid ${completed ? T.success : dayColor || T.gold}`,
+      borderLeft: `2px solid ${completed ? T.success : dayColor || T.gold}`,
       marginBottom: 16, overflow: "hidden", borderRadius: T.radius,
       boxShadow: T.sm
     }}>
@@ -1461,8 +1461,7 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
 
           {/* PANEL A: GOAL */}
           <div style={{
-            background: T.bgSoft, borderRadius: T.radius, padding: "16px 20px", marginBottom: 20,
-            borderLeft: `3px solid ${dayColor || T.gold}40`
+            background: T.bgSoft, borderRadius: T.radius, padding: "16px 20px", marginBottom: 20
           }}>
             <div style={{ fontSize: 15, color: T.textDark, fontFamily: T.sans, lineHeight: 1.7, marginBottom: ex.setup ? 12 : 0 }}>
               {ex.what}
