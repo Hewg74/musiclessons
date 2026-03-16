@@ -3698,31 +3698,42 @@ export function RhythmCellCards({ theme: T, cells = [], bpm = 80 }) {
     metroStartTimeRef.current = null;
   }, [clearPatternTimeouts]);
 
-  // Schedule a cell's pattern notes from now
+  // Schedule a cell's pattern notes using audio-thread timing (sample-accurate)
   const schedulePattern = useCallback((cell) => {
     clearPatternTimeouts();
+    const beatSec = 60 / localBpm;
     const beatMs = 60000 / localBpm;
-    let offset = 0;
+    const now = Tone.now();
+    let offsetSec = 0;
+    let offsetMs = 0;
 
+    // Pre-create one synth per note and schedule on the audio thread
+    // Audio thread timing is sample-accurate — no event-loop drift
     cell.pattern.forEach((dur, i) => {
-      const t = setTimeout(async () => {
-        if (Tone.context.state !== 'running') await Tone.context.resume();
-        setCurrentNoteIdx(i);
-        const synth = new Tone.Synth({
-          oscillator: { type: 'triangle' },
-          envelope: { attack: 0.01, decay: 0.1, sustain: 0.3, release: 0.2 }
-        }).toDestination();
-        synth.volume.value = -6;
-        synthsRef.current.push(synth);
-        synth.triggerAttackRelease("A3", dur * beatMs / 1000, Tone.now());
-        setTimeout(() => { synth.dispose(); synthsRef.current = synthsRef.current.filter(s2 => s2 !== synth); }, 2000);
-      }, offset);
+      const noteDur = dur * beatSec;
+      const synth = new Tone.Synth({
+        oscillator: { type: 'triangle' },
+        envelope: { attack: 0.01, decay: 0.1, sustain: 0.3, release: 0.2 }
+      }).toDestination();
+      synth.volume.value = -6;
+      synthsRef.current.push(synth);
+      // Schedule note at exact audio-thread time — locked to same clock as metronome click
+      synth.triggerAttackRelease("A3", noteDur, now + offsetSec);
+      // Visual highlight via setTimeout (slight drift is fine for UI)
+      const t = setTimeout(() => setCurrentNoteIdx(i), offsetMs);
       timeoutsRef.current.push(t);
-      offset += dur * beatMs;
+      // Dispose after note finishes + release tail
+      const disposeMs = offsetMs + dur * beatMs + 2000;
+      setTimeout(() => {
+        try { synth.dispose(); } catch {}
+        synthsRef.current = synthsRef.current.filter(s => s !== synth);
+      }, disposeMs);
+      offsetSec += noteDur;
+      offsetMs += dur * beatMs;
     });
 
     // Reset visual after pattern ends
-    const endTimeout = setTimeout(() => setCurrentNoteIdx(-1), offset + 50);
+    const endTimeout = setTimeout(() => setCurrentNoteIdx(-1), offsetMs + 50);
     timeoutsRef.current.push(endTimeout);
   }, [localBpm, clearPatternTimeouts]);
 
