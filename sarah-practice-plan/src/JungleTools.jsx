@@ -3726,21 +3726,21 @@ export function RhythmCellCards({ theme: T, cells = [], bpm = 80 }) {
     const ctx = Tone.getContext().rawContext;
     const totalDurSec = cell.pattern.reduce((a, b) => a + b, 0) * beatSec;
 
-    // Two layers: pitched tone (body) + high click (attack transient)
-    // Body: square wave at A3 — brighter and more present than triangle
+    // Two layers: warm tone (body) + click (attack transient)
+    // Body: triangle wave — warm, not grating. The click layer provides sharpness.
     const osc = ctx.createOscillator();
     const gainNode = ctx.createGain();
-    osc.type = 'square';
-    osc.frequency.value = 220; // A3
+    osc.type = 'triangle';
+    osc.frequency.value = 262; // C4 — sits above drone range, easier to hear
     osc.connect(gainNode);
     gainNode.connect(ctx.destination);
     gainNode.gain.setValueAtTime(0, startTime);
 
-    // Click: short high-pitched tick for attack transient (cuts through)
+    // Click: short tick for attack definition (woodblock-like)
     const clickOsc = ctx.createOscillator();
     const clickGain = ctx.createGain();
     clickOsc.type = 'sine';
-    clickOsc.frequency.value = 1200; // high tick
+    clickOsc.frequency.value = 800; // lower tick — less piercing
     clickOsc.connect(clickGain);
     clickGain.connect(ctx.destination);
     clickGain.gain.setValueAtTime(0, startTime);
@@ -3748,8 +3748,8 @@ export function RhythmCellCards({ theme: T, cells = [], bpm = 80 }) {
     // Schedule gain automation for each note
     let offsetSec = 0;
     let offsetMs = 0;
-    const vol = 0.12; // body volume
-    const clickVol = 0.08; // click volume
+    const vol = 0.18; // body volume
+    const clickVol = 0.05; // click volume — subtle definition, not piercing
     const articSec = 0.005; // 5ms articulation dip
 
     cell.pattern.forEach((dur, i) => {
