@@ -1057,36 +1057,7 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
           )}
 
           {/* ── STEPS ── */}
-          {ex.steps && (
-            <div style={{ marginBottom: 24 }}>
-              {ex.steps.map((s, i) => (
-                <div key={i}>
-                  {s.visual === "lyricGrid" && <LyricGrid />}
-                  <div style={{
-                    display: "flex", gap: 16, padding: "16px 0",
-                    borderBottom: i < ex.steps.length - 1 ? `1px solid ${T.borderSoft}` : "none"
-                  }}>
-                    <div style={{
-                      width: 24, height: 24, borderRadius: "50%", background: T.getTint(typeColor, 0.1), 
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      fontSize: 10, fontWeight: 900, color: typeColor, flexShrink: 0, fontFamily: T.sans
-                    }}>{i + 1}</div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 16, color: T.textDark, fontFamily: T.sans, lineHeight: 1.6 }}>{s.text}</div>
-                      {s.why && (
-                        <div style={{ 
-                          fontSize: 14, color: T.textMed, fontFamily: T.serif, lineHeight: 1.6, marginTop: 8, 
-                          fontStyle: "italic", paddingLeft: 16, borderLeft: `2px solid ${T.getTint(typeColor, 0.2)}`
-                        }}>
-                          {s.why}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+          {ex.steps && <FlowStepView steps={ex.steps} accentColor={accentColor} />}
 
           {/* Feel / Wrong — always expanded */}
           {(ex.feel || ex.wrong) && (
@@ -1382,6 +1353,7 @@ function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor
 
       {/* Exercise content — key forces remount */}
       <div style={{ flex: 1, maxWidth: 560, width: "100%", margin: "0 auto", padding: "16px 16px 120px", overflowY: "auto" }}>
+
         {/* Exercise header */}
         <div style={{ marginBottom: 20 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
