@@ -1,1 +1,2 @@
 - Implemented offline media library, HTML5 audio recorder, offline tab viewer, Tone.js pitch pipe, and PWA flight check for jungle use.
+- Refined UI/UX layout: compartmentalized Flow mode into Goal/Tools/Content panels, sleeker ExerciseCards, removed progress bars, and softened heavy borders while maintaining boxy aesthetic.

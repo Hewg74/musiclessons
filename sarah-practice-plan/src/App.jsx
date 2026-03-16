@@ -520,14 +520,15 @@ function LyricGrid() {
 function SarahQuote({ text }) {
   return (
     <div style={{
-      borderLeft: `1px solid ${T.gold}`,
+      borderLeft: `3px solid ${T.gold}40`,
       padding: "12px 20px", margin: "16px 0",
-      background: T.bgSoft
+      background: T.bgSoft,
+      borderRadius: T.radius
     }}>
       <div style={{ fontSize: 10, fontWeight: 700, color: T.gold, letterSpacing: 1.5, marginBottom: 4, fontFamily: T.sans }}>
-        SARAH'S NOTE
+        TEACHER'S NOTE
       </div>
-      <div style={{ fontSize: 13, color: T.goldDark, fontFamily: T.sans, lineHeight: 1.6, fontStyle: "italic" }}>
+      <div style={{ fontSize: 14, color: T.textDark, fontFamily: T.sans, lineHeight: 1.7, fontStyle: "italic" }}>
         "{text}"
       </div>
     </div>
@@ -539,13 +540,13 @@ function DetailSection({ label, color, children }) {
   return (
     <div style={{
       background: color + "08", border: `1px solid ${color}18`,
-      borderRadius: T.radius, padding: "14px 16px", marginBottom: 12,
-      borderLeft: `2px solid ${color}`
+      borderRadius: T.radius, padding: "16px 20px", marginBottom: 16,
+      borderLeft: `3px solid ${color}40`, boxShadow: T.sm
     }}>
-      <div style={{ fontSize: 10, fontWeight: 700, color, letterSpacing: 1.5, marginBottom: 6, fontFamily: T.sans, textTransform: "uppercase" }}>
+      <div style={{ fontSize: 10, fontWeight: 800, color, letterSpacing: 2, marginBottom: 8, fontFamily: T.sans, textTransform: "uppercase" }}>
         {label}
       </div>
-      <div style={{ fontSize: 14, color: T.textDark, fontFamily: T.sans, lineHeight: 1.6 }}>
+      <div style={{ fontSize: 15, color: T.textDark, fontFamily: T.sans, lineHeight: 1.7 }}>
         {children}
       </div>
     </div>
@@ -787,250 +788,253 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
 
   return (
     <div style={{ animation: "fade-in-up 0.4s ease-out" }}>
-      {/* Timer ring — prominent */}
-      <div style={{
-        display: "flex", alignItems: "center", gap: 16, marginBottom: 20,
-        padding: "14px 20px", background: T.bgSoft, borderRadius: T.radiusMd,
-        border: `1px solid ${timerDone ? T.gold + "60" : T.border}`,
-        boxShadow: timerDone ? `0 0 20px ${T.gold}20` : "none",
-        transition: "all 0.5s"
+      {/* PANEL A: GOAL & PROGRESS */}
+      <div style={{ 
+        background: T.bgCard, borderRadius: T.radiusMd, border: `1px solid ${T.border}`,
+        padding: "24px", marginBottom: 16, boxShadow: T.sm
       }}>
-        <TimerRing pct={timer.pct} fmt={timer.fmt} size={56} textSize={13} />
-        <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 14, fontWeight: 600, fontFamily: T.sans, color: T.textDark }}>
-            {ex.time || 5} min
+        <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20 }}>
+          <TimerRing pct={timer.pct} fmt={timer.fmt} size={56} textSize={13} />
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 16, fontWeight: 700, fontFamily: T.serif, color: T.textDark }}>
+              {ex.time || 5} min
+            </div>
+            <div style={{ fontSize: 11, color: timerDone ? T.gold : T.textMuted, fontFamily: T.sans, fontWeight: timerDone ? 700 : 400, textTransform: "uppercase", letterSpacing: 1 }}>
+              {timerDone ? "Time's up" : "Duration"}
+            </div>
           </div>
-          <div style={{ fontSize: 11, color: timerDone ? T.gold : T.textMuted, fontFamily: T.sans, fontWeight: timerDone ? 600 : 400 }}>
-            {timerDone ? "Time's up — move on when ready" : "Suggested duration"}
+          <div style={{ display: "flex", gap: 6 }}>
+            <button onClick={timer.toggle} className="interactive-btn" style={{
+              background: timer.on ? T.coral : (accentColor || T.gold), border: "none", color: "#fff",
+              padding: "8px 16px", fontSize: 11, fontWeight: 700, cursor: "pointer", borderRadius: T.radius,
+              fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase",
+              WebkitTapHighlightColor: "transparent"
+            }}>{timer.on ? "Pause" : "Start"}</button>
+            <button onClick={timer.reset} className="interactive-btn" style={{
+              background: "transparent", border: `1px solid ${T.border}`, color: T.textLight,
+              padding: "8px 12px", fontSize: 11, fontWeight: 700, cursor: "pointer", borderRadius: T.radius,
+              fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase",
+              WebkitTapHighlightColor: "transparent"
+            }}>Reset</button>
           </div>
         </div>
-        <div style={{ display: "flex", gap: 6 }}>
-          <button onClick={timer.toggle} className="interactive-btn" style={{
-            background: timer.on ? T.coral : (accentColor || T.gold), border: "none", color: "#fff",
-            padding: "8px 14px", fontSize: 11, fontWeight: 600, cursor: "pointer", borderRadius: T.radius,
-            fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase",
-            WebkitTapHighlightColor: "transparent"
-          }}>{timer.on ? "Pause" : "Start"}</button>
-          <button onClick={timer.reset} className="interactive-btn" style={{
-            background: "transparent", border: `1px solid ${T.border}`, color: T.textLight,
-            padding: "8px 10px", fontSize: 11, fontWeight: 600, cursor: "pointer", borderRadius: T.radius,
-            fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase",
-            WebkitTapHighlightColor: "transparent"
-          }}>Reset</button>
-        </div>
+
+        <div style={{
+          fontSize: 16, color: T.textDark, fontFamily: T.sans, lineHeight: 1.7,
+          padding: "16px 20px", background: T.bgSoft, borderRadius: T.radius,
+          borderLeft: `3px solid ${accentColor || T.gold}40`, marginBottom: ex.setup ? 16 : 0
+        }}>{ex.what}</div>
+
+        {ex.setup && (
+          <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, display: "flex", gap: 8, alignItems: "flex-start", padding: "0 4px" }}>
+            <span style={{ color: accentColor || T.gold, fontWeight: 800, fontSize: 10, letterSpacing: 1, textTransform: "uppercase", marginTop: 2 }}>Setup:</span> {ex.setup}
+          </div>
+        )}
       </div>
 
-      {/* What — always visible */}
-      <div style={{
-        fontSize: 14, color: T.textMed, fontFamily: T.sans, lineHeight: 1.7,
-        marginBottom: 16, padding: "12px 16px", background: T.bgSoft, borderRadius: T.radius,
-        borderLeft: `1px solid ${accentColor || T.gold}`
-      }}>{ex.what}</div>
+      {/* PANEL B: TOOLS */}
+      {(tracks.length > 0 || ex.metronome || ex.recorder || ex.drone) && (
+        <div style={{ 
+          background: T.bgCard, borderRadius: T.radiusMd, border: `1px solid ${T.border}`,
+          padding: "24px", marginBottom: 16, boxShadow: T.sm
+        }}>
+          <div style={{ fontSize: 10, fontWeight: 800, color: T.textMuted, letterSpacing: 2, textTransform: "uppercase", marginBottom: 20, borderBottom: `1px solid ${T.borderSoft}`, paddingBottom: 8 }}>
+            Tools & Accompaniment
+          </div>
 
-      {/* Setup */}
-      {ex.setup && (
-        <div style={{ fontSize: 12, color: T.textLight, fontFamily: T.sans, marginBottom: 14, display: "flex", gap: 6, alignItems: "flex-start" }}>
-          <span style={{ color: accentColor || T.gold, fontWeight: 700, fontSize: 11 }}>SETUP:</span> {ex.setup}
-        </div>
-      )}
+          {/* Reference Pitches */}
+          {ex.referencePitches && (
+            <div style={{ marginBottom: 20 }}>
+              <PitchRibbon pitches={ex.referencePitches} playNote={playNote} />
+            </div>
+          )}
 
-      {/* Reference Pitches */}
-      <PitchRibbon pitches={ex.referencePitches} playNote={playNote} />
-
-      {/* ── TOOL DOCK ── */}
-      {/* Audio Tracks */}
-      {tracks.length > 0 && (
-        <div style={{ marginBottom: 16 }}>
-          {tracks.map((t, i) => (
-            <div key={i} style={{ marginBottom: 16 }}>
-              <div style={{ fontSize: 11, fontWeight: 700, color: T.textDark, letterSpacing: 1.5, marginBottom: 8, fontFamily: T.sans, textTransform: "uppercase" }}>{t.name}</div>
-              <MiniAudioPlayer theme={T} src={t.src} playbackRate={trackRates[i] || 1} />
-              <div style={{ display: "flex", gap: 6, marginTop: 4 }}>
-                {[0.75, 1, 1.25].map(rate => (
-                  <button key={rate} onClick={() => setTrackRates(r => ({ ...r, [i]: rate }))} style={{
-                    background: (trackRates[i] || 1) === rate ? (accentColor || T.gold) : "transparent",
-                    color: (trackRates[i] || 1) === rate ? "#fff" : T.textMed,
-                    border: `1px solid ${(trackRates[i] || 1) === rate ? (accentColor || T.gold) : T.borderSoft}`,
-                    padding: "3px 10px", fontSize: 10, fontWeight: 700, cursor: "pointer",
-                    borderRadius: T.radius, fontFamily: T.sans, transition: "all 0.2s"
-                  }}>{rate === 1 ? "1x" : `${rate}x`}</button>
-                ))}
+          {/* Metronome */}
+          {ex.metronome && (
+            <div style={{ display: "flex", gap: 10, marginBottom: 24, alignItems: "center", background: T.bgSoft, padding: "12px 18px", borderRadius: T.radiusMd, border: `1px solid ${T.border}`, flexWrap: "wrap" }}>
+              <div style={{ flex: 1, display: "flex", alignItems: "center", gap: 10 }}>
+                <button onClick={() => metro.changeBpm(Math.max(40, metro.bpm - 1))} style={{ background: "transparent", border: "none", fontSize: 22, cursor: "pointer", color: T.textMed }}>−</button>
+                <div style={{ fontSize: 18, fontFamily: T.sans, color: T.textDark, fontWeight: 700, minWidth: 44, textAlign: "center" }}>{metro.bpm}</div>
+                <button onClick={() => metro.changeBpm(Math.min(280, metro.bpm + 1))} style={{ background: "transparent", border: "none", fontSize: 22, cursor: "pointer", color: T.textMed }}>+</button>
+                <button onClick={() => metro.changeBpm(ex.metronome)} style={{ marginLeft: 8, fontSize: 10, background: T.goldSoft, border: "none", padding: "4px 10px", borderRadius: T.radius, color: T.goldDark, cursor: "pointer", fontWeight: 700, textTransform: "uppercase" }}>Target: {ex.metronome}</button>
+              </div>
+              <div style={{ display: "flex", gap: 8 }}>
+                <button onClick={() => metro.playing ? metro.stop() : metro.start()} style={{
+                  background: metro.playing ? T.coral : (accentColor || T.gold), border: "none", color: "#fff",
+                  padding: "10px 18px", fontSize: 11, fontWeight: 700, cursor: "pointer", borderRadius: T.radius,
+                  fontFamily: T.sans, letterSpacing: 1.5, textTransform: "uppercase"
+                }}>{metro.playing ? "Stop" : "Start"}</button>
+                <button onClick={() => onOpenTapMatch && onOpenTapMatch(ex.metronome)} style={{
+                  background: "transparent", border: `1px solid ${T.slate}40`, color: T.slate, padding: "10px 14px", borderRadius: T.radius,
+                  fontSize: 11, cursor: "pointer", fontWeight: 700, fontFamily: T.sans, letterSpacing: 1.5, textTransform: "uppercase"
+                }}>Tap</button>
               </div>
             </div>
-          ))}
-        </div>
-      )}
+          )}
 
-      {/* Metronome */}
-      {ex.metronome && (
-        <div style={{ display: "flex", gap: 10, marginBottom: 16, alignItems: "center", background: T.bgSoft, padding: "10px 16px", borderRadius: T.radiusMd, border: `1px solid ${T.border}`, flexWrap: "wrap" }}>
-          <div style={{ flex: 1, display: "flex", alignItems: "center", gap: 8 }}>
-            <button onClick={() => metro.changeBpm(Math.max(40, metro.bpm - 1))} style={{ background: "transparent", border: "none", fontSize: 18, cursor: "pointer", color: T.textMed }}>-</button>
-            <div style={{ fontSize: 16, fontFamily: T.sans, color: T.textDark, fontWeight: 600, minWidth: 40, textAlign: "center" }}>{metro.bpm}</div>
-            <button onClick={() => metro.changeBpm(Math.min(280, metro.bpm + 1))} style={{ background: "transparent", border: "none", fontSize: 18, cursor: "pointer", color: T.textMed }}>+</button>
-            <button onClick={() => metro.changeBpm(ex.metronome)} style={{ marginLeft: 6, fontSize: 10, background: T.goldSoft, border: "none", padding: "4px 8px", borderRadius: T.radius, color: T.goldDark, cursor: "pointer", fontWeight: 600, textTransform: "uppercase" }}>Target: {ex.metronome}</button>
-          </div>
-          <div style={{ display: "flex", gap: 8 }}>
-            <button onClick={() => metro.playing ? metro.stop() : metro.start()} style={{
-              background: metro.playing ? T.coral : (accentColor || T.gold), border: "none", color: "#fff",
-              padding: "8px 16px", fontSize: 11, fontWeight: 600, cursor: "pointer", borderRadius: T.radius,
-              fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
-            }}>{metro.playing ? "Stop" : "Start"}</button>
-            <button onClick={() => onOpenTapMatch && onOpenTapMatch(ex.metronome)} style={{
-              background: "transparent", border: `1px solid ${T.slate}40`, color: T.slate, padding: "8px 12px", borderRadius: T.radius,
-              fontSize: 11, cursor: "pointer", fontWeight: 600, fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
-            }}>Tap</button>
-            {ex.speedLadder && (
-              <button onClick={() => {
-                if (!metro.speedBuilder) {
-                  metro.changeBpm(ex.speedLadder.start);
-                  metro.setSpeedIncrement(ex.speedLadder.increment);
-                  metro.setSpeedBars(ex.speedLadder.bars);
-                  metro.setSpeedCeiling(ex.speedLadder.end);
-                }
-                metro.setSpeedBuilder(!metro.speedBuilder);
-              }} style={{
-                background: metro.speedBuilder ? (accentColor || T.gold) : "transparent",
-                border: `1px solid ${metro.speedBuilder ? (accentColor || T.gold) : T.borderSoft}`,
-                color: metro.speedBuilder ? "#fff" : T.textMed,
-                padding: "8px 10px", borderRadius: T.radius,
-                fontSize: 11, cursor: "pointer", fontWeight: 600, fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
-              }} title={`${ex.speedLadder.start}→${ex.speedLadder.end} BPM, +${ex.speedLadder.increment} every ${ex.speedLadder.bars} bars`}>
-                Speed +
-              </button>
-            )}
-          </div>
-        </div>
-      )}
+          {/* Audio Tracks */}
+          {tracks.length > 0 && (
+            <div style={{ marginBottom: 24 }}>
+              {tracks.map((t, i) => (
+                <div key={i} style={{ marginBottom: 20 }}>
+                  <div style={{ fontSize: 11, fontWeight: 800, color: T.textDark, letterSpacing: 1.5, marginBottom: 10, fontFamily: T.sans, textTransform: "uppercase" }}>{t.name}</div>
+                  <MiniAudioPlayer theme={T} src={t.src} playbackRate={trackRates[i] || 1} />
+                  <div style={{ display: "flex", gap: 6, marginTop: 8 }}>
+                    {[0.75, 1, 1.25].map(rate => (
+                      <button key={rate} onClick={() => setTrackRates(r => ({ ...r, [i]: rate }))} style={{
+                        background: (trackRates[i] || 1) === rate ? (accentColor || T.gold) : "transparent",
+                        color: (trackRates[i] || 1) === rate ? "#fff" : T.textMed,
+                        border: `1px solid ${(trackRates[i] || 1) === rate ? (accentColor || T.gold) : T.borderSoft}`,
+                        padding: "4px 12px", fontSize: 10, fontWeight: 800, cursor: "pointer",
+                        borderRadius: T.radius, fontFamily: T.sans, transition: "all 0.2s"
+                      }}>{rate === 1 ? "1x" : `${rate}x`}</button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
 
-      {/* Pitch detector */}
-      {ex.referencePitches && ex.referencePitches.length > 0 && (
-        <div style={{ marginBottom: 16 }}>
-          <LivePitchDetector theme={T} referencePitches={ex.referencePitches} inline={true} pitchContour={!!ex.pitchContour} />
-        </div>
-      )}
+          {/* Drone */}
+          {ex.drone && (
+            <div style={{ marginBottom: 20 }}>
+              <DroneGenerator theme={T} inline={true} onActiveNotesChange={setDroneActiveNotes}
+                {...(typeof ex.drone === 'object' ? {
+                  defaultRoot: ex.drone.root, defaultOctave: ex.drone.octave,
+                  defaultTexture: ex.drone.texture, defaultMode: ex.drone.mode,
+                  defaultPreset: ex.drone.preset, defaultProgression: ex.drone.progression,
+                  defaultBpm: ex.drone.bpm, defaultStepDuration: ex.drone.stepDuration,
+                } : {})}
+              />
+            </div>
+          )}
 
-      {/* Drone */}
-      {ex.drone && (
-        <div style={{ marginBottom: 16 }}>
-          <DroneGenerator theme={T} inline={true} onActiveNotesChange={setDroneActiveNotes}
-            {...(typeof ex.drone === 'object' ? {
-              defaultRoot: ex.drone.root, defaultOctave: ex.drone.octave,
-              defaultTexture: ex.drone.texture, defaultMode: ex.drone.mode,
-              defaultPreset: ex.drone.preset, defaultProgression: ex.drone.progression,
-              defaultBpm: ex.drone.bpm, defaultStepDuration: ex.drone.stepDuration,
-            } : {})}
-          />
-        </div>
-      )}
-
-      {/* Recorder */}
-      {ex.recorder && (
-        <div style={{ marginBottom: 16 }}>
-          <AudioRecorder theme={T} inline={true} />
-        </div>
-      )}
-
-      {/* Fretboard */}
-      {ex.fretboard && (
-        <FretboardDiagram theme={T} scale={ex.fretboard.scale} position={ex.fretboard.position} highlight={ex.fretboard.highlight || []} />
-      )}
-
-      {/* Piano Keys — shows exercise pianoKeys or drone active chord */}
-      {ex.pianoKeys ? (
-        <PianoKeysDiagram notes={droneActiveNotes.notes.length > 0 ? normalizeDroneNotes(droneActiveNotes.notes, ex.pianoKeys.range) : ex.pianoKeys.notes} label={droneActiveNotes.notes.length > 0 ? droneActiveNotes.label : ex.pianoKeys.label} range={ex.pianoKeys.range} />
-      ) : droneActiveNotes.notes.length > 0 ? (
-        <PianoKeysDiagram notes={normalizeDroneNotes(droneActiveNotes.notes, ["C3", "C5"])} label={droneActiveNotes.label} range={["C3", "C5"]} />
-      ) : null}
-
-      {/* Volume Meter */}
-      {ex.volumeMeter && (
-        <VolumeMeter theme={T} inline={true} volumeContour={!!ex.volumeContour} />
-      )}
-
-      {/* Rhythm Cells */}
-      {ex.rhythmCells && (
-        <RhythmCellCards theme={T} cells={ex.rhythmCells} bpm={ex.metronome || 80} />
-      )}
-
-      {/* Phrase Form */}
-      {ex.phraseForm && (
-        <PhraseFormGuide theme={T} form={ex.phraseForm} />
-      )}
-
-      {/* Tabs */}
-      {ex.tabs && TAB_CONTENT[ex.tabs] && (
-        <div style={{ marginBottom: 16 }}>
-          <button onClick={() => setShowTabs(!showTabs)} style={{
-            background: "transparent", border: `1px solid ${T.border}`, color: T.textMed,
-            padding: "8px 14px", borderRadius: T.radius, cursor: "pointer", fontWeight: 600,
-            fontFamily: T.sans, fontSize: 11, letterSpacing: 1, textTransform: "uppercase",
-            width: "100%", textAlign: "left", display: "flex", justifyContent: "space-between", alignItems: "center"
-          }}>
-            <span>Tabs & Lyrics</span>
-            <span style={{ transition: "transform 0.2s", transform: showTabs ? "rotate(180deg)" : "" }}>&#9660;</span>
-          </button>
-          {showTabs && (
-            <pre style={{
-              background: T.bgSoft, padding: 16, border: `1px solid ${T.border}`, borderTop: "none",
-              borderRadius: `0 0 ${T.radiusMd} ${T.radiusMd}`, overflowX: "auto",
-              fontFamily: "monospace", fontSize: 12, color: T.textDark, lineHeight: 1.5, marginTop: 0, whiteSpace: "pre-wrap"
-            }}>{TAB_CONTENT[ex.tabs].trim()}</pre>
+          {/* Recorder */}
+          {ex.recorder && (
+            <div style={{ marginBottom: 0 }}>
+              <AudioRecorder theme={T} inline={true} />
+            </div>
           )}
         </div>
       )}
 
-      {/* ── STEPS ── */}
-      <FlowStepView steps={ex.steps} accentColor={accentColor} />
-
-      {/* Feel / Wrong — always expanded */}
-      {(ex.feel || ex.wrong) && (
-        <div style={{ marginBottom: 12 }}>
-          <div style={{
-            color: T.textLight, fontSize: 11,
-            fontFamily: T.sans, padding: "0 0 8px 0",
-            display: "flex", alignItems: "center", gap: 6, fontWeight: 700,
-            letterSpacing: 1.5, textTransform: "uppercase"
-          }}>
-            Feel & Pitfalls
-          </div>
-          
-          <div style={{ marginTop: 4, animation: "fade-in-up 0.2s ease-out" }}>
-            {ex.feel && <DetailSection label="What correct feels like" color={T.success}>{ex.feel}</DetailSection>}
-            {ex.wrong && <DetailSection label="What's going wrong if" color={T.coral}>{ex.wrong}</DetailSection>}
-          </div>
-        </div>
-      )}
-
-      {/* Sarah quote */}
-      {ex.sarah && <SarahQuote text={ex.sarah} />}
-
-      {/* Level up */}
-      {ex.levelUp && (
-        <div style={{
-          fontSize: 12, color: accentColor || T.gold, fontFamily: T.sans, fontWeight: 600,
-          padding: "8px 0", borderTop: `1px solid ${T.border}`, marginTop: 8
+      {/* PANEL C: CONTENT & GUIDES */}
+      {(ex.fretboard || ex.pianoKeys || ex.volumeMeter || ex.rhythmCells || ex.phraseForm || (ex.referencePitches && ex.referencePitches.length > 0)) && (
+        <div style={{ 
+          background: T.bgCard, borderRadius: T.radiusMd, border: `1px solid ${T.border}`,
+          padding: "24px", marginBottom: 16, boxShadow: T.sm
         }}>
-          Level up: {ex.levelUp}
+          <div style={{ fontSize: 10, fontWeight: 800, color: T.textMuted, letterSpacing: 2, textTransform: "uppercase", marginBottom: 20, borderBottom: `1px solid ${T.borderSoft}`, paddingBottom: 8 }}>
+            Content & Interactive Guides
+          </div>
+
+          {/* Pitch detector */}
+          {ex.referencePitches && ex.referencePitches.length > 0 && (
+            <div style={{ marginBottom: 24 }}>
+              <LivePitchDetector theme={T} referencePitches={ex.referencePitches} inline={true} pitchContour={!!ex.pitchContour} />
+            </div>
+          )}
+
+          {/* Fretboard */}
+          {ex.fretboard && (
+            <div style={{ marginBottom: 24 }}>
+              <FretboardDiagram theme={T} scale={ex.fretboard.scale} position={ex.fretboard.position} highlight={ex.fretboard.highlight || []} />
+            </div>
+          )}
+
+          {/* Piano Keys */}
+          {(ex.pianoKeys || droneActiveNotes.notes.length > 0) && (
+            <div style={{ marginBottom: 24 }}>
+              {ex.pianoKeys ? (
+                <PianoKeysDiagram notes={droneActiveNotes.notes.length > 0 ? normalizeDroneNotes(droneActiveNotes.notes, ex.pianoKeys.range) : ex.pianoKeys.notes} label={droneActiveNotes.notes.length > 0 ? droneActiveNotes.label : ex.pianoKeys.label} range={ex.pianoKeys.range} />
+              ) : (
+                <PianoKeysDiagram notes={normalizeDroneNotes(droneActiveNotes.notes, ["C3", "C5"])} label={droneActiveNotes.label} range={["C3", "C5"]} />
+              )}
+            </div>
+          )}
+
+          {/* Rhythm Cells */}
+          {ex.rhythmCells && (
+            <div style={{ marginBottom: 24 }}>
+              <RhythmCellCards cells={ex.rhythmCells} theme={T} accentColor={accentColor} />
+            </div>
+          )}
+
+          {/* Phrase Form */}
+          {ex.phraseForm && (
+            <div style={{ marginBottom: 24 }}>
+              <PhraseFormGuide form={ex.phraseForm} theme={T} accentColor={accentColor} />
+            </div>
+          )}
+
+          {/* Volume Meter */}
+          {ex.volumeMeter && (
+            <div style={{ marginBottom: 24 }}>
+              <VolumeMeter theme={T} />
+            </div>
+          )}
+
+          {/* Tabs */}
+          {ex.tabs && TAB_CONTENT[ex.tabs] && (
+            <div style={{ marginBottom: 24 }}>
+              <button onClick={() => setShowTabs(!showTabs)} style={{
+                background: "transparent", border: `1px solid ${T.border}`, color: T.textMed,
+                padding: "8px 14px", borderRadius: T.radius, cursor: "pointer", fontWeight: 600,
+                fontFamily: T.sans, fontSize: 11, letterSpacing: 1, textTransform: "uppercase",
+                width: "100%", textAlign: "left", display: "flex", justifyContent: "space-between", alignItems: "center"
+              }}>
+                <span>Tabs & Lyrics</span>
+                <span style={{ transition: "transform 0.2s", transform: showTabs ? "rotate(180deg)" : "" }}>&#9660;</span>
+              </button>
+              {showTabs && (
+                <pre style={{
+                  background: T.bgSoft, padding: 16, border: `1px solid ${T.border}`, borderTop: "none",
+                  borderRadius: `0 0 ${T.radiusMd} ${T.radiusMd}`, overflowX: "auto",
+                  fontFamily: "monospace", fontSize: 12, color: T.textDark, lineHeight: 1.5, marginTop: 0, whiteSpace: "pre-wrap"
+                }}>{TAB_CONTENT[ex.tabs].trim()}</pre>
+              )}
+            </div>
+          )}
+
+          {/* ── STEPS ── */}
+          <FlowStepView steps={ex.steps} accentColor={accentColor} />
+
+          {/* Feel / Wrong — always expanded */}
+          {(ex.feel || ex.wrong) && (
+            <div style={{ marginBottom: 12 }}>
+              <div style={{
+                color: T.textLight, fontSize: 11,
+                fontFamily: T.sans, padding: "0 0 8px 0",
+                display: "flex", alignItems: "center", gap: 6, fontWeight: 700,
+                letterSpacing: 1.5, textTransform: "uppercase"
+              }}>
+                Feel & Pitfalls
+              </div>
+              
+              <div style={{ marginTop: 4, animation: "fade-in-up 0.2s ease-out" }}>
+                {ex.feel && <DetailSection label="What correct feels like" color={T.success}>{ex.feel}</DetailSection>}
+                {ex.wrong && <DetailSection label="What's going wrong if" color={T.coral}>{ex.wrong}</DetailSection>}
+              </div>
+            </div>
+          )}
+
+          {/* Sarah quote */}
+          {ex.sarah && <SarahQuote text={ex.sarah} />}
+
+          {/* Level up */}
+          {ex.levelUp && (
+            <div style={{
+              fontSize: 12, color: accentColor || T.gold, fontFamily: T.sans, fontWeight: 600,
+              padding: "8px 0", borderTop: `1px solid ${T.border}`, marginTop: 8
+            }}>
+              Level up: {ex.levelUp}
+            </div>
+          )}
         </div>
       )}
-
-      {/* Complete button */}
-      <button onClick={() => onComplete(ex.id)} className="interactive-btn" style={{
-        marginTop: 16, width: "100%",
-        background: isComplete ? "transparent" : (accentColor || T.gold),
-        border: isComplete ? `1px solid ${T.border}` : "none",
-        color: isComplete ? T.textLight : "#fff",
-        padding: "14px", fontSize: 12, fontWeight: 600,
-        cursor: "pointer", fontFamily: T.sans, letterSpacing: 2, textTransform: "uppercase",
-        borderRadius: T.radius, WebkitTapHighlightColor: "transparent"
-      }}>
-        {isComplete ? "Mark Incomplete" : "Complete Exercise"}
-      </button>
     </div>
   );
 }
-
 function FlowSummary({ exercises, completed, sessionDuration, onExit }) {
   const done = exercises.filter(e => completed.has(e.id)).length;
   const mins = Math.floor(sessionDuration / 60);
@@ -1410,30 +1414,32 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
     <div className={`exercise-card exercise-card-${ex.id}`} style={{
       background: completed ? T.successSoft : T.bgCard,
       border: `1px solid ${completed ? T.success + "40" : T.border}`,
-      borderLeft: `1px solid ${completed ? T.success : dayColor || T.gold}`,
-      marginBottom: 12, overflow: "hidden", borderRadius: T.radius
+      borderLeft: `3px solid ${completed ? T.success : dayColor || T.gold}`,
+      marginBottom: 16, overflow: "hidden", borderRadius: T.radius,
+      boxShadow: T.sm
     }}>
       <div onClick={handleToggle} style={{
-        display: "flex", alignItems: "center", gap: 12, padding: "16px", cursor: "pointer"
+        display: "flex", alignItems: "center", gap: 16, padding: "20px 18px", cursor: "pointer"
       }}>
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4, minWidth: 54 }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4, minWidth: 64 }}>
           <TypeBadge type={ex.type} />
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontWeight: 600, fontSize: 18, color: T.textDark, fontFamily: T.serif, marginBottom: 4 }}>{ex.title}</div>
-          <div style={{ fontSize: 13, color: T.textMuted, fontFamily: T.sans, marginTop: 1, textTransform: "uppercase", letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: 8 }}>
-            {ex.time} min
-            <span onClick={e => { e.stopPropagation(); setShowTimer(t => !t); }} style={{ cursor: "pointer", fontSize: 14, opacity: showTimer ? 1 : 0.5, transition: "opacity 0.2s" }} title="Toggle timer">&#9201;</span>
+          <div style={{ fontWeight: 600, fontSize: 19, color: T.textDark, fontFamily: T.serif, marginBottom: 6, lineHeight: 1.2 }}>{ex.title}</div>
+          <div style={{ fontSize: 11, color: T.textMuted, fontFamily: T.sans, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", display: "flex", alignItems: "center", gap: 8 }}>
+            <span>{ex.time} MIN</span>
+            <span onClick={e => { e.stopPropagation(); setShowTimer(t => !t); }} style={{ cursor: "pointer", fontSize: 14, opacity: showTimer ? 1 : 0.4, transition: "opacity 0.2s" }} title="Toggle timer">&#9201;</span>
             {timer.on && !open && <span style={{ width: 6, height: 6, borderRadius: "50%", background: T.gold, animation: "pulse-ring 2s infinite", display: "inline-block" }} />}
           </div>
         </div>
-        <div style={{ color: T.textMuted, display: "flex", transition: "transform 0.2s", transform: open ? "rotate(180deg)" : "" }}>
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7 10l5 5 5-5z" /></svg>
+        <div style={{ color: T.textMuted, display: "flex", transition: "all 0.3s ease", transform: open ? "rotate(180deg)" : "" }}>
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" style={{ opacity: 0.5 }}><path d="M7 10l5 5 5-5z" /></svg>
         </div>
       </div>
 
       {open && (
-        <div style={{ padding: "0 18px 18px" }}>
+        <div style={{ padding: "0 20px 24px" }}>
+          <div style={{ height: "1px", background: T.borderSoft, marginBottom: 20, width: "100%" }} />
           {/* Flow button */}
           {onStartFlow && (
             <button onClick={() => {
@@ -1442,297 +1448,159 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
               onStartFlow(exercises, dayColor, Math.max(0, startIdx));
             }} className="interactive-btn" style={{
               background: dayColor || T.gold, border: "none",
-              color: "#fff", padding: "8px 18px", borderRadius: T.radius,
-              cursor: "pointer", fontSize: 10, fontWeight: 700, fontFamily: T.sans,
-              letterSpacing: 2, textTransform: "uppercase", display: "inline-flex",
-              alignItems: "center", gap: 8, marginTop: 4, marginBottom: 16,
-              boxShadow: `0 2px 8px ${dayColor || T.gold}40`,
+              color: "#fff", padding: "10px 24px", borderRadius: T.radius,
+              cursor: "pointer", fontSize: 11, fontWeight: 700, fontFamily: T.sans,
+              letterSpacing: 1.5, textTransform: "uppercase", display: "inline-flex",
+              alignItems: "center", gap: 10, marginBottom: 24,
+              boxShadow: `0 4px 12px ${dayColor || T.gold}30`,
               WebkitTapHighlightColor: "transparent", transition: "all 0.2s"
-            }}
-            onMouseOver={e => e.currentTarget.style.filter = "brightness(1.1)"}
-            onMouseOut={e => e.currentTarget.style.filter = "brightness(1)"}
-            >
-              <span style={{ fontSize: 12 }}>&#9654;</span> Flow from here
+            }}>
+              <span style={{ fontSize: 14 }}>&#9654;</span> Flow Start
             </button>
           )}
 
-          {/* Reference Pitches */}
-          <PitchRibbon pitches={ex.referencePitches} playNote={playNote} />
-
-          {/* What & Why */}
+          {/* PANEL A: GOAL */}
           <div style={{
-            fontSize: 14, color: T.textMed, fontFamily: T.sans, lineHeight: 1.7,
-            marginBottom: 14, padding: "12px 16px", background: T.bgSoft, borderRadius: T.radius,
-            borderLeft: `1px solid ${T.gold}`
-          }}>{ex.what}</div>
-
-          {/* Setup */}
-          {ex.setup && (
-            <div style={{ fontSize: 12, color: T.textLight, fontFamily: T.sans, marginBottom: 12, display: "flex", gap: 6, alignItems: "flex-start" }}>
-              <span style={{ color: T.gold, fontWeight: 700, fontSize: 11 }}>SETUP:</span> {ex.setup}
+            background: T.bgSoft, borderRadius: T.radius, padding: "16px 20px", marginBottom: 20,
+            borderLeft: `3px solid ${dayColor || T.gold}40`
+          }}>
+            <div style={{ fontSize: 15, color: T.textDark, fontFamily: T.sans, lineHeight: 1.7, marginBottom: ex.setup ? 12 : 0 }}>
+              {ex.what}
             </div>
-          )}
+            {ex.setup && (
+              <div style={{ fontSize: 12, color: T.textMed, fontFamily: T.sans, display: "flex", gap: 6, alignItems: "flex-start" }}>
+                <span style={{ color: dayColor || T.gold, fontWeight: 800, fontSize: 10, letterSpacing: 1, textTransform: "uppercase", marginTop: 2 }}>Setup:</span> {ex.setup}
+              </div>
+            )}
+          </div>
 
-          {/* Timer */}
-          {showTimer && (
-            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14, padding: "10px 16px", background: T.bgSoft, borderRadius: T.radiusMd, border: `1px solid ${T.border}` }}>
-              <TimerRing pct={timer.pct} fmt={timer.fmt} size={42} />
-              <div style={{ flex: 1, fontFamily: T.sans, fontSize: 14, color: T.textDark, fontWeight: 600 }}>{timer.fmt}</div>
-              <button onClick={timer.toggle} style={{
-                background: timer.on ? T.coral : T.gold, border: "none", color: "#fff",
-                padding: "6px 14px", fontSize: 11, fontWeight: 600, cursor: "pointer", borderRadius: T.radius,
-                fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
-              }}>{timer.on ? "Pause" : "Start"}</button>
-              <button onClick={timer.reset} style={{
-                background: "transparent", border: `1px solid ${T.border}`, color: T.textLight,
-                padding: "6px 12px", fontSize: 11, fontWeight: 600, cursor: "pointer", borderRadius: T.radius,
-                fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
-              }}>Reset</button>
-            </div>
-          )}
-
-          {/* Audio Tracks */}
-          {tracks.length > 0 && (
-            <div style={{ marginBottom: 16 }}>
-              {tracks.map((t, i) => (
-                <div key={i} style={{ marginBottom: 16 }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: T.textDark, letterSpacing: 1.5, marginBottom: 8, fontFamily: T.sans, textTransform: "uppercase" }}>{t.name}</div>
-                  <MiniAudioPlayer theme={T} src={t.src} playbackRate={trackRates[i] || 1} />
-                  <div style={{ display: "flex", gap: 6, marginTop: 4 }}>
-                    {[0.75, 1, 1.25].map(rate => (
-                      <button key={rate} onClick={() => {
-                        setTrackRates(r => ({ ...r, [i]: rate }));
-                      }} style={{
-                        background: (trackRates[i] || 1) === rate ? T.gold : "transparent",
-                        color: (trackRates[i] || 1) === rate ? "#fff" : T.textMed,
-                        border: `1px solid ${(trackRates[i] || 1) === rate ? T.gold : T.borderSoft}`,
-                        padding: "3px 10px", fontSize: 10, fontWeight: 700, cursor: "pointer",
-                        borderRadius: T.radius, fontFamily: T.sans, transition: "all 0.2s"
-                      }}>{rate === 1 ? "1x" : `${rate}x`}</button>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Metronome controls */}
-          {ex.metronome && (
-            <div style={{ display: "flex", gap: 10, marginBottom: 16, alignItems: "center", background: T.bgSoft, padding: "10px 16px", borderRadius: T.radiusMd, border: `1px solid ${T.border}`, flexWrap: "wrap" }}>
-              <div style={{ flex: 1, display: "flex", alignItems: "center", gap: 8 }}>
-                <button onClick={() => metro.changeBpm(Math.max(40, metro.bpm - 1))} style={{ background: "transparent", border: "none", fontSize: 18, cursor: "pointer", color: T.textMed }}>-</button>
-                <div style={{ fontSize: 16, fontFamily: T.sans, color: T.textDark, fontWeight: 600, minWidth: 40, textAlign: "center" }}>{metro.bpm}</div>
-                <button onClick={() => metro.changeBpm(Math.min(280, metro.bpm + 1))} style={{ background: "transparent", border: "none", fontSize: 18, cursor: "pointer", color: T.textMed }}>+</button>
-                <button onClick={() => metro.changeBpm(ex.metronome)} style={{ marginLeft: 6, fontSize: 10, background: T.goldSoft, border: "none", padding: "4px 8px", borderRadius: T.radius, color: T.goldDark, cursor: "pointer", fontWeight: 600, textTransform: "uppercase" }}>Target: {ex.metronome}</button>
+          {/* PANEL B: TOOLS */}
+          {(showTimer || tracks.length > 0 || ex.metronome || ex.drone || ex.recorder) && (
+            <div style={{ 
+              background: T.bgCard, borderRadius: T.radiusMd, border: `1px solid ${T.border}`,
+              padding: "18px", marginBottom: 20, boxShadow: T.sm
+            }}>
+              <div style={{ fontSize: 9, fontWeight: 800, color: T.textMuted, letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 16, borderBottom: `1px solid ${T.borderSoft}`, paddingBottom: 6 }}>
+                Tools & Accompaniment
               </div>
 
-              <div style={{ display: "flex", gap: 8 }}>
-                <button onClick={() => metro.playing ? metro.stop() : metro.start()} style={{
-                  background: metro.playing ? T.coral : T.gold, border: "none", color: "#fff",
-                  padding: "8px 16px", fontSize: 11, fontWeight: 600, cursor: "pointer", borderRadius: T.radius,
-                  fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
-                }}>
-                  {metro.playing ? "Stop" : "Start"}
-                </button>
-
-                <button onClick={() => onOpenTapMatch && onOpenTapMatch(ex.metronome)} style={{
-                  background: "transparent", border: `1px solid ${T.slate}40`, color: T.slate, padding: "8px 12px", borderRadius: T.radius,
-                  fontSize: 11, cursor: "pointer", fontWeight: 600, fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
-                }}>✋ Tap</button>
-
-                {ex.speedLadder && (
-                  <button onClick={() => {
-                    if (!metro.speedBuilder) {
-                      metro.changeBpm(ex.speedLadder.start);
-                      metro.setSpeedIncrement(ex.speedLadder.increment);
-                      metro.setSpeedBars(ex.speedLadder.bars);
-                      metro.setSpeedCeiling(ex.speedLadder.end);
-                    }
-                    metro.setSpeedBuilder(!metro.speedBuilder);
-                  }} style={{
-                    background: metro.speedBuilder ? T.gold : "transparent",
-                    border: `1px solid ${metro.speedBuilder ? T.gold : T.borderSoft}`,
-                    color: metro.speedBuilder ? "#fff" : T.textMed,
-                    padding: "8px 10px", borderRadius: T.radius,
-                    fontSize: 11, cursor: "pointer", fontWeight: 600, fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
-                  }} title={`${ex.speedLadder.start}→${ex.speedLadder.end} BPM, +${ex.speedLadder.increment} every ${ex.speedLadder.bars} bars`}>
-                    Speed + {metro.speedBuilder && metro.speedCeiling > 0 ? `↩${metro.speedCeiling}` : ""}
-                  </button>
-                )}
-              </div>
-              {ex.speedLadder && metro.speedBuilder && (
-                <div style={{ width: "100%", marginTop: 8, padding: "10px 14px", background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: T.radiusMd }}>
-                  <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
-                    <div style={{ flex: 1, minWidth: 120 }}>
-                      <div style={{ fontSize: 10, fontWeight: 600, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>+ BPM</div>
-                      <div style={{ display: "flex", gap: 4 }}>
-                        {[1, 2, 3, 5, 10].map(n => (
-                          <button key={n} onClick={() => metro.setSpeedIncrement(n)} style={{
-                            background: metro.speedIncrement === n ? T.gold : "transparent",
-                            border: `1px solid ${metro.speedIncrement === n ? T.gold : T.borderSoft}`,
-                            color: metro.speedIncrement === n ? "#fff" : T.textMed,
-                            borderRadius: T.radius, padding: "4px 8px", fontSize: 12, fontWeight: 600,
-                            cursor: "pointer", fontFamily: T.sans, minWidth: 32
-                          }}>{n}</button>
-                        ))}
-                      </div>
-                    </div>
-                    <div style={{ flex: 1, minWidth: 120 }}>
-                      <div style={{ fontSize: 10, fontWeight: 600, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>Every N bars</div>
-                      <div style={{ display: "flex", gap: 4 }}>
-                        {[2, 4, 8, 16].map(n => (
-                          <button key={n} onClick={() => metro.setSpeedBars(n)} style={{
-                            background: metro.speedBars === n ? T.gold : "transparent",
-                            border: `1px solid ${metro.speedBars === n ? T.gold : T.borderSoft}`,
-                            color: metro.speedBars === n ? "#fff" : T.textMed,
-                            borderRadius: T.radius, padding: "4px 8px", fontSize: 12, fontWeight: 600,
-                            cursor: "pointer", fontFamily: T.sans, minWidth: 32
-                          }}>{n}</button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <div style={{ marginTop: 10 }}>
-                    <div style={{ fontSize: 10, fontWeight: 600, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>Loop back at BPM (0 = off)</div>
-                    <div style={{ display: "flex", gap: 4, alignItems: "center", flexWrap: "wrap" }}>
-                      <button onClick={() => metro.setSpeedCeiling(0)} style={{
-                        background: metro.speedCeiling === 0 ? T.gold : "transparent",
-                        border: `1px solid ${metro.speedCeiling === 0 ? T.gold : T.borderSoft}`,
-                        color: metro.speedCeiling === 0 ? "#fff" : T.textMed,
-                        borderRadius: T.radius, padding: "4px 8px", fontSize: 12, fontWeight: 600,
-                        cursor: "pointer", fontFamily: T.sans, minWidth: 32
-                      }}>Off</button>
-                      {[80, 90, 100, 110, 120, 140, 160].map(n => (
-                        <button key={n} onClick={() => metro.setSpeedCeiling(n)} style={{
-                          background: metro.speedCeiling === n ? T.coral : "transparent",
-                          border: `1px solid ${metro.speedCeiling === n ? T.coral : T.borderSoft}`,
-                          color: metro.speedCeiling === n ? "#fff" : T.textMed,
-                          borderRadius: T.radius, padding: "4px 8px", fontSize: 12, fontWeight: 600,
-                          cursor: "pointer", fontFamily: T.sans, minWidth: 32
-                        }}>{n}</button>
-                      ))}
-                    </div>
-                    {metro.speedCeiling > 0 && (
-                      <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans, marginTop: 4 }}>
-                        ↩ Loops back to {metro.bpm} BPM after reaching {metro.speedCeiling}
-                      </div>
-                    )}
+              {/* Timer */}
+              {showTimer && (
+                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16, padding: "10px 14px", background: T.bgSoft, borderRadius: T.radius, border: `1px solid ${T.border}` }}>
+                  <TimerRing pct={timer.pct} fmt={timer.fmt} size={38} />
+                  <div style={{ flex: 1, fontFamily: T.sans, fontSize: 13, color: T.textDark, fontWeight: 700 }}>{timer.fmt}</div>
+                  <div style={{ display: "flex", gap: 4 }}>
+                    <button onClick={timer.toggle} style={{
+                      background: timer.on ? T.coral : (dayColor || T.gold), border: "none", color: "#fff",
+                      padding: "6px 12px", fontSize: 10, fontWeight: 700, cursor: "pointer", borderRadius: T.radius,
+                      fontFamily: T.sans, textTransform: "uppercase"
+                    }}>{timer.on ? "Pause" : "Start"}</button>
+                    <button onClick={timer.reset} style={{
+                      background: "transparent", border: `1px solid ${T.border}`, color: T.textLight,
+                      padding: "6px 10px", fontSize: 10, fontWeight: 700, cursor: "pointer", borderRadius: T.radius,
+                      fontFamily: T.sans, textTransform: "uppercase"
+                    }}>Reset</button>
                   </div>
                 </div>
               )}
-            </div>
-          )}
 
-          {/* Pitch detector for metronome exercises — rendered outside the button row */}
-          {ex.metronome && ex.referencePitches && ex.referencePitches.length > 0 && (
-            <div style={{ marginBottom: 16 }}>
-              <LivePitchDetector theme={T} referencePitches={ex.referencePitches} inline={true} pitchContour={!!ex.pitchContour} />
-            </div>
-          )}
-
-          {!ex.metronome && !ex.pitchContour && ex.referencePitches && ex.referencePitches.length > 0 && (
-            <div style={{ marginBottom: 16 }}>
-              <LivePitchDetector theme={T} referencePitches={ex.referencePitches} inline={true} />
-            </div>
-          )}
-
-          {/* Inline Drone Generator */}
-          {ex.drone && (
-            <div style={{ marginBottom: 16 }}>
-              <DroneGenerator
-                theme={T}
-                inline={true}
-                onActiveNotesChange={setDroneActiveNotes}
-                {...(typeof ex.drone === 'object' ? {
-                  defaultRoot: ex.drone.root,
-                  defaultOctave: ex.drone.octave,
-                  defaultTexture: ex.drone.texture,
-                  defaultMode: ex.drone.mode,
-                  defaultPreset: ex.drone.preset,
-                  defaultProgression: ex.drone.progression,
-                  defaultBpm: ex.drone.bpm,
-                  defaultStepDuration: ex.drone.stepDuration,
-                } : {})}
-              />
-            </div>
-          )}
-
-          {/* Inline Recorder */}
-          {ex.recorder && (
-            <div style={{ marginBottom: 16 }}>
-              <AudioRecorder theme={T} inline={true} />
-            </div>
-          )}
-
-          {/* Fretboard Diagram */}
-          {ex.fretboard && (
-            <FretboardDiagram
-              theme={T}
-              scale={ex.fretboard.scale}
-              position={ex.fretboard.position}
-              highlight={ex.fretboard.highlight || []}
-            />
-          )}
-
-          {/* Piano Keys Diagram — shows exercise pianoKeys or drone active chord */}
-          {ex.pianoKeys ? (
-            <PianoKeysDiagram
-              notes={droneActiveNotes.notes.length > 0 ? normalizeDroneNotes(droneActiveNotes.notes, ex.pianoKeys.range) : ex.pianoKeys.notes}
-              label={droneActiveNotes.notes.length > 0 ? droneActiveNotes.label : ex.pianoKeys.label}
-              range={ex.pianoKeys.range}
-            />
-          ) : droneActiveNotes.notes.length > 0 ? (
-            <PianoKeysDiagram
-              notes={normalizeDroneNotes(droneActiveNotes.notes, ["C3", "C5"])}
-              label={droneActiveNotes.label}
-              range={["C3", "C5"]}
-            />
-          ) : null}
-
-          {/* Volume Meter / Volume Contour */}
-          {ex.volumeMeter && (
-            <VolumeMeter theme={T} inline={true} volumeContour={!!ex.volumeContour} />
-          )}
-
-          {/* Rhythm Cells */}
-          {ex.rhythmCells && (
-            <RhythmCellCards theme={T} cells={ex.rhythmCells} bpm={ex.metronome || 80} />
-          )}
-
-          {/* Phrase Form Guide */}
-          {ex.phraseForm && (
-            <PhraseFormGuide theme={T} form={ex.phraseForm} />
-          )}
-
-          {/* Pitch Contour (enhanced LivePitchDetector) */}
-          {!ex.metronome && ex.pitchContour && ex.referencePitches && ex.referencePitches.length > 0 && (
-            <div style={{ marginBottom: 16 }}>
-              <LivePitchDetector theme={T} referencePitches={ex.referencePitches} inline={true} pitchContour={true} />
-            </div>
-          )}
-
-          {/* Inline Tabs/Lyrics */}
-          {ex.tabs && TAB_CONTENT[ex.tabs] && (
-            <div style={{ marginBottom: 16 }}>
-              <button onClick={() => setShowTabs(!showTabs)} style={{
-                background: "transparent", border: `1px solid ${T.border}`, color: T.textMed,
-                padding: "8px 14px", borderRadius: T.radius, cursor: "pointer", fontWeight: 600,
-                fontFamily: T.sans, fontSize: 11, letterSpacing: 1, textTransform: "uppercase",
-                width: "100%", textAlign: "left", display: "flex", justifyContent: "space-between", alignItems: "center"
-              }}>
-                <span>{ex.tabs === "soldelsur" ? "Sol Del Sur — Tabs & Lyrics" : "I Like The Way You Walk — Lyrics"}</span>
-                <span style={{ transition: "transform 0.2s", transform: showTabs ? "rotate(180deg)" : "" }}>▾</span>
-              </button>
-              {showTabs && (
-                <pre style={{
-                  background: T.bgSoft, padding: 16, border: `1px solid ${T.border}`, borderTop: "none",
-                  borderRadius: `0 0 ${T.radiusMd} ${T.radiusMd}`, overflowX: "auto",
-                  fontFamily: "monospace", fontSize: 12, color: T.textDark, lineHeight: 1.5, marginTop: 0,
-                  whiteSpace: "pre-wrap"
-                }}>
-                  {TAB_CONTENT[ex.tabs].trim()}
-                </pre>
+              {/* Audio Tracks */}
+              {tracks.length > 0 && (
+                <div style={{ marginBottom: 16 }}>
+                  {tracks.map((t, i) => (
+                    <div key={i} style={{ marginBottom: 12 }}>
+                      <div style={{ fontSize: 10, fontWeight: 800, color: T.textDark, letterSpacing: 1.2, marginBottom: 6, fontFamily: T.sans, textTransform: "uppercase" }}>{t.name}</div>
+                      <MiniAudioPlayer theme={T} src={t.src} playbackRate={trackRates[i] || 1} />
+                      <div style={{ display: "flex", gap: 4, marginTop: 6 }}>
+                        {[0.75, 1, 1.25].map(rate => (
+                          <button key={rate} onClick={() => setTrackRates(r => ({ ...r, [i]: rate }))} style={{
+                            background: (trackRates[i] || 1) === rate ? (dayColor || T.gold) : "transparent",
+                            color: (trackRates[i] || 1) === rate ? "#fff" : T.textMed,
+                            border: `1px solid ${(trackRates[i] || 1) === rate ? (dayColor || T.gold) : T.borderSoft}`,
+                            padding: "3px 8px", fontSize: 9, fontWeight: 800, cursor: "pointer",
+                            borderRadius: T.radius, fontFamily: T.sans
+                          }}>{rate === 1 ? "1x" : `${rate}x`}</button>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               )}
+
+              {/* Metronome */}
+              {ex.metronome && (
+                <div style={{ display: "flex", gap: 8, marginBottom: 16, alignItems: "center", background: T.bgSoft, padding: "10px 14px", borderRadius: T.radius, border: `1px solid ${T.border}`, flexWrap: "wrap" }}>
+                  <div style={{ flex: 1, display: "flex", alignItems: "center", gap: 6 }}>
+                    <button onClick={() => metro.changeBpm(Math.max(40, metro.bpm - 1))} style={{ background: "transparent", border: "none", fontSize: 18, cursor: "pointer", color: T.textMed }}>−</button>
+                    <div style={{ fontSize: 16, fontFamily: T.sans, color: T.textDark, fontWeight: 700, minWidth: 36, textAlign: "center" }}>{metro.bpm}</div>
+                    <button onClick={() => metro.changeBpm(Math.min(280, metro.bpm + 1))} style={{ background: "transparent", border: "none", fontSize: 18, cursor: "pointer", color: T.textMed }}>+</button>
+                  </div>
+                  <div style={{ display: "flex", gap: 6 }}>
+                    <button onClick={() => metro.playing ? metro.stop() : metro.start()} style={{
+                      background: metro.playing ? T.coral : (dayColor || T.gold), border: "none", color: "#fff",
+                      padding: "8px 14px", fontSize: 10, fontWeight: 700, cursor: "pointer", borderRadius: T.radius,
+                      fontFamily: T.sans, textTransform: "uppercase"
+                    }}>{metro.playing ? "Stop" : "Start"}</button>
+                    <button onClick={() => onOpenTapMatch && onOpenTapMatch(ex.metronome)} style={{
+                      background: "transparent", border: `1px solid ${T.slate}40`, color: T.slate, padding: "8px 10px", borderRadius: T.radius,
+                      fontSize: 10, cursor: "pointer", fontWeight: 700, fontFamily: T.sans, textTransform: "uppercase"
+                    }}>Tap</button>
+                  </div>
+                </div>
+              )}
+
+              {/* Drone & Recorder */}
+              {ex.drone && (
+                <div style={{ marginBottom: 12 }}>
+                  <DroneGenerator theme={T} inline={true} onActiveNotesChange={setDroneActiveNotes}
+                    {...(typeof ex.drone === 'object' ? {
+                      defaultRoot: ex.drone.root, defaultOctave: ex.drone.octave,
+                      defaultTexture: ex.drone.texture, defaultMode: ex.drone.mode,
+                      defaultPreset: ex.drone.preset, defaultProgression: ex.drone.progression,
+                      defaultBpm: ex.drone.bpm, defaultStepDuration: ex.drone.stepDuration,
+                    } : {})}
+                  />
+                </div>
+              )}
+              {ex.recorder && <AudioRecorder theme={T} inline={true} />}
+            </div>
+          )}
+
+          {/* PANEL C: CONTENT */}
+          {(ex.fretboard || ex.pianoKeys || ex.volumeMeter || ex.rhythmCells || (ex.referencePitches && ex.referencePitches.length > 0)) && (
+            <div style={{ 
+              background: T.bgCard, borderRadius: T.radiusMd, border: `1px solid ${T.border}`,
+              padding: "18px", marginBottom: 20, boxShadow: T.sm
+            }}>
+              <div style={{ fontSize: 9, fontWeight: 800, color: T.textMuted, letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 16, borderBottom: `1px solid ${T.borderSoft}`, paddingBottom: 6 }}>
+                Guide & Reference
+              </div>
+
+              {/* Pitch detector */}
+              {ex.referencePitches && ex.referencePitches.length > 0 && (
+                <div style={{ marginBottom: 16 }}>
+                  <LivePitchDetector theme={T} referencePitches={ex.referencePitches} inline={true} pitchContour={!!ex.pitchContour} />
+                </div>
+              )}
+
+              {/* Fretboard & Piano Keys */}
+              {ex.fretboard && (
+                <div style={{ marginBottom: 16 }}>
+                  <FretboardDiagram theme={T} scale={ex.fretboard.scale} position={ex.fretboard.position} highlight={ex.fretboard.highlight || []} />
+                </div>
+              )}
+              {(ex.pianoKeys || droneActiveNotes.notes.length > 0) && (
+                <div style={{ marginBottom: 16 }}>
+                  {ex.pianoKeys ? (
+                    <PianoKeysDiagram notes={droneActiveNotes.notes.length > 0 ? normalizeDroneNotes(droneActiveNotes.notes, ex.pianoKeys.range) : ex.pianoKeys.notes} label={droneActiveNotes.notes.length > 0 ? droneActiveNotes.label : ex.pianoKeys.label} range={ex.pianoKeys.range} />
+                  ) : (
+                    <PianoKeysDiagram notes={normalizeDroneNotes(droneActiveNotes.notes, ["C3", "C5"])} label={droneActiveNotes.label} range={["C3", "C5"]} />
+                  )}
+                </div>
+              )}
+
+              {/* Volume Meter */}
+              {ex.volumeMeter && <VolumeMeter theme={T} inline={true} volumeContour={!!ex.volumeContour} />}
             </div>
           )}
 
@@ -1844,16 +1712,14 @@ function DayView({ day, completed, onComplete, metro, onOpenTapMatch, onStartFlo
       {day.setup && (
         <div style={{
           background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radius,
-          padding: "12px 16px", marginBottom: 16, fontSize: 13, color: T.textLight, fontFamily: T.sans,
-          borderLeft: `1px solid ${T.gold}`
+          padding: "16px 20px", marginBottom: 16, fontSize: 13, color: T.textMed, fontFamily: T.sans,
+          borderLeft: `3px solid ${T.gold}40`, lineHeight: 1.6
         }}>
-          <span style={{ fontWeight: 700, color: T.textMed }}>Before you start: </span>{day.setup}
+          <span style={{ fontWeight: 800, color: T.textDark, fontSize: 11, textTransform: "uppercase", letterSpacing: 1, marginRight: 8 }}>Setup:</span>{day.setup}
         </div>
       )}
 
-      <div style={{ height: 3, background: T.border, borderRadius: 2, marginBottom: 12, overflow: "hidden" }}>
-        <div style={{ height: "100%", width: `${pct}%`, background: pct === 100 ? T.success : T.gold, borderRadius: 2, transition: "width 0.5s" }} />
-      </div>
+      <div style={{ marginBottom: 12 }}></div>
 
       {day.exercises.map(ex => (
         <ExerciseCard key={ex.id} ex={ex} metro={metro}
@@ -1996,14 +1862,6 @@ function VoiceView({ completed, onComplete, metro, onOpenTapMatch, onStartFlow }
         <div style={{ fontSize: 32, fontWeight: 400, fontFamily: T.serif, color: T.textDark }}>Voice</div>
         <div style={{ fontSize: 13, color: T.textMuted, fontFamily: T.sans, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>
           Breath to Performance · Psych-Surf-Reggae · {totalDone}/{totalEx} exercises
-        </div>
-        <div style={{ width: "100%", maxWidth: 320, margin: "16px auto 0", display: "flex", alignItems: "center", gap: 14 }}>
-          <div style={{ flex: 1 }}>
-            <div style={{ height: 2, background: T.border, overflow: "hidden" }}>
-              <div style={{ height: "100%", width: `${overallPct}%`, background: overallPct === 100 ? T.success : T.gold, transition: "width 0.5s" }} />
-            </div>
-          </div>
-          <div style={{ fontSize: 14, fontWeight: 400, fontFamily: T.serif, color: overallPct === 100 ? T.success : T.gold, minWidth: 36 }}>{overallPct}%</div>
         </div>
       </div>
 
@@ -4203,14 +4061,6 @@ export default function App() {
             </div>
             <div style={{ fontSize: 40, fontWeight: 400, fontFamily: T.serif, color: T.textDark, lineHeight: 1.2 }}>Practice Plan</div>
             <div style={{ fontSize: 13, color: T.textMuted, marginTop: 10, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: "0.15em", lineHeight: 1.6 }}>Lesson 3/2 · Tenor · Break ≈ A3</div>
-            <div style={{ width: "100%", maxWidth: 320, margin: "20px auto 0", display: "flex", alignItems: "center", gap: 14 }}>
-              <div style={{ flex: 1 }}>
-                <div style={{ height: 6, background: T.border, overflow: "hidden", borderRadius: 4 }}>
-                  <div style={{ height: "100%", width: `${weekPct}%`, background: weekPct === 100 ? T.success : T.gold, transition: "width 0.5s", borderRadius: 4 }} />
-                </div>
-              </div>
-              <div style={{ fontSize: 16, fontWeight: 600, fontFamily: T.serif, color: weekPct === 100 ? T.success : T.gold, minWidth: 36 }}>{weekPct}%</div>
-            </div>
           </div>
         </div>
       )}
