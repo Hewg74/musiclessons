@@ -3699,44 +3699,50 @@ export function RhythmCellCards({ theme: T, cells = [], bpm = 80 }) {
   }, [clearPatternTimeouts]);
 
   // Schedule a cell's pattern notes at an absolute audio-thread time
-  // startTime = exact audio-context time for beat 0 of this pattern cycle
+  // Uses a SINGLE synth with re-attacks — the oscillator keeps running between notes
+  // so there's zero silence gap. Each triggerAttack restarts the envelope (articulation)
+  // without stopping the sound. Like saying "tikatikatika" — tongue articulates, air never stops.
   const schedulePattern = useCallback((cell, startTime) => {
     clearPatternTimeouts();
     const beatSec = 60 / localBpm;
     const beatMs = 60000 / localBpm;
     const now = Tone.now();
-    // How far in the future is startTime from now (for setTimeout visual updates)
     const startDelayMs = Math.max(0, (startTime - now) * 1000);
+
+    // Single synth for the whole pattern — re-attacks create articulation, not gaps
+    const synth = new Tone.Synth({
+      oscillator: { type: 'triangle' },
+      envelope: { attack: 0.005, decay: 0.02, sustain: 0.9, release: 0.05 }
+    }).toDestination();
+    synth.volume.value = -6;
+    synthsRef.current.push(synth);
+
     let offsetSec = 0;
     let offsetMs = 0;
+    const totalDurSec = cell.pattern.reduce((a, b) => a + b, 0) * beatSec;
 
     cell.pattern.forEach((dur, i) => {
-      const noteDur = dur * beatSec;
-      const synth = new Tone.Synth({
-        oscillator: { type: 'triangle' },
-        // Full sustain + tiny release = notes hold at full volume for their entire duration
-        // The 10ms release overlaps with the next note's 5ms attack on a separate synth = gapless
-        envelope: { attack: 0.005, decay: 0.02, sustain: 0.9, release: 0.01 }
-      }).toDestination();
-      synth.volume.value = -6;
-      synthsRef.current.push(synth);
-      // Hold for FULL duration — no subtraction. The tiny release overlaps with next note's attack.
-      synth.triggerAttackRelease("A3", noteDur, startTime + offsetSec);
-      // Visual highlight via setTimeout (approximate is fine for UI)
+      // Re-attack at each note boundary — envelope restarts, oscillator stays running
+      synth.triggerAttack("A3", startTime + offsetSec);
+      // Visual highlight
       const t = setTimeout(() => setCurrentNoteIdx(i), startDelayMs + offsetMs);
       timeoutsRef.current.push(t);
-      // Dispose after note finishes
-      setTimeout(() => {
-        try { synth.dispose(); } catch {}
-        synthsRef.current = synthsRef.current.filter(s => s !== synth);
-      }, startDelayMs + offsetMs + dur * beatMs + 2000);
-      offsetSec += noteDur;
+      offsetSec += dur * beatSec;
       offsetMs += dur * beatMs;
     });
+
+    // Release only after the LAST note's full duration
+    synth.triggerRelease(startTime + totalDurSec);
 
     // Reset visual after pattern ends
     const endTimeout = setTimeout(() => setCurrentNoteIdx(-1), startDelayMs + offsetMs + 50);
     timeoutsRef.current.push(endTimeout);
+
+    // Dispose synth after everything finishes
+    setTimeout(() => {
+      try { synth.dispose(); } catch {}
+      synthsRef.current = synthsRef.current.filter(s => s !== synth);
+    }, startDelayMs + offsetMs + 2000);
   }, [localBpm, clearPatternTimeouts]);
 
   // Start a cell: begin metronome + quantize first pattern to next beat
