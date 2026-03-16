@@ -4139,6 +4139,7 @@ export default function App() {
           startIndex={flowStartIndex}
           onOpenTapMatch={setTapMatchBpm}
         />
+        <FloatingMetronome metro={metro} setTab={() => {}} isDark={isDark} theme={T} />
         {tapMatchBpm && (
           <TapMatchModal targetBpm={tapMatchBpm} onClose={() => setTapMatchBpm(null)} metro={metro} />
         )}
