@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import * as Tone from "tone";
 import confetti from "canvas-confetti";
+import { 
+  Drum, Guitar, Mic2, Ear, Music, Circle, Sparkles, Piano, Repeat, 
+  ChevronDown, Play, Pause, RotateCcw, CheckCircle2, Clock, MapPin, Wrench,
+  Mic, Headphones, Info, AlertCircle, Quote, ArrowRight, Check, 
+  Volume2, Sun, Moon
+} from 'lucide-react';
 import { MiniAudioPlayer, AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, VolumeMeter, DroneGenerator, TAB_CONTENT, InlineKeyboard, RhythmCellCards, PhraseFormGuide } from './JungleTools.jsx';
 import { DAYS, KEYBOARD_LEVELS, LOOPER_LEVELS, LESSON_POOL, ALL_NOTES, getPitchRange } from './data/appData.js';
 import { VOCAL_LEVELS } from './data/vocalLevels/index.js';
@@ -30,6 +36,33 @@ let T = {
 
   sm: "0 4px 12px rgba(44, 40, 37, 0.03)",
   md: "0 12px 32px rgba(44, 40, 37, 0.06), 0 4px 12px rgba(44, 40, 37, 0.02)",
+};
+
+// Helper for dynamic tinted backgrounds
+T.getTint = (color, opacity = 0.03) => {
+  if (!color) return T.bgSoft;
+  // If color is hex, convert to rgba
+  if (color.startsWith('#')) {
+    const r = parseInt(color.slice(1, 3), 16);
+    const g = parseInt(color.slice(3, 5), 16);
+    const b = parseInt(color.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+  }
+  return color;
+};
+
+// Helper for dynamic tinted shadows
+T.getShadow = (color, strength = 'sm') => {
+  const opacity = strength === 'sm' ? 0.1 : 0.2;
+  const blur = strength === 'sm' ? 12 : 32;
+  const spread = strength === 'sm' ? 0 : 4;
+  if (color && color.startsWith('#')) {
+    const r = parseInt(color.slice(1, 3), 16);
+    const g = parseInt(color.slice(3, 5), 16);
+    const b = parseInt(color.slice(5, 7), 16);
+    return `0 ${blur/3}px ${blur}px ${spread}px rgba(${r}, ${g}, ${b}, ${opacity})`;
+  }
+  return T[strength];
 };
 
 const LIGHT_THEME = { ...T };
@@ -62,15 +95,15 @@ applyTheme(false);
 
 // Exercise type config
 const TYPE = {
-  rhythm: { label: "Rhythm", color: "#d97d54", icon: "𝅘𝅥" },
-  guitar: { label: "Guitar", color: "#6b8e9f", icon: "♪" },
-  vocal: { label: "Voice", color: "#9e829c", icon: "♫" },
-  listen: { label: "Listen", color: "#7f9e88", icon: "♩" },
-  song: { label: "Song", color: "#d68383", icon: "𝄞" },
-  record: { label: "Record", color: "#d4a373", icon: "●" },
-  play: { label: "Free", color: "#72a8a8", icon: "✦" },
-  keys: { label: "Keys", color: "#5b7fa5", icon: "🎹" },
-  looper: { label: "Looper", color: "#3d8b6e", icon: "⟳" },
+  rhythm: { label: "Rhythm", color: "#d97d54", icon: Drum },
+  guitar: { label: "Guitar", color: "#6b8e9f", icon: Guitar },
+  vocal: { label: "Voice", color: "#9e829c", icon: Mic2 },
+  listen: { label: "Listen", color: "#7f9e88", icon: Ear },
+  song: { label: "Song", color: "#d68383", icon: Music },
+  record: { label: "Record", color: "#d4a373", icon: Circle },
+  play: { label: "Free", color: "#72a8a8", icon: Sparkles },
+  keys: { label: "Keys", color: "#5b7fa5", icon: Piano },
+  looper: { label: "Looper", color: "#3d8b6e", icon: Repeat },
 };
 
 const DAY_COLORS = ["#d68383", "#d97d54", "#d4a373", "#7f9e88", "#72a8a8", "#6b8e9f", "#9e829c"];
@@ -397,15 +430,19 @@ function useTimer(mins) {
 
 // ─── COMPONENTS ─────────────────────────────────────────────────────
 
-function TypeBadge({ type }) {
+function TypeBadge({ type, size = 12 }) {
   const t = TYPE[type] || TYPE.rhythm;
+  const Icon = t.icon;
   return (
     <div style={{
-      display: "inline-flex", alignItems: "center", gap: 4,
-      fontSize: 10, fontWeight: 400, letterSpacing: 1.5, textTransform: "uppercase",
-      color: t.color, fontFamily: T.sans, padding: "4px 12px",
-      background: "transparent", borderRadius: T.radius, border: `1px solid ${t.color}40`
-    }}>{t.icon} {t.label}</div>
+      display: "inline-flex", alignItems: "center", gap: 6,
+      fontSize: 9, fontWeight: 800, letterSpacing: 1.5, textTransform: "uppercase",
+      color: t.color, fontFamily: T.sans, padding: "4px 10px",
+      background: `${t.color}10`, borderRadius: T.radius, border: `1px solid ${t.color}20`
+    }}>
+      <Icon size={size} strokeWidth={2.5} />
+      <span>{t.label}</span>
+    </div>
   );
 }
 
@@ -520,15 +557,17 @@ function LyricGrid() {
 function SarahQuote({ text }) {
   return (
     <div style={{
-      padding: "12px 20px", margin: "16px 0",
-      background: T.bgSoft,
+      padding: "16px 20px", margin: "20px 0",
+      background: T.getTint(T.gold, 0.04),
       borderRadius: T.radius,
-      border: `1px solid ${T.gold}20`
+      border: `1px solid ${T.gold}15`,
+      position: "relative"
     }}>
-      <div style={{ fontSize: 10, fontWeight: 700, color: T.gold, letterSpacing: 1.5, marginBottom: 4, fontFamily: T.sans }}>
-        TEACHER'S NOTE
+      <Quote size={14} style={{ position: "absolute", top: -7, left: 16, color: T.gold, background: T.bgCard, padding: "0 4px" }} />
+      <div style={{ fontSize: 9, fontWeight: 800, color: T.gold, letterSpacing: 2, marginBottom: 8, fontFamily: T.sans, textTransform: "uppercase" }}>
+        Teacher's Note
       </div>
-      <div style={{ fontSize: 14, color: T.textDark, fontFamily: T.sans, lineHeight: 1.7, fontStyle: "italic" }}>
+      <div style={{ fontSize: 15, color: T.textDark, fontFamily: T.serif, lineHeight: 1.7, fontStyle: "italic" }}>
         "{text}"
       </div>
     </div>
@@ -539,11 +578,11 @@ function DetailSection({ label, color, children }) {
   if (!children) return null;
   return (
     <div style={{
-      background: color + "08", border: `1px solid ${color}18`,
-      borderRadius: T.radius, padding: "16px 20px", marginBottom: 16,
-      boxShadow: T.sm
+      background: T.getTint(color, 0.04), border: `1px solid ${color}15`,
+      borderRadius: T.radius, padding: "18px 20px", marginBottom: 16,
+      boxShadow: `0 4px 12px ${color}08`
     }}>
-      <div style={{ fontSize: 10, fontWeight: 800, color, letterSpacing: 2, marginBottom: 8, fontFamily: T.sans, textTransform: "uppercase" }}>
+      <div style={{ fontSize: 9, fontWeight: 800, color, letterSpacing: 2, marginBottom: 10, fontFamily: T.sans, textTransform: "uppercase" }}>
         {label}
       </div>
       <div style={{ fontSize: 15, color: T.textDark, fontFamily: T.sans, lineHeight: 1.7 }}>
@@ -753,6 +792,8 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
   const [trackRates, setTrackRates] = useState({});
   const [timerDone, setTimerDone] = useState(false);
   const [droneActiveNotes, setDroneActiveNotes] = useState({ notes: [], label: "" });
+  
+  const typeColor = TYPE[ex.type]?.color || accentColor || T.gold;
 
   // Detect timer completion
   useEffect(() => {
@@ -791,43 +832,48 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
       {/* PANEL A: GOAL & PROGRESS */}
       <div style={{ 
         background: T.bgCard, borderRadius: T.radiusMd, border: `1px solid ${T.border}`,
-        padding: "24px", marginBottom: 16, boxShadow: T.sm
+        padding: "24px", marginBottom: 16, boxShadow: T.getShadow(typeColor, 'sm'),
+        position: "relative", overflow: "hidden"
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20 }}>
-          <TimerRing pct={timer.pct} fmt={timer.fmt} size={56} textSize={13} />
+        <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "2px", background: typeColor, opacity: 0.3 }} />
+        <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 24 }}>
+          <TimerRing pct={timer.pct} fmt={timer.fmt} size={64} textSize={14} />
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 16, fontWeight: 700, fontFamily: T.serif, color: T.textDark }}>
+            <div style={{ fontSize: 18, fontWeight: 700, fontFamily: T.serif, color: T.textDark }}>
               {ex.time || 5} min
             </div>
-            <div style={{ fontSize: 11, color: timerDone ? T.gold : T.textMuted, fontFamily: T.sans, fontWeight: timerDone ? 700 : 400, textTransform: "uppercase", letterSpacing: 1 }}>
-              {timerDone ? "Time's up" : "Duration"}
+            <div style={{ fontSize: 9, color: timerDone ? T.gold : T.textMuted, fontFamily: T.sans, fontWeight: 900, textTransform: "uppercase", letterSpacing: 2 }}>
+              {timerDone ? "Time's up" : "Practice Target"}
             </div>
           </div>
-          <div style={{ display: "flex", gap: 6 }}>
+          <div style={{ display: "flex", gap: 8 }}>
             <button onClick={timer.toggle} className="interactive-btn" style={{
-              background: timer.on ? T.coral : (accentColor || T.gold), border: "none", color: "#fff",
-              padding: "8px 16px", fontSize: 11, fontWeight: 700, cursor: "pointer", borderRadius: T.radius,
-              fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase",
+              background: timer.on ? "transparent" : typeColor, 
+              border: `1px solid ${timer.on ? T.coral : typeColor}`, 
+              color: timer.on ? T.coral : "#fff",
+              padding: "10px 20px", fontSize: 10, fontWeight: 800, cursor: "pointer", borderRadius: T.radius,
+              fontFamily: T.sans, letterSpacing: 1.5, textTransform: "uppercase",
               WebkitTapHighlightColor: "transparent"
-            }}>{timer.on ? "Pause" : "Start"}</button>
-            <button onClick={timer.reset} className="interactive-btn" style={{
-              background: "transparent", border: `1px solid ${T.border}`, color: T.textLight,
-              padding: "8px 12px", fontSize: 11, fontWeight: 700, cursor: "pointer", borderRadius: T.radius,
-              fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase",
-              WebkitTapHighlightColor: "transparent"
-            }}>Reset</button>
+            }}>
+              {timer.on ? <RotateCcw size={14} /> : <Play size={14} fill="currentColor" />}
+              <span style={{ marginLeft: 8 }}>{timer.on ? "Pause" : "Start"}</span>
+            </button>
           </div>
         </div>
 
         <div style={{
-          fontSize: 16, color: T.textDark, fontFamily: T.sans, lineHeight: 1.7,
-          padding: "16px 20px", background: T.bgSoft, borderRadius: T.radius,
-          marginBottom: ex.setup ? 16 : 0
+          fontSize: 17, color: T.textDark, fontFamily: T.sans, lineHeight: 1.7,
+          padding: "20px 24px", background: T.getTint(typeColor, 0.02), borderRadius: T.radius,
+          border: `1px solid ${typeColor}10`, marginBottom: ex.setup ? 20 : 0
         }}>{ex.what}</div>
 
         {ex.setup && (
-          <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, display: "flex", gap: 8, alignItems: "flex-start", padding: "0 4px" }}>
-            <span style={{ color: accentColor || T.gold, fontWeight: 800, fontSize: 10, letterSpacing: 1, textTransform: "uppercase", marginTop: 2 }}>Setup:</span> {ex.setup}
+          <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, display: "flex", gap: 10, alignItems: "flex-start", padding: "0 8px" }}>
+            <Info size={14} style={{ color: typeColor, marginTop: 3 }} />
+            <div style={{ flex: 1 }}>
+              <span style={{ color: typeColor, fontWeight: 900, fontSize: 9, letterSpacing: 1.5, textTransform: "uppercase" }}>Setup:</span>
+              <span style={{ marginLeft: 8 }}>{ex.setup}</span>
+            </div>
           </div>
         )}
       </div>
@@ -838,35 +884,40 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
           background: T.bgCard, borderRadius: T.radiusMd, border: `1px solid ${T.border}`,
           padding: "24px", marginBottom: 16, boxShadow: T.sm
         }}>
-          <div style={{ fontSize: 10, fontWeight: 800, color: T.textMuted, letterSpacing: 2, textTransform: "uppercase", marginBottom: 20, borderBottom: `1px solid ${T.borderSoft}`, paddingBottom: 8 }}>
-            Tools & Accompaniment
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20, borderBottom: `1px solid ${T.borderSoft}`, paddingBottom: 10 }}>
+            <Wrench size={14} style={{ color: T.textMuted }} />
+            <div style={{ fontSize: 9, fontWeight: 900, color: T.textMuted, letterSpacing: 2, textTransform: "uppercase" }}>
+              Tools & Accompaniment
+            </div>
           </div>
 
           {/* Reference Pitches */}
           {ex.referencePitches && (
-            <div style={{ marginBottom: 20 }}>
+            <div style={{ marginBottom: 24 }}>
               <PitchRibbon pitches={ex.referencePitches} playNote={playNote} />
             </div>
           )}
 
           {/* Metronome */}
           {ex.metronome && (
-            <div style={{ display: "flex", gap: 10, marginBottom: 24, alignItems: "center", background: T.bgSoft, padding: "12px 18px", borderRadius: T.radiusMd, border: `1px solid ${T.border}`, flexWrap: "wrap" }}>
-              <div style={{ flex: 1, display: "flex", alignItems: "center", gap: 10 }}>
-                <button onClick={() => metro.changeBpm(Math.max(40, metro.bpm - 1))} style={{ background: "transparent", border: "none", fontSize: 22, cursor: "pointer", color: T.textMed }}>−</button>
-                <div style={{ fontSize: 18, fontFamily: T.sans, color: T.textDark, fontWeight: 700, minWidth: 44, textAlign: "center" }}>{metro.bpm}</div>
-                <button onClick={() => metro.changeBpm(Math.min(280, metro.bpm + 1))} style={{ background: "transparent", border: "none", fontSize: 22, cursor: "pointer", color: T.textMed }}>+</button>
-                <button onClick={() => metro.changeBpm(ex.metronome)} style={{ marginLeft: 8, fontSize: 10, background: T.goldSoft, border: "none", padding: "4px 10px", borderRadius: T.radius, color: T.goldDark, cursor: "pointer", fontWeight: 700, textTransform: "uppercase" }}>Target: {ex.metronome}</button>
+            <div style={{ display: "flex", gap: 10, marginBottom: 24, alignItems: "center", background: T.getTint(T.slate, 0.02), padding: "16px 20px", borderRadius: T.radiusMd, border: `1px solid ${T.border}`, flexWrap: "wrap" }}>
+              <div style={{ flex: 1, display: "flex", alignItems: "center", gap: 12 }}>
+                <button onClick={() => metro.changeBpm(Math.max(40, metro.bpm - 1))} style={{ background: "transparent", border: "none", fontSize: 24, cursor: "pointer", color: T.textMed }}>−</button>
+                <div style={{ fontSize: 20, fontFamily: T.sans, color: T.textDark, fontWeight: 800, minWidth: 48, textAlign: "center" }}>{metro.bpm}</div>
+                <button onClick={() => metro.changeBpm(Math.min(280, metro.bpm + 1))} style={{ background: "transparent", border: "none", fontSize: 24, cursor: "pointer", color: T.textMed }}>+</button>
+                <button onClick={() => metro.changeBpm(ex.metronome)} style={{ marginLeft: 12, fontSize: 9, background: T.goldSoft, border: "none", padding: "6px 12px", borderRadius: T.radius, color: T.goldDark, cursor: "pointer", fontWeight: 800, textTransform: "uppercase", letterSpacing: 1 }}>Target: {ex.metronome}</button>
               </div>
               <div style={{ display: "flex", gap: 8 }}>
                 <button onClick={() => metro.playing ? metro.stop() : metro.start()} style={{
-                  background: metro.playing ? T.coral : (accentColor || T.gold), border: "none", color: "#fff",
-                  padding: "10px 18px", fontSize: 11, fontWeight: 700, cursor: "pointer", borderRadius: T.radius,
+                  background: metro.playing ? "transparent" : typeColor, 
+                  border: `1px solid ${metro.playing ? T.coral : typeColor}`,
+                  color: metro.playing ? T.coral : "#fff",
+                  padding: "10px 20px", fontSize: 10, fontWeight: 800, cursor: "pointer", borderRadius: T.radius,
                   fontFamily: T.sans, letterSpacing: 1.5, textTransform: "uppercase"
                 }}>{metro.playing ? "Stop" : "Start"}</button>
                 <button onClick={() => onOpenTapMatch && onOpenTapMatch(ex.metronome)} style={{
-                  background: "transparent", border: `1px solid ${T.slate}40`, color: T.slate, padding: "10px 14px", borderRadius: T.radius,
-                  fontSize: 11, cursor: "pointer", fontWeight: 700, fontFamily: T.sans, letterSpacing: 1.5, textTransform: "uppercase"
+                  background: "transparent", border: `1px solid ${T.border}`, color: T.textMed, padding: "10px 16px", borderRadius: T.radius,
+                  fontSize: 10, cursor: "pointer", fontWeight: 800, fontFamily: T.sans, letterSpacing: 1.5, textTransform: "uppercase"
                 }}>Tap</button>
               </div>
             </div>
@@ -876,17 +927,20 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
           {tracks.length > 0 && (
             <div style={{ marginBottom: 24 }}>
               {tracks.map((t, i) => (
-                <div key={i} style={{ marginBottom: 20 }}>
-                  <div style={{ fontSize: 11, fontWeight: 800, color: T.textDark, letterSpacing: 1.5, marginBottom: 10, fontFamily: T.sans, textTransform: "uppercase" }}>{t.name}</div>
+                <div key={i} style={{ marginBottom: 24 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                    <Headphones size={14} style={{ color: T.textMuted }} />
+                    <div style={{ fontSize: 10, fontWeight: 900, color: T.textDark, letterSpacing: 1.5, fontFamily: T.sans, textTransform: "uppercase" }}>{t.name}</div>
+                  </div>
                   <MiniAudioPlayer theme={T} src={t.src} playbackRate={trackRates[i] || 1} />
-                  <div style={{ display: "flex", gap: 6, marginTop: 8 }}>
+                  <div style={{ display: "flex", gap: 6, marginTop: 10 }}>
                     {[0.75, 1, 1.25].map(rate => (
                       <button key={rate} onClick={() => setTrackRates(r => ({ ...r, [i]: rate }))} style={{
-                        background: (trackRates[i] || 1) === rate ? (accentColor || T.gold) : "transparent",
+                        background: (trackRates[i] || 1) === rate ? typeColor : "transparent",
                         color: (trackRates[i] || 1) === rate ? "#fff" : T.textMed,
-                        border: `1px solid ${(trackRates[i] || 1) === rate ? (accentColor || T.gold) : T.borderSoft}`,
-                        padding: "4px 12px", fontSize: 10, fontWeight: 800, cursor: "pointer",
-                        borderRadius: T.radius, fontFamily: T.sans, transition: "all 0.2s"
+                        border: `1px solid ${(trackRates[i] || 1) === rate ? typeColor : T.borderSoft}`,
+                        padding: "5px 14px", fontSize: 9, fontWeight: 900, cursor: "pointer",
+                        borderRadius: T.radius, fontFamily: T.sans, transition: "all 0.2s", letterSpacing: 1
                       }}>{rate === 1 ? "1x" : `${rate}x`}</button>
                     ))}
                   </div>
@@ -897,7 +951,7 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
 
           {/* Drone */}
           {ex.drone && (
-            <div style={{ marginBottom: 20 }}>
+            <div style={{ marginBottom: 24 }}>
               <DroneGenerator theme={T} inline={true} onActiveNotesChange={setDroneActiveNotes}
                 {...(typeof ex.drone === 'object' ? {
                   defaultRoot: ex.drone.root, defaultOctave: ex.drone.octave,
@@ -919,13 +973,16 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
       )}
 
       {/* PANEL C: CONTENT & GUIDES */}
-      {(ex.fretboard || ex.pianoKeys || ex.volumeMeter || ex.rhythmCells || ex.phraseForm || (ex.referencePitches && ex.referencePitches.length > 0)) && (
+      {(ex.fretboard || ex.pianoKeys || ex.volumeMeter || ex.rhythmCells || ex.phraseForm || (ex.referencePitches && ex.referencePitches.length > 0) || ex.steps || ex.feel || ex.wrong || ex.sarah || ex.levelUp) && (
         <div style={{ 
           background: T.bgCard, borderRadius: T.radiusMd, border: `1px solid ${T.border}`,
           padding: "24px", marginBottom: 16, boxShadow: T.sm
         }}>
-          <div style={{ fontSize: 10, fontWeight: 800, color: T.textMuted, letterSpacing: 2, textTransform: "uppercase", marginBottom: 20, borderBottom: `1px solid ${T.borderSoft}`, paddingBottom: 8 }}>
-            Content & Interactive Guides
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20, borderBottom: `1px solid ${T.borderSoft}`, paddingBottom: 10 }}>
+            <Info size={14} style={{ color: T.textMuted }} />
+            <div style={{ fontSize: 9, fontWeight: 900, color: T.textMuted, letterSpacing: 2, textTransform: "uppercase" }}>
+              Content & Interactive Guides
+            </div>
           </div>
 
           {/* Pitch detector */}
@@ -977,41 +1034,71 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
           {/* Tabs */}
           {ex.tabs && TAB_CONTENT[ex.tabs] && (
             <div style={{ marginBottom: 24 }}>
-              <button onClick={() => setShowTabs(!showTabs)} style={{
+              <button onClick={() => setShowTabs(!showTabs)} className="interactive-btn" style={{
                 background: "transparent", border: `1px solid ${T.border}`, color: T.textMed,
-                padding: "8px 14px", borderRadius: T.radius, cursor: "pointer", fontWeight: 600,
-                fontFamily: T.sans, fontSize: 11, letterSpacing: 1, textTransform: "uppercase",
+                padding: "12px 16px", borderRadius: T.radius, cursor: "pointer", fontWeight: 800,
+                fontFamily: T.sans, fontSize: 10, letterSpacing: 1.5, textTransform: "uppercase",
                 width: "100%", textAlign: "left", display: "flex", justifyContent: "space-between", alignItems: "center"
               }}>
-                <span>Tabs & Lyrics</span>
-                <span style={{ transition: "transform 0.2s", transform: showTabs ? "rotate(180deg)" : "" }}>&#9660;</span>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <Music size={14} />
+                  <span>Tabs & Lyrics</span>
+                </div>
+                <ChevronDown size={16} style={{ transition: "transform 0.3s ease", transform: showTabs ? "rotate(180deg)" : "" }} />
               </button>
               {showTabs && (
                 <pre style={{
-                  background: T.bgSoft, padding: 16, border: `1px solid ${T.border}`, borderTop: "none",
-                  borderRadius: `0 0 ${T.radiusMd} ${T.radiusMd}`, overflowX: "auto",
-                  fontFamily: "monospace", fontSize: 12, color: T.textDark, lineHeight: 1.5, marginTop: 0, whiteSpace: "pre-wrap"
+                  background: T.bgSoft, padding: 20, border: `1px solid ${T.border}`, borderTop: "none",
+                  borderRadius: `0 0 ${T.radius} ${T.radius}`, overflowX: "auto",
+                  fontFamily: "monospace", fontSize: 13, color: T.textDark, lineHeight: 1.6, marginTop: 0, whiteSpace: "pre-wrap"
                 }}>{TAB_CONTENT[ex.tabs].trim()}</pre>
               )}
             </div>
           )}
 
           {/* ── STEPS ── */}
-          <FlowStepView steps={ex.steps} accentColor={accentColor} />
+          {ex.steps && (
+            <div style={{ marginBottom: 24 }}>
+              {ex.steps.map((s, i) => (
+                <div key={i}>
+                  {s.visual === "lyricGrid" && <LyricGrid />}
+                  <div style={{
+                    display: "flex", gap: 16, padding: "16px 0",
+                    borderBottom: i < ex.steps.length - 1 ? `1px solid ${T.borderSoft}` : "none"
+                  }}>
+                    <div style={{
+                      width: 24, height: 24, borderRadius: "50%", background: T.getTint(typeColor, 0.1), 
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      fontSize: 10, fontWeight: 900, color: typeColor, flexShrink: 0, fontFamily: T.sans
+                    }}>{i + 1}</div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 16, color: T.textDark, fontFamily: T.sans, lineHeight: 1.6 }}>{s.text}</div>
+                      {s.why && (
+                        <div style={{ 
+                          fontSize: 14, color: T.textMed, fontFamily: T.serif, lineHeight: 1.6, marginTop: 8, 
+                          fontStyle: "italic", paddingLeft: 16, borderLeft: `2px solid ${T.getTint(typeColor, 0.2)}`
+                        }}>
+                          {s.why}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* Feel / Wrong — always expanded */}
           {(ex.feel || ex.wrong) && (
-            <div style={{ marginBottom: 12 }}>
-              <div style={{
-                color: T.textLight, fontSize: 11,
-                fontFamily: T.sans, padding: "0 0 8px 0",
-                display: "flex", alignItems: "center", gap: 6, fontWeight: 700,
-                letterSpacing: 1.5, textTransform: "uppercase"
-              }}>
-                Feel & Pitfalls
+            <div style={{ marginBottom: 24 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                <AlertCircle size={14} style={{ color: T.textLight }} />
+                <div style={{ color: T.textLight, fontSize: 9, fontFamily: T.sans, fontWeight: 900, letterSpacing: 2, textTransform: "uppercase" }}>
+                  Feel & Pitfalls
+                </div>
               </div>
               
-              <div style={{ marginTop: 4, animation: "fade-in-up 0.2s ease-out" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                 {ex.feel && <DetailSection label="What correct feels like" color={T.success}>{ex.feel}</DetailSection>}
                 {ex.wrong && <DetailSection label="What's going wrong if" color={T.coral}>{ex.wrong}</DetailSection>}
               </div>
@@ -1024,14 +1111,15 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
           {/* Level up */}
           {ex.levelUp && (
             <div style={{
-              fontSize: 12, color: accentColor || T.gold, fontFamily: T.sans, fontWeight: 600,
-              padding: "8px 0", borderTop: `1px solid ${T.border}`, marginTop: 8
+              fontSize: 10, color: typeColor, fontFamily: T.sans, fontWeight: 900, letterSpacing: 1.5,
+              padding: "16px 0", borderTop: `1px solid ${T.border}`, marginTop: 12, display: "flex", alignItems: "center", gap: 10, textTransform: "uppercase"
             }}>
-              Level up: {ex.levelUp}
+              <ArrowRight size={14} /> Level up: {ex.levelUp}
             </div>
           )}
         </div>
       )}
+
     </div>
   );
 }
@@ -1344,16 +1432,19 @@ function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor
 }
 
 function StartFlowButton({ onClick, accentColor }) {
+  const c = accentColor || T.gold;
   return (
     <button onClick={onClick} className="interactive-btn" style={{
       background: "transparent",
-      border: `1px solid ${accentColor || T.gold}`,
-      color: accentColor || T.gold,
-      padding: "8px 18px", borderRadius: T.radius, cursor: "pointer",
-      fontSize: 11, fontWeight: 700, fontFamily: T.sans, letterSpacing: 2, textTransform: "uppercase",
-      display: "inline-flex", alignItems: "center", gap: 6, transition: "all 0.2s"
+      border: `1px solid ${c}40`,
+      color: c,
+      padding: "10px 20px", borderRadius: T.radius, cursor: "pointer",
+      fontSize: 10, fontWeight: 800, fontFamily: T.sans, letterSpacing: 2, textTransform: "uppercase",
+      display: "inline-flex", alignItems: "center", gap: 10, transition: "all 0.3s ease",
+      boxShadow: `0 4px 12px ${c}10`
     }}>
-      <span style={{ fontSize: 14 }}>&#9654;</span> Flow
+      <Play size={12} fill="currentColor" />
+      <span>Flow Start</span>
     </button>
   );
 }
@@ -1409,31 +1500,40 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
   };
 
   const tracks = ex.tracks || [];
+  const typeColor = TYPE[ex.type]?.color || dayColor || T.gold;
 
   return (
     <div className={`exercise-card exercise-card-${ex.id}`} style={{
       background: completed ? T.successSoft : T.bgCard,
-      border: `1px solid ${completed ? T.success + "40" : T.border}`,
-      borderLeft: `2px solid ${completed ? T.success : dayColor || T.gold}`,
+      border: `1px solid ${completed ? T.success + "20" : T.border}`,
+      borderLeft: `2px solid ${completed ? T.success : typeColor}`,
       marginBottom: 16, overflow: "hidden", borderRadius: T.radius,
-      boxShadow: T.sm
+      boxShadow: completed ? "none" : T.getShadow(typeColor, 'sm'),
+      opacity: completed ? 0.85 : 1,
+      transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)"
     }}>
       <div onClick={handleToggle} style={{
-        display: "flex", alignItems: "center", gap: 16, padding: "20px 18px", cursor: "pointer"
+        display: "flex", alignItems: "center", gap: 16, padding: "20px 18px", cursor: "pointer",
+        background: completed ? "transparent" : T.getTint(typeColor, 0.01)
       }}>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4, minWidth: 64 }}>
           <TypeBadge type={ex.type} />
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontWeight: 600, fontSize: 19, color: T.textDark, fontFamily: T.serif, marginBottom: 6, lineHeight: 1.2 }}>{ex.title}</div>
-          <div style={{ fontSize: 11, color: T.textMuted, fontFamily: T.sans, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", display: "flex", alignItems: "center", gap: 8 }}>
-            <span>{ex.time} MIN</span>
-            <span onClick={e => { e.stopPropagation(); setShowTimer(t => !t); }} style={{ cursor: "pointer", fontSize: 14, opacity: showTimer ? 1 : 0.4, transition: "opacity 0.2s" }} title="Toggle timer">&#9201;</span>
+          <div style={{ fontWeight: 600, fontSize: 19, color: T.textDark, fontFamily: T.serif, marginBottom: 6, lineHeight: 1.2, display: "flex", alignItems: "center", gap: 8 }}>
+            {ex.title}
+            {completed && <CheckCircle2 size={16} color={T.success} strokeWidth={3} />}
+          </div>
+          <div style={{ fontSize: 9, color: T.textMuted, fontFamily: T.sans, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.15em", display: "flex", alignItems: "center", gap: 8 }}>
+            <span style={{ display: "flex", alignItems: "center", gap: 4 }}><Clock size={10} /> {ex.time} MIN</span>
+            <span onClick={e => { e.stopPropagation(); setShowTimer(t => !t); }} style={{ cursor: "pointer", display: "flex", alignItems: "center", opacity: showTimer ? 1 : 0.4, transition: "opacity 0.2s" }} title="Toggle timer">
+              <Clock size={12} strokeWidth={2.5} />
+            </span>
             {timer.on && !open && <span style={{ width: 6, height: 6, borderRadius: "50%", background: T.gold, animation: "pulse-ring 2s infinite", display: "inline-block" }} />}
           </div>
         </div>
         <div style={{ color: T.textMuted, display: "flex", transition: "all 0.3s ease", transform: open ? "rotate(180deg)" : "" }}>
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" style={{ opacity: 0.5 }}><path d="M7 10l5 5 5-5z" /></svg>
+          <ChevronDown size={20} strokeWidth={2.5} style={{ opacity: 0.4 }} />
         </div>
       </div>
 
@@ -1447,28 +1547,28 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
               const startIdx = levelExercises ? levelExercises.findIndex(e => e.id === ex.id) : 0;
               onStartFlow(exercises, dayColor, Math.max(0, startIdx));
             }} className="interactive-btn" style={{
-              background: dayColor || T.gold, border: "none",
-              color: "#fff", padding: "10px 24px", borderRadius: T.radius,
-              cursor: "pointer", fontSize: 11, fontWeight: 700, fontFamily: T.sans,
-              letterSpacing: 1.5, textTransform: "uppercase", display: "inline-flex",
+              background: "transparent", border: `1px solid ${typeColor}40`,
+              color: typeColor, padding: "10px 24px", borderRadius: T.radius,
+              cursor: "pointer", fontSize: 9, fontWeight: 800, fontFamily: T.sans,
+              letterSpacing: 2, textTransform: "uppercase", display: "inline-flex",
               alignItems: "center", gap: 10, marginBottom: 24,
-              boxShadow: `0 4px 12px ${dayColor || T.gold}30`,
               WebkitTapHighlightColor: "transparent", transition: "all 0.2s"
             }}>
-              <span style={{ fontSize: 14 }}>&#9654;</span> Flow Start
+              <Play size={12} fill="currentColor" /> Flow Start
             </button>
           )}
 
           {/* PANEL A: GOAL */}
           <div style={{
-            background: T.bgSoft, borderRadius: T.radius, padding: "16px 20px", marginBottom: 20
+            background: T.getTint(typeColor, 0.03), borderRadius: T.radius, padding: "18px 20px", marginBottom: 20,
+            border: `1px solid ${typeColor}10`
           }}>
             <div style={{ fontSize: 15, color: T.textDark, fontFamily: T.sans, lineHeight: 1.7, marginBottom: ex.setup ? 12 : 0 }}>
               {ex.what}
             </div>
             {ex.setup && (
-              <div style={{ fontSize: 12, color: T.textMed, fontFamily: T.sans, display: "flex", gap: 6, alignItems: "flex-start" }}>
-                <span style={{ color: dayColor || T.gold, fontWeight: 800, fontSize: 10, letterSpacing: 1, textTransform: "uppercase", marginTop: 2 }}>Setup:</span> {ex.setup}
+              <div style={{ fontSize: 11, color: T.textMed, fontFamily: T.sans, display: "flex", gap: 8, alignItems: "flex-start" }}>
+                <span style={{ color: typeColor, fontWeight: 900, fontSize: 9, letterSpacing: 1.5, textTransform: "uppercase", marginTop: 2 }}>Setup:</span> {ex.setup}
               </div>
             )}
           </div>
@@ -1694,27 +1794,33 @@ function DayView({ day, completed, onComplete, metro, onOpenTapMatch, onStartFlo
   const pct = Math.round((done / total) * 100);
 
   return (
-    <div>
-      <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 12 }}>
+    <div style={{ animation: "fade-in-up 0.4s ease-out" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24, borderBottom: `1px solid ${T.borderSoft}`, paddingBottom: 16 }}>
         <div>
-          <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: c, fontFamily: T.sans, marginBottom: 4 }}>Day {day.num}</div>
-          <div style={{ fontSize: 28, fontWeight: 400, color: T.textDark, fontFamily: T.serif }}>{day.name}</div>
-          <div style={{ fontSize: 13, color: T.textMuted, fontFamily: T.sans, marginTop: 2, textTransform: "uppercase", letterSpacing: "0.05em" }}>{day.focus} · {day.duration}</div>
+          <div style={{ fontSize: 9, fontWeight: 900, letterSpacing: 2.5, textTransform: "uppercase", color: c, fontFamily: T.sans, marginBottom: 6 }}>Day {day.num}</div>
+          <div style={{ fontSize: 32, fontWeight: 400, color: T.textDark, fontFamily: T.serif, lineHeight: 1 }}>{day.name}</div>
+          <div style={{ fontSize: 11, color: T.textMuted, fontFamily: T.sans, marginTop: 10, textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 700, display: "flex", alignItems: "center", gap: 10 }}>
+            {day.focus} <span style={{ opacity: 0.3 }}>|</span> <Clock size={12} /> {day.duration}
+          </div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
           <StartFlowButton onClick={() => onStartFlow(day.exercises, c)} accentColor={c} />
-          <div style={{ fontSize: 32, fontWeight: 700, fontFamily: T.serif, color: pct === 100 ? T.success : T.textDark }}>{pct}%</div>
+          <div style={{ textAlign: "right", minWidth: 64 }}>
+            <div style={{ fontSize: 28, fontWeight: 700, fontFamily: T.serif, color: pct === 100 ? T.success : T.textDark, lineHeight: 1, display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 8 }}>
+              {pct === 100 ? <CheckCircle2 size={24} color={T.success} strokeWidth={2.5} /> : `${pct}%`}
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Setup */}
       {day.setup && (
         <div style={{
-          background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radius,
-          padding: "16px 20px", marginBottom: 16, fontSize: 13, color: T.textMed, fontFamily: T.sans,
-          borderLeft: `3px solid ${T.gold}40`, lineHeight: 1.6
+          background: T.getTint(c, 0.03), border: `1px solid ${c}15`, borderRadius: T.radius,
+          padding: "16px 20px", marginBottom: 24, fontSize: 13, color: T.textMed, fontFamily: T.sans,
+          lineHeight: 1.6, boxShadow: `0 4px 12px ${c}08`
         }}>
-          <span style={{ fontWeight: 800, color: T.textDark, fontSize: 11, textTransform: "uppercase", letterSpacing: 1, marginRight: 8 }}>Setup:</span>{day.setup}
+          <span style={{ fontWeight: 900, color: T.textDark, fontSize: 10, textTransform: "uppercase", letterSpacing: 1.5, marginRight: 10 }}>Setup:</span>{day.setup}
         </div>
       )}
 
@@ -1841,7 +1947,6 @@ function VoiceView({ completed, onComplete, metro, onOpenTapMatch, onStartFlow }
     return VOCAL_LEVELS[0];
   });
 
-  // All levels unlocked — browse freely, work at your own pace
   const unlocked = new Set(VOCAL_LEVELS.map(l => l.num));
 
   useEffect(() => {
@@ -1853,27 +1958,32 @@ function VoiceView({ completed, onComplete, metro, onOpenTapMatch, onStartFlow }
   const overallPct = Math.round((totalDone / totalEx) * 100);
 
   return (
-    <div>
-      <div style={{ textAlign: "center", marginBottom: 24 }}>
-        <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: "#9e829c", fontFamily: T.sans, marginBottom: 6 }}>
-          Singer-Songwriter Curriculum
+    <div style={{ animation: "fade-in-up 0.4s ease-out" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 32, borderBottom: `1px solid ${T.borderSoft}`, paddingBottom: 24 }}>
+        <div>
+          <div style={{ fontSize: 9, fontWeight: 900, letterSpacing: 2.5, textTransform: "uppercase", color: T.plum, fontFamily: T.sans, marginBottom: 8 }}>Curriculum</div>
+          <div style={{ fontSize: 40, fontWeight: 400, fontFamily: T.serif, color: T.textDark, lineHeight: 1 }}>Voice</div>
+          <div style={{ fontSize: 11, color: T.textMuted, fontFamily: T.sans, marginTop: 12, textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 700, display: "flex", alignItems: "center", gap: 10 }}>
+            Breath to Performance <span style={{ opacity: 0.3 }}>|</span> <Mic size={12} /> {totalDone}/{totalEx} Done
+          </div>
         </div>
-        <div style={{ fontSize: 32, fontWeight: 400, fontFamily: T.serif, color: T.textDark }}>Voice</div>
-        <div style={{ fontSize: 13, color: T.textMuted, fontFamily: T.sans, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>
-          Breath to Performance · Psych-Surf-Reggae · {totalDone}/{totalEx} exercises
+        <div style={{ textAlign: "right" }}>
+          <div style={{ fontSize: 32, fontWeight: 700, fontFamily: T.serif, color: overallPct === 100 ? T.success : T.textDark, lineHeight: 1, display: "flex", alignItems: "center", gap: 10 }}>
+            {overallPct}%
+            {overallPct === 100 && <CheckCircle2 size={24} color={T.success} strokeWidth={2.5} />}
+          </div>
         </div>
       </div>
 
-      {/* VowelMap — always visible as reference */}
       <VowelMap />
 
       {/* Level pills — horizontal scroll */}
       <div className="hide-scrollbar sticky-pill-bar" style={{
-        display: "flex", gap: 0, overflowX: "auto", padding: "16px 0 0",
-        background: T.bg + "e6", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
+        display: "flex", gap: 12, overflowX: "auto", padding: "8px 0 24px",
+        background: T.bg + "f2", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
         WebkitOverflowScrolling: "touch", scrollSnapType: "x mandatory",
         msOverflowStyle: "none", scrollbarWidth: "none",
-        borderBottom: `1px solid ${T.border}`,
+        borderBottom: `1px solid ${T.borderSoft}`,
       }}>
         {VOCAL_LEVELS.map((level, idx) => {
           const c = VOCAL_COLORS[idx % VOCAL_COLORS.length];
@@ -1882,25 +1992,28 @@ function VoiceView({ completed, onComplete, metro, onOpenTapMatch, onStartFlow }
           const pct = Math.round((done / total) * 100);
           const active = selectedLevel.num === level.num;
           const isUnlocked = unlocked.has(level.num);
+          
           return (
             <button key={level.num} onClick={() => isUnlocked && setSelectedLevel(level)} style={{
               flex: "0 0 auto", scrollSnapAlign: "start",
-              background: isUnlocked ? (active ? c : T.bgCard) : "transparent",
-              border: `1px solid ${isUnlocked && active ? c : T.border}`,
-              borderRadius: 24, padding: "8px 20px", margin: "4px 8px 12px 0px",
-              cursor: isUnlocked ? "pointer" : "default", textAlign: "center", transition: "all 0.2s",
+              background: active ? T.getTint(c, 0.1) : T.bgCard,
+              border: `1px solid ${active ? c : T.border}`,
+              borderRadius: T.radiusMd, padding: "12px 20px",
+              cursor: isUnlocked ? "pointer" : "default", textAlign: "left", transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
               opacity: isUnlocked ? 1 : 0.4,
-              boxShadow: active ? `0 4px 10px ${c}40` : "none"
+              boxShadow: active ? T.getShadow(c, 'sm') : "none",
+              minWidth: 120
             }}>
-              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: active ? "#fff" : c, fontFamily: T.sans }}>
-                LVL {level.num}
+              <div style={{ fontSize: 9, fontWeight: 900, letterSpacing: 1.5, textTransform: "uppercase", color: active ? c : T.textMuted, fontFamily: T.sans, marginBottom: 4 }}>
+                Level {level.num}
               </div>
-              <div style={{ fontSize: 13, fontWeight: active ? 600 : 400, color: active ? "#fff" : T.textDark, fontFamily: T.serif, marginTop: 2, whiteSpace: "nowrap" }}>
-                {isUnlocked ? level.name : "🔒"}
+              <div style={{ fontSize: 15, fontWeight: active ? 600 : 400, color: active ? T.textDark : T.textMed, fontFamily: T.serif, whiteSpace: "nowrap" }}>
+                {isUnlocked ? level.name : "Locked"}
               </div>
               {isUnlocked && pct > 0 && (
-                <div style={{ fontSize: 9, color: active ? "rgba(255,255,255,0.8)" : (pct === 100 ? T.success : c), fontFamily: T.sans, fontWeight: 600, marginTop: 2 }}>
-                  {pct === 100 ? "done" : `${done}/${total}`}
+                <div style={{ fontSize: 9, color: pct === 100 ? T.success : c, fontFamily: T.sans, fontWeight: 900, marginTop: 8, textTransform: "uppercase", letterSpacing: 1, display: "flex", alignItems: "center", gap: 4 }}>
+                  {pct === 100 ? <Check size={10} strokeWidth={3} /> : null}
+                  {pct === 100 ? "Done" : `${done}/${total}`}
                 </div>
               )}
             </button>
@@ -1910,21 +2023,23 @@ function VoiceView({ completed, onComplete, metro, onOpenTapMatch, onStartFlow }
 
       {/* Level description */}
       <div style={{
-        background: T.plumSoft, border: `1px solid ${T.plum}20`, borderRadius: T.radiusMd,
-        padding: "16px 20px", marginTop: 20, marginBottom: 4
+        background: T.getTint(T.plum, 0.04), border: `1px solid ${T.plum}15`, borderRadius: T.radiusMd,
+        padding: "24px", marginTop: 24, marginBottom: 16, boxShadow: `0 4px 12px ${T.plum}08`
       }}>
-        <div style={{ fontSize: 15, fontWeight: 400, fontFamily: T.serif, color: T.textDark, marginBottom: 6 }}>
+        <div style={{ fontSize: 18, fontWeight: 600, fontFamily: T.serif, color: T.textDark, marginBottom: 12 }}>
           {selectedLevel.subtitle}
         </div>
-        <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, lineHeight: 1.6, marginBottom: 8 }}>
+        <div style={{ fontSize: 14, color: T.textMed, fontFamily: T.sans, lineHeight: 1.7, marginBottom: 16 }}>
           {selectedLevel.description}
         </div>
-        <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: 24, flexWrap: "wrap", borderTop: `1px solid ${T.plum}10`, paddingTop: 16 }}>
           <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans }}>
-            <span style={{ fontWeight: 700, color: T.plum, textTransform: "uppercase", letterSpacing: 1 }}>Artists: </span>{selectedLevel.artists}
+            <span style={{ fontWeight: 800, color: T.plum, textTransform: "uppercase", letterSpacing: 1.5, fontSize: 9 }}>Artists: </span>
+            <span style={{ marginLeft: 8 }}>{selectedLevel.artists}</span>
           </div>
           <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans }}>
-            <span style={{ fontWeight: 700, color: T.plum, textTransform: "uppercase", letterSpacing: 1 }}>Unlocks: </span>{selectedLevel.unlocks}
+            <span style={{ fontWeight: 800, color: T.plum, textTransform: "uppercase", letterSpacing: 1.5, fontSize: 9 }}>Unlocks: </span>
+            <span style={{ marginLeft: 8 }}>{selectedLevel.unlocks}</span>
           </div>
         </div>
       </div>
@@ -2521,12 +2636,12 @@ function CompactMetronomeControls({ metro, theme: T }) {
         )}
         
         {/* Tap Tempo standalone button */}
-        <button onClick={handleTapTempo} style={{
-          marginTop: 8, width: "100%", background: "transparent", border: `1px dashed ${T.border}`, color: T.textMed,
-          padding: "10px", fontSize: 12, fontWeight: 600, cursor: "pointer", borderRadius: 8,
-          fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase"
+        <button onClick={handleTapTempo} className="interactive-btn" style={{
+          marginTop: 12, width: "100%", background: "transparent", border: `1px dashed ${T.border}`, color: T.textMed,
+          padding: "12px", fontSize: 10, fontWeight: 800, cursor: "pointer", borderRadius: T.radius,
+          fontFamily: T.sans, letterSpacing: 2, textTransform: "uppercase"
         }}>
-          ✋ Tap Tempo
+          Tap Tempo
         </button>
       </div>
 
@@ -3043,7 +3158,7 @@ function ArchiveBranch({ type, exercises, completed, onComplete, metro, onOpenTa
         padding: "14px 18px", cursor: "pointer", transition: "all 0.2s"
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          <span style={{ fontSize: 24, width: 32, textAlign: "center" }}>{t.icon}</span>
+          <span style={{ fontSize: 24, width: 32, textAlign: "center", display: "flex", alignItems: "center", justifyContent: "center" }}>{React.createElement(t.icon, { size: 22 })}</span>
           <div>
             <div style={{ fontSize: 18, fontWeight: 600, color: T.textDark, fontFamily: T.serif, marginBottom: 2 }}>{t.label}</div>
             <div style={{ fontSize: 13, color: T.textMuted, fontFamily: T.sans, marginTop: 1 }}>{exercises.length} exercise{exercises.length !== 1 ? "s" : ""} from lessons</div>
@@ -3282,7 +3397,6 @@ function SingerSongwriterView({ completed, onComplete, metro, onOpenTapMatch, on
     return SINGER_SONGWRITER_LEVELS[0];
   });
 
-  // All levels unlocked — browse freely, work at your own pace
   const unlocked = new Set(SINGER_SONGWRITER_LEVELS.map(l => l.level));
 
   useEffect(() => {
@@ -3298,32 +3412,30 @@ function SingerSongwriterView({ completed, onComplete, metro, onOpenTapMatch, on
   const levelPct = Math.round((levelDone / levelTotal) * 100);
 
   return (
-    <div>
-      <div style={{ textAlign: "center", marginBottom: 24 }}>
-        <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.coral, fontFamily: T.sans, marginBottom: 6 }}>
-          Voice + Guitar Integration
-        </div>
-        <div style={{ fontSize: 32, fontWeight: 400, fontFamily: T.serif, color: T.textDark }}>Singer-Songwriter</div>
-        <div style={{ fontSize: 13, color: T.textMuted, fontFamily: T.sans, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>
-          Psych-Surf · Reggae · Desert Blues · {totalDone}/{totalEx} exercises
-        </div>
-        <div style={{ width: "100%", maxWidth: 320, margin: "16px auto 0", display: "flex", alignItems: "center", gap: 14 }}>
-          <div style={{ flex: 1 }}>
-            <div style={{ height: 2, background: T.border, overflow: "hidden" }}>
-              <div style={{ height: "100%", width: `${overallPct}%`, background: overallPct === 100 ? T.success : T.coral, transition: "width 0.5s" }} />
-            </div>
+    <div style={{ animation: "fade-in-up 0.4s ease-out" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 32, borderBottom: `1px solid ${T.borderSoft}`, paddingBottom: 24 }}>
+        <div>
+          <div style={{ fontSize: 9, fontWeight: 900, letterSpacing: 2.5, textTransform: "uppercase", color: T.coral, fontFamily: T.sans, marginBottom: 8 }}>Integration</div>
+          <div style={{ fontSize: 40, fontWeight: 400, fontFamily: T.serif, color: T.textDark, lineHeight: 1 }}>Singer-Songwriter</div>
+          <div style={{ fontSize: 11, color: T.textMuted, fontFamily: T.sans, marginTop: 12, textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 700, display: "flex", alignItems: "center", gap: 10 }}>
+            Psych-Surf-Reggae-Desert <span style={{ opacity: 0.3 }}>|</span> <Music size={12} /> {totalDone}/{totalEx} Done
           </div>
-          <div style={{ fontSize: 14, fontWeight: 400, fontFamily: T.serif, color: overallPct === 100 ? T.success : T.coral, minWidth: 36 }}>{overallPct}%</div>
+        </div>
+        <div style={{ textAlign: "right" }}>
+          <div style={{ fontSize: 32, fontWeight: 700, fontFamily: T.serif, color: overallPct === 100 ? T.success : T.textDark, lineHeight: 1, display: "flex", alignItems: "center", gap: 10 }}>
+            {overallPct}%
+            {overallPct === 100 && <CheckCircle2 size={24} color={T.success} strokeWidth={2.5} />}
+          </div>
         </div>
       </div>
 
       {/* Level pills — horizontal scroll */}
       <div className="hide-scrollbar sticky-pill-bar" style={{
-        display: "flex", gap: 0, overflowX: "auto", padding: "16px 0 0",
-        background: T.bg + "e6", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
+        display: "flex", gap: 12, overflowX: "auto", padding: "8px 0 24px",
+        background: T.bg + "f2", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
         WebkitOverflowScrolling: "touch", scrollSnapType: "x mandatory",
         msOverflowStyle: "none", scrollbarWidth: "none",
-        borderBottom: `1px solid ${T.border}`,
+        borderBottom: `1px solid ${T.borderSoft}`,
       }}>
         {SINGER_SONGWRITER_LEVELS.map(level => {
           const done = level.exercises.filter(e => completed.has(e.id)).length;
@@ -3334,22 +3446,24 @@ function SingerSongwriterView({ completed, onComplete, metro, onOpenTapMatch, on
           return (
             <button key={level.level} onClick={() => isUnlocked && setSelectedLevel(level)} style={{
               flex: "0 0 auto", scrollSnapAlign: "start",
-              background: isUnlocked ? (active ? T.coral : T.bgCard) : "transparent",
-              border: `1px solid ${isUnlocked && active ? T.coral : T.border}`,
-              borderRadius: 24, padding: "8px 20px", margin: "4px 8px 12px 0px",
-              cursor: isUnlocked ? "pointer" : "default", textAlign: "center", transition: "all 0.2s",
+              background: active ? T.getTint(T.coral, 0.1) : T.bgCard,
+              border: `1px solid ${active ? T.coral : T.border}`,
+              borderRadius: T.radiusMd, padding: "12px 20px",
+              cursor: isUnlocked ? "pointer" : "default", textAlign: "left", transition: "all 0.3s ease",
               opacity: isUnlocked ? 1 : 0.4,
-              boxShadow: active ? `0 4px 10px ${T.coral}40` : "none"
+              boxShadow: active ? T.getShadow(T.coral, 'sm') : "none",
+              minWidth: 120
             }}>
-              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: active ? "#fff" : T.coral, fontFamily: T.sans }}>
-                LVL {level.level}
+              <div style={{ fontSize: 9, fontWeight: 900, letterSpacing: 1.5, textTransform: "uppercase", color: active ? T.coral : T.textMuted, fontFamily: T.sans, marginBottom: 4 }}>
+                Level {level.level}
               </div>
-              <div style={{ fontSize: 13, fontWeight: active ? 600 : 400, color: active ? "#fff" : T.textDark, fontFamily: T.serif, marginTop: 2, whiteSpace: "nowrap" }}>
-                {isUnlocked ? level.title : "🔒"}
+              <div style={{ fontSize: 15, fontWeight: active ? 600 : 400, color: active ? T.textDark : T.textMed, fontFamily: T.serif, whiteSpace: "nowrap" }}>
+                {isUnlocked ? level.title : "Locked"}
               </div>
               {isUnlocked && pct > 0 && (
-                <div style={{ fontSize: 9, color: active ? "rgba(255,255,255,0.8)" : (pct === 100 ? T.success : T.coral), fontFamily: T.sans, fontWeight: 600, marginTop: 2 }}>
-                  {pct === 100 ? "done" : `${done}/${total}`}
+                <div style={{ fontSize: 9, color: pct === 100 ? T.success : T.coral, fontFamily: T.sans, fontWeight: 900, marginTop: 8, textTransform: "uppercase", letterSpacing: 1, display: "flex", alignItems: "center", gap: 4 }}>
+                  {pct === 100 ? <Check size={10} strokeWidth={3} /> : null}
+                  {pct === 100 ? "Done" : `${done}/${total}`}
                 </div>
               )}
             </button>
@@ -3358,17 +3472,15 @@ function SingerSongwriterView({ completed, onComplete, metro, onOpenTapMatch, on
       </div>
 
       {/* Level header + progress + exercises */}
-      <div style={{ marginTop: 20 }}>
-        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 12 }}>
+      <div style={{ marginTop: 24 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
           <div>
-            <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.coral, fontFamily: T.sans, marginBottom: 4 }}>Level {selectedLevel.level}</div>
-            <div style={{ fontSize: 28, fontWeight: 400, color: T.textDark, fontFamily: T.serif }}>{selectedLevel.title}</div>
+            <div style={{ fontSize: 9, fontWeight: 900, letterSpacing: 2, textTransform: "uppercase", color: T.coral, fontFamily: T.sans, marginBottom: 4 }}>Current Level</div>
+            <div style={{ fontSize: 32, fontWeight: 400, color: T.textDark, fontFamily: T.serif, lineHeight: 1 }}>{selectedLevel.title}</div>
           </div>
-          <div style={{ fontSize: 32, fontWeight: 700, fontFamily: T.serif, color: levelPct === 100 ? T.success : T.textDark }}>{levelPct}%</div>
-        </div>
-
-        <div style={{ height: 3, background: T.border, borderRadius: 2, marginBottom: 12, overflow: "hidden" }}>
-          <div style={{ height: "100%", width: `${levelPct}%`, background: levelPct === 100 ? T.success : T.coral, borderRadius: 2, transition: "width 0.5s" }} />
+          <div style={{ fontSize: 28, fontWeight: 700, fontFamily: T.serif, color: levelPct === 100 ? T.success : T.textDark, display: "flex", alignItems: "center", gap: 8 }}>
+            {levelPct === 100 ? <CheckCircle2 size={24} color={T.success} strokeWidth={2.5} /> : `${levelPct}%`}
+          </div>
         </div>
 
         {/* Level description */}
@@ -3715,16 +3827,7 @@ function FloatingMetronome({ metro, setTab, isDark, theme: T }) {
             width: 36, height: 36, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center",
             cursor: "pointer", flexShrink: 0, transition: "all 0.2s"
           }}>
-            {metro.playing ? (
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                <rect x="6" y="4" width="4" height="16" />
-                <rect x="14" y="4" width="4" height="16" />
-              </svg>
-            ) : (
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style={{ marginLeft: 3 }}>
-                <polygon points="5 3 19 12 5 21 5 3" />
-              </svg>
-            )}
+            {metro.playing ? <Pause size={16} fill="currentColor" /> : <Play size={16} fill="currentColor" style={{ marginLeft: 2 }} />}
           </button>
 
           {/* Integrated Visualizer & Editor */}
@@ -3796,24 +3899,17 @@ function BottomNav({ tab, setTab, isDark, theme: T }) {
   return (
     <div className={`bottom-nav mobile-only ${isDark ? "bottom-nav-dark" : ""}`}>
       <button className={`nav-item ${tab === "practice" ? "active" : ""}`} onClick={() => setTab("practice")}>
-        <svg viewBox="0 0 24 24">
-          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-        </svg>
+        <Music size={20} />
         <span className="nav-label">Practice</span>
       </button>
 
       <button className={`nav-item ${tab === "skills" ? "active" : ""}`} onClick={() => setTab("skills")}>
-        <svg viewBox="0 0 24 24">
-          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-        </svg>
+        <Sparkles size={20} />
         <span className="nav-label">Skills</span>
       </button>
 
       <button className={`nav-item ${tab === "tools" ? "active" : ""}`} onClick={() => setTab("tools")}>
-        <svg viewBox="0 0 24 24">
-          <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
-        </svg>
+        <Wrench size={20} />
         <span className="nav-label">Tools</span>
       </button>
     </div>
@@ -4040,26 +4136,29 @@ export default function App() {
       {/* Header */}
       {tab !== "skills" && (
         <div style={{ background: T.bgCard, borderBottom: `1px solid ${T.border}`, position: "relative", display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <div style={{ padding: "40px 24px 30px", width: "100%", maxWidth: 640, position: "relative" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
-              <div style={{ display: "flex", alignItems: "center" }}>
+          <div style={{ padding: "48px 24px 32px", width: "100%", maxWidth: 640, position: "relative" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                 <img src="/icon-jungle.png" alt="Jungle Tools Logo" style={{
-                  height: 32, width: 32, objectFit: "cover",
-                  borderRadius: 8, boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-                  mixBlendMode: isDark ? "normal" : "multiply" // removes white background seamlessly on light theme
+                  height: 36, width: 36, objectFit: "cover",
+                  borderRadius: 10, boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+                  mixBlendMode: isDark ? "normal" : "multiply"
                 }} />
+                <div style={{ fontSize: 9, fontWeight: 900, color: T.gold, letterSpacing: 2.5, textTransform: "uppercase", fontFamily: T.sans }}>Jungle Tools</div>
               </div>
               <button className="interactive-btn" onClick={toggleTheme} style={{
-                background: "transparent", border: `1px solid ${T.border}`,
-                color: T.textMed, padding: "6px 8px", borderRadius: T.radiusMd,
-                cursor: "pointer", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center",
-                marginTop: -6
+                background: isDark ? T.bgSoft : T.goldSoft, border: `1px solid ${isDark ? T.border : T.gold}15`,
+                color: isDark ? T.gold : T.goldDark, padding: "8px", borderRadius: T.radiusMd,
+                cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+                boxShadow: isDark ? "none" : `0 2px 8px ${T.gold}20`
               }}>
-                {isDark ? "☀️" : "🌙"}
+                {isDark ? <Sun size={18} strokeWidth={2.5} /> : <Moon size={18} strokeWidth={2.5} />}
               </button>
             </div>
-            <div style={{ fontSize: 40, fontWeight: 400, fontFamily: T.serif, color: T.textDark, lineHeight: 1.2 }}>Practice Plan</div>
-            <div style={{ fontSize: 13, color: T.textMuted, marginTop: 10, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: "0.15em", lineHeight: 1.6 }}>Lesson 3/2 · Tenor · Break ≈ A3</div>
+            <div style={{ fontSize: 44, fontWeight: 400, fontFamily: T.serif, color: T.textDark, lineHeight: 1.1, marginBottom: 12 }}>Practice Plan</div>
+            <div style={{ fontSize: 11, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: "0.2em", fontWeight: 800, opacity: 0.8, display: "flex", alignItems: "center", gap: 8 }}>
+              Lesson 3/2 <span style={{ opacity: 0.3 }}>|</span> Tenor <span style={{ opacity: 0.3 }}>|</span> Break ≈ A3
+            </div>
           </div>
         </div>
       )}

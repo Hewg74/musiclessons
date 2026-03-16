@@ -1,5 +1,9 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import * as Tone from 'tone';
+import { 
+  Play, Pause, RotateCcw, SkipBack, Scissors, Check, 
+  Volume2, Mic, Headphones, Music, Piano, Guitar, Drum
+} from 'lucide-react';
 
 // We'll accept the theme object `T` from App.jsx via props or just hardcode some shared colors for now.
 // For simplicity, we can just pass the theme object to these components.
@@ -186,27 +190,20 @@ export function MiniAudioPlayer({ src, theme: T, title, playbackRate = 1 }) {
         />
 
         <button onClick={togglePlay} style={{
-          background: "transparent", border: "none", cursor: "pointer",
+          background: isPlaying ? "transparent" : T.gold, 
+          border: isPlaying ? `1px solid ${T.gold}` : "none",
+          cursor: "pointer",
           display: "flex", alignItems: "center", justifyContent: "center",
           width: 36, height: 36, borderRadius: "50%",
-          boxShadow: `0 0 0 1px ${T.border}`,
-          transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
-          color: T.textDark
+          boxShadow: isPlaying ? "none" : `0 4px 12px ${T.gold}30`,
+          transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+          color: isPlaying ? T.gold : "#fff"
         }}
           onPointerDown={e => e.currentTarget.style.transform = "scale(0.92)"}
           onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
           onPointerLeave={e => e.currentTarget.style.transform = "scale(1)"}
         >
-          {isPlaying ? (
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <rect x="6" y="4" width="4" height="16" />
-              <rect x="14" y="4" width="4" height="16" />
-            </svg>
-          ) : (
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style={{ marginLeft: 3 }}>
-              <polygon points="5,3 19,12 5,21" />
-            </svg>
-          )}
+          {isPlaying ? <Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" style={{ marginLeft: 2 }} />}
         </button>
 
         {/* Main Track Info & Scrub */}
@@ -275,10 +272,7 @@ export function MiniAudioPlayer({ src, theme: T, title, playbackRate = 1 }) {
             transition: "all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
             marginLeft: 4
           }}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-              <line x1="9" y1="3" x2="9" y2="21"></line>
-            </svg>
+            <Scissors size={18} />
           </button>
         </div>
       </div>
@@ -299,18 +293,13 @@ export function MiniAudioPlayer({ src, theme: T, title, playbackRate = 1 }) {
                   onPointerDown={e => e.currentTarget.style.transform = "scale(0.85)"}
                   onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
                 >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M11 17l-5-5 5-5M18 17l-5-5 5-5" />
-                  </svg>
+                  <SkipBack size={14} />
                 </button>
                 <button onClick={resetSong} title="Restart" style={trayNavBtnStyle(T)}
                   onPointerDown={e => e.currentTarget.style.transform = "scale(0.85)"}
                   onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
                 >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <polygon points="19 20 9 12 19 4 19 20"></polygon>
-                    <line x1="5" y1="19" x2="5" y2="5"></line>
-                  </svg>
+                  <RotateCcw size={14} />
                 </button>
               </div>
             </div>
@@ -2045,17 +2034,20 @@ export function VolumeMeter({ theme: T, inline = false, volumeContour = false })
   if (!isActive) {
     return (
       <div style={{
-        background: T.bgSoft, border: `1px solid ${T.border}`,
-        borderRadius: T.radius, padding: inline ? 16 : 16, marginBottom: 16
+        background: T.getTint(T.gold, 0.03), border: `1px solid ${T.gold}15`,
+        borderRadius: T.radius, padding: 24, marginBottom: 16,
+        textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: 16
       }}>
+        <div style={{ color: T.gold, opacity: 0.8 }}><Volume2 size={32} strokeWidth={1.5} /></div>
         <button
           onClick={startMeter}
+          className="interactive-btn"
           style={{
             background: T.gold, color: '#fff', border: 'none',
-            padding: inline ? '8px 16px' : '12px 24px',
-            borderRadius: T.radius, cursor: 'pointer', fontWeight: 600,
-            fontFamily: T.sans, textTransform: 'uppercase', letterSpacing: 1,
-            fontSize: inline ? 13 : 14
+            padding: '12px 24px',
+            borderRadius: T.radius, cursor: 'pointer', fontWeight: 800,
+            fontFamily: T.sans, textTransform: 'uppercase', letterSpacing: 2,
+            fontSize: 10, boxShadow: T.getShadow(T.gold, 'sm')
           }}
         >
           Start Volume Meter
@@ -2073,23 +2065,29 @@ export function VolumeMeter({ theme: T, inline = false, volumeContour = false })
 
   return (
     <div style={{
-      background: T.bgSoft, border: `1px solid ${T.border}`,
-      borderRadius: T.radius, padding: inline ? 16 : 16, marginBottom: 16
+      background: T.bgCard, border: `1px solid ${T.border}`,
+      borderRadius: T.radiusMd, padding: 24, marginBottom: 16,
+      boxShadow: T.sm
     }}>
       {/* dB Readout */}
       <div style={{
-        fontSize: inline ? 28 : 36, fontWeight: 700, textAlign: 'center',
-        color: barColor, fontFamily: T.sans, marginBottom: 12,
-        transition: 'color 0.15s ease'
+        display: "flex", alignItems: "center", justifyContent: "center", gap: 12, marginBottom: 20
       }}>
-        {Math.round(dbLevel)} dB
+        <Volume2 size={24} color={barColor} />
+        <div style={{
+          fontSize: 32, fontWeight: 700, textAlign: 'center',
+          color: barColor, fontFamily: T.sans,
+          transition: 'color 0.15s ease', fontVariantNumeric: "tabular-nums"
+        }}>
+          {Math.round(dbLevel)} <span style={{ fontSize: 14, opacity: 0.6 }}>dB</span>
+        </div>
       </div>
 
       {/* LED-style VU Meter */}
       <div style={{
-        display: "flex", gap: inline ? 2 : 3, marginBottom: 12, height: inline ? 12 : 20,
-        padding: "4px", background: "#000", borderRadius: 4,
-        boxShadow: "inset 0 2px 8px rgba(0,0,0,0.5)"
+        display: "flex", gap: 2, marginBottom: 16, height: 14,
+        padding: "4px", background: "#1a1816", borderRadius: 4,
+        boxShadow: "inset 0 2px 4px rgba(0,0,0,0.3)"
       }}>
         {Array.from({ length: 30 }).map((_, i) => {
           // Range: -60dB to +0dB -> 30 segments (2dB per segment)
@@ -2104,9 +2102,9 @@ export function VolumeMeter({ theme: T, inline = false, volumeContour = false })
           return (
             <div key={i} style={{
               flex: 1, height: "100%",
-              background: isOn ? color : "#222",
+              background: isOn ? color : "#2c2825",
               borderRadius: 1,
-              boxShadow: isOn ? `0 0 8px ${glowColor}90` : "none",
+              boxShadow: isOn ? `0 0 6px ${glowColor}80` : "none",
               transition: "background 0.05s ease-out, box-shadow 0.05s ease-out"
             }} />
           );
