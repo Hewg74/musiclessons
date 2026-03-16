@@ -1633,6 +1633,7 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
                     <button onClick={() => metro.changeBpm(Math.max(40, metro.bpm - 1))} style={{ background: "transparent", border: "none", fontSize: 18, cursor: "pointer", color: T.textMed }}>−</button>
                     <div style={{ fontSize: 16, fontFamily: T.sans, color: T.textDark, fontWeight: 700, minWidth: 36, textAlign: "center" }}>{metro.bpm}</div>
                     <button onClick={() => metro.changeBpm(Math.min(280, metro.bpm + 1))} style={{ background: "transparent", border: "none", fontSize: 18, cursor: "pointer", color: T.textMed }}>+</button>
+                    <button onClick={() => metro.changeBpm(ex.metronome)} style={{ marginLeft: 8, fontSize: 9, background: T.goldSoft, border: "none", padding: "4px 10px", borderRadius: T.radius, color: T.goldDark, cursor: "pointer", fontWeight: 800, textTransform: "uppercase", letterSpacing: 1 }}>Target: {ex.metronome}</button>
                   </div>
                   <div style={{ display: "flex", gap: 6 }}>
                     <button onClick={() => metro.playing ? metro.stop() : metro.start()} style={{
@@ -1666,7 +1667,7 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
           )}
 
           {/* PANEL C: CONTENT */}
-          {(ex.fretboard || ex.pianoKeys || ex.volumeMeter || ex.rhythmCells || (ex.referencePitches && ex.referencePitches.length > 0)) && (
+          {(ex.fretboard || ex.pianoKeys || ex.volumeMeter || ex.rhythmCells || ex.phraseForm || (ex.tabs && TAB_CONTENT[ex.tabs]) || (ex.referencePitches && ex.referencePitches.length > 0)) && (
             <div style={{ 
               background: T.bgCard, borderRadius: T.radiusMd, border: `1px solid ${T.border}`,
               padding: "18px", marginBottom: 20, boxShadow: T.sm
@@ -1705,6 +1706,35 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
               {ex.rhythmCells && (
                 <div style={{ marginTop: 16 }}>
                   <RhythmCellCards cells={ex.rhythmCells} theme={T} bpm={ex.metronome?.bpm || 80} />
+                </div>
+              )}
+
+              {/* Phrase Form */}
+              {ex.phraseForm && (
+                <div style={{ marginTop: 16 }}>
+                  <PhraseFormGuide form={ex.phraseForm} theme={T} />
+                </div>
+              )}
+
+              {/* Tabs & Lyrics */}
+              {ex.tabs && TAB_CONTENT[ex.tabs] && (
+                <div style={{ marginTop: 16 }}>
+                  <button onClick={() => setShowTabs(!showTabs)} className="interactive-btn" style={{
+                    background: "transparent", border: `1px solid ${T.border}`, color: T.textMed,
+                    padding: "10px 14px", borderRadius: T.radius, cursor: "pointer", fontWeight: 800,
+                    fontFamily: T.sans, fontSize: 10, letterSpacing: 1.5, textTransform: "uppercase",
+                    width: "100%", textAlign: "left", display: "flex", justifyContent: "space-between", alignItems: "center"
+                  }}>
+                    <span>Tabs & Lyrics</span>
+                    <span style={{ transition: "transform 0.2s", transform: showTabs ? "rotate(180deg)" : "" }}>&#9660;</span>
+                  </button>
+                  {showTabs && (
+                    <pre style={{
+                      background: T.bgSoft, padding: 16, border: `1px solid ${T.border}`, borderTop: "none",
+                      borderRadius: `0 0 ${T.radius} ${T.radius}`, overflowX: "auto",
+                      fontFamily: "monospace", fontSize: 12, color: T.textDark, lineHeight: 1.5, marginTop: 0, whiteSpace: "pre-wrap"
+                    }}>{TAB_CONTENT[ex.tabs].trim()}</pre>
+                  )}
                 </div>
               )}
             </div>
