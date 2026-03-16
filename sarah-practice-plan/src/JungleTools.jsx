@@ -3691,7 +3691,10 @@ export function RhythmCellCards({ theme: T, cells = [], bpm = 80 }) {
     timeoutsRef.current = [];
     synthsRef.current.forEach(s => {
       try {
-        if (s.osc) { s.osc.stop(); s.osc.disconnect(); s.gainNode.disconnect(); }
+        if (s.osc) {
+          s.osc.stop(); s.osc.disconnect(); s.gainNode.disconnect();
+          if (s.clickOsc) { s.clickOsc.stop(); s.clickOsc.disconnect(); s.clickGain.disconnect(); }
+        }
         else if (s.dispose) { s.dispose(); }
       } catch (_) {}
     });
@@ -3723,32 +3726,44 @@ export function RhythmCellCards({ theme: T, cells = [], bpm = 80 }) {
     const ctx = Tone.getContext().rawContext;
     const totalDurSec = cell.pattern.reduce((a, b) => a + b, 0) * beatSec;
 
-    // Raw Web Audio: one oscillator + one gain node — no Tone.js envelope conflicts
+    // Two layers: pitched tone (body) + high click (attack transient)
+    // Body: square wave at A3 — brighter and more present than triangle
     const osc = ctx.createOscillator();
     const gainNode = ctx.createGain();
-    osc.type = 'triangle';
+    osc.type = 'square';
     osc.frequency.value = 220; // A3
     osc.connect(gainNode);
     gainNode.connect(ctx.destination);
     gainNode.gain.setValueAtTime(0, startTime);
 
-    // Schedule gain automation: dip → ramp up → hold for each note
+    // Click: short high-pitched tick for attack transient (cuts through)
+    const clickOsc = ctx.createOscillator();
+    const clickGain = ctx.createGain();
+    clickOsc.type = 'sine';
+    clickOsc.frequency.value = 1200; // high tick
+    clickOsc.connect(clickGain);
+    clickGain.connect(ctx.destination);
+    clickGain.gain.setValueAtTime(0, startTime);
+
+    // Schedule gain automation for each note
     let offsetSec = 0;
     let offsetMs = 0;
-    const vol = 0.15; // linear gain (≈ -16dB, audible but not overpowering)
-    const articMs = 5; // 5ms articulation dip between notes
-    const articSec = articMs / 1000;
+    const vol = 0.12; // body volume
+    const clickVol = 0.08; // click volume
+    const articSec = 0.005; // 5ms articulation dip
 
     cell.pattern.forEach((dur, i) => {
       const noteStart = startTime + offsetSec;
-      const noteDur = dur * beatSec;
-      // Dip to near-zero then ramp back = articulation without silence
+      // Body: dip → ramp up → sustain
       gainNode.gain.setValueAtTime(0.005, noteStart);
       gainNode.gain.linearRampToValueAtTime(vol, noteStart + articSec);
+      // Click transient: sharp spike that decays fast (15ms)
+      clickGain.gain.setValueAtTime(clickVol, noteStart);
+      clickGain.gain.exponentialRampToValueAtTime(0.001, noteStart + 0.015);
       // Visual highlight
       const t = setTimeout(() => setCurrentNoteIdx(i), startDelayMs + offsetMs);
       timeoutsRef.current.push(t);
-      offsetSec += noteDur;
+      offsetSec += dur * beatSec;
       offsetMs += dur * beatMs;
     });
 
@@ -3757,21 +3772,23 @@ export function RhythmCellCards({ theme: T, cells = [], bpm = 80 }) {
     gainNode.gain.setValueAtTime(vol, endTime);
     gainNode.gain.linearRampToValueAtTime(0, endTime + 0.05);
 
-    // Start/stop oscillator to match the pattern window
+    // Start/stop both oscillators
     osc.start(startTime);
     osc.stop(endTime + 0.1);
+    clickOsc.start(startTime);
+    clickOsc.stop(endTime + 0.1);
 
     // Track for cleanup
-    const nodeRef = { osc, gainNode };
+    const nodeRef = { osc, gainNode, clickOsc, clickGain };
     synthsRef.current.push(nodeRef);
 
     // Reset visual after pattern ends
     const endTimeout = setTimeout(() => setCurrentNoteIdx(-1), startDelayMs + offsetMs + 50);
     timeoutsRef.current.push(endTimeout);
 
-    // Cleanup after oscillator stops
+    // Cleanup after oscillators stop
     setTimeout(() => {
-      try { osc.disconnect(); gainNode.disconnect(); } catch {}
+      try { osc.disconnect(); gainNode.disconnect(); clickOsc.disconnect(); clickGain.disconnect(); } catch {}
       synthsRef.current = synthsRef.current.filter(s => s !== nodeRef);
     }, startDelayMs + offsetMs + 2000);
   }, [localBpm, clearVisualTimeouts]);
