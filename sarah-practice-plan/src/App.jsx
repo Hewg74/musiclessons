@@ -2516,24 +2516,6 @@ function CompactMetronomeControls({ metro, theme: T }) {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-      {/* Sound Kit */}
-      <div>
-        <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 6 }}>
-          Sound
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 6 }}>
-          {KIT_KEYS.map(k => (
-            <button key={k} onClick={() => metro.setSoundKit(k)} style={{
-              background: metro.soundKit === k ? T.gold : "transparent",
-              border: `1px solid ${metro.soundKit === k ? T.gold : "rgba(150,150,150,0.2)"}`,
-              color: metro.soundKit === k ? "#fff" : T.textMed,
-              padding: "6px", fontSize: 10, fontWeight: 500, cursor: "pointer",
-              fontFamily: T.sans, borderRadius: 6
-            }}>{SOUND_KITS[k].label}</button>
-          ))}
-        </div>
-      </div>
-
       {/* Time Signature */}
       <div>
         <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 6 }}>
@@ -4157,9 +4139,7 @@ export default function App() {
           startIndex={flowStartIndex}
           onOpenTapMatch={setTapMatchBpm}
         />
-        {metro.playing && (
-          <FloatingMetronome metro={metro} setTab={() => {}} isDark={isDark} theme={T} />
-        )}
+        <FloatingMetronome metro={metro} setTab={() => {}} isDark={isDark} theme={T} />
         {tapMatchBpm && (
           <TapMatchModal targetBpm={tapMatchBpm} onClose={() => setTapMatchBpm(null)} metro={metro} />
         )}
