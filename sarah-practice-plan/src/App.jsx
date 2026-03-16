@@ -1700,6 +1700,13 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
 
               {/* Volume Meter */}
               {ex.volumeMeter && <VolumeMeter theme={T} inline={true} volumeContour={!!ex.volumeContour} />}
+
+              {/* Rhythm Cells */}
+              {ex.rhythmCells && (
+                <div style={{ marginTop: 16 }}>
+                  <RhythmCellCards cells={ex.rhythmCells} theme={T} bpm={ex.metronome?.bpm || 80} />
+                </div>
+              )}
             </div>
           )}
 

@@ -3678,7 +3678,15 @@ export function RhythmCellCards({ theme: T, cells = [], bpm = 80 }) {
   const metroClickSynthRef = useRef(null);
   const activeCellRef = useRef(null); // { cell, idx, totalBeats }
 
-  const clearPatternTimeouts = useCallback(() => {
+  // Only clear visual timeouts — let audio nodes finish their scheduled stops naturally
+  const clearVisualTimeouts = useCallback(() => {
+    timeoutsRef.current.forEach(clearTimeout);
+    timeoutsRef.current = [];
+    setCurrentNoteIdx(-1);
+  }, []);
+
+  // Kill everything — audio nodes + visual timeouts (for full stop)
+  const killAllAudio = useCallback(() => {
     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current = [];
     synthsRef.current.forEach(s => {
@@ -3692,20 +3700,22 @@ export function RhythmCellCards({ theme: T, cells = [], bpm = 80 }) {
   }, []);
 
   const stopAll = useCallback(() => {
-    clearPatternTimeouts();
+    killAllAudio();
     activeCellRef.current = null;
     setPlayingIdx(null);
     setIsMetroRunning(false);
     setMetroBeatVisual(-1);
     metroBeatRef.current = 0;
     metroStartTimeRef.current = null;
-  }, [clearPatternTimeouts]);
+  }, [killAllAudio]);
 
   // Schedule a cell's pattern notes at an absolute audio-thread time
   // Schedule a cell's pattern using raw Web Audio for sample-accurate gapless playback.
   // Single oscillator runs continuously — gain automation creates articulation between notes.
   const schedulePattern = useCallback((cell, startTime) => {
-    clearPatternTimeouts();
+    // Only clear visual timeouts — let old oscillators finish their scheduled gain ramp to 0
+    // This prevents the gap between loop cycles (old osc crossfades with new osc)
+    clearVisualTimeouts();
     const beatSec = 60 / localBpm;
     const beatMs = 60000 / localBpm;
     const now = Tone.now();
@@ -3764,7 +3774,7 @@ export function RhythmCellCards({ theme: T, cells = [], bpm = 80 }) {
       try { osc.disconnect(); gainNode.disconnect(); } catch {}
       synthsRef.current = synthsRef.current.filter(s => s !== nodeRef);
     }, startDelayMs + offsetMs + 2000);
-  }, [localBpm, clearPatternTimeouts]);
+  }, [localBpm, clearVisualTimeouts]);
 
   // Start a cell: begin metronome + quantize first pattern to next beat
   const startCell = useCallback(async (cell, idx) => {
