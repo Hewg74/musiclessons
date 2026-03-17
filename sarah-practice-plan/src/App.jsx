@@ -7,7 +7,7 @@ import {
   Mic, Headphones, Info, AlertCircle, Quote, ArrowRight, Check, 
   Volume2, Sun, Moon
 } from 'lucide-react';
-import { MiniAudioPlayer, AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, VolumeMeter, DroneGenerator, TAB_CONTENT, InlineKeyboard, RhythmCellCards, PhraseFormGuide } from './JungleTools.jsx';
+import { MiniAudioPlayer, AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, VolumeMeter, DroneGenerator, TAB_CONTENT, InlineKeyboard, RhythmCellCards, PhraseFormGuide, StrumChartBuilder, ChartListView, makeTemplateChart } from './JungleTools.jsx';
 import { DAYS, KEYBOARD_LEVELS, LOOPER_LEVELS, LESSON_POOL, ALL_NOTES, getPitchRange } from './data/appData.js';
 import { VOCAL_LEVELS } from './data/vocalLevels/index.js';
 import { GUITAR_STUDY } from './data/guitarStudy/index.js';
@@ -3920,6 +3920,11 @@ function BottomNav({ tab, setTab, isDark, theme: T }) {
         <Wrench size={20} />
         <span className="nav-label">Tools</span>
       </button>
+
+      <button className={`nav-item ${tab === "charts" ? "active" : ""}`} onClick={() => setTab("charts")}>
+        <Guitar size={20} />
+        <span className="nav-label">Charts</span>
+      </button>
     </div>
   );
 }
@@ -4066,7 +4071,8 @@ export default function App() {
   const tabs = [
     { id: "practice", label: "Practice" },
     { id: "skills", label: "Skills" },
-    { id: "tools", label: "Tools" }
+    { id: "tools", label: "Tools" },
+    { id: "charts", label: "Charts" }
   ];
 
   const [skillTab, setSkillTab] = useState(() => {
@@ -4085,6 +4091,33 @@ export default function App() {
     { id: "keys", label: "Keys", color: "#5b7fa5" },
     { id: "looper", label: "Looper", color: "#3d8b6e" }
   ];
+
+  // Charts tab state
+  const [activeChart, setActiveChart] = useState(null);
+
+  // URL hash chart loading
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash.startsWith("#chart=")) {
+      try {
+        const data = hash.slice(7);
+        const binary = atob(data);
+        const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
+        const json = new TextDecoder().decode(bytes);
+        const chart = JSON.parse(json);
+        if (chart && chart.measures) {
+          setActiveChart(chart);
+          setTab("charts");
+          // Save locally
+          const all = JSON.parse(localStorage.getItem("strumCharts") || "{}");
+          all[chart.id] = chart;
+          localStorage.setItem("strumCharts", JSON.stringify(all));
+        }
+      } catch { }
+      // Clean hash
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+  }, []);
 
   // Flow Mode overlay — renders above everything
   if (flowActive && flowExercises.length > 0) {
@@ -4320,6 +4353,7 @@ export default function App() {
             {skillTab === "songwriter" && (
               <SingerSongwriterView completed={completed} onComplete={toggleComplete} metro={metro} onOpenTapMatch={setTapMatchBpm} onStartFlow={startFlow} />
             )}
+
           </div>
         )}
 
@@ -4433,6 +4467,24 @@ export default function App() {
             </ToolCard>
 
           </div>
+        )}
+
+        {/* CHARTS TAB */}
+        {tab === "charts" && (
+          activeChart ? (
+            <StrumChartBuilder
+              theme={T}
+              metro={metro}
+              initialChart={activeChart}
+              onBack={() => setActiveChart(null)}
+            />
+          ) : (
+            <ChartListView
+              theme={T}
+              onSelect={(ch) => setActiveChart(ch)}
+              onNew={() => setActiveChart(makeTemplateChart())}
+            />
+          )
         )}
       </div>
 

@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import * as Tone from 'tone';
-import { 
-  Play, Pause, RotateCcw, SkipBack, Scissors, Check, 
-  Volume2, Mic, Headphones, Music, Piano, Guitar, Drum
+import {
+  Play, Pause, RotateCcw, SkipBack, Scissors, Check,
+  Volume2, Mic, Headphones, Music, Piano, Guitar, Drum,
+  Plus, Trash2, Share2, Undo2, ChevronDown, ChevronUp, X, Edit3
 } from 'lucide-react';
 
 // We'll accept the theme object `T` from App.jsx via props or just hardcode some shared colors for now.
@@ -4345,6 +4346,1171 @@ export function PhraseFormGuide({ theme: T, form }) {
           Start the metronome to sync the phrase guide
         </div>
       )}
+    </div>
+  );
+}
+
+// ─── STRUM CHART BUILDER ─────────────────────────────────────────────────────
+// Interactive grid for building strum/chord/lyric charts
+
+const BEAT_LABELS_8 = ["1", "&", "2", "&", "3", "&", "4", "&"];
+// 16th note labels used by interstitial slots inline — "e" and "a" rendered contextually
+
+const COMMON_CHORDS = [
+  "C", "Cm", "D", "Dm", "E", "Em", "F", "Fm",
+  "G", "Gm", "A", "Am", "B", "Bm"
+];
+const SHARP_FLAT_CHORDS = ["C#", "Db", "D#", "Eb", "F#", "Gb", "Ab", "Bb"];
+
+// Built-in chord voicings for ChordDiagram
+const CHORD_VOICINGS = {
+  "C":  { frets: "x32010", name: "C" },
+  "Cm": { frets: "x35543", name: "Cm" },
+  "D":  { frets: "xx0232", name: "D" },
+  "Dm": { frets: "xx0231", name: "Dm" },
+  "E":  { frets: "022100", name: "E" },
+  "Em": { frets: "022000", name: "Em" },
+  "F":  { frets: "133211", name: "F" },
+  "Fm": { frets: "133111", name: "Fm" },
+  "G":  { frets: "320003", name: "G" },
+  "Gm": { frets: "355333", name: "Gm" },
+  "A":  { frets: "x02220", name: "A" },
+  "Am": { frets: "x02210", name: "Am" },
+  "B":  { frets: "x24442", name: "B" },
+  "Bm": { frets: "x24432", name: "Bm" },
+  "C#": { frets: "x46664", name: "C#" },
+  "Db": { frets: "x46664", name: "Db" },
+  "D#": { frets: "x68886", name: "D#" },
+  "Eb": { frets: "x68886", name: "Eb" },
+  "F#": { frets: "244322", name: "F#" },
+  "Gb": { frets: "244322", name: "Gb" },
+  "Ab": { frets: "466544", name: "Ab" },
+  "Bb": { frets: "x13331", name: "Bb" },
+};
+
+function makeEmptyCell() { return { chord: null, strum: null, lyric: "" }; }
+function makeEmptyMeasure() { return { cells: Array.from({ length: 8 }, makeEmptyCell), between: {}, sectionLabel: "" }; }
+
+export function makeTemplateChart() {
+  const m = makeEmptyMeasure();
+  // Reggae offbeat template: ↓ _ ↓ _ ↑ ↓ _ ↑
+  m.cells[0] = { chord: "G", strum: "D", lyric: "" };
+  m.cells[1] = { chord: null, strum: null, lyric: "" };
+  m.cells[2] = { chord: null, strum: "D", lyric: "" };
+  m.cells[3] = { chord: null, strum: null, lyric: "" };
+  m.cells[4] = { chord: null, strum: "U", lyric: "" };
+  m.cells[5] = { chord: null, strum: "D", lyric: "" };
+  m.cells[6] = { chord: null, strum: null, lyric: "" };
+  m.cells[7] = { chord: null, strum: "U", lyric: "" };
+  return {
+    id: "chart_" + Date.now(),
+    title: "",
+    bpm: 80,
+    activeSlots: [],
+    measures: [m],
+    lyricsPool: [],
+    lyricsInput: "",
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  };
+}
+
+// URL sharing — encode chart state as base64 in URL hash
+function compressToURL(obj) {
+  try {
+    const json = JSON.stringify(obj);
+    const bytes = new TextEncoder().encode(json);
+    const binary = Array.from(bytes, b => String.fromCharCode(b)).join("");
+    return btoa(binary);
+  } catch { return null; }
+}
+function decompressFromURL(str) {
+  try {
+    const binary = atob(str);
+    const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
+    const json = new TextDecoder().decode(bytes);
+    return JSON.parse(json);
+  } catch { return null; }
+}
+
+// ─── ChordDiagram ───────────────────────────────────────────────────────────
+export function ChordDiagram({ theme: T, frets, name, onClose }) {
+  if (!frets) return null;
+  const f = frets.split("").map(c => c === "x" ? -1 : c === "0" ? 0 : parseInt(c, 10));
+  const playable = f.filter(v => v > 0);
+  const minFret = playable.length ? Math.min(...playable) : 1;
+  const maxFret = playable.length ? Math.max(...playable) : 1;
+  const startFret = maxFret <= 4 ? 1 : minFret;
+  const numFrets = 4;
+
+  const w = 120, h = 140;
+  const left = 28, top = 30, strGap = 14, fretGap = 22;
+
+  return (
+    <div style={{
+      background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: T.radiusMd,
+      padding: 12, boxShadow: T.md, position: "relative", width: w + 24,
+    }} onClick={e => e.stopPropagation()}>
+      {onClose && (
+        <button onClick={onClose} style={{
+          position: "absolute", top: 4, right: 4, background: "none", border: "none",
+          cursor: "pointer", color: T.textMuted, padding: 4,
+        }}><X size={12} /></button>
+      )}
+      {name && (
+        <div style={{
+          textAlign: "center", fontFamily: T.serif, fontWeight: 700, fontSize: 14,
+          color: T.gold, marginBottom: 4,
+        }}>{name}</div>
+      )}
+      <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`}>
+        {/* Fret lines */}
+        {Array.from({ length: numFrets + 1 }, (_, i) => (
+          <line key={`f${i}`}
+            x1={left} y1={top + i * fretGap}
+            x2={left + 5 * strGap} y2={top + i * fretGap}
+            stroke={i === 0 && startFret === 1 ? T.textDark : T.border}
+            strokeWidth={i === 0 && startFret === 1 ? 3 : 1}
+          />
+        ))}
+        {/* String lines */}
+        {Array.from({ length: 6 }, (_, i) => (
+          <line key={`s${i}`}
+            x1={left + i * strGap} y1={top}
+            x2={left + i * strGap} y2={top + numFrets * fretGap}
+            stroke={T.border} strokeWidth={1}
+          />
+        ))}
+        {/* Start fret number */}
+        {startFret > 1 && (
+          <text x={left - 8} y={top + fretGap * 0.6} textAnchor="end"
+            fontSize={9} fill={T.textMed} fontFamily={T.sans}>{startFret}</text>
+        )}
+        {/* Dots + X/O markers */}
+        {f.map((fretNum, strIdx) => {
+          const sx = left + strIdx * strGap;
+          if (fretNum === -1) {
+            return <text key={strIdx} x={sx} y={top - 8} textAnchor="middle"
+              fontSize={10} fill={T.textMuted} fontFamily={T.sans}>×</text>;
+          }
+          if (fretNum === 0) {
+            return <circle key={strIdx} cx={sx} cy={top - 8} r={4}
+              fill="none" stroke={T.textMed} strokeWidth={1.5} />;
+          }
+          const fy = top + (fretNum - startFret + 0.5) * fretGap;
+          return <circle key={strIdx} cx={sx} cy={fy} r={5}
+            fill={T.gold} stroke="none" />;
+        })}
+      </svg>
+    </div>
+  );
+}
+
+// ─── Bottom Sheet ───────────────────────────────────────────────────────────
+function BottomSheet({ theme: T, open, onClose, children }) {
+  const [visible, setVisible] = useState(false);
+  const [animating, setAnimating] = useState(false);
+
+  useEffect(() => {
+    if (open) {
+      setVisible(true);
+      requestAnimationFrame(() => requestAnimationFrame(() => setAnimating(true)));
+    } else {
+      setAnimating(false);
+      const timer = setTimeout(() => setVisible(false), 250);
+      return () => clearTimeout(timer);
+    }
+  }, [open]);
+
+  if (!visible) return null;
+
+  return (
+    <div style={{
+      position: "fixed", inset: 0, zIndex: 1000,
+      background: animating ? "rgba(0,0,0,0.3)" : "transparent",
+      transition: "background 0.25s",
+    }} onClick={onClose}>
+      <div style={{
+        position: "absolute", bottom: 0, left: 0, right: 0,
+        background: T.bgCard, borderTopLeftRadius: 16, borderTopRightRadius: 16,
+        boxShadow: "0 -4px 20px rgba(0,0,0,0.15)",
+        transform: animating ? "translateY(0)" : "translateY(100%)",
+        transition: "transform 0.25s cubic-bezier(0.33, 1, 0.68, 1)",
+        maxHeight: "60vh", overflowY: "auto",
+        padding: "12px 16px 24px",
+      }} onClick={e => e.stopPropagation()}>
+        {/* Drag handle */}
+        <div style={{
+          width: 36, height: 4, borderRadius: 2, background: T.borderSoft,
+          margin: "0 auto 12px",
+        }} />
+        {children}
+      </div>
+    </div>
+  );
+}
+
+// ─── StrumChartBuilder ──────────────────────────────────────────────────────
+export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSave }) {
+  const [chart, setChart] = useState(() => initialChart || makeTemplateChart());
+  const [undoStack, setUndoStack] = useState([]);
+  const [strumMode, setStrumMode] = useState(null); // null | "D" | "U" | "R"
+  const [activeChordCell, setActiveChordCell] = useState(null); // { m, c } measure + cell index
+  const [selectedChip, setSelectedChip] = useState(null); // index in lyricsPool
+  const [recentChords, setRecentChords] = useState([]);
+  const [customChord, setCustomChord] = useState("");
+  const [savedShow, setSavedShow] = useState(false);
+  const [deleteToast, setDeleteToast] = useState(null);
+  const [chordVoicing, setChordVoicing] = useState(null); // { m, c }
+  const [stepMode, setStepMode] = useState(false);
+  const [stepIndex, setStepIndex] = useState(0); // beat index across all measures
+  const [currentBeat, setCurrentBeat] = useState(-1);
+  const [currentBar, setCurrentBar] = useState(-1);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [lyricsEditing, setLyricsEditing] = useState(!initialChart);
+  const longPressRef = useRef(null);
+  const savedTimerRef = useRef(null);
+
+  const totalBeats = chart.measures.length * 4; // 4 quarter-note beats per measure
+
+  // Update chart with undo
+  const updateChart = useCallback((updater) => {
+    setChart(prev => {
+      setUndoStack(s => [...s.slice(-9), JSON.parse(JSON.stringify(prev))]);
+      const next = typeof updater === "function" ? updater(JSON.parse(JSON.stringify(prev))) : updater;
+      next.updatedAt = Date.now();
+      return next;
+    });
+  }, []);
+
+  // Undo
+  const undo = useCallback(() => {
+    setUndoStack(stack => {
+      if (stack.length === 0) return stack;
+      const prev = stack[stack.length - 1];
+      setChart(prev);
+      return stack.slice(0, -1);
+    });
+  }, []);
+
+  // Auto-save to localStorage
+  useEffect(() => {
+    if (!chart.id) return;
+    try {
+      const all = JSON.parse(localStorage.getItem("strumCharts") || "{}");
+      all[chart.id] = chart;
+      localStorage.setItem("strumCharts", JSON.stringify(all));
+    } catch { }
+    if (onSave) onSave(chart);
+    // Flash saved indicator
+    setSavedShow(true);
+    if (savedTimerRef.current) clearTimeout(savedTimerRef.current);
+    savedTimerRef.current = setTimeout(() => setSavedShow(false), 1500);
+  }, [chart, onSave]);
+
+  // Metronome listener
+  useEffect(() => {
+    const handler = (e) => {
+      const { beat, bar } = e.detail;
+      if (beat !== undefined) setCurrentBeat(beat);
+      if (bar !== undefined) setCurrentBar(bar);
+      setIsPlaying(true);
+    };
+    const stopHandler = () => { setIsPlaying(false); setCurrentBeat(-1); setCurrentBar(-1); };
+    window.addEventListener("metroBeat", handler);
+    // Detect metronome stop by checking if no beat event for 1s
+    let stopTimer;
+    const resetStop = () => { clearTimeout(stopTimer); stopTimer = setTimeout(stopHandler, 1500); };
+    window.addEventListener("metroBeat", resetStop);
+    return () => {
+      window.removeEventListener("metroBeat", handler);
+      window.removeEventListener("metroBeat", resetStop);
+      clearTimeout(stopTimer);
+    };
+  }, []);
+
+  // Strum cell handlers — cycle: D → U → X → null (rest/blank) → D
+  const cycleStrum = (mIdx, cIdx) => {
+    if (isPlaying && !stepMode) return;
+    const cur = chart.measures[mIdx].cells[cIdx].strum;
+    let next;
+    if (strumMode) {
+      next = strumMode;
+    } else {
+      if (!cur) next = "D";
+      else if (cur === "D") next = "U";
+      else if (cur === "U") next = "X";
+      else next = null; // X → rest (blank)
+    }
+    updateChart(c => { c.measures[mIdx].cells[cIdx].strum = next; return c; });
+  };
+
+  const clearStrumCell = (mIdx, cIdx) => {
+    updateChart(c => { c.measures[mIdx].cells[cIdx].strum = null; return c; });
+  };
+
+  // Long-press handler for strum cells
+  const startLongPress = (mIdx, cIdx, type) => {
+    longPressRef.current = setTimeout(() => {
+      if (type === "strum") clearStrumCell(mIdx, cIdx);
+      if (type === "chord") {
+        const chord = chart.measures[mIdx].cells[cIdx].chord;
+        if (chord && CHORD_VOICINGS[chord]) {
+          setChordVoicing({ m: mIdx, c: cIdx });
+        }
+      }
+      longPressRef.current = "fired";
+    }, 300);
+  };
+  const endLongPress = () => {
+    if (longPressRef.current && longPressRef.current !== "fired") {
+      clearTimeout(longPressRef.current);
+      longPressRef.current = null;
+    } else if (longPressRef.current === "fired") {
+      // Delay null-out so onClick handlers can still check "fired"
+      setTimeout(() => { longPressRef.current = null; }, 50);
+    }
+  };
+
+  // Chord handlers
+  const selectChord = (chord) => {
+    if (!activeChordCell) return;
+    const { m, c } = activeChordCell;
+    updateChart(ch => { ch.measures[m].cells[c].chord = chord; return ch; });
+    setRecentChords(prev => {
+      const next = [chord, ...prev.filter(x => x !== chord)].slice(0, 4);
+      return next;
+    });
+  };
+  const clearChord = () => {
+    if (!activeChordCell) return;
+    const { m, c } = activeChordCell;
+    updateChart(ch => { ch.measures[m].cells[c].chord = null; return ch; });
+  };
+
+  // Chord tap handler — short tap opens picker, long press opens voicing
+  const handleChordCellTap = (mIdx, cIdx) => {
+    if (isPlaying && !stepMode) return;
+    if (longPressRef.current === "fired") return; // was a long press
+    setActiveChordCell({ m: mIdx, c: cIdx });
+  };
+
+  // Lyrics handlers
+  const handleLyricsPaste = (text) => {
+    updateChart(c => {
+      c.lyricsInput = text;
+      // Split on spaces and hyphens (keeping hyphens attached)
+      const words = text.split(/\s+/).filter(w => w.length > 0).flatMap(w => {
+        if (w.includes("-")) {
+          return w.split(/(?<=-)/).filter(s => s.length > 0);
+        }
+        return [w];
+      });
+      c.lyricsPool = words;
+      // Clear all placed lyrics
+      c.measures.forEach(m => m.cells.forEach(cell => { cell.lyric = ""; }));
+      return c;
+    });
+    setLyricsEditing(false);
+    setSelectedChip(null);
+  };
+
+  const placeLyric = (mIdx, cIdx) => {
+    if (selectedChip === null) return;
+    const word = chart.lyricsPool[selectedChip];
+    if (!word) return;
+    updateChart(c => {
+      c.measures[mIdx].cells[cIdx].lyric = word;
+      c.lyricsPool = c.lyricsPool.filter((_, i) => i !== selectedChip);
+      return c;
+    });
+    setSelectedChip(null);
+  };
+
+  const removePlacedLyric = (mIdx, cIdx) => {
+    const word = chart.measures[mIdx].cells[cIdx].lyric;
+    if (!word) return;
+    updateChart(c => {
+      c.measures[mIdx].cells[cIdx].lyric = "";
+      // Re-insert at original position based on lyricsInput order
+      const allWords = (c.lyricsInput || "").split(/\s+/).filter(w => w.length > 0).flatMap(w =>
+        w.includes("-") ? w.split(/(?<=-)/).filter(s => s.length > 0) : [w]
+      );
+      const pool = [...c.lyricsPool, word];
+      // Sort pool by original order in lyricsInput
+      pool.sort((a, b) => {
+        const ai = allWords.indexOf(a);
+        const bi = allWords.indexOf(b);
+        return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi);
+      });
+      c.lyricsPool = pool;
+      return c;
+    });
+  };
+
+  // Measure management — new measures clone strum pattern from previous
+  const addMeasure = () => {
+    updateChart(c => {
+      const newM = makeEmptyMeasure();
+      const prev = c.measures[c.measures.length - 1];
+      if (prev) {
+        prev.cells.forEach((cell, i) => { newM.cells[i].strum = cell.strum; });
+      }
+      c.measures.push(newM);
+      return c;
+    });
+  };
+
+  const removeMeasure = (mIdx) => {
+    if (chart.measures.length <= 1) return;
+    const removed = JSON.parse(JSON.stringify(chart.measures[mIdx]));
+    updateChart(c => { c.measures.splice(mIdx, 1); return c; });
+    setDeleteToast({ measure: removed, index: mIdx });
+    setTimeout(() => setDeleteToast(null), 4000);
+  };
+
+  const undoDeleteMeasure = () => {
+    if (!deleteToast) return;
+    updateChart(c => {
+      c.measures.splice(deleteToast.index, 0, deleteToast.measure);
+      return c;
+    });
+    setDeleteToast(null);
+  };
+
+  // Interstitial 16th note slots
+  const toggleSlot = (slotIdx) => {
+    updateChart(c => {
+      if (c.activeSlots.includes(slotIdx)) {
+        // Check if any measure has content at this slot
+        const hasContent = c.measures.some(m => {
+          const b = m.between[slotIdx];
+          return b && (b.chord || b.strum || b.lyric);
+        });
+        if (!hasContent) {
+          c.activeSlots = c.activeSlots.filter(s => s !== slotIdx);
+          c.measures.forEach(m => delete m.between[slotIdx]);
+        }
+      } else {
+        c.activeSlots = [...c.activeSlots, slotIdx].sort((a, b) => a - b);
+      }
+      return c;
+    });
+  };
+
+  // Step mode
+  const advanceStep = () => {
+    setStepIndex(prev => (prev + 1) % totalBeats);
+  };
+
+  // Share
+  const shareChart = async () => {
+    const compressed = compressToURL(chart);
+    if (!compressed) return;
+    const url = window.location.origin + window.location.pathname + "#chart=" + compressed;
+    if (url.length > 2000) {
+      try { await navigator.clipboard.writeText(JSON.stringify(chart)); } catch { }
+      setSavedShow(true); // reuse saved indicator as feedback
+      if (savedTimerRef.current) clearTimeout(savedTimerRef.current);
+      savedTimerRef.current = setTimeout(() => setSavedShow(false), 1500);
+      return;
+    }
+    if (navigator.share) {
+      try { await navigator.share({ title: chart.title || "Strum Chart", url }); } catch { }
+    } else {
+      try { await navigator.clipboard.writeText(url); } catch { }
+      setSavedShow(true);
+      if (savedTimerRef.current) clearTimeout(savedTimerRef.current);
+      savedTimerRef.current = setTimeout(() => setSavedShow(false), 1500);
+    }
+  };
+
+  // Get strum display — D=down, U=up, X=chuck/mute, null=rest (blank)
+  const strumDisplay = (val) => {
+    if (!val) return null;
+    if (val === "D") return { glyph: "↓", color: T.textDark, weight: 700 };
+    if (val === "U") return { glyph: "↑", color: T.textMed, weight: 400 };
+    if (val === "X") return { glyph: "×", color: T.coral, weight: 700 };
+    return null;
+  };
+
+  // Check if lyric overflows — measure how many empty cells to the right
+  const getLyricOverflow = (cells, cIdx) => {
+    const word = cells[cIdx].lyric;
+    if (!word || word.length <= 5) return 1; // fits in one cell
+    let span = 1;
+    for (let j = cIdx + 1; j < cells.length; j++) {
+      if (cells[j].lyric) break;
+      span++;
+      if (span * 5 >= word.length) break; // rough char-per-cell estimate
+    }
+    return span;
+  };
+
+  // Step mode beat → measure + column mapping
+  const stepBeat = Math.floor(stepIndex); // quarter note index
+  const stepMeasure = Math.floor(stepBeat / 4);
+  const stepCol = (stepBeat % 4) * 2; // 2 columns per quarter note
+
+  // Metronome beat → column mapping
+  const metroBeatMeasure = currentBar >= 0 ? currentBar % chart.measures.length : -1;
+  const metroBeatCol = currentBeat >= 0 ? currentBeat * 2 : -1;
+
+  const activeMeasure = stepMode ? stepMeasure : metroBeatMeasure;
+  const activeCol = stepMode ? stepCol : metroBeatCol;
+
+  return (
+    <div style={{ fontFamily: T.sans }}>
+      {/* Header */}
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+        {onBack && (
+          <button onClick={onBack} style={{
+            background: "none", border: "none", cursor: "pointer", color: T.textMed, padding: 4,
+          }}>← Back</button>
+        )}
+        <input
+          type="text"
+          value={chart.title}
+          onChange={e => setChart(c => ({ ...c, title: e.target.value, updatedAt: Date.now() }))}
+          placeholder="Untitled Chart"
+          style={{
+            flex: 1, fontSize: 20, fontFamily: T.serif, fontWeight: 600, color: T.textDark,
+            border: "none", borderBottom: `1px solid ${T.borderSoft}`, background: "transparent",
+            padding: "4px 0", outline: "none",
+          }}
+        />
+        <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+          {savedShow && (
+            <span style={{
+              fontSize: 9, color: T.success, fontWeight: 700, letterSpacing: 1,
+              textTransform: "uppercase", fontFamily: T.sans,
+              animation: "fade-in-up 0.3s ease",
+            }}>Saved</span>
+          )}
+          <button onClick={undo} disabled={undoStack.length === 0} style={{
+            background: "none", border: "none", cursor: undoStack.length ? "pointer" : "default",
+            color: undoStack.length ? T.textMed : T.borderSoft, padding: 4,
+          }}><Undo2 size={16} /></button>
+          <button onClick={shareChart} style={{
+            background: "none", border: "none", cursor: "pointer", color: T.textMed, padding: 4,
+          }}><Share2 size={16} /></button>
+        </div>
+      </div>
+
+      {/* BPM + controls */}
+      <div style={{ display: "flex", gap: 8, marginBottom: 16, alignItems: "center", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+          <span style={{ fontSize: 10, color: T.textMuted, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1 }}>BPM</span>
+          <input
+            type="number" min={40} max={280}
+            value={chart.bpm || 80}
+            onChange={e => setChart(c => ({ ...c, bpm: parseInt(e.target.value) || 80, updatedAt: Date.now() }))}
+            style={{
+              width: 48, fontSize: 14, fontWeight: 700, textAlign: "center", color: T.textDark,
+              border: `1px solid ${T.border}`, borderRadius: T.radius, background: T.bgSoft,
+              padding: "4px 2px", fontFamily: T.sans,
+            }}
+          />
+          {metro && (
+            <>
+              <button onClick={() => metro.changeBpm(chart.bpm || 80)} style={{
+                fontSize: 9, background: T.goldSoft, border: "none", padding: "5px 10px",
+                borderRadius: T.radius, color: T.goldDark, cursor: "pointer", fontWeight: 800,
+                textTransform: "uppercase", letterSpacing: 1,
+              }}>Set</button>
+              <button onClick={() => { metro.changeBpm(chart.bpm || 80); metro.playing ? metro.stop() : metro.start(); }} style={{
+                fontSize: 9, padding: "5px 12px", borderRadius: T.radius, cursor: "pointer",
+                fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans,
+                background: metro.playing ? "transparent" : T.gold,
+                color: metro.playing ? T.coral : "#fff",
+                border: `1px solid ${metro.playing ? T.coral : T.gold}`,
+              }}>{metro.playing ? "Stop" : "▶ Play"}</button>
+            </>
+          )}
+        </div>
+        <button
+          onClick={() => setStepMode(!stepMode)}
+          style={{
+            fontSize: 9, padding: "5px 10px", borderRadius: T.radius, cursor: "pointer",
+            fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans,
+            background: stepMode ? T.gold : "transparent",
+            color: stepMode ? "#fff" : T.textMed,
+            border: `1px solid ${stepMode ? T.gold : T.border}`,
+          }}
+        >Tap-Along</button>
+        {stepMode && (
+          <button onClick={advanceStep} style={{
+            fontSize: 9, padding: "5px 14px", borderRadius: T.radius, cursor: "pointer",
+            fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans,
+            background: T.gold, color: "#fff", border: "none",
+          }}>Next ▸</button>
+        )}
+      </div>
+
+      {/* Strum mode pills */}
+      <div style={{ display: "flex", gap: 6, marginBottom: 12 }}>
+        <span style={{ fontSize: 9, color: T.textMuted, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1, alignSelf: "center", marginRight: 4 }}>Paint:</span>
+        {[
+          { val: "D", label: "↓ Down" },
+          { val: "U", label: "↑ Up" },
+          { val: "X", label: "× Chuck" },
+        ].map(({ val, label }) => (
+          <button key={val} onClick={() => setStrumMode(strumMode === val ? null : val)} style={{
+            fontSize: 10, padding: "4px 10px", borderRadius: T.radius, cursor: "pointer",
+            fontWeight: 700, fontFamily: T.sans,
+            background: strumMode === val ? T.gold : T.bgSoft,
+            color: strumMode === val ? "#fff" : T.textMed,
+            border: `1px solid ${strumMode === val ? T.gold : T.border}`,
+          }}>{label}</button>
+        ))}
+        {strumMode && (
+          <button onClick={() => setStrumMode(null)} style={{
+            fontSize: 9, padding: "4px 8px", background: "none", border: "none",
+            color: T.textMuted, cursor: "pointer",
+          }}>Clear</button>
+        )}
+      </div>
+
+      {/* Lyrics input */}
+      <div style={{
+        marginBottom: 16, padding: "12px 16px", background: T.bgSoft,
+        border: `1px solid ${T.border}`, borderRadius: T.radiusMd,
+      }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+          <span style={{ fontSize: 9, color: T.textMuted, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1 }}>Lyrics</span>
+          {!lyricsEditing && chart.lyricsInput && (
+            <button onClick={() => setLyricsEditing(true)} style={{
+              fontSize: 9, background: "none", border: "none", color: T.gold, cursor: "pointer",
+              fontWeight: 700, textTransform: "uppercase", letterSpacing: 1,
+            }}><Edit3 size={10} style={{ marginRight: 3 }} />Edit</button>
+          )}
+        </div>
+        {lyricsEditing ? (
+          <div>
+            <textarea
+              value={chart.lyricsInput}
+              onChange={e => setChart(c => ({ ...c, lyricsInput: e.target.value }))}
+              placeholder="Paste your lyrics here — words become placeable chips"
+              rows={2}
+              style={{
+                width: "100%", fontSize: 13, fontFamily: T.serif, color: T.textDark,
+                border: `1px solid ${T.border}`, borderRadius: T.radius, background: T.bgCard,
+                padding: 8, resize: "vertical", outline: "none", boxSizing: "border-box",
+              }}
+            />
+            <button
+              onClick={() => handleLyricsPaste(chart.lyricsInput)}
+              disabled={!chart.lyricsInput?.trim()}
+              style={{
+                marginTop: 6, fontSize: 9, padding: "5px 14px", borderRadius: T.radius, cursor: "pointer",
+                fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans,
+                background: chart.lyricsInput?.trim() ? T.gold : T.borderSoft,
+                color: chart.lyricsInput?.trim() ? "#fff" : T.textMuted,
+                border: "none",
+              }}
+            >Set Lyrics</button>
+          </div>
+        ) : chart.lyricsInput ? (
+          <div style={{ fontSize: 12, fontFamily: T.serif, color: T.textLight, fontStyle: "italic" }}>
+            {chart.lyricsInput}
+          </div>
+        ) : (
+          <button onClick={() => setLyricsEditing(true)} style={{
+            fontSize: 11, color: T.textMuted, background: "none", border: `1px dashed ${T.border}`,
+            borderRadius: T.radius, padding: "8px 12px", cursor: "pointer", width: "100%",
+            fontFamily: T.sans,
+          }}>+ Add Lyrics</button>
+        )}
+
+        {/* Lyric chips tray */}
+        {chart.lyricsPool.length > 0 && !lyricsEditing && (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 10 }}>
+            {chart.lyricsPool.map((word, i) => (
+              <button key={i} onClick={() => setSelectedChip(selectedChip === i ? null : i)} style={{
+                fontSize: 12, fontFamily: T.serif, padding: "4px 10px",
+                borderRadius: 12, cursor: "pointer",
+                background: selectedChip === i ? T.getTint(T.gold, 0.15) : T.getTint(T.coral, 0.08),
+                border: selectedChip === i ? `2px solid ${T.gold}` : `1px solid ${T.coral}30`,
+                color: T.textDark, fontWeight: selectedChip === i ? 600 : 400,
+                transform: selectedChip === i ? "scale(1.05)" : "none",
+                transition: "all 0.15s",
+              }}>{word}</button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Playback indicator */}
+      {isPlaying && !stepMode && (
+        <div style={{
+          textAlign: "center", fontSize: 9, color: T.gold, fontWeight: 700,
+          textTransform: "uppercase", letterSpacing: 2, marginBottom: 8, fontFamily: T.sans,
+        }}>♪ Playing — tap grid to pause</div>
+      )}
+
+      {/* Measures */}
+      {chart.measures.map((measure, mIdx) => {
+        const isActiveMeasure = activeMeasure === mIdx;
+
+        // Build column template: for each main cell, add 1fr, then if slot is active add 24px
+        let colTemplate = "";
+        for (let i = 0; i < 8; i++) {
+          colTemplate += "1fr ";
+          if (chart.activeSlots.includes(i) && i < 7) {
+            colTemplate += "24px ";
+          }
+        }
+
+        return (
+          <div key={mIdx} style={{
+            marginBottom: 12, position: "relative",
+            border: `1px solid ${isActiveMeasure ? T.gold : T.border}`,
+            borderRadius: T.radiusMd,
+            boxShadow: isActiveMeasure ? `0 0 8px ${T.gold}40` : "none",
+            transition: "box-shadow 0.2s, border-color 0.2s",
+          }}
+          >
+            {/* Measure number + section label + delete button */}
+            <div style={{
+              position: "absolute", top: -8, left: 8, display: "flex", alignItems: "center", gap: 4,
+              background: T.bg, padding: "0 4px",
+            }}>
+              <span style={{ fontSize: 9, color: T.textMuted, fontWeight: 700, fontFamily: T.sans }}>{mIdx + 1}</span>
+              <input
+                type="text"
+                value={measure.sectionLabel || ""}
+                onChange={e => updateChart(c => { c.measures[mIdx].sectionLabel = e.target.value; return c; })}
+                placeholder="section"
+                style={{
+                  fontSize: 9, fontWeight: 600, color: T.gold, fontFamily: T.sans,
+                  textTransform: "uppercase", letterSpacing: 1,
+                  border: "none", background: "transparent", padding: 0, outline: "none",
+                  width: measure.sectionLabel ? Math.max(40, measure.sectionLabel.length * 7) : 40,
+                }}
+              />
+            </div>
+            {chart.measures.length > 1 && (
+              <button onClick={(e) => { e.stopPropagation(); removeMeasure(mIdx); }} style={{
+                position: "absolute", top: -8, right: 8, background: T.bg, border: "none",
+                cursor: "pointer", color: T.textMuted, padding: "0 4px", fontSize: 9,
+                fontFamily: T.sans, display: "flex", alignItems: "center", gap: 2,
+              }}><X size={10} /></button>
+            )}
+
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: `40px ${colTemplate}`,
+              padding: "8px 4px 4px",
+            }}>
+              {/* Beat labels row */}
+              <div style={{ fontSize: 8, color: T.textMuted, display: "flex", alignItems: "center", justifyContent: "center" }} />
+              {measure.cells.map((_, cIdx) => {
+                const label = BEAT_LABELS_8[cIdx];
+                const isDownbeat = cIdx % 2 === 0;
+                const isActive = isActiveMeasure && (activeCol === cIdx || activeCol === cIdx - 1) && Math.floor(activeCol / 2) === Math.floor(cIdx / 2);
+                return (
+                  <React.Fragment key={`beat-${cIdx}`}>
+                    <div style={{
+                      textAlign: "center", fontSize: 9, fontFamily: T.sans,
+                      color: isDownbeat ? T.textMed : T.textMuted,
+                      fontWeight: isDownbeat ? 700 : 400,
+                      background: isActive ? T.getTint(T.gold, 0.2) : (isDownbeat ? T.getTint(T.gold, 0.03) : "transparent"),
+                      borderRadius: T.radius, padding: "2px 0",
+                      transition: "background 0.15s",
+                    }}>{label}</div>
+                    {chart.activeSlots.includes(cIdx) && cIdx < 7 && (
+                      <div style={{
+                        textAlign: "center", fontSize: 7, fontFamily: T.sans, color: T.textMuted,
+                        padding: "2px 0",
+                      }}>{cIdx % 2 === 0 ? "e" : "a"}</div>
+                    )}
+                  </React.Fragment>
+                );
+              })}
+
+              {/* Chord row — each cell individually clickable */}
+              <div style={{
+                fontSize: 9, color: T.textMuted, fontWeight: 600, textTransform: "uppercase",
+                letterSpacing: 1, display: "flex", alignItems: "center", justifyContent: "center",
+              }}>Chord</div>
+              {measure.cells.map((cell, cIdx) => {
+                // Find which chord is active at this position (could be from a previous cell spanning here)
+                let displayChord = cell.chord;
+                let isSpanContinuation = false;
+                if (!displayChord) {
+                  // Walk backwards to find spanning chord
+                  for (let j = cIdx - 1; j >= 0; j--) {
+                    if (measure.cells[j].chord) { displayChord = measure.cells[j].chord; isSpanContinuation = true; break; }
+                  }
+                }
+                const hasChord = !!cell.chord;
+                const inSpan = hasChord || isSpanContinuation;
+                return (
+                  <React.Fragment key={`c-${cIdx}`}>
+                    <div
+                      style={{
+                        textAlign: "center", fontFamily: T.serif, fontSize: 14, fontWeight: 700,
+                        color: hasChord ? T.gold : (isSpanContinuation ? T.gold + "40" : "transparent"),
+                        background: inSpan ? T.getTint(T.gold, 0.05) : "transparent",
+                        borderRadius: T.radius, padding: "4px 2px", minHeight: 28,
+                        cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+                        border: inSpan ? "none" : `1px dashed ${T.borderSoft}`,
+                        transition: "background 0.15s",
+                      }}
+                      onClick={() => handleChordCellTap(mIdx, cIdx)}
+                      onTouchStart={() => startLongPress(mIdx, cIdx, "chord")}
+                      onTouchEnd={endLongPress}
+                      onMouseDown={() => startLongPress(mIdx, cIdx, "chord")}
+                      onMouseUp={endLongPress}
+                    >
+                      {hasChord ? displayChord : (isSpanContinuation ? "·" : "·")}
+                    </div>
+                    {chart.activeSlots.includes(cIdx) && cIdx < 7 && (
+                      <div style={{
+                        textAlign: "center", fontSize: 11, fontFamily: T.serif, color: T.gold,
+                        minHeight: 28, display: "flex", alignItems: "center", justifyContent: "center",
+                        opacity: 0.7, cursor: "pointer",
+                      }}
+                        onClick={() => { setActiveChordCell({ m: mIdx, c: cIdx, between: true }); }}
+                      >{measure.between[cIdx]?.chord || "·"}</div>
+                    )}
+                  </React.Fragment>
+                );
+              })}
+
+              {/* Strum row */}
+              <div style={{
+                fontSize: 9, color: T.textMuted, fontWeight: 600, textTransform: "uppercase",
+                letterSpacing: 1, display: "flex", alignItems: "center", justifyContent: "center",
+              }}>Strum</div>
+              {measure.cells.map((cell, cIdx) => {
+                const sd = strumDisplay(cell.strum);
+                const isActive = isActiveMeasure && Math.floor(activeCol / 2) === Math.floor(cIdx / 2);
+                return (
+                  <React.Fragment key={`s-${cIdx}`}>
+                    <div
+                      style={{
+                        textAlign: "center", fontSize: 16, minHeight: 32,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        cursor: "pointer", borderRadius: T.radius,
+                        color: sd ? sd.color : "transparent",
+                        fontWeight: sd ? sd.weight : 400,
+                        border: cell.strum ? "none" : `1px dashed ${T.borderSoft}`,
+                        background: isActive ? T.getTint(T.gold, 0.15) : "transparent",
+                        transition: "background 0.15s",
+                        userSelect: "none",
+                      }}
+                      onClick={() => cycleStrum(mIdx, cIdx)}
+                      onTouchStart={() => startLongPress(mIdx, cIdx, "strum")}
+                      onTouchEnd={endLongPress}
+                      onMouseDown={() => startLongPress(mIdx, cIdx, "strum")}
+                      onMouseUp={endLongPress}
+                    >
+                      {sd ? sd.glyph : "·"}
+                    </div>
+                    {chart.activeSlots.includes(cIdx) && cIdx < 7 && (
+                      <div style={{
+                        textAlign: "center", fontSize: 13, minHeight: 32,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        cursor: "pointer", borderRadius: T.radius, opacity: 0.7,
+                        color: strumDisplay(measure.between[cIdx]?.strum)?.color || "transparent",
+                      }}
+                        onClick={() => {
+                          // Cycle between strum for interstitial
+                          updateChart(c => {
+                            if (!c.measures[mIdx].between[cIdx]) c.measures[mIdx].between[cIdx] = makeEmptyCell();
+                            const cur = c.measures[mIdx].between[cIdx].strum;
+                            c.measures[mIdx].between[cIdx].strum = !cur ? "D" : cur === "D" ? "U" : cur === "U" ? "X" : null;
+                            return c;
+                          });
+                        }}
+                      >
+                        {strumDisplay(measure.between[cIdx]?.strum)?.glyph || "·"}
+                      </div>
+                    )}
+                  </React.Fragment>
+                );
+              })}
+
+              {/* Lyric row */}
+              <div style={{
+                fontSize: 9, color: T.textMuted, fontWeight: 600, textTransform: "uppercase",
+                letterSpacing: 1, display: "flex", alignItems: "center", justifyContent: "center",
+              }}>Lyric</div>
+              {measure.cells.map((cell, cIdx) => {
+                const hasLyric = cell.lyric && cell.lyric.length > 0;
+                const isActive = isActiveMeasure && Math.floor(activeCol / 2) === Math.floor(cIdx / 2);
+                const isTarget = selectedChip !== null && !hasLyric;
+                return (
+                  <React.Fragment key={`l-${cIdx}`}>
+                    <div
+                      style={{
+                        textAlign: "center", fontSize: hasLyric && cell.lyric.length > 5 ? 11 : 13,
+                        fontFamily: T.serif, fontStyle: "italic", color: T.textDark,
+                        minHeight: 28, display: "flex", alignItems: "center", justifyContent: "center",
+                        cursor: "pointer", borderRadius: T.radius,
+                        border: isTarget ? `1px dashed ${T.gold}` : (hasLyric ? "none" : `1px dashed ${T.borderSoft}`),
+                        background: isActive ? T.getTint(T.gold, 0.1) : (isTarget ? T.getTint(T.gold, 0.05) : "transparent"),
+                        overflow: "visible", whiteSpace: "nowrap", position: "relative", zIndex: hasLyric ? 1 : 0,
+                        transition: "background 0.15s, border-color 0.15s",
+                      }}
+                      onClick={() => {
+                        if (isPlaying && !stepMode) return;
+                        if (hasLyric) { removePlacedLyric(mIdx, cIdx); }
+                        else if (selectedChip !== null) { placeLyric(mIdx, cIdx); }
+                      }}
+                    >
+                      {hasLyric ? cell.lyric : (isTarget ? "·" : "")}
+                    </div>
+                    {chart.activeSlots.includes(cIdx) && cIdx < 7 && (
+                      <div style={{
+                        textAlign: "center", fontSize: 10, fontFamily: T.serif, fontStyle: "italic",
+                        minHeight: 28, display: "flex", alignItems: "center", justifyContent: "center",
+                        opacity: 0.7, color: T.textDark,
+                      }}>{measure.between[cIdx]?.lyric || ""}</div>
+                    )}
+                  </React.Fragment>
+                );
+              })}
+            </div>
+
+            {/* 16th note slot toggles — positioned between beat columns */}
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: `40px ${colTemplate}`,
+              padding: "2px 4px 6px",
+            }}>
+              <div style={{ fontSize: 8, color: T.textMuted, display: "flex", alignItems: "center", justifyContent: "center" }}>16th</div>
+              {measure.cells.map((_, cIdx) => {
+                const isActive = chart.activeSlots.includes(cIdx);
+                const isLast = cIdx === 7;
+                return (
+                  <React.Fragment key={`slot-${cIdx}`}>
+                    <div style={{
+                      display: "flex", justifyContent: "center", alignItems: "center",
+                    }}>
+                      {!isLast && (
+                        <button onClick={() => toggleSlot(cIdx)} style={{
+                          width: 22, height: 18, borderRadius: 9, cursor: "pointer",
+                          border: `1px solid ${isActive ? T.gold : T.border}`,
+                          background: isActive ? T.getTint(T.gold, 0.15) : "transparent",
+                          color: isActive ? T.gold : T.textMuted,
+                          fontSize: 9, fontWeight: 700, fontFamily: T.sans,
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                          padding: 0, transition: "all 0.15s",
+                        }}>{isActive ? "−" : "+"}</button>
+                      )}
+                    </div>
+                    {/* Spacer for interstitial column if active */}
+                    {isActive && !isLast && (
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        <span style={{ fontSize: 7, color: T.gold, fontWeight: 600 }}>
+                          {cIdx % 2 === 0 ? "e" : "a"}
+                        </span>
+                      </div>
+                    )}
+                  </React.Fragment>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
+
+      {/* Add measure button */}
+      <button onClick={addMeasure} style={{
+        width: "100%", padding: "12px", background: T.bgSoft, border: `1px dashed ${T.border}`,
+        borderRadius: T.radiusMd, cursor: "pointer", color: T.textMuted,
+        fontSize: 12, fontFamily: T.sans, fontWeight: 600, marginBottom: 16,
+        display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+      }}><Plus size={14} /> Add Measure</button>
+
+      {/* Delete toast */}
+      {deleteToast && (
+        <div style={{
+          position: "fixed", bottom: 24, left: "50%", transform: "translateX(-50%)",
+          background: T.textDark, color: "#fff", padding: "10px 20px", borderRadius: T.radiusMd,
+          fontSize: 12, fontFamily: T.sans, display: "flex", gap: 12, alignItems: "center",
+          zIndex: 999, boxShadow: T.md,
+        }}>
+          <span>Measure deleted</span>
+          <button onClick={undoDeleteMeasure} style={{
+            background: T.gold, color: "#fff", border: "none", padding: "4px 12px",
+            borderRadius: T.radius, cursor: "pointer", fontSize: 11, fontWeight: 700,
+          }}>Undo</button>
+        </div>
+      )}
+
+      {/* Chord voicing popup */}
+      {chordVoicing && (() => {
+        const chord = chart.measures[chordVoicing.m]?.cells[chordVoicing.c]?.chord;
+        const voicing = chord ? CHORD_VOICINGS[chord] : null;
+        if (!voicing) return null;
+        return (
+          <div style={{
+            position: "fixed", inset: 0, zIndex: 1001, display: "flex",
+            alignItems: "center", justifyContent: "center",
+            background: "rgba(0,0,0,0.2)",
+          }} onClick={() => setChordVoicing(null)}>
+            <ChordDiagram theme={T} frets={voicing.frets} name={voicing.name} onClose={() => setChordVoicing(null)} />
+          </div>
+        );
+      })()}
+
+      {/* Chord bottom sheet */}
+      <BottomSheet theme={T} open={!!activeChordCell} onClose={() => setActiveChordCell(null)}>
+        <div style={{ marginBottom: 8 }}>
+          <span style={{
+            fontSize: 9, color: T.textMuted, fontWeight: 600, textTransform: "uppercase",
+            letterSpacing: 1,
+          }}>Select Chord</span>
+        </div>
+
+        {/* Recently used */}
+        {recentChords.length > 0 && (
+          <div style={{ marginBottom: 12 }}>
+            <div style={{ fontSize: 8, color: T.textMuted, marginBottom: 4, textTransform: "uppercase", letterSpacing: 1 }}>Recent</div>
+            <div style={{ display: "flex", gap: 6 }}>
+              {recentChords.map(ch => (
+                <button key={ch} onClick={() => selectChord(ch)} style={{
+                  minWidth: 44, minHeight: 44, fontSize: 14, fontFamily: T.serif, fontWeight: 700,
+                  color: T.gold, background: T.getTint(T.gold, 0.08), border: `1px solid ${T.gold}30`,
+                  borderRadius: T.radius, cursor: "pointer",
+                }}>{ch}</button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Common chords */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 6, marginBottom: 12 }}>
+          {COMMON_CHORDS.map(ch => (
+            <button key={ch} onClick={() => selectChord(ch)} style={{
+              minHeight: 44, fontSize: 13, fontFamily: T.serif, fontWeight: 600,
+              color: T.textDark, background: T.bgSoft, border: `1px solid ${T.border}`,
+              borderRadius: T.radius, cursor: "pointer",
+            }}>{ch}</button>
+          ))}
+        </div>
+
+        {/* Sharps/flats */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 6, marginBottom: 12 }}>
+          {SHARP_FLAT_CHORDS.map(ch => (
+            <button key={ch} onClick={() => selectChord(ch)} style={{
+              minHeight: 44, fontSize: 13, fontFamily: T.serif, fontWeight: 600,
+              color: T.textMed, background: T.bgSoft, border: `1px solid ${T.borderSoft}`,
+              borderRadius: T.radius, cursor: "pointer",
+            }}>{ch}</button>
+          ))}
+        </div>
+
+        {/* Custom + Clear */}
+        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          <input
+            type="text" value={customChord} onChange={e => setCustomChord(e.target.value)}
+            placeholder="Custom (e.g. Cmaj7)"
+            onKeyDown={e => { if (e.key === "Enter" && customChord.trim()) { selectChord(customChord.trim()); setCustomChord(""); } }}
+            style={{
+              flex: 1, fontSize: 13, fontFamily: T.serif, color: T.textDark,
+              border: `1px solid ${T.border}`, borderRadius: T.radius, background: T.bgCard,
+              padding: "8px 12px", outline: "none",
+            }}
+          />
+          <button onClick={() => { if (customChord.trim()) { selectChord(customChord.trim()); setCustomChord(""); } }} style={{
+            minHeight: 36, padding: "0 12px", fontSize: 10, fontWeight: 700, fontFamily: T.sans,
+            background: T.gold, color: "#fff", border: "none", borderRadius: T.radius, cursor: "pointer",
+            textTransform: "uppercase", letterSpacing: 1,
+          }}>Add</button>
+          <button onClick={clearChord} style={{
+            minHeight: 36, padding: "0 12px", fontSize: 10, fontWeight: 700, fontFamily: T.sans,
+            background: "transparent", color: T.coral, border: `1px solid ${T.coral}40`,
+            borderRadius: T.radius, cursor: "pointer", textTransform: "uppercase", letterSpacing: 1,
+          }}>Clear</button>
+        </div>
+      </BottomSheet>
+    </div>
+  );
+}
+
+// ─── Chart List View ────────────────────────────────────────────────────────
+export function ChartListView({ theme: T, onSelect, onNew }) {
+  const [charts, setCharts] = useState([]);
+
+  useEffect(() => {
+    try {
+      const all = JSON.parse(localStorage.getItem("strumCharts") || "{}");
+      const list = Object.values(all).sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+      setCharts(list);
+    } catch { setCharts([]); }
+  }, []);
+
+  const deleteChart = (id) => {
+    try {
+      const all = JSON.parse(localStorage.getItem("strumCharts") || "{}");
+      delete all[id];
+      localStorage.setItem("strumCharts", JSON.stringify(all));
+      setCharts(Object.values(all).sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0)));
+    } catch { }
+  };
+
+  const getPreview = (chart) => {
+    const n = chart.measures?.length || 0;
+    const bpm = chart.bpm || 80;
+    const sections = [...new Set((chart.measures || []).map(m => m.sectionLabel).filter(Boolean))];
+    const sectionStr = sections.length ? sections.join(", ") : "";
+    return `${bpm} BPM · ${n} measure${n !== 1 ? "s" : ""}${sectionStr ? " · " + sectionStr : ""}`;
+  };
+
+  return (
+    <div>
+      <div style={{ textAlign: "center", marginBottom: 24 }}>
+        <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 4, textTransform: "uppercase", color: T.gold, fontFamily: T.sans, marginBottom: 8 }}>
+          Chart Builder
+        </div>
+        <div style={{ fontSize: 32, fontWeight: 400, fontFamily: T.serif, color: T.textDark }}>Charts</div>
+      </div>
+
+      <button onClick={onNew} style={{
+        width: "100%", padding: "16px", background: T.getTint(T.gold, 0.05),
+        border: `1px dashed ${T.gold}60`, borderRadius: T.radiusMd, cursor: "pointer",
+        color: T.gold, fontSize: 13, fontFamily: T.sans, fontWeight: 700, marginBottom: 16,
+        display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+      }}><Plus size={16} /> New Chart</button>
+
+      {charts.length === 0 && (
+        <div style={{
+          textAlign: "center", padding: "40px 20px", color: T.textLight,
+          fontFamily: T.serif, fontStyle: "italic", fontSize: 14,
+        }}>
+          No charts yet — create your first one!
+        </div>
+      )}
+
+      {charts.map(ch => (
+        <div key={ch.id} onClick={() => onSelect(ch)} style={{
+          padding: "16px 20px", background: T.bgCard, border: `1px solid ${T.border}`,
+          borderRadius: T.radiusMd, marginBottom: 8, cursor: "pointer",
+          transition: "box-shadow 0.15s",
+        }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div>
+              <div style={{
+                fontSize: 15, fontFamily: T.serif, fontWeight: 600, color: T.textDark,
+                marginBottom: 4,
+              }}>{ch.title || "Untitled Chart"}</div>
+              <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans }}>
+                {getPreview(ch)} · {ch.measures?.length || 0} measure{(ch.measures?.length || 0) !== 1 ? "s" : ""}
+              </div>
+              <div style={{ fontSize: 9, color: T.textMuted, fontFamily: T.sans, marginTop: 4 }}>
+                {ch.updatedAt ? new Date(ch.updatedAt).toLocaleDateString() : ""}
+              </div>
+            </div>
+            <button onClick={e => { e.stopPropagation(); deleteChart(ch.id); }} style={{
+              background: "none", border: "none", cursor: "pointer", color: T.textMuted, padding: 8,
+            }}><Trash2 size={14} /></button>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
