@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { MiniAudioPlayer, AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, VolumeMeter, DroneGenerator, TAB_CONTENT, InlineKeyboard, RhythmCellCards, PhraseFormGuide, StrumChartBuilder, ChartListView, makeTemplateChart } from './JungleTools.jsx';
 import { DAYS, KEYBOARD_LEVELS, LOOPER_LEVELS, LESSON_POOL, ALL_NOTES, getPitchRange } from './data/appData.js';
+import { WEEKLY_PLANS, CURRENT_WEEK } from './data/weeklyPlans/index.js';
 import { VOCAL_LEVELS } from './data/vocalLevels/index.js';
 import { GUITAR_STUDY } from './data/guitarStudy/index.js';
 import { SINGER_SONGWRITER_LEVELS } from './data/singerSongwriter/index.js';
@@ -3002,6 +3003,88 @@ function ToolCard({ title, icon, defaultOpen = false, children }) {
   );
 }
 
+function PastWeeksView({ completed }) {
+  const [openWeek, setOpenWeek] = useState(null);
+  const pastWeeks = WEEKLY_PLANS.slice(0, -1).reverse(); // newest-first, exclude current
+  if (pastWeeks.length === 0) return null;
+
+  return (
+    <div>
+      <div style={{ textAlign: "center", marginBottom: 20 }}>
+        <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 4, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 6 }}>
+          Past Weeks
+        </div>
+        <div style={{ fontSize: 13, color: T.textLight, fontFamily: T.sans, lineHeight: 1.6 }}>
+          {pastWeeks.length} previous week{pastWeeks.length !== 1 ? "s" : ""}
+        </div>
+      </div>
+      {pastWeeks.map((week) => {
+        const isOpen = openWeek === week.id;
+        const allExIds = week.days.flatMap(d => d.exercises.map(e => e.id));
+        const doneCount = allExIds.filter(id => completed.has(id)).length;
+        const weekDate = new Date(week.weekOf + "T00:00:00");
+        const label = weekDate.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+        return (
+          <div key={week.id} style={{
+            background: T.bgCard, border: `1px solid ${T.border}`, marginBottom: 12, borderRadius: T.radius,
+            overflow: "hidden"
+          }}>
+            <div onClick={() => setOpenWeek(isOpen ? null : week.id)} style={{
+              display: "flex", alignItems: "center", gap: 14, padding: "14px 18px", cursor: "pointer"
+            }}>
+              <div style={{
+                width: 44, height: 44, borderRadius: T.radiusMd, background: T.bgSoft,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontSize: 12, fontWeight: 700, color: T.textMuted, fontFamily: T.sans, flexShrink: 0
+              }}>{label}</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontWeight: 600, fontSize: 16, color: T.textDark, fontFamily: T.serif }}>{week.focus}</div>
+                <div style={{ fontSize: 12, color: T.textMuted, fontFamily: T.sans, marginTop: 2 }}>
+                  {doneCount}/{allExIds.length} completed
+                  {week.carryForward.length > 0 && ` · ${week.carryForward.length} carried forward`}
+                </div>
+              </div>
+              <div style={{ color: T.textMuted, transition: "transform 0.2s", transform: isOpen ? "rotate(180deg)" : "" }}>
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M7 10l5 5 5-5z" /></svg>
+              </div>
+            </div>
+            {isOpen && (
+              <div style={{ padding: "0 18px 16px", borderTop: `1px solid ${T.borderSoft}` }}>
+                {week.teacherNotes && (
+                  <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, lineHeight: 1.6, padding: "12px 0", fontStyle: "italic" }}>
+                    {week.teacherNotes}
+                  </div>
+                )}
+                {week.days.map(day => (
+                  <div key={day.num} style={{ marginTop: 12 }}>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>
+                      Day {day.num} — {day.name}
+                    </div>
+                    {day.exercises.map(ex => {
+                      const done = completed.has(ex.id);
+                      return (
+                        <div key={ex.id} style={{
+                          display: "flex", alignItems: "center", gap: 8, padding: "4px 0",
+                          fontSize: 13, fontFamily: T.sans, color: done ? T.success : T.textLight,
+                          textDecoration: done ? "line-through" : "none", opacity: done ? 0.6 : 1
+                        }}>
+                          <span style={{ fontSize: 10 }}>{done ? "✓" : "·"}</span>
+                          <span>{ex.title}</span>
+                          <span style={{ fontSize: 11, color: T.textMuted, marginLeft: "auto" }}>{ex.time}m</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function LessonNotesView() {
   const [openLesson, setOpenLesson] = useState(null);
   const [openSection, setOpenSection] = useState(null);
@@ -3995,6 +4078,19 @@ export default function App() {
     localStorage.setItem("ss-level-migration-v2", "done");
   }
 
+  // Weekly plan ID migration: d1e1 → w0317-d1e1 (prevents cross-week collisions)
+  if (!localStorage.getItem("weekly-id-migration-v1")) {
+    try {
+      const savedCompleted = localStorage.getItem("practice-completed");
+      if (savedCompleted) {
+        const ids = JSON.parse(savedCompleted);
+        const migrated = ids.map(id => /^d\d+e\d+$/.test(id) ? `w0317-${id}` : id);
+        localStorage.setItem("practice-completed", JSON.stringify(migrated));
+      }
+    } catch { /* ignore migration errors */ }
+    localStorage.setItem("weekly-id-migration-v1", "done");
+  }
+
   const [tab, setTab] = useState("practice");
   const [selectedDay, setSelectedDay] = useState(DAYS[0]);
   const [completed, setCompleted] = useState(() => {
@@ -4275,6 +4371,13 @@ export default function App() {
             <div style={{ marginTop: 28 }}>
               <DayView day={selectedDay} completed={completed} onComplete={toggleComplete} metro={metro} onOpenTapMatch={setTapMatchBpm} onStartFlow={startFlow} />
             </div>
+
+            {/* Past Weeks — history of completed weekly plans */}
+            {WEEKLY_PLANS.length > 1 && (
+              <div style={{ marginTop: 40, borderTop: `1px solid ${T.border}`, paddingTop: 24 }}>
+                <PastWeeksView completed={completed} />
+              </div>
+            )}
 
             {/* Archive — exercises from LESSON_POOL by skill branch */}
             <div style={{ marginTop: 40, borderTop: `1px solid ${T.border}`, paddingTop: 24 }}>
