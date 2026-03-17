@@ -1,4 +1,5 @@
-export { ALL_NOTES, getPitchRange } from "./utils.js";
+import { ALL_NOTES, getPitchRange } from "./utils.js";
+export { ALL_NOTES, getPitchRange };
 import { CURRENT_WEEK } from "./weeklyPlans/index.js";
 
 export const DAYS = CURRENT_WEEK.days;
