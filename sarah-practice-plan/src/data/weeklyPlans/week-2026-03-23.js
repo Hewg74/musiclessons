@@ -55,20 +55,36 @@ export const week_2026_03_23 = {
         metronome: 78, levelUp: "Clean 'e and a' only at 85 BPM for 2 minutes."
       },
       {
-        id: "w0323-d1e4", time: 12, title: "Sol Del Sur — Strum Map Review", type: "guitar",
-        what: "Review and internalize the strum pattern mapping for verses 1-2. The pattern: pluck, down, down, down, up, down, up, down, down. Know exactly where each strum falls relative to the beat.",
-        setup: "Guitar. Sol Del Sur strum mapping doc. Metronome at slow tempo (70–80 BPM). No backing track yet.",
+        id: "w0323-d1e4", time: 10, title: "Sol Del Sur — Vocal Rhythm (No Guitar)", type: "rhythm",
+        what: "Sing the Sol Del Sur lines with metronome. Underlined words land ON the click. Start at 75, work toward 122 BPM. Incorporate the nod!",
+        setup: "Metronome at 75 BPM. Strum map doc in front of you (shows underlines). No guitar — voice only.",
         tracks: [{ name: "Sol Del Sur", src: "/sol-del-sur.mp3" }],
         steps: [
-          { text: "Write out (or review) the strum map: which syllable/word aligns with which strum direction.", why: "Sarah's homework: map where each strum (pluck, D, U) falls relative to beats and words." },
-          { text: "Strum pattern at 70 BPM with metronome. No singing. Just the hands.", why: "The pattern needs to be in your hands before you add voice. Pluck starts each chord." },
-          { text: "Focus on the B and F# chord changes — these land on the 'and' (offbeat).", why: "This is where Gene felt the syncopation breakthrough. The words fall between clicks." },
-          { text: "Play through verses 1-2 strum pattern 5 times cleanly at slow tempo.", why: "Repetition at slow tempo builds the muscle memory that fast tempo reveals." },
+          { text: "Set metronome to 75 BPM. Look at your strum map — the underlined words are on the click.", why: "Sarah: 'The underlines are the click of the metronome.' Every underlined syllable aligns with a metronome hit." },
+          { text: "Sing: 'I once heard about a place / somewhere south far away.' Underlined words ON the click, everything else BETWEEN clicks.", why: "This is pure vocal rhythm — no guitar to worry about. Get the word placement locked in." },
+          { text: "NOD the whole time. Down on the click (underlined words), up between clicks.", why: "The nod is your anchor. It tells your body where beat 1 is while the words float around it." },
+          { text: "When 75 feels easy, push to 85, then 95, working toward 122 BPM.", why: "122 BPM is the song's actual tempo. Build up gradually." },
+          { text: "At 122 BPM: tap tempo on spacebar while singing. Verify you're locked in.", why: "Tap tempo at 122 confirms your internal clock matches the song speed." },
+        ],
+        feel: "The underlined words should land like drumbeats — precise and solid. The non-underlined words should feel weightless, floating between the clicks. The nod ties it all together.",
+        wrong: "If all the words are landing on clicks, you're squaring off the rhythm. Listen back to the recording — the non-underlined words are deliberately between beats.",
+        sarah: "Tap tempo at 122, metronome playing at 122. Sing the lines — the underlines are the click. Incorporate the nod! You can start at 75, but eventually speed it up to 122.",
+        metronome: 75, levelUp: "Sing both lines with clean word placement at 122 BPM while tapping."
+      },
+      {
+        id: "w0323-d1e5a", time: 12, title: "Sol Del Sur — Strum Pattern on Beat", type: "guitar",
+        what: "Strum the Sol Del Sur pattern on beat at 75 BPM. Hands only — no singing yet.",
+        setup: "Guitar. Metronome at 75 BPM. Strum map doc visible.",
+        steps: [
+          { text: "Review the strum map: pluck, D, D, D, U, D, U, D, D. Know which strum falls on which beat.", why: "Sarah's homework: strum the pattern on beat at 75 BPM." },
+          { text: "Strum pattern at 75 BPM with metronome. No singing. Just the hands.", why: "The pattern needs to be in your hands before you add voice. Pluck starts each chord." },
+          { text: "Focus on the B and F# chord changes — these land on the 'and' (offbeat).", why: "This is where you felt the syncopation breakthrough. The words fall between clicks." },
+          { text: "Play through verses 1-2 strum pattern 5 times cleanly.", why: "Repetition at slow tempo builds the muscle memory that fast tempo reveals." },
         ],
         feel: "When the B and F# land on the offbeat, you should feel that same groove you felt in the lesson — the syncopation 'locks in' and it feels like the rhythm is pulling you forward.",
         wrong: "If the chord changes are landing ON the click instead of between clicks, you're simplifying the rhythm. Listen to the recording and hear where the changes actually fall.",
-        sarah: "You felt it — that moment when B and F# land on the 'and' and the groove clicks. That's the syncopation. Chase that feeling.",
-        metronome: 70, levelUp: "Strum pattern at 80 BPM without looking at the map."
+        sarah: "Metronome at 75 BPM: strum the pattern on beat. Get the hands solid before adding anything else.",
+        metronome: 75, levelUp: "Strum pattern at 85 BPM without looking at the map."
       },
       {
         id: "w0323-d1e5", time: 8, title: "Passaggio Warm-Up", type: "vocal",
@@ -235,20 +251,20 @@ export const week_2026_03_23 = {
       {
         id: "w0323-d3e3", time: 15, title: "Sol Del Sur — First 2 Lines with Voice", type: "song",
         recorder: true,
-        what: "Add vocals to 'I once heard about a place / somewhere south far away.' This is Sarah's homework. Start slow, nail the word placement.",
-        setup: "Guitar. Metronome at 70 BPM (half-speed). Phone ready to record.",
+        what: "Add vocals to 'I once heard about a place / somewhere south far away.' Sarah's homework: start at 75 BPM, nail the word placement, record + send.",
+        setup: "Guitar. Metronome at 75 BPM. Phone ready to record.",
         tracks: [{ name: "Sol Del Sur", src: "/sol-del-sur.mp3" }],
         steps: [
-          { text: "At 70 BPM, strum the pattern and speak (don't sing) the words in rhythm.", why: "Speaking removes pitch stress. Focus purely on where the words fall relative to the strum." },
-          { text: "Line 1: 'I once heard about a place.' Map each syllable to your strum doc.", why: "You know where the strums fall. Now you need to know where the syllables fall." },
-          { text: "Line 2: 'Somewhere south far away.' Same mapping.", why: "Each syllable has a specific rhythmic home — on a beat, on an 'and,' or between subdivisions." },
-          { text: "Once the speaking feels locked, switch to singing at the same slow tempo.", why: "The rhythm should already be in your body from speaking. Singing just adds pitch." },
-          { text: "Record yourself singing + strumming the 2 lines. Listen back immediately.", why: "Sarah's homework: record and send it. But listen to it yourself first — catch what you can." },
+          { text: "At 75 BPM, strum the pattern and speak (don't sing) the words in rhythm. Nod: down on numbers, up on &'s.", why: "Speaking removes pitch stress. Focus purely on where the words fall relative to the strum." },
+          { text: "Line 1: 'I once heard about a place.' The underlines in your strum map show which syllables land on the metronome click.", why: "Every underlined syllable = a click. Words without underlines fall BETWEEN clicks." },
+          { text: "Line 2: 'Somewhere south far away.' Same mapping — underlined words on the click, everything else floats between.", why: "This syncopation is what makes the song groove. The words dance around the beat." },
+          { text: "Once the speaking feels locked, switch to singing at 75 BPM.", why: "The rhythm should already be in your body from speaking. Singing just adds pitch." },
+          { text: "When it feels solid, record yourself singing + strumming. Listen back. Send to Sarah for the green light.", why: "Sarah: 'Send me a recording once you feel like you've got it so I can give you the green light to do more reps and move on.'" },
         ],
         feel: "The words should feel like they have 'homes' in the strum pattern — specific spots where they lock in. When it's right, the singing and strumming feel like one thing, not two things fighting each other.",
         wrong: "If the words keep landing on random spots, go back to speaking-only. The rhythm of the words matters more than the pitch right now.",
-        sarah: "Add the vocals to the first two lines — 'I once heard about a place, somewhere south far away.' Record yourself and send it to me.",
-        metronome: 70, levelUp: "Clean recording of 2 lines with strum at 80+ BPM."
+        sarah: "Metronome at 75: add the vocals to the strum — send me a recording once you feel like you've got it so I can give you the green light to do more reps and move on to the next step.",
+        metronome: 75, levelUp: "Clean recording sent to Sarah. Green light to speed up."
       },
       {
         id: "w0323-d3e4", time: 8, title: "Passaggio Work", type: "vocal",
@@ -303,20 +319,20 @@ export const week_2026_03_23 = {
       {
         id: "w0323-d4e2", time: 15, title: "Sol Del Sur — Sing Lines 1-2", type: "song",
         recorder: true,
-        what: "Full practice of singing + strumming the first 2 lines. Build tempo toward the real song speed.",
-        setup: "Guitar. Metronome starting at 75 BPM, building up. Phone for recording.",
+        what: "Full practice of singing + strumming the first 2 lines. Metronome at 75 BPM. Send Sarah a recording once it feels solid — she'll give the green light to move on.",
+        setup: "Guitar. Metronome at 75 BPM. Phone for recording.",
         tracks: [{ name: "Sol Del Sur", src: "/sol-del-sur.mp3" }],
         steps: [
-          { text: "Strum-only warm-up at 80 BPM: 1 minute. Get the hands going.", why: "Hands first, always. Autopilot before adding voice." },
-          { text: "Add vocals: 'I once heard about a place / somewhere south far away.' At 75 BPM.", why: "Slow enough to think about word placement. Speed is not the goal yet." },
-          { text: "Focus on where 'place' and 'away' land — are they on-beat or between beats?", why: "The line endings carry the syncopation. Get these right and the rest follows." },
-          { text: "Build: 75 → 80 → 85 → 90 BPM as it gets clean.", why: "Gradual tempo increase. Only advance when word placement is solid." },
-          { text: "Record your best take. Listen back. Compare to the original.", why: "Your ear is the judge. Does your version have the same 'bounce' as the recording?" },
+          { text: "Strum-only warm-up at 75 BPM: 1 minute. Get the hands going.", why: "Hands first, always. Autopilot before adding voice." },
+          { text: "Add vocals: 'I once heard about a place / somewhere south far away.' At 75 BPM.", why: "The underlined words land on the click. Everything else floats between." },
+          { text: "Nod the whole time. Focus on where 'once', 'heard', 'bout', 'place' land relative to the click.", why: "The line endings carry the syncopation. Get these right and the rest follows." },
+          { text: "Run it 5+ times at 75 BPM until it feels locked.", why: "Sarah: 'Send me a recording once you feel like you've got it.' Don't speed up yet — get 75 BPM solid first." },
+          { text: "Record your best take. Listen back. If it sounds right, send to Sarah for the green light.", why: "Sarah will check it and give you the go-ahead to do more reps and move to the next step." },
         ],
         feel: "When the words and strum lock together, it should feel like one unified thing — not singing over strumming, but singing-and-strumming as a single action.",
         wrong: "If the words are landing in random places each time through, the word map isn't internalized yet. Go back to speaking the words in rhythm.",
-        sarah: "Record yourself singing and strumming and send it to me. I want to hear those first two lines with the guitar.",
-        metronome: 75, levelUp: "Lines 1-2 sung + strummed cleanly at 90 BPM."
+        sarah: "Metronome at 75: add the vocals — send me a recording once you feel like you've got it so I can give you the green light to do more reps and move on to the next step.",
+        metronome: 75, levelUp: "Recording sent to Sarah. Green light received."
       },
       {
         id: "w0323-d4e3", time: 10, title: "Sol Del Sur — Ear-Map Verse 3-4", type: "listen",
