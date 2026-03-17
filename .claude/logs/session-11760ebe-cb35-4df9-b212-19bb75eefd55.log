@@ -1,3 +1,4 @@
 [2026-03-17T20:14:46.732Z] app wont load it is stuck on a white screen after our last commit
 [2026-03-17T20:17:56.179Z] app wont load it is stuck on a white screen after our last commit
 [2026-03-17T20:29:42.990Z] I think it's actually broken still. I don't think you fixed it.
+[2026-03-17T20:42:25.510Z] Okay, great, it worked. But we should be able to pick the audio from a dropdown. And then also, it is in the wrong place. It should be inside the actual module itself when we are trying to match up the lyrics and the beat and the chord and strum because we need to actually hear it. Also, let's give it the playback that we have with the looping and whatnot, as we already have that code in here. The tabs portion is a great touch. That's actually really useful. And yeah, we don't need audios without lyrics.

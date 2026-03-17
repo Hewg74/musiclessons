@@ -3,7 +3,7 @@ import * as Tone from 'tone';
 import {
   Play, Pause, RotateCcw, SkipBack, Scissors, Check,
   Volume2, Mic, Headphones, Music, Piano, Guitar, Drum,
-  Plus, Trash2, Share2, Undo2, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, X, Edit3
+  Plus, Trash2, Share2, Undo2, ChevronDown, ChevronUp, X, Edit3
 } from 'lucide-react';
 
 // We'll accept the theme object `T` from App.jsx via props or just hardcode some shared colors for now.
@@ -4351,133 +4351,70 @@ export function PhraseFormGuide({ theme: T, form }) {
 }
 
 // ─── SONG PICKER ────────────────────────────────────────────────────────────
-// Simple song selector + player for the Charts tab. Uses existing tracks.
+// Song selector + player for inside StrumChartBuilder. Only songs with lyrics.
 
-const SONGS = [
-  { id: "soldelsur", name: "Sol Del Sur", artist: "Sun Room", src: "/sol-del-sur.mp3", bpm: 80, key: "C#m", hasLyrics: true, tabId: "soldelsur" },
-  { id: "iltwyw", name: "I Like The Way You Walk", artist: "The Donkeys", src: "/iltwyw.mp3", bpm: 95, key: "G", hasLyrics: true, tabId: "iltwyw" },
-  { id: "surf", name: "Surf Rock Beat", src: "/surf-rock-120.mp3", bpm: 120 },
-  { id: "groove", name: "Groove Beat", src: "/groove-beat-90.mp3", bpm: 90 },
-  { id: "psych", name: "Psych Rock Beat", src: "/psych-rock-120.mp3", bpm: 120 },
-  { id: "reggae", name: "Reggae One Drop", src: "/reggae-one-drop-85.mp3", bpm: 85 },
-  { id: "dub", name: "Dub Reggae", src: "/dub-reggae-85.mp3", bpm: 85 },
-  { id: "desert", name: "Desert Blues", src: "/desert-blues-75.mp3", bpm: 75 },
-  { id: "khruangbin", name: "Khruangbin Style", src: "/khruangbin-style-80.mp3", bpm: 80 },
-  { id: "western", name: "Cinematic Western", src: "/cinematic-western-80.mp3", bpm: 80 },
-  { id: "deepsoul", name: "Deep Soul Groove", src: "/deep-soul-groove-80.mp3", bpm: 80 },
-  { id: "soulfunk", name: "Soul Funk Groove", src: "/soul-funk-groove-90.mp3", bpm: 90 },
-  { id: "reggaerock", name: "Reggae Rock", src: "/reggae-rock-100.mp3", bpm: 100 },
-  { id: "bossanova", name: "Bossa Nova", src: "/bossa-nova-75.mp3", bpm: 75 },
-  { id: "afrobeat", name: "Afrobeat", src: "/afrobeat-100.mp3", bpm: 100 },
-  { id: "ska", name: "Ska Upbeat", src: "/ska-upbeat-95.mp3", bpm: 95 },
+const CHART_SONGS = [
+  { id: "soldelsur", name: "Sol Del Sur", artist: "Sun Room", src: "/sol-del-sur.mp3", bpm: 80, key: "C#m", tabId: "soldelsur" },
+  { id: "iltwyw", name: "I Like The Way You Walk", artist: "The Donkeys", src: "/iltwyw.mp3", bpm: 95, key: "G", tabId: "iltwyw" },
 ];
 
 export function SongPicker({ theme: T }) {
-  const [idx, setIdx] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [songId, setSongId] = useState("");
   const [showTabs, setShowTabs] = useState(false);
-  const audioRef = useRef(null);
-  const song = SONGS[idx];
-
-  const prev = () => setIdx(i => (i - 1 + SONGS.length) % SONGS.length);
-  const next = () => setIdx(i => (i + 1) % SONGS.length);
-
-  const disposeAudio = () => {
-    if (audioRef.current) { audioRef.current.pause(); audioRef.current.src = ""; audioRef.current = null; }
-  };
-
-  const togglePlay = () => {
-    if (isPlaying) { disposeAudio(); setIsPlaying(false); return; }
-    disposeAudio();
-    const audio = new Audio(song.src);
-    audio.onended = () => setIsPlaying(false);
-    audio.play().catch(() => {});
-    audioRef.current = audio;
-    setIsPlaying(true);
-  };
-
-  useEffect(() => { disposeAudio(); setIsPlaying(false); setShowTabs(false); }, [idx]);
-  useEffect(() => () => disposeAudio(), []);
+  const song = CHART_SONGS.find(s => s.id === songId);
 
   return (
-    <div style={{ marginBottom: 24 }}>
-      {/* Compact player bar */}
-      <div style={{
-        background: T.getTint(T.gold, 0.03), border: `1px solid ${T.border}`,
-        borderRadius: T.radiusMd, overflow: "hidden",
-      }}>
-        {/* Navigation + song info */}
-        <div style={{ display: "flex", alignItems: "center", padding: "10px 12px", gap: 8 }}>
-          {/* Prev */}
-          <button onClick={prev} style={{
-            background: "none", border: "none", cursor: "pointer", color: T.textMuted,
-            padding: 4, display: "flex", alignItems: "center",
-          }}><ChevronLeft size={18} /></button>
+    <div style={{ marginBottom: 16 }}>
+      {/* Dropdown + tabs toggle row */}
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: song ? 8 : 0 }}>
+        <Music size={14} style={{ color: T.textMuted, flexShrink: 0 }} />
+        <select
+          value={songId}
+          onChange={e => { setSongId(e.target.value); setShowTabs(false); }}
+          style={{
+            flex: 1, fontSize: 13, fontFamily: T.serif, fontWeight: 600, color: T.textDark,
+            background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radius,
+            padding: "7px 10px", cursor: "pointer", outline: "none",
+            appearance: "auto",
+          }}
+        >
+          <option value="">Choose a song...</option>
+          {CHART_SONGS.map(s => (
+            <option key={s.id} value={s.id}>{s.name} — {s.artist} ({s.bpm} BPM, {s.key})</option>
+          ))}
+        </select>
 
-          {/* Play */}
-          <button onClick={togglePlay} style={{
-            width: 36, height: 36, borderRadius: "50%", border: "none", cursor: "pointer",
-            background: isPlaying ? T.coral : T.gold, color: "#fff",
-            display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
-            transition: "all 0.2s",
-            boxShadow: isPlaying ? `0 0 12px ${T.coral}40` : "none",
-          }}>
-            {isPlaying ? <Pause size={14} /> : <Play size={14} style={{ marginLeft: 1 }} />}
-          </button>
-
-          {/* Song info */}
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{
-              fontSize: 14, fontFamily: T.serif, fontWeight: 600, color: T.textDark,
-              whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
-              display: "flex", alignItems: "center", gap: 6,
-            }}>
-              {song.name}
-              {song.hasLyrics && (
-                <span style={{
-                  fontSize: 7, fontWeight: 800, color: T.gold, background: T.getTint(T.gold, 0.12),
-                  padding: "1px 5px", borderRadius: 6, textTransform: "uppercase", letterSpacing: 0.5,
-                  fontFamily: T.sans, flexShrink: 0,
-                }}>Lyrics</span>
-              )}
-            </div>
-            <div style={{ fontSize: 10, color: T.textLight, fontFamily: T.sans, marginTop: 1 }}>
-              {song.artist ? `${song.artist} · ` : ""}{song.bpm} BPM{song.key ? ` · ${song.key}` : ""}
-              <span style={{ color: T.textMuted }}> · {idx + 1}/{SONGS.length}</span>
-            </div>
-          </div>
-
-          {/* Tabs toggle */}
-          {song.hasLyrics && (
-            <button onClick={() => setShowTabs(!showTabs)} style={{
-              background: showTabs ? T.getTint(T.gold, 0.1) : "none",
-              border: `1px solid ${showTabs ? T.gold + "40" : T.borderSoft}`,
-              borderRadius: T.radius, padding: "5px 10px", cursor: "pointer",
-              fontSize: 9, fontWeight: 700, color: showTabs ? T.gold : T.textMuted,
-              fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1,
-              transition: "all 0.15s",
-            }}>Tabs</button>
-          )}
-
-          {/* Next */}
-          <button onClick={next} style={{
-            background: "none", border: "none", cursor: "pointer", color: T.textMuted,
-            padding: 4, display: "flex", alignItems: "center",
-          }}><ChevronRight size={18} /></button>
-        </div>
-
-        {/* Lyrics/tabs expansion */}
-        {showTabs && song.tabId && TAB_CONTENT[song.tabId] && (
-          <div style={{ borderTop: `1px solid ${T.borderSoft}` }}>
-            <pre style={{
-              margin: 0, padding: "12px 16px", background: T.bgSoft,
-              fontSize: 11, fontFamily: "'Courier New', monospace",
-              color: T.textDark, whiteSpace: "pre-wrap", wordBreak: "break-word",
-              maxHeight: 280, overflowY: "auto", lineHeight: 1.6,
-            }}>{TAB_CONTENT[song.tabId].trim()}</pre>
-          </div>
+        {song && song.tabId && TAB_CONTENT[song.tabId] && (
+          <button onClick={() => setShowTabs(!showTabs)} style={{
+            background: showTabs ? T.getTint(T.gold, 0.1) : "none",
+            border: `1px solid ${showTabs ? T.gold + "40" : T.borderSoft}`,
+            borderRadius: T.radius, padding: "5px 10px", cursor: "pointer",
+            fontSize: 9, fontWeight: 700, color: showTabs ? T.gold : T.textMuted,
+            fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1,
+            transition: "all 0.15s", flexShrink: 0,
+          }}>Tabs</button>
         )}
       </div>
+
+      {/* MiniAudioPlayer for selected song */}
+      {song && (
+        <MiniAudioPlayer src={song.src} theme={T} title={`${song.name} — ${song.artist}`} />
+      )}
+
+      {/* Tabs expansion */}
+      {showTabs && song && song.tabId && TAB_CONTENT[song.tabId] && (
+        <div style={{
+          border: `1px solid ${T.borderSoft}`, borderRadius: T.radius,
+          overflow: "hidden", marginTop: 8,
+        }}>
+          <pre style={{
+            margin: 0, padding: "12px 16px", background: T.bgSoft,
+            fontSize: 11, fontFamily: "'Courier New', monospace",
+            color: T.textDark, whiteSpace: "pre-wrap", wordBreak: "break-word",
+            maxHeight: 280, overflowY: "auto", lineHeight: 1.6,
+          }}>{TAB_CONTENT[song.tabId].trim()}</pre>
+        </div>
+      )}
     </div>
   );
 }
@@ -5023,6 +4960,9 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
           }}><Share2 size={16} /></button>
         </div>
       </div>
+
+      {/* Song picker with audio player + tabs */}
+      <SongPicker theme={T} />
 
       {/* BPM + controls */}
       <div style={{ display: "flex", gap: 8, marginBottom: 16, alignItems: "center", flexWrap: "wrap" }}>
