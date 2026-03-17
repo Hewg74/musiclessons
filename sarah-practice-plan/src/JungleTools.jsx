@@ -4354,8 +4354,8 @@ export function PhraseFormGuide({ theme: T, form }) {
 // Song selector + player for inside StrumChartBuilder. Only songs with lyrics.
 
 const CHART_SONGS = [
-  { id: "soldelsur", name: "Sol Del Sur", artist: "Sun Room", src: "/sol-del-sur.mp3", bpm: 80, key: "C#m", tabId: "soldelsur" },
-  { id: "iltwyw", name: "I Like The Way You Walk", artist: "The Donkeys", src: "/iltwyw.mp3", bpm: 95, key: "G", tabId: "iltwyw" },
+  { id: "soldelsur", name: "Sol Del Sur", artist: "Sun Room", src: "/sol-del-sur.mp3", bpm: 120, key: "F#", tabId: "soldelsur" },
+  { id: "iltwyw", name: "I Like The Way You Walk", artist: "The Donkeys", src: "/iltwyw.mp3", bpm: 97, key: "A", tabId: "iltwyw" },
 ];
 
 export function SongPicker({ theme: T }) {
