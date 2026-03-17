@@ -7,7 +7,7 @@ import {
   Mic, Headphones, Info, AlertCircle, Quote, ArrowRight, Check, 
   Volume2, Sun, Moon
 } from 'lucide-react';
-import { MiniAudioPlayer, AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, VolumeMeter, DroneGenerator, TAB_CONTENT, InlineKeyboard, RhythmCellCards, PhraseFormGuide, StrumChartBuilder, ChartListView, makeTemplateChart } from './JungleTools.jsx';
+import { MiniAudioPlayer, AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, VolumeMeter, DroneGenerator, TAB_CONTENT, InlineKeyboard, RhythmCellCards, PhraseFormGuide, StrumChartBuilder, ChartListView, makeTemplateChart, SongPicker } from './JungleTools.jsx';
 import { DAYS, KEYBOARD_LEVELS, LOOPER_LEVELS, LESSON_POOL, ALL_NOTES, getPitchRange } from './data/appData.js';
 import { WEEKLY_PLANS, CURRENT_WEEK } from './data/weeklyPlans/index.js';
 import { VOCAL_LEVELS } from './data/vocalLevels/index.js';
@@ -4582,11 +4582,23 @@ export default function App() {
               onBack={() => setActiveChart(null)}
             />
           ) : (
-            <ChartListView
-              theme={T}
-              onSelect={(ch) => setActiveChart(ch)}
-              onNew={() => setActiveChart(makeTemplateChart())}
-            />
+            <div>
+              {/* Page header */}
+              <div style={{ textAlign: "center", marginBottom: 24 }}>
+                <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 4, textTransform: "uppercase", color: T.gold, fontFamily: T.sans, marginBottom: 8 }}>
+                  Chart Builder
+                </div>
+                <div style={{ fontSize: 32, fontWeight: 400, fontFamily: T.serif, color: T.textDark }}>Charts</div>
+              </div>
+
+              <SongPicker theme={T} />
+
+              <ChartListView
+                theme={T}
+                onSelect={(ch) => setActiveChart(ch)}
+                onNew={() => setActiveChart(makeTemplateChart())}
+              />
+            </div>
           )
         )}
       </div>

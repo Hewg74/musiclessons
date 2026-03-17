@@ -3,7 +3,7 @@ import * as Tone from 'tone';
 import {
   Play, Pause, RotateCcw, SkipBack, Scissors, Check,
   Volume2, Mic, Headphones, Music, Piano, Guitar, Drum,
-  Plus, Trash2, Share2, Undo2, ChevronDown, ChevronUp, X, Edit3
+  Plus, Trash2, Share2, Undo2, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, X, Edit3
 } from 'lucide-react';
 
 // We'll accept the theme object `T` from App.jsx via props or just hardcode some shared colors for now.
@@ -4350,17 +4350,143 @@ export function PhraseFormGuide({ theme: T, form }) {
   );
 }
 
+// ─── SONG PICKER ────────────────────────────────────────────────────────────
+// Simple song selector + player for the Charts tab. Uses existing tracks.
+
+const SONGS = [
+  { id: "soldelsur", name: "Sol Del Sur", artist: "Sun Room", src: "/sol-del-sur.mp3", bpm: 80, key: "C#m", hasLyrics: true, tabId: "soldelsur" },
+  { id: "iltwyw", name: "I Like The Way You Walk", artist: "The Donkeys", src: "/iltwyw.mp3", bpm: 95, key: "G", hasLyrics: true, tabId: "iltwyw" },
+  { id: "surf", name: "Surf Rock Beat", src: "/surf-rock-120.mp3", bpm: 120 },
+  { id: "groove", name: "Groove Beat", src: "/groove-beat-90.mp3", bpm: 90 },
+  { id: "psych", name: "Psych Rock Beat", src: "/psych-rock-120.mp3", bpm: 120 },
+  { id: "reggae", name: "Reggae One Drop", src: "/reggae-one-drop-85.mp3", bpm: 85 },
+  { id: "dub", name: "Dub Reggae", src: "/dub-reggae-85.mp3", bpm: 85 },
+  { id: "desert", name: "Desert Blues", src: "/desert-blues-75.mp3", bpm: 75 },
+  { id: "khruangbin", name: "Khruangbin Style", src: "/khruangbin-style-80.mp3", bpm: 80 },
+  { id: "western", name: "Cinematic Western", src: "/cinematic-western-80.mp3", bpm: 80 },
+  { id: "deepsoul", name: "Deep Soul Groove", src: "/deep-soul-groove-80.mp3", bpm: 80 },
+  { id: "soulfunk", name: "Soul Funk Groove", src: "/soul-funk-groove-90.mp3", bpm: 90 },
+  { id: "reggaerock", name: "Reggae Rock", src: "/reggae-rock-100.mp3", bpm: 100 },
+  { id: "bossanova", name: "Bossa Nova", src: "/bossa-nova-75.mp3", bpm: 75 },
+  { id: "afrobeat", name: "Afrobeat", src: "/afrobeat-100.mp3", bpm: 100 },
+  { id: "ska", name: "Ska Upbeat", src: "/ska-upbeat-95.mp3", bpm: 95 },
+];
+
+export function SongPicker({ theme: T }) {
+  const [idx, setIdx] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [showTabs, setShowTabs] = useState(false);
+  const audioRef = useRef(null);
+  const song = SONGS[idx];
+
+  const prev = () => setIdx(i => (i - 1 + SONGS.length) % SONGS.length);
+  const next = () => setIdx(i => (i + 1) % SONGS.length);
+
+  const disposeAudio = () => {
+    if (audioRef.current) { audioRef.current.pause(); audioRef.current.src = ""; audioRef.current = null; }
+  };
+
+  const togglePlay = () => {
+    if (isPlaying) { disposeAudio(); setIsPlaying(false); return; }
+    disposeAudio();
+    const audio = new Audio(song.src);
+    audio.onended = () => setIsPlaying(false);
+    audio.play().catch(() => {});
+    audioRef.current = audio;
+    setIsPlaying(true);
+  };
+
+  useEffect(() => { disposeAudio(); setIsPlaying(false); setShowTabs(false); }, [idx]);
+  useEffect(() => () => disposeAudio(), []);
+
+  return (
+    <div style={{ marginBottom: 24 }}>
+      {/* Compact player bar */}
+      <div style={{
+        background: T.getTint(T.gold, 0.03), border: `1px solid ${T.border}`,
+        borderRadius: T.radiusMd, overflow: "hidden",
+      }}>
+        {/* Navigation + song info */}
+        <div style={{ display: "flex", alignItems: "center", padding: "10px 12px", gap: 8 }}>
+          {/* Prev */}
+          <button onClick={prev} style={{
+            background: "none", border: "none", cursor: "pointer", color: T.textMuted,
+            padding: 4, display: "flex", alignItems: "center",
+          }}><ChevronLeft size={18} /></button>
+
+          {/* Play */}
+          <button onClick={togglePlay} style={{
+            width: 36, height: 36, borderRadius: "50%", border: "none", cursor: "pointer",
+            background: isPlaying ? T.coral : T.gold, color: "#fff",
+            display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+            transition: "all 0.2s",
+            boxShadow: isPlaying ? `0 0 12px ${T.coral}40` : "none",
+          }}>
+            {isPlaying ? <Pause size={14} /> : <Play size={14} style={{ marginLeft: 1 }} />}
+          </button>
+
+          {/* Song info */}
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{
+              fontSize: 14, fontFamily: T.serif, fontWeight: 600, color: T.textDark,
+              whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+              display: "flex", alignItems: "center", gap: 6,
+            }}>
+              {song.name}
+              {song.hasLyrics && (
+                <span style={{
+                  fontSize: 7, fontWeight: 800, color: T.gold, background: T.getTint(T.gold, 0.12),
+                  padding: "1px 5px", borderRadius: 6, textTransform: "uppercase", letterSpacing: 0.5,
+                  fontFamily: T.sans, flexShrink: 0,
+                }}>Lyrics</span>
+              )}
+            </div>
+            <div style={{ fontSize: 10, color: T.textLight, fontFamily: T.sans, marginTop: 1 }}>
+              {song.artist ? `${song.artist} · ` : ""}{song.bpm} BPM{song.key ? ` · ${song.key}` : ""}
+              <span style={{ color: T.textMuted }}> · {idx + 1}/{SONGS.length}</span>
+            </div>
+          </div>
+
+          {/* Tabs toggle */}
+          {song.hasLyrics && (
+            <button onClick={() => setShowTabs(!showTabs)} style={{
+              background: showTabs ? T.getTint(T.gold, 0.1) : "none",
+              border: `1px solid ${showTabs ? T.gold + "40" : T.borderSoft}`,
+              borderRadius: T.radius, padding: "5px 10px", cursor: "pointer",
+              fontSize: 9, fontWeight: 700, color: showTabs ? T.gold : T.textMuted,
+              fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1,
+              transition: "all 0.15s",
+            }}>Tabs</button>
+          )}
+
+          {/* Next */}
+          <button onClick={next} style={{
+            background: "none", border: "none", cursor: "pointer", color: T.textMuted,
+            padding: 4, display: "flex", alignItems: "center",
+          }}><ChevronRight size={18} /></button>
+        </div>
+
+        {/* Lyrics/tabs expansion */}
+        {showTabs && song.tabId && TAB_CONTENT[song.tabId] && (
+          <div style={{ borderTop: `1px solid ${T.borderSoft}` }}>
+            <pre style={{
+              margin: 0, padding: "12px 16px", background: T.bgSoft,
+              fontSize: 11, fontFamily: "'Courier New', monospace",
+              color: T.textDark, whiteSpace: "pre-wrap", wordBreak: "break-word",
+              maxHeight: 280, overflowY: "auto", lineHeight: 1.6,
+            }}>{TAB_CONTENT[song.tabId].trim()}</pre>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ─── STRUM CHART BUILDER ─────────────────────────────────────────────────────
 // Interactive grid for building strum/chord/lyric charts
 
 const BEAT_LABELS_8 = ["1", "&", "2", "&", "3", "&", "4", "&"];
 // 16th note labels used by interstitial slots inline — "e" and "a" rendered contextually
-
-const COMMON_CHORDS = [
-  "C", "Cm", "D", "Dm", "E", "Em", "F", "Fm",
-  "G", "Gm", "A", "Am", "B", "Bm"
-];
-const SHARP_FLAT_CHORDS = ["C#", "Db", "D#", "Eb", "F#", "Gb", "Ab", "Bb"];
 
 // Built-in chord voicings for ChordDiagram
 const CHORD_VOICINGS = {
@@ -4559,6 +4685,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   const [selectedChip, setSelectedChip] = useState(null); // index in lyricsPool
   const [recentChords, setRecentChords] = useState([]);
   const [customChord, setCustomChord] = useState("");
+  const [chordQuality, setChordQuality] = useState(""); // "", "m", "7", "m7", "maj7", "sus2", "sus4", "dim", "aug"
   const [savedShow, setSavedShow] = useState(false);
   const [deleteToast, setDeleteToast] = useState(null);
   const [chordVoicing, setChordVoicing] = useState(null); // { m, c }
@@ -5357,58 +5484,79 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
         );
       })()}
 
-      {/* Chord bottom sheet */}
+      {/* Chord bottom sheet — root notes + quality toggles */}
       <BottomSheet theme={T} open={!!activeChordCell} onClose={() => setActiveChordCell(null)}>
-        <div style={{ marginBottom: 8 }}>
-          <span style={{
-            fontSize: 9, color: T.textMuted, fontWeight: 600, textTransform: "uppercase",
-            letterSpacing: 1,
-          }}>Select Chord</span>
-        </div>
-
         {/* Recently used */}
         {recentChords.length > 0 && (
           <div style={{ marginBottom: 12 }}>
             <div style={{ fontSize: 8, color: T.textMuted, marginBottom: 4, textTransform: "uppercase", letterSpacing: 1 }}>Recent</div>
-            <div style={{ display: "flex", gap: 6 }}>
+            <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
               {recentChords.map(ch => (
                 <button key={ch} onClick={() => selectChord(ch)} style={{
-                  minWidth: 44, minHeight: 44, fontSize: 14, fontFamily: T.serif, fontWeight: 700,
+                  minWidth: 44, minHeight: 40, fontSize: 13, fontFamily: T.serif, fontWeight: 700,
                   color: T.gold, background: T.getTint(T.gold, 0.08), border: `1px solid ${T.gold}30`,
-                  borderRadius: T.radius, cursor: "pointer",
+                  borderRadius: T.radius, cursor: "pointer", padding: "0 10px",
                 }}>{ch}</button>
               ))}
             </div>
           </div>
         )}
 
-        {/* Common chords */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 6, marginBottom: 12 }}>
-          {COMMON_CHORDS.map(ch => (
-            <button key={ch} onClick={() => selectChord(ch)} style={{
-              minHeight: 44, fontSize: 13, fontFamily: T.serif, fontWeight: 600,
-              color: T.textDark, background: T.bgSoft, border: `1px solid ${T.border}`,
-              borderRadius: T.radius, cursor: "pointer",
-            }}>{ch}</button>
-          ))}
+        {/* Root notes */}
+        <div style={{ marginBottom: 10 }}>
+          <div style={{ fontSize: 8, color: T.textMuted, marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>Root Note</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 5, marginBottom: 6 }}>
+            {["C", "D", "E", "F", "G", "A", "B"].map(note => (
+              <button key={note} onClick={() => selectChord(note + chordQuality)} style={{
+                minHeight: 44, fontSize: 15, fontFamily: T.serif, fontWeight: 700,
+                color: T.textDark, background: T.bgSoft, border: `1px solid ${T.border}`,
+                borderRadius: T.radius, cursor: "pointer",
+              }}>{note}</button>
+            ))}
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 5 }}>
+            {["C#", "Eb", "F#", "Ab", "Bb"].map(note => (
+              <button key={note} onClick={() => selectChord(note + chordQuality)} style={{
+                minHeight: 38, fontSize: 13, fontFamily: T.serif, fontWeight: 600,
+                color: T.textMed, background: T.bgSoft, border: `1px solid ${T.borderSoft}`,
+                borderRadius: T.radius, cursor: "pointer",
+              }}>{note}</button>
+            ))}
+          </div>
         </div>
 
-        {/* Sharps/flats */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 6, marginBottom: 12 }}>
-          {SHARP_FLAT_CHORDS.map(ch => (
-            <button key={ch} onClick={() => selectChord(ch)} style={{
-              minHeight: 44, fontSize: 13, fontFamily: T.serif, fontWeight: 600,
-              color: T.textMed, background: T.bgSoft, border: `1px solid ${T.borderSoft}`,
-              borderRadius: T.radius, cursor: "pointer",
-            }}>{ch}</button>
-          ))}
+        {/* Quality / Type toggles */}
+        <div style={{ marginBottom: 12 }}>
+          <div style={{ fontSize: 8, color: T.textMuted, marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>Type</div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+            {[
+              { label: "Major", val: "" },
+              { label: "Minor", val: "m" },
+              { label: "7", val: "7" },
+              { label: "m7", val: "m7" },
+              { label: "Maj7", val: "maj7" },
+              { label: "Sus2", val: "sus2" },
+              { label: "Sus4", val: "sus4" },
+              { label: "Dim", val: "dim" },
+              { label: "Aug", val: "aug" },
+            ].map(q => (
+              <button key={q.val} onClick={() => setChordQuality(q.val)} style={{
+                padding: "6px 12px", borderRadius: T.radius, cursor: "pointer",
+                fontSize: 11, fontWeight: 700, fontFamily: T.sans,
+                background: chordQuality === q.val ? T.textDark : T.bgSoft,
+                color: chordQuality === q.val ? "#fff" : T.textDark,
+                border: `1px solid ${chordQuality === q.val ? T.textDark : T.border}`,
+                transition: "all 0.15s",
+              }}>{q.label}</button>
+            ))}
+          </div>
         </div>
 
         {/* Custom + Clear */}
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
           <input
             type="text" value={customChord} onChange={e => setCustomChord(e.target.value)}
-            placeholder="Custom (e.g. Cmaj7)"
+            placeholder="Custom (e.g. Cadd9)"
             onKeyDown={e => { if (e.key === "Enter" && customChord.trim()) { selectChord(customChord.trim()); setCustomChord(""); } }}
             style={{
               flex: 1, fontSize: 13, fontFamily: T.serif, color: T.textDark,
@@ -5463,13 +5611,6 @@ export function ChartListView({ theme: T, onSelect, onNew }) {
 
   return (
     <div>
-      <div style={{ textAlign: "center", marginBottom: 24 }}>
-        <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 4, textTransform: "uppercase", color: T.gold, fontFamily: T.sans, marginBottom: 8 }}>
-          Chart Builder
-        </div>
-        <div style={{ fontSize: 32, fontWeight: 400, fontFamily: T.serif, color: T.textDark }}>Charts</div>
-      </div>
-
       <button onClick={onNew} style={{
         width: "100%", padding: "16px", background: T.getTint(T.gold, 0.05),
         border: `1px dashed ${T.gold}60`, borderRadius: T.radiusMd, cursor: "pointer",
