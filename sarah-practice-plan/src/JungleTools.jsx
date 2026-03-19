@@ -4691,7 +4691,6 @@ function BottomSheet({ theme: T, open, onClose, children }) {
 export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSave }) {
   const [chart, setChart] = useState(() => initialChart || makeTemplateChart());
   const [undoStack, setUndoStack] = useState([]);
-  const [strumMode, setStrumMode] = useState(null); // null | "D" | "U" | "R"
   const [activeChordCell, setActiveChordCell] = useState(null); // { m, c } measure + cell index
   const [selectedChip, setSelectedChip] = useState(null); // index in lyricsPool
   const [recentChords, setRecentChords] = useState([]);
@@ -4852,14 +4851,10 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
     if (isPlaying) return;
     const cur = chart.measures[mIdx].cells[cIdx].strum;
     let next;
-    if (strumMode) {
-      next = strumMode;
-    } else {
-      if (!cur) next = "D";
-      else if (cur === "D") next = "U";
-      else if (cur === "U") next = "X";
-      else next = null; // X → rest (blank)
-    }
+    if (!cur) next = "D";
+    else if (cur === "D") next = "U";
+    else if (cur === "U") next = "X";
+    else next = null; // X → rest (blank)
     updateChart(c => { c.measures[mIdx].cells[cIdx].strum = next; return c; });
   };
 
@@ -5216,30 +5211,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
           )}
         </div>
       )}
-
-      {/* Strum mode pills */}
-      <div style={{ display: "flex", gap: 6, marginBottom: 12 }}>
-        <span style={{ fontSize: 9, color: T.textMuted, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1, alignSelf: "center", marginRight: 4 }}>Paint:</span>
-        {[
-          { val: "D", label: "↓ Down" },
-          { val: "U", label: "↑ Up" },
-          { val: "X", label: "× Chuck" },
-        ].map(({ val, label }) => (
-          <button key={val} onClick={() => setStrumMode(strumMode === val ? null : val)} style={{
-            fontSize: 10, padding: "4px 10px", borderRadius: T.radius, cursor: "pointer",
-            fontWeight: 700, fontFamily: T.sans,
-            background: strumMode === val ? T.gold : T.bgSoft,
-            color: strumMode === val ? "#fff" : T.textMed,
-            border: `1px solid ${strumMode === val ? T.gold : T.border}`,
-          }}>{label}</button>
-        ))}
-        {strumMode && (
-          <button onClick={() => setStrumMode(null)} style={{
-            fontSize: 9, padding: "4px 8px", background: "none", border: "none",
-            color: T.textMuted, cursor: "pointer",
-          }}>Clear</button>
-        )}
-      </div>
+      </div>{/* end sticky controls zone */}
 
       {/* Bars per group */}
       <div style={{ display: "flex", gap: 6, marginBottom: 12, alignItems: "center" }}>
@@ -5255,7 +5227,6 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
           }}>{g === 0 ? "Off" : g}</button>
         ))}
       </div>
-      </div>{/* end sticky controls zone */}
 
       {/* Lyrics input */}
       <div style={{
@@ -5327,9 +5298,9 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
           : [items];
         return groups.map((group, gIdx) => (
           <div key={gIdx} style={bpg > 0 ? {
-            borderLeft: `2px solid ${T.gold}30`,
-            paddingLeft: 8,
-            marginBottom: 20,
+            borderLeft: `3px solid ${T.textMed}`,
+            paddingLeft: 10,
+            marginBottom: 24,
             position: "relative",
           } : {}}>
             {bpg > 0 && (
