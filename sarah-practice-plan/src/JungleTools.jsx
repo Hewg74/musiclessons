@@ -5676,19 +5676,19 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
           <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 5, marginBottom: 6 }}>
             {["C", "D", "E", "F", "G", "A", "B"].map(note => (
               <button key={note} onClick={() => selectChord(note + chordQuality)} style={{
-                minHeight: 44, fontSize: 15, fontFamily: T.serif, fontWeight: 700,
+                minHeight: 44, fontSize: chordQuality ? 13 : 15, fontFamily: T.serif, fontWeight: 700,
                 color: T.textDark, background: T.bgSoft, border: `1px solid ${T.border}`,
                 borderRadius: T.radius, cursor: "pointer",
-              }}>{note}</button>
+              }}>{note}{chordQuality && <span style={{ fontSize: 10, fontWeight: 500, color: T.textMed }}>{chordQuality}</span>}</button>
             ))}
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 5 }}>
             {["C#", "Eb", "F#", "Ab", "Bb"].map(note => (
               <button key={note} onClick={() => selectChord(note + chordQuality)} style={{
-                minHeight: 38, fontSize: 13, fontFamily: T.serif, fontWeight: 600,
+                minHeight: 38, fontSize: chordQuality ? 11 : 13, fontFamily: T.serif, fontWeight: 600,
                 color: T.textMed, background: T.bgSoft, border: `1px solid ${T.borderSoft}`,
                 borderRadius: T.radius, cursor: "pointer",
-              }}>{note}</button>
+              }}>{note}{chordQuality && <span style={{ fontSize: 9, fontWeight: 500 }}>{chordQuality}</span>}</button>
             ))}
           </div>
         </div>
