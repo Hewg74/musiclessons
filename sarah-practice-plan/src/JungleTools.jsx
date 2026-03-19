@@ -5298,16 +5298,24 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
           : [items];
         return groups.map((group, gIdx) => (
           <div key={gIdx} style={bpg > 0 ? {
-            borderLeft: `3px solid ${T.textMed}`,
+            borderLeft: `3px solid ${T.gold}`,
             paddingLeft: 10,
-            marginBottom: 24,
+            paddingBottom: 4,
+            marginBottom: gIdx < groups.length - 1 ? 28 : 8,
             position: "relative",
           } : {}}>
             {bpg > 0 && (
               <span style={{
-                position: "absolute", top: -8, left: -1, fontSize: 8, color: T.textMuted,
+                position: "absolute", top: -8, left: -1, fontSize: 8, color: T.gold,
                 fontWeight: 700, fontFamily: T.sans, background: T.bg, padding: "0 4px",
               }}>{gIdx + 1}</span>
+            )}
+            {/* Dashed divider between groups */}
+            {bpg > 0 && gIdx < groups.length - 1 && (
+              <div style={{
+                position: "absolute", bottom: -16, left: 0, right: 0,
+                borderBottom: `1px dashed ${T.border}`,
+              }} />
             )}
             {group.map(({ measure, globalIdx: mIdx }) => {
         const isActiveMeasure = activeMeasure === mIdx;
