@@ -3,7 +3,7 @@ import * as Tone from 'tone';
 import {
   Play, Pause, RotateCcw, SkipBack, Scissors, Check,
   Volume2, Mic, Headphones, Music, Piano, Guitar, Drum,
-  Plus, Trash2, Share2, Undo2, ChevronDown, ChevronUp, X, Edit3
+  Plus, Trash2, Share2, Undo2, ChevronDown, ChevronUp, X, Edit3, Upload
 } from 'lucide-react';
 
 // We'll accept the theme object `T` from App.jsx via props or just hardcode some shared colors for now.
@@ -63,15 +63,10 @@ export function MiniAudioPlayer({ src, theme: T, title, playbackRate = 1 }) {
   const [progress, setProgress] = useState(0); // 0 to 1
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
+  const [speed, setSpeed] = useState(1);
+  const syncRafRef = useRef(null);
 
-  // Apply playback rate globally when it changes
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.playbackRate = playbackRate;
-    }
-  }, [playbackRate]);
-
-  // Looping state
+  // Looping state — declared before effects that reference them
   const [isLooping, setIsLooping] = useState(false);
   const [showLoopSettings, setShowLoopSettings] = useState(false);
   const [loopStart, setLoopStart] = useState(0); // seconds
@@ -81,6 +76,36 @@ export function MiniAudioPlayer({ src, theme: T, title, playbackRate = 1 }) {
   useEffect(() => {
     if (duration > 0 && loopEnd === 0) setLoopEnd(duration);
   }, [duration, loopEnd]);
+
+  // Apply playback rate when speed or prop changes
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.playbackRate = speed * playbackRate;
+    }
+  }, [playbackRate, speed]);
+
+  // rAF-based songTimeUpdate dispatch for smooth audio sync
+  useEffect(() => {
+    const dispatchSync = () => {
+      if (audioRef.current && !audioRef.current.paused) {
+        window.dispatchEvent(new CustomEvent("songTimeUpdate", {
+          detail: {
+            currentTime: audioRef.current.currentTime,
+            isLooping, loopStart, loopEnd,
+            playing: true
+          }
+        }));
+        syncRafRef.current = requestAnimationFrame(dispatchSync);
+      }
+    };
+    if (isPlaying) {
+      syncRafRef.current = requestAnimationFrame(dispatchSync);
+    } else {
+      cancelAnimationFrame(syncRafRef.current);
+      window.dispatchEvent(new CustomEvent("songTimeUpdate", { detail: { playing: false } }));
+    }
+    return () => cancelAnimationFrame(syncRafRef.current);
+  }, [isPlaying, isLooping, loopStart, loopEnd]);
 
   const togglePlay = () => {
     if (audioRef.current) {
@@ -277,6 +302,23 @@ export function MiniAudioPlayer({ src, theme: T, title, playbackRate = 1 }) {
           </button>
         </div>
       </div>
+
+      {/* Speed Control */}
+      {duration > 0 && (
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <span style={{ fontSize: 9, color: T.textMuted, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans, marginRight: 2 }}>Speed:</span>
+          {[0.5, 0.75, 1].map(s => (
+            <button key={s} onClick={() => setSpeed(s)} style={{
+              fontSize: 10, padding: "4px 10px", borderRadius: T.radius, cursor: "pointer",
+              fontWeight: 700, fontFamily: T.sans,
+              background: speed === s ? T.gold : T.bgSoft,
+              color: speed === s ? "#fff" : T.textMed,
+              border: `1px solid ${speed === s ? T.gold : T.border}`,
+              transition: "all 0.15s",
+            }}>{s}x</button>
+          ))}
+        </div>
+      )}
 
       {/* Expandable Loop Tray */}
       {showLoopSettings && (
@@ -4470,11 +4512,43 @@ export function makeTemplateChart() {
     title: "",
     bpm: 80,
     activeSlots: [],
+    barsPerGroup: 0,
+    beatOffset: 0,
     measures: [m],
     lyricsPool: [],
     lyricsInput: "",
     createdAt: Date.now(),
     updatedAt: Date.now(),
+  };
+}
+
+// Validate and sanitize an imported chart object
+function validateAndSanitizeChart(obj) {
+  if (!obj || typeof obj !== "object") return { error: "Invalid JSON — not an object" };
+  if (!Array.isArray(obj.measures) || obj.measures.length === 0) return { error: "Chart must have at least one measure" };
+  if (obj.measures.length > 200) return { error: "Chart too large — max 200 measures" };
+  for (let i = 0; i < obj.measures.length; i++) {
+    const m = obj.measures[i];
+    if (!Array.isArray(m.cells) || m.cells.length !== 8) return { error: `Measure ${i + 1} must have exactly 8 cells` };
+    m.between = m.between || {};
+    m.sectionLabel = m.sectionLabel || "";
+  }
+  const bpm = typeof obj.bpm === "number" && obj.bpm >= 40 && obj.bpm <= 280 ? obj.bpm : 80;
+  // Allowlist: only copy known fields to prevent prototype pollution from arbitrary JSON
+  return {
+    chart: {
+      id: "chart_" + Date.now(),
+      title: typeof obj.title === "string" ? obj.title.slice(0, 200) : "",
+      bpm,
+      activeSlots: Array.isArray(obj.activeSlots) ? obj.activeSlots : [],
+      barsPerGroup: typeof obj.barsPerGroup === "number" ? obj.barsPerGroup : 0,
+      beatOffset: typeof obj.beatOffset === "number" ? obj.beatOffset : 0,
+      measures: obj.measures,
+      lyricsPool: Array.isArray(obj.lyricsPool) ? obj.lyricsPool : [],
+      lyricsInput: typeof obj.lyricsInput === "string" ? obj.lyricsInput.slice(0, 5000) : "",
+      createdAt: obj.createdAt || Date.now(),
+      updatedAt: Date.now(),
+    }
   };
 }
 
@@ -4626,8 +4700,6 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   const [savedShow, setSavedShow] = useState(false);
   const [deleteToast, setDeleteToast] = useState(null);
   const [chordVoicing, setChordVoicing] = useState(null); // { m, c }
-  const [stepMode, setStepMode] = useState(false);
-  const [stepIndex, setStepIndex] = useState(0); // beat index across all measures
   const [currentBeat, setCurrentBeat] = useState(-1);
   const [currentBar, setCurrentBar] = useState(-1);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -4635,15 +4707,34 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   const longPressRef = useRef(null);
   const savedTimerRef = useRef(null);
 
-  const totalBeats = chart.measures.length * 4; // 4 quarter-note beats per measure
+  // rAF-based 8th-note beat tracking
+  const [eighthCol, setEighthCol] = useState(-1);
+  const [eighthMeasure, setEighthMeasure] = useState(-1);
+  const lastBeatTimeRef = useRef(0);
+  const lastBeatRef = useRef(-1);
+  const lastBarRef = useRef(-1);
+  const beatRafRef = useRef(null);
+  const bpmRef = useRef(80);
+  const numMeasuresRef = useRef(1);
 
-  // Update chart with undo
+  // Audio sync state
+  const [songPlaying, setSongPlaying] = useState(false);
+  const [songLoopState, setSongLoopState] = useState({ isLooping: false, loopStart: 0, loopEnd: 0 });
+  const latestSongTimeRef = useRef(0);
+
+  // Tap tempo — taps stored in ref (never rendered), only detected BPM is state
+  const tapsRef = useRef([]);
+  const [tapBpm, setTapBpm] = useState(null);
+
+  // Update chart with undo — defensive: if updater forgets to return, fall back to clone
   const updateChart = useCallback((updater) => {
     setChart(prev => {
-      setUndoStack(s => [...s.slice(-9), JSON.parse(JSON.stringify(prev))]);
+      const clone = JSON.parse(JSON.stringify(prev));
+      setUndoStack(s => [...s.slice(-9), clone]);
       const next = typeof updater === "function" ? updater(JSON.parse(JSON.stringify(prev))) : updater;
-      next.updatedAt = Date.now();
-      return next;
+      const result = next || clone;
+      result.updatedAt = Date.now();
+      return result;
     });
   }, []);
 
@@ -4672,17 +4763,27 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
     savedTimerRef.current = setTimeout(() => setSavedShow(false), 1500);
   }, [chart, onSave]);
 
-  // Metronome listener
+  // Metronome listener — records timestamps for rAF interpolation
   useEffect(() => {
     const handler = (e) => {
       const { beat, bar } = e.detail;
-      if (beat !== undefined) setCurrentBeat(beat);
-      if (bar !== undefined) setCurrentBar(bar);
+      if (beat !== undefined) {
+        setCurrentBeat(beat);
+        lastBeatRef.current = beat;
+        lastBeatTimeRef.current = performance.now();
+      }
+      if (bar !== undefined) {
+        setCurrentBar(bar);
+        lastBarRef.current = bar;
+      }
       setIsPlaying(true);
     };
-    const stopHandler = () => { setIsPlaying(false); setCurrentBeat(-1); setCurrentBar(-1); };
+    const stopHandler = () => {
+      setIsPlaying(false); setCurrentBeat(-1); setCurrentBar(-1);
+      setEighthCol(-1); setEighthMeasure(-1);
+      lastBeatRef.current = -1; lastBarRef.current = -1;
+    };
     window.addEventListener("metroBeat", handler);
-    // Detect metronome stop by checking if no beat event for 1s
     let stopTimer;
     const resetStop = () => { clearTimeout(stopTimer); stopTimer = setTimeout(stopHandler, 1500); };
     window.addEventListener("metroBeat", resetStop);
@@ -4693,9 +4794,62 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
     };
   }, []);
 
+  // Keep refs current so rAF loop always reads latest values
+  bpmRef.current = chart.bpm || 80;
+  numMeasuresRef.current = chart.measures.length;
+
+  // rAF loop for 8th-note interpolation (when metronome plays, no song audio)
+  useEffect(() => {
+    if (!isPlaying || songPlaying) {
+      cancelAnimationFrame(beatRafRef.current);
+      return;
+    }
+    const animate = () => {
+      if (lastBeatRef.current < 0) { beatRafRef.current = requestAnimationFrame(animate); return; }
+      const elapsed = performance.now() - lastBeatTimeRef.current;
+      const quarterMs = 60000 / bpmRef.current;
+      const subBeat = elapsed >= quarterMs / 2 ? 1 : 0;
+      const col = lastBeatRef.current * 2 + subBeat;
+      const nm = numMeasuresRef.current;
+      const measure = lastBarRef.current >= 0 ? lastBarRef.current % nm : 0;
+      setEighthCol(col);
+      setEighthMeasure(measure);
+      beatRafRef.current = requestAnimationFrame(animate);
+    };
+    beatRafRef.current = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(beatRafRef.current);
+  }, [isPlaying, songPlaying]);
+
+  // Audio sync listener — uses songTimeUpdate events from MiniAudioPlayer
+  useEffect(() => {
+    const handler = (e) => {
+      const { currentTime, playing, isLooping, loopStart, loopEnd } = e.detail;
+      if (!playing) { setSongPlaying(false); return; }
+      setSongPlaying(true);
+      latestSongTimeRef.current = currentTime;
+      const loop = { isLooping: !!isLooping, loopStart: loopStart || 0, loopEnd: loopEnd || 0 };
+      setSongLoopState(loop);
+
+      if (chart.beatOffset > 0 && chart.bpm > 0) {
+        let effectiveTime = currentTime;
+        if (loop.isLooping && loop.loopEnd > loop.loopStart) {
+          effectiveTime = loop.loopStart + ((currentTime - loop.loopStart) % (loop.loopEnd - loop.loopStart));
+        }
+        const eighthDur = 60 / chart.bpm / 2;
+        const elapsed = effectiveTime - chart.beatOffset;
+        const totalEighths = Math.floor(elapsed / eighthDur);
+        const numMeasures = chart.measures.length;
+        setEighthCol(((totalEighths % 8) + 8) % 8);
+        setEighthMeasure(((Math.floor(totalEighths / 8) % numMeasures) + numMeasures) % numMeasures);
+      }
+    };
+    window.addEventListener("songTimeUpdate", handler);
+    return () => window.removeEventListener("songTimeUpdate", handler);
+  }, [chart.beatOffset, chart.bpm, chart.measures.length]);
+
   // Strum cell handlers — cycle: D → U → X → null (rest/blank) → D
   const cycleStrum = (mIdx, cIdx) => {
-    if (isPlaying && !stepMode) return;
+    if (isPlaying) return;
     const cur = chart.measures[mIdx].cells[cIdx].strum;
     let next;
     if (strumMode) {
@@ -4754,7 +4908,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
 
   // Chord tap handler — short tap opens picker, long press opens voicing
   const handleChordCellTap = (mIdx, cIdx) => {
-    if (isPlaying && !stepMode) return;
+    if (isPlaying) return;
     if (longPressRef.current === "fired") return; // was a long press
     setActiveChordCell({ m: mIdx, c: cIdx });
   };
@@ -4862,9 +5016,32 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
     });
   };
 
-  // Step mode
-  const advanceStep = () => {
-    setStepIndex(prev => (prev + 1) % totalBeats);
+  // Tap tempo
+  const handleTapTempo = () => {
+    const now = performance.now();
+    const recent = [...tapsRef.current, now].filter(t => now - t < 3000);
+    tapsRef.current = recent;
+    if (recent.length >= 2) {
+      const intervals = [];
+      for (let i = 1; i < recent.length; i++) intervals.push(recent[i] - recent[i - 1]);
+      const avg = intervals.reduce((a, b) => a + b, 0) / intervals.length;
+      const detected = Math.round(60000 / avg);
+      if (detected >= 40 && detected <= 280) {
+        setTapBpm(detected);
+        updateChart(c => { c.bpm = detected; return c; });
+        metro.changeBpm(detected);
+      }
+    }
+  };
+
+  // Mark beat 1 for audio sync
+  const markBeatOne = () => {
+    if (latestSongTimeRef.current > 0) {
+      updateChart(c => { c.beatOffset = latestSongTimeRef.current; return c; });
+    }
+  };
+  const nudgeBeatOffset = (amount) => {
+    updateChart(c => { c.beatOffset = Math.max(0, (c.beatOffset || 0) + amount); return c; });
   };
 
   // Share
@@ -4911,20 +5088,19 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
     return span;
   };
 
-  // Step mode beat → measure + column mapping
-  const stepBeat = Math.floor(stepIndex); // quarter note index
-  const stepMeasure = Math.floor(stepBeat / 4);
-  const stepCol = (stepBeat % 4) * 2; // 2 columns per quarter note
-
-  // Metronome beat → column mapping
-  const metroBeatMeasure = currentBar >= 0 ? currentBar % chart.measures.length : -1;
-  const metroBeatCol = currentBeat >= 0 ? currentBeat * 2 : -1;
-
-  const activeMeasure = stepMode ? stepMeasure : metroBeatMeasure;
-  const activeCol = stepMode ? stepCol : metroBeatCol;
+  // Beat tracking — uses rAF-interpolated 8th-note position
+  const activeMeasure = eighthMeasure;
+  const activeCol = eighthCol;
 
   return (
     <div style={{ fontFamily: T.sans }}>
+      {/* Sticky controls zone */}
+      <div style={{
+        position: "sticky", top: 0, zIndex: 100,
+        background: T.bg, paddingBottom: 4, marginBottom: 4,
+        borderBottom: `1px solid ${T.borderSoft}`,
+        boxShadow: "0 2px 8px rgba(44,40,37,0.04)",
+      }}>
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
         {onBack && (
@@ -4965,7 +5141,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
       <SongPicker theme={T} />
 
       {/* BPM + controls */}
-      <div style={{ display: "flex", gap: 8, marginBottom: 16, alignItems: "center", flexWrap: "wrap" }}>
+      <div style={{ display: "flex", gap: 8, marginBottom: 12, alignItems: "center", flexWrap: "wrap" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
           <span style={{ fontSize: 10, color: T.textMuted, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1 }}>BPM</span>
           <input
@@ -4995,24 +5171,51 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
             </>
           )}
         </div>
-        <button
-          onClick={() => setStepMode(!stepMode)}
-          style={{
+        <button onClick={handleTapTempo} style={{
+          fontSize: 9, padding: "5px 10px", borderRadius: T.radius, cursor: "pointer",
+          fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans,
+          background: tapBpm ? T.getTint(T.gold, 0.15) : "transparent",
+          color: tapBpm ? T.gold : T.textMed,
+          border: `1px solid ${tapBpm ? T.gold : T.border}`,
+          transition: "all 0.15s",
+        }}>Tap{tapBpm ? ` ${tapBpm}` : ""}</button>
+      </div>
+
+      {/* Audio sync — Mark Beat 1 + nudge */}
+      {songPlaying && (
+        <div style={{ display: "flex", gap: 6, marginBottom: 12, alignItems: "center", flexWrap: "wrap" }}>
+          <button onClick={markBeatOne} style={{
             fontSize: 9, padding: "5px 10px", borderRadius: T.radius, cursor: "pointer",
             fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans,
-            background: stepMode ? T.gold : "transparent",
-            color: stepMode ? "#fff" : T.textMed,
-            border: `1px solid ${stepMode ? T.gold : T.border}`,
-          }}
-        >Tap-Along</button>
-        {stepMode && (
-          <button onClick={advanceStep} style={{
-            fontSize: 9, padding: "5px 14px", borderRadius: T.radius, cursor: "pointer",
-            fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans,
-            background: T.gold, color: "#fff", border: "none",
-          }}>Next ▸</button>
-        )}
-      </div>
+            background: chart.beatOffset > 0 ? T.getTint(T.gold, 0.12) : "transparent",
+            color: chart.beatOffset > 0 ? T.gold : T.textMed,
+            border: `1px solid ${chart.beatOffset > 0 ? T.gold : T.border}`,
+            transition: "all 0.15s",
+          }}>Mark Beat 1</button>
+          {chart.beatOffset > 0 && (
+            <>
+              <span style={{ fontSize: 10, color: T.textMuted, fontFamily: T.sans, fontVariantNumeric: "tabular-nums" }}>
+                {chart.beatOffset.toFixed(2)}s
+              </span>
+              <button onClick={() => nudgeBeatOffset(-0.01)} style={{
+                fontSize: 10, padding: "3px 8px", borderRadius: T.radius, cursor: "pointer",
+                background: T.bgSoft, border: `1px solid ${T.border}`, color: T.textMed,
+                fontWeight: 700, fontFamily: T.sans,
+              }}>-10ms</button>
+              <button onClick={() => nudgeBeatOffset(0.01)} style={{
+                fontSize: 10, padding: "3px 8px", borderRadius: T.radius, cursor: "pointer",
+                background: T.bgSoft, border: `1px solid ${T.border}`, color: T.textMed,
+                fontWeight: 700, fontFamily: T.sans,
+              }}>+10ms</button>
+              {songLoopState.isLooping && chart.beatOffset < songLoopState.loopStart && (
+                <span style={{ fontSize: 9, color: T.coral, fontFamily: T.sans, fontWeight: 600 }}>
+                  Re-mark within loop
+                </span>
+              )}
+            </>
+          )}
+        </div>
+      )}
 
       {/* Strum mode pills */}
       <div style={{ display: "flex", gap: 6, marginBottom: 12 }}>
@@ -5037,6 +5240,22 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
           }}>Clear</button>
         )}
       </div>
+
+      {/* Bars per group */}
+      <div style={{ display: "flex", gap: 6, marginBottom: 12, alignItems: "center" }}>
+        <span style={{ fontSize: 9, color: T.textMuted, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans, marginRight: 4 }}>Group:</span>
+        {[0, 2, 4, 8].map(g => (
+          <button key={g} onClick={() => updateChart(c => { c.barsPerGroup = g; return c; })} style={{
+            fontSize: 10, padding: "4px 10px", borderRadius: T.radius, cursor: "pointer",
+            fontWeight: 700, fontFamily: T.sans,
+            background: (chart.barsPerGroup || 0) === g ? T.gold : T.bgSoft,
+            color: (chart.barsPerGroup || 0) === g ? "#fff" : T.textMed,
+            border: `1px solid ${(chart.barsPerGroup || 0) === g ? T.gold : T.border}`,
+            transition: "all 0.15s",
+          }}>{g === 0 ? "Off" : g}</button>
+        ))}
+      </div>
+      </div>{/* end sticky controls zone */}
 
       {/* Lyrics input */}
       <div style={{
@@ -5089,34 +5308,37 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
           }}>+ Add Lyrics</button>
         )}
 
-        {/* Lyric chips tray */}
-        {chart.lyricsPool.length > 0 && !lyricsEditing && (
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 10 }}>
-            {chart.lyricsPool.map((word, i) => (
-              <button key={i} onClick={() => setSelectedChip(selectedChip === i ? null : i)} style={{
-                fontSize: 12, fontFamily: T.serif, padding: "4px 10px",
-                borderRadius: 12, cursor: "pointer",
-                background: selectedChip === i ? T.getTint(T.gold, 0.15) : T.getTint(T.coral, 0.08),
-                border: selectedChip === i ? `2px solid ${T.gold}` : `1px solid ${T.coral}30`,
-                color: T.textDark, fontWeight: selectedChip === i ? 600 : 400,
-                transform: selectedChip === i ? "scale(1.05)" : "none",
-                transition: "all 0.15s",
-              }}>{word}</button>
-            ))}
-          </div>
-        )}
       </div>
 
       {/* Playback indicator */}
-      {isPlaying && !stepMode && (
+      {(isPlaying || songPlaying) && (
         <div style={{
           textAlign: "center", fontSize: 9, color: T.gold, fontWeight: 700,
           textTransform: "uppercase", letterSpacing: 2, marginBottom: 8, fontFamily: T.sans,
         }}>♪ Playing — tap grid to pause</div>
       )}
 
-      {/* Measures */}
-      {chart.measures.map((measure, mIdx) => {
+      {/* Measures — grouped by barsPerGroup */}
+      {(() => {
+        const bpg = chart.barsPerGroup || 0;
+        const items = chart.measures.map((m, i) => ({ measure: m, globalIdx: i }));
+        const groups = bpg > 0
+          ? Array.from({ length: Math.ceil(items.length / bpg) }, (_, gi) => items.slice(gi * bpg, (gi + 1) * bpg))
+          : [items];
+        return groups.map((group, gIdx) => (
+          <div key={gIdx} style={bpg > 0 ? {
+            borderLeft: `2px solid ${T.gold}30`,
+            paddingLeft: 8,
+            marginBottom: 20,
+            position: "relative",
+          } : {}}>
+            {bpg > 0 && (
+              <span style={{
+                position: "absolute", top: -8, left: -1, fontSize: 8, color: T.textMuted,
+                fontWeight: 700, fontFamily: T.sans, background: T.bg, padding: "0 4px",
+              }}>{gIdx + 1}</span>
+            )}
+            {group.map(({ measure, globalIdx: mIdx }) => {
         const isActiveMeasure = activeMeasure === mIdx;
 
         // Build column template: for each main cell, add 1fr, then if slot is active add 24px
@@ -5174,7 +5396,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
               {measure.cells.map((_, cIdx) => {
                 const label = BEAT_LABELS_8[cIdx];
                 const isDownbeat = cIdx % 2 === 0;
-                const isActive = isActiveMeasure && (activeCol === cIdx || activeCol === cIdx - 1) && Math.floor(activeCol / 2) === Math.floor(cIdx / 2);
+                const isActive = isActiveMeasure && activeCol === cIdx;
                 return (
                   <React.Fragment key={`beat-${cIdx}`}>
                     <div style={{
@@ -5252,7 +5474,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
               }}>Strum</div>
               {measure.cells.map((cell, cIdx) => {
                 const sd = strumDisplay(cell.strum);
-                const isActive = isActiveMeasure && Math.floor(activeCol / 2) === Math.floor(cIdx / 2);
+                const isActive = isActiveMeasure && activeCol === cIdx;
                 return (
                   <React.Fragment key={`s-${cIdx}`}>
                     <div
@@ -5306,7 +5528,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
               }}>Lyric</div>
               {measure.cells.map((cell, cIdx) => {
                 const hasLyric = cell.lyric && cell.lyric.length > 0;
-                const isActive = isActiveMeasure && Math.floor(activeCol / 2) === Math.floor(cIdx / 2);
+                const isActive = isActiveMeasure && activeCol === cIdx;
                 const isTarget = selectedChip !== null && !hasLyric;
                 return (
                   <React.Fragment key={`l-${cIdx}`}>
@@ -5322,7 +5544,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                         transition: "background 0.15s, border-color 0.15s",
                       }}
                       onClick={() => {
-                        if (isPlaying && !stepMode) return;
+                        if (isPlaying) return;
                         if (hasLyric) { removePlacedLyric(mIdx, cIdx); }
                         else if (selectedChip !== null) { placeLyric(mIdx, cIdx); }
                       }}
@@ -5382,7 +5604,10 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
             </div>
           </div>
         );
-      })}
+            })}
+          </div>
+        ));
+      })()}
 
       {/* Add measure button */}
       <button onClick={addMeasure} style={{
@@ -5423,6 +5648,30 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
           </div>
         );
       })()}
+
+      {/* Sticky lyrics chips tray — pinned above BottomNav */}
+      {chart.lyricsPool.length > 0 && !lyricsEditing && (
+        <div style={{
+          position: "sticky", bottom: 60, zIndex: 99,
+          background: T.bg, padding: "8px 12px",
+          borderTop: `1px solid ${T.borderSoft}`,
+          boxShadow: "0 -2px 8px rgba(44,40,37,0.04)",
+        }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+            {chart.lyricsPool.map((word, i) => (
+              <button key={i} onClick={() => setSelectedChip(selectedChip === i ? null : i)} style={{
+                fontSize: 12, fontFamily: T.serif, padding: "4px 10px",
+                borderRadius: 12, cursor: "pointer",
+                background: selectedChip === i ? T.getTint(T.gold, 0.15) : T.getTint(T.coral, 0.08),
+                border: selectedChip === i ? `2px solid ${T.gold}` : `1px solid ${T.coral}30`,
+                color: T.textDark, fontWeight: selectedChip === i ? 600 : 400,
+                transform: selectedChip === i ? "scale(1.05)" : "none",
+                transition: "all 0.15s",
+              }}>{word}</button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Chord bottom sheet — root notes + quality toggles */}
       <BottomSheet theme={T} open={!!activeChordCell} onClose={() => setActiveChordCell(null)}>
@@ -5523,6 +5772,9 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
 // ─── Chart List View ────────────────────────────────────────────────────────
 export function ChartListView({ theme: T, onSelect, onNew }) {
   const [charts, setCharts] = useState([]);
+  const [showImport, setShowImport] = useState(false);
+  const [importText, setImportText] = useState("");
+  const [importError, setImportError] = useState("");
 
   useEffect(() => {
     try {
@@ -5541,6 +5793,23 @@ export function ChartListView({ theme: T, onSelect, onNew }) {
     } catch { }
   };
 
+  const handleImport = () => {
+    setImportError("");
+    if (importText.length > 500000) { setImportError("JSON too large — max 500KB"); return; }
+    let obj;
+    try { obj = JSON.parse(importText); } catch { setImportError("Invalid JSON — could not parse"); return; }
+    const result = validateAndSanitizeChart(obj);
+    if (result.error) { setImportError(result.error); return; }
+    try {
+      const all = JSON.parse(localStorage.getItem("strumCharts") || "{}");
+      all[result.chart.id] = result.chart;
+      localStorage.setItem("strumCharts", JSON.stringify(all));
+      setShowImport(false);
+      setImportText("");
+      onSelect(result.chart);
+    } catch { setImportError("Failed to save — localStorage may be full"); }
+  };
+
   const getPreview = (chart) => {
     const n = chart.measures?.length || 0;
     const bpm = chart.bpm || 80;
@@ -5554,11 +5823,58 @@ export function ChartListView({ theme: T, onSelect, onNew }) {
       <button onClick={onNew} style={{
         width: "100%", padding: "16px", background: T.getTint(T.gold, 0.05),
         border: `1px dashed ${T.gold}60`, borderRadius: T.radiusMd, cursor: "pointer",
-        color: T.gold, fontSize: 13, fontFamily: T.sans, fontWeight: 700, marginBottom: 16,
+        color: T.gold, fontSize: 13, fontFamily: T.sans, fontWeight: 700, marginBottom: 8,
         display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
       }}><Plus size={16} /> New Chart</button>
 
-      {charts.length === 0 && (
+      <button onClick={() => { setShowImport(!showImport); setImportError(""); }} style={{
+        width: "100%", padding: "12px", background: showImport ? T.getTint(T.gold, 0.08) : "transparent",
+        border: `1px dashed ${T.border}`, borderRadius: T.radiusMd, cursor: "pointer",
+        color: T.textMed, fontSize: 12, fontFamily: T.sans, fontWeight: 600, marginBottom: 16,
+        display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+        transition: "all 0.15s",
+      }}><Upload size={14} /> Import Chart</button>
+
+      {showImport && (
+        <div style={{
+          marginBottom: 16, padding: "16px", background: T.bgCard,
+          border: `1px solid ${T.border}`, borderRadius: T.radiusMd,
+          boxShadow: "0 2px 8px rgba(44,40,37,0.03)",
+        }}>
+          <div style={{ fontSize: 11, color: T.textMed, fontFamily: T.sans, fontWeight: 600, marginBottom: 8, textTransform: "uppercase", letterSpacing: 1 }}>
+            Paste chart JSON
+          </div>
+          <textarea
+            value={importText}
+            onChange={e => { setImportText(e.target.value); setImportError(""); }}
+            placeholder='{"title":"My Chart","bpm":100,"measures":[...]}'
+            style={{
+              width: "100%", minHeight: 100, padding: "10px 12px", fontSize: 12, fontFamily: "'Courier New', monospace",
+              background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radius,
+              color: T.textDark, resize: "vertical", outline: "none", boxSizing: "border-box",
+            }}
+          />
+          {importError && (
+            <div style={{ fontSize: 11, color: T.coral, fontFamily: T.sans, fontWeight: 600, marginTop: 6 }}>
+              {importError}
+            </div>
+          )}
+          <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+            <button onClick={handleImport} style={{
+              flex: 1, padding: "10px", fontSize: 11, fontWeight: 700, fontFamily: T.sans,
+              background: T.gold, color: "#fff", border: "none", borderRadius: T.radius,
+              cursor: "pointer", textTransform: "uppercase", letterSpacing: 1,
+            }}>Load Chart</button>
+            <button onClick={() => { setShowImport(false); setImportText(""); setImportError(""); }} style={{
+              padding: "10px 16px", fontSize: 11, fontWeight: 600, fontFamily: T.sans,
+              background: "transparent", color: T.textMed, border: `1px solid ${T.border}`,
+              borderRadius: T.radius, cursor: "pointer",
+            }}>Cancel</button>
+          </div>
+        </div>
+      )}
+
+      {charts.length === 0 && !showImport && (
         <div style={{
           textAlign: "center", padding: "40px 20px", color: T.textLight,
           fontFamily: T.serif, fontStyle: "italic", fontSize: 14,
