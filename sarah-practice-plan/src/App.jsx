@@ -374,14 +374,20 @@ function useMetronome() {
     window.dispatchEvent(new CustomEvent('metroBeat', { detail: { beat: 0 } }));
   }, []);
 
-  // Background tab safety net: if AudioContext suspended despite keepalive, restart Transport cleanly
+  // Screen off / app switch: stop Transport on hide to prevent event backlog,
+  // clean restart on return so metronome resumes at correct tempo with no burst.
   useEffect(() => {
     const handleVisibility = async () => {
-      if (!playingRef.current || document.hidden) return;
-      const ctx = Tone.getContext();
-      const wasSuspended = ctx.state !== "running";
-      try { await ctx.rawContext.resume(); } catch {}
-      if (wasSuspended) {
+      if (!playingRef.current) return;
+      if (document.hidden) {
+        // Proactively pause Transport — prevents events from queueing during suspension
+        Tone.Transport.pause();
+      } else {
+        // Returning — resume AudioContext first, then restart Transport cleanly
+        try { await Tone.getContext().rawContext.resume(); } catch {}
+        if (Tone.getContext().state !== "running") {
+          try { await Tone.start(); } catch {}
+        }
         Tone.Transport.stop();
         Tone.Transport.position = 0;
         Tone.Transport.bpm.value = bpmRef.current;

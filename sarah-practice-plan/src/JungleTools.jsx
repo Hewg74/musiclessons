@@ -2392,6 +2392,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
   const [activePreset, setActivePreset] = useState(defaultPreset || null);
 
   const synthRef = useRef(null);
+  const lastWorkerTickRef = useRef(0);
   const octaveRef = useRef(octave);
   const textureRef = useRef(texture);
   const progressionRef = useRef(progression);
@@ -2435,26 +2436,32 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     }
   }, [stepDuration]);
 
-  // Handle screen off / app switch — keep playing via keepalive, graceful fallback if context suspends
+  // Handle screen off / app switch — graceful suspend and clean recovery
   useEffect(() => {
     const handleVisibility = async () => {
       if (!playing) return;
       try {
         if (document.hidden) {
-          // Screen off — keepalive audio should prevent context suspension.
-          // But as a safety net, do a SMOOTH ramp to near-zero (not abrupt mute)
-          // so if the context DOES freeze, the waveform is near silence = no pop on resume.
-          // Don't set to exactly 0 — leave a tiny signal so the context stays "active".
+          // Screen off — ramp to near-zero so if context freezes, no pop on resume
           if (userGainRef.current) {
             try { userGainRef.current.gain.rampTo(0.001, 0.05); } catch {}
           }
+          // Pause worker timer to prevent accumulated ticks during suspension
+          if (workerRef.current) {
+            workerRef.current.postMessage({ cmd: 'stop' });
+          }
         } else {
-          // Screen back on — recover audio
+          // Screen back on — resume AudioContext
           try { await Tone.getContext().rawContext.resume(); } catch {}
           if (Tone.getContext().state !== "running") {
             try { await Tone.start(); } catch {}
             await new Promise(r => setTimeout(r, 300));
             try { await Tone.getContext().rawContext.resume(); } catch {}
+          }
+          // Restart worker timer fresh (no accumulated ticks)
+          if (workerRef.current) {
+            lastWorkerTickRef.current = performance.now();
+            workerRef.current.postMessage({ cmd: 'start', ms: stepToMs(stepDurationRef.current) });
           }
           // Restore volume and re-trigger chord if it died
           setTimeout(() => {
@@ -2794,7 +2801,15 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         if (userGainRef.current) { userGainRef.current.gain.rampTo(Tone.dbToGain(volume), 0.05); }
         // Web Worker timer — immune to background tab throttling, independent of Tone.Transport
         workerRef.current = createTimerWorker();
-        workerRef.current.onmessage = () => playStep();
+        lastWorkerTickRef.current = performance.now();
+        workerRef.current.onmessage = () => {
+          // Debounce: skip rapid-fire catch-up ticks after screen-off resume
+          const now = performance.now();
+          const minGap = stepToMs(stepDurationRef.current) * 0.5;
+          if (now - lastWorkerTickRef.current < minGap) return;
+          lastWorkerTickRef.current = now;
+          playStep();
+        };
         workerRef.current.postMessage({ cmd: 'start', ms: stepToMs(stepDurationRef.current) });
 
       } else {
