@@ -2393,6 +2393,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
 
   const synthRef = useRef(null);
   const lastWorkerTickRef = useRef(0);
+  const refreshRef = useRef(null);
   const octaveRef = useRef(octave);
   const textureRef = useRef(texture);
   const progressionRef = useRef(progression);
@@ -2444,7 +2445,10 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         if (document.hidden) {
           // Screen off — ramp to near-zero so if context freezes, no pop on resume
           if (userGainRef.current) {
-            try { userGainRef.current.gain.rampTo(0.001, 0.05); } catch {}
+            try {
+              userGainRef.current.gain.cancelScheduledValues(Tone.now());
+              userGainRef.current.gain.rampTo(0.001, 0.05);
+            } catch {}
           }
           // Pause worker timer to prevent accumulated ticks during suspension
           if (workerRef.current) {
@@ -2466,7 +2470,10 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
           // Restore volume and re-trigger chord if it died
           setTimeout(() => {
             try {
-              if (userGainRef.current) userGainRef.current.gain.rampTo(Tone.dbToGain(volume), 0.15);
+              if (userGainRef.current) {
+                userGainRef.current.gain.cancelScheduledValues(Tone.now());
+                userGainRef.current.gain.rampTo(Tone.dbToGain(volume), 0.15);
+              }
               if (synthRef.current && previousNotesRef.current.length > 0) {
                 synthRef.current.releaseAll();
                 synthRef.current.triggerAttack(previousNotesRef.current);
@@ -2485,12 +2492,16 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     return () => {
       // Immediate fade-out so navigating exercises doesn't leave audio hanging
       if (userGainRef.current) {
-        try { userGainRef.current.gain.rampTo(0, 0.05); } catch {}
+        try {
+          userGainRef.current.gain.cancelScheduledValues(Tone.now());
+          userGainRef.current.gain.rampTo(0, 0.05);
+        } catch {}
       }
       if (synthRef.current) {
         setTimeout(() => { try { synthRef.current.releaseAll(); } catch {} }, 80);
       }
       if (workerRef.current) { workerRef.current.postMessage({ cmd: 'stop' }); terminateWorker(workerRef.current); workerRef.current = null; }
+      if (refreshRef.current) { clearInterval(refreshRef.current); refreshRef.current = null; }
       releaseKeepalive();
       clearMediaSession();
     };
@@ -2697,17 +2708,22 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       // Fade out the old chain smoothly before disposing to prevent clicks
       const oldUserGain = userGainRef.current;
       if (oldUserGain) {
-        try { oldUserGain.gain.rampTo(0, 0.05); } catch {}
+        try {
+          oldUserGain.gain.cancelScheduledValues(Tone.now());
+          oldUserGain.gain.rampTo(0, 0.05);
+        } catch {}
       }
       if (effectSynth) {
         // Wait for fade, then release voices
         setTimeout(() => {
           try { effectSynth.releaseAll(); } catch {}
         }, 80);
-        // Wait for release tails to decay, then dispose everything
+        // Wait for release tails to decay, then stop + dispose everything
         setTimeout(() => {
           try { effectSynth.dispose(); } catch {}
           effectNodes.forEach(node => {
+            // Stop effects with internal oscillators (Chorus, Tremolo, LFO) before disposal
+            try { if (node.stop) node.stop(); } catch {}
             try { node.dispose(); } catch {}
           });
         }, 2500);
@@ -2717,6 +2733,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
 
   useEffect(() => {
     if (userGainRef.current) {
+      try { userGainRef.current.gain.cancelScheduledValues(Tone.now()); } catch {}
       userGainRef.current.gain.rampTo(Tone.dbToGain(volume), 0.1);
     }
   }, [volume]);
@@ -2734,12 +2751,17 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       // Stop worker timer (NOT Tone.Transport — drone uses its own timer)
       if (workerRef.current) {
         workerRef.current.postMessage({ cmd: 'stop' });
-        workerRef.current.terminate();
+        terminateWorker(workerRef.current);
         workerRef.current = null;
       }
+      // Stop periodic refresh
+      if (refreshRef.current) { clearInterval(refreshRef.current); refreshRef.current = null; }
       // Smooth fade out to prevent click, then release voices
       if (userGainRef.current) {
-        try { userGainRef.current.gain.rampTo(0, 0.1); } catch {}
+        try {
+          userGainRef.current.gain.cancelScheduledValues(Tone.now());
+          userGainRef.current.gain.rampTo(0, 0.1);
+        } catch {}
       }
       setTimeout(() => {
         try { synthRef.current?.releaseAll(); } catch {}
@@ -2820,6 +2842,20 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         if (userGainRef.current) { userGainRef.current.gain.rampTo(Tone.dbToGain(volume), 0.05); }
         previousNotesRef.current = chordNotes || [];
         onActiveNotesChangeRef.current?.({ notes: chordNotes || [], label: root });
+      }
+      // Periodic refresh: re-trigger held notes every 3 min to prevent oscillator drift / voice degradation.
+      // In cycle mode the Worker already re-triggers regularly, so this is only for manual/single.
+      if (refreshRef.current) clearInterval(refreshRef.current);
+      if (mode !== "cycle") {
+        refreshRef.current = setInterval(() => {
+          if (stoppedRef.current || !synthRef.current) return;
+          try { synthRef.current.volume; } catch { return; }
+          const notes = previousNotesRef.current;
+          if (notes.length > 0) {
+            synthRef.current.releaseAll();
+            synthRef.current.triggerAttack(notes);
+          }
+        }, 3 * 60 * 1000);
       }
       // Start background audio keepalive so screen-off doesn't kill the AudioContext
       acquireKeepalive();
