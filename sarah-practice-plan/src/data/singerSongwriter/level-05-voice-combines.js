@@ -8,7 +8,7 @@ export const level5 = {
     "Levels 3-4 isolated each skill individually. Now combine them in pairs: rhythm + chord changes, genre feel + dynamics, conversation + harmony, dual-task independence. Motor learning research is clear — combining two automated sub-skills is a distinct cognitive stage that must be practiced deliberately before full integration. Each exercise here takes two skills from Levels 3-4 and fuses them.",
   artists: "Khruangbin, Skinshape, DOPE LEMON, Allah-Las, Pepper",
   unlocks: "Voice Flows (Level 6)",
-  review: { label: "Level 4 Check-In", time: 5, exercises: ["ss-4-17", "ss-4-20"], prompt: "Play Am-C-G-Em in 4 genre feels (ss-4-17). Then do Whisper to Full Voice with pentatonic freedom (ss-4-20). Both fluid? Move on." },
+  review: { label: "Level 4 Check-In", time: 5, exercises: ["ss-4-17", "ss-4-20", "ss-4-35"], prompt: "Play Am-C-G-Em in 4 genre feels (ss-4-17). Whisper to Full Voice with pentatonic freedom (ss-4-20). Then navigate interval jumps by feel (ss-4-35). All fluid? Move on." },
   exercises: [
 
     // ─── DUAL-TASK RAMP ───

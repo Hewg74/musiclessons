@@ -3,7 +3,7 @@ import { getPitchRange } from "../appData.js";
 export const level4 = {
   level: 4,
   title: "The Full Palette",
-  subtitle: "From triad to pentatonic. Color, expression, freedom.",
+  subtitle: "From triad to the full natural minor. Pentatonic, tension notes, and jump training.",
   description:
     "You've mastered the triad — root, 3rd, 5th, deeply felt. Now we expand: a fourth note (D) unlocks stepwise motion, and a fifth (G) completes the Am pentatonic — the most universal scale in music. With five notes you can improvise over any song in the key of Am with no wrong notes. Along the way you'll explore major vs minor palettes, palette switching over chord changes, vowel shapes, breath-phrased melody, the expressive power of silence, groove absorption, sensory vocabulary building, genre feel shifts, syncopation, and body percussion layering. By the end, your five-note palette is a living, breathing musical vocabulary.",
   artists: "Khruangbin, Skinshape, Tommy Guerrero, DOPE LEMON",
@@ -536,8 +536,284 @@ export const level4 = {
       referencePitches: getPitchRange("E3", "E4"),
       pitchContour: true,
       recorder: true,
+      metronome: 80
+    },
+
+    // ─── PHASE 9: THE TENSION NOTES — B AND F ───
+
+    {
+      id: "ss-4-24",
+      time: 7,
+      title: "The Pull Note — B",
+      type: "vocal",
+      what: "Your pentatonic has five notes: A, C, D, E, G. Now meet the sixth: B. B sits a half step below C — the tightest, most tense interval you've encountered. Where D was a bridge and G was a peak, B is a PULL. It yearns upward toward C. This is the note Tinariwen leans on for that desert blues longing.",
+      setup: "Guitar. Drone on A. Metronome at 75 BPM.",
+      steps: [
+        { text: "Sing A, then step up to B. A-B is a whole step — similar to C-D or D-E. Hold B for 8 beats against the drone. It has a restless quality, a lean, a wanting.", why: "B is the 2nd scale degree — naturally unstable. It pulls upward toward C or downward toward A. Unlike the pentatonic notes, B never feels 'settled.' That instability is its power." },
+        { text: "Now sing B-C. This is a HALF STEP — the smallest interval in Western music. Feel how tight it is, how B almost melts into C. Alternate: B-C-B-C slowly. The half step creates tension that the whole step (A-B) doesn't.", why: "The half step B-C is the first semitone you've sung deliberately. Half steps create yearning, pull, urgency. They're what makes the blues sound blue and desert music sound longing." },
+        { text: "Walk A-B-C-D ascending and D-C-B-A descending. Feel how B fills the gap between A and C — just like D filled the gap between C and E. Now your scale has no gaps: A-B-C-D-E.", why: "With B, you can walk stepwise from A all the way to E without skipping any notes. The scale becomes smoother, more connected, more capable of nuanced melodic movement." },
+        { text: "Improvise with six notes: A, B, C, D, E, G (pentatonic + B). Let B appear naturally — as a passing note between A and C, as a tension note held against the drone, as a quick flicker of yearning. 2 minutes, record.", why: "Adding one tension note to the pentatonic doesn't make everything harder — it adds one specific emotional color. B is yearning. Use it when you want that pull, that lean, that ache." },
+        { text: "Compare: improvise 1 minute with pentatonic only (A, C, D, E, G), then 1 minute with B added. Listen back. Hear the difference B makes? That's the tension note effect — one note, new emotional dimension.", why: "Side-by-side comparison makes the effect of B audible. The pentatonic sounds complete and safe. Adding B introduces longing and forward motion." }
+      ],
+      feel: "B should feel like leaning forward — like you're about to say something important but haven't said it yet. When B resolves up to C, the release should feel satisfying, like exhaling.",
+      wrong: "If B sounds 'wrong' or 'out of tune,' you might be singing Bb (B-flat) instead of B natural. B natural is a whole step above A. Use the drone and pitch display to calibrate.",
+      sarah: "Gene, B is the note that makes Tinariwen sound like Tinariwen. That desert blues yearning — the voice leaning into a note that wants to resolve but you hold it there, suspended in longing. That's B.",
+      drone: { root: "Am", octave: 2, texture: "pure" },
+      referencePitches: getPitchRange("A3", "G4"),
+      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4", "G4"], label: "Pentatonic + B", range: ["A3", "A4"] },
+      pitchContour: true,
+      recorder: true,
+      metronome: 75
+    },
+    {
+      id: "ss-4-25",
+      time: 7,
+      title: "The Dark Note — F",
+      type: "vocal",
+      what: "The seventh and final note: F. F sits a half step above E — another semitone, another tension point. But where B pulls upward (yearning), F pulls downward (gravity, darkness, weight). F is the minor 6th from A — the most emotionally heavy interval. With F, you have all seven notes of A natural minor: A, B, C, D, E, F, G. The complete palette.",
+      setup: "Guitar. Drone on A. Metronome at 75 BPM.",
+      steps: [
+        { text: "Sing E, then step up to F. E-F is a HALF STEP — tight, heavy, dark. Alternate E-F-E-F slowly. Feel how F creates a downward pull, a weight, a shadow over the bright E.", why: "E-F is the second semitone in A natural minor. Where B-C pulls upward (yearning), E-F pulls downward (gravity). These two half steps are the emotional engine of the minor scale." },
+        { text: "Sing A then jump to F. A-F is a wide interval — the minor 6th. Hold both notes long. This is the most bittersweet sound in the scale — not quite sad, not quite sweet, but both at once.", why: "The minor 6th (A-F) is the interval of film music sadness, of nostalgia, of 'almost but not quite.' It appears in Hermanos Gutiérrez, in cinematic western music, in the darkest corners of desert blues." },
+        { text: "Walk E-F-G ascending and G-F-E descending. Feel F as the shadow between E and G. Now walk the FULL SCALE: A-B-C-D-E-F-G ascending, G-F-E-D-C-B-A descending. Seven notes. The complete A natural minor.", why: "With all seven notes, you can walk smoothly through the entire scale with no gaps. Every note connects to its neighbors by step. This is the full melodic vocabulary of A minor." },
+        { text: "Improvise with all 7 notes: A, B, C, D, E, F, G. Use F for darkness and weight. Use B for yearning and pull. The pentatonic notes (A, C, D, E, G) are your stable ground; B and F are your tension colors. 2 minutes, record.", why: "Seven-note improvisation is a qualitative leap from pentatonic. You now have every note the scale offers — including both semitones. The pentatonic notes remain your safe base; B and F are your expressive spice." },
+        { text: "The full natural minor scale is complete. Sing it once more, slowly: A-B-C-D-E-F-G-A. Name each note as you sing it. These seven notes are every melody you'll ever write in A minor.", why: "Naming each note while singing it builds the auditory-label connection that makes future music theory feel intuitive rather than abstract. You're not learning theory — you're labeling what you already feel." }
+      ],
+      feel: "F should feel heavy, like a stone in your pocket. When you sing A-F, it should feel wide and bittersweet — like looking at a beautiful sunset knowing it will end. When F resolves down to E, the weight lifts.",
+      wrong: "If F sounds the same as E to your ear, you're likely singing E again. F is one half step higher — the smallest possible step up. Use the pitch display to see the difference.",
+      sarah: "Gene, you now have every note in the A minor scale. The pentatonic was your safe space — beautiful, versatile, can't go wrong. B and F are where the real emotion lives. Hermanos Gutiérrez, the Allah-Las at their darkest, Tinariwen's deepest moments — they're using B and F to break your heart.",
+      drone: { root: "Am", octave: 2, texture: "warm" },
+      referencePitches: getPitchRange("A3", "A4"),
+      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4", "F4", "G4"], label: "A Natural Minor", range: ["A3", "A4"] },
+      pitchContour: true,
+      recorder: true,
+      metronome: 75
+    },
+    {
+      id: "ss-4-26",
+      time: 7,
+      title: "Seven-Note Wandering",
+      type: "vocal",
+      what: "Free exploration of all seven notes — A, B, C, D, E, F, G. Walk the scale, wander through it, mix steps and small leaps. This mirrors your pentatonic wandering (ss-4-2) but with the full palette. Notice how B and F change the color of everything — the melodies that emerge from seven notes sound darker, richer, more complex than pentatonic alone.",
+      setup: "Guitar. Drone on A. Metronome at 80 BPM.",
+      steps: [
+        { text: "Walk the full A natural minor scale ascending: A-B-C-D-E-F-G. Then descending: G-F-E-D-C-B-A. Do this 4 times. Let the scale settle into your voice and your ear.", why: "Scale walking is the foundation of diatonic singing. Once the ascending and descending patterns are automatic, your voice can navigate the full scale without conscious effort." },
+        { text: "Wander freely using mostly stepwise motion — each note leads to its neighbor. A-B-C-B-A-B-C-D-E-F-E-D. No big leaps yet, just gentle meandering through all seven notes.", why: "Stepwise wandering through seven notes produces surprisingly beautiful, folk-like melodies. The two half steps (B-C and E-F) add moments of tension that the pentatonic never had." },
+        { text: "Add occasional small leaps for contrast: walk for 3-4 notes, then skip one note. A-B-C-E (skipped D). Or D-F-G (skipped E). The leaps add surprise to the wandering.", why: "Mixing steps and small leaps creates more interesting contour than pure stepwise motion. The leaps introduce the 'surprise' element that makes melodies memorable." },
+        { text: "2-minute eyes-closed freestyle with all seven notes. Record it. Then listen back-to-back with your pentatonic freestyle (ss-4-7). Hear the difference? The seven-note version is darker, richer, more 'real-song-sounding.'", why: "The comparison reveals what B and F add to your sound. Seven-note melodies sound more like the actual songs you listen to because those songs use all seven notes." }
+      ],
+      feel: "Seven-note wandering should feel like walking through a landscape with more shadows and depth than the pentatonic meadow. The same trail, but the light is different — more complex, more atmospheric.",
+      wrong: "If you keep avoiding B and F and reverting to pentatonic patterns, consciously include them. Try starting a phrase ON B or ON F — make them the departure point, not just passing visitors.",
+      sarah: "Gene, the pentatonic was training wheels — beautiful training wheels that professionals use every day, but still a simplified version. Seven notes is the real thing. This is what the Allah-Las, Skinshape, and DOPE LEMON are actually singing. You're there.",
+      drone: { root: "Am", octave: 2, texture: "pure" },
+      referencePitches: getPitchRange("A3", "A4"),
+      pitchContour: true,
+      recorder: true,
+      metronome: 80
+    },
+    {
+      id: "ss-4-27",
+      time: 7,
+      title: "Seven-Note Rhythm Play",
+      type: "vocal",
+      what: "Rhythm applied to all seven notes — mirrors the pentatonic rhythm play (ss-4-5) but with the full palette. Whole notes through the scale, then half notes, then quarter notes. Try syncopation with B and F as landing notes — the tension notes on strong beats create a distinctly different rhythmic flavor than pentatonic notes on strong beats.",
+      setup: "Guitar. Metronome at 80 BPM.",
+      tracks: [{ name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" }],
+      steps: [
+        { text: "Sing through all seven notes using whole notes — one note per bar. A... B... C... D... E... F... G... Slow, deliberate. Notice how B and F feel different when they get a whole bar of attention.", why: "Whole notes on tension notes (B and F) expose their character. B on a strong beat creates pull. F on a strong beat creates weight. You're learning how note choice + rhythm = melodic identity." },
+        { text: "Speed up to half notes, then quarter notes. At quarter-note speed, the half steps (B-C, E-F) become quick flickers of tension. Try landing B on beat 1 — feel the yearning emphasis. Then land F on beat 1 — feel the dark emphasis.", why: "Tension notes on rhythmically strong beats create a fundamentally different sound than pentatonic notes on strong beats. This is the same rhythmic skill from ss-4-5 applied to richer harmonic material." },
+        { text: "Syncopation with the groove: sing seven-note phrases that land between the Khruangbin backbeat. Put B or F on the offbeat — between the strum hits. The tension notes in the rhythmic gaps create irresistible groove.", why: "Offbeat tension notes over a groove is the signature sound of psych-soul and desert blues. When B or F falls in the gaps, it creates a sense of floating, unresolved mystery." },
+        { text: "2-minute freestyle: all seven notes, any rhythm, over the backing track. Use B and F deliberately — not randomly, but when you WANT tension. Record it.", why: "Controlled use of tension notes over a groove is the synthesis of this exercise. When you can choose exactly when B and F appear and where they land rhythmically, you're composing in real time." }
+      ],
+      feel: "The seven-note rhythmic phrases should sound more complex and more 'professional' than your pentatonic rhythm play. The half steps add a sophistication that the pentatonic can't produce.",
+      wrong: "If you're still playing it safe with only pentatonic notes, set a rule: every other phrase MUST include B or F. Force the tension notes into your rhythm until they feel natural.",
+      sarah: "Gene, this is the sound of Khruangbin's vocal lines — pentatonic with occasional tension notes placed on rhythmically interesting beats. Laura Misch does the same thing. The seven-note palette over this groove is exactly where your music lives.",
+      referencePitches: getPitchRange("A3", "A4"),
+      pitchContour: true,
+      recorder: true,
+      metronome: 80
+    },
+    {
+      id: "ss-4-28",
+      time: 7,
+      title: "Seven-Note Conversation",
+      type: "vocal",
+      what: "Guitar-voice call and response with all seven notes — the richest conversation yet. The guitar now has B and F available for calls; the voice has them for answers. Try phrases that emphasize the tension notes — a guitar call ending on B demands a voice answer that resolves or extends the tension.",
+      setup: "Guitar. Drone on A. Metronome at 80 BPM.",
+      steps: [
+        { text: "Guitar plays a phrase using all seven notes — include B or F deliberately. Voice answers with a phrase that responds to the tension. If the guitar ends on B (tension), the voice might resolve to C (release) or hold the tension.", why: "Tension-and-resolution in call-and-response is the foundation of musical dialogue. When one voice creates tension, the other can resolve it, extend it, or mirror it — each choice has a different emotional effect." },
+        { text: "Try a conversation using ONLY B and F — the tension notes. Guitar: B-F-B. Voice: F-B-F. Pure tension, no resolution. How does it feel? Unresolved, floating, mysterious.", why: "Isolating the tension notes reveals their character in pure form. A conversation in only B and F has a specific, haunting quality that you'll recognize from cinematic and ambient music." },
+        { text: "Now alternate: tension call, pentatonic answer. Guitar plays a phrase ending on F (dark). Voice answers with a pentatonic phrase ending on A (home). The contrast between tension and resolution drives the conversation forward.", why: "Mixing tension calls with pentatonic answers creates dramatic arc within the conversation. This push-pull between instability and stability is the engine of all tonal music." },
+        { text: "Free conversation, all seven notes, 3 minutes. Record it. Listen for the moments where B and F made the dialogue more interesting than it would have been with pentatonic alone.", why: "Extended conversation with the full palette is where you discover your natural relationship with the tension notes. Some musicians love F; others lean on B. Your preference is part of your voice." }
+      ],
+      feel: "The seven-note conversation should feel more dramatic and emotionally varied than the pentatonic version. The tension notes add stakes — when B or F appears, something needs to happen next.",
+      wrong: "If the conversation feels the same as your pentatonic conversations, you're not using B and F enough. Make a rule: every other phrase must include at least one tension note.",
+      sarah: "Gene, this conversation is richer than anything you've done before. Seven notes means every phrase has more options — and the tension notes mean the stakes are higher. When the guitar calls with B, your voice has to decide: resolve the tension or ride it. That decision IS musical expression.",
+      drone: { root: "Am", octave: 2, texture: "pure" },
+      referencePitches: getPitchRange("A3", "A4"),
+      pitchContour: true,
+      recorder: true,
       metronome: 80,
-      levelUp: "Can walk stepwise through 4 notes, improvise freely across the full Am pentatonic, hold musical conversations at every note stage, switch between minor and major palettes, lock into backing track grooves, shift between 4 genre feels on the same progression, sing syncopated rhythms between beats, layer 4 independent body percussion streams, use silence and dynamics as expressive tools, absorb grooves through listening, build sensory vocabulary through object writing, sustain extended improvisation in G major pentatonic, sing E major triad tones (E-Ab-B-C#) with new key-specific vocal production, and compare your musical identity across three different key centers — all while the guitar strum stays on autopilot."
+      phraseForm: { pattern: "AB", barsPerSection: 2, labels: { A: "Guitar Call", B: "Voice Answer" } }
+    },
+    {
+      id: "ss-4-29",
+      time: 8,
+      title: "Tension Groove",
+      type: "vocal",
+      what: "Genre-feel improv emphasizing B and F over backing tracks — mirrors the Pentatonic Groove Palette (ss-4-15) but with the tension notes as featured players. Desert blues leans on B for yearning. Reggae uses B as a pull into C for one-drop phrasing. Surf uses F for weight and drama. Three genres, the tension notes are what make each one distinctive.",
+      setup: "Guitar. Choose backing tracks by genre.",
+      tracks: [
+        { name: "Desert Blues 75", src: "/desert-blues-75.mp3" },
+        { name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" },
+        { name: "Surf Rock 120", src: "/surf-rock-120.mp3" }
+      ],
+      steps: [
+        { text: "Desert blues (2 min): Play over the desert blues groove. Lean heavily on B — hold it, bend into it, let it hang unresolved. B is the Tinariwen note, the Saharan longing note. Sing mostly in the lower register (A3-D4). Let the tension build and release slowly.", why: "Desert blues thrives on sustained tension. B held against the drone creates that hypnotic, yearning quality that defines the genre. The groove is sparse — your voice fills it with emotion." },
+        { text: "Reggae (2 min): Switch to the one-drop groove. Use B as a quick approach note — B pulling up to C on the offbeat. The B-C half step in a reggae context sounds like roots reggae at its most soulful. Keep phrases short, behind the beat.", why: "In reggae, half steps are used as quick ornamental pulls — B slides up to C like a vocal scoop. The one-drop groove provides the pocket; B-C provides the soul." },
+        { text: "Surf rock (2 min): Switch to the surf groove. Use F for weight and drama — F on a downbeat adds gravity to otherwise bright phrases. The A-F interval over surf rock sounds cinematic and slightly dark. Let it ride.", why: "Surf rock uses the minor 6th (A-F) for its darker, more dramatic moments — think Dick Dale's moodier passages or the Allah-Las' darker songs. F adds shadows to the sunshine." },
+        { text: "Record all three. Listen back — hear how B and F transform each genre differently? Same notes, completely different emotional effects depending on the groove context.", why: "Context shapes meaning. B in desert blues = longing. B in reggae = soul. F in surf = drama. The notes are tools; the genre is the intention. This is the core of expressive musicianship." }
+      ],
+      feel: "Each genre should sound DIFFERENT despite using the same seven notes. The groove determines the mood; B and F are the spice that makes each genre taste distinct.",
+      wrong: "If all three genres sound the same, you're not adapting to the groove. In desert blues, slow down and hold notes. In reggae, shorten phrases and go behind the beat. In surf, ride the tempo and use dynamics.",
+      sarah: "Gene, this is the exercise where your playlists come alive in your voice. Desert blues B is Tinariwen. Reggae B-to-C is Protoje. Surf F is Allah-Las at their darkest. These are YOUR genres, and now you have the notes that make them real.",
+      referencePitches: getPitchRange("A3", "A4"),
+      pitchContour: true,
+      recorder: true
+    },
+
+    // ─── PHASE 10: JUMP TRAINING ───
+
+    {
+      id: "ss-4-30",
+      time: 7,
+      title: "First Jumps — From A",
+      type: "vocal",
+      what: "Until now, most of your singing has been stepwise — moving to the next adjacent note. Now practice JUMPING: singing one note, then leaping to a non-adjacent note. Start from A (home) and jump to each of the other six notes. Each jump has a different size and a different emotional flavor.",
+      setup: "Guitar. Drone on A. Metronome at 70 BPM.",
+      steps: [
+        { text: "A→B (one step up — intimate, close). Sing A for 2 beats, jump to B for 2 beats. Then reverse: B→A. Repeat 4 times. Feel how small and personal this jump is.", why: "Starting with the smallest jump calibrates your ear. A→B is just a whole step — comfortable, warm, intimate. This is the baseline for feeling larger jumps." },
+        { text: "A→C (minor 3rd — the 'ache'). Sing A for 2 beats, jump to C for 2 beats. This is wider — a skip, not a step. You know this jump from Level 3 — now feel it consciously. Then A→D (perfect 4th — 'lift') and A→E (perfect 5th — 'openness').", why: "Each progressively wider jump has a distinct emotional character. Minor 3rd = ache. Perfect 4th = hope/lift. Perfect 5th = heroic openness. These are the fundamental emotional colors of melody." },
+        { text: "A→F (minor 6th — 'bittersweet'). This is a wide jump — heavy, cinematic, melancholy. Then A→G (minor 7th — 'yearning'). The widest jump, pulling toward resolution. Hold each landing note and feel the tension.", why: "The widest jumps (to F and G) are the most emotionally charged. A→F is the Hollywood sadness interval. A→G is blues yearning. These are the jumps that make listeners feel something." },
+        { text: "Quick-fire round: someone calls a note name (or you randomize), you jump from A to that note instantly. No hesitation. 2 minutes. Record it — can you hear the different sizes?", why: "Instant recall of any jump from A builds the neural pathways for interval navigation. When you can jump from home to any note without thinking, you have the foundation for melody writing." }
+      ],
+      feel: "Each jump should feel distinctly different — like reaching for objects at different distances. A→B is reaching for your phone. A→G is reaching for the top shelf. The physical sensation in your voice changes with the distance.",
+      wrong: "If all jumps feel the same, slow down and hold each landing note for 4 beats. The destination matters as much as the launch. Really ARRIVE on each note.",
+      sarah: "Gene, this is where your improvisation goes from 'walking through the scale' to 'painting with distance.' Every great melody is a sequence of jumps — some small, some dramatic. You're building the vocabulary of distance.",
+      drone: { root: "Am", octave: 2, texture: "pure" },
+      referencePitches: getPitchRange("A3", "A4"),
+      pitchContour: true,
+      recorder: true,
+      metronome: 70
+    },
+    {
+      id: "ss-4-31",
+      time: 8,
+      title: "Jumps From Everywhere",
+      type: "vocal",
+      what: "Now jump from EVERY note, not just A. Start on C, jump to G. Start on D, jump to B. Start on F, jump to A. There are 21 unique pairs between 7 notes — and each pair has its own character. The key insight: A is not the only valid starting point. Every note is a valid home base for a jump.",
+      setup: "Guitar. Drone on A. Metronome at 70 BPM.",
+      steps: [
+        { text: "Jumps from C: C→D, C→E, C→F, C→G, C→A, C→B. Sing each pair 4 times (up and down). Notice: starting from C feels different than starting from A. C is the minor 3rd — launches from here have a bluesy departure point.", why: "Changing the starting note changes everything. C as a launch pad produces different melodic feelings than A. This trains your ear to navigate from ANY position in the scale, not just from home." },
+        { text: "Jumps from D and E: D→F, D→G, D→A, D→B, D→C. Then E→G, E→A, E→B, E→C, E→F. Quick-fire — 4 reps each pair. Feel how each starting note has its own gravity.", why: "D is restless (the bridge note). E is stable (the 5th). Jumping from each produces different emotional trajectories. A jump from a stable note feels like departure. A jump from an unstable note feels like searching." },
+        { text: "Jumps from the tension notes: F→A, F→B, F→C, F→G. Then B→D, B→E, B→F, B→G. Starting on B or F — the tension notes — makes every jump feel urgent, unresolved.", why: "Launching from tension notes is the most advanced interval skill. When your starting point is already unstable, the jump carries extra emotional weight. This is how melodic tension chains work." },
+        { text: "Random pairs: have someone call two notes (or draw from a hat). Jump between them. Any pair, any direction. 2 minutes. How fast can you find the interval?", why: "Random pair calling eliminates any remaining dependency on specific starting notes. When you can jump between ANY two notes on demand, your melodic vocabulary is truly complete." }
+      ],
+      feel: "By the end, you should feel equally comfortable starting from ANY note — not just A. The scale has no privileged starting point for jumps. Every note is a valid launch pad.",
+      wrong: "If jumps from B and F feel impossible, spend extra time on those. Sing B as your 'home' for 8 beats, then jump outward. The tension notes need to feel like viable starting points, not just destinations.",
+      sarah: "Gene, most singers only jump from the root. You're training to jump from ANYWHERE — and that's what makes a melody unpredictable and interesting. When you can start a phrase on F and leap to D, you're writing melodies no one expects.",
+      drone: { root: "Am", octave: 2, texture: "pure" },
+      referencePitches: getPitchRange("A3", "A4"),
+      pitchContour: true,
+      recorder: true,
+      metronome: 70
+    },
+    {
+      id: "ss-4-32",
+      time: 7,
+      title: "Half-Step Mastery",
+      type: "vocal",
+      what: "The two hardest jumps in the scale: B↔C and E↔F. These half steps are where most singers go out of tune. Dedicated practice here pays off in EVERY melody you'll ever sing — because half steps appear in every key, every mode, every style. Master these two intervals and your intonation improves across the board.",
+      setup: "Guitar. Drone on A. Metronome starting at 60 BPM.",
+      steps: [
+        { text: "Slow alternation: B-C-B-C-B-C at 60 BPM (one note per beat). Use the pitch display — are you hitting B and C accurately, or sliding between them? The half step is so small that imprecision is easy to miss.", why: "Half steps require finer muscle control than whole steps. Slow practice with visual feedback (pitch display) builds the neuromuscular precision that fast practice cannot. This is the violin approach: slow, perfect, then faster." },
+        { text: "Same with E-F-E-F-E-F at 60 BPM. E-F has a different physical sensation than B-C — it's in a different part of your range and uses slightly different vocal muscles. Both half steps need separate practice.", why: "E-F and B-C are acoustically identical intervals but physically different for the voice. Each half step has its own muscle memory that must be trained independently." },
+        { text: "Speed up gradually: try 70 BPM, then 80. At each tempo, check the pitch display. Accuracy matters more than speed. If the notes blur together at 80, go back to 70.", why: "The speed-accuracy tradeoff is real for half steps. Your goal is to maintain distinct, accurate pitch at increasing speeds. This is pure ear-training for vocal precision." },
+        { text: "Embed the half steps in melodies: walk A-B-C (B is the approach note pulling into C). Walk D-E-F (F is the color note adding darkness after E). Now try phrases that START on B or F and step away. 2 minutes freestyle, record.", why: "Half steps in melodic context are more useful than half steps in isolation. When B leads into C within a phrase, the pull is musical, not just technical. When F follows E, the darkness is expressive, not just an exercise." }
+      ],
+      feel: "Half-step practice should feel like tuning a fine instrument — precise, careful, rewarding when accurate. The pitch display is your mirror. When B and C appear as two distinct notes (not a smear), you've got it.",
+      wrong: "If B and C sound like the same note, you're not moving enough. A half step is SMALL but it IS a step. If they sound too far apart, you're overshooting — probably singing Bb-C instead of B-C.",
+      sarah: "Gene, this is the exercise that makes your voice trustworthy. When you can nail half steps consistently, everything else is easy. Professional singers drill half steps their entire careers. This is where precision meets expression.",
+      drone: { root: "Am", octave: 2, texture: "pure" },
+      referencePitches: getPitchRange("A3", "A4"),
+      pitchContour: true,
+      recorder: true,
+      metronome: 60
+    },
+    {
+      id: "ss-4-33",
+      time: 7,
+      title: "Jump Improv — Leaps Only",
+      type: "vocal",
+      what: "Free improvisation where stepwise motion is BANNED. Every note must be a leap — skip at least one scale note between each pitch. This creates angular, jagged, unexpected melodies that force your ear to navigate wide intervals. No walking allowed. Only jumping.",
+      setup: "Guitar. Drums-only track for rhythm.",
+      tracks: [{ name: "Drums Only — Soul/Funk 90", src: "/drums-soul-funk-90.mp3" }],
+      steps: [
+        { text: "2 minutes over the Am drone: sing only leaps. A→D→F→C→G→B→E. Skip at least one note between each pitch. No A-B, no C-D, no E-F. Only jumps. It will feel strange at first.", why: "Banning stepwise motion forces your ear into unfamiliar territory. Most singing relies heavily on adjacent notes — removing that crutch reveals how well you actually know the interval distances." },
+        { text: "2 minutes over the drums: same rule (leaps only) but now with rhythm. The angular intervals over a groove create a completely different kind of melody — think modern jazz vocals or avant-garde pop.", why: "Angular melodies over a groove produce a sophisticated, unpredictable sound. This is the territory of artists like Bjork, Robert Wyatt, or the weirder moments of Radiohead — melody that surprises." },
+        { text: "Challenge: try to make the leaps-only improv sound MUSICAL, not random. Give the jagged intervals emotional intent — each leap should feel deliberate, not accidental. Land on notes with confidence.", why: "The difference between random leaping and intentional leaping is conviction. When you land on F after jumping from C, COMMIT to F. Hold it. Mean it. Intentional leaps are expressive; random leaps are noise." },
+        { text: "Record both sections. Listen back — which leaps sounded best? Which surprised you? The unexpected combinations that sound great are melodic ideas you'd NEVER have found through stepwise motion.", why: "Leaps-only improvisation is a creativity generator. The constraint forces novel combinations that your stepwise habits would never produce. Some of these 'accidental' intervals will become signature phrases in your songwriting." }
+      ],
+      feel: "This should feel like jumping between rocks in a stream — each leap requires a moment of faith before you land. The angularity is the point. Smooth comes later; right now, embrace the jaggedness.",
+      wrong: "If you catch yourself singing A-B-C-D (stepwise), stop and skip: A-C-E-G. The rule is absolute — every note must skip at least one pitch. If it feels impossible, start with just 3 notes (A, D, G — all leaps) and add more as you gain confidence.",
+      sarah: "Gene, leaps-only improv is the most creatively explosive exercise in this level. The melodies that emerge from pure jumping are unlike anything you'd write on purpose — and some of them will be genuinely beautiful. Accidents become ideas.",
+      referencePitches: getPitchRange("A3", "A4"),
+      pitchContour: true,
+      recorder: true
+    },
+    {
+      id: "ss-4-34",
+      time: 8,
+      title: "Random Jump Roulette",
+      type: "vocal",
+      what: "Maximum ear training: draw two random notes, sing the jump between them. No preparation, no pattern, pure ear navigation. Write A, B, C, D, E, F, G on slips of paper (or use a randomizer app). Draw two. Sing the first, jump to the second. Draw again. The unpredictability forces your ear to calculate intervals in real time.",
+      setup: "Guitar. Drums-only track. Seven slips of paper with note names (or a randomizer app on your phone).",
+      tracks: [{ name: "Drums Only — Bossa 75", src: "/drums-bossa-75.mp3" }],
+      steps: [
+        { text: "Draw two notes. Sing the first for 2 beats, jump to the second for 2 beats. Draw again. Repeat for 2 minutes. Don't overthink — just find the note. Speed matters less than accuracy.", why: "Random interval calling is the gold standard of ear training. When you can find any interval on demand without preparation, you have genuine interval fluency — not just pattern memory." },
+        { text: "Same drill, but now name the EMOTION of each jump before moving on. D→F: 'that feels dark.' A→E: 'that feels open.' Build the emotional vocabulary of intervals. 2 minutes.", why: "Linking each interval to an emotion creates a second retrieval pathway. You can find intervals by sound (ear) OR by feeling (emotion). Two paths to the same note make you faster and more expressive." },
+        { text: "String 4 random jumps together into a melody: draw 4 pairs, sing them connected. The random sequence creates phrases you'd never compose on purpose. Some will sound terrible. Some will sound amazing. Keep the amazing ones.", why: "Random-generated melodies are the ultimate creative surprise. The intervals your conscious mind would never choose can produce striking, original phrases. Songwriters use random constraints to escape their habits." },
+        { text: "Final round: keep drawing pairs until you find one that MOVES you emotionally. Repeat that pair 8 times, embedding it in different rhythmic contexts. This random-discovered interval is now yours — a found object that becomes a compositional tool.", why: "The roulette doesn't just train your ear — it discovers your unconscious preferences. The jump that moves you reveals something about your musical identity that deliberate practice can't uncover." }
+      ],
+      feel: "The roulette should feel playful — like a game, not a test. Some jumps will be easy (A→E), some hard (B→F). The surprise is the fun part. Laugh at the hard ones. Celebrate the beautiful ones.",
+      wrong: "If you're peeking at the slips and choosing 'easy' pairs, shuffle harder. The whole point is randomness. If a pair feels impossible (F→B?), slow down and use the drone to guide you there. Every pair IS singable.",
+      sarah: "Gene, this is musical roulette — and it's the most fun exercise in the whole curriculum. Every draw is a tiny adventure. Some combinations will surprise you with how beautiful they sound. Those surprises become the building blocks of songs nobody else could write.",
+      referencePitches: getPitchRange("A3", "A4"),
+      pitchContour: true,
+      recorder: true
+    },
+    {
+      id: "ss-4-35",
+      time: 7,
+      title: "Emotional Jumping",
+      type: "vocal",
+      what: "The final exercise: choose jumps by FEELING, not by name. Small jumps feel intimate. Wide jumps feel dramatic. Tension-note jumps feel dark or yearning. Build emotional arcs using only the distance between notes. This is where interval training becomes musical expression — you stop thinking about 'A to F' and start thinking about 'I want that bittersweet feeling.'",
+      setup: "Guitar. Drone on A. Metronome at 75 BPM.",
+      steps: [
+        { text: "Map the emotions: sing A→B (intimate, close). A→C (ache). A→D (lift). A→E (openness). A→F (bittersweet, dark). A→G (yearning, longing). Say the feeling out loud after each jump. Build the emotion-interval dictionary.", why: "Associating each interval with a feeling creates a new kind of musical vocabulary — one based on emotion, not theory. When you want 'yearning,' you reach for A→G without thinking about 'minor 7th.'" },
+        { text: "Emotional request round: someone says a feeling (or you pick a card with emotions written on it). Find the jump that matches. 'Give me sadness' → A→F. 'Give me hope' → A→D. 'Give me tension' → E→F. Can you find the right interval for each emotion?", why: "Emotion-to-interval translation is the composer's core skill. Songwriters don't think 'I'll use a perfect 5th here.' They think 'I want openness here' — and their trained ear produces the right interval automatically." },
+        { text: "Build a mood arc using only jumps: Start dark (F-based jumps, wide intervals). Gradually shift to more open (E-based, D-based). End intimate (B-based, small steps). The emotional journey lives in the interval choices. 2 minutes, record.", why: "An emotional arc built from interval choices is a melody in its purest form — stripped of rhythm, lyrics, and harmony. If the arc FEELS like a journey using only jump distances, you understand melody at its deepest level." },
+        { text: "Listen to the recording. Can you hear the mood shift? Dark → open → intimate? The intervals are doing the emotional work. This is how melodies communicate feeling — and now you can do it consciously.", why: "Conscious control of emotional arcs through interval selection is the highest-level melodic skill. Everything from here forward — songwriting, harmony, performance — builds on this foundation of feeling through distance." }
+      ],
+      feel: "This should feel like painting with emotions — each jump is a brushstroke, and the combination of jumps creates a mood. You're not singing notes anymore. You're singing feelings.",
+      wrong: "If all the jumps feel emotionally neutral, exaggerate. Sing the dark jumps with dark vowels and low volume. Sing the open jumps with bright vowels and projection. Let your voice's expression match the interval's character.",
+      sarah: "Gene, this is where everything connects. The notes, the tension, the jumps — they all serve one thing: emotion. When you can choose a jump because of how it FEELS, not what it's called, you're thinking like a songwriter. Every melody you write from now on will have this emotional vocabulary underneath it.",
+      drone: { root: "Am", octave: 2, texture: "warm" },
+      referencePitches: getPitchRange("A3", "A4"),
+      pitchContour: true,
+      recorder: true,
+      metronome: 75,
+      levelUp: "Can walk stepwise through all 7 notes of A natural minor, improvise freely across the full pentatonic and diatonic scales, sing tension notes B and F with emotional intent, hold seven-note conversations with tension-resolution dynamics, lock into genre grooves emphasizing B and F for desert blues yearning and surf rock darkness, jump between all 21 note pairs from any starting point, nail half-step precision on B↔C and E↔F, improvise angular leaps-only melodies, navigate random interval jumps by ear, choose jumps by emotional color to build mood arcs, switch between minor and major palettes, compare musical identity across three key centers, and use silence, dynamics, syncopation, and body percussion as expressive tools — all while the guitar strum stays on autopilot."
     }
   ]
 };

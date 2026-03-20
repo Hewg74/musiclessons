@@ -5,7 +5,7 @@ export const level9 = {
   title: "Hearing Harmony",
   subtitle: "Your ears lead. Your voice follows.",
   description:
-    "Move beyond the pentatonic into full diatonic melody — all 7 notes of the major and minor scales. Learn to hear intervals, feel chord functions (tension vs resolution), and navigate harmonic changes by ear. Based on Gordon's audiation stages: you'll learn to hear harmony in your inner ear before singing it. This level transforms you from a pentatonic improviser into a harmonic navigator.",
+    "You've been singing all 7 notes since Level 4 and jumping between them by feel. Now learn to HEAR the theory behind what you already do — intervals by name, chord functions (tension vs resolution), modes, borrowed chords, and harmonic navigation by ear. Based on Gordon's audiation stages: you'll learn to hear harmony in your inner ear before singing it. This level transforms intuitive singing into conscious harmonic understanding.",
   artists: "Khruangbin, BALTHVS, Hermanos Gutierrez, Nick Drake",
   unlocks: "Originals & Genre Craft (Level 10)",
   review: { label: "Level 8-9 Check-In", time: 5, exercises: ["ss-8-5", "ss-9-7"], prompt: "Do 2 minutes of free pentatonic improv (ss-8-5). Then play through your complete original song (ss-9-7). Both confident? Move on." },
@@ -16,7 +16,7 @@ export const level9 = {
       title: "Interval Feeling",
       type: "vocal",
       drone: { root: "Am", octave: 2, texture: "pure" },
-      what: "Sing the basic intervals and associate each with an emotional quality. Minor 2nd = tension. Major 3rd = brightness. Perfect 5th = strength. Perfect 4th = openness. Each interval has a 'personality' — learning to feel them is how you navigate harmony by instinct.",
+      what: "You've been jumping these intervals since Level 4. Now put NAMES on what you already feel. Minor 2nd = tension. Major 3rd = brightness. Perfect 5th = strength. Perfect 4th = openness. Each interval has a 'personality' and a formal name — connecting the feeling to the theory is how you communicate with other musicians and understand songs instantly.",
       steps: [
         { text: "Sing A, then B (major 2nd — a step up). Then A to C (minor 3rd — sad). Then A to C# (major 3rd — happy). Notice how each interval FEELS different.", why: "Intervals are the atoms of melody. Every melodic movement is an interval. Hearing them emotionally makes them intuitive." },
         { text: "Sing A to D (perfect 4th — open, floating). Then A to E (perfect 5th — strong, grounded). These are the anchor intervals of harmony.", why: "The 4th and 5th define the harmonic framework. They're the most consonant intervals after the octave." },
