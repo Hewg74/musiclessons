@@ -8,6 +8,7 @@ import {
   Volume2, Sun, Moon
 } from 'lucide-react';
 import { MiniAudioPlayer, AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, VolumeMeter, DroneGenerator, TAB_CONTENT, InlineKeyboard, RhythmCellCards, PhraseFormGuide, StrumChartBuilder, ChartListView, makeTemplateChart } from './JungleTools.jsx';
+import { acquireKeepalive, releaseKeepalive, setMediaSession, clearMediaSession } from './audioKeepalive.js';
 import { DAYS, KEYBOARD_LEVELS, LOOPER_LEVELS, LESSON_POOL, ALL_NOTES, getPitchRange } from './data/appData.js';
 import { WEEKLY_PLANS, CURRENT_WEEK } from './data/weeklyPlans/index.js';
 import { VOCAL_LEVELS } from './data/vocalLevels/index.js';
@@ -211,6 +212,7 @@ function triggerSynth(synth, kit, pitchNote, accConfig, time) {
 function useMetronome() {
   const [bpm, setBpm] = useState(120);
   const [playing, setPlaying] = useState(false);
+  const playingRef = useRef(false);
   const beat = 0; // Dummy beat to satisfy return signature; actual beat is managed via events to prevent App re-renders
   const [beatsPerBar, setBeatsPerBar] = useState(4);
   const [soundKit, setSoundKit] = useState("modernClick");
@@ -281,6 +283,8 @@ function useMetronome() {
 
   const start = useCallback(async () => {
     await Tone.start();
+    acquireKeepalive();
+    setMediaSession('Metronome', 'Practice');
     Tone.Transport.bpm.value = bpmRef.current;
     let count = 0;
     loopRef.current = new Tone.Loop((time) => {
@@ -355,15 +359,37 @@ function useMetronome() {
       count++;
     }, "4n").start(0);
     Tone.Transport.start();
+    playingRef.current = true;
     setPlaying(true);
   }, []);
 
   const stop = useCallback(() => {
     loopRef.current?.stop(); loopRef.current?.dispose();
     Tone.Transport.stop(); Tone.Transport.position = 0;
+    playingRef.current = false;
     setPlaying(false);
+    releaseKeepalive();
+    clearMediaSession();
     window.dispatchEvent(new CustomEvent('metroBeatAudio', { detail: { beat: 0 } }));
     window.dispatchEvent(new CustomEvent('metroBeat', { detail: { beat: 0 } }));
+  }, []);
+
+  // Background tab safety net: if AudioContext suspended despite keepalive, restart Transport cleanly
+  useEffect(() => {
+    const handleVisibility = async () => {
+      if (!playingRef.current || document.hidden) return;
+      const ctx = Tone.getContext();
+      const wasSuspended = ctx.state !== "running";
+      try { await ctx.rawContext.resume(); } catch {}
+      if (wasSuspended) {
+        Tone.Transport.stop();
+        Tone.Transport.position = 0;
+        Tone.Transport.bpm.value = bpmRef.current;
+        Tone.Transport.start();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => document.removeEventListener("visibilitychange", handleVisibility);
   }, []);
 
   const changeBpm = useCallback((v) => {

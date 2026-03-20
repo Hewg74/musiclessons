@@ -5,6 +5,30 @@ import {
   Volume2, Mic, Headphones, Music, Piano, Guitar, Drum,
   Plus, Trash2, Share2, Undo2, ChevronDown, ChevronUp, X, Edit3, Upload
 } from 'lucide-react';
+import { acquireKeepalive, releaseKeepalive, setMediaSession, clearMediaSession } from './audioKeepalive.js';
+
+// ─── Web Worker timer for background-safe intervals ───────────────────
+// Browser throttles setInterval to ~1Hz in background tabs.
+// Web Worker timers are NOT throttled, so drone cycle mode stays accurate.
+function createTimerWorker() {
+  const blob = new Blob([`
+    let tid = null;
+    self.onmessage = (e) => {
+      if (e.data.cmd === 'start') { clearInterval(tid); tid = setInterval(() => self.postMessage('tick'), e.data.ms); }
+      else if (e.data.cmd === 'stop') { clearInterval(tid); tid = null; }
+      else if (e.data.cmd === 'update') { clearInterval(tid); tid = setInterval(() => self.postMessage('tick'), e.data.ms); }
+    };
+  `], { type: 'application/javascript' });
+  const url = URL.createObjectURL(blob);
+  const worker = new Worker(url);
+  worker._blobUrl = url;
+  return worker;
+}
+function terminateWorker(worker) {
+  if (!worker) return;
+  URL.revokeObjectURL(worker._blobUrl);
+  worker.terminate();
+}
 
 // We'll accept the theme object `T` from App.jsx via props or just hardcode some shared colors for now.
 // For simplicity, we can just pass the theme object to these components.
@@ -2368,7 +2392,6 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
   const [activePreset, setActivePreset] = useState(defaultPreset || null);
 
   const synthRef = useRef(null);
-  const loopRef = useRef(null);
   const octaveRef = useRef(octave);
   const textureRef = useRef(texture);
   const progressionRef = useRef(progression);
@@ -2378,28 +2401,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
   const onActiveNotesChangeRef = useRef(onActiveNotesChange);
   const stepCountRef = useRef(0);
   const userGainRef = useRef(null);
-  const keepaliveRef = useRef(null);
-
-  // Silent audio keepalive — keeps AudioContext alive when screen is off (like YouTube Premium)
-  const SILENT_MP3 = "data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAABhgC7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7//////////////////////////////////////////////////////////////////8AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAAAAAAAAAAAAYYoRBqmAAAAAAD/+1DEAAAHAAGf9AAAIgAANIAAAAQAAANIAAAASEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7UMQbA8AAAaQAAAAgAAA0gAAABFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVQ==";
-
-  const startKeepalive = useCallback(() => {
-    if (keepaliveRef.current) return;
-    try {
-      const audio = new Audio(SILENT_MP3);
-      audio.loop = true;
-      audio.volume = 0.01;
-      audio.play().catch(() => {});
-      keepaliveRef.current = audio;
-    } catch {}
-  }, []);
-
-  const stopKeepalive = useCallback(() => {
-    if (keepaliveRef.current) {
-      keepaliveRef.current.pause();
-      keepaliveRef.current = null;
-    }
-  }, []);
+  const workerRef = useRef(null);
 
   const notes = ["C", "C#", "D", "E♭", "E", "F", "F#", "G", "A♭", "A", "B♭", "B"];
 
@@ -2427,29 +2429,9 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
 
   useEffect(() => {
     stepDurationRef.current = stepDuration;
-    // Restart interval with new timing if sequence is playing
-    if (loopRef.current && playing && mode === "cycle") {
-      clearInterval(loopRef.current);
-      loopRef.current = setInterval(() => {
-        if (stoppedRef.current || !synthRef.current) return;
-        try { synthRef.current.volume; } catch { return; }
-        const currentProg = progressionRef.current;
-        if (currentProg.length === 0) return;
-        const idx = stepCountRef.current % currentProg.length;
-        const rawChord = currentProg[idx];
-        const match = rawChord.match(/^[A-G][#♭b]?/);
-        const r = match ? match[0].replace('b', '♭') : "C";
-        const chordNotes = parseChordToNotes(rawChord, octaveRef.current, "chord");
-        if (chordNotes) {
-          synthRef.current.releaseAll();
-          synthRef.current.triggerAttack(chordNotes);
-          previousNotesRef.current = chordNotes;
-        }
-        setRoot(r);
-        setActiveStep(idx);
-        onActiveNotesChangeRef.current?.({ notes: chordNotes || [], label: rawChord });
-        stepCountRef.current++;
-      }, stepToMs(stepDuration));
+    // Update worker interval if sequence is playing
+    if (workerRef.current && playing && mode === "cycle") {
+      workerRef.current.postMessage({ cmd: 'update', ms: stepToMs(stepDuration) });
     }
   }, [stepDuration]);
 
@@ -2501,16 +2483,9 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       if (synthRef.current) {
         setTimeout(() => { try { synthRef.current.releaseAll(); } catch {} }, 80);
       }
-      if (loopRef.current) clearInterval(loopRef.current);
-      // Stop keepalive audio if running
-      if (keepaliveRef.current) {
-        keepaliveRef.current.pause();
-        keepaliveRef.current = null;
-      }
-      // Clear media session
-      if ('mediaSession' in navigator) {
-        try { navigator.mediaSession.metadata = null; } catch {}
-      }
+      if (workerRef.current) { workerRef.current.postMessage({ cmd: 'stop' }); terminateWorker(workerRef.current); workerRef.current = null; }
+      releaseKeepalive();
+      clearMediaSession();
     };
   }, []);
 
@@ -2749,10 +2724,11 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
 
     if (playing) {
       stoppedRef.current = true;
-      // Clear sequence interval (NOT Tone.Transport — drone uses its own timer)
-      if (loopRef.current) {
-        clearInterval(loopRef.current);
-        loopRef.current = null;
+      // Stop worker timer (NOT Tone.Transport — drone uses its own timer)
+      if (workerRef.current) {
+        workerRef.current.postMessage({ cmd: 'stop' });
+        workerRef.current.terminate();
+        workerRef.current = null;
       }
       // Smooth fade out to prevent click, then release voices
       if (userGainRef.current) {
@@ -2763,10 +2739,8 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         previousNotesRef.current = [];
       }, 120);
       // Stop background audio keepalive and clear media session
-      stopKeepalive();
-      if ('mediaSession' in navigator) {
-        try { navigator.mediaSession.metadata = null; } catch {}
-      }
+      releaseKeepalive();
+      clearMediaSession();
       setPlaying(false);
       onActiveNotesChangeRef.current?.({ notes: [], label: "" });
       setActiveStep(-1);
@@ -2818,8 +2792,10 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         // Play first chord immediately
         playStep();
         if (userGainRef.current) { userGainRef.current.gain.rampTo(Tone.dbToGain(volume), 0.05); }
-        // Then repeat on interval — completely independent of Tone.Transport
-        loopRef.current = setInterval(playStep, stepToMs(stepDurationRef.current));
+        // Web Worker timer — immune to background tab throttling, independent of Tone.Transport
+        workerRef.current = createTimerWorker();
+        workerRef.current.onmessage = () => playStep();
+        workerRef.current.postMessage({ cmd: 'start', ms: stepToMs(stepDurationRef.current) });
 
       } else {
         // Smooth fade in to prevent click
@@ -2831,15 +2807,11 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         onActiveNotesChangeRef.current?.({ notes: chordNotes || [], label: root });
       }
       // Start background audio keepalive so screen-off doesn't kill the AudioContext
-      startKeepalive();
-      // Register with OS media session so audio persists in background
-      if ('mediaSession' in navigator) {
-        try {
-          navigator.mediaSession.metadata = new MediaMetadata({ title: 'Harmonic Drone', artist: 'Practice' });
-          navigator.mediaSession.setActionHandler('pause', () => toggleDrone());
-          navigator.mediaSession.setActionHandler('play', () => toggleDrone());
-        } catch {}
-      }
+      acquireKeepalive();
+      setMediaSession('Harmonic Drone', 'Practice', {
+        pause: () => toggleDrone(),
+        play: () => toggleDrone(),
+      });
       setPlaying(true);
     }
   };
