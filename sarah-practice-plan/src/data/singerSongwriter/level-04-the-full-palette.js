@@ -466,8 +466,78 @@ export const level4 = {
       referencePitches: getPitchRange("A2", "E4"),
       volumeMeter: true,
       volumeContour: true,
+      recorder: true
+    },
+
+    // ─── KEY DIVERSITY — INTERLEAVED PRACTICE ───
+
+    {
+      id: "ss-4-21",
+      time: 7,
+      title: "G Major Extended Improv",
+      type: "vocal",
+      what: "You explored the G major palette briefly in ss-4-8. Now spend real time there. Improvise freely using G major pentatonic (G-A-B-D-E) over a G drone for 4 minutes. Let the brightness of G major seep into your voice. This isn't a quick visit — it's moving in.",
+      setup: "Guitar strumming G. Metronome at 80 BPM.",
+      steps: [
+        { text: "Strum G and sing the G major pentatonic ascending and descending: G-A-B-D-E-D-B-A-G. Feel how each note relates to the G chord underneath. B is the major 3rd — bright and warm. E is the 6th — sweet and floating.", why: "Extended time in a major pentatonic builds a separate mental schema from Am. Your voice learns that 'major' has its own set of melodic instincts — brighter intervals, more open vowels, different emotional gravity." },
+        { text: "Free improv: 2 minutes of melodic wandering in G major pentatonic. Use stepwise motion, leaps, silence, dynamics — everything from earlier exercises, but in this new key. Let the major brightness guide your phrasing.", why: "Sustained improvisation in a new key forces your ear to recalibrate. The first minute feels unfamiliar; by the second minute, G major starts feeling like home. That shift is schema formation happening in real time." },
+        { text: "Try a call-and-response: guitar plays a short G major phrase, voice answers. Notice how your voice gravitates toward different intervals than in Am. Major keys pull toward the 3rd (B) and 5th (D) differently.", why: "Call-and-response in a new key reveals your melodic instincts. In Am, you probably lean on A and E. In G major, you'll discover new favorite intervals — and those become tools for songwriting." },
+        { text: "Record 2 minutes of your best G major improv. Listen back and compare to your Am improvisations. How does your voice sound different? Brighter? More open? More confident? That difference is the point.", why: "Side-by-side comparison makes the key-specific vocal production differences audible. Your voice literally sounds different in G major than in Am — different resonance, different emotional quality." }
+      ],
+      feel: "G major should feel like stepping out of a cool forest (Am) into warm sunlight. The brightness is not just theoretical — your voice will naturally open up, vowels widen, and phrasing becomes more buoyant.",
+      wrong: "If G major feels exactly like Am, you're not hearing the color difference yet. Focus on the B note (major 3rd) — it's the note that doesn't exist in Am pentatonic. Emphasize it until you hear the shift.",
+      sarah: "Gene, surf rock and Khruangbin's brighter moments live in major keys. This extended time in G major builds the vocal muscle memory that makes major-key songwriting feel natural — not like a translation from minor.",
+      drone: { root: "G", octave: 2, texture: "warm" },
+      referencePitches: getPitchRange("G3", "E4"),
+      pitchContour: true,
       recorder: true,
-      levelUp: "Can walk stepwise through 4 notes, improvise freely across the full Am pentatonic, hold musical conversations at every note stage, switch between minor and major palettes, lock into backing track grooves, shift between 4 genre feels on the same progression, sing syncopated rhythms between beats, layer 4 independent body percussion streams, use silence and dynamics as expressive tools, absorb grooves through listening, and build sensory vocabulary through object writing — all while the guitar strum stays on autopilot."
+      metronome: 80
+    },
+    {
+      id: "ss-4-22",
+      time: 8,
+      title: "Welcome to E Major",
+      type: "vocal",
+      what: "Your first genuinely new key family. Everything so far — Am, G, Em, C, D — shares the same notes (A natural minor = C major). E major introduces notes you've NEVER sung: Ab (which musicians also call G# — same sound, different name), C#, and F#. On guitar, E-A-B7 is one of the easiest progressions. This is where surf rock and bright reggae live.",
+      setup: "Guitar. Metronome at 75 BPM. New chord: B7 — index finger on 1st fret A string, middle finger on 2nd fret D string, ring finger on 2nd fret G string, pinky on 2nd fret high E string. Open B and high E strings ring. Practice E-A-B7 changes before singing.",
+      steps: [
+        { text: "Strum E major. Sing the root: E. Hold it against the chord. This is home in E major — same function as A in Am, but a different pitch, a different resonance in your chest.", why: "Establishing a new 'home' note is the first step in building a new key schema. E sits lower than A in most octaves, so your chest voice engages differently." },
+        { text: "Sing the E major triad: E-Ab-B. Ab is the major 3rd — on our pitch display it shows as 'Ab' (musicians in E major call this G#, but it's the same sound). Hold Ab and feel how bright it is compared to C (the minor 3rd of Am). This one note is the entire difference between major and minor.", why: "Ab/G# is the note that makes E major MAJOR. In Am, the 3rd is C (minor, dark). In E major, it's Ab (major, bright). Training your ear on this one interval unlocks all major/minor awareness." },
+        { text: "Add C# — sing E-Ab-B-C#. This is the E major triad plus the bright 6th. Compare this to Am's A-C-E — feel how E major is more open, more expansive. C# doesn't exist anywhere in the Am/G family.", why: "C# is a note your voice has literally never produced in this curriculum. New notes create new muscle memory, new resonance patterns. This is why practicing in different key families matters — it's not just theory, it's physical vocal development." },
+        { text: "Strum the E-A-B7 progression slowly. Sing the root of each chord: E over E, A over A, B over B7. Feel the harmonic movement. B7 creates tension that wants to resolve back to E — same function as D resolving to G, but in a completely different sonic world.", why: "Hearing chord function (tension and resolution) in a new key proves the concept is universal. The B7-to-E pull feels the same as D-to-G but sounds completely different. That's the insight." },
+        { text: "Free improv: sing E, Ab, B, C# over the E-A-B7 progression. Just these four notes — explore them the way you explored A, C, E in Level 3. 2 minutes, record it. You're building a new palette from scratch.", why: "Starting with just 4 notes in a new key mirrors the Level 3 approach — constraint breeds mastery. You'll expand to the full E major pentatonic later, but first, make these 4 notes feel like yours." }
+      ],
+      feel: "E major should feel brighter and more open than anything you've sung so far. Like walking out of a shaded porch into direct sunlight. The Ab and C# notes will feel unfamiliar at first — that's correct. Unfamiliar is where growth happens.",
+      wrong: "If you're accidentally singing G natural instead of Ab (G#), you're pulling from your Am muscle memory. Use the drone as a reference — the E major drone includes Ab. Match that note. It's a half-step higher than G.",
+      sarah: "Gene, this is Dick Dale territory. This is the Beach Boys. This is the bright, shimmering side of surf rock that your playlists are full of. E major is where that sound comes from — and now your voice lives there too.",
+      drone: { root: "E", octave: 2, texture: "warm" },
+      referencePitches: getPitchRange("E3", "C#4"),
+      pitchContour: true,
+      recorder: true,
+      metronome: 75
+    },
+    {
+      id: "ss-4-23",
+      time: 8,
+      title: "Three-Palette Comparison",
+      type: "vocal",
+      what: "Record yourself improvising in three different keys back-to-back: Am pentatonic, G major pentatonic, E major (4 notes). Listen to all three. The comparison IS the lesson — your voice sounds different in each key, your phrasing changes, your emotional instincts shift. This is what research calls 'contextual interference' — and it's the fastest path to key-independent musicianship.",
+      setup: "Guitar. Metronome at 80 BPM. Three drone settings: Am, G, E.",
+      steps: [
+        { text: "Set drone to Am. Improvise in Am pentatonic (A-C-D-E-G) for 90 seconds. Don't overthink — just sing what comes naturally. Your Am vocabulary is deep by now. Record it.", why: "Am is your anchor key — the key where everything feels automatic. Recording it establishes your baseline. After hearing E major, coming back to Am will feel different." },
+        { text: "Switch drone to G major. Improvise in G major pentatonic (G-A-B-D-E) for 90 seconds. Notice the brightness. Your vowels may naturally open wider, your phrasing may become more buoyant. Record it.", why: "G major shares most notes with Am but the emotional center is completely different. Your body responds to the major drone with different vocal production — this is the key-specific effect the research describes." },
+        { text: "Switch drone to E major. Improvise with E-Ab-B-C# for 90 seconds. This will feel the most unfamiliar — and that's the point. Embrace the awkwardness. Record it.", why: "E major is genuinely foreign territory — new notes, new intervals, new physical vocal sensations. The difficulty you feel IS the contextual interference that produces deeper learning." },
+        { text: "Listen to all three recordings back-to-back. How does your voice change? What happens to your phrasing? Your vowel choices? Your confidence? Write down one observation about each key.", why: "Comparative listening reveals things you can't notice while singing. The three recordings are a mirror showing you three different musical identities — all yours, all valid, all useful for songwriting." }
+      ],
+      feel: "Am should feel like coming home. G major should feel like a sunlit version of home. E major should feel like visiting a new country — exciting and slightly disorienting. All three feelings are correct.",
+      wrong: "If all three recordings sound identical, you're not letting the key influence your singing. Try exaggerating: in Am, lean into dark vowels and descending phrases. In G, lean into bright vowels and ascending phrases. In E, explore the unfamiliar notes Ab and C#.",
+      sarah: "Gene, this three-key comparison is the single most important exercise for breaking out of the Am comfort zone. When you hear yourself singing differently in three keys, you'll understand why key diversity isn't just theory — it's creative vocabulary.",
+      drone: { root: "Am", octave: 2, texture: "pure" },
+      referencePitches: getPitchRange("E3", "E4"),
+      pitchContour: true,
+      recorder: true,
+      metronome: 80,
+      levelUp: "Can walk stepwise through 4 notes, improvise freely across the full Am pentatonic, hold musical conversations at every note stage, switch between minor and major palettes, lock into backing track grooves, shift between 4 genre feels on the same progression, sing syncopated rhythms between beats, layer 4 independent body percussion streams, use silence and dynamics as expressive tools, absorb grooves through listening, build sensory vocabulary through object writing, sustain extended improvisation in G major pentatonic, sing E major triad tones (E-Ab-B-C#) with new key-specific vocal production, and compare your musical identity across three different key centers — all while the guitar strum stays on autopilot."
     }
   ]
 };

@@ -2786,7 +2786,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         // Play a chord at the current step (reads from refs, always current)
         const playStep = () => {
           if (stoppedRef.current || !synthRef.current) return;
-          try { synthRef.current.volume; } catch { return; }
+          if (stoppedRef.current || !synthRef.current || synthRef.current.disposed) return;
           const currentProg = progressionRef.current;
           if (currentProg.length === 0) return;
 
@@ -2849,7 +2849,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       if (mode !== "cycle") {
         refreshRef.current = setInterval(() => {
           if (stoppedRef.current || !synthRef.current) return;
-          try { synthRef.current.volume; } catch { return; }
+          if (stoppedRef.current || !synthRef.current || synthRef.current.disposed) return;
           const notes = previousNotesRef.current;
           if (notes.length > 0) {
             synthRef.current.releaseAll();

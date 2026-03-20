@@ -266,8 +266,54 @@ export const level9 = {
       sarah: "Gene, this is the skill that lets you jam with anyone, play any song, and write over any chord progression. Your ear is becoming your most reliable instrument.",
       metronome: 85,
       referencePitches: getPitchRange("C3", "A4"),
+      recorder: true
+    },
+
+    // ─── KEY DIVERSITY — CONSOLIDATION + ALL-KEY MASTERY ───
+
+    {
+      id: "ss-9-14",
+      time: 8,
+      title: "D Major Bridge",
+      type: "vocal",
+      what: "D major (D-G-A) is the bridge key between your two key families. It shares F# with E and A major, and G with the Am/G family. Strum D-G-A and feel how it connects both worlds — bright like E major but warm like G. Folk, country, and acoustic singer-songwriter music lives here. D major is the last open-chord key you need for complete coverage.",
+      setup: "Guitar. D-G-A progression at 80 BPM.",
+      tracks: [{ name: "A Major Folk 80", src: "/a-major-folk-80.mp3" }],
+      steps: [
+        { text: "Strum D-G-A. Sing D major pentatonic: D-E-F#-A-B. Notice: D and G are notes you know from your Am family. F# is from your E/A major family. D major literally bridges the two.", why: "D major contains notes from BOTH key families. It's the Rosetta Stone of key independence — the key that proves all keys are connected." },
+        { text: "Improvise over D-G-A for 2 minutes. Feel how the folk/country/acoustic vibe emerges naturally. This is the key of Dylan, Joni Mitchell, and every campfire song.", why: "D major has a warm, open quality on guitar because of the open D string resonance. It's the most 'acoustic' of all keys — and it sits perfectly in Gene's tenor range." },
+        { text: "Chain three key families: 4 bars D-G-A → 4 bars Am-C-G-Em → 4 bars E-A-B7. Navigate the transitions by ear. D major should make the jump between families smoother.", why: "D major as a bridge key reduces the perceived distance between Am-family and E-family. The shared notes (F# with E, G with Am) create stepping stones." },
+        { text: "Record the three-family chain. Listen for how D major connects the two worlds. If D feels comfortable, your key independence is nearly complete.", why: "When D major feels like a natural bridge rather than a third foreign key, you've internalized the relationships between all major open-chord keys." }
+      ],
+      feel: "D major should feel like the warmest, most inviting of all your keys — the key where everyone sings along. It's home for folk music, and it connects your Am world to your E major world.",
+      wrong: "If D major feels like 'just another key,' spend more time on the D-G-A progression. Let the open D string resonate. Sing long D notes against it. D major has a specific warmth that becomes obvious once you tune in.",
+      sarah: "Gene, D major is where 'Songs 2 Learn' meets 'Sing with Court' — it's the key that brings people together. With D major in your pocket, you can play in any open-chord key on the guitar.",
+      referencePitches: getPitchRange("D3", "D4"),
+      pitchContour: true,
+      recorder: true
+    },
+    {
+      id: "ss-9-15",
+      time: 10,
+      title: "All-Key Pentatonic Marathon",
+      type: "song",
+      what: "The ultimate contextual interference exercise. 30-second improvisation in each of five pentatonic keys — Am, Em, G major, E major, A major — back to back with no pause. Five key families, five musical identities, five sets of vocal skills, all in 5 minutes. This is the final proof of key-independent musicianship.",
+      setup: "Guitar. Drums-only track for rhythm. Timer set for 30-second intervals.",
+      tracks: [{ name: "Drums Only — Soul/Funk 90", src: "/drums-soul-funk-90.mp3" }],
+      steps: [
+        { text: "Set a 30-second timer. Round 1: Am pentatonic (A-C-D-E-G) over Am chord. Improvise freely — this is your deepest key. When the timer sounds, switch immediately.", why: "30 seconds forces quick melodic decisions. No time to settle in — you must draw from internalized vocabulary instantly." },
+        { text: "Round 2: Em pentatonic (E-G-A-B-D) over Em. Then Round 3: G major pentatonic (G-A-B-D-E) over G. Same note family, different centers. Switch immediately at each timer.", why: "The first three keys share notes but have different emotional centers. Switching between them tests your key-center awareness within the same note family." },
+        { text: "Round 4: E major pentatonic (E-F#-Ab-B-C#) over E chord. This is the big jump — genuinely new notes. Round 5: A major pentatonic (A-B-C#-E-F#) over A chord. Back in sharp-key territory.", why: "Rounds 4 and 5 shift to the new key family. The jump from G major (no sharps) to E major (4 sharps) is the maximum contextual interference moment." },
+        { text: "Run the full marathon again — 5 rounds, 30 seconds each. Try to improve fluency in each key. Then a third time. Record all three runs and compare.", why: "Three complete runs of the marathon in one session is intensive interleaved practice. The improvement between run 1 and run 3 will be audible — that's your brain building abstract key schemas in real time." },
+        { text: "After three runs, rate your fluency 1-5 in each key. Set a goal: all five keys at 4+ fluency. The key with the lowest score is your next practice priority.", why: "Quantified self-assessment turns key-independence from a vague goal into a measurable skill. When all five keys score 4+, you have genuine key-independent musicianship." }
+      ],
+      feel: "The marathon should feel like a workout — demanding but exhilarating. Each key switch is a mental sprint. By the third run, the switches start feeling like gear changes instead of emergency stops.",
+      wrong: "If you can't make it through all 5 rounds without freezing, extend to 45-second rounds. If one specific key causes a freeze, spend extra time on that key's pentatonic exercises before attempting the marathon again.",
+      sarah: "Gene, this marathon is the culmination of everything. Am was your starting point. Now you have five musical worlds to draw from — minor, relative minor, major, bright major, warm major. You're not an Am singer anymore. You're a singer who happens to love Am.",
+      referencePitches: getPitchRange("E3", "A4"),
+      pitchContour: true,
       recorder: true,
-      levelUp: "Can hear and sing intervals, feel major/minor/modal colors, navigate tension-resolution, think in Nashville numbers for instant transposition, use borrowed chords (bVI, bVII, iv) for emotional color, control harmonic rhythm as a structural tool, hear bass motion as harmonic drive, target chord tones through changes, create surprise with deceptive cadences, access dark modal colors, and improvise melodies over unfamiliar chord progressions by ear."
+      levelUp: "Can hear and sing intervals, feel major/minor/modal colors, navigate tension-resolution, think in Nashville numbers for instant transposition, use borrowed chords (bVI, bVII, iv) for emotional color, control harmonic rhythm as a structural tool, hear bass motion as harmonic drive, target chord tones through changes, create surprise with deceptive cadences, access dark modal colors, improvise melodies over unfamiliar chord progressions by ear, navigate D major as a bridge between key families, and sustain fluent pentatonic improvisation across five key centers (Am, Em, G, E, A) with genuine key-independent musicianship."
     }
   ]
 };

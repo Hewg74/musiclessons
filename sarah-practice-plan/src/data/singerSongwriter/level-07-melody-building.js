@@ -285,8 +285,80 @@ export const level7 = {
       metronome: 80,
       referencePitches: getPitchRange("A3", "G4"),
       volumeMeter: true,
+      recorder: true
+    },
+
+    // ─── KEY DIVERSITY — PENTATONIC INTERLEAVING + NUMBERS ───
+
+    {
+      id: "ss-7-14",
+      time: 8,
+      title: "E Major Pentatonic Improv",
+      type: "vocal",
+      what: "Mirror your Am pentatonic improv skills in E major pentatonic: E-F#-Ab(G#)-B-C#. Same melodic principles — stepwise motion, leaps, target notes, motif development — but completely different notes. Over E-A-B7 backing tracks. This is where your pentatonic skills become truly portable.",
+      setup: "Guitar. Strum E-A-B7.",
+      tracks: [
+        { name: "E Major Surf 120", src: "/e-major-surf-120.mp3" },
+        { name: "E Major Reggae 85", src: "/e-major-reggae-85.mp3" }
+      ],
+      steps: [
+        { text: "Sing E major pentatonic ascending and descending: E-F#-Ab-B-C#-B-Ab-F#-E. Against the E chord. Feel how this scale has a different shape from Am pentatonic — the intervals between notes are in different places.", why: "Am pentatonic: minor 3rd, whole step, whole step, minor 3rd, whole step. E major pentatonic: whole step, whole step, minor 3rd, whole step, minor 3rd. Same interval set, different order — different melodic feel." },
+        { text: "Target note exercise: set Ab as your target. Improvise freely but land on Ab every 4 bars. Ab is the major 3rd of E — the note that makes E major MAJOR. Make it your anchor.", why: "Target-note practice in a new key transfers the skill from Level 7's Am exercises. The specific target (Ab) reinforces the E major identity." },
+        { text: "Motif development in E major: create a 3-4 note motif using E major pentatonic. Sequence it (repeat starting from different notes). Invert it. Fragment it. Same tools, new notes.", why: "If you can develop motifs in E major using the same techniques you learned in Am, the techniques are truly internalized — not key-dependent." },
+        { text: "Choose a backing track (surf or reggae). Improvise a verse melody (low register, E3-Ab3) and a chorus melody (higher, B3-C#4) using E major pentatonic. Record it.", why: "Verse/chorus contrast in E major proves your melodic architecture skills transfer across keys. The backing track provides genre context." }
+      ],
+      feel: "E major pentatonic should feel like Am pentatonic's brighter sibling — familiar shapes in an unfamiliar key. By the end, E major should feel like a second home, not a foreign country.",
+      wrong: "If you keep defaulting to Am notes (G natural, C natural), you're not hearing the E major context. Slow down, sing each note of the E major pentatonic individually against the drone, and memorize the sound before improvising.",
+      sarah: "Gene, every pentatonic lick that works in Am works in E major — just transposed. The melodic DNA is the same. Your Am improvisations were the training wheels; E major is riding on your own.",
+      referencePitches: getPitchRange("E3", "C#4"),
+      pitchContour: true,
+      recorder: true
+    },
+    {
+      id: "ss-7-15",
+      time: 7,
+      title: "Intro to Numbers",
+      type: "vocal",
+      what: "The simplest version of the Nashville Number System: assign a number (1-7) to each chord based on its position in the key. Am-C-G-Em becomes 1-3-7-5 in Am. The SAME numbers in E major give you E-Ab-D-C#. Numbers let you move any song to any key instantly — it's the universal language of professional musicians.",
+      setup: "Guitar. Metronome at 80 BPM.",
+      tracks: [{ name: "Drums Only — Reggae 85", src: "/drums-reggae-85.mp3" }],
+      steps: [
+        { text: "Strum Am-C-G-Em. Say the numbers out loud as you strum: 'one... three... seven... five.' Am is 1 (home), C is 3 (third chord in the key), G is 7, Em is 5. Don't think about why — just label them.", why: "Numbers abstract harmony away from specific keys. Once you think in numbers, you can play any song in any key by converting chord names to numbers and back." },
+        { text: "Now play in Em: the same 1-3-7-5 gives you Em-G-D-Bm. Strum it and say the numbers. Same emotional shape, different key. If Bm is hard, substitute B7.", why: "Transposing by numbers is instant — no music theory required. The numbers carry the harmonic FUNCTION, which is the part that matters." },
+        { text: "Try it in E major: 1-4-5 gives you E-A-B7 (the progression you've been playing). 1 is always home, 4 is always departure, 5 is always tension. Same feelings, any key.", why: "When you can feel that '5 chord' tension in multiple keys, you're hearing function, not just notes. This is the key to key-independent musicianship." },
+        { text: "Pick any song you know. Write out the chords as numbers. Then play it in a different key using only the numbers. Record both versions.", why: "When transposition becomes a simple number lookup, every key is equally accessible. The mental barrier between keys dissolves." }
+      ],
+      feel: "Numbers should start replacing chord names in your head. When you think '4 chord,' you should feel 'departure' before your fingers even move.",
+      wrong: "If the numbers feel arbitrary, focus on just 1, 4, and 5 — the most important functions. 1 = home, 4 = leaving home, 5 = wanting to come back. Build from there.",
+      sarah: "Gene, this is the single tool that makes everything click. Nashville session musicians play songs they've never heard using just numbers. One skill, infinite keys.",
+      referencePitches: getPitchRange("A3", "E4"),
       recorder: true,
-      levelUp: "Can freely improvise pentatonic melodies over backing tracks, land on target notes intentionally, sing pentatonic in multiple keys, develop motifs through sequence/inversion/fragmentation, feel intervals as emotional colors, use silence as a melodic element, create contrasting verse/chorus melodies, and use call-and-response between voice and guitar."
+      metronome: 80
+    },
+    {
+      id: "ss-7-16",
+      time: 10,
+      title: "Cross-Family Key Roulette",
+      type: "vocal",
+      what: "Maximum contextual interference. Randomize between four pentatonic keys: Am (no sharps), G major (no sharps, different center), E major (4 sharps), A major (3 sharps). One minute in each key, chosen randomly. The unpredictable key switches force your brain to build truly abstract, key-independent melodic skills.",
+      setup: "Guitar. Use a dice app or flip a coin twice: HH=Am, HT=G, TH=E major, TT=A major.",
+      tracks: [
+        { name: "Drums Only — Bossa 75", src: "/drums-bossa-75.mp3" },
+        { name: "Drums Only — Afrobeat 110", src: "/drums-afrobeat-110.mp3" }
+      ],
+      steps: [
+        { text: "Roll your randomizer. Whatever key comes up, immediately start strumming and improvising in that pentatonic for 60 seconds. No warm-up, no preparation. Record the whole session.", why: "The randomness is the entire point. Research shows that random interleaving produces the most durable learning — even though it feels harder than structured practice." },
+        { text: "Roll again. Switch immediately to the new key. The transition should be as fast as you can manage — change guitar chord, find the new pentatonic root, start singing.", why: "Fast key switches build the neural pathways for key-independent musicianship. Each switch forces a full reconfiguration — new root, new scale, new vocal targets." },
+        { text: "Continue for 8-10 rolls (8-10 minutes). Some keys will repeat — that's fine. The pattern is unpredictable, which is what matters.", why: "Over 10 rounds, you'll notice the unfamiliar keys (E and A major) getting easier while the familiar keys (Am, G) stay effortless. The gap closing IS the learning." },
+        { text: "Listen back. Rate your fluency in each key from 1-5. The lowest-rated key is your next practice priority.", why: "Self-assessment after randomized practice reveals exactly where your key-independence has gaps. Targeted follow-up closes those gaps efficiently." }
+      ],
+      feel: "The first few switches should feel chaotic — that's desirable difficulty. By round 5 or 6, a rhythm emerges. By round 8, you're flowing between keys with growing confidence.",
+      wrong: "If you panic at key switches and default to Am every time, slow down. Take 5 seconds between rounds to find the new root on guitar. Speed comes with practice.",
+      sarah: "Gene, this is the most fun exercise in the curriculum — musical roulette. Each round is a tiny adventure. The chaos is productive. Your brain is building connections between keys that structured practice can't create.",
+      referencePitches: getPitchRange("E3", "A4"),
+      pitchContour: true,
+      recorder: true,
+      levelUp: "Can freely improvise pentatonic melodies over backing tracks, land on target notes intentionally, sing pentatonic in multiple keys including E major and A major, develop motifs through sequence/inversion/fragmentation, feel intervals as emotional colors, use silence as a melodic element, create contrasting verse/chorus melodies, use call-and-response between voice and guitar, think in Nashville numbers for basic transposition, and navigate random key switches across four pentatonic families with growing fluency."
     }
   ]
 };

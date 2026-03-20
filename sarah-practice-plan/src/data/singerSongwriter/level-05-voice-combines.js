@@ -575,8 +575,75 @@ export const level5 = {
       referencePitches: getPitchRange("E3", "E4"),
       pitchContour: true,
       volumeMeter: true,
+      recorder: true
+    },
+
+    // ─── KEY DIVERSITY — DUAL-TASK IN MULTIPLE KEYS ───
+
+    {
+      id: "ss-5-25",
+      time: 6,
+      title: "Em Center Transpose",
+      type: "vocal",
+      what: "Take the Hum+Strum skill from ss-5-2 and do it over Em-G-C-D instead of Am-C-G-Em. Same dual-task challenge, new harmonic center. Em feels more melancholy than Am, and the chord order creates different gravitational pull. The fact that this feels harder than Am-C-G-Em IS the learning — your brain is building a more flexible schema.",
+      setup: "Guitar. Metronome at 80 BPM. Strum Em-G-C-D.",
+      steps: [
+        { text: "Strum Em-G-C-D at 80 BPM. Hum the root of each chord: E over Em, G over G, C over C, D over D. Notice: these chord changes feel different from Am-C-G-Em even though they share the same notes.", why: "Same notes, different center of gravity. Em as home makes G feel like departure and D feel like tension. This proves that 'key' is about where HOME is, not which notes you play." },
+        { text: "Sing chord tones: E-G-B over Em, G-B-D over G, C-E-G over C, D-F#-A over D. Notice the D chord introduces F# — a note outside the Am pentatonic. Navigate to it by ear.", why: "F# appears when D becomes a major chord in this context. Your voice encounters a 'new' note that challenges Am-trained muscle memory." },
+        { text: "Free vocal improv over Em-G-C-D. Treat Em as home — phrases that end on E feel resolved. Compare this to your Am improv — different emotional center, same set of notes. 2 minutes, record.", why: "The emotional difference between Em-centered and Am-centered improvisation proves that key center matters more than which notes are available. This is the deepest lesson in key diversity." }
+      ],
+      feel: "Em center should feel darker and more introspective than Am center — even though the chords overlap. Like the same landscape at dusk instead of noon.",
+      wrong: "If you keep gravitating back to A as your home note, you're fighting the Em center. Deliberately end phrases on E. Let E be the note of resolution.",
+      sarah: "Gene, Em is the minor relative of G major — it's the melancholy side of the bright key you explored in L4. Every chord you know can serve a different function depending on which one is 'home.'",
+      drone: { mode: "cycle", progression: ["Em", "G", "C", "D"], bpm: 80, stepDuration: "1m" },
+      referencePitches: getPitchRange("E3", "G4"),
+      pitchContour: true,
       recorder: true,
-      levelUp: "Can pass the TV Test for guitar autonomy, hum/speak/sustain over chord changes, combine any two improvisation skills — rhythm + dynamics, chord changes + emotion, genre feel + vowel shapes — navigate chord changes by feeling root gravity, place voice behind/on/ahead of the beat deliberately, paint with notes as emotional colors across changing harmonic palettes, distinguish swing from straight feel, vary rhythmic density as a compositional tool, and create complementary vocal rhythms that interlock with guitar grooves — while strumming, without either skill degrading when the other is added."
+      metronome: 80
+    },
+    {
+      id: "ss-5-26",
+      time: 7,
+      title: "E Major Strum + Sing",
+      type: "vocal",
+      what: "The dual-task ramp from ss-5-2, but in E major. Strum E-A-B7 at 80 BPM. Hum roots, then sing chord tones. This is the first time you're combining guitar autonomy with vocal work in a genuinely new key family. The chord shapes are different, the vocal targets are different — everything you automated in Am must be rebuilt from scratch in E major.",
+      setup: "Guitar. Metronome at 80 BPM. Strum E-A-B7. Review B7 fingering from ss-4-22 if needed.",
+      steps: [
+        { text: "Strum E-A-B7 at 80 BPM with a simple quarter-note pattern. Just get the chord changes smooth. If B7 is still rough, drill E→B7→E transitions until the change is clean.", why: "Guitar autonomy in a new chord progression must be established before adding voice. E-A-B7 has different transition mechanics than Am-C-G-Em." },
+        { text: "Hum the root of each chord: E over E, A over A, B over B7. Sustained hum, one root per chord. If the strum hitches, go back to guitar-only practice.", why: "Root tracking over new chords tests whether the dual-task transfers across key families. If humming E-A-B disrupts the strum, the E-A-B7 guitar pattern isn't autonomous yet." },
+        { text: "Sing chord tones: E-Ab-B over E (remember Ab = G#), A-C#-E over A, B-D#-F# over B7. Navigate these new notes by ear — the drone will guide you.", why: "These chord tones include notes you've rarely or never sung (Ab, C#, D#/Eb, F#). Each one is a new physical vocal experience — different resonance, different breath support." },
+        { text: "Free vocal improv over E-A-B7. Sing whatever notes feel right over each chord. 2 minutes, record. Compare to your Am-C-G-Em improv — how does your voice sound different?", why: "Free improvisation in E major with guitar tests the full dual-task in a new key family. The comparison to Am reveals how key-specific your vocal instincts are." }
+      ],
+      feel: "This should feel like learning to drive in a new car — the controls are in different places but the skill is the same. Awkwardness is expected and productive.",
+      wrong: "If you're singing Am pentatonic notes (G natural, C natural) over E-A-B7, you're defaulting to familiar muscle memory. Use the drone to find Ab and C# — they're the notes that make E major sound like E major.",
+      sarah: "Gene, this is where the research on key-specific vocal production gets real. Your voice literally uses different muscles to produce Ab than to produce G. Building this dual-task in E major gives you a second musical identity.",
+      drone: { mode: "cycle", progression: ["E", "A", "B7"], bpm: 80, stepDuration: "1m" },
+      referencePitches: getPitchRange("E3", "C#4"),
+      recorder: true,
+      metronome: 80
+    },
+    {
+      id: "ss-5-27",
+      time: 8,
+      title: "Cross-Key Flow",
+      type: "vocal",
+      what: "The ultimate contextual interference exercise for Level 5. Strum 4 bars Am-C-G-Em, then switch to 4 bars E-A-B7, then back. Navigate the key family shift while maintaining all dual-task skills. The jump between Am (no sharps) and E major (4 sharps) forces your brain to build abstract, key-independent musicianship rather than Am-specific habits.",
+      setup: "Guitar. Metronome at 85 BPM.",
+      tracks: [{ name: "Drums Only — Reggae 85", src: "/drums-reggae-85.mp3" }],
+      steps: [
+        { text: "Strum Am-C-G-Em for 4 bars (16 beats). Sing chord tones freely — you know this territory. Then immediately switch to E-A-B7 for 4 bars. Sing chord tones in E major. The transition is the challenge.", why: "The key switch forces your brain to reconfigure both guitar shapes AND vocal targets simultaneously. This is maximum contextual interference — and it's what produces the deepest learning." },
+        { text: "Repeat the cycle 4 times: Am family → E family → Am family → E family. Each time the switch should feel slightly smoother. Your brain is building the neural pathways for key-independent musicianship.", why: "Repeated key switching builds the 'abstract schema' that research describes — the ability to apply musical skills in any context, not just the one you practiced in." },
+        { text: "On the final cycle, try to maintain the same emotional arc across both keys. Start quiet and build, or start bright and fade — but keep the emotional continuity even as the key changes.", why: "Maintaining emotional continuity across key changes is what professional musicians do instinctively. It separates 'playing in a key' from 'making music that happens to change keys.'" },
+        { text: "Record the full exercise. Listen back — can you hear the transition points? Do they sound like jarring gear shifts, or smooth lane changes? The goal is smooth.", why: "The recording reveals whether the key switches are musical or mechanical. Over time, these transitions become invisible — and that's when key independence is achieved." }
+      ],
+      feel: "The Am sections should feel like home. The E major sections should feel like a vacation home — familiar enough to function, unfamiliar enough to be exciting. The transitions should feel like stepping through a doorway.",
+      wrong: "If you freeze up at the key switch and stop singing, that's normal for the first few attempts. Keep the guitar going and rejoin with your voice — even if it means just humming the root until you find your footing in the new key.",
+      sarah: "Gene, this exercise is the research made real. Contextual interference — jumping between keys — feels harder but produces better retention than staying in one key. Every awkward moment here is your brain getting stronger.",
+      referencePitches: getPitchRange("E3", "G4"),
+      pitchContour: true,
+      recorder: true,
+      metronome: 85,
+      levelUp: "Can pass the TV Test for guitar autonomy, hum/speak/sustain over chord changes, combine any two improvisation skills — rhythm + dynamics, chord changes + emotion, genre feel + vowel shapes — navigate chord changes by feeling root gravity, place voice behind/on/ahead of the beat deliberately, paint with notes as emotional colors across changing harmonic palettes, distinguish swing from straight feel, vary rhythmic density as a compositional tool, create complementary vocal rhythms that interlock with guitar grooves, perform dual-task singing in Em-centered and E major progressions, and navigate cross-key transitions between Am and E major families — while strumming, without either skill degrading when the other is added."
     }
   ]
 };

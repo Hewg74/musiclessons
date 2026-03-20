@@ -530,8 +530,100 @@ export const level6 = {
       metronome: 85,
       referencePitches: getPitchRange("E3", "E4"),
       pitchContour: true,
+      recorder: true
+    },
+
+    // ─── KEY DIVERSITY — FULL INTEGRATION ACROSS KEY FAMILIES ───
+
+    {
+      id: "ss-6-22",
+      time: 7,
+      title: "Dm Color Introduction",
+      type: "vocal",
+      what: "Dm is the first chord that doesn't appear in your standard Am-C-G-Em set. Strum Am-Dm-Am-Em and feel how Dm adds a new emotional dimension — darker than Am, more restless, wanting to move. In soul music, Dm is the chord that adds depth and longing to minor-key grooves.",
+      setup: "Guitar. Metronome at 80 BPM. Dm chord: index on 1st fret high E, middle on 2nd fret G, ring on 3rd fret B. Open D string rings.",
+      tracks: [{ name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }],
+      steps: [
+        { text: "Strum Am-Dm-Am-Em at 80 BPM. Just guitar first — get the Am→Dm transition smooth. Dm shares two fingers with Am but the shape is subtly different. Feel the harmonic shift when Dm arrives.", why: "Dm adds the note F to your vocabulary — the one note in A natural minor that hasn't been emphasized. F creates a darker, more tense color than anything in Am-C-G-Em." },
+        { text: "Sing chord tones: A-C-E over Am, D-F-A over Dm, A-C-E over Am, E-G-B over Em. Notice the F note over Dm — it's the minor 3rd of Dm and it creates a distinctive pull.", why: "F is the 'soul' note in this context. It's what makes the Dm chord sound like Marvin Gaye, like Khruangbin's slower grooves, like the warm side of minor-key music." },
+        { text: "Improvise over Am-Dm-Am-Em using all your pentatonic vocabulary plus the new F note. When Dm arrives, lean into F and D. When Am returns, resolve to A. 3 minutes, record.", why: "Adding one new chord and one new emphasized note to a familiar context is the gentlest form of harmonic expansion. The progression still feels like home, but with a new room." },
+        { text: "Try Am-Dm-G-C — a different progression using Dm. Feel how Dm→G creates a beautiful lift — darkness resolving to brightness. Improvise over this for 2 minutes.", why: "Dm functions differently depending on what follows it. Dm→Am = circular return. Dm→G = dramatic lift. Understanding chord-to-chord color is songwriting intelligence." }
+      ],
+      feel: "Dm should feel like a shadow passing over the sun — darker, more mysterious, but still warm. When it resolves back to Am or lifts to G, the release is satisfying.",
+      wrong: "If Dm sounds the same as Am to your ear, focus on the F note. Sing D-F-A slowly against the Dm chord and really hear how F gives Dm its unique character.",
+      sarah: "Gene, Dm is the chord that turns a simple Am groove into something soulful and deep. Think Khruangbin's 'Maria También' or any classic soul ballad — Dm is doing the emotional heavy lifting.",
+      referencePitches: getPitchRange("D3", "D4"),
+      pitchContour: true,
       recorder: true,
-      levelUp: "Can sustain 5 minutes of fully integrated vocal improvisation over a backing track while strumming — varied rhythm, dynamics, emotional color, vowel shapes, chord-tone navigation, and genre-specific micro-timing — across multiple genre feels without stopping or losing the groove. Can identify your default genre instinct, self-assess using structured recording protocol, and use harmonic rhythm and genre rhythm transcription as creative tools."
+      metronome: 80
+    },
+    {
+      id: "ss-6-23",
+      time: 8,
+      title: "A Major Reggae Integration",
+      type: "vocal",
+      what: "Full integration improv in A major — a genuinely different key family. Strum A-D-E (I-IV-V in A major) with a reggae offbeat chop. All your skills from Levels 3-5 — dynamics, emotion, vowels, space, genre feel — applied in a key with sharps. A major is the classic reggae/roots key. C# and F# give it a warm, bright character completely unlike Am.",
+      setup: "Guitar. A-D-E with reggae offbeat chop (strum on the 'and' of each beat).",
+      tracks: [{ name: "A Major Reggae 85", src: "/a-major-reggae-85.mp3" }],
+      steps: [
+        { text: "Strum A-D-E with reggae chop. Sing A major pentatonic: A-B-C#-E-F#. All these notes are in our pitch display as sharps — no enharmonic confusion here. Feel the warmth.", why: "A major shares the ROOT (A) with Am but has completely different color notes. C# replaces C, F# replaces the absent F. It's the same home note in a completely different emotional house." },
+        { text: "Apply genre feel: behind-the-beat phrasing over the reggae groove. Let your voice lag slightly behind the strum. Reggae vocals are NEVER ahead of the beat.", why: "Genre-specific timing in a new key proves the skill is transferable. You learned behind-the-beat phrasing in Am reggae exercises — now apply it to A major." },
+        { text: "Dynamics: start quiet and intimate (DOPE LEMON in A major), then build to full voice. Use space — leave 2-bar gaps. Let the reggae groove breathe.", why: "Full integration means ALL skills simultaneously in a new key. If dynamics or space disappear when you focus on the new notes, those skills aren't automated yet." },
+        { text: "5-minute freestyle over A-D-E reggae. Record it. This is your first full-integration improv in a new key family.", why: "Five minutes in A major with full skill integration is the proof that your musicianship is key-independent, not Am-dependent." }
+      ],
+      feel: "A major reggae should feel warm, bright, and laid-back — like a sunset beach session. The reggae groove provides the pocket; A major provides the sunshine.",
+      wrong: "If you keep singing C natural instead of C#, your Am muscle memory is overriding the new key. Use the backing track as a guide — C natural will clash audibly with the A major harmony.",
+      sarah: "Gene, this is Bob Marley territory. This is Sublime. A major is where reggae lives when it's feeling optimistic. Your voice in this key, with this groove, is a whole new sound.",
+      referencePitches: getPitchRange("A3", "F#4"),
+      pitchContour: true,
+      recorder: true
+    },
+    {
+      id: "ss-6-24",
+      time: 8,
+      title: "E Major Surf Integration",
+      type: "vocal",
+      what: "Full integration improv in E major — the surf rock key. Strum E-A-B7 with a jangly surf strum pattern. All your skills flowing in the key of Dick Dale, the Beach Boys, and the bright side of Allah-Las. Ab (G# on the fretboard) and C# are now part of your active vocabulary.",
+      setup: "Guitar. E-A-B7 with jangly surf strum (down-up-down-up, emphasis on downbeats).",
+      tracks: [{ name: "E Major Surf 120", src: "/e-major-surf-120.mp3" }],
+      steps: [
+        { text: "Strum E-A-B7 with surf energy at 120 BPM. Sing E major pentatonic (E-F#-Ab-B-C#) freely. The tempo is faster than your Am exercises — surf rock moves. Let the energy carry your voice.", why: "Higher tempo in a new key is a double challenge. If your voice keeps up, both the key schema and the tempo schema are working." },
+        { text: "Use bright vowels — 'ee', 'ay', 'oh'. Surf-rock vocals are open and forward. No dark, closed 'oo' sounds. Let E major's brightness guide your vowel choices.", why: "Vowel choice should match the key's character. Major keys + fast tempo = open, bright vowels. This is genre intelligence applied to a new key." },
+        { text: "Dynamics: surf rock uses dynamics differently than reggae. Build to the B7 chord (tension), release on E (resolution). Let the dynamic arc follow the harmonic tension.", why: "Pairing dynamics with harmonic function (loud on tension, release on resolution) is sophisticated integration. In E major, B7→E is the tension→release point." },
+        { text: "4-minute freestyle over E-A-B7. Record it. Compare to your Am Desert Blues and A Major Reggae — three completely different musical identities, all yours.", why: "Three key families, three genres, three emotional palettes. Your voice is becoming a multi-dimensional instrument." }
+      ],
+      feel: "E major surf should feel bright, driving, and exhilarating — like catching a wave. The tempo pushes you forward; the key lifts you up.",
+      wrong: "If 120 BPM feels too fast for singing, drop to 100 BPM. The surf strum can be relaxed too — think Allah-Las mid-tempo, not Dick Dale shred.",
+      sarah: "Gene, this is the sound of your playlists coming through your own voice. E major at surf tempo is where Allah-Las and BALTHVS live. You're not just listening anymore — you're inside the music.",
+      referencePitches: getPitchRange("E3", "C#4"),
+      pitchContour: true,
+      recorder: true
+    },
+    {
+      id: "ss-6-25",
+      time: 10,
+      title: "Four-Key Freestyle",
+      type: "song",
+      what: "The ultimate integration test. Four key centers, 2 minutes each, continuous flow: Am-C-G-Em (minor home) → G-C-D (major) → E-A-B7 (surf) → A-D-E (reggae). All skills, all keys, no stopping. This is what key-independent musicianship sounds like — the ability to make music in any harmonic context with equal fluency.",
+      setup: "Guitar. Drums-only track for key-agnostic rhythm support. Plan your chord progression order before starting.",
+      tracks: [
+        { name: "Drums Only — Soul/Funk 90", src: "/drums-soul-funk-90.mp3" },
+        { name: "Drums Only — Surf 120", src: "/drums-surf-120.mp3" }
+      ],
+      steps: [
+        { text: "2 minutes: Am-C-G-Em. Your comfort zone. Warm up with all your skills flowing — dynamics, vowels, emotion, space, genre feel. This is home.", why: "Starting in your strongest key builds confidence and establishes the musical flow state before you venture into newer territory." },
+        { text: "2 minutes: G-C-D. Shift to major. Feel the brightness change. Your vowels should open, your phrasing may become more buoyant. Let the key change your singing.", why: "G major is your first 'step outside' — same note family but different emotional center. The transition should feel like sunrise." },
+        { text: "2 minutes: E-A-B7. New key family. Ab, C#, F# enter your vocabulary. Surf energy. The contrast with the previous Am section should be dramatic.", why: "E major is the biggest jump — genuinely different notes, different vocal production. The contextual interference here is maximum." },
+        { text: "2 minutes: A-D-E. Another new-family key. Reggae groove. C#, F# but centered on A. Close your eyes and FEEL the groove shift from surf to roots.", why: "Ending with A major reggae brings the energy down from surf-rock intensity while staying in the sharp-key family. The journey is: home → bright → electric → warm." },
+        { text: "Listen to the full 8-minute recording. Note where the transitions were smooth and where they were rough. The rough spots are your practice targets.", why: "The four-key freestyle is both a performance piece and a diagnostic tool. Smooth transitions = key independence. Rough transitions = where more interleaved practice is needed." }
+      ],
+      feel: "Each 2-minute section should have its own personality — the keys demand it. But there should be a thread of YOU running through all four. Your phrasing, your timing, your emotional instinct.",
+      wrong: "If you freeze at the key transitions, that's normal. Keep the guitar going and sing the root of the new key until you find your footing. The strum must never stop.",
+      sarah: "Gene, eight minutes across four key families with every skill you've built. This is the proof that your musicianship isn't locked into Am — it's portable, flexible, and genuinely yours.",
+      referencePitches: getPitchRange("E3", "A4"),
+      pitchContour: true,
+      recorder: true,
+      levelUp: "Can sustain 5 minutes of fully integrated vocal improvisation over a backing track while strumming — varied rhythm, dynamics, emotional color, vowel shapes, chord-tone navigation, and genre-specific micro-timing — across multiple genre feels without stopping or losing the groove. Can identify your default genre instinct, self-assess using structured recording protocol, use harmonic rhythm and genre rhythm transcription as creative tools, improvise fluently in Dm, A major, and E major contexts, and navigate continuous multi-key freestyle across four different key families with all skills integrated."
     }
   ]
 };

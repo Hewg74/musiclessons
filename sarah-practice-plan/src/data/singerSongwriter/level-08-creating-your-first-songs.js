@@ -379,8 +379,58 @@ export const level8 = {
       sarah: "Gene, two original song sketches. You created both from scratch — no covers, no imitation. That's the foundation of everything that follows. Every level from here builds on this ability.",
       metronome: 85,
       referencePitches: getPitchRange("E3", "A4"),
+      recorder: true
+    },
+
+    // ─── KEY DIVERSITY — SONGS IN MULTIPLE KEY FAMILIES ───
+
+    {
+      id: "ss-8-19",
+      time: 10,
+      title: "Song in E Major",
+      type: "song",
+      what: "Write a song sketch in E major — E-A-B7. The different guitar shapes will suggest different melodies than Am-C-G-Em. E major is surf-rock and bright reggae territory. Your third original song sketch, and your first in a new key family. The physical difference in the guitar voicings will lead you to discover melodic ideas you'd never find in Am.",
+      setup: "Guitar. Strum E-A-B7 with your choice of strum pattern — surf jangle, reggae chop, or folk strum.",
+      tracks: [
+        { name: "E Major Surf 120", src: "/e-major-surf-120.mp3" },
+        { name: "E Major Reggae 85", src: "/e-major-reggae-85.mp3" }
+      ],
+      steps: [
+        { text: "Choose a backing track and strum E-A-B7. Improvise melodies using E major pentatonic (E-F#-Ab-B-C#) for 2 minutes. Let phrases emerge. When you hear one you like, repeat it.", why: "The E major guitar voicings resonate differently — open E and B strings ring, creating a natural shimmer. Your voice will respond to this shimmer with different melodic instincts than Am." },
+        { text: "Settle on a verse melody in the lower register (E3-Ab3). Keep it intimate and conversational. Simple words: 'Walking down the shore' or 'Sun going down again.'", why: "Verse melodies in E major sit in a slightly different vocal register than Am. The key literally places your voice in a new physical position, which changes the emotional quality." },
+        { text: "Create a chorus that lifts — higher range (B3-C#4), more open vowels, more energy. The B7→E resolution is your moment of arrival. Place your strongest word on the E chord.", why: "B7→E is the tension→resolution pair in E major. Placing the emotional payoff word on the E chord (resolution) creates natural prosody alignment." },
+        { text: "Assemble: Verse-Verse-Chorus-Verse. Sing the whole thing twice. Record the second pass. You've written a song in a genuinely new key.", why: "Three original sketches in three different keys (Am, G-area, E major) proves your songwriting method is portable. You're a songwriter, not an Am specialist." }
+      ],
+      feel: "E major songs should feel brighter and more outward-facing than Am songs. Where Am is introspective porch music, E major is sunshine and open road.",
+      wrong: "If your E major melody sounds exactly like your Am melodies transposed up, you're not letting the key influence you. Play the E chord and just listen — what does it want to become? Follow the guitar's voice.",
+      sarah: "Gene, every new key opens a door to songs you couldn't have written in Am. E major is where your surf and reggae playlists live. This song is proof that your creativity isn't locked to one key.",
+      referencePitches: getPitchRange("E3", "E4"),
       recorder: true,
-      levelUp: "Can create two original song sketches with contrasting A/B sections, sing chord-tone melodies with simple lyrics over strumming at 80-85 BPM, dissect songs for structure/contour/phrasing/dynamics, check prosody alignment between speech and melody, assess recordings with a structured protocol, capture song seeds habitually, write ugly first drafts under time pressure, build sensory vocabulary through object writing, generate songs from titles, paint with chord tones as colors, recycle melodies through variation, and create complete two-section song sketches with verse and chorus."
+      phraseForm: { pattern: "AABA", barsPerSection: 4, labels: { A: "Verse", B: "Chorus" } }
+    },
+    {
+      id: "ss-8-20",
+      time: 10,
+      title: "Same Song, New Key",
+      type: "song",
+      what: "Take a song you created in Am (from ss-8-17 or ss-8-18) and transpose it to A major using Nashville numbers. Sing both versions. Notice how the vocal production changes — different resonances, different breath points, different emotional color from the same melodic contour. This is the ultimate proof that keys aren't just theory — they're physical, emotional, and creative.",
+      setup: "Guitar. Your Am song sketch from earlier. Nashville numbers written out.",
+      tracks: [
+        { name: "A Major Folk 80", src: "/a-major-folk-80.mp3" },
+        { name: "Drums Only — Reggae 85", src: "/drums-reggae-85.mp3" }
+      ],
+      steps: [
+        { text: "Take the core chords from your Am song and transpose them to A major. The simplest approach: Am becomes A, and your other chords map to the A major family — try A-D-E (1-4-5 in A major). If your Am song used Am-C-G, that's 1-3-7 in minor — in A major, try A-D-E for a similar journey. Strum the A major version and feel how the same harmonic movement sounds brighter.", why: "Transposing between minor and major isn't a one-to-one number swap — the chord qualities change. But the emotional arc (home → departure → tension → home) transfers. Focus on the feeling, not the exact numbers." },
+        { text: "Sing your original melody over the A major chords. Some notes will work perfectly. Others will need to shift — C becomes C#, G stays G. Adjust by ear. Record the A major version.", why: "Transposing a melody teaches you which parts of a melody are key-dependent (specific notes) and which are key-independent (contour, rhythm, emotion). Both are valuable knowledge." },
+        { text: "Listen to both versions back-to-back: Am original, then A major transposition. How does the emotional color change? The melody contour is the same, but the feeling is different.", why: "This comparison is the clearest demonstration of how key affects emotion. Same song, same structure, different key = different emotional meaning. This is why professional producers choose keys carefully." },
+        { text: "Which version do you prefer? Which feels more 'you'? The answer reveals something about your artistic identity — and there's no wrong answer.", why: "Key preference is part of your artistic voice. Some writers live in minor keys, others in major. Knowing your preference helps you make intentional creative choices." }
+      ],
+      feel: "The A major version should feel like the same story told by a more optimistic narrator — same events, brighter outlook. Or it might reveal that the song was always meant to be major. Both discoveries are valuable.",
+      wrong: "If the transposition sounds identical to the original, you're probably singing the same absolute notes instead of transposing them. C in Am becomes C# in A major — that half-step matters.",
+      sarah: "Gene, hearing your own song in two keys is one of the most illuminating moments in songwriting. It proves the song exists as an idea — not just a set of notes. The idea can live in any key.",
+      referencePitches: getPitchRange("A3", "A4"),
+      recorder: true,
+      levelUp: "Can create two original song sketches with contrasting A/B sections, sing chord-tone melodies with simple lyrics over strumming at 80-85 BPM, dissect songs for structure/contour/phrasing/dynamics, check prosody alignment between speech and melody, assess recordings with a structured protocol, capture song seeds habitually, write ugly first drafts under time pressure, build sensory vocabulary through object writing, generate songs from titles, paint with chord tones as colors, recycle melodies through variation, create complete song sketches in both Am and E major key families, and transpose songs between keys using Nashville numbers."
     }
   ]
 };
