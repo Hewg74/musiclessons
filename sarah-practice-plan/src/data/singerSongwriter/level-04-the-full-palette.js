@@ -812,8 +812,99 @@ export const level4 = {
       referencePitches: getPitchRange("A3", "A4"),
       pitchContour: true,
       recorder: true,
+      metronome: 75
+    },
+
+    // ─── PHASE 11: CROSS-KEY JUMP TRAINING ───
+
+    {
+      id: "ss-4-36",
+      time: 8,
+      title: "E Major Jumps",
+      type: "vocal",
+      what: "Jump training in E major — a completely different set of intervals than Am. The E major pentatonic (E-F#-Ab-B-C#) has different distances between notes, different physical vocal sensations, different emotional flavors. Ab and C# are notes that don't exist in Am at all. Jumping between them builds key-independent interval navigation.",
+      setup: "Guitar strumming E. Drone on E. Metronome at 70 BPM.",
+      steps: [
+        { text: "Review the E major pentatonic: E-F#-Ab-B-C#. Sing it ascending and descending against the E drone. These notes should be familiar from ss-4-22 — but now you're going to jump between them, not walk.", why: "Jumping in E major forces your ear to calculate intervals in a new tonal context. The 'same' size jump (like a minor 3rd) sounds and feels different when it's Ab→B instead of A→C." },
+        { text: "Jumps from E: E→F# (close), E→Ab (bright major 3rd), E→B (open 5th), E→C# (warm 6th). Sing each pair 4 times. Compare to the Am jumps — E→B has the same SIZE as A→E (both are 5ths) but a completely different COLOR.", why: "Comparing the same interval size in two keys proves that intervals are key-colored, not abstract. A perfect 5th in E major sounds different than a perfect 5th in Am — different resonance, different vocal placement." },
+        { text: "All 10 E major pentatonic pairs: E→F#, E→Ab, E→B, E→C#, F#→Ab, F#→B, F#→C#, Ab→B, Ab→C#, B→C#. Quick-fire — 4 reps each. Some are easy (E→B), some are tricky (F#→C#). Note which ones challenge you.", why: "Systematic coverage in a new key builds the abstract interval schema that research says transfers across all keys. Every pair you master in E major makes the same interval easier in every other key." },
+        { text: "Random E major pairs: draw two notes from E, F#, Ab, B, C#. Jump between them. 2 minutes. Then switch to Am and do random Am jumps for 1 minute. Feel the key switch in your body.", why: "Alternating between Am and E major random jumps is the ultimate contextual interference for interval training. Your brain must reconfigure for each key — and that reconfiguration builds flexibility." }
+      ],
+      feel: "E major jumps should feel brighter and more 'electric' than Am jumps — like the difference between an acoustic guitar and a Fender Stratocaster. The intervals have the same math but completely different vibes.",
+      wrong: "If you're accidentally singing Am notes (C natural instead of C#, G instead of Ab), the E major drone will clash audibly. Use the drone as your guide — if it sounds wrong, you're in the wrong key.",
+      sarah: "Gene, jumping in E major is where your surf-rock instincts come alive. These intervals — E to Ab, F# to C# — are the building blocks of every Allah-Las melody, every Beach Boys harmony. You're not just training your ear. You're learning to think in surf.",
+      drone: { root: "E", octave: 2, texture: "warm" },
+      referencePitches: getPitchRange("E3", "C#4"),
+      pitchContour: true,
+      recorder: true,
+      metronome: 70
+    },
+    {
+      id: "ss-4-37",
+      time: 8,
+      title: "A Major Jumps",
+      type: "vocal",
+      what: "Jump training in A major — same ROOT as Am but completely different notes. A major pentatonic is A-B-C#-E-F#. Compare A→C# (major 3rd, bright) to A→C (minor 3rd, ache). Same starting note, different destination, different emotion. This comparison IS the major/minor distinction, felt through jumping.",
+      setup: "Guitar strumming A. Drone on A. Metronome at 70 BPM.",
+      steps: [
+        { text: "Sing A major pentatonic: A-B-C#-E-F#. Against the A major drone. Notice: A and B are the same as Am. But C# replaces C, and F# replaces... nothing (F doesn't exist in Am pentatonic, but F# doesn't exist in Am diatonic either). These are genuinely new vocal targets.", why: "A major shares the ROOT with Am but almost nothing else. C# vs C is the defining difference — the 'happy vs sad' toggle. Jumping from A to C# vs A to C is the most direct way to feel the major/minor switch." },
+        { text: "The comparison jump: A→C (minor 3rd, ache — from your Am training). Then A→C# (major 3rd, brightness — new). Alternate: A→C, A→C#, A→C, A→C#. Feel the half-step difference between 'sad' and 'happy.' This is the most important interval distinction in all of music.", why: "The minor-3rd vs major-3rd comparison is the foundation of all harmonic understanding. When you can feel the difference in your body — not just hear it — you understand harmony at a visceral level." },
+        { text: "All 10 A major pentatonic pairs. Focus on the ones that differ from Am: A→C# (vs A→C), A→F# (vs A→F), B→C# (half step in Am context too, but now it's B to major 3rd), C#→E, C#→F#. 4 reps each.", why: "The pairs that overlap with Am (A→B, A→E, B→E) are easy — you've done them. The new pairs (involving C# and F#) are where A major becomes its own key, not just a variation of Am." },
+        { text: "Reggae jumping: over an A-D-E strum pattern, practice jumping between A major pentatonic notes with behind-the-beat timing. The jumps should feel warm, laid-back, roots-reggae. 2 minutes, record.", why: "A major in a reggae context is the sound of classic roots rock — bright, warm, optimistic. Jumping in A major over reggae is where this training meets Gene's genre DNA." }
+      ],
+      feel: "A major should feel like Am's optimistic twin — same home note, brighter colors everywhere else. The jumps feel warmer, more open, less shadowy than Am jumps.",
+      wrong: "The biggest trap: singing C natural instead of C# from muscle memory. Your Am training is deep — the pull toward C is strong. Use the A major drone to keep your ear calibrated to C#.",
+      sarah: "Gene, A major jumps over a reggae groove is Bob Marley, Slightly Stoopid, Pepper at their brightest. The C# is what makes it sunshine instead of shadow. You're learning to jump in the key of joy.",
+      drone: { root: "A", octave: 2, texture: "warm" },
+      referencePitches: getPitchRange("A3", "F#4"),
+      pitchContour: true,
+      recorder: true,
+      metronome: 70
+    },
+    {
+      id: "ss-4-38",
+      time: 10,
+      title: "Three-Key Jump Roulette",
+      type: "vocal",
+      what: "The ultimate interval training: randomize not just the NOTES but the KEY. Round 1: random Am pairs. Round 2: random E major pairs. Round 3: random A major pairs. The key switches every round. Your brain must reconfigure interval calculations for each key — this is maximum contextual interference and the fastest path to key-independent ear training.",
+      setup: "Guitar. Drums-only track (key-agnostic). Three sets of note slips: Am (A,B,C,D,E,F,G), E major (E,F#,Ab,B,C#), A major (A,B,C#,E,F#).",
+      tracks: [{ name: "Drums Only — Bossa 75", src: "/drums-bossa-75.mp3" }],
+      steps: [
+        { text: "Round 1 (2 min): Draw from the Am pile. Random pairs, jump between them. This is your comfort zone — let it flow.", why: "Starting with Am grounds you before the key switches begin. It's the warm-up round." },
+        { text: "Round 2 (2 min): Switch to E major pile. Random pairs from E, F#, Ab, B, C#. The shift should feel jarring at first — different notes, different vocal targets. Let your ear adapt.", why: "The key switch from Am to E major forces a complete recalibration. Every interval is in a new position. The adjustment time shortens with practice." },
+        { text: "Round 3 (2 min): Switch to A major pile. Random pairs from A, B, C#, E, F#. Same root as Am but different colors. The C# catches you every time you expect C.", why: "A major after E major is an interesting switch — both have sharps, but centered differently. Your ear is now navigating three distinct tonal worlds." },
+        { text: "Round 4 (3 min): MIX ALL THREE PILES. Draw any pair from any key — you won't know which key you're in until you see the notes. Strum the matching chord (Am, E, or A) and jump. Pure ear chaos. Record it.", why: "Mixed-key random jumping is the most cognitively demanding ear training possible. When you can do this fluently, you can navigate ANY key by ear — not just the three you practiced." },
+        { text: "Listen back. Rate your fluency in each key 1-5. The weakest key is tomorrow's practice priority.", why: "Self-assessment after cross-key roulette reveals exactly where your key-independence has gaps. Targeted follow-up is more efficient than repeated full roulettes." }
+      ],
+      feel: "This should feel like a cognitive workout — demanding, slightly chaotic, but exhilarating when you nail a jump in an unfamiliar key. The chaos is the learning.",
+      wrong: "If you freeze at every key switch, simplify: do 1-minute rounds instead of 2. Or limit each key to just 3 notes (root, 3rd, 5th) instead of the full pentatonic. Reduce variables until the switching feels manageable.",
+      sarah: "Gene, three-key jump roulette is the exercise that makes everything else in this curriculum possible. When your ear can navigate random intervals in three different keys, you can sing over ANY chord progression in ANY key. This is musicianship.",
+      referencePitches: getPitchRange("E3", "A4"),
+      pitchContour: true,
+      recorder: true
+    },
+    {
+      id: "ss-4-39",
+      time: 8,
+      title: "Cross-Key Emotional Arcs",
+      type: "vocal",
+      what: "The capstone of all jump training: build emotional arcs that CROSS keys. Start in Am (dark, intimate jumps using F and B). Shift to A major (bright, warm jumps using C# and F#). End in E major (electric, expansive jumps using Ab and C#). The emotional journey moves from shadow to light — and the keys carry the emotion through interval color alone.",
+      setup: "Guitar. Metronome at 75 BPM.",
+      tracks: [{ name: "Drums Only — Soul/Funk 90", src: "/drums-soul-funk-90.mp3" }],
+      steps: [
+        { text: "2 min — Am darkness: strum Am, use only dark/tense jumps. A→F (bittersweet), B→F (diminished tension), E→F (heavy half step). Small intervals, low register, heavy vowels. Build a mood of introspection.", why: "Starting in Am with dark intervals establishes the emotional floor. The shadow is where the journey begins — every sunrise needs a night before it." },
+        { text: "2 min — A major warmth: switch to A strum. Same root, brighter intervals. A→C# (major brightness), A→F# (warm 6th), C#→E (gentle step). The same 'A' home note but the world around it has changed from shadow to sun.", why: "The Am → A major switch is the most powerful key change in music. Same home, different mood. Feeling this through JUMPS makes the contrast physical, not just theoretical." },
+        { text: "2 min — E major electricity: switch to E strum. E→Ab (bright 3rd), E→C# (soaring 6th), F#→B (open 4th). Wider intervals, higher energy, surf-rock brightness. This is the emotional peak.", why: "E major is the most distant key from Am in this curriculum. Arriving here after Am → A major feels like a journey from midnight to noon. The intervals carry the emotional altitude." },
+        { text: "Record the full 6-minute arc. Listen back as one continuous piece. Can you hear the emotional journey? Dark → warm → electric? The keys and intervals did that — no lyrics, no chords changes, just jumping with intent.", why: "A cross-key emotional arc built from intervals alone is composition at its most elemental. If the recording FEELS like a journey, you understand how melody communicates emotion across keys." }
+      ],
+      feel: "The three sections should feel like three different emotional landscapes connected by a thread — your voice. Am is the cave. A major is the meadow. E major is the mountaintop. The journey between them is the music.",
+      wrong: "If all three sections sound the same, you're not committing to the key changes. Exaggerate: in Am, go dark and quiet. In A major, brighten your vowels and add volume. In E major, go full energy. Let the key dictate the performance.",
+      sarah: "Gene, this is the exercise that proves you're a musician, not just a singer. Building an emotional arc across three keys using only interval jumps — that's what composers do. When you listen back and hear the journey from dark to bright, you'll know: you have the tools to write songs that take people somewhere.",
+      referencePitches: getPitchRange("E3", "A4"),
+      pitchContour: true,
+      recorder: true,
       metronome: 75,
-      levelUp: "Can walk stepwise through all 7 notes of A natural minor, improvise freely across the full pentatonic and diatonic scales, sing tension notes B and F with emotional intent, hold seven-note conversations with tension-resolution dynamics, lock into genre grooves emphasizing B and F for desert blues yearning and surf rock darkness, jump between all 21 note pairs from any starting point, nail half-step precision on B↔C and E↔F, improvise angular leaps-only melodies, navigate random interval jumps by ear, choose jumps by emotional color to build mood arcs, switch between minor and major palettes, compare musical identity across three key centers, and use silence, dynamics, syncopation, and body percussion as expressive tools — all while the guitar strum stays on autopilot."
+      levelUp: "Can walk stepwise through all 7 notes of A natural minor, improvise freely across pentatonic and diatonic scales, sing tension notes B and F with emotional intent, hold seven-note conversations with tension-resolution dynamics, lock into genre grooves emphasizing B and F for desert blues yearning and surf rock darkness, jump between all 21 note pairs in Am from any starting point, nail half-step precision on B↔C and E↔F, improvise angular leaps-only melodies, navigate random interval jumps by ear, choose jumps by emotional color, jump systematically in E major and A major pentatonics, navigate random cross-key interval roulette across three keys, build emotional arcs through key-crossing interval journeys, switch between minor and major palettes, and compare musical identity across three key centers — all while the guitar strum stays on autopilot."
     }
   ]
 };
