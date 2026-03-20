@@ -1,17 +1,17 @@
 import { getPitchRange } from "../appData.js";
 
-export const level9 = {
-  level: 9,
+export const level10 = {
+  level: 10,
   title: "Hearing Harmony",
   subtitle: "Your ears lead. Your voice follows.",
   description:
     "You've been singing all 7 notes since Level 4 and jumping between them by feel. Now learn to HEAR the theory behind what you already do — intervals by name, chord functions (tension vs resolution), modes, borrowed chords, and harmonic navigation by ear. Based on Gordon's audiation stages: you'll learn to hear harmony in your inner ear before singing it. This level transforms intuitive singing into conscious harmonic understanding.",
   artists: "Khruangbin, BALTHVS, Hermanos Gutierrez, Nick Drake",
   unlocks: "Originals & Genre Craft (Level 10)",
-  review: { label: "Level 8-9 Check-In", time: 5, exercises: ["ss-8-5", "ss-9-7"], prompt: "Do 2 minutes of free pentatonic improv (ss-8-5). Then play through your complete original song (ss-9-7). Both confident? Move on." },
+  review: { label: "Level 9 Check-In", time: 5, exercises: ["ss-9-5", "ss-10-7"], prompt: "Do 2 minutes of free pentatonic improv (ss-9-5). Then play through your complete original song (ss-10-7). Both confident? Move on." },
   exercises: [
     {
-      id: "ss-9-1",
+      id: "ss-10-1",
       time: 6,
       title: "Interval Feeling",
       type: "vocal",
@@ -32,7 +32,7 @@ export const level9 = {
       recorder: true
     },
     {
-      id: "ss-9-2",
+      id: "ss-10-2",
       time: 6,
       title: "Major vs Minor Feeling",
       type: "vocal",
@@ -51,7 +51,7 @@ export const level9 = {
       recorder: true
     },
     {
-      id: "ss-9-3",
+      id: "ss-10-3",
       time: 8,
       title: "Chord Function: Tension & Resolution",
       type: "song",
@@ -73,7 +73,7 @@ export const level9 = {
       recorder: true
     },
     {
-      id: "ss-9-4",
+      id: "ss-10-4",
       time: 6,
       title: "Relative Minor Discovery",
       type: "vocal",
@@ -92,7 +92,7 @@ export const level9 = {
       recorder: true
     },
     {
-      id: "ss-9-5",
+      id: "ss-10-5",
       time: 8,
       title: "Modal Colors",
       type: "song",
@@ -113,7 +113,7 @@ export const level9 = {
       recorder: true
     },
     {
-      id: "ss-9-6",
+      id: "ss-10-6",
       time: 7,
       title: "Nashville Numbers",
       type: "song",
@@ -132,7 +132,7 @@ export const level9 = {
       metronome: 80
     },
     {
-      id: "ss-9-7",
+      id: "ss-10-7",
       time: 8,
       title: "Emotional Mapping: Borrowed Chords",
       type: "song",
@@ -152,7 +152,7 @@ export const level9 = {
       recorder: true
     },
     {
-      id: "ss-9-8",
+      id: "ss-10-8",
       time: 7,
       title: "Harmonic Rhythm as Architecture",
       type: "song",
@@ -170,7 +170,7 @@ export const level9 = {
       recorder: true
     },
     {
-      id: "ss-9-9",
+      id: "ss-10-9",
       time: 6,
       title: "Singing the Bass Line",
       type: "vocal",
@@ -189,7 +189,7 @@ export const level9 = {
       recorder: true
     },
     {
-      id: "ss-9-10",
+      id: "ss-10-10",
       time: 7,
       title: "Chord Tone Targeting Through Changes",
       type: "vocal",
@@ -209,7 +209,7 @@ export const level9 = {
       metronome: 80
     },
     {
-      id: "ss-9-11",
+      id: "ss-10-11",
       time: 6,
       title: "The Deceptive Cadence",
       type: "song",
@@ -228,7 +228,7 @@ export const level9 = {
       recorder: true
     },
     {
-      id: "ss-9-12",
+      id: "ss-10-12",
       time: 7,
       title: "Dark Modal Colors",
       type: "song",
@@ -248,7 +248,7 @@ export const level9 = {
       recorder: true
     },
     {
-      id: "ss-9-13",
+      id: "ss-10-13",
       time: 8,
       title: "Sing Over New Progressions",
       type: "song",
@@ -272,7 +272,7 @@ export const level9 = {
     // ─── KEY DIVERSITY — CONSOLIDATION + ALL-KEY MASTERY ───
 
     {
-      id: "ss-9-14",
+      id: "ss-10-14",
       time: 8,
       title: "D Major Bridge",
       type: "vocal",
@@ -293,7 +293,7 @@ export const level9 = {
       recorder: true
     },
     {
-      id: "ss-9-15",
+      id: "ss-10-15",
       time: 10,
       title: "All-Key Pentatonic Marathon",
       type: "song",

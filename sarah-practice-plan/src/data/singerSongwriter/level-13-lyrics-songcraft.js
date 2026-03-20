@@ -1,17 +1,17 @@
 import { getPitchRange } from "../appData.js";
 
-export const level12 = {
-  level: 12,
+export const level13 = {
+  level: 13,
   title: "Lyrics & Songcraft",
   subtitle: "Show, don't tell. Sing, don't explain.",
   description:
     "Your songs have structure and melody. Now craft the words. Based on Pat Pattison's Berklee lyric method: use concrete images instead of abstract emotions. Show the listener a scene and let them feel the feeling themselves. Strong lyrics are specific, sensory, and surprising. This level teaches observation, imagery, prosody, and the art of editing.",
   artists: "DOPE LEMON, Nick Drake, Khruangbin (instrumental as lyric), Angus Stone",
   unlocks: "Fingerpicking & Dynamics (Level 13)",
-  review: { label: "Level 10-11 Check-In", time: 5, exercises: ["ss-10-3", "ss-11-6"], prompt: "Sing over G-C-D-G feeling tension and resolution (ss-10-3). Then play through your arranged song (ss-11-6). Both solid? Move on." },
+  review: { label: "Level 11-12 Check-In", time: 5, exercises: ["ss-11-3", "ss-12-6"], prompt: "Sing over G-C-D-G feeling tension and resolution (ss-11-3). Then play through your arranged song (ss-12-6). Both solid? Move on." },
   exercises: [
     {
-      id: "ss-12-1",
+      id: "ss-13-1",
       time: 8,
       title: "Observation Lyrics",
       type: "record",
@@ -31,7 +31,7 @@ export const level12 = {
       recorder: true
     },
     {
-      id: "ss-12-2",
+      id: "ss-13-2",
       time: 8,
       title: "Sensory Writing",
       type: "record",
@@ -54,7 +54,7 @@ export const level12 = {
     // ─── NEW: OBJECT WRITING DAILY ───
 
     {
-      id: "ss-12-3",
+      id: "ss-13-3",
       time: 6,
       title: "Object Writing Daily",
       type: "record",
@@ -75,7 +75,7 @@ export const level12 = {
     // ─── NEW: POINT OF VIEW ───
 
     {
-      id: "ss-12-4",
+      id: "ss-13-4",
       time: 7,
       title: "Point of View",
       type: "record",
@@ -96,7 +96,7 @@ export const level12 = {
     // ─── NEW: LYRIC DENSITY MAPPING ───
 
     {
-      id: "ss-12-5",
+      id: "ss-13-5",
       time: 7,
       title: "Lyric Density Mapping",
       type: "song",
@@ -116,10 +116,10 @@ export const level12 = {
       recorder: true
     },
 
-    // ─── RHYME & NEAR-RHYME (was ss-12-3) ───
+    // ─── RHYME & NEAR-RHYME (was ss-13-3) ───
 
     {
-      id: "ss-12-6",
+      id: "ss-13-6",
       time: 6,
       title: "Rhyme & Near-Rhyme",
       type: "vocal",
@@ -138,10 +138,10 @@ export const level12 = {
       recorder: true
     },
 
-    // ─── PROSODY (was ss-12-4) ───
+    // ─── PROSODY (was ss-13-4) ───
 
     {
-      id: "ss-12-7",
+      id: "ss-13-7",
       time: 6,
       title: "Prosody",
       type: "song",
@@ -163,7 +163,7 @@ export const level12 = {
     // ─── NEW: PATTISON'S STABLE/UNSTABLE ───
 
     {
-      id: "ss-12-8",
+      id: "ss-13-8",
       time: 7,
       title: "Pattison's Stable/Unstable",
       type: "song",
@@ -186,7 +186,7 @@ export const level12 = {
     // ─── NEW: RHYME HIERARCHY ───
 
     {
-      id: "ss-12-9",
+      id: "ss-13-9",
       time: 6,
       title: "Rhyme Hierarchy",
       type: "vocal",
@@ -209,7 +209,7 @@ export const level12 = {
     // ─── NEW: THE REWRITE ───
 
     {
-      id: "ss-12-10",
+      id: "ss-13-10",
       time: 8,
       title: "The Rewrite: One Element Per Pass",
       type: "record",
@@ -227,17 +227,17 @@ export const level12 = {
       recorder: true
     },
 
-    // ─── IMAGE & METAPHOR (was ss-12-5) ───
+    // ─── IMAGE & METAPHOR (was ss-13-5) ───
 
     {
-      id: "ss-12-11",
+      id: "ss-13-11",
       time: 8,
       title: "Image & Metaphor",
       type: "record",
       what: "Transform observations into metaphors: 'The palm trees bending' becomes 'the island bowing.' 'Coffee getting cold' becomes 'time I poured but didn't drink.' Metaphors compress complex feelings into vivid images. They're the advanced tool of lyric writing.",
-      setup: "Notebook. Your observation lyrics from ss-12-1.",
+      setup: "Notebook. Your observation lyrics from ss-13-1.",
       steps: [
-        { text: "Take 3 observation lines from ss-12-1. For each one, ask: 'What else looks / sounds / feels like this?' A gecko on the screen = something watching from the edges. Rust on the railing = time making its mark.", why: "Metaphor is just asking 'what does this remind me of?' The connection between concrete image and abstract meaning creates depth." },
+        { text: "Take 3 observation lines from ss-13-1. For each one, ask: 'What else looks / sounds / feels like this?' A gecko on the screen = something watching from the edges. Rust on the railing = time making its mark.", why: "Metaphor is just asking 'what does this remind me of?' The connection between concrete image and abstract meaning creates depth." },
         { text: "Write the metaphorical version alongside the literal version. Sometimes the literal is better. Sometimes the metaphor elevates it. Choose the stronger one.", why: "Not every line needs a metaphor. The contrast between literal and figurative creates texture. A song that's ALL metaphor is exhausting." },
         { text: "Create a verse that mixes observation and metaphor: 2 literal lines + 2 metaphorical lines. The literal grounds the listener; the metaphor lifts them.", why: "The mix of literal and metaphorical is the mark of a skilled lyricist. Paul Simon, Joni Mitchell, and every great songwriter does this." },
         { text: "Set the verse to melody. Record it. Listen: does the metaphor feel natural or forced? If forced, go back to the literal version.", why: "Forced metaphors are worse than no metaphors. If a listener has to puzzle out your meaning, the metaphor has failed. Clarity always wins." }
@@ -253,7 +253,7 @@ export const level12 = {
     // ─── NEW: CONVERSATIONAL VS ELEVATED REGISTER ───
 
     {
-      id: "ss-12-12",
+      id: "ss-13-12",
       time: 7,
       title: "Conversational vs Elevated Register",
       type: "song",
@@ -274,10 +274,10 @@ export const level12 = {
       recorder: true
     },
 
-    // ─── THE EDIT / CAPSTONE (was ss-12-6) ───
+    // ─── THE EDIT / CAPSTONE (was ss-13-6) ───
 
     {
-      id: "ss-12-13",
+      id: "ss-13-13",
       time: 6,
       title: "The Edit",
       type: "record",

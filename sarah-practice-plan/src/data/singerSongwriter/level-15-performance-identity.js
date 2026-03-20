@@ -1,17 +1,17 @@
 import { getPitchRange } from "../appData.js";
 
-export const level14 = {
-  level: 14,
+export const level15 = {
+  level: 15,
   title: "Performance & Identity",
   subtitle: "You are a singer-songwriter. Act like one.",
   description:
     "Everything converges: technique, songwriting, improvisation, and the courage to share your music with another person. This level focuses on performance psychology, live improvisation, building a set of originals, and discovering your musical identity. Based on Csikszentmihalyi's flow state research: performing with 4% challenge above skill level creates optimal experience.",
   artists: "Your own sound — the artist you've been building since Level 1",
   unlocks: "The rest of your musical life",
-  review: { label: "Full Check-In", time: 5, exercises: ["ss-9-7", "ss-13-5"], prompt: "Play your strummed original (ss-9-7) and your fingerpicked original (ss-13-5) back to back. If both feel performance-ready, you're ready for Level 14." },
+  review: { label: "Full Check-In", time: 5, exercises: ["ss-10-7", "ss-14-5"], prompt: "Play your strummed original (ss-10-7) and your fingerpicked original (ss-14-5) back to back. If both feel performance-ready, you're ready for Level 14." },
   exercises: [
     {
-      id: "ss-14-1",
+      id: "ss-15-1",
       time: 8,
       title: "Improvise Lyrics Live",
       type: "vocal",
@@ -34,7 +34,7 @@ export const level14 = {
     // ─── PERFORMANCE PSYCHOLOGY ───
 
     {
-      id: "ss-14-2",
+      id: "ss-15-2",
       time: 6,
       title: "Pre-Performance Routine",
       type: "play",
@@ -52,7 +52,7 @@ export const level14 = {
       recorder: true
     },
     {
-      id: "ss-14-3",
+      id: "ss-15-3",
       time: 7,
       title: "Process Focus vs Outcome Focus",
       type: "play",
@@ -69,7 +69,7 @@ export const level14 = {
       recorder: true
     },
     {
-      id: "ss-14-4",
+      id: "ss-15-4",
       time: 10,
       title: "Record & Self-Critique",
       type: "record",
@@ -93,7 +93,7 @@ export const level14 = {
     // ─── SONGWRITING CRAFT & COLLABORATION ───
 
     {
-      id: "ss-14-5",
+      id: "ss-15-5",
       time: 8,
       title: "Vertical Editing: Full Song Polish",
       type: "song",
@@ -113,7 +113,7 @@ export const level14 = {
       recorder: true
     },
     {
-      id: "ss-14-6",
+      id: "ss-15-6",
       time: 8,
       title: "Duo Singing",
       type: "vocal",
@@ -132,7 +132,7 @@ export const level14 = {
       recorder: true
     },
     {
-      id: "ss-14-7",
+      id: "ss-15-7",
       time: 8,
       title: "Song a Week Challenge",
       type: "song",
@@ -141,7 +141,7 @@ export const level14 = {
         { text: "Week 1: write and record a song in one session. Set a timer for 45 minutes. Whatever you have at the end is the song. Verse, chorus, done. Record it. Move on.", why: "The timer eliminates perfectionism. You can't overthink a song when the clock is running. The constraint forces decisions — and decisions are what finishing requires." },
         { text: "Week 2: same rules. Different song. Don't revisit Week 1's song yet. The temptation to fix last week's song is strong — resist it. Forward momentum only.", why: "The 'no editing until next week' rule prevents the perfectionism loop where you polish one song forever instead of writing new ones. Volume builds skill faster than polish." },
         { text: "Week 3: same rules. By now you'll notice patterns — chord progressions you default to, lyric themes that keep appearing, melodic shapes you favor. These patterns ARE your style emerging.", why: "Style isn't something you choose — it's something that reveals itself through volume. Three songs in three weeks will show you more about your artistic identity than three months of polishing one song." },
-        { text: "Week 4: write and record your fourth song. Then — and only then — go back and listen to all four. Pick the strongest one for vertical editing (ss-14-5). The other three are finished as-is.", why: "Four songs in four weeks means you have a catalog growing at real speed. One polished gem plus three rough originals is better than zero finished songs after a month of trying to write one perfect one." }
+        { text: "Week 4: write and record your fourth song. Then — and only then — go back and listen to all four. Pick the strongest one for vertical editing (ss-15-5). The other three are finished as-is.", why: "Four songs in four weeks means you have a catalog growing at real speed. One polished gem plus three rough originals is better than zero finished songs after a month of trying to write one perfect one." }
       ],
       feel: "This challenge should feel liberating and slightly terrifying. Liberating because you're free to write badly. Terrifying because there's nowhere to hide — every week demands a finished product.",
       wrong: "If you're spending the whole week agonizing over one song, you've missed the point. The song should be written and recorded in one or two sessions, then left alone. Speed is the teacher here.",
@@ -150,7 +150,7 @@ export const level14 = {
       recorder: true
     },
     {
-      id: "ss-14-8",
+      id: "ss-15-8",
       time: 6,
       title: "Build Your Set",
       type: "song",
@@ -171,7 +171,7 @@ export const level14 = {
     // ─── FLOW & EXPOSURE ───
 
     {
-      id: "ss-14-9",
+      id: "ss-15-9",
       time: 8,
       title: "Flow State Finder",
       type: "play",
@@ -189,7 +189,7 @@ export const level14 = {
       recorder: true
     },
     {
-      id: "ss-14-10",
+      id: "ss-15-10",
       time: 7,
       title: "Graduated Audience Exposure",
       type: "play",
@@ -197,7 +197,7 @@ export const level14 = {
       steps: [
         { text: "Level 1 — Mirror: set up a mirror and play your strongest song while watching yourself. Notice your posture, facial expressions, how you hold the guitar. This is your visual performance self.", why: "Playing to a mirror forces self-awareness about visual performance. Many musicians close their eyes and hunch over — a mirror reveals habits you didn't know you had." },
         { text: "Level 2 — Phone camera: set up your phone to record video. Play your song knowing the camera is watching. Notice what changes — do you tense up? Rush? The camera simulates an audience without the social pressure.", why: "A recording device activates mild performance anxiety — the knowledge that this take 'counts.' It's a safe way to practice performing under low-level pressure." },
-        { text: "Level 3 — Court: play for one trusted person. This is the real threshold — another human being listening in real time. Use your pre-performance routine (ss-14-2) before you start.", why: "The jump from camera to human is the biggest step. A trusted listener like Court provides the social element without judgment. This is where performance anxiety either takes hold or gets managed." },
+        { text: "Level 3 — Court: play for one trusted person. This is the real threshold — another human being listening in real time. Use your pre-performance routine (ss-15-2) before you start.", why: "The jump from camera to human is the biggest step. A trusted listener like Court provides the social element without judgment. This is where performance anxiety either takes hold or gets managed." },
         { text: "Level 4 — Small gathering: play for 2-3 people. Friends, family, whoever is willing. Each additional person slightly increases the exposure. Notice that the anxiety peaks before you start and decreases once you're playing.", why: "Graduated exposure works because each successful experience at a new level rewires your anxiety response. Your brain learns: 'I played for 3 people and survived. This is safe.' The fear diminishes with repetition." }
       ],
       feel: "Each level should feel slightly uncomfortable but manageable — that's the therapeutic window. Too comfortable means no growth. Too terrifying means you'll avoid it. The sweet spot is 'nervous but willing.'",
@@ -210,7 +210,7 @@ export const level14 = {
     // ─── CAPSTONE PERFORMANCES ───
 
     {
-      id: "ss-14-11",
+      id: "ss-15-11",
       time: 8,
       title: "Playing for One",
       type: "song",
@@ -230,7 +230,7 @@ export const level14 = {
       recorder: true
     },
     {
-      id: "ss-14-12",
+      id: "ss-15-12",
       time: 10,
       title: "Jam Circle",
       type: "play",
@@ -252,7 +252,7 @@ export const level14 = {
       recorder: true
     },
     {
-      id: "ss-14-13",
+      id: "ss-15-13",
       time: 10,
       title: "The Golden Hour",
       type: "play",
@@ -272,7 +272,7 @@ export const level14 = {
       recorder: true
     },
     {
-      id: "ss-14-14",
+      id: "ss-15-14",
       time: 5,
       title: "Your Musical Voice",
       type: "song",

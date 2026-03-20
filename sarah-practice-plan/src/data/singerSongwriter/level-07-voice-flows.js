@@ -1,38 +1,38 @@
 import { getPitchRange } from "../appData.js";
 
-export const level6 = {
-  level: 6,
+export const level7 = {
+  level: 7,
   title: "Voice Flows",
   subtitle: "Everything at once. Trust the process. Trust your ear.",
   description:
-    "Levels 3-4 isolated skills. Level 5 combined them in pairs. Now everything flows together: pitch, rhythm, dynamics, emotion, vowels, chord changes, genre feel — all at once, across multiple genres and progressions. This is full integration. Based on Csikszentmihalyi's flow research: flow states emerge when all sub-skills are automated and the challenge matches your ability. You've built the automation. Now find the flow.",
+    "Levels 3-5 isolated skills. Level 6 combined them in pairs. Now everything flows together: pitch, rhythm, dynamics, emotion, vowels, chord changes, genre feel — all at once, across multiple genres and progressions. This is full integration. Based on Csikszentmihalyi's flow research: flow states emerge when all sub-skills are automated and the challenge matches your ability. You've built the automation. Now find the flow.",
   artists: "Khruangbin, DOPE LEMON, Allah-Las, Tinariwen, Hermanos Gutiérrez, Skinshape",
   unlocks: "Melody Building (Level 7)",
-  review: { label: "Level 5 Check-In", time: 5, exercises: ["ss-5-20", "ss-5-24"], prompt: "Do a Color Palette Freestyle (ss-5-20). Then a Strum + Vocal Rhythm Conversation (ss-5-24). Both fluid with no strum breaks? Move on." },
+  review: { label: "Level 6 Check-In", time: 5, exercises: ["ss-6-20", "ss-6-24"], prompt: "Do a Color Palette Freestyle (ss-6-20). Then a Strum + Vocal Rhythm Conversation (ss-6-24). Both fluid with no strum breaks? Move on." },
   exercises: [
 
     // ─── TRIPLE-SKILL BRIDGE ───
 
     {
-      id: "ss-6-1",
+      id: "ss-7-1",
       time: 8,
       title: "Triple-Skill Fusion",
       type: "vocal",
-      what: "Bridge exercise: combine THREE skills at once (not two like Level 5, not everything like the rest of Level 6). Three 2-min rounds. Round 1: rhythm + dynamics + chord changes. Round 2: emotional color + vowels + genre feel. Round 3: breath phrasing + audiation + space.",
+      what: "Bridge exercise: combine THREE skills at once (not two like Level 6, not everything like the rest of Level 7). Three 2-min rounds. Round 1: rhythm + dynamics + chord changes. Round 2: emotional color + vowels + genre feel. Round 3: breath phrasing + audiation + space.",
       setup: "Guitar. Metronome at 85 BPM.",
       tracks: [
         { name: "Groove Beat 90", src: "/groove-beat-90.mp3" },
         { name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }
       ],
       steps: [
-        { text: "Round 1 — Rhythm + Dynamics + Chord Changes: strum Am-C-G-Em at 85 BPM. Sing chord tones with varied rhythms AND varied dynamics while navigating the changes. Three variables at once. 2 minutes over the groove beat.", why: "Three skills is the cognitive sweet spot between Level 5's pairs and Level 6's full integration. Your brain learns to manage three variables before being asked to manage everything." },
+        { text: "Round 1 — Rhythm + Dynamics + Chord Changes: strum Am-C-G-Em at 85 BPM. Sing chord tones with varied rhythms AND varied dynamics while navigating the changes. Three variables at once. 2 minutes over the groove beat.", why: "Three skills is the cognitive sweet spot between Level 6's pairs and Level 7's full integration. Your brain learns to manage three variables before being asked to manage everything." },
         { text: "Round 2 — Emotional Color + Vowels + Genre Feel: switch to the reggae backing. Strum Am-C with reggae chop. Match emotional color to each chord, choose vowels deliberately, and stay in the reggae pocket. Three expressive variables. 2 minutes.", why: "This triple combines three 'feel' variables — emotion, vowel, and genre. They reinforce each other: reggae feel suggests certain vowels and emotional textures." },
         { text: "Round 3 — Breath Phrasing + Audiation + Space: no backing track. Strum Am-C-G-Em quietly. Hear each phrase internally before singing it (audiation), let each phrase be one breath long (breath phrasing), and leave at least 2 bars of silence between phrases (space). 2 minutes.", why: "This triple combines three 'internal' skills — breath control, inner hearing, and restraint. These are the meditative, contemplative side of improvisation." },
         { text: "Reflect: which round felt most natural? Which felt most challenging? The challenging one reveals which skill combination needs more practice.", why: "Self-assessment identifies your weakest skill intersection. The strongest round shows where your natural abilities lie — useful intel for songwriting." }
       ],
       feel: "Each round should feel like Level 5 with one more ball to juggle. Challenging but not overwhelming. If it feels impossible, one of the three skills isn't automated yet.",
       wrong: "If you can only manage two of the three skills in each round, go back to the relevant Level 5 exercise and solidify the pair before adding the third.",
-      sarah: "Gene, this is the stepping stone between Level 5 and the rest of Level 6. Three skills is the bridge — it smooths the jump from combining pairs to integrating everything.",
+      sarah: "Gene, this is the stepping stone between Level 5 and the rest of Level 7. Three skills is the bridge — it smooths the jump from combining pairs to integrating everything.",
       metronome: 85,
       referencePitches: getPitchRange("E3", "D4"),
       pitchContour: true,
@@ -43,7 +43,7 @@ export const level6 = {
     // ─── FULL-INTEGRATION IMPROV ───
 
     {
-      id: "ss-6-2",
+      id: "ss-7-2",
       time: 8,
       title: "Full Progression Improv",
       type: "vocal",
@@ -64,7 +64,7 @@ export const level6 = {
       recorder: true
     },
     {
-      id: "ss-6-3",
+      id: "ss-7-3",
       time: 8,
       title: "Major Key Flow",
       type: "vocal",
@@ -90,7 +90,7 @@ export const level6 = {
     // ─── GENRE INTEGRATION ───
 
     {
-      id: "ss-6-4",
+      id: "ss-7-4",
       time: 8,
       title: "Desert Blues Flow",
       type: "song",
@@ -114,7 +114,7 @@ export const level6 = {
     },
 
     {
-      id: "ss-6-5",
+      id: "ss-7-5",
       time: 8,
       title: "Dub Reggae Flow",
       type: "song",
@@ -136,7 +136,7 @@ export const level6 = {
       recorder: true
     },
     {
-      id: "ss-6-6",
+      id: "ss-7-6",
       time: 8,
       title: "Soul Groove Flow",
       type: "song",
@@ -159,7 +159,7 @@ export const level6 = {
       recorder: true
     },
     {
-      id: "ss-6-7",
+      id: "ss-7-7",
       time: 8,
       title: "Cinematic Western Flow",
       type: "song",
@@ -184,7 +184,7 @@ export const level6 = {
     // ─── MOTIF AND VARIATION ───
 
     {
-      id: "ss-6-8",
+      id: "ss-7-8",
       time: 8,
       title: "Motif and Variation",
       type: "vocal",
@@ -209,7 +209,7 @@ export const level6 = {
     // ─── PHRASING ARCHITECTURE ───
 
     {
-      id: "ss-6-9",
+      id: "ss-7-9",
       time: 8,
       title: "Phrasing Architecture",
       type: "vocal",
@@ -234,7 +234,7 @@ export const level6 = {
     // ─── VERSE-CHORUS ENERGY ───
 
     {
-      id: "ss-6-10",
+      id: "ss-7-10",
       time: 8,
       title: "Verse-Chorus Energy",
       type: "song",
@@ -262,7 +262,7 @@ export const level6 = {
     // ─── RECOVERY ───
 
     {
-      id: "ss-6-11",
+      id: "ss-7-11",
       time: 6,
       title: "The Recovery Move",
       type: "vocal",
@@ -287,7 +287,7 @@ export const level6 = {
     // ─── AUDIATION ───
 
     {
-      id: "ss-6-12",
+      id: "ss-7-12",
       time: 6,
       title: "Hear It First, Sing It Second",
       type: "vocal",
@@ -310,7 +310,7 @@ export const level6 = {
     // ─── SILENT AUDIATION ───
 
     {
-      id: "ss-6-13",
+      id: "ss-7-13",
       time: 6,
       title: "Silent Audiation",
       type: "vocal",
@@ -332,7 +332,7 @@ export const level6 = {
       recorder: true
     },
     {
-      id: "ss-6-14",
+      id: "ss-7-14",
       time: 6,
       title: "Sing What You Hear",
       type: "vocal",
@@ -356,7 +356,7 @@ export const level6 = {
     // ─── RHYTHM INTEGRATION (from Level 7) ───
 
     {
-      id: "ss-6-15",
+      id: "ss-7-15",
       time: 6,
       title: "Rhythmic Call & Response",
       type: "vocal",
@@ -377,7 +377,7 @@ export const level6 = {
       recorder: true
     },
     {
-      id: "ss-6-16",
+      id: "ss-7-16",
       time: 7,
       title: "Harmonic Rhythm Awareness",
       type: "guitar",
@@ -397,7 +397,7 @@ export const level6 = {
       recorder: true
     },
     {
-      id: "ss-6-17",
+      id: "ss-7-17",
       time: 6,
       title: "Genre Rhythm Transcription",
       type: "rhythm",
@@ -420,7 +420,7 @@ export const level6 = {
     // ─── BRIDGING EXERCISES ───
 
     {
-      id: "ss-6-18",
+      id: "ss-7-18",
       time: 8,
       title: "Genre Feel Diagnostic",
       type: "song",
@@ -446,7 +446,7 @@ export const level6 = {
       recorder: true
     },
     {
-      id: "ss-6-19",
+      id: "ss-7-19",
       time: 8,
       title: "Integration Self-Assessment",
       type: "song",
@@ -473,7 +473,7 @@ export const level6 = {
     // ─── GRADUATION ───
 
     {
-      id: "ss-6-20",
+      id: "ss-7-20",
       time: 10,
       title: "Genre Freestyle Round",
       type: "song",
@@ -502,7 +502,7 @@ export const level6 = {
       recorder: true
     },
     {
-      id: "ss-6-21",
+      id: "ss-7-21",
       time: 10,
       title: "5-Minute Freestyle",
       type: "song",
@@ -536,7 +536,7 @@ export const level6 = {
     // ─── KEY DIVERSITY — FULL INTEGRATION ACROSS KEY FAMILIES ───
 
     {
-      id: "ss-6-22",
+      id: "ss-7-22",
       time: 7,
       title: "Dm Color Introduction",
       type: "vocal",
@@ -558,7 +558,7 @@ export const level6 = {
       metronome: 80
     },
     {
-      id: "ss-6-23",
+      id: "ss-7-23",
       time: 8,
       title: "A Major Reggae Integration",
       type: "vocal",
@@ -579,7 +579,7 @@ export const level6 = {
       recorder: true
     },
     {
-      id: "ss-6-24",
+      id: "ss-7-24",
       time: 8,
       title: "E Major Surf Integration",
       type: "vocal",
@@ -600,7 +600,7 @@ export const level6 = {
       recorder: true
     },
     {
-      id: "ss-6-25",
+      id: "ss-7-25",
       time: 10,
       title: "Four-Key Freestyle",
       type: "song",

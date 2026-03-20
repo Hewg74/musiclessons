@@ -1,20 +1,20 @@
 import { getPitchRange } from "../appData.js";
 
-export const level8 = {
-  level: 8,
+export const level9 = {
+  level: 9,
   title: "Creating Your First Songs",
   subtitle: "Chord tones become melodies. Melodies become songs.",
   description:
     "You can strum and sing individual notes. Now create original melodic phrases using the chord tones from Level 2. Start with 2-note phrases, grow to 4-note melodies, then string them into a simple song sketch. Everything is YOUR creation — no covers, no imitation. But first, five songwriting-readiness exercises sharpen your analytical ear and build the capture-and-draft habits that make composing sustainable. Based on Orff's 'create before you analyze' and Kratus's first improvisation level: exploration within constraints.",
   artists: "DOPE LEMON, Skinshape, Khruangbin",
-  unlocks: "Hearing Harmony (Level 9)",
-  review: { label: "Level 6-7 Check-In", time: 5, exercises: ["ss-6-21", "ss-7-13"], prompt: "Sustain 5-minute freestyle over changes (ss-6-21). Create an original verse/chorus melody (ss-7-13). Both solid? Move on." },
+  unlocks: "Hearing Harmony (Level 10)",
+  review: { label: "Level 7-8 Check-In", time: 5, exercises: ["ss-7-21", "ss-8-13"], prompt: "Sustain 5-minute freestyle over changes (ss-7-21). Create an original verse/chorus melody (ss-8-13). Both solid? Move on." },
   exercises: [
 
-    // ─── SONGWRITING READINESS (from Level 6 Voice Flows) ───
+    // ─── SONGWRITING READINESS (from Level 7 Voice Flows) ───
 
     {
-      id: "ss-8-1",
+      id: "ss-9-1",
       time: 10,
       title: "Song Dissection",
       type: "listen",
@@ -33,7 +33,7 @@ export const level8 = {
       recorder: true
     },
     {
-      id: "ss-8-2",
+      id: "ss-9-2",
       time: 8,
       title: "Prosody Check — Words Meet Melody",
       type: "vocal",
@@ -54,7 +54,7 @@ export const level8 = {
       recorder: true
     },
     {
-      id: "ss-8-3",
+      id: "ss-9-3",
       time: 8,
       title: "Self-Recording Protocol",
       type: "song",
@@ -81,7 +81,7 @@ export const level8 = {
       recorder: true
     },
     {
-      id: "ss-8-4",
+      id: "ss-9-4",
       time: 6,
       title: "Song Seed Capture",
       type: "record",
@@ -101,7 +101,7 @@ export const level8 = {
       recorder: true
     },
     {
-      id: "ss-8-5",
+      id: "ss-9-5",
       time: 12,
       title: "The Ugly First Draft",
       type: "song",
@@ -127,7 +127,7 @@ export const level8 = {
     // ─── CREATING YOUR FIRST SONGS ───
 
     {
-      id: "ss-8-6",
+      id: "ss-9-6",
       time: 6,
       title: "Your First Phrase",
       type: "vocal",
@@ -147,7 +147,7 @@ export const level8 = {
       recorder: true
     },
     {
-      id: "ss-8-7",
+      id: "ss-9-7",
       time: 6,
       title: "Phrase Library",
       type: "vocal",
@@ -167,7 +167,7 @@ export const level8 = {
       recorder: true
     },
     {
-      id: "ss-8-8",
+      id: "ss-9-8",
       time: 8,
       title: "Melody Over Changes",
       type: "song",
@@ -189,13 +189,13 @@ export const level8 = {
       recorder: true
     },
     {
-      id: "ss-8-9",
+      id: "ss-9-9",
       time: 8,
       title: "Add Simple Words",
       type: "song",
-      what: "Take your favorite melody from ss-8-8 and add simple, descriptive words. No poetry, no cleverness — just describe what you see or feel. 'Sun is going down / water on the rocks / wind is getting warm.' Words turn melodies into songs.",
+      what: "Take your favorite melody from ss-9-8 and add simple, descriptive words. No poetry, no cleverness — just describe what you see or feel. 'Sun is going down / water on the rocks / wind is getting warm.' Words turn melodies into songs.",
       steps: [
-        { text: "Play your chord progression with your melody from ss-8-8. Hum it once through to lock it in.", why: "Reaffirming the melody before adding words ensures the pitch and rhythm are stable." },
+        { text: "Play your chord progression with your melody from ss-9-8. Hum it once through to lock it in.", why: "Reaffirming the melody before adding words ensures the pitch and rhythm are stable." },
         { text: "Look around you. Describe what you see in short phrases: 'Morning light on the wall.' Fit each phrase into your melody's rhythm.", why: "Observation-based lyrics are the easiest to generate. You're describing reality, not inventing stories. Zero creative pressure." },
         { text: "Don't worry about rhyme or meaning. Just let words land on the melody. Some will fit perfectly. Some will need adjustment.", why: "Prosody — matching word stress to melodic stress — happens naturally when you speak freely over a melody. Don't force it." },
         { text: "Sing through 4 passes with different words each time. On the 5th pass, use your favorite words from all the passes.", why: "Multiple passes generate options. Selecting favorites from multiple attempts is how professional songwriters work." }
@@ -208,7 +208,7 @@ export const level8 = {
       recorder: true
     },
     {
-      id: "ss-8-10",
+      id: "ss-9-10",
       time: 6,
       title: "Object Writing Warm-Up",
       type: "record",
@@ -226,7 +226,7 @@ export const level8 = {
       recorder: true
     },
     {
-      id: "ss-8-11",
+      id: "ss-9-11",
       time: 7,
       title: "Title-First Song Seed",
       type: "song",
@@ -245,7 +245,7 @@ export const level8 = {
       recorder: true
     },
     {
-      id: "ss-8-12",
+      id: "ss-9-12",
       time: 10,
       title: "Ugly First Draft",
       type: "song",
@@ -264,7 +264,7 @@ export const level8 = {
       recorder: true
     },
     {
-      id: "ss-8-13",
+      id: "ss-9-13",
       time: 7,
       title: "Chord Tone Color Painting",
       type: "vocal",
@@ -285,14 +285,14 @@ export const level8 = {
       recorder: true
     },
     {
-      id: "ss-8-14",
+      id: "ss-9-14",
       time: 8,
       title: "Song Deconstruction I",
       type: "listen",
-      what: "Pick a DOPE LEMON or Skinshape track you love. Listen three times with three different focuses: (1) map the structure — where do sections start and end, (2) trace the melodic contour — does the chorus sit higher than the verse, (3) count phrasing density — how many words per bar in verse versus chorus. This is a lighter version of the full 5-layer analysis from ss-8-1, focused on the three elements most relevant to your own songwriting right now.",
+      what: "Pick a DOPE LEMON or Skinshape track you love. Listen three times with three different focuses: (1) map the structure — where do sections start and end, (2) trace the melodic contour — does the chorus sit higher than the verse, (3) count phrasing density — how many words per bar in verse versus chorus. This is a lighter version of the full 5-layer analysis from ss-9-1, focused on the three elements most relevant to your own songwriting right now.",
       steps: [
         { text: "Listen 1 — Structure Map: play the track and mark section boundaries. Is it verse-chorus-verse-chorus-bridge-chorus? AABA? Something else? Write or speak the map as you go. Note timestamps.", why: "Understanding form is the most immediately useful analytical skill for songwriting. Before you can build structure, you need to see how others build it." },
-        { text: "Listen 2 — Melodic Contour: focus only on the vocal melody. Does the verse melody sit in a lower range than the chorus? Does the bridge go somewhere new? Hum along and notice where the melody lifts and where it settles.", why: "Range mapping reveals the architecture of emotional intensity. Most songs place their highest melody in the chorus — that's the lift you felt in ss-8-17 (Two-Section Song Sketch). Now see it in professional work." },
+        { text: "Listen 2 — Melodic Contour: focus only on the vocal melody. Does the verse melody sit in a lower range than the chorus? Does the bridge go somewhere new? Hum along and notice where the melody lifts and where it settles.", why: "Range mapping reveals the architecture of emotional intensity. Most songs place their highest melody in the chorus — that's the lift you felt in ss-9-17 (Two-Section Song Sketch). Now see it in professional work." },
         { text: "Listen 3 — Phrasing Density: count roughly how many words or syllables land per bar in the verse versus the chorus. Is the verse wordy and the chorus spacious? Or the opposite?", why: "Phrasing density is a hidden lever of songwriting. Wordy verses that open into spacious choruses create a breathing sensation. The contrast in density IS part of the hook." },
         { text: "Write a one-paragraph summary: 'This song uses [form]. The verse melody sits around [range], the chorus lifts to [range]. Verse phrasing is [dense/sparse], chorus is [dense/sparse].' Record your observations.", why: "Articulating your observations makes them usable. Next time you write a song, you can deliberately apply or subvert these patterns." }
       ],
@@ -302,7 +302,7 @@ export const level8 = {
       recorder: true
     },
     {
-      id: "ss-8-15",
+      id: "ss-9-15",
       time: 8,
       title: "Melody Recycling",
       type: "song",
@@ -323,7 +323,7 @@ export const level8 = {
       recorder: true
     },
     {
-      id: "ss-8-16",
+      id: "ss-9-16",
       time: 5,
       title: "Voice Memo Capture Practice",
       type: "record",
@@ -340,7 +340,7 @@ export const level8 = {
       recorder: true
     },
     {
-      id: "ss-8-17",
+      id: "ss-9-17",
       time: 8,
       title: "Two-Section Song Sketch",
       type: "song",
@@ -362,7 +362,7 @@ export const level8 = {
       phraseForm: { pattern: "AABA", barsPerSection: 4, labels: { A: "Verse", B: "Chorus" } }
     },
     {
-      id: "ss-8-18",
+      id: "ss-9-18",
       time: 10,
       title: "Second Song Sketch",
       type: "song",
@@ -385,7 +385,7 @@ export const level8 = {
     // ─── KEY DIVERSITY — SONGS IN MULTIPLE KEY FAMILIES ───
 
     {
-      id: "ss-8-19",
+      id: "ss-9-19",
       time: 10,
       title: "Song in E Major",
       type: "song",
@@ -409,11 +409,11 @@ export const level8 = {
       phraseForm: { pattern: "AABA", barsPerSection: 4, labels: { A: "Verse", B: "Chorus" } }
     },
     {
-      id: "ss-8-20",
+      id: "ss-9-20",
       time: 10,
       title: "Same Song, New Key",
       type: "song",
-      what: "Take a song you created in Am (from ss-8-17 or ss-8-18) and transpose it to A major using Nashville numbers. Sing both versions. Notice how the vocal production changes — different resonances, different breath points, different emotional color from the same melodic contour. This is the ultimate proof that keys aren't just theory — they're physical, emotional, and creative.",
+      what: "Take a song you created in Am (from ss-9-17 or ss-9-18) and transpose it to A major using Nashville numbers. Sing both versions. Notice how the vocal production changes — different resonances, different breath points, different emotional color from the same melodic contour. This is the ultimate proof that keys aren't just theory — they're physical, emotional, and creative.",
       setup: "Guitar. Your Am song sketch from earlier. Nashville numbers written out.",
       tracks: [
         { name: "A Major Folk 80", src: "/a-major-folk-80.mp3" },

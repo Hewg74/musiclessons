@@ -1,20 +1,20 @@
 import { getPitchRange } from "../appData.js";
 
-export const level5 = {
-  level: 5,
+export const level6 = {
+  level: 6,
   title: "Voice Combines",
   subtitle: "Two skills at once. This is where it starts to feel like music.",
   description:
     "Levels 3-4 isolated each skill individually. Now combine them in pairs: rhythm + chord changes, genre feel + dynamics, conversation + harmony, dual-task independence. Motor learning research is clear — combining two automated sub-skills is a distinct cognitive stage that must be practiced deliberately before full integration. Each exercise here takes two skills from Levels 3-4 and fuses them.",
   artists: "Khruangbin, Skinshape, DOPE LEMON, Allah-Las, Pepper",
-  unlocks: "Voice Flows (Level 6)",
-  review: { label: "Level 4 Check-In", time: 5, exercises: ["ss-4-17", "ss-4-20", "ss-4-35"], prompt: "Play Am-C-G-Em in 4 genre feels (ss-4-17). Whisper to Full Voice with pentatonic freedom (ss-4-20). Then navigate interval jumps by feel (ss-4-35). All fluid? Move on." },
+  unlocks: "Voice Flows (Level 7)",
+  review: { label: "Level 5 Check-In", time: 5, exercises: ["ss-5-15", "ss-5-19"], prompt: "Navigate interval jumps by emotional color (ss-5-15). Then build a cross-key emotional arc (ss-5-19). Both fluid? Move on." },
   exercises: [
 
     // ─── DUAL-TASK RAMP ───
 
     {
-      id: "ss-5-1",
+      id: "ss-6-1",
       time: 5,
       title: "The TV Test",
       type: "guitar",
@@ -32,7 +32,7 @@ export const level5 = {
       metronome: 80
     },
     {
-      id: "ss-5-2",
+      id: "ss-6-2",
       time: 6,
       title: "Hum + Strum",
       type: "vocal",
@@ -41,7 +41,7 @@ export const level5 = {
       steps: [
         { text: "Strum Am-C-G-Em with a simple quarter-note pattern at 80 BPM. Hum a sustained A over Am — just a low, relaxed hum. Mouth closed, no vowel shaping needed. Let the hum sit on top of the strum.", why: "Humming is the lowest-demand vocal task: no articulation, no vowel choices, no projection decisions. It isolates the core dual-task question: can voice and guitar coexist?" },
         { text: "When C arrives, shift your hum to C. Then G over G, E over Em. One root per chord, sustained hum. The chord changes guide your pitch — just follow the gravity of each chord.", why: "Tracking chord roots with a hum builds the voice-following-harmony reflex. Your voice learns to respond to chord changes without conscious pitch calculation." },
-        { text: "Check: is your strum perfectly steady through the hum changes? If the strum hitches when your pitch shifts, the guitar isn't autonomous enough yet. Go back to ss-5-1.", why: "Any strum disruption during a hum means the dual-task is overloading working memory. Humming is the easiest vocal task — if it disrupts the strum, singing definitely will." },
+        { text: "Check: is your strum perfectly steady through the hum changes? If the strum hitches when your pitch shifts, the guitar isn't autonomous enough yet. Go back to ss-6-1.", why: "Any strum disruption during a hum means the dual-task is overloading working memory. Humming is the easiest vocal task — if it disrupts the strum, singing definitely will." },
         { text: "Once stable, try humming chord tones other than the root: hum E over Am (the 5th), hum G over C (the 5th). Same chord changes, different hum targets. 2 minutes, record it.", why: "Varying the hum target while maintaining the strum adds a small pitch-decision layer on top of the dual-task. This is the bridge between humming roots and singing freely." }
       ],
       feel: "The hum should feel effortless — like a quiet soundtrack running underneath your guitar. When both layers are relaxed and steady, you've found the dual-task sweet spot.",
@@ -52,7 +52,7 @@ export const level5 = {
       referencePitches: getPitchRange("E3", "G4")
     },
     {
-      id: "ss-5-3",
+      id: "ss-6-3",
       time: 7,
       title: "Speak + Strum",
       type: "vocal",
@@ -71,7 +71,7 @@ export const level5 = {
       recorder: true
     },
     {
-      id: "ss-5-4",
+      id: "ss-6-4",
       time: 7,
       title: "Sustained Note + Changing Chords",
       type: "vocal",
@@ -96,14 +96,14 @@ export const level5 = {
     // ─── DUAL-TASK FOUNDATION ───
 
     {
-      id: "ss-5-5",
+      id: "ss-6-5",
       time: 8,
       title: "Simultaneous Voice & Strum",
       type: "vocal",
       what: "Combines: STRUM INDEPENDENCE + PITCH. Unlike call-and-response where you alternate, now sing AND strum at the same time — with your voice doing something different from your guitar rhythm. Two independent musical streams from one person.",
       setup: "Guitar. Metronome at 80 BPM.",
       steps: [
-        { text: "Strum Am with a steady quarter-note downstroke. Sing a long, sustained A over the strum. Just hold the note while your hand keeps the rhythm. Get comfortable with both happening at once.", why: "The simplest dual-task: sustained voice + steady strum. If this wobbles, the strum isn't automatic enough yet. Go back to ss-5-1." },
+        { text: "Strum Am with a steady quarter-note downstroke. Sing a long, sustained A over the strum. Just hold the note while your hand keeps the rhythm. Get comfortable with both happening at once.", why: "The simplest dual-task: sustained voice + steady strum. If this wobbles, the strum isn't automatic enough yet. Go back to ss-6-1." },
         { text: "Keep strumming. Now change your vocal note: A... hold... C... hold... E... hold. Move between chord tones slowly while the strum stays steady. The strum must NOT change when your voice moves.", why: "When the voice changes pitch, the brain wants the hands to react. Training independence means the strum stays perfectly steady regardless of what the voice does." },
         { text: "Now try vocal rhythms that differ from the strum. Strum quarter notes but sing half notes. Then strum quarter notes but sing syncopated patterns. The two rhythms coexist independently.", why: "Rhythmic independence is the core of the singer-songwriter dual-task. When your voice and guitar have different rhythms, you sound like a full arrangement, not a solo act." },
         { text: "2-minute free improv: strum autopilot, voice improvises chord tones in any rhythm. The voice moves freely while the strum holds steady. Record it.", why: "This is the dual-task payoff. When you can improvise vocally while maintaining an independent strum, you've crossed the coordination threshold that makes songwriting possible." }
@@ -119,7 +119,7 @@ export const level5 = {
     // ─── RHYTHM + CHORD CHANGES ───
 
     {
-      id: "ss-5-6",
+      id: "ss-6-6",
       time: 8,
       title: "Two-Chord Deep Dive",
       type: "vocal",
@@ -144,7 +144,7 @@ export const level5 = {
     // ─── THREE-CHORD BRIDGE ───
 
     {
-      id: "ss-5-7",
+      id: "ss-6-7",
       time: 8,
       title: "Three-Chord Bridge",
       type: "vocal",
@@ -170,7 +170,7 @@ export const level5 = {
     // ─── STEPPING BETWEEN CHORDS ───
 
     {
-      id: "ss-5-8",
+      id: "ss-6-8",
       time: 8,
       title: "Stepping Between Chords",
       type: "vocal",
@@ -193,7 +193,7 @@ export const level5 = {
       recorder: true
     },
     {
-      id: "ss-5-9",
+      id: "ss-6-9",
       time: 8,
       title: "Rhythmic Chord Navigation",
       type: "vocal",
@@ -217,7 +217,7 @@ export const level5 = {
     // ─── GENRE FEEL + SKILLS ───
 
     {
-      id: "ss-5-10",
+      id: "ss-6-10",
       time: 8,
       title: "Reggae Groove + Chord Tones",
       type: "vocal",
@@ -238,7 +238,7 @@ export const level5 = {
       recorder: true
     },
     {
-      id: "ss-5-11",
+      id: "ss-6-11",
       time: 8,
       title: "Surf Jangle + Dynamics",
       type: "vocal",
@@ -265,7 +265,7 @@ export const level5 = {
     // ─── DESERT BLUES + DYNAMICS ───
 
     {
-      id: "ss-5-12",
+      id: "ss-6-12",
       time: 8,
       title: "Desert Blues + Dynamics",
       type: "vocal",
@@ -291,7 +291,7 @@ export const level5 = {
     // ─── EXPRESSION + HARMONY ───
 
     {
-      id: "ss-5-13",
+      id: "ss-6-13",
       time: 8,
       title: "Chord Change = Mood Change",
       type: "vocal",
@@ -312,7 +312,7 @@ export const level5 = {
       recorder: true
     },
     {
-      id: "ss-5-14",
+      id: "ss-6-14",
       time: 8,
       title: "Conversation Over Changes",
       type: "vocal",
@@ -337,7 +337,7 @@ export const level5 = {
     // ─── BREATH + HARMONY ───
 
     {
-      id: "ss-5-15",
+      id: "ss-6-15",
       time: 8,
       title: "Breath Shapes the Phrase",
       type: "vocal",
@@ -361,7 +361,7 @@ export const level5 = {
     // ─── VOWEL + RHYTHM ───
 
     {
-      id: "ss-5-16",
+      id: "ss-6-16",
       time: 8,
       title: "Vowel Rhythm Patterns",
       type: "vocal",
@@ -384,7 +384,7 @@ export const level5 = {
     // ─── DYNAMICS + RHYTHM ───
 
     {
-      id: "ss-5-17",
+      id: "ss-6-17",
       time: 8,
       title: "Dynamics + Rhythm Pair",
       type: "vocal",
@@ -410,7 +410,7 @@ export const level5 = {
     // ─── TIMING, ROOTS & COLORS ───
 
     {
-      id: "ss-5-18",
+      id: "ss-6-18",
       time: 8,
       title: "Behind-the-Beat Feel",
       type: "vocal",
@@ -433,7 +433,7 @@ export const level5 = {
       recorder: true
     },
     {
-      id: "ss-5-19",
+      id: "ss-6-19",
       time: 8,
       title: "Root Singing — Feel the Function",
       type: "vocal",
@@ -458,7 +458,7 @@ export const level5 = {
       recorder: true
     },
     {
-      id: "ss-5-20",
+      id: "ss-6-20",
       time: 10,
       title: "Color Palette Freestyle",
       type: "vocal",
@@ -484,10 +484,10 @@ export const level5 = {
       recorder: true
     },
 
-    // ─── RHYTHM EXERCISES (from Level 7) ───
+    // ─── RHYTHM EXERCISES (from Level 8) ───
 
     {
-      id: "ss-5-21",
+      id: "ss-6-21",
       time: 7,
       title: "Swing vs Straight",
       type: "rhythm",
@@ -508,7 +508,7 @@ export const level5 = {
       recorder: true
     },
     {
-      id: "ss-5-22",
+      id: "ss-6-22",
       time: 6,
       title: "Rhythmic Density as Color",
       type: "vocal",
@@ -529,7 +529,7 @@ export const level5 = {
       recorder: true
     },
     {
-      id: "ss-5-23",
+      id: "ss-6-23",
       time: 6,
       title: "Strum + Vocal Rhythm Conversation",
       type: "song",
@@ -552,7 +552,7 @@ export const level5 = {
     // ─── COMBINATION CAPSTONE ───
 
     {
-      id: "ss-5-24",
+      id: "ss-6-24",
       time: 10,
       title: "Two-Skill Freestyle",
       type: "song",
@@ -566,11 +566,11 @@ export const level5 = {
         { text: "Round 1 — Rhythm + Dynamics: strum Am at 80 BPM. Sing one chord tone (A) with varied rhythms AND varied dynamics simultaneously. Loud bursts, quiet sustained notes, syncopated whispers, on-beat shouts. 2 minutes.", why: "Combining rhythm and dynamics means managing two expressive variables at once. When both are fluid, your single-chord improvisation sounds like a complete musical performance." },
         { text: "Round 2 — Changes + Emotion: strum Am-C-G-Em at 80 BPM. Sing chord tones while matching emotional color to each chord. Am=melancholic, C=warm, G=bright, Em=dark. 2 minutes.", why: "Combining chord navigation with emotional expression is the core of expressive singing. Your voice tracks both the harmony AND the feeling simultaneously." },
         { text: "Round 3 — Genre + Vowels: reggae offbeat chop at 85 BPM over Am-C. Sing chord tones with deliberate vowel choices — 'ooh' for quiet moments, 'ahh' for projecting moments, vowel morphs on sustained notes. 2 minutes.", why: "Genre feel + vowel awareness produces a fully textured vocal performance. This is what separates 'singing notes' from 'having a vocal style.'" },
-        { text: "Listen to all three recordings. Each round combined two skills. In Level 6, everything combines at once. How close are you?", why: "Self-assessment through recording playback is one of the most effective practice techniques. You hear things in playback that you can't hear while performing." }
+        { text: "Listen to all three recordings. Each round combined two skills. In Level 7, everything combines at once. How close are you?", why: "Self-assessment through recording playback is one of the most effective practice techniques. You hear things in playback that you can't hear while performing." }
       ],
-      feel: "Each round should feel like juggling two balls — challenging but possible. In Level 6, you'll juggle all of them at once.",
+      feel: "Each round should feel like juggling two balls — challenging but possible. In Level 7, you'll juggle all of them at once.",
       wrong: "If one skill disappears when you focus on the other (e.g., dynamics go flat when you focus on chord changes), the weaker skill needs more isolated practice from Levels 3-4.",
-      sarah: "Gene, this is the checkpoint. If you can combine any two skills fluently, you're ready for Level 6 where everything flows together. These recordings are your proof.",
+      sarah: "Gene, this is the checkpoint. If you can combine any two skills fluently, you're ready for Level 7 where everything flows together. These recordings are your proof.",
       metronome: 85,
       referencePitches: getPitchRange("E3", "E4"),
       pitchContour: true,
@@ -581,11 +581,11 @@ export const level5 = {
     // ─── KEY DIVERSITY — DUAL-TASK IN MULTIPLE KEYS ───
 
     {
-      id: "ss-5-25",
+      id: "ss-6-25",
       time: 6,
       title: "Em Center Transpose",
       type: "vocal",
-      what: "Take the Hum+Strum skill from ss-5-2 and do it over Em-G-C-D instead of Am-C-G-Em. Same dual-task challenge, new harmonic center. Em feels more melancholy than Am, and the chord order creates different gravitational pull. The fact that this feels harder than Am-C-G-Em IS the learning — your brain is building a more flexible schema.",
+      what: "Take the Hum+Strum skill from ss-6-2 and do it over Em-G-C-D instead of Am-C-G-Em. Same dual-task challenge, new harmonic center. Em feels more melancholy than Am, and the chord order creates different gravitational pull. The fact that this feels harder than Am-C-G-Em IS the learning — your brain is building a more flexible schema.",
       setup: "Guitar. Metronome at 80 BPM. Strum Em-G-C-D.",
       steps: [
         { text: "Strum Em-G-C-D at 80 BPM. Hum the root of each chord: E over Em, G over G, C over C, D over D. Notice: these chord changes feel different from Am-C-G-Em even though they share the same notes.", why: "Same notes, different center of gravity. Em as home makes G feel like departure and D feel like tension. This proves that 'key' is about where HOME is, not which notes you play." },
@@ -602,11 +602,11 @@ export const level5 = {
       metronome: 80
     },
     {
-      id: "ss-5-26",
+      id: "ss-6-26",
       time: 7,
       title: "E Major Strum + Sing",
       type: "vocal",
-      what: "The dual-task ramp from ss-5-2, but in E major. Strum E-A-B7 at 80 BPM. Hum roots, then sing chord tones. This is the first time you're combining guitar autonomy with vocal work in a genuinely new key family. The chord shapes are different, the vocal targets are different — everything you automated in Am must be rebuilt from scratch in E major.",
+      what: "The dual-task ramp from ss-6-2, but in E major. Strum E-A-B7 at 80 BPM. Hum roots, then sing chord tones. This is the first time you're combining guitar autonomy with vocal work in a genuinely new key family. The chord shapes are different, the vocal targets are different — everything you automated in Am must be rebuilt from scratch in E major.",
       setup: "Guitar. Metronome at 80 BPM. Strum E-A-B7. Review B7 fingering from ss-4-22 if needed.",
       steps: [
         { text: "Strum E-A-B7 at 80 BPM with a simple quarter-note pattern. Just get the chord changes smooth. If B7 is still rough, drill E→B7→E transitions until the change is clean.", why: "Guitar autonomy in a new chord progression must be established before adding voice. E-A-B7 has different transition mechanics than Am-C-G-Em." },
@@ -623,7 +623,7 @@ export const level5 = {
       metronome: 80
     },
     {
-      id: "ss-5-27",
+      id: "ss-6-27",
       time: 8,
       title: "Cross-Key Flow",
       type: "vocal",

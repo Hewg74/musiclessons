@@ -1,17 +1,17 @@
 import { getPitchRange } from "../appData.js";
 
-export const level11 = {
-  level: 11,
+export const level12 = {
+  level: 12,
   title: "Song Architecture",
   subtitle: "Verses tell stories. Choruses tell truths.",
   description:
     "You can create melodies and feel harmony. Now build complete songs with intentional structure — verse/chorus/bridge, dynamic arcs, intros and outros. Based on Berklee's songwriting sequence: melody and structure are taught together because they're inseparable. A great melody in a bad structure is a wasted melody.",
   artists: "DOPE LEMON, Nick Drake, Skinshape, BALTHVS",
   unlocks: "Lyrics & Songcraft (Level 12)",
-  review: { label: "Level 9-10 Check-In", time: 5, exercises: ["ss-9-7", "ss-10-6"], prompt: "Play your complete original (ss-9-7). Then improvise over a new progression for 2 minutes (ss-10-6). Both confident? Move on." },
+  review: { label: "Level 10-11 Check-In", time: 5, exercises: ["ss-10-7", "ss-11-6"], prompt: "Play your complete original (ss-10-7). Then improvise over a new progression for 2 minutes (ss-11-6). Both confident? Move on." },
   exercises: [
     {
-      id: "ss-11-1",
+      id: "ss-12-1",
       time: 8,
       title: "Verse Craft",
       type: "song",
@@ -31,13 +31,13 @@ export const level11 = {
       recorder: true
     },
     {
-      id: "ss-11-2",
+      id: "ss-12-2",
       time: 8,
       title: "Chorus Lift",
       type: "song",
       what: "Create a chorus that LIFTS from the verse — higher melody, more energy, simpler lyrics, stronger groove. The chorus is the emotional peak. It should feel like the verse was building toward it. Use contrast in range, rhythm, and delivery.",
       steps: [
-        { text: "Take your verse from ss-11-1. Identify its highest note. Your chorus should start at or above that note.", why: "Choruses lift above verses in range. Even a minor 3rd higher creates obvious sectional contrast." },
+        { text: "Take your verse from ss-12-1. Identify its highest note. Your chorus should start at or above that note.", why: "Choruses lift above verses in range. Even a minor 3rd higher creates obvious sectional contrast." },
         { text: "Create a chorus melody with a simpler rhythm — longer notes, more repetition, more singable. Verses can be intricate; choruses must be memorable.", why: "Chorus simplicity is what makes them stick. The listener should be able to sing along after hearing it once." },
         { text: "Increase your strum intensity for the chorus. More volume, fuller strumming, maybe switch from fingerpick to strum or from chop to full strum.", why: "The guitar reinforces the dynamic shift. A louder, fuller guitar signals 'chorus' to the listener's subconscious." },
         { text: "Play verse → chorus → verse → chorus. The transition into the chorus should feel like a door opening into a bigger room.", why: "The verse-to-chorus transition is the most important moment in the song. It's the payoff for the setup." }
@@ -51,7 +51,7 @@ export const level11 = {
       recorder: true
     },
     {
-      id: "ss-11-3",
+      id: "ss-12-3",
       time: 8,
       title: "Bridge: The Departure",
       type: "song",
@@ -71,13 +71,13 @@ export const level11 = {
       recorder: true
     },
     {
-      id: "ss-11-4",
+      id: "ss-12-4",
       time: 7,
       title: "Pre-Chorus: The Ramp",
       type: "song",
       what: "The 2-4 bar section between verse and chorus that builds anticipation. Rising melody, building dynamics, harmonic tension — often landing on the V chord. Write a pre-chorus for one of your L9 songs. The pre-chorus makes the chorus arrival feel inevitable and earned.",
       steps: [
-        { text: "Take your verse and chorus from ss-11-1/ss-11-2. Sing the last line of the verse, then jump straight into the chorus. Notice the gap — the verse ends intimate, the chorus starts big. The pre-chorus fills that gap.", why: "Without a pre-chorus, the verse-to-chorus transition can feel abrupt. The ramp smooths the dynamic shift and builds anticipation — like a plane accelerating before takeoff." },
+        { text: "Take your verse and chorus from ss-12-1/ss-12-2. Sing the last line of the verse, then jump straight into the chorus. Notice the gap — the verse ends intimate, the chorus starts big. The pre-chorus fills that gap.", why: "Without a pre-chorus, the verse-to-chorus transition can feel abrupt. The ramp smooths the dynamic shift and builds anticipation — like a plane accelerating before takeoff." },
         { text: "Write 2-4 bars of melody that sit BETWEEN the verse's low range and the chorus's high range. Start near the verse's top note and rise toward the chorus's starting note. Use shorter, more urgent phrases.", why: "The pre-chorus melody creates a literal pitch ramp. Rising pitch triggers anticipation in the listener's brain — they can feel the chorus coming before it arrives." },
         { text: "Harmonically, move toward the V chord (D if you're in G, E if you're in Am). The V chord creates tension that resolves when the chorus lands on I. Try: pre-chorus ends on V... pause... chorus explodes on I.", why: "The dominant chord is the most tension-heavy chord in the key. Ending the pre-chorus on V is like pulling back a slingshot — the chorus is the release." },
         { text: "Build dynamics through the pre-chorus: start at the verse's mp volume and crescendo to the chorus's f. Increase strum intensity bar by bar. Record the full V → Pre-Chorus → Chorus sequence.", why: "Dynamic building reinforces the melodic and harmonic ramp. All three dimensions — pitch, harmony, volume — should point toward the chorus like arrows." }
@@ -91,7 +91,7 @@ export const level11 = {
       recorder: true
     },
     {
-      id: "ss-11-5",
+      id: "ss-12-5",
       time: 7,
       title: "Hook Inventory",
       type: "song",
@@ -109,7 +109,7 @@ export const level11 = {
       recorder: true
     },
     {
-      id: "ss-11-6",
+      id: "ss-12-6",
       time: 8,
       title: "Song Deconstruction III: Architecture",
       type: "listen",
@@ -127,7 +127,7 @@ export const level11 = {
       phraseForm: { pattern: ["V", "V", "Ch", "V", "Ch", "Br", "Ch"], barsPerSection: [8, 8, 8, 8, 8, 4, 8] }
     },
     {
-      id: "ss-11-7",
+      id: "ss-12-7",
       time: 8,
       title: "Contrast Toolkit",
       type: "song",
@@ -146,7 +146,7 @@ export const level11 = {
       recorder: true
     },
     {
-      id: "ss-11-8",
+      id: "ss-12-8",
       time: 6,
       title: "Intro & Outro Framing",
       type: "guitar",
@@ -164,7 +164,7 @@ export const level11 = {
       recorder: true
     },
     {
-      id: "ss-11-9",
+      id: "ss-12-9",
       time: 8,
       title: "Dynamic Mapping",
       type: "song",
@@ -184,7 +184,7 @@ export const level11 = {
       recorder: true
     },
     {
-      id: "ss-11-10",
+      id: "ss-12-10",
       time: 8,
       title: "The 48-Hour Rewrite",
       type: "song",
@@ -202,7 +202,7 @@ export const level11 = {
       recorder: true
     },
     {
-      id: "ss-11-11",
+      id: "ss-12-11",
       time: 7,
       title: "Alternative Song Forms",
       type: "song",
@@ -220,7 +220,7 @@ export const level11 = {
       recorder: true
     },
     {
-      id: "ss-11-12",
+      id: "ss-12-12",
       time: 8,
       title: "Arranging for Emotional Arc",
       type: "song",
@@ -239,7 +239,7 @@ export const level11 = {
       recorder: true
     },
     {
-      id: "ss-11-13",
+      id: "ss-12-13",
       time: 10,
       title: "Complete Arranged Song",
       type: "song",

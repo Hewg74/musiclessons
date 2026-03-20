@@ -1,17 +1,17 @@
 import { getPitchRange } from "../appData.js";
 
-export const level7 = {
-  level: 7,
+export const level8 = {
+  level: 8,
   title: "Melody Building",
   subtitle: "Five notes. Infinite melodies. Zero wrong answers.",
   description:
     "The pentatonic scale is your 'safe space' — five notes that sound good over any chord in the key. Based on Orff Schulwerk and Kodály: the pentatonic scale is universally the first melodic framework taught because it contains no dissonant intervals. You CAN'T play a wrong note. This level builds from 2-note melodies to free pentatonic improvisation, with backing tracks as your band.",
   artists: "Khruangbin, Allah-Las, Tinariwen, BALTHVS",
-  unlocks: "Creating Your First Songs & Genre Craft (Level 8)",
-  review: { label: "Level 6-7 Check-In", time: 5, exercises: ["ss-6-3", "ss-7-6"], prompt: "Create a chord-tone melody over Am-C-G-Em (ss-6-3). Then do 2 minutes of one-note rhythm improv (ss-7-6). Both flowing? Move on." },
+  unlocks: "Creating Your First Songs (Level 9)",
+  review: { label: "Level 7 Check-In", time: 5, exercises: ["ss-7-3", "ss-8-6"], prompt: "Create a chord-tone melody over Am-C-G-Em (ss-7-3). Then do 2 minutes of one-note rhythm improv (ss-8-6). Both flowing? Move on." },
   exercises: [
     {
-      id: "ss-7-1",
+      id: "ss-8-1",
       time: 6,
       title: "Pentatonic Playground",
       type: "vocal",
@@ -32,7 +32,7 @@ export const level7 = {
       recorder: true
     },
     {
-      id: "ss-7-2",
+      id: "ss-8-2",
       time: 8,
       title: "Call & Response",
       type: "song",
@@ -54,7 +54,7 @@ export const level7 = {
       recorder: true
     },
     {
-      id: "ss-7-3",
+      id: "ss-8-3",
       time: 6,
       title: "Constraint Melodies",
       type: "vocal",
@@ -73,7 +73,7 @@ export const level7 = {
       recorder: true
     },
     {
-      id: "ss-7-4",
+      id: "ss-8-4",
       time: 8,
       title: "Melodic Variation",
       type: "vocal",
@@ -93,7 +93,7 @@ export const level7 = {
       recorder: true
     },
     {
-      id: "ss-7-5",
+      id: "ss-8-5",
       time: 8,
       title: "Pentatonic Improv",
       type: "vocal",
@@ -115,7 +115,7 @@ export const level7 = {
       recorder: true
     },
     {
-      id: "ss-7-6",
+      id: "ss-8-6",
       time: 8,
       title: "Contour Drawing",
       type: "vocal",
@@ -137,7 +137,7 @@ export const level7 = {
       phraseForm: { pattern: ["Rise", "Arch", "Valley", "Fall"], barsPerSection: 4, labels: { Rise: "Rising", Arch: "Arch", Valley: "Valley", Fall: "Falling" } }
     },
     {
-      id: "ss-7-7",
+      id: "ss-8-7",
       time: 7,
       title: "Target Note Landing",
       type: "vocal",
@@ -159,7 +159,7 @@ export const level7 = {
       recorder: true
     },
     {
-      id: "ss-7-8",
+      id: "ss-8-8",
       time: 7,
       title: "Pentatonic in New Keys",
       type: "vocal",
@@ -181,7 +181,7 @@ export const level7 = {
       metronome: 80
     },
     {
-      id: "ss-7-9",
+      id: "ss-8-9",
       time: 8,
       title: "Melodic Motif Development",
       type: "song",
@@ -203,7 +203,7 @@ export const level7 = {
       referencePitches: getPitchRange("A3", "G4")
     },
     {
-      id: "ss-7-10",
+      id: "ss-8-10",
       time: 6,
       title: "Singing Intervals by Feel",
       type: "vocal",
@@ -224,7 +224,7 @@ export const level7 = {
       recorder: true
     },
     {
-      id: "ss-7-11",
+      id: "ss-8-11",
       time: 6,
       title: "Space as Melody",
       type: "vocal",
@@ -244,7 +244,7 @@ export const level7 = {
       referencePitches: getPitchRange("A3", "G4")
     },
     {
-      id: "ss-7-12",
+      id: "ss-8-12",
       time: 8,
       title: "Two-Melody Contrast",
       type: "song",
@@ -267,7 +267,7 @@ export const level7 = {
       metronome: 80
     },
     {
-      id: "ss-7-13",
+      id: "ss-8-13",
       time: 10,
       title: "First Original Over Backing Track",
       type: "song",
@@ -291,7 +291,7 @@ export const level7 = {
     // ─── KEY DIVERSITY — PENTATONIC INTERLEAVING + NUMBERS ───
 
     {
-      id: "ss-7-14",
+      id: "ss-8-14",
       time: 8,
       title: "E Major Pentatonic Improv",
       type: "vocal",
@@ -303,7 +303,7 @@ export const level7 = {
       ],
       steps: [
         { text: "Sing E major pentatonic ascending and descending: E-F#-Ab-B-C#-B-Ab-F#-E. Against the E chord. Feel how this scale has a different shape from Am pentatonic — the intervals between notes are in different places.", why: "Am pentatonic: minor 3rd, whole step, whole step, minor 3rd, whole step. E major pentatonic: whole step, whole step, minor 3rd, whole step, minor 3rd. Same interval set, different order — different melodic feel." },
-        { text: "Target note exercise: set Ab as your target. Improvise freely but land on Ab every 4 bars. Ab is the major 3rd of E — the note that makes E major MAJOR. Make it your anchor.", why: "Target-note practice in a new key transfers the skill from Level 7's Am exercises. The specific target (Ab) reinforces the E major identity." },
+        { text: "Target note exercise: set Ab as your target. Improvise freely but land on Ab every 4 bars. Ab is the major 3rd of E — the note that makes E major MAJOR. Make it your anchor.", why: "Target-note practice in a new key transfers the skill from Level 8's Am exercises. The specific target (Ab) reinforces the E major identity." },
         { text: "Motif development in E major: create a 3-4 note motif using E major pentatonic. Sequence it (repeat starting from different notes). Invert it. Fragment it. Same tools, new notes.", why: "If you can develop motifs in E major using the same techniques you learned in Am, the techniques are truly internalized — not key-dependent." },
         { text: "Choose a backing track (surf or reggae). Improvise a verse melody (low register, E3-Ab3) and a chorus melody (higher, B3-C#4) using E major pentatonic. Record it.", why: "Verse/chorus contrast in E major proves your melodic architecture skills transfer across keys. The backing track provides genre context." }
       ],
@@ -315,7 +315,7 @@ export const level7 = {
       recorder: true
     },
     {
-      id: "ss-7-15",
+      id: "ss-8-15",
       time: 7,
       title: "Intro to Numbers",
       type: "vocal",
@@ -336,7 +336,7 @@ export const level7 = {
       metronome: 80
     },
     {
-      id: "ss-7-16",
+      id: "ss-8-16",
       time: 10,
       title: "Cross-Family Key Roulette",
       type: "vocal",
