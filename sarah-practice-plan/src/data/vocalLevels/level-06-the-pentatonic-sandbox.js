@@ -284,8 +284,28 @@ export const level6 = {
       ],
       feel: "A performance, not an exercise. Exercises are about getting right; performances are about communicating. Nervous pressing record? Good — you're treating it as real.",
       wrong: "3 minutes felt empty? Back to exercises 4-8, build vocabulary first. Couldn't stop singing? Practice silence — space is a skill, not a deficit.",
-      sarah: "Everything in this level built toward these 3 minutes. And this is just the first one. Each repetition deepens your relationship to the pentatonic. The first time is hardest and most important. After this, you know you can improvise. That changes everything.",
-      levelUp: "3-minute improvisation with a discernible arc, 4+ pentatonic notes plus blue note, rhythmic and melodic variety. Sounds like music."
+      sarah: "Everything in this level built toward these 3 minutes. And this is just the first one. Each repetition deepens your relationship to the pentatonic. The first time is hardest and most important. After this, you know you can improvise. That changes everything."
+    },
+    {
+      id: "v6e12", time: 7, title: "Pentatonic Siren in Three Keys", type: "vocal",
+      drone: { root: "A", octave: 2, texture: "analog" },
+      recorder: true,
+      pitchContour: true,
+      referencePitches: getPitchRange("A2", "A4"),
+      metronome: 80,
+      what: "The same pentatonic improvisation skills you've built in Am — now applied in E major and A major. Same melodic principles, completely different notes. This cross-key practice builds key-independent pentatonic fluency through contextual interference (Stambaugh 2009). Your ear learns that 'pentatonic' is a PATTERN that works in any key, not a specific set of notes tied to Am. Let your body sway with each key's groove — movement helps your voice find the new pitch center.",
+      setup: "Guitar for drone reference. Pitch Detector on. Metronome at 80 BPM.",
+      steps: [
+        { text: "Am pentatonic siren (2 min): sing A-C-D-E-G ascending and descending, then improvise freely. This is your comfort zone — let it flow. Feel the Am pentatonic in your body: where does it resonate? What's your natural phrasing?", why: "Starting in Am grounds you before the key switches. Your Am pentatonic is deeply automated — the improvisation should feel effortless. This effortlessness is the benchmark you're building toward in other keys." },
+        { text: "E major pentatonic siren (2 min): switch drone to E. Sing E-F#-Ab-B-C# ascending and descending, then improvise. Ab (which musicians call G#) and C# are notes that don't exist in Am — your voice must find entirely new targets. Let your body adjust: stand differently, breathe differently. Each key has its own physical signature.", why: "E major pentatonic engages different vocal muscles than Am because the pitch center is different. The notes Ab and C# require different laryngeal configurations than C and G. This physical difference is what the research calls 'key-specific vocal production' — and it's why cross-key practice matters for singers, not just instrumentalists." },
+        { text: "A major pentatonic siren (2 min): switch drone to A (major, not minor). Sing A-B-C#-E-F# ascending and descending, then improvise. Same ROOT as Am but completely different color notes. C# replaces C — the 'happy/sad' toggle. Notice how your voice opens up in major.", why: "A major vs Am is the most direct comparison of major vs minor vocal production. Same home note, different emotional world. Your vowels may naturally brighten in A major — let them. The voice responds to harmonic context physically, not just emotionally." },
+        { text: "Three-key roulette: 30 seconds in each key, switching randomly. Am → E major → A major → Am → E major. Don't prepare for the switch — just jump. The faster the switches, the better the contextual interference. Record the whole thing.", why: "Random key switching under time pressure forces your auditory-motor system to reconfigure rapidly. This is maximum contextual interference — and research consistently shows it produces the most durable learning, even though it feels harder than blocked single-key practice." },
+        { text: "Self-assessment: listen to the recording. Rate your fluency 1-5 in each key. In which key does your improvisation sound most musical? Most hesitant? The weakest key is tomorrow's practice priority. Over weeks, the gap between your strongest and weakest key will close — that's key independence developing.", why: "Structured self-assessment with comparative criteria accelerates improvement. The 2021 Springer study on musical retention found that deliberate evaluation during playback strengthens both memory and self-correction instincts." }
+      ],
+      feel: "Am should feel like home. E major should feel like visiting a friend's house — familiar concept, different furniture. A major should feel like Am with the lights turned on. Each key has its own personality, and your voice should respond differently to each.",
+      wrong: "If you're singing Am notes (C natural, G natural) over the E major drone, the clash will be audible. Use the drone as your guide — if it clashes, you're in the wrong key. Slow down and sing the pentatonic scale ascending before improvising. Build the new key's map first.",
+      sarah: "Gene, this is where your pentatonic skills become truly portable. You've built deep Am fluency — now you're proving those skills work in any key. When all three keys feel equally comfortable, you can improvise over any song, in any key, with pentatonic confidence.",
+      levelUp: "3-minute improvisation with a discernible arc, 4+ pentatonic notes plus blue note, rhythmic and melodic variety. Sounds like music, and improvise fluently in three pentatonic keys (Am, E major, A major) with cross-key switching."
     }
   ]
 };

@@ -517,8 +517,26 @@ export const level11 = {
       ],
       feel: "Like a painter who started with 5 colors and now has 12. You don't HAVE to use them all in every painting — but knowing they're available means every creative choice is deliberate. The medley should feel like a journey: safe → warm → breezy → free. Each section builds on the last.",
       wrong: "If the sections all sound the same, the mode switches aren't happening. The color notes (F# for Dorian, F for Mixolydian) need to be present. If the chromatic section sounds chaotic, rein it in — use more diatonic notes with occasional chromatic spice. If the pentatonic section sounds boring compared to the rest, good — that contrast is the point. You've outgrown the five-note box.",
-      sarah: "Gene, this is the recording to save. Date it. Put it next to your Level 11 Diagnostic. The difference between those two recordings IS this level. You went from five notes to twelve. From one color to a full palette. From safe to free. That's not practice — that's transformation. And every note of it is yours.",
-      levelUp: "Complete 4-minute modal medley with audible differences between each section, chromatic section sounding intentional, and measurable improvement over diagnostic recording."
+      sarah: "Gene, this is the recording to save. Date it. Put it next to your Level 11 Diagnostic. The difference between those two recordings IS this level. You went from five notes to twelve. From one color to a full palette. From safe to free. That's not practice — that's transformation. And every note of it is yours."
+    },
+    {
+      id: "v11e12", time: 8, title: "Scale Freedom Across Keys", type: "vocal",
+      drone: { root: "A", octave: 2, texture: "pure" },
+      recorder: true,
+      pitchContour: true,
+      referencePitches: getPitchRange("A3", "A4"),
+      what: "Full diatonic scale improvisation in three keys: Am, then E major, then D major. Each key has different notes, different intervals, different physical vocal sensations. The contextual interference from key switching at the diatonic level builds the most advanced form of key-independent musicianship — the ability to improvise freely in ANY key with full scale freedom.",
+      setup: "Guitar for drone reference. Pitch Detector on.",
+      steps: [
+        { text: "Am diatonic improv (2 min): all 7 notes of A natural minor (A-B-C-D-E-F-G). Free improv — use tension notes B and F for color. This should feel familiar and comfortable from your singer-songwriter Level 5 work.", why: "Am is your anchor key for diatonic singing. Starting here establishes the musical flow state before venturing into new keys." },
+        { text: "E major diatonic improv (2 min): switch drone to E. All 7 notes of E major (E-F#-Ab-A-B-C#-D#). Remember Ab = G# on the display. New notes, new intervals, new vocal sensations. The E major scale sits in a slightly different vocal register than Am — notice how your resonance shifts.", why: "E major diatonic is the biggest key jump from Am — genuinely different notes with sharps your voice has practiced in the singer-songwriter curriculum. The diatonic level (all 7 notes, including the half steps F#-Ab and C#-D#) adds more complexity than the pentatonic cross-key work from Level 6." },
+        { text: "D major diatonic improv (2 min): switch drone to D. All 7 notes of D major (D-E-F#-G-A-B-C#). D major shares some notes with both Am (D, E, G, A, B) and E major (F#, C#) — it's the bridge key between your two key families.", why: "D major is the connective key — it shares notes with both Am and E major. Improvising in D major after Am and E major reveals the relationships between keys. Some phrases will transfer directly; others will need adjustment." },
+        { text: "Three-key chain: 4 bars Am → 4 bars E major → 4 bars D major → 4 bars Am. Continuous improv, no stops. Navigate the key transitions by ear. Record the full chain. Self-assess: rate fluency in each key 1-5.", why: "Continuous key-switching diatonic improv is the capstone of scale freedom. When you can improvise across three diatonic keys without hesitation, your melodic vocabulary is truly key-independent." }
+      ],
+      feel: "Each key should sound and feel distinctly different — Am is dark and grounded, E major is bright and electric, D major is warm and acoustic. The key switches should feel like emotional gear changes, not mechanical note-swaps.",
+      wrong: "If you're defaulting to pentatonic in every key (avoiding the 4th and 7th scale degrees), consciously include them. The diatonic half steps are what make each key sound unique — the pentatonic is the same in every key, but the diatonic is where key personality lives.",
+      sarah: "Gene, scale freedom across three keys is the skill that makes everything from here forward possible — songwriting in any key, harmonizing on the fly, learning any song by ear. Your voice is no longer locked to Am. It's truly free.",
+      levelUp: "Complete 4-minute modal medley with audible differences between each section, chromatic section sounding intentional, and measurable improvement over diagnostic recording, and improvise freely across three diatonic keys (Am, E major, D major) with key-independent scale freedom."
     }
   ]
 };

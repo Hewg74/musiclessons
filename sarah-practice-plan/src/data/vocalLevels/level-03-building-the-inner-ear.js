@@ -257,8 +257,47 @@ export const level3 = {
       feel: "Like a workout — engaging, not exhausting. Each section uses a different ear muscle. When the improvisation sounds musical, your inner ear is developing.",
       wrong: "Overwhelming? Go back to individual exercises until comfortable. The relay integrates skills — it doesn't build them.",
       sarah: "Imperfect attempts at combined skills drive neural integration faster than perfect isolated attempts. Your brain learns most during SWITCHES between modes — the stumbles aren't failures, they're the learning events.",
-      metronome: 80,
-      levelUp: "Complete the full 6-section relay with no section below 50% accuracy. Record and review."
+      metronome: 80
+    },
+    {
+      id: "v3e12", time: 7, title: "Ears Only — Feedback Fading", type: "vocal",
+      drone: { root: "A", octave: 2, texture: "tanpura" },
+      referencePitches: getPitchRange("A3", "A4"),
+      pitchContour: false,
+      recorder: true,
+      metronome: 70,
+      what: "Same solfege and interval exercises you've been doing — but with the pitch detector TURNED OFF. Motor learning research shows that 100% real-time feedback during practice actually DECREASES long-term retention. It becomes a crutch. Faded feedback — gradually removing the visual display — forces your internal auditory discrimination to develop. This is where your ear really learns to lead.",
+      setup: "Guitar for drone. Pitch Detector OFF — cover it, minimize it, or turn the screen away. Recorder ON (you'll check accuracy AFTER, not during).",
+      steps: [
+        { text: "Sing Do-Re-Mi-Fa-Sol in Am WITHOUT looking at the pitch display. Trust your ear. Feel the distances between notes in your body. If a note feels uncertain, commit to it anyway.", why: "Removing visual feedback forces the auditory-motor loop to operate on internal references alone. Research on feedback fading (Winstein & Schmidt 1990, updated by Wulf 2025) shows that 100% concurrent feedback creates dependency — learners perform well WITH feedback but poorly WITHOUT it. Faded feedback produces the opposite: slightly worse performance during practice but significantly better retention and transfer." },
+        { text: "Sing the intervals from v3e3: minor 3rd (A-C), perfect 5th (A-E), perfect 4th (A-D). No visual reference — only your internal hearing.", why: "Intervals without visual confirmation test whether your anchor song system (from v3e3) has been internalized. If you can produce a perfect 5th accurately without the pitch display, the interval is stored in long-term auditory-motor memory, not just recognized when shown on screen." },
+        { text: "4-note melody dictation: play a random 4-note phrase on guitar, then sing it back. No pitch display. Trust the forward model.", why: "Melody reproduction without feedback is the ultimate test of the forward model built in v3e1. Your brain must: (1) encode the heard melody, (2) generate a motor plan for reproduction, (3) execute without visual correction. This is exactly what happens in real singing — you hear a melody and reproduce it with no pitch display available." },
+        { text: "Now turn the pitch display BACK on and repeat the same exercises. Compare: were you more accurate than you thought? Most people are. The display confirms what your ear already knew.", why: "The reveal moment is pedagogically powerful. Most students discover they were more accurate without feedback than they expected. This builds confidence in internal hearing and reduces dependency on the visual display. The surprise of being accurate without help is more motivating than being accurate with help." },
+        { text: "Going forward: alternate between 'eyes on' and 'eyes off' practice sessions. The research says a 50/50 split produces better long-term accuracy than 100% feedback.", why: "The 50/50 feedback schedule is supported by motor learning research across domains — it applies to pitch accuracy, sports skills, and rehabilitation. The alternation forces the brain to develop both the internal reference (eyes off) and the error correction system (eyes on). Neither alone is optimal; the combination produces the best long-term retention." }
+      ],
+      feel: "Eyes-off practice should feel slightly vulnerable — like singing without a safety net. That vulnerability IS the learning. Your ear is being forced to lead instead of follow. The discomfort decreases rapidly as your internal hearing strengthens.",
+      wrong: "Do NOT peek at the pitch display during eyes-off sections — that defeats the entire purpose. If you find yourself unable to resist checking, physically turn the screen away. Also: do not judge accuracy during eyes-off practice. The point is not to be perfect without feedback — the point is to PRACTICE without feedback. Accuracy improves over sessions, not within a single session.",
+      sarah: "Gene, this is the exercise that separates people who can sing with a tuner from people who can actually sing. Every great singer you love — Mark Speer humming over a Khruangbin groove, Angus Stone floating a melody — they have no pitch display. They trust their ear. You need to trust yours too. And the only way to build that trust is to practice without the safety net."
+    },
+    {
+      id: "v3e13", time: 8, title: "Intervals in Three Keys", type: "vocal",
+      drone: { root: "A", octave: 2, texture: "pure" },
+      referencePitches: getPitchRange("E3", "A4"),
+      pitchContour: true,
+      recorder: true,
+      what: "The same intervals you learned in Am — now sing them in E major and A major. Same SIZE jump, completely different SOUND because the key colors the interval. The contextual interference from switching keys forces your brain to build abstract interval recognition rather than key-specific pitch memory.",
+      setup: "Guitar for drone changes. Pitch Detector on. Recorder on.",
+      steps: [
+        { text: "In Am: sing A→C (minor 3rd), A→E (perfect 5th), A→D (perfect 4th). Feel each interval.", why: "Starting in the familiar key establishes the baseline. These intervals should feel comfortable after the work in v3e3. The familiar context serves as the reference point against which the new keys will be compared." },
+        { text: "Switch drone to E major. Sing E→Ab (major 3rd), E→B (perfect 5th), E→A (perfect 4th). Same SIZES but different SOUNDS. The 5th from E (E→B) should feel the same as the 5th from A (A→E) — same physical distance, different pitch.", why: "The key switch reveals whether your interval recognition is abstract (size-based) or concrete (pitch-based). If the 5th from E feels unfamiliar even though the 5th from A is easy, your brain has learned specific pitches, not interval sizes. The practice of singing the same interval in a new key forces abstraction." },
+        { text: "Switch to A major. Sing A→C# (major 3rd), A→E (perfect 5th), A→D (perfect 4th). Now compare: the 5th from A in Am (minor context) vs. the 5th from A in A major (major context). Same two notes (A and E) — but the DRONE underneath changes the emotional meaning.", why: "This is the deepest insight in interval training: the same two notes can feel different depending on harmonic context. A→E over an Am drone feels melancholy; A→E over an A major drone feels bright. The interval size is identical, but the musical MEANING changes. Understanding this context-dependency is what separates mechanical interval recognition from real musical hearing." },
+        { text: "Random key switching: alternate Am → E major → A major, singing the same interval in each. The key switch gets easier each time.", why: "Rapid key switching creates maximal contextual interference, which research consistently shows produces superior long-term learning compared to blocked practice (staying in one key). The initial difficulty of switching is the price you pay for deeper, more durable learning. Each switch forces a motor plan rebuild that strengthens the abstract interval representation." },
+        { text: "Self-assess: rate your accuracy in each key 1-5. The weakest key needs the most practice.", why: "The accuracy differential between keys quantifies how key-specific your current skills are. Equal ratings across all three keys indicate fully abstract interval recognition — the goal. Unequal ratings reveal which key contexts need more exposure. Preferentially practicing the weakest key will equalize performance fastest." }
+      ],
+      feel: "The first key switch should feel jarring — like the ground shifted under your feet. The second switch is easier. By the end of the exercise, switching keys should feel like changing lanes on a highway — a deliberate move that requires attention but not anxiety.",
+      wrong: "If all three keys feel equally impossible, you may need more time with single-key interval practice (v3e3) before adding multi-key work. The multi-key exercise builds on single-key competence — it does not replace it. Also: make sure you actually CHANGE the drone when switching keys. Singing E major intervals over an Am drone is a different exercise entirely (and much harder).",
+      sarah: "Real music changes keys constantly — even within a single song. If your ear only works in Am, you can only sing in Am. This exercise breaks that limitation. By the time you finish Level 3, intervals should feel the same SIZE in every key, even though they sound different. That's abstract interval hearing — the foundation of musical fluency.",
+      levelUp: "Complete the full 6-section relay with no section below 50% accuracy. Record and review. Practice with pitch feedback OFF for long-term retention, and navigate intervals across three keys (Am, E major, A major) with cross-key fluency."
     }
   ]
 };
