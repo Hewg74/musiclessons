@@ -5416,57 +5416,68 @@ export function SongPicker({ theme: T, youtubeUrl, onYoutubeChange, hidePlayer, 
 const BEAT_LABELS_8 = ["1", "&", "2", "&", "3", "&", "4", "&"];
 // 16th note labels used by interstitial slots inline — "e" and "a" rendered contextually
 
-// Built-in chord voicings for ChordDiagram
-const CHORD_VOICINGS = {
-  "C":  { frets: "x32010", name: "C" },
-  "Cm": { frets: "x35543", name: "Cm" },
-  "D":  { frets: "xx0232", name: "D" },
-  "Dm": { frets: "xx0231", name: "Dm" },
-  "E":  { frets: "022100", name: "E" },
-  "Em": { frets: "022000", name: "Em" },
-  "F":  { frets: "133211", name: "F" },
-  "Fm": { frets: "133111", name: "Fm" },
-  "G":  { frets: "320003", name: "G" },
-  "Gm": { frets: "355333", name: "Gm" },
-  "A":  { frets: "x02220", name: "A" },
-  "Am": { frets: "x02210", name: "Am" },
-  "B":  { frets: "x24442", name: "B" },
-  "Bm": { frets: "x24432", name: "Bm" },
-  "C#": { frets: "x46664", name: "C#" },
-  "Db": { frets: "x46664", name: "Db" },
-  "D#": { frets: "x68886", name: "D#" },
-  "Eb": { frets: "x68886", name: "Eb" },
-  "F#": { frets: "244322", name: "F#" },
-  "Gb": { frets: "244322", name: "Gb" },
-  "Ab": { frets: "466544", name: "Ab" },
-  "Bb": { frets: "x13331", name: "Bb" },
-  // Minor chords
-  "C#m": { frets: "x46654", name: "C#m" },
-  "F#m": { frets: "244222", name: "F#m" },
-  "Bbm": { frets: "x13321", name: "Bbm" },
-  "G#m": { frets: "466444", name: "G#m" },
-  // 7th chords
-  "Am7":  { frets: "x02010", name: "Am7" },
-  "Dm7":  { frets: "xx0211", name: "Dm7" },
-  "Em7":  { frets: "022030", name: "Em7" },
-  "Cmaj7": { frets: "x32000", name: "Cmaj7" },
-  "Dmaj7": { frets: "xx0222", name: "Dmaj7" },
-  "Gm7":  { frets: "353333", name: "Gm7" },
-  "C7":   { frets: "x32310", name: "C7" },
-  "A7":   { frets: "x02020", name: "A7" },
-  "E7":   { frets: "020100", name: "E7" },
-  "B7":   { frets: "x21202", name: "B7" },
-  "F#7":  { frets: "242322", name: "F#7" },
-  "G7":   { frets: "320001", name: "G7" },
+// Built-in chord voicings — multi-voicing: each chord maps to an array of { frets, name, pos }
+// pos = short label for the voicing position (e.g., "Open", "5th", "Barre")
+const CHORD_VOICINGS_MULTI = {
+  "C":  [{ frets: "x32010", name: "C", pos: "Open" }, { frets: "x35553", name: "C", pos: "3rd" }, { frets: "8a9988", name: "C", pos: "8th" }],
+  "Cm": [{ frets: "x35543", name: "Cm", pos: "3rd" }, { frets: "8a9888", name: "Cm", pos: "8th" }],
+  "D":  [{ frets: "xx0232", name: "D", pos: "Open" }, { frets: "x57775", name: "D", pos: "5th" }, { frets: "a97a7a", name: "D", pos: "10th" }],
+  "Dm": [{ frets: "xx0231", name: "Dm", pos: "Open" }, { frets: "x57765", name: "Dm", pos: "5th" }, { frets: "a97a6a", name: "Dm", pos: "10th" }],
+  "E":  [{ frets: "022100", name: "E", pos: "Open" }, { frets: "x79997", name: "E", pos: "7th" }],
+  "Em": [{ frets: "022000", name: "Em", pos: "Open" }, { frets: "x79987", name: "Em", pos: "7th" }, { frets: "079000", name: "Em", pos: "7th alt" }],
+  "F":  [{ frets: "133211", name: "F", pos: "1st" }, { frets: "x8a998", name: "F", pos: "8th" }],
+  "Fm": [{ frets: "133111", name: "Fm", pos: "1st" }, { frets: "x8a988", name: "Fm", pos: "8th" }],
+  "G":  [{ frets: "320003", name: "G", pos: "Open" }, { frets: "355433", name: "G", pos: "3rd" }],
+  "Gm": [{ frets: "355333", name: "Gm", pos: "3rd" }, { frets: "x13331", name: "Gm", pos: "Partial" }],
+  "A":  [{ frets: "x02220", name: "A", pos: "Open" }, { frets: "577655", name: "A", pos: "5th" }],
+  "Am": [{ frets: "x02210", name: "Am", pos: "Open" }, { frets: "577555", name: "Am", pos: "5th" }],
+  "B":  [{ frets: "x24442", name: "B", pos: "2nd" }, { frets: "799877", name: "B", pos: "7th" }],
+  "Bm": [{ frets: "x24432", name: "Bm", pos: "2nd" }, { frets: "799777", name: "Bm", pos: "7th" }],
+  "C#": [{ frets: "x46664", name: "C#", pos: "4th" }, { frets: "9bb999", name: "C#", pos: "9th" }],
+  "Db": [{ frets: "x46664", name: "Db", pos: "4th" }],
+  "D#": [{ frets: "x68886", name: "D#", pos: "6th" }],
+  "Eb": [{ frets: "x68886", name: "Eb", pos: "6th" }],
+  "F#": [{ frets: "244322", name: "F#", pos: "2nd" }, { frets: "x9bba9", name: "F#", pos: "9th" }],
+  "Gb": [{ frets: "244322", name: "Gb", pos: "2nd" }],
+  "Ab": [{ frets: "466544", name: "Ab", pos: "4th" }],
+  "Bb": [{ frets: "x13331", name: "Bb", pos: "1st" }, { frets: "688766", name: "Bb", pos: "6th" }],
+  // Minor chords — multiple positions
+  "C#m": [{ frets: "x46654", name: "C#m", pos: "4th" }, { frets: "9bb999", name: "C#m", pos: "9th" }, { frets: "x04650", name: "C#m", pos: "Open" }],
+  "F#m": [{ frets: "244222", name: "F#m", pos: "2nd" }, { frets: "x04220", name: "F#m", pos: "Open" }, { frets: "x9baa9", name: "F#m", pos: "9th" }],
+  "Bbm": [{ frets: "x13321", name: "Bbm", pos: "1st" }, { frets: "688666", name: "Bbm", pos: "6th" }],
+  "G#m": [{ frets: "466444", name: "G#m", pos: "4th" }, { frets: "x02440", name: "G#m", pos: "Partial" }],
+  // 7th chords — multiple positions
+  "Am7":  [{ frets: "x02010", name: "Am7", pos: "Open" }, { frets: "575555", name: "Am7", pos: "5th" }],
+  "Dm7":  [{ frets: "xx0211", name: "Dm7", pos: "Open" }, { frets: "x57565", name: "Dm7", pos: "5th" }],
+  "Em7":  [{ frets: "022030", name: "Em7", pos: "Open" }, { frets: "020000", name: "Em7", pos: "Easy" }],
+  "Cmaj7": [{ frets: "x32000", name: "Cmaj7", pos: "Open" }, { frets: "x35453", name: "Cmaj7", pos: "3rd" }],
+  "Dmaj7": [{ frets: "xx0222", name: "Dmaj7", pos: "Open" }, { frets: "x57675", name: "Dmaj7", pos: "5th" }],
+  "Gm7":  [{ frets: "353333", name: "Gm7", pos: "3rd" }, { frets: "xx5333", name: "Gm7", pos: "Partial" }],
+  "C7":   [{ frets: "x32310", name: "C7", pos: "Open" }, { frets: "x35353", name: "C7", pos: "3rd" }],
+  "A7":   [{ frets: "x02020", name: "A7", pos: "Open" }, { frets: "575655", name: "A7", pos: "5th" }],
+  "E7":   [{ frets: "020100", name: "E7", pos: "Open" }, { frets: "x79797", name: "E7", pos: "7th" }],
+  "B7":   [{ frets: "x21202", name: "B7", pos: "Open" }, { frets: "797877", name: "B7", pos: "7th" }],
+  "F#7":  [{ frets: "242322", name: "F#7", pos: "2nd" }],
+  "G7":   [{ frets: "320001", name: "G7", pos: "Open" }, { frets: "353433", name: "G7", pos: "3rd" }],
   // Sus chords
-  "Dsus2": { frets: "xx0230", name: "Dsus2" },
-  "Asus2": { frets: "x02200", name: "Asus2" },
+  "Dsus2": [{ frets: "xx0230", name: "Dsus2", pos: "Open" }],
+  "Asus2": [{ frets: "x02200", name: "Asus2", pos: "Open" }],
   // Power chords
-  "A5":  { frets: "x022xx", name: "A5" },
-  "D5":  { frets: "xx023x", name: "D5" },
-  "E5":  { frets: "022xxx", name: "E5" },
-  "B5":  { frets: "x244xx", name: "B5" },
+  "A5":  [{ frets: "x022xx", name: "A5", pos: "Open" }, { frets: "577xxx", name: "A5", pos: "5th" }],
+  "D5":  [{ frets: "xx023x", name: "D5", pos: "Open" }, { frets: "x577xx", name: "D5", pos: "5th" }],
+  "E5":  [{ frets: "022xxx", name: "E5", pos: "Open" }, { frets: "x799xx", name: "E5", pos: "7th" }],
+  "B5":  [{ frets: "x244xx", name: "B5", pos: "2nd" }, { frets: "799xxx", name: "B5", pos: "7th" }],
 };
+
+// Backward-compatible accessor: returns first voicing as { frets, name } for StrumChartBuilder
+const CHORD_VOICINGS = new Proxy(CHORD_VOICINGS_MULTI, {
+  get(target, prop) {
+    if (prop === Symbol.toPrimitive || prop === Symbol.iterator || typeof prop === "symbol") return undefined;
+    const arr = target[prop];
+    return arr ? arr[0] : undefined;
+  },
+  has(target, prop) { return prop in target; },
+});
 
 function makeEmptyCell() { return { chord: null, strum: null, lyric: "" }; }
 function makeEmptyMeasure() { return { cells: Array.from({ length: 8 }, makeEmptyCell), between: {}, sectionLabel: "" }; }
@@ -5550,84 +5561,137 @@ function decompressFromURL(str) {
 // ─── ChordVoicingViewer (for exercise inline chord diagrams) ───────────────
 export { CHORD_VOICINGS };
 
+function playChordAudio(fretStr) {
+  if (!fretStr) return;
+  const resume = async () => { if (Tone.context.state !== 'running') await Tone.context.resume(); };
+  resume();
+  // Parse frets: digits 0-9 as frets, a-f as 10-15 (hex-style for high frets), x as muted
+  const f = fretStr.split("").map(c => {
+    if (c === "x") return -1;
+    const n = parseInt(c, 16); // handles 0-9 and a-f
+    return isNaN(n) ? -1 : n;
+  });
+  const stringMidi = [40, 45, 50, 55, 59, 64]; // E2-A2-D3-G3-B3-E4
+  f.forEach((fretNum, i) => {
+    if (fretNum < 0) return;
+    const midi = stringMidi[i] + fretNum;
+    const noteNames = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
+    const note = noteNames[midi % 12] + (Math.floor(midi / 12) - 1);
+    setTimeout(() => {
+      const synth = new Tone.Synth({
+        oscillator: { type: 'triangle' },
+        envelope: { attack: 0.04, decay: 0.25, sustain: 0.5, release: 1.5 }
+      }).toDestination();
+      synth.volume.value = -10;
+      synth.triggerAttackRelease(note, "2n");
+      setTimeout(() => synth.dispose(), 2500);
+    }, i * 65);
+  });
+}
+
 export function ChordVoicingViewer({ theme: T, chords = [], defaultChord }) {
-  const [selected, setSelected] = useState(defaultChord || chords[0] || null);
+  const [selectedChord, setSelectedChord] = useState(defaultChord || chords[0] || null);
+  // Track which voicing index is active per chord
+  const [voicingIdx, setVoicingIdx] = useState({});
   if (!chords.length) return null;
 
-  const playChord = async (fretStr) => {
-    if (!fretStr) return;
-    if (Tone.context.state !== 'running') await Tone.context.resume();
-    const f = fretStr.split("").map(c => c === "x" ? -1 : parseInt(c, 10));
-    const stringMidi = [40, 45, 50, 55, 59, 64]; // E2-A2-D3-G3-B3-E4 (standard guitar tuning)
-    f.forEach((fretNum, i) => {
-      if (fretNum < 0) return;
-      const midi = stringMidi[i] + fretNum;
-      const noteNames = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
-      const note = noteNames[midi % 12] + (Math.floor(midi / 12) - 1);
-      setTimeout(() => {
-        const synth = new Tone.Synth({
-          oscillator: { type: 'triangle' },
-          envelope: { attack: 0.05, decay: 0.3, sustain: 0.6, release: 1.2 }
-        }).toDestination();
-        synth.volume.value = -10;
-        synth.triggerAttackRelease(note, "2n");
-        setTimeout(() => synth.dispose(), 2500);
-      }, i * 70);
-    });
+  const getVoicings = (ch) => CHORD_VOICINGS_MULTI[ch] || [];
+  const getActiveVoicing = (ch) => {
+    const voicings = getVoicings(ch);
+    const idx = voicingIdx[ch] || 0;
+    return voicings[Math.min(idx, voicings.length - 1)] || null;
   };
 
   return (
-    <div style={{ marginBottom: 24 }}>
+    <div style={{
+      marginBottom: 24, background: T.bgSoft, border: `1px solid ${T.border}`,
+      borderRadius: T.radiusMd || 4, padding: "16px 12px 12px", overflow: "hidden",
+    }}>
       {/* Chord selector pills */}
       {chords.length > 1 && (
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 12, justifyContent: "center" }}>
-          {chords.map(ch => (
-            <button key={ch} onClick={() => setSelected(ch)} style={{
-              background: ch === selected ? T.gold : T.bgSoft,
-              color: ch === selected ? "#fff" : T.textDark,
-              border: `1px solid ${ch === selected ? T.gold : T.border}`,
-              borderRadius: 14, padding: "3px 12px", fontSize: 12,
-              fontFamily: T.serif, fontWeight: ch === selected ? 700 : 500,
-              cursor: "pointer", transition: "all 0.15s",
-              letterSpacing: "0.02em",
-            }}>{ch}</button>
-          ))}
+        <div style={{
+          display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 14,
+          justifyContent: "center", padding: "0 4px",
+        }}>
+          {chords.map(ch => {
+            const isActive = ch === selectedChord;
+            return (
+              <button key={ch} onClick={() => setSelectedChord(ch)} style={{
+                background: isActive ? T.gold : "transparent",
+                color: isActive ? "#fff" : T.textDark,
+                border: `1.5px solid ${isActive ? T.gold : T.border}`,
+                borderRadius: 16, padding: "4px 14px", fontSize: 13,
+                fontFamily: T.serif, fontWeight: isActive ? 700 : 500,
+                cursor: "pointer", transition: "all 0.2s ease",
+                letterSpacing: "0.02em",
+              }}>{ch}</button>
+            );
+          })}
         </div>
       )}
-      {/* Chord diagrams row */}
-      <div style={{
-        display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center",
-        overflowX: chords.length > 4 ? "auto" : "visible",
-        scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch",
-        padding: "2px 0",
-      }}>
-        {chords.map(ch => {
-          const voicing = CHORD_VOICINGS[ch];
-          if (!voicing) return (
-            <div key={ch} style={{
-              width: 100, height: 130, display: "flex", alignItems: "center", justifyContent: "center",
-              background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radiusMd || 4,
-              scrollSnapAlign: "start",
-            }}>
-              <span style={{ fontSize: 11, color: T.textMuted, fontFamily: T.sans, textAlign: "center" }}>{ch}<br/>?</span>
-            </div>
-          );
-          const isSelected = ch === selected;
-          return (
-            <div key={ch} onClick={() => { setSelected(ch); playChord(voicing.frets); }}
-              role="button" tabIndex={0} aria-label={`Play ${ch} chord`}
-              onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelected(ch); playChord(voicing.frets); } }}
-              style={{
-                scrollSnapAlign: "start", cursor: "pointer",
-                transform: isSelected ? "scale(1)" : "scale(0.92)",
-                opacity: isSelected ? 1 : 0.65,
-                transition: "all 0.15s ease",
+
+      {/* Selected chord: voicing position tabs + diagram */}
+      {selectedChord && (() => {
+        const voicings = getVoicings(selectedChord);
+        if (!voicings.length) return (
+          <div style={{ textAlign: "center", padding: 20, color: T.textMuted, fontFamily: T.sans, fontSize: 12 }}>
+            {selectedChord} — no voicing data
+          </div>
+        );
+        const activeIdx = Math.min(voicingIdx[selectedChord] || 0, voicings.length - 1);
+        const active = voicings[activeIdx];
+
+        return (
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
+            {/* Position tabs — only show if multiple voicings */}
+            {voicings.length > 1 && (
+              <div style={{
+                display: "flex", gap: 4, padding: "2px 4px",
+                background: T.bgCard, borderRadius: 12, border: `1px solid ${T.border}`,
               }}>
-              <ChordDiagram theme={T} frets={voicing.frets} name={voicing.name} />
+                {voicings.map((v, i) => {
+                  const isActive2 = i === activeIdx;
+                  return (
+                    <button key={i} onClick={() => {
+                      setVoicingIdx(prev => ({ ...prev, [selectedChord]: i }));
+                      playChordAudio(v.frets);
+                    }} style={{
+                      background: isActive2 ? T.gold : "transparent",
+                      color: isActive2 ? "#fff" : T.textMed,
+                      border: "none", borderRadius: 10,
+                      padding: "3px 10px", fontSize: 11,
+                      fontFamily: T.sans, fontWeight: isActive2 ? 700 : 400,
+                      cursor: "pointer", transition: "all 0.15s ease",
+                      whiteSpace: "nowrap",
+                    }}>{v.pos || `Pos ${i + 1}`}</button>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* The chord diagram — tap to play */}
+            <div
+              onClick={() => playChordAudio(active.frets)}
+              role="button" tabIndex={0} aria-label={`Play ${selectedChord} chord, ${active.pos || ""} position`}
+              onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); playChordAudio(active.frets); } }}
+              style={{ cursor: "pointer", transition: "transform 0.1s ease" }}
+              onPointerDown={e => e.currentTarget.style.transform = "scale(0.97)"}
+              onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
+              onPointerLeave={e => e.currentTarget.style.transform = "scale(1)"}
+            >
+              <ChordDiagram theme={T} frets={active.frets} name={active.name} />
             </div>
-          );
-        })}
-      </div>
+
+            {/* Hint text */}
+            <div style={{
+              fontSize: 10, color: T.textMuted, fontFamily: T.sans,
+              textAlign: "center", letterSpacing: "0.03em", marginTop: -4,
+            }}>
+              tap to hear{voicings.length > 1 ? " · switch positions above" : ""}
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }
@@ -5635,7 +5699,7 @@ export function ChordVoicingViewer({ theme: T, chords = [], defaultChord }) {
 // ─── ChordDiagram ───────────────────────────────────────────────────────────
 export function ChordDiagram({ theme: T, frets, name, onClose }) {
   if (!frets) return null;
-  const f = frets.split("").map(c => c === "x" ? -1 : c === "0" ? 0 : parseInt(c, 10));
+  const f = frets.split("").map(c => c === "x" ? -1 : parseInt(c, 16)); // hex: 0-9 + a=10 b=11 etc.
   const playable = f.filter(v => v > 0);
   const minFret = playable.length ? Math.min(...playable) : 1;
   const maxFret = playable.length ? Math.max(...playable) : 1;
