@@ -18,6 +18,7 @@ export const level6 = {
       what: "Sing pentatonic notes freely over a drone. Record and assess: are you using all 5 notes? Are you stuck on root and third? How comfortable does improvisation feel? This diagnostic sets your baseline for the whole level.",
       setup: "Guitar: hold a steady A2 drone (open A string). Pitch Detector on. Record from the start.",
       referencePitches: getPitchRange("A2", "G3"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Am Pentatonic", range: ["A3", "G4"] },
       steps: [
         { text: "Strum the open A string and let it ring. Without thinking too hard, sing whatever pentatonic notes come — A, C, D, E, G in any order, any rhythm.", why: "This unfiltered attempt reveals your current pentatonic relationship. Most people default to root and third, leaving three notes untouched. Your brain gravitates toward the strongest neural pathways." },
         { text: "Keep going for 60 seconds. Don't stop to judge. Try to use the full range from low A to high G.", why: "Sixty seconds is long enough for safe patterns to run out. That's when your voice reaches for unfamiliar notes and you get an honest picture of your comfort zone." },
@@ -39,6 +40,7 @@ export const level6 = {
       what: "Sing A minor pentatonic (A-C-D-E-G) ascending and descending with Pitch Detector. Map it physically: feel where each note resonates. Low A in the chest, high G more forward. Connect to solfege (La-Do-Re-Mi-Sol).",
       setup: "Standing. Guitar for reference only — play each note once, then put guitar down. Pitch Detector on.",
       referencePitches: getPitchRange("A2", "G3"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Am Pentatonic", range: ["A3", "G4"] },
       metronome: 70,
       steps: [
         { text: "Play A2 on guitar. Sing it on 'mah'. Feel chest vibration — low, warm, grounded. Hold 4 beats at 70 BPM.", why: "'Mah' opens the throat. Low frequencies genuinely resonate in the thoracic cavity. This sensation becomes your landmark for the root — eventually you find it without the guitar." },
@@ -62,6 +64,7 @@ export const level6 = {
       what: "Sing pentatonic starting on different roots — A, C, D, E, G — with guitar drone. Breaks the 'Am = only pentatonic' habit. The PATTERN stays the same; only starting pitch changes.",
       setup: "Guitar for drone. Pitch Detector on. Metronome at 80 BPM.",
       referencePitches: getPitchRange("C3", "A3"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Am Pentatonic", range: ["A3", "G4"] },
       metronome: 80,
       steps: [
         { text: "A minor pentatonic: A-C-D-E-G. Ascending/descending, 2 beats per note. Home base review.", why: "Starting in the familiar key primes the motor pattern before transporting it." },
@@ -83,6 +86,7 @@ export const level6 = {
       what: "Sing sequential patterns through the pentatonic — thirds, skips, waves. These are the 'words' of melodic vocabulary. B.B. King and Mark Speer rely on internalized patterns drilled until automatic.",
       setup: "Standing. A minor pentatonic. Pitch Detector on. Metronome at 70 BPM.",
       referencePitches: getPitchRange("A2", "G3"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Pentatonic", range: ["A3", "G4"] },
       metronome: 70,
       steps: [
         { text: "Pattern 1 — Ascending Thirds: A-C, C-D, D-E, E-G, then descend G-E, E-D, D-C, C-A. Two notes per beat.", why: "Thirds are the most common pentatonic pattern. Mark Speer runs them instinctively. Your brain builds a motor program for 'third from any note' — a single chunk rather than two decisions." },
@@ -106,6 +110,7 @@ export const level6 = {
       what: "Guitar holds A2 drone while you sing pentatonic melodies. Build from 2-note phrases to continuous improv. The drone gives harmonic context without chord changes — how Indian classical and desert blues artists train.",
       setup: "Guitar: open A string ringing continuously. Pitch Detector on. Record everything.",
       referencePitches: getPitchRange("A2", "G3"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Am Pentatonic", range: ["A3", "G4"] },
       steps: [
         { text: "Sing only 2-note phrases: A-C, C-D, E-G. Leave 2+ beats of silence between each.", why: "Two notes are the smallest melodic unit. Silence lets your auditory cortex process and plan. Tinariwen's vocals work this way — short spaced phrases, each a complete thought." },
         { text: "Expand to 3-note phrases: A-C-D, D-E-G, G-E-C. Keep spaces, but let phrases flow.", why: "Three notes give directional contour — up-up, up-down. Rising feels hopeful, falling feels resolved. Two decisions per phrase, doubling complexity." },
@@ -128,6 +133,7 @@ export const level6 = {
       what: "Am→G vamp (2 bars each). Sing pentatonic melodies that respond to changes. Same notes, but their function shifts with each chord. A feels like home over Am but like suspension over G.",
       setup: "Guitar: Am 2 bars, G 2 bars, repeat at 85 BPM. Or Dub Reggae 85 track.",
       referencePitches: getPitchRange("A2", "G3"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Pentatonic", range: ["A3", "G4"] },
       metronome: 85,
       steps: [
         { text: "Strum Am 2 bars, hold A — stable, home. Strum G 2 bars, sing A again — same note, different feeling.", why: "Same note, different meaning. A is root of Am (stability) but 9th of G (tension). Context-dependent hearing separates 'playing notes' from 'playing music.'" },
@@ -150,6 +156,7 @@ export const level6 = {
       what: "Guitar plays a phrase, voice echoes it. Voice sings a phrase, guitar plays it back. Musical conversation in pentatonic — the oldest training method in blues and desert blues.",
       setup: "Guitar in hand. Am pentatonic position 1 (frets 5-8). Pitch Detector on.",
       referencePitches: getPitchRange("A2", "G3"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Pentatonic", range: ["A3", "G4"] },
       metronome: 75,
       steps: [
         { text: "Guitar calls: play a 3-4 note pentatonic phrase. Voice responds: sing it back on 'dah'. Match pitch, rhythm, contour.", why: "Trains the ear-to-voice pathway via the arcuate fasciculus — the neural bundle connecting auditory and motor regions. Musicians who do call-and-response have measurably stronger connections." },
@@ -177,6 +184,7 @@ export const level6 = {
       what: "Improvise pentatonic vocals over real music — Khruangbin funk, desert blues, reggae. Start with long notes, build to rhythmic phrases. The sandbox becomes real music.",
       setup: "Backing tracks ready. Standing. Voice only, no guitar. Pitch Detector on. Record everything.",
       referencePitches: getPitchRange("A2", "A3"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Pentatonic", range: ["A3", "G4"] },
       steps: [
         { text: "Khruangbin Style 80. First 30 seconds: long sustained notes, 2-4 bars each. Pick notes that feel good over the groove.", why: "Long notes reveal how each pentatonic degree interacts with full harmonic texture. Sustained C over funk sounds different from sustained E. Extended listening develops real harmonic awareness." },
         { text: "Next pass: 1-bar notes, connected into 2-3 note phrases with space between.", why: "Short phrases are the shift from exploration to composition. Laura Lee's Khruangbin vocals work this way — carefully placed with generous space creating anticipation." },
@@ -198,6 +206,7 @@ export const level6 = {
       what: "Add the b5 (Eb in Am) to the pentatonic: A-C-D-Eb-E-G. Six notes, the blues scale. The blue note adds tension and color. Use sparingly — like hot sauce.",
       setup: "Guitar: Am pentatonic + Eb (fret 6 on A string). Hear the difference. Pitch Detector on.",
       referencePitches: getPitchRange("A2", "G3"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Pentatonic", range: ["A3", "G4"] },
       metronome: 75,
       steps: [
         { text: "Straight pentatonic: A-C-D-E-G-E-D-C-A. Now with blue note: A-C-D-Eb-E-G-E-Eb-D-C-A. Feel the Eb crunch between D and E.", why: "D-Eb-E is a chromatic cluster — three half steps. This is the sound of the blues. Eb creates a tritone with root A, the interval medieval monks called 'the devil in music.' In blues, that edge is the point." },
@@ -223,6 +232,7 @@ export const level6 = {
       what: "Pentatonic melodies plus Level 4 rhythmic skills. Offbeat pentatonic. Behind-the-beat. Call-and-space with pentatonic phrases. Rhythm + melody = real improvisation.",
       setup: "Backing tracks ready. Voice only. Pitch Detector on.",
       referencePitches: getPitchRange("A2", "G3"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Pentatonic", range: ["A3", "G4"] },
       metronome: 85,
       steps: [
         { text: "Reggae One Drop 85: sing 3-4 note pentatonic phrases placing every note on offbeats. Tap foot on downbeats.", why: "Offbeat singing requires dual processing: rhythmic grid in the foot, melodic content between grid points. This is how reggae vocals work — floating above the riddim." },
@@ -245,6 +255,7 @@ export const level6 = {
       what: "Sing pentatonic phrases while playing them on guitar simultaneously. Then try singing one phrase while playing another. Builds toward Level 10 sing-and-play.",
       setup: "Guitar in hand. Am pentatonic position 1 (frets 5-8). Pitch Detector on. 60 BPM.",
       referencePitches: getPitchRange("A2", "G3"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Pentatonic", range: ["A3", "G4"] },
       metronome: 60,
       steps: [
         { text: "Play Am pentatonic ascending on guitar while singing each note in unison. One note per beat, 60 BPM.", why: "Simultaneous commands to larynx and hands at the same pitch. This engages the supplementary motor area — guitarists who sing have measurably larger ones." },
@@ -272,6 +283,7 @@ export const level6 = {
       what: "Full 3-minute pentatonic vocal solo over a backing track. Everything: patterns, blue note, rhythm, dynamics, space. Record it. Your first real vocal improvisation — a performance, not an exercise.",
       setup: "Pick Desert Blues 75 or Khruangbin Style 80. Standing. No guitar. Pitch Detector + Volume Meter on.",
       referencePitches: getPitchRange("A2", "A3"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Pentatonic", range: ["A3", "G4"] },
       steps: [
         { text: "30 seconds: breathe, set an emotional intention — 'meditative,' 'journey,' 'longing.' Not a plan. Press record.", why: "Emotional intention activates the limbic system before performance, guiding decisions below conscious awareness. fMRI shows intention-setting produces more coherent improvisations." },
         { text: "Minute 1: Simple. Long notes, short phrases, lots of space. Enter like joining friends mid-conversation.", why: "Gradual entry creates a dynamic arc and lets your brain sync with the track. The first minute is calibration — mapping harmony, tempo, tonal center. Experienced improvisers always start simple." },
@@ -292,6 +304,7 @@ export const level6 = {
       recorder: true,
       pitchContour: true,
       referencePitches: getPitchRange("A2", "A4"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Am Pentatonic", range: ["A3", "G4"] },
       metronome: 80,
       what: "The same pentatonic improvisation skills you've built in Am — now applied in E major and A major. Same melodic principles, completely different notes. This cross-key practice builds key-independent pentatonic fluency through contextual interference (Stambaugh 2009). Your ear learns that 'pentatonic' is a PATTERN that works in any key, not a specific set of notes tied to Am. Let your body sway with each key's groove — movement helps your voice find the new pitch center.",
       setup: "Guitar for drone reference. Pitch Detector on. Metronome at 80 BPM.",

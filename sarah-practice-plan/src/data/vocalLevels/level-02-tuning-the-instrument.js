@@ -15,6 +15,7 @@ export const level2 = {
       setup: "Standing. Pitch Detector on. Guitar or piano app for reference notes. Recorder on.",
       recorder: true,
       referencePitches: getPitchRange("E3", "C4"),
+      pianoKeys: { notes: ["E3", "G3", "A3", "B3", "C4"], label: "Passaggio Zone", range: ["E3", "C4"] },
       steps: [
         { text: "Play C3 on your guitar or piano app. Listen for 2 seconds. Then sing it on 'ah.' Hold for 3 seconds. Watch the pitch detector — how close are you? Write down: exact match, slightly sharp, slightly flat, or way off.", why: "Pitch matching is the foundation of singing in tune, and it involves a neural circuit called the auditory-motor loop. When you hear a pitch, your auditory cortex processes the frequency. Your motor cortex then sends commands to the laryngeal muscles to produce that frequency. But here is the crucial part: your brain does not just react to the pitch — it PREDICTS what pitch your voice will produce based on past experience. This prediction is called a 'forward model.' If the prediction is wrong, you sing flat or sharp. This diagnostic tells you how accurate your forward model currently is. Think of it like a GPS that has not been calibrated yet — it knows roughly where you are, but the precision needs work." },
         { text: "Repeat for E3, G3, A3, Bb3, C4. Six notes spanning your chest voice, passaggio, and lower head voice. For each note: play it, listen, sing it, rate your accuracy. Write down all six ratings.", why: "Testing across a range reveals WHERE your pitch accuracy breaks down. Most singers are reasonably accurate in their comfortable chest voice (C3-G3) and significantly less accurate near and above the passaggio (A3-C4). The passaggio introduces a mechanical complication: the vocal fold configuration is changing, which alters the relationship between muscle effort and pitch. Your brain's forward model was built on chest voice experience, and it may not yet have accurate predictions for the passaggio zone. Identifying exactly where accuracy degrades tells you where to focus your training." },
@@ -35,6 +36,7 @@ export const level2 = {
       what: "Start above your break on a comfortable note, descend through A3 on a single vowel. The voice naturally transitions from head/mix into chest. You are observing where that happens, not forcing it. Descending through the break is easier than ascending because the vocal folds naturally thicken as pitch drops, which is the direction the break wants to go. This exercise trains the forward model by giving your brain repeated, predictable experiences of the register transition.",
       setup: "Standing. Pitch Detector on. Conversational volume, 6/10. No guitar.",
       referencePitches: getPitchRange("E3", "C4"),
+      pianoKeys: { notes: ["E3", "G3", "A3", "B3", "C4"], label: "Passaggio Zone", range: ["E3", "C4"] },
       metronome: 80,
       recorder: true,
       steps: [
@@ -59,6 +61,7 @@ export const level2 = {
       what: "Gentle pitch slides (glissando) across the break zone (F3-B3). The 'ooh' vowel keeps the larynx relaxed, letting you slide up and down slowly through the break instead of jumping across it. While the descending scale (v2e1) lets you observe the break, slides let you TRAIN it — spending extended time in the transition zone, forcing the muscles to negotiate the shift in slow motion.",
       setup: "Standing. Pitch Detector on. Relaxed jaw, no guitar. Conversational volume.",
       referencePitches: getPitchRange("E3", "C4"),
+      pianoKeys: { notes: ["E3", "G3", "A3", "B3", "C4"], label: "Passaggio Zone", range: ["E3", "C4"] },
       metronome: 70,
       recorder: true,
       steps: [
@@ -83,6 +86,7 @@ export const level2 = {
       what: "Sing a single note in your break zone. Start as quiet as possible, swell to medium volume, back to quiet. The crescendo challenges the vocal fold configuration because louder singing engages more chest voice pull. The goal: stay in mix through the entire swell, maintaining tone quality regardless of volume. This is the gold standard exercise for building a seamless register blend.",
       setup: "Standing. Breathe into your ribs (appoggio from Level 1). Pitch Detector on. Volume Meter on.",
       referencePitches: getPitchRange("G3", "C4"),
+      pianoKeys: { notes: ["E3", "G3", "A3", "B3", "C4"], label: "Passaggio Zone", range: ["E3", "C4"] },
       metronome: 60,
       recorder: true,
       steps: [
@@ -106,6 +110,7 @@ export const level2 = {
       what: "Lip trill (or sustained 'vvv') gliding from your lowest note up to your highest and back. The lip trill adds SOVT backpressure which makes the transition through the break easier. This is both a warm-up and a diagnostic — it reveals the current state of your passaggio on any given day. Use it as your daily 'instrument check' before focused practice.",
       setup: "Standing. Lips loose. No guitar. Water nearby.",
       referencePitches: getPitchRange("C2", "G4"),
+      pianoKeys: { notes: ["E3", "G3", "A3", "B3", "C4"], label: "Passaggio Zone", range: ["E3", "C4"] },
       steps: [
         { text: "Start a lip trill on your lowest comfortable note (approximately C2-E2 depending on the day). Glide UP to your highest comfortable head voice (approximately E4-G4). Take 4-5 seconds for the full ascent. One continuous sound, no breaks.", why: "The full-range siren maps your entire instrument in one pass. Under SOVT protection, you can safely explore the extremes of your range without risk of strain. The lip trill reduces vocal fold collision force by approximately 30% compared to open singing, making it safe to explore pitches you would not attempt on open vowels. The ascent reveals the current state of your passaggio: if the trill wobbles or thins dramatically around A3-Bb3, your transition zone is stiff today and needs extra warm-up. If it sails through smoothly, you are in good shape and can move to more demanding exercises." },
         { text: "Glide back DOWN in 4-5 seconds. Listen for where the trill wobbles or cuts out. These spots are your transition zones — the areas of maximum interest for training. Mark them mentally.", why: "The descent reveals different information than the ascent. Going up, the cricothyroid muscle is actively stretching the folds. Going down, the folds are relaxing back toward their resting configuration. Some singers find the downward transition smoother (the folds naturally want to relax) while others find it rougher (the voice 'falls' too fast through the break). Your specific pattern tells you which direction needs more work. The wobbling spots are not failures — they are the exact locations where your training will produce the most improvement. They are targets, not problems." },
@@ -125,6 +130,7 @@ export const level2 = {
       what: "Practice sustaining each vowel (ee-eh-ah-oh-oo) on a single pitch at the passaggio (A3), then move through the passaggio on each vowel. Some vowels cross easier than others — 'oo' and 'oh' are easiest, 'ee' and 'eh' are hardest. This exercise teaches you which vowels help the passaggio and which fight it, so you can make intelligent vowel choices when singing songs.",
       setup: "Standing. Pitch Detector on. No guitar. Relaxed jaw. Soft knees.",
       referencePitches: getPitchRange("G3", "C4"),
+      pianoKeys: { notes: ["E3", "G3", "A3", "B3", "C4"], label: "Passaggio Zone", range: ["E3", "C4"] },
       metronome: 60,
       recorder: true,
       steps: [
@@ -148,6 +154,7 @@ export const level2 = {
       what: "Ascend E3-C4 shifting vowels as you climb: 'ah' in chest, 'uh' through the break, 'oh' in head. You are learning to modify vowels to smooth register transitions — applying the formant shaping from v2e3b in a climbing pattern that mirrors real melodic movement. This is the first exercise where technique serves melody rather than the other way around.",
       setup: "Standing. Pitch Detector on. Reference the vowel formant work from v2e3b.",
       referencePitches: getPitchRange("E3", "C4"),
+      pianoKeys: { notes: ["E3", "G3", "A3", "B3", "C4"], label: "Passaggio Zone", range: ["E3", "C4"] },
       metronome: 70,
       recorder: true,
       steps: [
@@ -172,6 +179,7 @@ export const level2 = {
       what: "Over a chord progression, sing 4 ascending 'ooh' notes per chord. Each chord gets different notes. Push through the break zone as you repeat cycles. This bridges the gap between technical exercises and real singing — you are improvising melodies in real-time over a harmonic framework, which is exactly what singing a song demands.",
       setup: "Guitar: Am -> C -> G -> D. Island strum or fingerpick at 120 BPM. Or use a backing track.",
       referencePitches: getPitchRange("A2", "C4"),
+      pianoKeys: { notes: ["E3", "G3", "A3", "B3", "C4"], label: "Passaggio Zone", range: ["E3", "C4"] },
       metronome: 120,
       recorder: true,
       tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }],
@@ -194,6 +202,7 @@ export const level2 = {
       what: "Over a groove beat with Am on guitar, sing specific chord tones on specific beats. Then move them to off-beats. This fuses pitch training with rhythm training, simulating the dual demands of real singing where you must be in tune AND in time simultaneously. The cognitive load of rhythm tracking reveals whether your pitch accuracy is truly internalized or requires conscious attention.",
       setup: "Guitar: Am chord. Groove Beat 90 BPM playing.",
       referencePitches: getPitchRange("A2", "C4"),
+      pianoKeys: { notes: ["E3", "G3", "A3", "B3", "C4"], label: "Passaggio Zone", range: ["E3", "C4"] },
       tracks: [{ name: "Groove Beat 90", src: "/groove-beat-90.mp3" }],
       metronome: 90,
       recorder: true,
@@ -216,6 +225,7 @@ export const level2 = {
       what: "Remove all visual crutches — no pitch detector, no guitar fret reference, no sheet music. Close your eyes and match pitches using only your ears and your body's internal sense of pitch. This trains the auditory-motor loop's 'forward model' — your brain's ability to predict and produce a target pitch without external verification.",
       setup: "Standing. Eyes closed. Someone plays random notes on guitar, or use a pitch generator app set to random notes in E3-C4 range. Pitch detector OFF during the exercise (turn it on only to verify afterward).",
       referencePitches: getPitchRange("E3", "C4"),
+      pianoKeys: { notes: ["E3", "G3", "A3", "B3", "C4"], label: "Passaggio Zone", range: ["E3", "C4"] },
       recorder: true,
       steps: [
         { text: "Have a reference pitch played: any note between E3 and C4 (you do not know which one in advance). Listen for 2 seconds with eyes closed. Do NOT look at a tuner or fretboard. Then sing the note back on 'ah.' Hold for 3 seconds.", why: "Eyes-closed pitch matching isolates the auditory-motor loop from all external assistance. When the pitch detector is on, your brain can use visual feedback to correct pitch in real-time — you see the needle drift flat and adjust. This is useful for building the motor pattern, but it can become a crutch. With eyes closed and no visual feedback, your brain must rely entirely on its internal forward model: the neural prediction of what pitch your voice will produce based on the motor commands it sends to the laryngeal muscles. If the forward model is accurate, you match the pitch effortlessly. If it is inaccurate, you hear the mismatch and your brain begins updating the model. This self-correction is the mechanism of pitch improvement." },
@@ -238,6 +248,7 @@ export const level2 = {
       setup: "Standing. Pitch detector on. Pen and paper (or phone notes). This exercise combines singing with reflection and documentation.",
       recorder: true,
       referencePitches: getPitchRange("F3", "C4"),
+      pianoKeys: { notes: ["E3", "G3", "A3", "B3", "C4"], label: "Passaggio Zone", range: ["E3", "C4"] },
       steps: [
         { text: "Ascending slide on 'ooh' from F3 to C4. Listen and feel for the exact note where the voice first shows any change in quality — even subtle warmth-to-brightness shift. Write down: 'First sign of transition: [note].' This is the bottom of your passaggio zone.", why: "The passaggio is not a single note but a zone — typically spanning 2-4 half steps. The bottom of the zone is where the vocal folds first begin to thin out from their full chest-voice configuration. This may be as low as G3 or as high as A3, and it can change day to day based on warm-up status, hydration, and fatigue. Mapping the bottom boundary gives you advance warning in real singing: when you see a melody approaching that note, you can prepare by adjusting your breath support and vowel shape. This preparation prevents surprise cracks." },
         { text: "Continue the slide. Find the note where the transition is most pronounced — the 'center' of the break, where the voice is most likely to crack or flip. Write down: 'Break center: [note].' For most tenors, this is A3 or Bb3.", why: "The break center is where the vocal folds are in their most ambiguous configuration — neither fully chest nor fully head. At this note, the slightest change in subglottic pressure, vowel shape, or laryngeal tension can flip the voice from one register to the other. This is the pitch where your messa di voce (v2e2) is most challenging and most educational. Knowing your exact break center — not approximately, but to the specific note — lets you target your passaggio exercises with surgical precision. Generic passaggio exercises work, but targeted exercises at YOUR break center work three times faster." },
@@ -260,6 +271,7 @@ export const level2 = {
       what: "Apply everything from Level 2 to actual music. Sing a simple melody that passes through your passaggio — using the vowel modification, breath support, and register blending skills you have been building. This is where exercises become singing. Choose a phrase from a song you love that crosses the break, and sing it with full technique.",
       setup: "Guitar: simple chord progression in Am (Am-C-G or Am-F-C-G). Or use a backing track. Pitch detector on for verification but eyes on the music, not the screen.",
       referencePitches: getPitchRange("E3", "C4"),
+      pianoKeys: { notes: ["E3", "G3", "A3", "B3", "C4"], label: "Passaggio Zone", range: ["E3", "C4"] },
       tracks: [
         { name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" },
         { name: "Desert Blues 75", src: "/desert-blues-75.mp3" },
@@ -283,6 +295,7 @@ export const level2 = {
       id: "v2e10", time: 6, title: "Wide-Range Pitch Slides", type: "vocal",
       drone: { root: "A", octave: 3, texture: "pure" },
       referencePitches: getPitchRange("C3", "G4"),
+      pianoKeys: { notes: ["E3", "G3", "A3", "B3", "C4"], label: "Passaggio Zone", range: ["E3", "C4"] },
       pitchContour: true,
       recorder: true,
       metronome: 60,
@@ -303,6 +316,7 @@ export const level2 = {
       id: "v2e11", time: 7, title: "Vowel Modification Through the Break", type: "vocal",
       drone: { root: "A", octave: 3, texture: "pure" },
       referencePitches: getPitchRange("E3", "E4"),
+      pianoKeys: { notes: ["E3", "G3", "A3", "B3", "C4"], label: "Passaggio Zone", range: ["E3", "C4"] },
       pitchContour: true,
       recorder: true,
       metronome: 70,
@@ -323,6 +337,7 @@ export const level2 = {
       id: "v2e12", time: 6, title: "Passaggio in E Major", type: "vocal",
       drone: { root: "E", octave: 3, texture: "pure" },
       referencePitches: getPitchRange("B3", "F#4"),
+      pianoKeys: { notes: ["E3", "F#3", "A3", "B3", "C#4"], label: "E Major", range: ["E3", "C#4"] },
       pitchContour: true,
       recorder: true,
       metronome: 80,

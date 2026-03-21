@@ -15,6 +15,7 @@ export const level9 = {
       what: "Can you harmonize with a recording of yourself? This diagnostic reveals your starting point. Most people find it surprisingly hard to sing a different note while hearing their own voice on playback -- your brain desperately wants to match the pitch it hears. This is called pitch interference, and it's the central challenge of self-harmony.",
       setup: "Phone for recording and playback. No guitar. Quiet room. Headphones with one ear on, one ear off.",
       referencePitches: getPitchRange("C3", "G3"),
+      pianoKeys: { notes: ["A3", "C4", "E4", "G4"], label: "Harmony", range: ["A3", "G4"] },
       recorder: true,
       steps: [
         { text: "Record yourself singing a simple 4-bar melody on 'la'. Keep it in the range C3 to G3. Simple, predictable, easy to remember.", why: "You need a melody you know cold. Any uncertainty in the melody will make harmonizing impossible -- your brain can't track two uncertain streams at once." },
@@ -35,6 +36,7 @@ export const level9 = {
       what: "The most common harmony interval. Sing a melody, then sing the same melody a 3rd above. Elliott Smith and Bob Marley both relied on 3rd harmonies as their primary vocal layering tool. A diatonic 3rd follows the key signature, so sometimes it's a major 3rd (4 half steps) and sometimes a minor 3rd (3 half steps) -- your ear learns to feel which is right.",
       setup: "Guitar: C major scale reference. No backing track.",
       referencePitches: getPitchRange("C3", "E4"),
+      pianoKeys: { notes: ["A3", "C4", "E4", "G4"], label: "Harmony", range: ["A3", "G4"] },
       recorder: true,
       steps: [
         { text: "Sing a simple melody: C-D-E-F-G (ascending major scale fragment). Sing it three times until it's completely automatic.", why: "Start with the simplest possible melody. You need to know it cold before adding harmony. The melody must live in procedural memory so your conscious attention can focus on the harmony." },
@@ -54,6 +56,7 @@ export const level9 = {
       what: "Power harmony. Open, resonant, and less common than 3rds but iconic when used. 5ths create a hollow, powerful sound that works especially well in psych and folk music. Tinariwen's desert blues vocals often move in parallel 5ths -- it's the sound of wide open spaces.",
       setup: "Guitar: Am chord reference.",
       referencePitches: getPitchRange("A2", "E4"),
+      pianoKeys: { notes: ["A3", "C4", "E4", "G4"], label: "Harmony", range: ["A3", "G4"] },
       recorder: true,
       steps: [
         { text: "Sing A3. Now sing E4 (a 5th above). Feel how open and powerful the interval sounds. Sustain both notes for 4 seconds each.", why: "The 5th is the most consonant interval after the octave. It sounds ancient and strong because the frequency ratio is 3:2 -- the simplest ratio after 2:1 (the octave). Your brain processes it as deeply stable." },
@@ -73,6 +76,7 @@ export const level9 = {
       what: "A major 3rd (4 half steps) sounds bright and resolved. A minor 3rd (3 half steps) sounds dark and yearning. Learning to choose between them gives you emotional control over your harmonies. DOPE LEMON uses minor 3rds for that hazy, melancholic vibe. Jack Johnson leans on major 3rds for brightness.",
       setup: "Guitar: C chord and Am chord for reference. Phone for recording.",
       referencePitches: getPitchRange("C3", "E4"),
+      pianoKeys: { notes: ["A3", "C4", "E4", "G4"], label: "Harmony", range: ["A3", "G4"] },
       recorder: true,
       steps: [
         { text: "Play a C chord. Sing C3 and E3 together (or back to back). That's a major 3rd -- 4 half steps. Feel the brightness.", why: "The major 3rd is the interval that defines a major chord's character. It sounds resolved, happy, and complete. Your brain encodes it as 'safe landing.'" },
@@ -93,6 +97,7 @@ export const level9 = {
       volumeMeter: true,
       recorder: true,
       referencePitches: getPitchRange("C3", "E4"),
+      pianoKeys: { notes: ["A3", "C4", "E4", "G4"], label: "Harmony", range: ["A3", "G4"] },
       what: "Record a melody on your phone, play it back, and sing harmony live over it. This is the analog version of looper vocal stacking -- training the skill before involving technology. The pitch interference effect will fight you at first: your brain hears your own voice and tries to match it instead of harmonize.",
       setup: "Phone for recording and playback. Headphones recommended -- one ear on playback, one ear open for your live voice.",
       steps: [
@@ -111,6 +116,7 @@ export const level9 = {
       id: "v9e5", time: 4, title: "Harmony by Ear", type: "vocal",
       recorder: true,
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["A3", "C4", "E4", "G4"], label: "Harmony", range: ["A3", "G4"] },
       what: "Find the harmony without knowing the interval. Trust your ear. This is the most musical approach to harmony -- instead of calculating 'a 3rd above,' you listen for the note that sounds right. Your auditory cortex does the math unconsciously, and it's faster and more accurate than conscious calculation.",
       setup: "Phone with a recording of yourself singing a melody. Guitar for checking. Headphones recommended.",
       steps: [
@@ -130,6 +136,7 @@ export const level9 = {
       id: "v9e6", time: 4, title: "Harmony in Motion", type: "vocal",
       recorder: true,
       referencePitches: getPitchRange("C3", "E4"),
+      pianoKeys: { notes: ["A3", "C4", "E4", "G4"], label: "Harmony", range: ["A3", "G4"] },
       what: "Moving harmony lines that don't just follow the melody in parallel. Oblique motion (one voice holds while the other moves), contrary motion (voices move in opposite directions), and independent lines. This is what separates basic harmony from professional harmony -- the voices are individuals, not clones.",
       setup: "Phone with recorded melody. Guitar for checking. Headphones.",
       tracks: [{ name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" }],
@@ -171,6 +178,7 @@ export const level9 = {
       volumeMeter: true,
       recorder: true,
       referencePitches: getPitchRange("C3", "E4"),
+      pianoKeys: { notes: ["A3", "C4", "E4", "G4"], label: "Harmony", range: ["A3", "G4"] },
       what: "RC-505: melody on Track 1, harmony on Track 2. This is the technology-assisted version of self-harmony -- building the looper skill for live performance. The looper adds a new challenge: your harmony must be locked in time AND pitch, because the loop is unforgiving. Every tiny error repeats forever.",
       setup: "RC-505mkII. Mic connected. Quantize: MEASURE. 80 BPM. Headphones essential -- you need to hear the loop cleanly while singing the harmony.",
       metronome: 80,
@@ -193,6 +201,7 @@ export const level9 = {
       volumeMeter: true,
       recorder: true,
       referencePitches: getPitchRange("C3", "E4"),
+      pianoKeys: { notes: ["A3", "C4", "E4", "G4"], label: "Harmony", range: ["A3", "G4"] },
       what: "Bass (root) + melody + high harmony. The Bon Iver live setup. Three vocal layers create a full arrangement from your voice alone. This is where self-harmony becomes self-arranging -- you're building a complete harmonic texture with no instruments required.",
       setup: "RC-505mkII. 3 tracks available. 80 BPM. Headphones essential.",
       metronome: 80,
@@ -215,6 +224,7 @@ export const level9 = {
       drone: { root: "A", octave: 2, texture: "choir" },
       recorder: true,
       referencePitches: getPitchRange("A2", "E4"),
+      pianoKeys: { notes: ["A3", "C4", "E4", "G4"], label: "Harmony", range: ["A3", "G4"] },
       what: "Sustaining a chord with your voice and looper -- creating a vocal pad that sits underneath your lead singing. This is the ambient, atmospheric application of self-harmony. Think Bon Iver's 'Woods' or Imogen Heap's 'Hide and Seek'. The voices become an instrument, not a melody.",
       setup: "RC-505mkII. Headphones. No backing track -- voice only. 70 BPM or free time.",
       steps: [
@@ -234,6 +244,7 @@ export const level9 = {
       id: "v9e11", time: 4, title: "Full Harmonized Arrangement", type: "vocal",
       recorder: true,
       referencePitches: getPitchRange("A2", "A4"),
+      pianoKeys: { notes: ["A3", "C4", "E4", "G4"], label: "Harmony", range: ["A3", "G4"] },
       what: "The integration exercise. Take a real song from your repertoire and build a full harmonized arrangement: bass, melody, harmony, and optional rhythm. This is the practical application of everything in Level 9 -- self-harmony as an arrangement and performance tool.",
       setup: "RC-505mkII. All tracks available. Guitar optional. Headphones. Choose ILTWYW or Sol Del Sur or any song you know well.",
       tracks: [{ name: "ILTWYW", src: "/iltwyw.mp3" }, { name: "Sol Del Sur", src: "/sol-del-sur.mp3" }],

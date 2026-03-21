@@ -17,6 +17,7 @@ export const level5 = {
       recorder: true,
       pitchContour: true,
       referencePitches: getPitchRange("A2", "E4"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Chord Tones", range: ["A3", "G4"] },
       steps: [
         { text: "Strum a C major chord. Let it ring for 3 seconds. Without plucking individual strings, sing the note you hear most prominently. Check with the Pitch Detector — what note did you land on? Was it the root (C), the third (E), or the fifth (G)?", why: "Your ear naturally gravitates toward certain chord tones based on your listening history and vocal range. Most people hear the root or the fifth most prominently. Knowing which chord tone your ear defaults to tells you about your harmonic hearing style — root-hearers tend to track bass lines easily, while fifth-hearers often have a natural sense of harmonic space." },
         { text: "Strum Am. Sing what you hear. Then strum G. Sing what you hear. Then D. Sing what you hear. Don't analyze — just commit to the first note that comes to you for each chord.", why: "Speed matters here. The first note your voice reaches for is coming from your auditory cortex's automatic processing — it's the note your ear-voice connection finds without thinking. The second note you'd reach for is already being filtered through conscious analysis. We want the automatic response because that reveals the true state of your ear training." },
@@ -36,6 +37,7 @@ export const level5 = {
       what: "Strum a chord on guitar and sing the notes you hear — without plucking individual strings first. Trust your ear to find the notes hidden in the harmony. The chord is a house; the chord tones are the rooms inside it. Learn to walk through the rooms by ear.",
       setup: "Guitar in hand. Strum C chord. Let it ring. Pitch Detector on.",
       referencePitches: getPitchRange("C3", "C4"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Chord Tones", range: ["A3", "G4"] },
       recorder: true,
       pitchContour: true,
       steps: [
@@ -58,6 +60,7 @@ export const level5 = {
       what: "Sing specific intervals over Am: root, minor 3rd, 5th, octave. Then track chord tones through Am->C->G->D. This trains your ear to hear, name, and produce specific intervals — the building blocks of all melody and harmony.",
       setup: "Guitar: Am chord. Slow strum. Pitch Detector on.",
       referencePitches: getPitchRange("A2", "A3"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Chord Tones", range: ["A3", "G4"] },
       recorder: true,
       pitchContour: true,
       steps: [
@@ -80,6 +83,7 @@ export const level5 = {
       what: "Build simple melodies using only chord tones. This is the Jack Johnson / Nick Drake approach — melodies that live inside the chords, never fighting the harmony. Every note belongs. Every note has a home.",
       setup: "Guitar: Am -> C -> G -> D. Slow fingerpick at about 70 BPM.",
       referencePitches: getPitchRange("A2", "B3"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Chord Tones", range: ["A3", "G4"] },
       recorder: true,
       steps: [
         { text: "On Am, sing any two chord tones (A, C, or E) in any order. That's your Am melody fragment. Keep it simple — just two notes. Hold the second note until the chord changes.", why: "Limiting yourself to chord tones guarantees consonance. Every note will 'work' against the chord. This constraint might feel limiting, but it's actually liberating — you can't make a 'wrong' choice, so you're free to focus on rhythm and phrasing instead of worrying about pitch accuracy. Nick Drake's melodies are almost entirely chord tones, and they're some of the most beautiful in folk music." },
@@ -101,6 +105,7 @@ export const level5 = {
       what: "Extend the chest voice downward: sing descending 5-note scales from A3 down to E3, then D3, then C3. Use 'mah' to keep the throat open. This is range expansion work that builds the warm low tones essential for your porch-register delivery.",
       setup: "Standing. Pitch Detector on. No guitar. Warm up with lip trills first.",
       referencePitches: getPitchRange("C3", "A3"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Chord Tones", range: ["A3", "G4"] },
       pitchContour: true,
       volumeMeter: true,
       metronome: 70,
@@ -125,6 +130,7 @@ export const level5 = {
       what: "Sing the root notes of a progression in rhythm against a backing track. Your voice becomes the bass instrument — low, grounded, rhythmic. This is the first step toward looper bass vocal lines and toward hearing the harmonic foundation of any song.",
       setup: "Guitar: Am -> C -> G -> D. Simple strum at 85 BPM. Or use Dub Reggae 85 backing track.",
       referencePitches: getPitchRange("A2", "A3"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Chord Tones", range: ["A3", "G4"] },
       metronome: 85,
       recorder: true,
       tracks: [{ name: "Dub Reggae 85", src: "/dub-reggae-85.mp3" }, { name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }],
@@ -147,6 +153,7 @@ export const level5 = {
       what: "Play a note on guitar, then sing a specific interval above or below it. Ear-voice connection training — you hear the target in your head, then your voice finds it. This is the bridge between knowing intervals intellectually and producing them instantly.",
       setup: "Guitar in hand. Random notes across the neck. Pitch Detector on.",
       referencePitches: getPitchRange("A2", "A3"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Chord Tones", range: ["A3", "G4"] },
       recorder: true,
       pitchContour: true,
       steps: [
@@ -169,6 +176,7 @@ export const level5 = {
       what: "Listen to a short melody, hold it in your memory, sing it back, then figure out the intervals. This exercise trains melodic memory — the ability to hear a phrase once and reproduce it, which is the foundation of learning songs by ear.",
       setup: "Guitar in hand (to play melodies for yourself). Pitch Detector on. Quiet room. Recorder ready.",
       referencePitches: getPitchRange("E3", "A3"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Chord Tones", range: ["A3", "G4"] },
       recorder: true,
       pitchContour: true,
       steps: [
@@ -191,6 +199,7 @@ export const level5 = {
       what: "Learn to identify chord quality by ear — is it major, minor, or a dominant 7th? — and sing the defining interval. This trains the harmonic perception that lets you hear the emotional color of music in real time.",
       setup: "Guitar in hand. Strum various chord types. Pitch Detector on.",
       referencePitches: getPitchRange("C3", "C4"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Chord Tones", range: ["A3", "G4"] },
       recorder: true,
       steps: [
         { text: "Strum C major. Listen for 5 seconds. Now strum C minor (move the E string down one fret to Eb). Listen for 5 seconds. Alternate between them. The major is bright, open, resolved. The minor is dark, deep, yearning. Feel the difference in your body, not just your ears.", why: "The major/minor distinction is the most fundamental chord quality in Western music, and it's determined by a single note — the 3rd. C major has E natural (major 3rd); C minor has Eb (minor 3rd). One half-step changes the entire emotional character of the chord. Training your body to feel this difference (not just intellectually know it) is essential because in real musical situations, you don't have time to analyze — you have to feel." },
@@ -212,6 +221,7 @@ export const level5 = {
       setup: "Phone with a song queued up (choose a simple one: Jack Johnson, Nick Drake, or any Gene favorite). Guitar in hand. Notebook or notes app for writing down what you hear.",
       recorder: true,
       referencePitches: getPitchRange("E3", "A3"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Chord Tones", range: ["A3", "G4"] },
       steps: [
         { text: "Choose a simple song you love but haven't learned yet. Play the first 30 seconds three times. Don't try to figure anything out — just listen. Let the song wash over you. What do you notice? The mood? The tempo? The general direction of the melody?", why: "The first listen should be pure absorption. Neuroscience research on music perception shows that the brain processes music holistically before analytically — you perceive the overall mood, tempo, and energy before you can identify individual notes or chords. Trying to analyze on the first listen fights this natural processing order. Three full listens at the absorption stage gives your brain time to build a rich holistic representation that subsequent analysis can draw from." },
         { text: "Fourth listen: focus ONLY on the bass notes. Hum along with the lowest notes you can hear. These are the chord roots. Don't worry about the melody yet — the bass tells you the harmonic foundation.", why: "The bass line contains the harmonic roadmap of any song. Identifying roots first (before melody or chords) gives you the foundation that everything else is built on. This is the most efficient analysis order: roots tell you what key you're likely in, roots reveal the chord progression, and the chord progression contextualizes the melody. Professional transcribers almost always start with the bass." },
@@ -234,6 +244,7 @@ export const level5 = {
       recorder: true,
       pitchContour: true,
       referencePitches: getPitchRange("A2", "A3"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Chord Tones", range: ["A3", "G4"] },
       tracks: [{ name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" }, { name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }, { name: "Desert Blues 75", src: "/desert-blues-75.mp3" }],
       steps: [
         { text: "Start the Khruangbin Style 80 backing track. Listen for 8 bars without singing. What key is it in? What chord quality do you hear? Can you feel the root? Don't analyze — just listen and let your ear tell you.", why: "Starting with pure listening activates your holistic music perception — the accumulated ear training from this entire level. Instead of approaching the track analytically (what are the chords?), you're letting your trained ear process it naturally. The answer should come as a feeling before it becomes a thought. If you trained v5e8 well, you'll feel 'minor' or 'major' before you can name the specific chord." },

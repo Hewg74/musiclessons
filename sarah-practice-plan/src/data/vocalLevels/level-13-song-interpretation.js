@@ -15,6 +15,7 @@ export const level13 = {
       what: "Assess your current song-learning method. Do you use tabs? YouTube tutorials? Do you figure out melodies by ear? This diagnostic reveals the gaps in your learn-by-ear skill set and creates a baseline for measuring growth through the level.",
       setup: "Phone or speaker with a song you DON'T already know. Something from your playlist that you've heard but never learned. Guitar nearby but don't touch it yet.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Song Reference", range: ["E3", "E4"] },
       recorder: true,
       steps: [
         { text: "Pick a song you've heard many times but never learned to play or sing. Something from your regular rotation -- an Allah-Las track, a Skinshape tune, a DOPE LEMON song. Press play and just listen to the first verse and chorus. Don't do anything else. Just listen.", why: "Starting with a familiar-but-unlearned song reveals the gap between passive listening and active musical knowledge. You've heard this song dozens of times, but can you sing the melody accurately from memory? Can you identify the chord changes? The gap between 'I know this song' and 'I can perform this song' is exactly what this level closes. Research on music perception shows that casual listeners encode the FEELING of a song (tempo, mood, key) but not the DETAILS (exact melody, chord voicings, rhythmic patterns). Active learning converts feeling-level knowledge into performance-level knowledge." },
@@ -34,6 +35,7 @@ export const level13 = {
       what: "A systematic process for learning any song by ear, backed by research on expert musician learning strategies. These 6 steps transform the vague process of 'figuring it out' into a repeatable, reliable method that gets faster with practice.",
       setup: "Phone/speaker with target song queued. Guitar. Paper and pen for notes. Quiet space where you can replay sections repeatedly.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Song Reference", range: ["E3", "E4"] },
       recorder: true,
       steps: [
         { text: "Step 1: LISTEN 3x without doing anything. Full song, no pausing, no guitar, no singing along. First listen: notice the overall form (verse, chorus, bridge, how many sections?). Second listen: focus on the vocal melody (where does it go up? down? how high does it get?). Third listen: focus on the accompaniment (what instruments? what rhythm? what key feeling?).", why: "Three full listens before any active engagement is the single most important habit in by-ear learning. Research on expert musicians (Woody & Lehmann, 2010) found that professionals spend significantly more time LISTENING before attempting to play than amateurs do. Amateurs grab their instrument after 30 seconds and start guessing; professionals listen to the entire piece multiple times first. The three-listen protocol (form -> melody -> accompaniment) is a structured version of this expert behavior. Each listen has a different focus, which prevents the brain from trying to process everything at once -- a strategy called 'selective attention' that dramatically improves information encoding." },
@@ -55,6 +57,7 @@ export const level13 = {
       what: "Listen to a target song 5 times with different focus each time. Not casual listening -- ACTIVE listening with a specific assignment for each pass. Research shows that focused repetitive listening activates mirror neurons that prepare your motor system to replicate what you hear. You're literally training your brain to sing the song WHILE you're listening to it.",
       setup: "Target song queued. Headphones strongly recommended -- you need to hear details. Comfortable position. Paper and pen for notes between listens.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Song Reference", range: ["E3", "E4"] },
       steps: [
         { text: "Listen 1: FEEL. Don't analyze anything. Just receive the song as an emotional experience. Notice: what mood does it create? Where does it feel tense? Where does it release? What's the overall energy arc (does it build, stay steady, ebb and flow)? Write 3 words that describe the feeling.", why: "The emotional listen comes first because music is fundamentally an emotional communication medium. If you start by analyzing intervals and chord progressions, you miss the forest for the trees. The 3-word exercise forces you to crystallize your emotional response, which becomes the interpretive compass for your performance. When you eventually sing this song, those 3 words should guide your delivery: if the song feels 'warm, lazy, golden,' your voice should communicate warmth, laziness, and golden-hour light. This emotion-first approach comes from acting pedagogy -- actors identify the emotional core of a scene before working on the technical delivery." },
         { text: "Listen 2: VOCAL MELODY only. Try to hear ONLY the singer's voice. Ignore everything else -- guitar, drums, bass, production. Follow the melody like a line drawn in the air. Notice: where does it go highest? Lowest? Where does it repeat the same phrase? Where does it do something unexpected?", why: "Selective auditory attention is a trainable skill, and isolating the vocal from the mix is one of its most useful applications. When you focus exclusively on the vocal melody, you engage a neural process called 'auditory stream segregation' -- the brain's ability to separate one sound source from a complex mixture. This skill improves dramatically with practice and is essential for by-ear learning because the vocal melody is usually what you're trying to learn. The spatial/contour observations (highest, lowest, repetitions, surprises) create a mental MAP of the melody that guides the learning process." },
@@ -73,6 +76,7 @@ export const level13 = {
       what: "Listen to a 4-bar melody from one of Gene's artists. Without the music playing: hum it back, find the starting note on guitar, figure out each note, map the scale degrees, and sing it from your transcription. This builds the ear-to-voice-to-instrument neural pathway that is the foundation of all by-ear musicianship.",
       setup: "Phone/speaker with song cued to a clear vocal section. Guitar. Paper and pen. This is a focused ear-training exercise -- minimize distractions.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Song Reference", range: ["E3", "E4"] },
       pitchContour: true,
       recorder: true,
       steps: [
@@ -95,6 +99,7 @@ export const level13 = {
       what: "Deep dive into one DOPE LEMON track. Learn the vocal melody by ear. Then study the DELIVERY: the breathiness, the lazy timing, the vowel shapes, the dynamic choices. Imitate the delivery exactly -- not just the notes, but the STYLE. Record yourself and compare. This is how singers develop a vocabulary of vocal colors.",
       setup: "DOPE LEMON track queued (suggestion: 'Marinade' or 'Uptown Folks' or any track Gene connects with). Headphones. Guitar. Recording setup. Give this exercise your full attention.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Song Reference", range: ["E3", "E4"] },
       tracks: [{ name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }],
       recorder: true,
       steps: [
@@ -116,6 +121,7 @@ export const level13 = {
       what: "Same deep-dive approach with an Allah-Las track. Different vocal aesthetic: straighter tone, more psych-surf float, less personal and more textural. The contrast with DOPE LEMON teaches you that vocal 'style' isn't one thing -- it's a constellation of choices, and different choices create different emotional worlds.",
       setup: "Allah-Las track queued (suggestion: 'Tell Me' or 'Catamaran' or any track with clear vocals). Headphones. Guitar. Recording setup.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Song Reference", range: ["E3", "E4"] },
       tracks: [{ name: "Surf Rock 120", src: "/surf-rock-120.mp3" }],
       recorder: true,
       steps: [
@@ -136,6 +142,7 @@ export const level13 = {
       what: "Take a song you've learned by ear and find the key where it sits most comfortably in your range. Gene's sweet spot is E3-A4, with the passaggio around A3-B3. Every song should be evaluated: does the original key work for MY voice, or do I need to transpose? This is a critical skill that many singers never learn, leading to years of fighting songs in the wrong key.",
       setup: "Guitar tuned. A song you've already learned the melody for (from earlier exercises). Capo optional but helpful.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Song Reference", range: ["E3", "E4"] },
       pitchContour: true,
       recorder: true,
       steps: [
@@ -157,6 +164,7 @@ export const level13 = {
       what: "Take a song you've learned by ear and change ONE element to make it personal: the rhythm (behind-the-beat delivery), the dynamics (whisper verse, full chorus), or the texture (add breathiness, add falsetto breaks). This is the art of INTERPRETATION -- the difference between a cover and a performance. Making covers personal is what separates artists from karaoke singers.",
       setup: "A song you've learned (melody + chords). Guitar. Recording setup. Quiet space for concentrated creative work.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Song Reference", range: ["E3", "E4"] },
       tracks: [{ name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" }],
       recorder: true,
       steps: [
@@ -177,6 +185,7 @@ export const level13 = {
       what: "Record yourself singing a learned song. Listen back with a structured rubric: Pitch (1-5), Timing (1-5), Delivery (1-5), Guitar coordination (1-5), Emotional connection (1-5). Identify the lowest score. Focus next practice on that dimension. This transforms vague self-criticism into targeted improvement.",
       setup: "Phone or recording device. A song you can perform (even imperfectly). The rubric below. Honest ears.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Song Reference", range: ["E3", "E4"] },
       recorder: true,
       pitchContour: true,
       steps: [
@@ -197,6 +206,7 @@ export const level13 = {
       what: "Build a list of 5-10 songs Gene can perform. Criteria: in his key (E3-A4), playable on guitar, suits his vocal style, emotionally connected. This is the beginning of a set list -- the curated collection of songs that define Gene as a performing musician.",
       setup: "Guitar. Phone/speaker for reference. Paper and pen for the list. Thinking cap on.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Song Reference", range: ["E3", "E4"] },
       steps: [
         { text: "Brainstorm a long list of songs you know (or could learn) -- at least 15-20 candidates. Include: songs you've learned in this level, songs you've been playing for years, songs you sing in the car, songs from your 'Songs 2 Learn' playlist. Don't filter yet -- quantity first.", why: "Starting with a long list prevents premature filtering. If you start by looking for 'perfect' songs, you'll overlook good ones. The brainstorm captures everything that's even remotely in your musical world. Songs you sing in the car are particularly valuable data because they represent songs your voice naturally connects with -- you wouldn't sing along if the melody didn't feel good in your voice. The 'Songs 2 Learn' playlist is a curated source of songs you're already drawn to." },
         { text: "Apply the first filter: RANGE. For each song, does the melody fit within E3-A4? If you've already transposed it (from v13e6), note the transposed key. Cross off any song where the melody can't be made to fit your range without radical surgery.", why: "Range is the non-negotiable first filter because no amount of practice will make a melody comfortable if it's outside your physiological range. A song that requires notes above B4 or below D3 will always involve strain or inaudibility, which undermines every other dimension of the performance. The transposition notes from v13e6 make this filter quick for songs you've already processed. For new songs, a rough assessment (can I hum the highest and lowest notes comfortably?) is sufficient at this stage." },
@@ -215,6 +225,7 @@ export const level13 = {
       what: "Timed exercise: 25 minutes to learn a new song by ear from scratch using the 6-step method. Everything you've practiced in this level comes together under time pressure. This tests the SPEED of your by-ear learning -- how fast can you go from 'never learned this song' to 'can perform it from memory'?",
       setup: "Timer set for 25 minutes. A song you've HEARD but NEVER LEARNED. Guitar. No tabs, no YouTube tutorials, no cheating. Phone/speaker for the reference track. Record the final performance.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Song Reference", range: ["E3", "E4"] },
       recorder: true,
       steps: [
         { text: "Minutes 0-3: LISTEN. Three full listens with the focused protocol from v13e2. You don't have time for 5 separate listens, so combine: Listen 1 = form + feel, Listen 2 = vocal melody, Listen 3 = chords + guitar. Write brief notes between listens.", why: "Under time pressure, the listening phase gets compressed but NOT eliminated. Skipping the listening phase to 'save time' is a false economy -- you'll spend MORE time fumbling with notes you haven't properly heard. Three focused listens in 3 minutes provides enough information to guide the learning process. The notes between listens capture first impressions that you'll refine later." },
@@ -236,6 +247,7 @@ export const level13 = {
       what: "Perform a song learned entirely by ear throughout this level. Full arrangement: verse, chorus, any additional sections. Personal interpretation applied. In Gene's key. Recorded and self-assessed. This is the capstone of Level 13 -- proof that you can hear a song, learn it with your ear and your guitar, make it your own, and perform it convincingly.",
       setup: "Full setup: guitar, mic or phone recording, quiet space. The song you feel strongest about from this level's work. Warm up with the 4-7-8 breathing from v10e0 (performance mode).",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Song Reference", range: ["E3", "E4"] },
       recorder: true,
       pitchContour: true,
       volumeMeter: true,

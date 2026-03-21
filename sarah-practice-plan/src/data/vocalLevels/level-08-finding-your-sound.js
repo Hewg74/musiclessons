@@ -16,6 +16,7 @@ export const level8 = {
       what: "Before building your signature sound, you need to know what your voice naturally does. This diagnostic maps your default vocal texture across four dimensions: breathiness, placement, vibrato, and rhythmic feel. The result is your vocal texture fingerprint -- a starting point for intentional style development.",
       setup: "Standing. Phone recording. No backing track. Quiet room.",
       referencePitches: getPitchRange("E3", "A3"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Vocal Texture", range: ["E3", "E4"] },
       steps: [
         { text: "Record yourself singing 'ah' on G3 for 10 seconds with zero effort to shape the sound. Just sing naturally. Don't try to sound good, don't try to sound like anyone. This is your default voice.", why: "Your default voice is the sound your vocal system produces when your brain isn't consciously shaping it. This is the raw material you'll build your signature sound from. Most singers have never heard their true default because they're always (consciously or unconsciously) imitating someone. By stripping away all intention, you reveal the acoustic fingerprint of your unique vocal tract -- the combination of throat length, mouth shape, nasal cavity size, and fold thickness that belongs only to you." },
         { text: "Listen back and assess breathiness on a scale of 1-5. 1 = fully closed, clear tone (like Bob Marley). 5 = extremely airy, half-whisper (like Angus Stone). Where do you naturally sit?", why: "Breathiness is determined by your habitual glottal closure pattern -- how completely your vocal folds close during each vibration cycle. Some people's folds naturally close firmly (producing clear, projected tone), while others have a natural posterior gap (producing breathy, intimate tone). Neither is better or worse -- it's simply your starting point. Knowing where you sit tells you which textures will feel natural (close to your default) and which will require more conscious effort (far from your default)." },
@@ -36,6 +37,7 @@ export const level8 = {
       what: "Chest-to-falsetto mid-phrase. Thom Yorke, Bon Iver, and Jeff Buckley all use this -- the voice breaks from full chest into airy falsetto within a single line, creating emotional contrast. This switch exploits the natural instability at the passaggio to create expressive vulnerability.",
       setup: "Standing. Record yourself. Comfortable range around A3-E4.",
       referencePitches: getPitchRange("A3", "E4"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Vocal Texture", range: ["E3", "E4"] },
       steps: [
         { text: "Sing a phrase in chest voice up to around A3-Bb3. Full, committed tone. Build conviction in the chest register before you attempt the switch.", why: "You need a solid chest voice runway before the switch. The contrast between full chest and airy falsetto is what makes the effect emotionally powerful -- without committed chest tone, the switch has nothing to contrast against. Neurologically, you're establishing a strong motor pattern (chest voice engagement with full thyroarytenoid activation) so that when you suddenly release it, the brain perceives the change as dramatic rather than gradual." },
         { text: "At the peak of the phrase, switch to falsetto. Let the voice break -- don't try to smooth it. The break IS the effect.", why: "The break happens when the thyroarytenoid muscles (which thicken the folds for chest voice) suddenly disengage and the cricothyroid muscles (which stretch the folds for head voice) take over. This switch can happen gradually (a smooth register transition) or suddenly (a break). For this technique, you WANT the sudden break. Thom Yorke doesn't hide it. Bon Iver leans into it. The crack is emotional because it sounds vulnerable -- like the voice is overcome by feeling and literally breaks under the weight of it." },
@@ -52,6 +54,7 @@ export const level8 = {
       id: "v8e2", time: 3, title: "Lo-Fi Vocal Delivery", type: "vocal",
       recorder: true,
       referencePitches: getPitchRange("E3", "A3"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Vocal Texture", range: ["E3", "E4"] },
       what: "Angus Stone / DOPE LEMON style: close-mic, low volume, lots of air, lazy articulation. This is the most intimate vocal texture -- it sounds like you're singing directly into someone's ear. It's also the defining texture of the indie-folk-psych aesthetic Gene gravitates toward.",
       setup: "Phone mic close to your mouth (2-3 inches). Record everything. Quiet room essential.",
       steps: [
@@ -74,6 +77,7 @@ export const level8 = {
       what: "Bob Marley / Bradley Nowell style: rhythmic precision, slight nasality, warm tone locked to the riddim. Reggae vocals are rhythmic instruments that happen to carry melody. The voice is part of the percussion section as much as it's a melodic element.",
       setup: "Reggae One Drop 85 BPM or Dub Reggae 85 BPM backing track. Standing.",
       referencePitches: getPitchRange("E3", "B3"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Vocal Texture", range: ["E3", "E4"] },
       steps: [
         { text: "Sing short phrases locked to the offbeat. Every syllable lands on &'s, not beats. Start with a simple phrase: 'Get up, stand up' -- each word on an offbeat.", why: "Reggae vocals are rhythmically precise because the voice functions as part of the rhythm section. In most Western pop, the vocal melody floats somewhat freely over the rhythm. In reggae, the vocal locks into the rhythmic grid as tightly as the guitar skank or the bass. This requires a fundamentally different relationship between your voice and the beat -- instead of the beat being a backdrop, it's a partner you must synchronize with. This rhythmic precision activates different neural circuits than melodic singing: your cerebellum (timing) works in tight coordination with your motor cortex (vocal production)." },
         { text: "Add slight nasality: think of the sound living in your nose/mask area, not your chest. The easiest way to find this is to hum 'mmm' and then open to 'mah' while keeping the buzz in your nose.", why: "Marley's tone has a nasal edge that cuts through the bass-heavy reggae mix. This is functional, not aesthetic -- reggae arrangements are dominated by bass frequencies, and a nasal vocal tone occupies higher frequency space that doesn't compete with the bass. The nasal focus is created by lowering the soft palate slightly, which redirects sound energy into the nasal passages. It's not sinus-y or congested -- it's focused, like a beam of light rather than a flood." },
@@ -94,6 +98,7 @@ export const level8 = {
       what: "Allah-Las / Laura Lee (Khruangbin) style: voice as texture, minimal vibrato, sits INSIDE the guitar mix rather than on top of it. The vocal doesn't lead -- it blends with the instruments like another color in the palette. This is the most 'guitaristic' vocal approach and is central to Gene's aesthetic.",
       setup: "Psych Rock 120 BPM or Surf Rock 120 BPM backing track. Guitar droning Am if possible.",
       referencePitches: getPitchRange("E3", "A3"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Vocal Texture", range: ["E3", "E4"] },
       steps: [
         { text: "Play or loop a droning Am pattern on guitar (or use the backing track). Sing a simple melody with minimal dynamics -- stay in one volume range, probably mp. No swells, no fades, no drama.", why: "Psych-surf vocals don't do dramatic swells because the voice isn't telling an emotional story -- it's creating atmosphere. Think of it like ambient lighting versus a spotlight: pop vocals are spotlights that move and change, psych-surf vocals are diffused light that fills the room evenly. Maintaining a single dynamic level requires its own kind of control -- the constant, steady airflow that Level 1 rib expansion trained you for." },
         { text: "Minimize vibrato. Sing with a straight, steady tone -- no wobble, no pulse, no oscillation. If vibrato naturally appears, consciously suppress it by keeping your larynx completely still.", why: "Vibrato calls attention to the voice because pitch oscillation creates the perception of emotional intensity. In psych-surf, emotional intensity is the wrong tone. You want dreamy detachment -- the voice observing rather than feeling. Straight tone lets the voice blend into the instrumental texture like a synthesizer pad. Laura Lee (Khruangbin) sings with almost zero vibrato, which is why her voice works as a textural element rather than a lead instrument. Suppressing vibrato requires conscious relaxation of the cricothyroid/thyroarytenoid oscillation cycle." },
@@ -129,6 +134,7 @@ export const level8 = {
       recorder: true,
       tracks: [{ name: "Desert Blues 75", src: "/desert-blues-75.mp3" }],
       referencePitches: getPitchRange("E3", "A3"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Vocal Texture", range: ["E3", "E4"] },
       what: "Tinariwen / Ali Farka Toure style: controlled vocal grit that adds texture without damaging the voice. This is the sound of the Sahara -- dry, weathered, earthy. The rasp comes from specific anatomical configurations that can be produced safely when you understand the mechanism.",
       setup: "Standing. Desert Blues 75 BPM backing track. Phone recording. Water nearby.",
       steps: [
@@ -148,6 +154,7 @@ export const level8 = {
       id: "v8e7", time: 3, title: "Indie Breath Technique", type: "vocal",
       recorder: true,
       referencePitches: getPitchRange("E3", "B3"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Vocal Texture", range: ["E3", "E4"] },
       tracks: [{ name: "Cinematic Western 80", src: "/cinematic-western-80.mp3" }],
       what: "Bon Iver / Phoebe Bridgers / Iron & Wine style: precise air management for breathy clarity. This isn't sloppy breathiness -- it's engineered breathiness where every wisp of air is intentional. The difference between amateur breathy and professional breathy is control.",
       setup: "Standing. Phone recording at close distance (3-4 inches). Quiet room essential.",
@@ -170,6 +177,7 @@ export const level8 = {
       what: "Combine 2 styles in one song: reggae verse into psych chorus, or lo-fi verse into falsetto chorus. Genre-blending is how distinctive artists are born -- Khruangbin blends Thai funk with psych-soul, BALTHVS blends reggae with psych-pop. Your unique blend is your artistic identity.",
       setup: "Standing. Two backing tracks loaded (you'll transition between them or pick one that bridges genres). Phone recording.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Vocal Texture", range: ["E3", "E4"] },
       steps: [
         { text: "Choose two styles from this level that felt most natural in v8e5 (Finding Your Mix). These are your primary colors -- the styles you'll blend.", why: "Starting with your two most natural styles gives you the best chance of a successful blend because you have competence in both. Blending a style you're good at with a style you struggle with usually produces something awkward -- one element dominates and the other feels forced. Two strengths combined create something greater than either alone." },
         { text: "Sing a verse in Style A. Then sing the chorus in Style B. The transition between styles should happen at the section break -- verse to chorus is the natural moment for a textural shift.", why: "Section boundaries (verse to chorus, chorus to bridge) are the natural places for stylistic transitions because the listener expects SOMETHING to change at these moments. The harmonic progression changes, the melodic contour changes, often the lyrical perspective changes. Adding a vocal texture change reinforces all these other changes and creates a clear sonic architecture. This is exactly what Khruangbin does: verses are one vocal world, choruses are another." },
@@ -189,6 +197,7 @@ export const level8 = {
       what: "Intensive listening IS motor rehearsal. When you study a singer's delivery in detail, your vocal muscles subtly mirror their movements. This is neurologically real -- it's called the mirror neuron pathway. This exercise turns passive listening into active vocal training.",
       setup: "Headphones essential. A reference track from one of Gene's favorite artists (Allah-Las, Khruangbin, DOPE LEMON, Skinshape, or Tinariwen). Phone recording.",
       referencePitches: getPitchRange("E3", "A3"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Vocal Texture", range: ["E3", "E4"] },
       steps: [
         { text: "Put on headphones and play a reference track from one of your favorite vocalists. Close your eyes. Don't sing along -- just listen. But listen with your BODY, not just your ears. Feel your throat subtly respond to the singer's delivery.", why: "Mirror neurons were discovered in the 1990s in macaque monkeys and later confirmed in humans. These neurons fire both when you perform an action AND when you observe someone else performing it. For vocalization, this means your laryngeal muscles subtly activate when you hear someone else sing, even if you're silent. This isn't metaphorical -- EMG studies have detected measurable muscle activity in listeners' throats during music listening. By listening with conscious body awareness, you amplify this mirror neuron response." },
         { text: "Listen to the same passage 3 times. Each time, focus on a different aspect. First pass: breathiness level. How much air is in the tone? When does it increase or decrease? Second pass: rhythmic placement. Where does the voice sit relative to the beat?", why: "Analytical listening engages both the mirror neuron system (unconscious motor simulation) and the prefrontal cortex (conscious analysis). This dual-processing creates deeper learning than either alone. The first pass trains your vocal system to mirror the breathiness pattern. The second pass trains your rhythmic system to mirror the timing. By separating these elements, you prevent the overwhelm that comes from trying to absorb everything at once." },
@@ -207,6 +216,7 @@ export const level8 = {
       recorder: true,
       tracks: [{ name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" }, { name: "Desert Blues 75", src: "/desert-blues-75.mp3" }, { name: "Dub Reggae 85", src: "/dub-reggae-85.mp3" }],
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Vocal Texture", range: ["E3", "E4"] },
       what: "Build YOUR signature sound from the techniques learned in this level. This exercise guides you through the conscious construction of a vocal identity -- not by imitating any one artist, but by combining elements from multiple influences into something that sounds authentically yours.",
       setup: "Standing. Phone recording. Backing track that suits your mood. All your recordings from this level available for reference.",
       steps: [
@@ -228,6 +238,7 @@ export const level8 = {
       volumeMeter: true,
       tracks: [{ name: "ILTWYW", src: "/iltwyw.mp3" }, { name: "Sol Del Sur", src: "/sol-del-sur.mp3" }, { name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" }, { name: "Desert Blues 75", src: "/desert-blues-75.mp3" }, { name: "Dub Reggae 85", src: "/dub-reggae-85.mp3" }, { name: "Groove Beat 90", src: "/groove-beat-90.mp3" }],
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Vocal Texture", range: ["E3", "E4"] },
       what: "The culmination of Level 8: sing one of your songs (ILTWYW, Sol Del Sur, or an original) using your developing signature vocal style. This is a full performance that integrates every technique from this level -- falsetto switches, lo-fi delivery, genre textures, controlled rasp, indie breath, genre-blending -- all in service of YOUR sound.",
       setup: "Standing. Phone at calibrated distance. Best backing track for your chosen song. Quiet room. Headphones if using backing track. Lyrics memorized.",
       steps: [
@@ -249,6 +260,7 @@ export const level8 = {
       recorder: true,
       pitchContour: true,
       referencePitches: getPitchRange("E3", "E4"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Vocal Texture", range: ["E3", "E4"] },
       what: "Contemporary Commercial Music (CCM) — your genres: psych-surf, reggae, desert blues, folk — uses DIFFERENT vocal technique from classical singing. Jeannette LoVetri's research and the NATS 2020 investigation established that CCM requires: (1) neutral or speech-height larynx (NOT the lowered larynx of classical), (2) speech-like vowel quality, (3) 'twang' — a bright, forward resonance created by narrowing the aryepiglottic sphincter, (4) belt within M1 (chest mechanism extended higher than classical allows). This exercise teaches you the CCM distinction so you can make genre-appropriate choices.",
       setup: "Standing. Pitch Detector on. No guitar — this is pure vocal technique.",
       steps: [
@@ -268,6 +280,7 @@ export const level8 = {
       recorder: true,
       pitchContour: true,
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Vocal Texture", range: ["E3", "E4"] },
       what: "Sing the same simple melody in four different genre voices. Same notes, same rhythm — but each genre requires different vocal production, different vowel shapes, different timing, different resonance. This is where all your vocal tools come together in service of artistic identity. Record all four and discover which feels most 'you.'",
       setup: "Guitar for light strum. Pitch Detector on. Record everything.",
       steps: [

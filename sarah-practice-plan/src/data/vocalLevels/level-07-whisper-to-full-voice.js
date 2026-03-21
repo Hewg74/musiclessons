@@ -17,6 +17,7 @@ export const level7 = {
       what: "Measure the gap between your softest controllable pitch and your loudest comfortable tone. This diagnostic establishes your current dynamic range so you have a concrete baseline to improve against. Most untrained singers have a range of about 15 dB. A skilled vocalist can control 30-40 dB of range.",
       setup: "Standing. Phone recording with a decibel meter app open (or use the volume meter here). Quiet room is critical -- ambient noise masks your pp floor.",
       referencePitches: getPitchRange("E3", "A3"),
+      pianoKeys: { notes: ["E3", "G3", "A3"], label: "Dynamic Range", range: ["E3", "A3"] },
       steps: [
         { text: "Sing a comfortable sustained 'ah' on G3 at your normal speaking volume. Hold it for 5 seconds. Note the approximate volume level on your meter or the visual here.", why: "This is your 'home base' volume -- mezzo forte (mf), the dynamic level most people default to. Neurologically, this is the volume at which your brain requires the least conscious effort to regulate airflow. Your laryngeal muscles are in their most relaxed, habitual configuration. Establishing this baseline helps you understand how far you can stretch in both directions." },
         { text: "Now sing the same 'ah' on G3 as softly as you possibly can while keeping a clear pitch. Not breathy air -- actual pitched tone, just extremely quiet. This is your pianissimo (pp) floor.", why: "Your pp floor reveals how finely your nervous system can regulate subglottic pressure -- the air pressure below your vocal folds. Quiet singing requires the vocal folds to be thinned and lengthened with just barely enough air pressure to set them vibrating. This is one of the hardest things the voice does because the margin for error is razor-thin: a tiny bit less pressure and the folds stop vibrating, a tiny bit more and you're suddenly at mp." },
@@ -37,6 +38,7 @@ export const level7 = {
       what: "5-note scale: whisper (pp) at the bottom, full voice (f) at the top, back to whisper. Jeff Buckley's superpower was this kind of dynamic range within a single phrase. This exercise trains the neural pathway between volume and pitch -- your brain learns to modulate subglottic pressure as a smooth, continuous gradient rather than discrete jumps.",
       setup: "Standing. Comfortable 5-note range (e.g., C3-G3). No guitar.",
       referencePitches: getPitchRange("C3", "G3"),
+      pianoKeys: { notes: ["E3", "G3", "A3"], label: "Dynamic Range", range: ["E3", "A3"] },
       steps: [
         { text: "Sing C3 at a whisper (pp). Barely audible, but still pitched -- not just air. Hold it for 2 beats to establish the dynamic floor.", why: "A pitched whisper still engages the vocal folds, just barely. The thyroarytenoid muscles (the ones that thicken and shorten the folds for chest voice) are minimally activated, while the cricothyroid muscles maintain just enough tension to keep the folds vibrating. This is your dynamic floor -- the quietest you can sing while maintaining a recognizable pitch. It's a remarkably precise neural task." },
         { text: "Ascend: D3 at p, E3 at mp, F3 at mf, G3 at f. Each note louder than the last. The increase should feel gradual and connected, not like stepping up a staircase.", why: "Linking volume to pitch creates a natural crescendo that trains your brain to coordinate two systems simultaneously: the pitch-control system (cricothyroid muscle stretch) and the volume-control system (subglottic pressure from breath support). Higher notes naturally want to be louder because stretched vocal folds handle more air pressure efficiently. You're leveraging this natural tendency to build the crescendo pathway." },
@@ -73,6 +75,7 @@ export const level7 = {
       recorder: true,
       volumeMeter: true,
       referencePitches: getPitchRange("E3", "A3"),
+      pianoKeys: { notes: ["E3", "G3", "A3"], label: "Dynamic Range", range: ["E3", "A3"] },
       what: "4-bar phrase: quiet start, peak word, fade. This is the emotional storytelling shape that every great vocalist uses -- build to the most important word, then release. The arc is the universal shape of emotional communication in every language and culture.",
       setup: "Standing. Record yourself. Pick any lyric or make one up.",
       steps: [
@@ -96,6 +99,7 @@ export const level7 = {
       what: "Apply the pp->mf->pp swell to lyric lines from your actual repertoire. The messa di voce -- the classical vocal technique of swelling and fading on a single note -- evolves here from a technical exercise into an expressive storytelling tool. This is where neuroscience meets artistry.",
       setup: "Standing. Record yourself. ILTWYW or Sol Del Sur loaded.",
       referencePitches: getPitchRange("G3", "B3"),
+      pianoKeys: { notes: ["E3", "G3", "A3"], label: "Dynamic Range", range: ["E3", "A3"] },
       steps: [
         { text: "Take a lyric line from ILTWYW or Sol Del Sur. Identify the peak word -- the emotional center of gravity.", why: "Using real lyrics from your repertoire makes this immediately applicable to your performance. The peak word in a song lyric is different from the peak word in arbitrary text because it carries the songwriter's emotional intent. Listen to the original recording if you need a hint -- where does the original singer lean in?" },
         { text: "Sing the line with a messa di voce shape: start quiet, swell to the peak word, fade after. But here's the key -- the swell should feel like it's driven by the emotion of the words, not by a conscious volume decision.", why: "The messa di voce is one of the oldest vocal techniques in existence, developed by Italian bel canto singers in the 17th century. But it works because it mirrors something primal in human communication: when we feel something strongly, our voice naturally gets louder, and when the feeling passes, our voice naturally softens. The technique simply makes this natural tendency conscious and controllable. Neurologically, you're training the connection between your emotional processing centers (limbic system) and your motor control centers (motor cortex) for vocalization." },
@@ -115,6 +119,7 @@ export const level7 = {
       volumeMeter: true,
       recorder: true,
       referencePitches: getPitchRange("E3", "A3"),
+      pianoKeys: { notes: ["E3", "G3", "A3"], label: "Dynamic Range", range: ["E3", "A3"] },
       what: "Alternate between breathy delivery (Nick Drake, Angus Stone, DOPE LEMON) and full tone (Marley, Vedder) on the same phrase. Two vocal textures, one lyric -- feel how they change the mood. This toggle is the foundation of dynamic arrangement for solo singer-songwriters.",
       setup: "Standing. Any lyric. Record yourself.",
       steps: [
@@ -151,6 +156,7 @@ export const level7 = {
       recorder: true,
       volumeMeter: true,
       referencePitches: getPitchRange("E3", "A3"),
+      pianoKeys: { notes: ["E3", "G3", "A3"], label: "Dynamic Range", range: ["E3", "A3"] },
       what: "The messa di voce (swell and fade on a single note) is the purest dynamic exercise. This deep-dive version focuses on the two independent physical systems that create it: subglottic pressure control and vocal fold adduction. Understanding these systems separately gives you finer control over the combined result.",
       setup: "Standing. Hand on ribs. Phone recording. No backing track.",
       steps: [
@@ -174,6 +180,7 @@ export const level7 = {
       what: "Apply everything from this level to full verses and choruses of ILTWYW and Sol Del Sur. Map the dynamic arc of each section, identify peak words, and perform with intentional dynamics from start to finish.",
       setup: "Standing. Record yourself. Backing tracks loaded. Lyrics memorized.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["E3", "G3", "A3"], label: "Dynamic Range", range: ["E3", "A3"] },
       steps: [
         { text: "Load ILTWYW. Before singing, MAP the dynamics: mark each phrase's peak word. Where should the verse be? (probably pp-mp). Where should the chorus peak? (probably mf-f). Write it down if it helps.", why: "Dynamic mapping is pre-performance planning. Every professional vocalist does this, either explicitly on paper or implicitly in their head. By identifying the dynamic arc before singing, you shift from reactive (responding to the music in real-time) to proactive (executing a plan). This is a higher-level cognitive skill that engages your prefrontal cortex in musical decision-making rather than leaving dynamics to chance." },
         { text: "Sing the first verse with the backing track, following your dynamic map. Start the verse quiet -- pp to p. Build toward the pre-chorus. Let the chorus arrive at mf-f with the peak word hitting hardest.", why: "The verse-chorus dynamic contrast is the most fundamental structural arc in popular music. Quiet verse to loud chorus creates the satisfying sense of arrival that listeners crave. Your dynamic map should mirror the emotional trajectory: the verse draws the listener in (intimate, close), the pre-chorus builds anticipation (growing intensity), and the chorus delivers the payoff (full voice, emotional peak)." },
@@ -192,6 +199,7 @@ export const level7 = {
       volumeMeter: true,
       recorder: true,
       referencePitches: getPitchRange("C3", "A3"),
+      pianoKeys: { notes: ["E3", "G3", "A3"], label: "Dynamic Range", range: ["E3", "A3"] },
       what: "Connect Level 1 appoggio breath support to dynamic control. Loud singing uses air faster. Quiet singing uses air slower. Managing your breath budget across a dynamic phrase is the practical skill that makes everything else in this level work.",
       setup: "Standing. Hands on ribs. No backing track.",
       steps: [
@@ -214,6 +222,7 @@ export const level7 = {
       what: "A focused recording session where you apply mic technique to capture your dynamics at their best. This combines the recording skills from v7e2 with the performance skills from v7e8. The goal is one take that sounds like a finished product, not a practice session.",
       setup: "Phone recording at your calibrated distance. One backing track loaded. Quiet room. Lyrics memorized.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["E3", "G3", "A3"], label: "Dynamic Range", range: ["E3", "A3"] },
       steps: [
         { text: "Choose one backing track (Deep Soul Groove 80 or Khruangbin Style 80). Choose lyrics you know well -- either from your song repertoire or made up. This is a performance, not a practice run.", why: "The shift from 'practice' to 'performance' mindset is neurologically significant. When you practice, your prefrontal cortex is active and monitoring (analytical mode). When you perform, the prefrontal cortex quiets and the motor cortex takes over (flow state). By declaring this a performance, you're training the transition between these brain states. You need both modes, but performance mode is where dynamics sound most natural." },
         { text: "Do one practice run without recording. Map your dynamics, identify peak words, plan breath marks. This is your last chance to think analytically.", why: "The practice run is your prefrontal cortex's last contribution. After this, you need to let go and trust the preparation. Analytical thinking during performance creates stiff, calculated-sounding delivery. The dynamics should flow from internalized planning, not real-time decision-making." },
@@ -235,6 +244,7 @@ export const level7 = {
       what: "Combine every dynamic skill from this level into one extended performance. Whisper-to-full transitions, messa di voce swells, emotional coloring, breathy-to-full toggles, dynamic phrase arcs, breath management, and mic technique -- all in one take over a backing track.",
       setup: "Standing. Phone recording at calibrated distance. Best backing track for your mood. Lyrics ready.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["E3", "G3", "A3"], label: "Dynamic Range", range: ["E3", "A3"] },
       steps: [
         { text: "Choose your backing track and lyrics. Take 30 seconds to settle into your body: soft knees, dropped shoulders, loose jaw, rib expansion breath. This is your singer's posture from Level 1.", why: "The pre-performance reset activates your parasympathetic nervous system, calming performance anxiety and preparing your body for controlled, expressive singing. Every skill from every previous level is embedded in this posture: the breath support from Level 1, the pitch awareness from Level 2, the rhythmic grounding from Level 3, the harmonic awareness from Level 4, the ear training from Level 5 and 6. This moment of stillness integrates everything." },
         { text: "Start the backing track. Begin your first verse at pp -- barely there, intimate, drawing the listener in. Use breathy texture. Lean into the mic.", why: "Starting quiet forces the listener to lean in. It creates space for the music to grow. The breathy texture at pp activates intimacy cues. Leaning into the mic uses proximity effect to warm the tone. This is the technique every great album opener uses: start quiet, let the sound envelope the listener before building." },

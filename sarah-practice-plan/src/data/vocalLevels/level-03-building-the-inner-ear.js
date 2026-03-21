@@ -15,6 +15,7 @@ export const level3 = {
       what: "Play 5 random notes on guitar in your comfortable range, sing each back. How many can you match within a semitone? This isn't pass-fail — it's a snapshot so we know what to build.",
       setup: "Guitar in hand. Pitch Detector on. Recorder on.",
       referencePitches: getPitchRange("E3", "A3"),
+      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4"], label: "Ear Training", range: ["A3", "E4"] },
       recorder: true,
       steps: [
         { text: "Pick 5 random single notes on guitar between E3 and A3. Don't plan them — fret random spots and pluck.", why: "Random notes force your brain to do real ear-to-voice translation instead of testing memory. That's the skill we're measuring." },
@@ -35,6 +36,7 @@ export const level3 = {
       what: "Before singing a note, IMAGINE it for 3 seconds. Your brain builds a 'forward model' — a prediction of what the note should feel like. Training this prediction is what makes pitch automatic.",
       setup: "Guitar for reference. Pitch Detector on. Quiet room.",
       referencePitches: getPitchRange("E3", "G3"),
+      pianoKeys: { notes: ["E3", "F#3", "A3", "B3", "C#4"], label: "E Major", range: ["E3", "C#4"] },
       pitchContour: true,
       recorder: true,
       steps: [
@@ -56,6 +58,7 @@ export const level3 = {
       what: "Learn Do-Re-Mi with MOVABLE Do — Do = root of whatever key. Each syllable carries FUNCTION: Do = home, Sol = dominant, Ti = tension wanting to resolve. These become cognitive hooks that organize all of pitch space.",
       setup: "Guitar for reference. Pitch Detector on. Start in C (Do = C3).",
       referencePitches: getPitchRange("C3", "C4"),
+      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4"], label: "Ear Training", range: ["A3", "E4"] },
       pitchContour: true,
       steps: [
         { text: "In C: play C3. This is 'Do.' Sing 'Do' on C3. Feel how stable it sounds — like sitting down after a long walk.", why: "Naming the tonal center 'Do' gives your conscious mind access to something your ear already feels. You're connecting a syllable to a neural sensation of stability." },
@@ -77,6 +80,7 @@ export const level3 = {
       what: "Every interval has a 'song anchor' — a melody that starts with that interval. By attaching intervals to songs you know, you hijack existing neural templates for instant recognition.",
       setup: "Guitar for playing intervals. Pitch Detector on. No backing track.",
       referencePitches: getPitchRange("C3", "C4"),
+      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4"], label: "Ear Training", range: ["A3", "E4"] },
       recorder: true,
       steps: [
         { text: "Minor 2nd (half step): C3 to Db3. JAWS theme — 'duh-nuh.' Sing it. Feel how tight and menacing.", why: "Your brain recognizes this as 'danger' from movie soundtracks. Anchoring to Jaws gives instant recall — leveraging existing pathways, not building from scratch." },
@@ -98,6 +102,7 @@ export const level3 = {
       what: "Sing part of a scale out loud, THINK the next notes silently, then sing out loud again. If your internal tracking is accurate, you land on the right note. Pure auditory imagery training.",
       setup: "Guitar for checking. Pitch Detector on. Key of C.",
       referencePitches: getPitchRange("C3", "C4"),
+      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4"], label: "Ear Training", range: ["A3", "E4"] },
       pitchContour: true,
       recorder: true,
       steps: [
@@ -120,6 +125,7 @@ export const level3 = {
       what: "The pentatonic in solfege: Do-Re-Mi-Sol-La. No Fa, no Ti. Every note sounds good. This is the scale of surf rock, reggae, blues — most of the music you love.",
       setup: "Guitar for drone. Pitch Detector on. Key of A (Do = A2).",
       referencePitches: getPitchRange("A2", "A3"),
+      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4"], label: "Ear Training", range: ["A3", "E4"] },
       tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }],
       steps: [
         { text: "Open A string drone. Sing A major pentatonic: Do(A2)-Re(B2)-Mi(C#3)-Sol(E3)-La(F#3)-Do(A3). One note per 2 beats, 85 BPM.", why: "The pentatonic removes the two tension notes, leaving five consonant degrees. The drone lets you HEAR how each degree relates to the root in real time." },
@@ -140,6 +146,7 @@ export const level3 = {
       what: "Play short patterns on guitar, sing them back. 2-note to 4-note patterns. Hear it, hold it, reproduce it — the fundamental ear skill.",
       setup: "Guitar in hand. Pitch Detector on. Recorder on. Stay between E3 and A3.",
       referencePitches: getPitchRange("E3", "A3"),
+      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4"], label: "Ear Training", range: ["A3", "E4"] },
       recorder: true,
       steps: [
         { text: "Play 2 stepwise notes: E3-F3, F3-G3, G3-A3. Sing each pair back on 'lah-lah.'", why: "Simplest dictation — one interval, two pitches. Stepwise motion is easiest because minimal pitch distance means minimal tracking demand." },
@@ -160,6 +167,7 @@ export const level3 = {
       what: "Strum a chord, close your eyes, find and sing the root. Then the 3rd, then the 5th. You're learning to hear individual notes inside a harmony.",
       setup: "Guitar in standard tuning. Pitch Detector on. Chords: Am, C, G, D, Em.",
       referencePitches: getPitchRange("D3", "G3"),
+      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4"], label: "Ear Training", range: ["A3", "E4"] },
       recorder: true,
       steps: [
         { text: "Strum Am, let it ring. Close eyes. Find the lowest note — root: A. Sing on 'Do'. Check Detector.", why: "The root is what everything else orbits. Your brain naturally gravitates toward the bass note — you're learning to isolate what your ear already notices." },
@@ -179,6 +187,7 @@ export const level3 = {
       what: "Over a backing track, sing specific intervals above the bass note. Intervals feel different in musical context — this is where ear training becomes music.",
       setup: "Backing track playing. Pitch Detector on. Guitar for checking.",
       referencePitches: getPitchRange("A2", "E4"),
+      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4"], label: "Ear Training", range: ["A3", "E4"] },
       tracks: [
         { name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" },
         { name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }
@@ -203,6 +212,7 @@ export const level3 = {
       what: "Sing Do-Re-Mi-Fa-Sol-La-Ti... STOP. Feel the pull — your brain wants Do. That magnetic pull is called the 'tonic magnet' and it's one of the most powerful forces in music.",
       setup: "Guitar for reference. Pitch Detector on. Key of C.",
       referencePitches: getPitchRange("C3", "C4"),
+      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4"], label: "Ear Training", range: ["A3", "E4"] },
       pitchContour: true,
       recorder: true,
       steps: [
@@ -224,6 +234,7 @@ export const level3 = {
       what: "Play a note. Wait in silence — 5, 10, 15, 30 seconds. Sing it back. How long can you hold pitch in memory? This trains the same brain system that holds a phone number.",
       setup: "Guitar. Pitch Detector on. Recorder on. Timer visible. Dead silence.",
       referencePitches: getPitchRange("E3", "A3"),
+      pianoKeys: { notes: ["E3", "F#3", "A3", "B3", "C#4"], label: "E Major", range: ["E3", "C#4"] },
       recorder: true,
       steps: [
         { text: "Play E3. Listen 2 seconds. Silence string. Count 5 seconds of TOTAL silence (no humming). Sing on 'lah'. Check.", why: "The phonological loop holds info ~2-3 seconds before decay. At 5 seconds, your brain must actively rehearse the pitch internally to maintain it." },
@@ -243,6 +254,7 @@ export const level3 = {
       what: "A 6-section circuit combining everything from this level: root finding, solfege, intervals, imagery, memory, improvisation. The capstone proving all skills work together.",
       setup: "Guitar. Pitch Detector on. Recorder on. Backing track ready. Breathe between sections.",
       referencePitches: getPitchRange("C3", "A3"),
+      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4"], label: "Ear Training", range: ["A3", "E4"] },
       tracks: [{ name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }],
       recorder: true,
       steps: [
@@ -263,6 +275,7 @@ export const level3 = {
       id: "v3e12", time: 7, title: "Ears Only — Feedback Fading", type: "vocal",
       drone: { root: "A", octave: 2, texture: "tanpura" },
       referencePitches: getPitchRange("A3", "A4"),
+      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4"], label: "Ear Training", range: ["A3", "E4"] },
       pitchContour: false,
       recorder: true,
       metronome: 70,
@@ -283,6 +296,7 @@ export const level3 = {
       id: "v3e13", time: 8, title: "Intervals in Three Keys", type: "vocal",
       drone: { root: "A", octave: 2, texture: "pure" },
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4"], label: "Ear Training", range: ["A3", "E4"] },
       pitchContour: true,
       recorder: true,
       what: "The same intervals you learned in Am — now sing them in E major and A major. Same SIZE jump, completely different SOUND because the key colors the interval. The contextual interference from switching keys forces your brain to build abstract interval recognition rather than key-specific pitch memory.",

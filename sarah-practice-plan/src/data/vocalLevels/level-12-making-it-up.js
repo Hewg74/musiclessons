@@ -15,6 +15,7 @@ export const level12 = {
       what: "Improvise freely for 2 minutes over a backing track. No rules, no constraints -- just sing whatever comes out. This unfiltered snapshot reveals your current improv instincts: do you default to the same shapes? Stay safe on chord tones? Freeze up? The recording doesn't judge, but it doesn't lie either.",
       setup: "Any backing track at 85-90 BPM. Voice only, no guitar. Hit record before you start.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Improv Notes", range: ["A3", "G4"] },
       tracks: [{ name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }],
       recorder: true,
       steps: [
@@ -35,6 +36,7 @@ export const level12 = {
       what: "Over a groove beat, improvise scat syllables following chord tones. Start simple, increase rhythmic complexity. Scat singing is the closest thing to instrumental improvisation -- your voice becomes a horn, a guitar, a drum. The three levels build from quarter-note placement through syncopation to 16th-note bursts, training your voice-rhythm connection at progressively higher resolution.",
       setup: "No guitar. Groove Beat 90 BPM or any backing track. Standing -- scat feels better when your body can move.",
       referencePitches: getPitchRange("A2", "C4"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Improv Notes", range: ["A3", "G4"] },
       tracks: [{ name: "Groove Beat 90", src: "/groove-beat-90.mp3" }],
       metronome: 90,
       recorder: true,
@@ -54,6 +56,7 @@ export const level12 = {
     {
       id: "v12e2", time: 4, title: "Melodic Freestyle Over Changes", type: "vocal",
       referencePitches: getPitchRange("A2", "C4"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Improv Notes", range: ["A3", "G4"] },
       tracks: [{ name: "Soul Funk Groove 90", src: "/soul-funk-groove-90.mp3" }],
       what: "Improvise melodies (no words) over Am-C-G-D. Start with chord tones, add passing tones, then go free. Your ear guides you; your voice follows. This is the pure melodic improvisation exercise -- stripping away lyrics and scat syllables to focus entirely on pitch contour, phrasing, and harmonic awareness.",
       setup: "Backing track at 85-90 BPM. No guitar -- just voice. Use 'ooh', 'ah', or any open vowel.",
@@ -97,6 +100,7 @@ export const level12 = {
       what: "Practice vocal delivery in 3 contrasting styles: breathy/intimate (DOPE LEMON), warm/chest (soul), and raw/edgy (garage-psych). Same melody, same words, three completely different deliveries. This exercise develops the tonal palette you need for genre switching and, more importantly, for creating dynamic contrast within your own songs.",
       setup: "Standing. Record yourself. Pick a simple 4-bar melody with words you know well. Backing tracks ready.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Improv Notes", range: ["A3", "G4"] },
       tracks: [
         { name: "Soul Funk Groove 90", src: "/soul-funk-groove-90.mp3" },
         { name: "Psych Rock 120", src: "/psych-rock-120.mp3" }
@@ -119,6 +123,7 @@ export const level12 = {
     {
       id: "v12e5", time: 4, title: "Genre Switching in Real Time", type: "vocal",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Improv Notes", range: ["A3", "G4"] },
       tracks: [{ name: "Groove Beat 90", src: "/groove-beat-90.mp3" }],
       what: "Same progression, 4 vocal styles: reggae, surf-psych, soul croon, punk bark. Switching styles mid-improvisation trains vocal flexibility and keeps your delivery from getting stale. This is the improv version of Genre Vocal Colors -- now you're changing styles while ALSO improvising melody and rhythm in real time.",
       setup: "Backing track at 90 BPM. Am-C-G-D or backing track. Standing, moving with the groove.",
@@ -161,6 +166,7 @@ export const level12 = {
       what: "Learn melodic fragments (licks) from songs you love, then recombine them freely. Like learning phrases in a new language before studying grammar rules. This is the jazz approach to building an improvisational vocabulary -- collect phrases, internalize them, and let them emerge spontaneously in your own improvisations.",
       setup: "Phone/speaker for reference tracks. No guitar initially -- voice only. Backing track ready for recombination phase.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Improv Notes", range: ["A3", "G4"] },
       tracks: [{ name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" }],
       metronome: 80,
       recorder: true,
@@ -182,6 +188,7 @@ export const level12 = {
       what: "Sing a short motif (3-5 notes), then vary it: rhythm, intervals, dynamics, register. Building an entire solo from one idea. This is how the greatest musical improvisers and composers work -- not by generating endless new material, but by developing a single idea until it reveals all its possibilities.",
       setup: "Backing track at 80-85 BPM. Voice only. Record everything.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Improv Notes", range: ["A3", "G4"] },
       tracks: [{ name: "Desert Blues 75", src: "/desert-blues-75.mp3" }],
       metronome: 80,
       recorder: true,
@@ -204,6 +211,7 @@ export const level12 = {
       what: "Alternate between singing and listening (to a backing track or your guitar) in 4-bar phrases. Sing 4 bars, rest 4 bars, sing 4 bars, rest 4 bars. During the rest bars, LISTEN to the track and plan your next phrase based on what you hear. This is the jazz 'trading fours' format adapted for singer-songwriter practice.",
       setup: "Backing track at 85 BPM. Voice only first, then try with guitar. Timer or metronome for bar counting.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Improv Notes", range: ["A3", "G4"] },
       tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }],
       metronome: 85,
       recorder: true,
@@ -225,6 +233,7 @@ export const level12 = {
       what: "Improvise using only 3 notes, then 5, then 7, then free. Each round adds more notes to your palette. Counterintuitively, constraints breed creativity -- fewer choices force you to explore rhythm, dynamics, and phrasing instead of relying on pitch variety. This exercise proves that musicality doesn't require a lot of notes.",
       setup: "Backing track at 80 BPM. Voice only. Know your 3-note, 5-note, and 7-note sets before starting.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Improv Notes", range: ["A3", "G4"] },
       tracks: [{ name: "Cinematic Western 80", src: "/cinematic-western-80.mp3" }],
       metronome: 80,
       recorder: true,
@@ -246,6 +255,7 @@ export const level12 = {
       what: "Full 5-minute improvised vocal performance combining every technique from this level: scat, melodic freestyle, lyric freestyle, genre switching, motivic development, constraint expansion, and trading. This is the final exam. Record it as a performance, not a practice session -- commit to every choice, recover from every mistake, and let the 5 minutes unfold as a complete musical statement.",
       setup: "Best backing track for your vibe today. Voice only first 3 minutes, then add guitar for the last 2 if you want. Record everything. Standing. Perform as if someone is watching.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["A3", "C4", "D4", "E4", "G4"], label: "Improv Notes", range: ["A3", "G4"] },
       tracks: [
         { name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" },
         { name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }

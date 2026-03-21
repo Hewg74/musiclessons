@@ -30,6 +30,7 @@ export const level5 = {
       sarah: "Gene, surf rock and Khruangbin's brighter moments live in major keys. This extended time in G major builds the vocal muscle memory that makes major-key songwriting feel natural — not like a translation from minor.",
       drone: { root: "G", octave: 2, texture: "warm" },
       referencePitches: getPitchRange("G3", "E4"),
+      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4", "F4", "G4"], label: "Reference Notes", range: ["A3", "A4"] },
       pitchContour: true,
       recorder: true,
       metronome: 80
@@ -53,6 +54,7 @@ export const level5 = {
       sarah: "Gene, this is Dick Dale territory. This is the Beach Boys. This is the bright, shimmering side of surf rock that your playlists are full of. E major is where that sound comes from — and now your voice lives there too.",
       drone: { root: "E", octave: 2, texture: "warm" },
       referencePitches: getPitchRange("E3", "C#4"),
+      pianoKeys: { notes: ["E3", "F#3", "A3", "B3", "C#4"], label: "E Major Pentatonic", range: ["E3", "C#4"] },
       pitchContour: true,
       recorder: true,
       metronome: 75
@@ -75,6 +77,7 @@ export const level5 = {
       sarah: "Gene, this three-key comparison is the single most important exercise for breaking out of the Am comfort zone. When you hear yourself singing differently in three keys, you'll understand why key diversity isn't just theory — it's creative vocabulary.",
       drone: { root: "Am", octave: 2, texture: "pure" },
       referencePitches: getPitchRange("E3", "E4"),
+      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4", "F4", "G4"], label: "A Natural Minor", range: ["A3", "A4"] },
       pitchContour: true,
       recorder: true,
       metronome: 80
@@ -102,7 +105,7 @@ export const level5 = {
       sarah: "Gene, B is the note that makes Tinariwen sound like Tinariwen. That desert blues yearning — the voice leaning into a note that wants to resolve but you hold it there, suspended in longing. That's B.",
       drone: { root: "Am", octave: 2, texture: "pure" },
       referencePitches: getPitchRange("A3", "G4"),
-      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4", "G4"], label: "Pentatonic + B", range: ["A3", "A4"] },
+      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4", "F4", "G4"], label: "A Natural Minor", range: ["A3", "A4"] },
       pitchContour: true,
       recorder: true,
       metronome: 75
@@ -150,6 +153,7 @@ export const level5 = {
       sarah: "Gene, the pentatonic was training wheels — beautiful training wheels that professionals use every day, but still a simplified version. Seven notes is the real thing. This is what the Allah-Las, Skinshape, and DOPE LEMON are actually singing. You're there.",
       drone: { root: "Am", octave: 2, texture: "pure" },
       referencePitches: getPitchRange("A3", "A4"),
+      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4", "F4", "G4"], label: "A Natural Minor", range: ["A3", "A4"] },
       pitchContour: true,
       recorder: true,
       metronome: 80
@@ -172,6 +176,7 @@ export const level5 = {
       wrong: "If you're still playing it safe with only pentatonic notes, set a rule: every other phrase MUST include B or F. Force the tension notes into your rhythm until they feel natural.",
       sarah: "Gene, this is the sound of Khruangbin's vocal lines — pentatonic with occasional tension notes placed on rhythmically interesting beats. Laura Misch does the same thing. The seven-note palette over this groove is exactly where your music lives.",
       referencePitches: getPitchRange("A3", "A4"),
+      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4", "F4", "G4"], label: "Reference Notes", range: ["A3", "A4"] },
       pitchContour: true,
       recorder: true,
       metronome: 80
@@ -194,6 +199,7 @@ export const level5 = {
       sarah: "Gene, this conversation is richer than anything you've done before. Seven notes means every phrase has more options — and the tension notes mean the stakes are higher. When the guitar calls with B, your voice has to decide: resolve the tension or ride it. That decision IS musical expression.",
       drone: { root: "Am", octave: 2, texture: "pure" },
       referencePitches: getPitchRange("A3", "A4"),
+      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4", "F4", "G4"], label: "A Natural Minor", range: ["A3", "A4"] },
       pitchContour: true,
       recorder: true,
       metronome: 80,
@@ -221,6 +227,7 @@ export const level5 = {
       wrong: "If all three genres sound the same, you're not adapting to the groove. In desert blues, slow down and hold notes. In reggae, shorten phrases and go behind the beat. In surf, ride the tempo and use dynamics.",
       sarah: "Gene, this is the exercise where your playlists come alive in your voice. Desert blues B is Tinariwen. Reggae B-to-C is Protoje. Surf F is Allah-Las at their darkest. These are YOUR genres, and now you have the notes that make them real.",
       referencePitches: getPitchRange("A3", "A4"),
+      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4", "F4", "G4"], label: "Reference Notes", range: ["A3", "A4"] },
       pitchContour: true,
       recorder: true
     },
@@ -246,6 +253,7 @@ export const level5 = {
       sarah: "Gene, this is where your improvisation goes from 'walking through the scale' to 'painting with distance.' Every great melody is a sequence of jumps — some small, some dramatic. You're building the vocabulary of distance.",
       drone: { root: "Am", octave: 2, texture: "pure" },
       referencePitches: getPitchRange("A3", "A4"),
+      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4", "F4", "G4"], label: "A Natural Minor", range: ["A3", "A4"] },
       pitchContour: true,
       recorder: true,
       metronome: 70
@@ -268,6 +276,7 @@ export const level5 = {
       sarah: "Gene, most singers only jump from the root. You're training to jump from ANYWHERE — and that's what makes a melody unpredictable and interesting. When you can start a phrase on F and leap to D, you're writing melodies no one expects.",
       drone: { root: "Am", octave: 2, texture: "pure" },
       referencePitches: getPitchRange("A3", "A4"),
+      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4", "F4", "G4"], label: "A Natural Minor", range: ["A3", "A4"] },
       pitchContour: true,
       recorder: true,
       metronome: 70
@@ -290,6 +299,7 @@ export const level5 = {
       sarah: "Gene, this is the exercise that makes your voice trustworthy. When you can nail half steps consistently, everything else is easy. Professional singers drill half steps their entire careers. This is where precision meets expression.",
       drone: { root: "Am", octave: 2, texture: "pure" },
       referencePitches: getPitchRange("A3", "A4"),
+      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4", "F4", "G4"], label: "A Natural Minor", range: ["A3", "A4"] },
       pitchContour: true,
       recorder: true,
       metronome: 60
@@ -312,6 +322,7 @@ export const level5 = {
       wrong: "If you catch yourself singing A-B-C-D (stepwise), stop and skip: A-C-E-G. The rule is absolute — every note must skip at least one pitch. If it feels impossible, start with just 3 notes (A, D, G — all leaps) and add more as you gain confidence.",
       sarah: "Gene, leaps-only improv is the most creatively explosive exercise in this level. The melodies that emerge from pure jumping are unlike anything you'd write on purpose — and some of them will be genuinely beautiful. Accidents become ideas.",
       referencePitches: getPitchRange("A3", "A4"),
+      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4", "F4", "G4"], label: "Reference Notes", range: ["A3", "A4"] },
       pitchContour: true,
       recorder: true
     },
@@ -333,6 +344,7 @@ export const level5 = {
       wrong: "If you're peeking at the slips and choosing 'easy' pairs, shuffle harder. The whole point is randomness. If a pair feels impossible (F→B?), slow down and use the drone to guide you there. Every pair IS singable.",
       sarah: "Gene, this is musical roulette — and it's the most fun exercise in the whole curriculum. Every draw is a tiny adventure. Some combinations will surprise you with how beautiful they sound. Those surprises become the building blocks of songs nobody else could write.",
       referencePitches: getPitchRange("A3", "A4"),
+      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4", "F4", "G4"], label: "Reference Notes", range: ["A3", "A4"] },
       pitchContour: true,
       recorder: true
     },
@@ -354,6 +366,7 @@ export const level5 = {
       sarah: "Gene, this is where everything connects. The notes, the tension, the jumps — they all serve one thing: emotion. When you can choose a jump because of how it FEELS, not what it's called, you're thinking like a songwriter. Every melody you write from now on will have this emotional vocabulary underneath it.",
       drone: { root: "Am", octave: 2, texture: "warm" },
       referencePitches: getPitchRange("A3", "A4"),
+      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4", "F4", "G4"], label: "A Natural Minor", range: ["A3", "A4"] },
       pitchContour: true,
       recorder: true,
       metronome: 75
@@ -379,6 +392,7 @@ export const level5 = {
       sarah: "Gene, jumping in E major is where your surf-rock instincts come alive. These intervals — E to Ab, F# to C# — are the building blocks of every Allah-Las melody, every Beach Boys harmony. You're not just training your ear. You're learning to think in surf.",
       drone: { root: "E", octave: 2, texture: "warm" },
       referencePitches: getPitchRange("E3", "C#4"),
+      pianoKeys: { notes: ["E3", "F#3", "A3", "B3", "C#4"], label: "E Major Pentatonic", range: ["E3", "C#4"] },
       pitchContour: true,
       recorder: true,
       metronome: 70
@@ -401,6 +415,7 @@ export const level5 = {
       sarah: "Gene, A major jumps over a reggae groove is Bob Marley, Slightly Stoopid, Pepper at their brightest. The C# is what makes it sunshine instead of shadow. You're learning to jump in the key of joy.",
       drone: { root: "A", octave: 2, texture: "warm" },
       referencePitches: getPitchRange("A3", "F#4"),
+      pianoKeys: { notes: ["A3", "B3", "C#4", "E4", "F#4"], label: "A Major Pentatonic", range: ["A3", "F#4"] },
       pitchContour: true,
       recorder: true,
       metronome: 70
@@ -424,6 +439,7 @@ export const level5 = {
       wrong: "If you freeze at every key switch, simplify: do 1-minute rounds instead of 2. Or limit each key to just 3 notes (root, 3rd, 5th) instead of the full pentatonic. Reduce variables until the switching feels manageable.",
       sarah: "Gene, three-key jump roulette is the exercise that makes everything else in this curriculum possible. When your ear can navigate random intervals in three different keys, you can sing over ANY chord progression in ANY key. This is musicianship.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4", "F4", "G4"], label: "Reference Notes", range: ["A3", "A4"] },
       pitchContour: true,
       recorder: true
     },
@@ -445,6 +461,7 @@ export const level5 = {
       wrong: "If all three sections sound the same, you're not committing to the key changes. Exaggerate: in Am, go dark and quiet. In A major, brighten your vowels and add volume. In E major, go full energy. Let the key dictate the performance.",
       sarah: "Gene, this is the exercise that proves you're a musician, not just a singer. Building an emotional arc across three keys using only interval jumps — that's what composers do. When you listen back and hear the journey from dark to bright, you'll know: you have the tools to write songs that take people somewhere.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4", "F4", "G4"], label: "Reference Notes", range: ["A3", "A4"] },
       pitchContour: true,
       recorder: true,
       metronome: 75
@@ -472,6 +489,7 @@ export const level5 = {
       sarah: "Gene, this is the exercise that ties every thread together. Hearing before singing. Feeling where notes live in your body. Breathing from your center. Assessing your own work honestly. These aren't separate skills — they're one integrated awareness. When this clicks, everything gets easier. Every jump, every key change, every emotional arc. Because you're not guessing anymore. You're hearing, feeling, and choosing.",
       drone: { root: "Am", octave: 2, texture: "pure" },
       referencePitches: getPitchRange("A3", "A4"),
+      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4", "F4", "G4"], label: "A Natural Minor", range: ["A3", "A4"] },
       pitchContour: true,
       recorder: true,
       levelUp: "Can walk stepwise through all 7 notes of A natural minor, improvise freely across pentatonic and diatonic scales, sing tension notes B and F with emotional intent, hold seven-note conversations with tension-resolution dynamics, lock into genre grooves with passaggio awareness and breath support, jump between all 21 note pairs in Am from any starting point, nail half-step precision on B↔C and E↔F, audiate notes and intervals silently before producing them, navigate register transitions across the passaggio smoothly, improvise angular leaps-only melodies, navigate random interval jumps by ear, choose jumps by emotional color, assess pitch accuracy and resonance quality through structured self-evaluation, jump systematically in E major and A major pentatonics, navigate random cross-key interval roulette, build emotional arcs through key-crossing interval journeys, switch between minor and major palettes, and compare musical identity across three key centers — all while the guitar strum stays on autopilot."

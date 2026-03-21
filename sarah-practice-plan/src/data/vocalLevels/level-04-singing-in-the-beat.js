@@ -36,6 +36,7 @@ export const level4 = {
       setup: "Metronome at 90 BPM. Standing. No guitar.",
       metronome: 90,
       referencePitches: getPitchRange("A2", "C4"),
+      pianoKeys: { notes: ["A3", "C4", "E4"], label: "Rhythm Reference", range: ["A3", "E4"] },
       pitchContour: true,
       recorder: true,
       steps: [
@@ -186,6 +187,7 @@ export const level4 = {
       metronome: 80,
       recorder: true,
       referencePitches: getPitchRange("E3", "A3"),
+      pianoKeys: { notes: ["A3", "C4", "E4"], label: "Rhythm Reference", range: ["A3", "E4"] },
       pitchContour: true,
       steps: [
         { text: "First, feel the 4/4 pulse. Clap on every beat at 80 BPM for 4 bars. 1-2-3-4, 1-2-3-4. Get it locked in your body.", why: "The 4/4 pulse is home base. Before attempting any polyrhythmic singing, the underlying pulse has to be absolutely solid in your body. If 4/4 isn't automatic, the polyrhythm will collapse into one pattern or the other." },

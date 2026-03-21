@@ -15,6 +15,7 @@ export const level14 = {
       what: "Perform your strongest song from start to finish. Full arrangement: guitar, voice, any looper layers. Record video if possible (audio at minimum). This diagnostic captures your current performance level across ALL dimensions -- not just singing, but the complete package: voice, instrument, stage presence, emotional delivery, error recovery, and overall musical impact.",
       setup: "Full setup. Your best song. Camera or audio recorder. Stand as if performing for a small audience. Make eye contact with an imaginary listener.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Performance", range: ["E3", "E4"] },
       recorder: true,
       pitchContour: true,
       volumeMeter: true,
@@ -56,6 +57,7 @@ export const level14 = {
       what: "Your strongest song, start to finish, with guitar. No stopping for mistakes. This is the foundational performance exercise: can you deliver a complete song as a cohesive performance? The emphasis is on CONTINUITY (no stops), DYNAMICS (verse/chorus contrast), and EMOTIONAL ARC (the song tells a story from beginning to end).",
       setup: "Guitar in hand. Song chart if needed (but try without). Record video if possible. Standing is preferable -- it changes your energy and breath support.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Performance", range: ["E3", "E4"] },
       recorder: true,
       pitchContour: true,
       steps: [
@@ -100,6 +102,7 @@ export const level14 = {
       what: "Distance for dynamics, off-axis for plosives, proximity effect for warmth, and the hand-mic techniques that separate amateur from professional. These mic skills transform your vocal sound and are completely invisible to the audience -- they just hear you sounding better and don't know why.",
       setup: "Mic (SM58 or similar) on a stand, or handheld. Record everything through the mic so you can hear the difference each technique makes. A/B comparison is essential.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Performance", range: ["E3", "E4"] },
       steps: [
         { text: "Baseline: sing 4 bars at your normal position relative to the mic. Record it. This is your 'default' mic technique -- whatever you naturally do. For most singers, the default is: too far away, same distance for quiet and loud parts, plosives popping, and no use of proximity effect.", why: "Recording the baseline is essential for A/B comparison because mic technique improvements are AUDIBLE but often not VISIBLE (the movements are subtle). Without the baseline recording, you won't appreciate how much each technique improves your sound. Most untrained singers position themselves 6-12 inches from the mic and stay there regardless of dynamics. This produces a thin, distant sound on quiet passages and distorted, peaking sound on loud passages. The techniques that follow fix all of these issues." },
         { text: "Technique 1: DISTANCE FOR DYNAMICS. Sing a quiet verse at 2 inches from the mic. Sing the loud chorus at 6-8 inches. Move BACKWARD when you get louder, FORWARD when you get softer. The volume to the audience stays relatively even, but the QUALITY changes: close = warm and intimate, far = clear and powerful. Record it.", why: "Moving away from the mic when you get loud is the single most important mic technique for singers. It's counterintuitive (you'd expect to stay in one place) but essential because microphones have a fixed sensitivity that doesn't adjust for human dynamics. A voice that doubles in volume at a fixed distance will sound distorted or compressed by the mic/PA system. By pulling back, you maintain a consistent input level while your voice naturally fills the room. Professional singers do this unconsciously -- watch any live concert footage and you'll see the singer move the mic (or move their head) constantly." },
@@ -119,6 +122,7 @@ export const level14 = {
       what: "Your body communicates as loudly as your voice. Eye contact, posture, movement, and facial expression create the visual dimension of performance that can enhance or undermine your musical message. This exercise makes the invisible visible -- training the body to support the music instead of contradicting it.",
       setup: "Mirror or camera (video recording). Guitar. A song you know well. Stand as if performing for a small audience of 5-10 people in a living room or small venue.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Performance", range: ["E3", "E4"] },
       recorder: true,
       steps: [
         { text: "Perform your song while watching yourself in a mirror (or recording video). Focus on what your BODY does while you play and sing. Common observations: staring at the fretboard, closed eyes for the entire song, rigid posture, no movement, tense facial expression, or conversely: too much random movement, head bobbing that looks nervous rather than musical.", why: "Self-observation is the starting point because most performers have no idea what their body does during performance. The body operates on autopilot, and autopilot body language is often defensive: closed posture (shoulders forward, head down), avoidant eye contact (looking at the floor or the fretboard), and tension-revealing micro-expressions (furrowed brow, clenched jaw, tight lips). These visual signals communicate ANXIETY to the audience, which creates sympathetic anxiety in the room. Identifying default body language is the first step to intentionally managing it." },
@@ -157,6 +161,7 @@ export const level14 = {
       what: "Deliberately practice making mistakes and recovering from them in real time. This is the 'keep going' skill expanded: not just surviving errors, but turning them into musical moments. The audience doesn't know what you PLANNED to play -- they only know what you DID play. A confident recovery sounds intentional.",
       setup: "Guitar + voice. A song you know well. Recording. The willingness to mess up on purpose.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Performance", range: ["E3", "E4"] },
       recorder: true,
       steps: [
         { text: "Play your song and deliberately make a mistake in bar 4. Play a wrong chord. Sing a wrong note. Drop a beat. Then immediately RECOVER: play the next correct chord louder and more confidently. Sing the next correct note with conviction. Make the recovery sound INTENTIONAL.", why: "Deliberate mistake practice is counterintuitive but incredibly effective because it trains the RECOVERY reflex in a controlled environment. In a real performance, mistakes are unpredictable and the accompanying panic impairs recovery. By practicing mistakes deliberately, you remove the panic element and focus purely on the recovery skill. Over time, the recovery reflex becomes automatic: wrong note -> immediate confident correction, no hesitation, no facial grimace, no stopping. This reflex transfers to unplanned mistakes because the neural pathway is the same regardless of whether the mistake was deliberate." },
@@ -176,6 +181,7 @@ export const level14 = {
       what: "Plan and perform a 3-song mini-set with transitions, energy arc, and looper integration. Start intimate, build energy, end with impact. This is how every great live performer structures their show -- and it's where individual songs become a SHOW.",
       setup: "Guitar. Looper (optional but recommended). Song list from repertoire. Timer. Full performance energy.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Performance", range: ["E3", "E4"] },
       tracks: [
         { name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" },
         { name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" },
@@ -201,6 +207,7 @@ export const level14 = {
       what: "Record a performance-quality demo of your best song using just your phone. Not a professional studio recording -- a DEMO that captures your voice, your guitar, and your interpretation in a way that you'd be proud to share with a friend. Phone recording best practices that produce surprisingly professional results.",
       setup: "Phone with voice memo app or simple recording app. Quiet room. Guitar. Optional: a piece of cloth or pillow behind the phone to reduce room reflections.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Performance", range: ["E3", "E4"] },
       recorder: true,
       steps: [
         { text: "Room choice: find the quietest room available. Close windows, turn off fans/AC, silence notifications. The biggest enemy of phone recordings is background noise, because phone mics are omnidirectional (they pick up everything). A quiet bedroom or closet (clothes absorb reflections) is often the best option.", why: "Environmental noise is the number one quality differentiator between amateur phone recordings and listenable demos. Phone microphones are designed to capture speech in noisy environments, which means they pick up everything: HVAC, traffic, neighbors, appliance hum. These sounds are filtered out by your brain when you're in the room (auditory habituation) but are obvious on playback. A closet or bedroom with carpeting and curtains provides natural acoustic treatment: the soft surfaces absorb reflections and reduce room echo, producing a drier, more intimate sound that's flattering for voice and guitar." },
@@ -220,6 +227,7 @@ export const level14 = {
       what: "Combine skills from 4+ levels in a single performance. Breath support (Level 1) + pitch accuracy (Level 2) + rhythmic phrasing (Level 3) + harmonic awareness (Level 4) + dynamic control (Level 5) + personal style (Level 6) + harmony/looper (Level 7) + guitar coordination (Level 8) + improvisation (Level 12) + song interpretation (Level 13) + performance skills (Level 14). This is the comprehensive test: can you access EVERYTHING you've learned simultaneously?",
       setup: "Full setup: guitar, looper, mic awareness, backing track available. A song you know deeply. Performance energy. Record video.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Performance", range: ["E3", "E4"] },
       tracks: [
         { name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" },
         { name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" }
@@ -246,6 +254,7 @@ export const level14 = {
       what: "The comprehensive final assessment of the vocal curriculum. Perform a complete mini-set: looper build from nothing, 2-3 songs with transitions, improvised section, dynamic arc, personal interpretation, stage presence, and intentional ending. Record video. Score on all 9 dimensions. Compare to the Level 14 diagnostic (v14e0). Document the growth. This is not a test -- it's a celebration of everything you've built.",
       setup: "Full setup: guitar, looper, mic. Quiet room. Video recording. 20-25 minutes of uninterrupted time. Stand as if performing for an audience. Wear something you'd wear to a gig. This is a performance.",
       referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["E3", "A3", "C4", "E4"], label: "Performance", range: ["E3", "E4"] },
       tracks: [
         { name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" },
         { name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" },
