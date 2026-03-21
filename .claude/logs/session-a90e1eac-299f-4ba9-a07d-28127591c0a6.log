@@ -1,0 +1,531 @@
+[2026-03-21T10:41:47.305Z] 
+  ▎ Read tasks/guitar-curriculum-execution-prompt.md first — it contains the complete execution plan for rewriting the guitar curriculum. Then read gene_music_profile.md for all the
+   song/artist data. Then read sarah-practice-plan/src/data/singerSongwriter/level-03-first-notes.js as the quality reference. Execute the plan step by step: prerequisites first,   
+  then levels 1-14 sequentially.
+[2026-03-21T10:45:04.940Z] Please use Opus Agents in order to do this. Also, we are updating the prompts. So please look at it 
+
+  1. PReVaDe framework fully explained (Present, Repeat, Vary, Deconstruct) with code example
+  2. Constant arm motion principle — the #1 strumming concept
+  3. One-minute changes drill — Justin Guitar's most effective exercise
+  4. Anchor finger concept — for clean chord transitions
+  5. Full ChordVoicingViewer component spec — from the UX review agent (render approach, tap-to-play, design decisions)
+  6. Additional verified song data — Allah-Las catalog (Catamaran, Long Journey), Khruangbin songs, Ocean Alley songs
+  7. Backing track KEY information — mapped each track to its likely key and which levels it serves
+  8. Level 8 (Desert) keep-list — explicitly says which 11 existing exercises to KEEP vs what 2-3 to ADD
+  9. Singer-songwriter update scope — defined what to change and what NOT to change
+  10. Execution tips — context window management, quality-over-quantity guidance, cross-reference checking
+
+  The document now references these files the other AI must read:
+  - tasks/guitar-curriculum-execution-prompt.md (this doc — 743 lines)
+  - gene_music_profile.md (top 50 tracks + artist techniques + harmonic patterns)
+  - singerSongwriter/level-03-first-notes.js (quality reference)
+  - guitarStudy/level-05-desert-blues.js (content to keep for Level 8)
+  - JungleTools.jsx lines 2154-2239 (SCALES), 5396-5419 (CHORD_VOICINGS), 5500-5600 (ChordDiagram)
+  - App.jsx lines 1028-1040 (tool rendering), 3360-3410 (GuitarStudyView), 4076-4132 (migrations)
+
+  NOW it's comprehensive. The other AI can execute top-to-bottom with no research needed.
+[2026-03-21T10:54:25.453Z] <task-notification>
+<task-id>a4e2eef13f3a29ba9</task-id>
+<tool-use-id>toolu_017eEG6eBJ9bspzr1ous51tU</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\a4e2eef13f3a29ba9.output</output-file>
+<status>completed</status>
+<summary>Agent "Write guitar Level 2 Rhythm & Feel" completed</summary>
+<result>All track paths match available backing tracks. All fretboard scales reference `am-pentatonic` which exists in the SCALES dictionary. All chord voicings reference standard chords that exist in CHORD_VOICINGS.
+
+The file is complete. Here is a summary:
+
+**Written:** `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\data\guitarStudy\level-02-rhythm-and-feel.js`
+
+**Level 2: Rhythm & Feel** -- 12 exercises, 318 lines, ~52KB
+
+**Exercise breakdown:**
+1. **gs-2-1** Dynamic control (whisper-to-shout strumming)
+2. **gs-2-2** Behind-the-beat feel (the laid-back strum)
+3. **gs-2-3** Ghost strums (constant arm motion with dynamic variation)
+4. **gs-2-4** Song study: Close My Eyes (D-Bm-G-A, 104 BPM) -- The Lagoons
+5. **gs-2-5** 3-3-2 syncopation pattern (universal groove)
+6. **gs-2-6** A blues scale introduction (blue note = Eb)
+7. **gs-2-7** Half-step and whole-step bends technique
+8. **gs-2-8** Song study: Baby (D-Em-D, 92 BPM) -- Ariel Pink
+9. **gs-2-9** Song study: Mexico (F-C-E-Dm-Am, 150 BPM) -- Husbands
+10. **gs-2-10** Blues scale improv with dynamic contour
+11. **gs-2-11** Blues scale speed ladder (60-100 BPM)
+12. **gs-2-12** Full performance: Close My Eyes capstone recording
+
+**Quality standards met:**
+- Every `sarah` note references Gene's specific artists (DOPE LEMON, Khruangbin, The Lagoons, Ariel Pink, Allah-Las, Mystic Braves, Skinshape, Sun Room, BALTHVS, Tinariwen, Mark Speer)
+- Every exercise has `what`, `steps` (with `why` for each), `feel`, `wrong`, `sarah`, `levelUp`, and `metronome`
+- Pedagogy principles baked in: slow practice first, sleep consolidation, one-minute changes, constant arm motion, play-target-then-bend, 5-consecutive-clean-reps rule
+- All chord progressions from the verified database only
+- Review field correctly references gs-1-5 and gs-1-10 from Level 1
+- Backing tracks match available files and appropriate keys</result>
+<usage><total_tokens>66727</total_tokens><tool_uses>8</tool_uses><duration_ms>383795</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\a4e2eef13f3a29ba9.output
+[2026-03-21T10:54:31.196Z] <task-notification>
+<task-id>ad526110a6483da77</task-id>
+<tool-use-id>toolu_01Li3PbZLmVqncbYk4JjgVdt</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\ad526110a6483da77.output</output-file>
+<status>completed</status>
+<summary>Agent "Write guitar Level 1 First Sounds" completed</summary>
+<result>All quality checks pass. Here is the summary:
+
+---
+
+**File written:** `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\data\guitarStudy\level-01-first-sounds.js`
+
+**Level 1: "First Sounds" -- 13 exercises, 55 KB**
+
+**Exercise flow:**
+1. **gs-1-1** Baseline recording -- honest snapshot before training
+2. **gs-1-2** Am pentatonic shape -- the mother tongue scale with note naming
+3. **gs-1-3** Open chords Am, C, G, D, Em -- with anchor finger concept
+4. **gs-1-4** One-minute changes drill -- competitive chord transition training
+5. **gs-1-5** Constant arm motion -- THE foundational strumming principle (pendulum, hits vs misses)
+6. **gs-1-6** Muted string percussion -- rhythm before notes, backbeat accents
+7. **gs-1-7** One-note groove -- open A string, all rhythm/dynamics/palm muting
+8. **gs-1-8** Blues scale -- adding the blue note (Eb) to pentatonic
+9. **gs-1-9** Bending & vibrato -- making the guitar sing, supporting fingers
+10. **gs-1-10** Song study: Dope & Smoke (Am-D-G, 112 BPM) -- DOPE LEMON
+11. **gs-1-11** Song study: Real Love Baby (D-Em-G, 102 BPM) -- Father John Misty
+12. **gs-1-12** First improv -- call & response over backing track, space > notes
+13. **gs-1-13** Self-check -- can you sing the pentatonic? Sing roots while strumming?
+
+**Quality verification:**
+- All 13 IDs are unique (gs-1-1 through gs-1-13)
+- Every exercise has 5 steps, each with a `why` field
+- Every `sarah` note references Gene's specific artists by name
+- Every exercise has `what`, `feel`, `wrong`, `levelUp` fields
+- `recorder: true` on baseline, one-note groove, improv, and self-check exercises
+- Backing tracks reference only existing files in `/public/`
+- Fretboard references use `am-pentatonic` (exists in SCALES dict)
+- `chordVoicings` used on chord exercises and song studies
+- No `review` field (Level 1 -- correct per spec)
+- `unlocks: "Rhythm & Feel (Level 2)"` set correctly</result>
+<usage><total_tokens>72994</total_tokens><tool_uses>8</tool_uses><duration_ms>426434</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\ad526110a6483da77.output
+[2026-03-21T10:54:36.914Z] <task-notification>
+<task-id>ad38211654985e20f</task-id>
+<tool-use-id>toolu_0138rG8BhpNbSgs28RqqRWvb</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\ad38211654985e20f.output</output-file>
+<status>completed</status>
+<summary>Agent "Write guitar Level 3 Power & Drive" completed</summary>
+<result>The file parses cleanly. Here is a summary of what was written:
+
+**File:** `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\data\guitarStudy\level-03-power-and-drive.js`
+
+**Level 3: Power & Drive** -- 11 exercises, all with complete fields (sarah, levelUp, feel, wrong, steps with why, metronome, etc.)
+
+**Exercise breakdown:**
+1. **gs-3-1** — Power chord shapes (A5, D5, E5, B5) with One-Minute Changes drill and `chordVoicings`
+2. **gs-3-2** — Palm muting technique (mute depth, contrast drill, gradual release)
+3. **gs-3-3** — Power chord + palm mute combo (verse/chorus dynamics, the "garage sound")
+4. **gs-3-4** — Song study: Going Gets Tough (The Growlers, capo 1 G-C-D-Em, half-time 79 BPM)
+5. **gs-3-5** — Song study: Summer Heat (Sun Room, E-A-B-C#m, syncopated strum, speed ladder 100-130)
+6. **gs-3-6** — Fuzz/overdrive exploration (gain as expression, Mystic Braves Big Muff vs. Sun Room Tubescreamer)
+7. **gs-3-7** — PReVaDe intro (full framework with `phraseForm` field, two seed riff cycles)
+8. **gs-3-8** — Song study: Something About You (Eyedress, F-Em-Am-Dm, lo-fi behind-the-beat feel)
+9. **gs-3-9** — Improv: Power chord riff factory with PReVaDe application
+10. **gs-3-10** — Palm mute dynamics (gradient from heavy mute to open, breathing dynamic arcs)
+11. **gs-3-11** — Extended 10-minute jam combining all Level 3 tools
+
+**Key features:**
+- All three specified songs used with verified chords
+- Every `sarah` note references Gene's specific artists (The Growlers, Sun Room, Eyedress, Mystic Braves, Pepper, Tinariwen, Khruangbin, DOPE LEMON, Ali Farka Touré)
+- PReVaDe framework introduced with `phraseForm` fields on exercises gs-3-7, gs-3-9
+- `chordVoicings` used on exercises gs-3-1, gs-3-4, gs-3-5, gs-3-8
+- Backing tracks matched to keys: surf-rock-120 (E major) for Summer Heat, psych-rock-120 for fuzz exercises
+- `speedLadder` on Summer Heat (100-130 BPM)
+- `recorder: true` on 9 of 11 exercises
+- No duplicate IDs, unique exercise numbers gs-3-1 through gs-3-11
+- Summer Heat chords flagged with `// UNVERIFIED` comment as specified in execution prompt</result>
+<usage><total_tokens>66506</total_tokens><tool_uses>9</tool_uses><duration_ms>366792</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\ad38211654985e20f.output
+[2026-03-21T10:54:50.945Z] <task-notification>
+<task-id>a0351969d0cc6c5e7</task-id>
+<tool-use-id>toolu_01T9hQUMTPvXakkiiAfrEq6P</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\a0351969d0cc6c5e7.output</output-file>
+<status>completed</status>
+<summary>Agent "Write guitar Level 4 The Offbeat" completed</summary>
+<result>The file parses cleanly. Here is a summary of what was written:
+
+**File:** `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\data\guitarStudy\level-04-the-offbeat.js`
+
+**11 exercises across 4 phases:**
+
+1. **Phase 1 — Isolate the Skank (gs-4-1 to gs-4-3):**
+   - Muted-string skank isolation (rhythm before chords)
+   - Adding Am/Em chords with palm muting
+   - Mute-and-release spectrum (roots chop vs. rocksteady vs. reggae-rock)
+
+2. **Phase 2 — Song Studies (gs-4-4 to gs-4-6):**
+   - Gimme Love / Jah Werx (B-F#-E template at 85 BPM)
+   - Ghost notes — percussive texture between skanks
+   - 1999 by NO CIGAR (E-B-F#-G#m, laid-back reggae-surf)
+
+3. **Phase 3 — Expanding the Feel (gs-4-7 to gs-4-8):**
+   - Reggae vs. Rock toggle (same chords, different rhythmic universe)
+   - It's a Love by Baskervillain (A-E-C#m-B-F#, uptempo ska-reggae at 112 BPM)
+
+4. **Phase 4 — Deeper Rhythm & Improv (gs-4-9 to gs-4-11):**
+   - One-drop rhythm introduction (kick on beat 3 only)
+   - Dynamic variation improv over backing tracks
+   - Extended 5-minute reggae jam flowing through all three song progressions
+
+**Quality checks passed:**
+- All 11 exercise IDs are unique (gs-4-1 through gs-4-11)
+- Every exercise has all required fields: `what`, `steps` (with `why`), `feel`, `wrong`, `sarah`, `levelUp`
+- `chordVoicings` used for chord diagram rendering where appropriate
+- `rhythmCells` used for the skank pattern in gs-4-1
+- `tracks` reference existing backing tracks (`/drums-reggae-85.mp3`, `/reggae-one-drop-85.mp3`, `/dub-reggae-85.mp3`, `/e-major-reggae-85.mp3`, `/ska-upbeat-95.mp3`)
+- `review` references gs-3-2 and gs-3-7 from Level 3
+- All chord progressions use verified data from the song database
+- `sarah` notes reference Gene's specific artists by name with contextual details
+- `recorder: true` on all performance/improv exercises</result>
+<usage><total_tokens>69232</total_tokens><tool_uses>7</tool_uses><duration_ms>371158</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\a0351969d0cc6c5e7.output
+[2026-03-21T10:54:56.658Z] <task-notification>
+<task-id>a662a4a5f5082058a</task-id>
+<tool-use-id>toolu_017vASyF7B4HH8BV9FXMqLZf</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\a662a4a5f5082058a.output</output-file>
+<status>completed</status>
+<summary>Agent "Write guitar Level 5 Barre Chord World" completed</summary>
+<result>The file parses and exports correctly. Here is a summary of what was written:
+
+**File:** `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\data\guitarStudy\level-05-barre-chord-world.js`
+
+**Level 5: Barre Chord World** -- 11 exercises, 89 total minutes
+
+**Structure follows the Learn > Play > Jam > Create pattern:**
+
+1. **gs-5-1** Index Finger Isolation (8 min) -- barre technique at fret 5, bony side of finger, thumb placement, progressive fret descent
+2. **gs-5-2** E-Shape Barre (8 min) -- Am shape moved up: Bm, C#m, Dm; rep-with-reset drill; C#m is the Sol Del Sur shape
+3. **gs-5-3** A-Shape Barre (8 min) -- B major and F# major shapes; combines both shapes for the full Sol Del Sur progression
+4. **gs-5-4** One-Minute Changes (7 min) -- 4 barre chord pairs timed drill, including the critical C#m-to-B cross-shape transition
+5. **gs-5-5** Sliding Barres (6 min) -- chromatic escalator up and down the neck in both shapes
+6. **gs-5-6** Sol Del Sur Song Study (10 min) -- THE anchor: C#m-B-F#, harmonic analysis of borrowed IV, syncopated strum, speed ladder 70-100 BPM
+7. **gs-5-7** Island Fever Song Study (8 min) -- Fm-Bb-Ab-Eb with capo and full-barre options, dreamy feel contrast
+8. **gs-5-8** Just Yesterday Song Study (8 min) -- E-G-A-Em at 130 BPM, mixing open and barre voicings at speed
+9. **gs-5-9** Sunset Garage Song Study (8 min) -- G-B-C-D at 142 BPM, single barre among open chords
+10. **gs-5-10** Barre Chord Improv (8 min) -- create your own 3-chord barre loop, choose strum style
+11. **gs-5-11** Extended Jam (10 min) -- 5+ minute Sol Del Sur performance with dynamic contrast, recorded
+
+**Key pedagogy baked in:** Start at fret 5 (not fret 1), bony side technique, thumb-behind-barre, one-minute changes drill, rep-with-reset, sleep consolidation reminders, speed ladders. All four specified songs are covered. `chordVoicings` and `fretboard` fields used where appropriate. All backing track paths reference existing files. Sarah notes reference Sun Room's Jazzmaster/Tubescreamer/Deluxe Reverb setup, the i-bVII-IV harmonic pattern, and the "simple is better" philosophy.</result>
+<usage><total_tokens>66117</total_tokens><tool_uses>8</tool_uses><duration_ms>351880</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\a662a4a5f5082058a.output
+[2026-03-21T10:55:25.507Z] <task-notification>
+<task-id>ab645ec5459aba464</task-id>
+<tool-use-id>toolu_018Q6WYWSgV1gVDAquPfwE3K</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\ab645ec5459aba464.output</output-file>
+<status>completed</status>
+<summary>Agent "Write guitar Level 7 Groove Machine" completed</summary>
+<result>All backing tracks exist. Here is the summary:
+
+**Written:** `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\data\guitarStudy\level-07-the-groove-machine.js`
+
+**Level 7 — "The Groove Machine"** contains 10 exercises:
+
+1. **gs-7-1** — The SoCal Switch (clean skank to power chords, the core move)
+2. **gs-7-2** — Stormtrooper Power Chord Riff (D#5-A#5-F#5, speed ladder 75-150 BPM)
+3. **gs-7-3** — The Distorted Skank (overdrive on the offbeat chop)
+4. **gs-7-4** — Song Study: Stormtrooper Feel (full song structure with intro/verse/chorus)
+5. **gs-7-5** — Song Study: Warmth of the Sun (E-D-A-Bm, shoegaze reverb contrast)
+6. **gs-7-6** — Rock Lead Over Reggae Groove (Am pentatonic solo over reggae backing)
+7. **gs-7-7** — Dynamic Contrast: Whisper Verse to Shout Chorus
+8. **gs-7-8** — Four-on-the-Floor vs One-Drop (SoCal vs roots feel comparison)
+9. **gs-7-9** — The Full SoCal Toolkit (skank + power chords + solo in one piece)
+10. **gs-7-10** — Extended SoCal Jam (capstone, full song recorded in one take)
+
+**Key details:**
+- All 10 exercise IDs are unique (gs-7-1 through gs-7-10)
+- All 5 referenced backing tracks exist in `/public/`
+- Review references gs-6-3 and gs-6-11 per spec
+- Unlocks "Desert & Drone (Level 8)"
+- Uses `chordVoicings`, `fretboard`, `speedLadder`, `volumeMeter`, `recorder` fields where appropriate
+- Sarah notes reference Pepper, Slightly Stoopid, Iration, The Hip Abduction, levitation room by name with specific technique details
+- Includes the Stormtrooper chord data (D#5-A#5-F#5 at 150 BPM) and Warmth of the Sun (E-D-A-Bm at 122 BPM) as verified in the song database
+- No `getPitchRange` import needed (no vocal reference pitches used) but the import is included per the spec template</result>
+<usage><total_tokens>65182</total_tokens><tool_uses>10</tool_uses><duration_ms>324100</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\ab645ec5459aba464.output
+[2026-03-21T10:55:47.761Z] <task-notification>
+<task-id>a1cbcbb3b7a8b3b90</task-id>
+<tool-use-id>toolu_01HF9UzkC1AWC1LbD3nAwj4B</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\a1cbcbb3b7a8b3b90.output</output-file>
+<status>completed</status>
+<summary>Agent "Write guitar Level 6 Jangle & Shimmer" completed</summary>
+<result>The file parses cleanly and all structure checks out. Here is a summary:
+
+**File written:** `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\data\guitarStudy\level-06-jangle-and-shimmer.js`
+
+**Level 6 — Jangle & Shimmer** contains 12 exercises (94 minutes total), organized in 6 phases:
+
+1. **Phase 1 (gs-6-1, gs-6-2):** Cmaj7 and Dmaj7 shapes individually, with the open high E string trick explained
+2. **Phase 2 (gs-6-3, gs-6-4):** The Allah-Las float (Cmaj7-Dmaj7 loop) and Worship the Sun song study
+3. **Phase 3 (gs-6-5, gs-6-6):** Sus2 voicings (Dsus2, Asus2) and Friends by levitation room
+4. **Phase 4 (gs-6-7, gs-6-8):** Major-to-minor shift (D-Dm, G-Gm) and Geneva Strange by modGlyders
+5. **Phase 5 (gs-6-9, gs-6-10):** Catamaran (Am-C-D-Dm) and Get Away (E-F#-G#m-E7 with barre + open voicing mix)
+6. **Phase 6 (gs-6-11, gs-6-12):** Jangle improv (create your own progression) and 5-minute recorded graduation jam
+
+Key details:
+- All chord progressions are from the verified database (no hallucinated chords)
+- `chordVoicings` fields reference chords that exist in the expanded CHORD_VOICINGS dict
+- `review` references gs-5-5 and gs-5-11 from Level 5
+- `unlocks` points to "The Groove Machine (Level 7)"
+- `sarah` notes reference Allah-Las gear (1970s Fender, Twin Reverb Blackface, "Love 'verb"), the open high E string trick, the Am-G-F-E descending minor tradition, DOPE LEMON's major-minor oscillation, and levitation room's LA psych scene
+- Backing tracks use existing files: deep-soul-groove-80, groove-beat-90, psych-rock-120
+- Matches the quality depth of the singer-songwriter reference with 4-5 steps per exercise, each with substantive `why` fields</result>
+<usage><total_tokens>69842</total_tokens><tool_uses>7</tool_uses><duration_ms>377917</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\a1cbcbb3b7a8b3b90.output
+[2026-03-21T10:56:23.739Z] <task-notification>
+<task-id>a72ebdce9a0fa178b</task-id>
+<tool-use-id>toolu_01YD6tE8KFQwYH5bsqUAaT8p</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\a72ebdce9a0fa178b.output</output-file>
+<status>completed</status>
+<summary>Agent "Write guitar Level 8 Desert & Drone" completed</summary>
+<result>The file parses cleanly. Here is a summary of what was done:
+
+**File written:** `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\data\guitarStudy\level-08-desert-and-drone.js`
+
+**14 exercises total:**
+- **gs-8-1 through gs-8-11** — All 11 exercises from the existing Level 5 (desert blues) were carried over with these changes:
+  - IDs renumbered from `gs-5-X` to `gs-8-X`
+  - `sarah` notes updated to address Gene directly and reference his specific playlist (e.g., "Nànnuflày is track #47 on your top 50")
+  - gs-8-5 title updated to "Drone Motif Development (PReVaDe)" with explicit PReVaDe framework language woven into steps and `why` fields
+  - Review field updated from `["gs-3-1", "gs-2-5"]` to `["gs-7-1", "gs-7-10"]` referencing Level 7
+  - Sleep consolidation tips added to gs-8-4 and gs-8-8
+  - Internal cross-references updated (e.g., gs-5-4 references changed to gs-8-4)
+  - Unlocks updated from "The Improvisation Engine (Level 6)" to "Extended Harmony (Level 9)"
+  - Artists field expanded to include Vieux Farka Touré
+
+- **3 new exercises added:**
+  - **gs-8-12 "Bombino's Fire — Electric Desert"** — Aggressive/electric desert blues with overdrive, tremolo picking, and rapid melodic bursts contrasted with meditative drone phrasing
+  - **gs-8-13 "One Note Per Minute — Extreme Constraint"** — 12-minute improv with max one pitch change per minute, forcing exploration of rhythm/dynamics/articulation on each note
+  - **gs-8-14 "Vieux Farka Touré — Desert Meets Rock"** — Bridges Saharan tradition with funk/rock via syncopated melody placement, ghost notes, and call-and-response; connects desert blues to Khruangbin's global groove</result>
+<usage><total_tokens>74918</total_tokens><tool_uses>6</tool_uses><duration_ms>346304</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\a72ebdce9a0fa178b.output
+[2026-03-21T10:57:25.429Z] <task-notification>
+<task-id>a9c20d9efb9c6ed5d</task-id>
+<tool-use-id>toolu_0129fpJMpMMtJ4E2NZumvJtA</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\a9c20d9efb9c6ed5d.output</output-file>
+<status>completed</status>
+<summary>Agent "Write guitar Level 9 Extended Harmony" completed</summary>
+<result>The file is valid. Here is a summary of what was written:
+
+**File:** `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\data\guitarStudy\level-09-extended-harmony.js`
+
+**Level 9: Extended Harmony** -- 11 exercises covering 7th chords, Dorian mode, ghost-note grooves, and Khruangbin three-note voicings.
+
+**Exercise breakdown:**
+
+| ID | Title | Time | Focus |
+|---|---|---|---|
+| gs-9-1 | Open 7th Chords -- Am7, Dm7, Em7 | 8 min | Learn shapes |
+| gs-9-2 | Triad vs. 7th -- Hearing the Color | 7 min | Ear training, Cotton Jones trick |
+| gs-9-3 | Barre 7th Chords -- Gm7, C7, A7 | 8 min | Moveable shapes, one-minute changes |
+| gs-9-4 | Song Study: I Didn't Know (Skinshape) | 10 min | Gm7-C7-A7-Dm7 soul cycle with ghost scratches |
+| gs-9-5 | A Dorian Mode -- The Brighter Minor | 8 min | Scale with fretboard diagram, drone, F# as color note |
+| gs-9-6 | Ghost-Note Groove | 7 min | Muted scratch technique for soul texture |
+| gs-9-7 | Song Study: Chewing Gum (Cotton Jones) | 8 min | Am-D-Dm7-Dm, the 7th that appears and vanishes |
+| gs-9-8 | Song Study: Texas Sun (Khruangbin) | 9 min | Am-G vamp with Speer-style melody, 60% silence |
+| gs-9-9 | Khruangbin Three-Note Voicings | 8 min | Top 3 strings, slide shapes like samples |
+| gs-9-10 | Dorian Soul Improv | 8 min | Full technique stack with PReVaDe framework |
+| gs-9-11 | Extended Soul Jam | 10 min | 5-minute recorded performance, all Level 9 skills |
+
+**Key features:**
+- All chord progressions are from the verified database (Skinshape Gm-C-A7-Dm, Cotton Jones Am-D-Dm7-Dm, Texas Sun Am-G / Em-D-Bm)
+- `chordVoicings` fields use the voicings specified in the prompt (Am7, Dm7, Em7, Gm7, C7, A7)
+- `fretboard: { scale: "a-dorian" }` references the existing SCALES entry
+- Sarah notes reference Skinshape's recording process (drums first, Lee Perry/King Tubby dub influence), Speer's gear (DiMarzio DP186, flatwounds, parked wah, 60%+ silence), and Cotton Jones' subtle harmonic tricks
+- Backing tracks match exercise keys (deep-soul-groove-80 and khruangbin-style-80 for Am-based exercises)
+- Review field references gs-8-4 and gs-8-11 from the prior level
+- `unlocks: "Global Colors (Level 10)"` points to the next level</result>
+<usage><total_tokens>69400</total_tokens><tool_uses>7</tool_uses><duration_ms>367403</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\a9c20d9efb9c6ed5d.output
+[2026-03-21T10:58:24.217Z] <task-notification>
+<task-id>a176b09991d5bf60c</task-id>
+<tool-use-id>toolu_017PNbsm6pAUXL59YBUc4sUs</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\a176b09991d5bf60c.output</output-file>
+<status>completed</status>
+<summary>Agent "Write guitar Level 10 Global Colors" completed</summary>
+<result>Everything validates. Here is a summary of what was written:
+
+---
+
+**File:** `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\data\guitarStudy\level-10-global-colors.js`
+
+**Level 10: Global Colors** -- 11 exercises covering:
+
+| ID | Title | Style/Concept | Time |
+|---|---|---|---|
+| gs-10-1 | Afrobeat Rhythmic Ostinato -- Part A | Afrobeat, 16th-note grid, hypnotic repetition | 8 min |
+| gs-10-2 | Interlocking Parts -- A Meets B | Afrobeat hocketing, record-and-overlay | 8 min |
+| gs-10-3 | Song Study: Abusey Junction Feel | Kokoroko highlife arpeggios, warm tone | 10 min |
+| gs-10-4 | Bossa Nova Rhythm | Joao Gilberto pattern, thumb + syncopated fingers | 8 min |
+| gs-10-5 | Tone Knob as Expression | Same phrase at 4 tone settings, real-time knob rolling | 7 min |
+| gs-10-6 | Parked Wah Concept | Fixed wah position tone shaping, Khruangbin signature | 7 min |
+| gs-10-7 | Song Study: Rules (Khruangbin) | Am-G, 60%+ silence, behind-the-beat, 74 BPM | 10 min |
+| gs-10-8 | BALTHVS Cumbia Stabs | Syncopated 16th-note staccato, clave-based | 8 min |
+| gs-10-9 | Tommy Guerrero Style | Finger-picked melody-as-vocalist, Ethio-jazz | 8 min |
+| gs-10-10 | Global Fusion Improv | Style-switching across all 5 global colors | 10 min |
+| gs-10-11 | Extended World Jam | 5-minute composed/recorded piece, graduation | 12 min |
+
+**Quality features matching the singer-songwriter reference:**
+- Every `sarah` note references specific artist gear, techniques, and Gene's personal listening data (top 50, 12-month rankings)
+- Khruangbin details: Strat/DiMarzio DP186, flatwound Chromes, DS-1 gain almost off, parked wah, 60%+ silence
+- BALTHVS: Colombian trio, Bogota, Santana + cumbia + Turkish, clave-based stabs
+- Tommy Guerrero: 1980s Japanese Telecaster, finger-picked, Gabor Szabo / Mulatu Astatke influences
+- Kokoroko: Afrobeat-jazz, interlocking figures, Oscar Jerome and Cassie Kinoshi
+- All backing track paths verified against available files in `/public/`
+- `chordVoicings` on 3 exercises (Am/Dm/E7, Am/G)
+- `recorder: true` on 8 of 11 exercises
+- Review references gs-9-4 and gs-9-9 from the new Level 9</result>
+<usage><total_tokens>68452</total_tokens><tool_uses>10</tool_uses><duration_ms>391924</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\a176b09991d5bf60c.output
+[2026-03-21T10:58:37.170Z] <task-notification>
+<task-id>a79bad26825880454</task-id>
+<tool-use-id>toolu_01Lfo2WbrfKH3c5eKVs4SYNK</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\a79bad26825880454.output</output-file>
+<status>completed</status>
+<summary>Agent "Write guitar Level 13 Full Palette" completed</summary>
+<result>The file parses cleanly. Here is a summary of what was written:
+
+**File:** `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\data\guitarStudy\level-13-the-full-palette.js`
+
+**Level 13: "The Full Palette"** -- 9 exercises, 99 total minutes.
+
+| ID | Exercise | Time | Focus |
+|---|---|---|---|
+| gs-13-1 | Five Feels, One Progression | 10 min | Am-G-C-D in 5 styles (surf, reggae, fingerpicked, power chords, desert drone) |
+| gs-13-2 | Scale Choice Game | 10 min | Ear-guided scale selection across 5 backing tracks (Am pent, sus pent, Dorian, Phrygian, etc.) |
+| gs-13-3 | PReVaDe Genre Shift | 10 min | PReVaDe where the Vary section changes STYLE, not notes |
+| gs-13-4 | Ear Transcription Challenge | 12 min | Figure out chords by ear from Gene's playlist songs, verify against curriculum |
+| gs-13-5 | Multi-Genre Flow | 12 min | 10-minute continuous improvisation flowing through 3+ styles |
+| gs-13-6 | The Feel Toggle | 8 min | Texas Sun played with toggles: timing, tone, voicing (major/minor) |
+| gs-13-7 | Three-World Composition | 12 min | Compose a 3-section piece using 3 styles in the same key |
+| gs-13-8 | Song Study Mashup | 10 min | Combine elements from 2-3 studied songs into one piece |
+| gs-13-9 | Extended Palette Jam | 15 min | 15-minute recorded session with full palette, all tracks available |
+
+Key details:
+- References all SCALES dict entries (am-pentatonic, a-sus-pentatonic, a-dorian, a-phrygian, a-phrygian-dominant, em-pentatonic, a-natural-minor) across exercises
+- Review references gs-12-3 and gs-12-8 from Level 12 as specified
+- Sarah notes reference the full breadth of Gene's artists: Khruangbin, Allah-Las, Tinariwen, DOPE LEMON, Pepper, Jack Johnson, Tommy Guerrero, Hermanos Gutierrez, Skinshape, Sun Room, Mystic Braves, BALTHVS, Leon Bridges
+- Uses all 8 melodic backing tracks and all 5 drums-only tracks across the exercises
+- Includes `chordVoicings`, `fretboard`, `phraseForm`, `recorder`, and `tracks` fields where appropriate
+- Matches the quality depth of the singer-songwriter Level 3 reference (detailed steps with `why`, rich `feel`/`wrong`/`sarah` fields)</result>
+<usage><total_tokens>63351</total_tokens><tool_uses>7</tool_uses><duration_ms>300672</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\a79bad26825880454.output
+[2026-03-21T10:58:48.630Z] <task-notification>
+<task-id>a4144a3a5d15a6ce0</task-id>
+<tool-use-id>toolu_01MZK6jsaWQnCCKNA4cyGBwE</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\a4144a3a5d15a6ce0.output</output-file>
+<status>completed</status>
+<summary>Agent "Write guitar Level 11 Fingerpicking" completed</summary>
+<result>The file validates cleanly. Here is a summary:
+
+**Written:** `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\data\guitarStudy\level-11-fingerpicking.js`
+
+**11 exercises, all with complete fields (what, steps, feel, wrong, sarah, levelUp):**
+
+| ID | Title | Time | Key Technique |
+|---|---|---|---|
+| gs-11-1 | PIMA — Assigning Your Fingers | 8 min | Finger-to-string assignments, home position |
+| gs-11-2 | The Six-Note Roll — P-i-m-a-m-i | 8 min | Continuous rolling pattern, sleep consolidation |
+| gs-11-3 | Rolling Through Changes | 10 min | Roll over Am-C-G-Em, bass string navigation |
+| gs-11-4 | Song Study: Breakdown — Jack Johnson | 12 min | G-Bm-Em-D capo 5, Travis-adjacent picking |
+| gs-11-5 | Travis Picking — The Alternating Thumb | 12 min | Thumb independence, 3-step progressive build |
+| gs-11-6 | Percussive Slap — Hermanos Gutierrez Gallop | 8 min | Slap-horse technique, cinematic western feel |
+| gs-11-7 | Song Study: Coastline Feel — Hollow Coves | 10 min | Spacious picking, G-Bm-A, dynamic shaping |
+| gs-11-8 | Duo Thinking — Bass + Melody | 10 min | Tommy Guerrero approach, independent voices |
+| gs-11-9 | Pick Tuck — Switching Mid-Song | 6 min | Tuck/uncurl transitions, dynamic shifts |
+| gs-11-10 | Fingerpicked Improv | 10 min | Bass + melody + slap over bossa track |
+| gs-11-11 | Extended Fingerpicking Piece | 12 min | Full performance, 3+ sections, graduation piece |
+
+**Pedagogy arc:** Phase 1 (static thumb PIMA) -> Phase 2 (six-note roll + chord changes) -> Phase 3 (Travis picking independence) -> Song studies -> Percussion/texture -> Duo thinking -> Performance integration.
+
+**Artist references** throughout sarah notes: Jack Johnson, Hollow Coves, Hermanos Gutierrez (El Capistan, milonga/cumbia roots, slap-horse), Tommy Guerrero (melody-as-vocalist, Soul Food Taqueria), with connections back to Khruangbin, Rosinha De Valenca, and Joao Gilberto for the bossa fingerpicking DNA.
+
+**Backing tracks used:** `/a-major-folk-80.mp3`, `/bossa-nova-75.mp3`, `/cinematic-western-80.mp3`, `/drums-bossa-75.mp3` -- all confirmed existing tracks from the spec.</result>
+<usage><total_tokens>70010</total_tokens><tool_uses>8</tool_uses><duration_ms>377995</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\a4144a3a5d15a6ce0.output
+[2026-03-21T10:58:54.656Z] <task-notification>
+<task-id>a477b4902e7cebda8</task-id>
+<tool-use-id>toolu_014Kk6pigSZNdb4PAsH8DCN9</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\a477b4902e7cebda8.output</output-file>
+<status>completed</status>
+<summary>Agent "Write guitar Level 14 Your Sound" completed</summary>
+<result>Level 14 has been written to `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\data\guitarStudy\level-14-your-sound.js`.
+
+**Summary of what was written:**
+
+- **10 exercises** (gs-14-1 through gs-14-10), progressing from self-discovery to final recorded performance
+- **Total estimated time:** ~135 minutes across all exercises
+- **Structure:**
+  - **Identity phase** (gs-14-1, gs-14-2): Sound identity exploration and set list curation
+  - **Set building phase** (gs-14-3 through gs-14-7): Opener, transitions, peak, quiet moment, closer — each practiced individually
+  - **Full performance phase** (gs-14-8 through gs-14-10): Dress rehearsal, baseline comparison, and the final Golden Hour Set recording
+
+**Key design decisions:**
+- `recorder: true` on every exercise — this level is entirely about performance and documentation
+- No new scales, chords, or techniques introduced — purely reflective and performance-oriented
+- Sarah notes are the warmest and most personal of any level, celebrating the journey from Am pentatonic to a full 30-minute set
+- The baseline comparison (gs-14-9) references gs-1-1 and creates a profound before/after moment
+- The final exercise (gs-14-10) includes a 5-minute free improvisation after the structured set — capturing the player's unfiltered musical identity
+- The `review` field references gs-13-5 and gs-13-9 (Level 13 exercises, consistent with the spec)
+- No `unlocks` field — this is the final level
+- Backing tracks used sparingly (student's choice per the spec), with groove-beat-90 and drums-surf-120 suggested where appropriate</result>
+<usage><total_tokens>61488</total_tokens><tool_uses>6</tool_uses><duration_ms>276948</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\a477b4902e7cebda8.output
+[2026-03-21T10:59:28.753Z] <task-notification>
+<task-id>ad26a6e4c8276b9f2</task-id>
+<tool-use-id>toolu_018oWPbzErU8SMzsgZbv5zcX</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\ad26a6e4c8276b9f2.output</output-file>
+<status>completed</status>
+<summary>Agent "Write guitar Level 12 Dynamics & Expression" completed</summary>
+<result>The file parses cleanly. Here is a summary of what was written:
+
+**File:** `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\data\guitarStudy\level-12-dynamics-and-expression.js`
+
+**Level 12: Dynamics & Expression** -- 11 exercises, matching the spec.
+
+| # | ID | Title | Key Technique |
+|---|---|---|---|
+| 1 | gs-12-1 | Five Shades of Am | 5-level dynamic precision drill |
+| 2 | gs-12-2 | Volume Swell — The Bowed Guitar | Volume knob roll, chained swells |
+| 3 | gs-12-3 | The DOPE LEMON Trick — D to Dm | Major-to-minor shift, D/Dm |
+| 4 | gs-12-4 | The G→Gm Shift | Same trick on G, Geneva Strange progression |
+| 5 | gs-12-5 | Song Study: Marsha | Current Swell F-G-Bb-C-D-Dm, dynamic arc |
+| 6 | gs-12-6 | Phrygian Spice — The Bb Over Am | Phrygian b2 as color note over Am pentatonic |
+| 7 | gs-12-7 | Song Study: Peace Blossom Boogy | Babe Rainbow D-G7-A, boogaloo shuffle |
+| 8 | gs-12-8 | PReVaDe With Dynamics | Dynamic-only variation in PReVaDe framework |
+| 9 | gs-12-9 | Dynamic Song Form | Quiet verse, loud chorus, whispered bridge |
+| 10 | gs-12-10 | Expressive Improv | Dynamics-first improv with Phrygian color |
+| 11 | gs-12-11 | Extended Dynamics Piece | 4-5 min capstone with full dynamic arc |
+
+**Quality features:**
+- Every exercise has all required fields (`what`, `steps` with `why`, `feel`, `wrong`, `sarah`, `metronome`, `levelUp`)
+- `sarah` notes reference Gene's specific artists (DOPE LEMON, Current Swell, Babe Rainbow, modGlyders, Hermanos Gutierrez, Tommy Guerrero, Khruangbin, Tinariwen, Mark Speer)
+- `chordVoicings` used for major-minor exercises (D/Dm, G/Gm, full sets for song studies)
+- `volumeMeter` and `volumeContour` used generously for dynamics exercises
+- `fretboard` with `a-phrygian` scale for Phrygian exercises
+- `phraseForm` for PReVaDe exercise
+- `drone` for Phrygian and capstone exercises
+- `recorder: true` on all improv/performance exercises
+- Backing tracks matched to exercise keys (deep-soul-groove-80, cinematic-western-80, drums-soul-funk-90, groove-beat-90)
+- Review references valid Level 11 IDs (gs-11-5, gs-11-11)
+- All chord progressions from the verified database (no hallucinated chords)
+- No duplicate exercise IDs</result>
+<usage><total_tokens>71059</total_tokens><tool_uses>8</tool_uses><duration_ms>384238</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\ad26a6e4c8276b9f2.output

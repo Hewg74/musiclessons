@@ -216,3 +216,141 @@ This reveals someone whose identity is strongly tied to **surf culture, outdoor 
 ## Summary Prompt for Other AIs
 
 > Gene is a surfer and outdoor enthusiast based (likely) in Southern California whose musical taste centers on psych-surf, reggae-rock, and global/world fusion. His top artists across all time ranges are Allah-Las, Khruangbin, DOPE LEMON, BALTHVS, Skinshape, Tommy Guerrero, Hermanos Gutiérrez, and Tinariwen. He prefers mid-tempo, guitar-driven, reverb-drenched, analog-sounding music with laid-back vocals. He listens geographically by scene (LA psych, Australian surf-garage, SoCal reggae, West African desert blues, Latin rhythms). His top genres are Surf Rock, Neo-Psychedelic, Psychedelic Rock, Reggae Rock, Garage Rock, Indie Soul, and Gnawa. He discovers music through micro-scenes and values authenticity over polish. Avoid mainstream pop, EDM, metal, modern country, and overwrought production. When recommending, think "golden hour on a warm coast with good friends" as the emotional target. He also has periodic interest in neoclassical/ambient (Joe Hisaishi, Erland Cooper) and instrumental hip-hop beats (Cap Kendricks, Moderator).
+
+---
+
+## Updated Top 50 Artists (12-month, March 2026)
+
+1. Allah-Las, 2. Khruangbin, 3. DOPE LEMON, 4. BALTHVS, 5. Sun Room, 6. The Hip Abduction, 7. Offthewally, 8. levitation room, 9. Tommy Guerrero, 10. Arc De Soleil, 11. Daily J, 12. Hermanos Gutiérrez, 13. Skinshape, 14. The Everywheres, 15. Ocean Alley, 16. Babe Rainbow, 17. The Lagoons, 18. Richard Houghten, 19. Pepper, 20. Slightly Stoopid, 21. Bay Ledges, 22. Surf Trash, 23. Jack Johnson, 24. Goth Babe, 25. The Grogans, 26. Marcoca, 27. Mystic Braves, 28. Stick Figure, 29. NO CIGAR, 30. Tinariwen, 31. Nick Bampton, 32. LEISURE, 33. Pasiflorez, 34. Surf Hat, 35. Majak Door, 36. Sapien Medicine, 37. Gitkin, 38. Iration, 39. Les Krills, 40. The Growlers, 41. The Elovaters, 42. Vieux Farka Touré, 43. Common Saints, 44. GHOSTWOMAN, 45. Orions Belte, 46. Gizmo Varillas, 47. Easy Giant, 48. Rum Jungle, 49. Current Swell, 50. Skeggs
+
+---
+
+## Top 50 Tracks with Guitar Data (12-month, March 2026)
+
+> **Purpose:** Chord progressions, keys, BPMs, and techniques for Gene's most-played songs. Use these as song study vehicles in curriculum exercises. Chords sourced from Ultimate Guitar, Chordify, ChordU, and verified where possible.
+
+| # | Song | Artist | Key | BPM | Chords | Technique/Feel |
+|---|------|--------|-----|-----|--------|----------------|
+| 1 | I Like The Way You Walk | The Donkeys | D/A | 97 | D-Dsus2-A (intro), A-D (verse), B-C#m-E-F# (chorus) | Steady rhythm, barre chorus |
+| 2 | Dope & Smoke | DOPE LEMON | G | 112 | Am-D-G (also Am7-D7-G) | Mellow strumming, warm loose feel |
+| 3 | Breakdown | Jack Johnson | G (capo 5) | 75 | G-Bm-Em-D | Travis fingerpicking |
+| 4 | Sol Del Sur | Sun Room | C#m | 100 | C#m-B-F# | Syncopated strum, reggae-adjacent offbeat |
+| 5 | North Side | The Bunchy Tops | ? | ? | Needs transcription | — |
+| 6 | for my team | axaero | C#m | 98 | Needs transcription | Lo-fi bedroom indie |
+| 7 | Reunited with the Day | The Groovy Nobody | F#m | ? | F#m-B-F#m7-B7 | Psych indie, arpeggios |
+| 8 | Candy Flu | The Walking Who | ? | ? | Needs transcription | Montreal psych-pop |
+| 9 | Marsha | Current Swell | F | 116 | F-G-Bb-C-D-Dm | Distinctive intro riff (tab on UG) |
+| 10 | Gimme Love | The Elovaters | B | 86 | B-F#-E | Reggae offbeat chop |
+| 11 | The West | Les Krills | ? | ? | UG tab exists (paywall) | Indie folk |
+| 12 | Get Away | Babitha | E | ? | E-F#-G#m-E7 | Indie/folk strumming |
+| 13 | Coastline | Hollow Coves | D | 100 | G-Bm-A (verse), G-Bm-A-D (chorus) | Fingerpicking, alt tuning CGDGGD capo 7 |
+| 14 | It's a Love | Baskervillain | E | 112 | A-E-C#m-E-A-C#m-B-F# | Upbeat reggae-ska inflection |
+| 15 | Pattymanajaro | Yasawa Group | C | 167 | Am-G-C-Em | Upbeat island strumming |
+| 16 | Friends | levitation room | D | 100 | Em-Dmaj7 (verse), A-Em (pre-chorus), A-Em-D (chorus) | Dreamy psych, Dmaj7 voicing |
+| 17 | 1999 | NO CIGAR | Ab | 85 | E-B-F#-G#m (barre chords) | Laid-back reggae/surf, offbeat |
+| 18 | Going Gets Tough | The Growlers | Ab | 158 | Ab-Db-Eb-Fm (capo 1: G-C-D-Em) | Surf-psych, half-time groove |
+| 19 | Son of a Beach | The Polarity | C | 110 | F-G-C-Am | Upbeat indie pop |
+| 20 | Space Garden | Auntie Leo | ? | ? | Needs transcription | Psychedelic rock |
+| 21 | Something About You | Eyedress | Am | 133 | F-Em-F-Em-Am-Dm-Em | Indie psych |
+| 22 | Foaming | Day We Ran | ? | ? | Needs transcription | — |
+| 23 | Summer Heat | Sun Room | E | 130 | E-A-B-C#m | Energetic surf strum |
+| 24 | Rules | Khruangbin | Em | 102 | Am-G (Speer melody on top) | Behind-beat, minimal, parked wah |
+| 25 | Long Summer | Yalisco | Ab | 110 | Ab-Fm (two-chord) | Minimal |
+| 26 | Jah Werx | Susto | B | 85 | B-F#-E | Reggae-influenced |
+| 27 | Warmth of the Sun | levitation room | Am | 122 | E-D-A-Bm | Shoegaze/psych, reverb-heavy |
+| 28 | Sunset Garage | Sun Room | G | 142 | G-B-C-D (verse), C-D-G-Em (chorus) | Energetic, lead solo available |
+| 29 | Visions of My Mind | levitation room | C | 118 | Needs transcription | Psych-pop |
+| 30 | Real Love Baby | Father John Misty | G (tune down) | 102 | D-Em-G | Hammer-on/pull-off embellishments |
+| 31 | I Didn't Know (Extended) | Skinshape | Gm | ? | Gm7-C7-Dm7-A7 | Soul/jazz 7th chord groove |
+| 32 | End of Time | The Everywheres | ? | ? | Needs transcription | Psych-pop |
+| 33 | Abusey Junction | Kokoroko | ? | ? | Afrobeat/highlife guitar pattern | Interlocking rhythmic figures |
+| 34 | Just Yesterday | Sun Room | Bm | 130 | E-G-A-Em | Surf-pop |
+| 35 | Island Fever | Billy Changer | Fm | 97 | Fm-Bb-Ab-Eb (capo 1: Em-A-G-D) | Dreamy barre chords |
+| 36 | Tongue | Edamame | ? | ? | Needs transcription | Lo-fi electronic |
+| 37 | Mexico | Husbands | C | 150 | F-C-E-Dm-Am | Indie-pop, fast tempo |
+| 38 | Chewing Gum | Cotton Jones | Am | 120 | Am-D-Dm7-Dm | Psychedelic folk, Dm7 texture |
+| 39 | Matter of Time | Vandelux | C/G | 115 | G-C (two-chord) | Chill indie-electronic |
+| 40 | Geneva Strange | modGlyders | G | ? | G-C-D-Gm | Major→minor shift |
+| 41 | Texas Sun | Khruangbin/Leon Bridges | G | 111 | Am-G (verse), Am-G-Em-D-Bm (full) | Vibrato arm, spring reverb, dub |
+| 42 | Pictures of You | Drugdealer | ? | ? | Needs transcription | Psych-pop |
+| 43 | Saving A Life | Richard Houghten | ? | ? | Needs transcription | Acoustic cinematic |
+| 44 | Peace Blossom Boogy | Babe Rainbow | D | ~112 | D-G7-A (VERIFIED — not F#m) | Psych-pop boogaloo |
+| 45 | Baby | Ariel Pink/DāM-FunK | ? | ? | Needs transcription | Synth-funk |
+| 46 | Oysters In My Pocket | Royel Otis | A | ~168 | A-F#m-Bm-D (VERIFIED — not C-G-Am-F) | Fast indie-pop |
+| 47 | Trust | Hot Flash Heat Wave | F | ? | F-C-Dm-Bb | Indie psych |
+| 48 | I See You | Echo Frame | ? | ? | Needs transcription | — |
+| 49 | Close My Eyes | The Lagoons | D | ? | D-Bm-G-A | Dreamy indie |
+| 50 | Surf Hat | Surf Hat | ? | ? | Needs transcription | Surf rock |
+
+---
+
+## Artist Guitar Techniques (Research-Verified, March 2026)
+
+### Sun Room
+- **Gear:** Fender Jazzmaster + Tubescreamer always-on (low gain, tone shaper) + Fender Deluxe Reverb
+- **Philosophy:** "Simple is better"
+- **Key progression:** C#m-B-F# (i-bVII-IV) — F# is MAJOR, borrowed from parallel major
+- **Strum:** NOT straight downstrokes. Down, Down-Up, Down-Up syncopated push. Muted strums between hits. Reggae-adjacent offbeat emphasis.
+
+### Allah-Las
+- **Gear:** 1970s Fender, Twin Reverb Blackface amp. "Love 'verb."
+- **Signature move:** Cmaj7 → Dmaj7 — two major 7ths a whole step apart. Open high E string IS the maj7 = the jangle.
+- **Key progression:** Am-G-F-E (i-bVII-bVI-V) — core psych-surf descending minor
+- **Jangle technique:** Open string resonance through moveable barre shapes. Let strings ring.
+
+### Khruangbin (Mark Speer)
+- **Gear:** Strat with DiMarzio DP186 pickups, D'Addario Chromes flatwound strings, volume at 7-8, tone at 5-6
+- **Effects:** EHX Holy Grail reverb, chorus, DS-1 with gain almost off + parked wah = Coltrane sustained sound
+- **Technique:** Three-note voicings top 3 strings ONLY (bass covers root). Chord shapes slid around neck like samples.
+- **Scales:** Persian/Iranian scales for "global" flavor. Thai funk phrasing.
+- **Feel:** Behind-the-beat, more space than sound.
+
+### Mystic Braves
+- **Sound:** Fuzz-forward, two guitars split lead/rhythm. More grind than jangle.
+- **Key progression:** Gm-Dm-C (i-v-bVII) — dark, droning, modal. No leading tones.
+
+### BALTHVS
+- **Background:** Colombian trio (Bogotá). Santana + cumbia + Turkish music.
+- **Technique:** Cumbia rhythmic influence = syncopated 16th-note chord stabs, not sustained strums. Clave-based feel.
+- **Tone:** Cleaner than Mystic Braves, more percussive.
+
+### Skinshape
+- **Chords:** Heavy 7ths (Gm7, C7, Dm7, A7), maj7s (Bbmaj7, Fmaj7)
+- **Process:** Records drums first, improvises guitar over groove
+- **Influence:** Lee Perry / King Tubby dub, 1960s folk, trip-hop
+
+### DOPE LEMON
+- **Key trick:** D-Dm-G-Gm (major→minor oscillation) — same as 1960s soul ballads
+- **Feel:** Lo-fi, slightly behind the beat, reverb-drenched. Simple progressions, emotional weight.
+
+### Pepper / SoCal Reggae-Rock
+- **SoCal switch:** Clean skank verse → crunchy power chord chorus
+- **Stormtrooper:** Power chord intro (D#5, A#5, F#5) then reggae upstrokes. 150 BPM.
+- **Vs. roots reggae:** Four-on-the-floor kick (not one-drop), power chords + skank, distorted solos
+
+### Tinariwen / Tuareg Guitar
+- **Scale:** Sus pentatonic (1-2-4-5-b7, no 3rd) — tonally ambiguous, neither major nor minor
+- **Tunings:** 9-10 different open tunings. Most common: G-A-D-G-B-E
+- **Technique:** Drone strings + melody, hypnotic repetition, quarter-tone bends
+
+### Hermanos Gutiérrez
+- **Technique:** Classical fingerpickers. Estevan's "slap-horse" percussive galloping.
+- **Gear:** Strymon El Capistan (tape echo used AS reverb), Magnatone vibrato amps
+- **Rhythm base:** Milonga and cumbia, not rock. Habanera-adjacent 2/4 patterns.
+
+### Tommy Guerrero
+- **Technique:** Finger-picked (not flat-picked). Melody-as-vocalist approach.
+- **Influences:** Gabor Szabo, Mulatu Astatke (Ethio-jazz), Marc Ribot
+- **Gear:** 1980s Japanese Fender Telecaster through Fender amps
+
+---
+
+## Harmonic Patterns Across Gene's Music
+
+1. **Descending minor (i-bVII-bVI-V):** Am-G-F-E. Core of psych-surf. Used by Allah-Las, Mystic Braves, and every surf band since the 60s.
+2. **Minor i-bVII-IV:** C#m-B-F# (Sol Del Sur). F# is major = borrowed from parallel major. Creates Mixolydian ambiguity.
+3. **Major→minor shift:** D-Dm, G-Gm. Appears in DOPE LEMON, modGlyders, Cotton Jones. Same 1960s soul trick.
+4. **Cmaj7-Dmaj7 float:** Allah-Las signature. Two major 7ths a whole step apart. Non-resolving, dreamy.
+5. **Soul 7th cycle:** Gm7-C7-Dm7-A7 (Skinshape). Minor ii-V type jazz motion.
+6. **Three-chord reggae:** B-F#-E / I-V-IV pattern appears in Gimme Love, Jah Werx, Sol Del Sur.
+7. **I-V-vi-IV in A:** A-F#m-Bm-D (Oysters In My Pocket, verified). Same pattern, different key.

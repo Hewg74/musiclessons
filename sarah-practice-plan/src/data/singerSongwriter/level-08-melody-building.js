@@ -87,7 +87,7 @@ export const level8 = {
       ],
       feel: "Variation should feel like looking at the same landscape from different angles — recognizable but fresh each time. The seed phrase is always there underneath.",
       wrong: "If your variations are so different they don't sound related to the original, you've changed too much. Keep at least one element constant (rhythm OR notes) so the family resemblance holds.",
-      sarah: "Gene, melodic variation is the secret weapon of your favorite artists. Khruangbin's melodies evolve through subtle variations — same shape, slightly different details. That's exactly this skill.",
+      sarah: "Gene, melodic variation is the secret weapon of your favorite artists. Khruangbin's melodies evolve through subtle variations — same shape, slightly different details. Try your variations over the descending minor progression Am-G-F-E — the backbone of psych-surf from Allah-Las to the Ventures. That progression's built-in tension-resolution (the E pulls back to Am) gives your variations a harmonic context that makes them sound like real music, not exercises.",
       metronome: 80,
       referencePitches: getPitchRange("A3", "G4"),
       recorder: true
@@ -107,7 +107,7 @@ export const level8 = {
       ],
       feel: "Free pentatonic improv should feel like surfing — riding the wave of the backing track, making intuitive decisions, sometimes wiping out and paddling back. The flow state lives here.",
       wrong: "If you're planning phrases before singing them, you're composing, not improvising. Let go of control. Sing the 'wrong' note sometimes — you'll discover it leads somewhere interesting.",
-      sarah: "Gene, this is the exercise that unlocks improvisational freedom. Everything before this was scaffolding. Now you're flying. The pentatonic is your safety net — you cannot fall.",
+      sarah: "Gene, this is the exercise that unlocks improvisational freedom. Everything before this was scaffolding. Now you're flying. The pentatonic is your safety net — you cannot fall. One thing to try: let your vocal phrases land BEHIND the beat. Not late — intentionally, slightly after the click. This is the feel of every artist you love. DOPE LEMON, Khruangbin, reggae — all behind the beat. Mark Speer's guitar arrives after the drum, and Laura Lee's bass sits slightly behind too. That 'lazy precision' IS the golden hour sound.",
       metronome: 80,
       referencePitches: getPitchRange("A3", "G4"),
       fretboard: { scale: "am-pentatonic", position: 1 },

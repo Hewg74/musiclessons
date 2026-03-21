@@ -4132,6 +4132,20 @@ export default function App() {
     localStorage.setItem("weekly-id-migration-v1", "done");
   }
 
+  // Migration: Guitar curriculum v2 — wipe guitar progress for 14-level rework
+  if (!localStorage.getItem("guitar-v2-migrated")) {
+    const saved = localStorage.getItem("practice-completed");
+    if (saved) {
+      try {
+        const completed = new Set(JSON.parse(saved));
+        const filtered = [...completed].filter(id => !id.startsWith("gs-"));
+        localStorage.setItem("practice-completed", JSON.stringify(filtered));
+      } catch {}
+    }
+    localStorage.removeItem("guitar-study-level");
+    localStorage.setItem("guitar-v2-migrated", "true");
+  }
+
   const [tab, setTab] = useState("practice");
   const [selectedDay, setSelectedDay] = useState(DAYS[0]);
   const [completed, setCompleted] = useState(() => {

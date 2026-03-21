@@ -1,0 +1,282 @@
+import { getPitchRange } from "../appData.js";
+
+export const level4 = {
+  level: 4,
+  title: "The Offbeat",
+  subtitle: "The reggae skank. Play on the \"ands.\" Make silence louder than sound.",
+  description:
+    "Everything you've strummed so far has lived on the downbeat — the strong beats your foot taps on. Now you flip it. The reggae skank plays ONLY on the upbeats, the \"ands\" between the beats, with an immediate palm mute after each stroke. It's the rhythmic backbone of reggae, ska, and half the SoCal surf-rock you love. This level teaches you to hear and feel the space between beats, to make silence as intentional as sound, and to control exactly how long a chord rings before your palm kills it.",
+  artists: "The Elovaters, Susto, NO CIGAR, Baskervillain",
+  unlocks: "Barre Chord World (Level 5)",
+  review: {
+    label: "Level 3 Check-In",
+    time: 5,
+    exercises: ["gs-3-2", "gs-3-7"],
+    prompt: "Play palm-muted power chords (gs-3-2) at 100 BPM cleanly. Then play a PReVaDe cycle with a 4-note riff (gs-3-7). Both solid? The offbeat awaits."
+  },
+  exercises: [
+
+    // ─── PHASE 1: ISOLATE THE SKANK ───
+
+    {
+      id: "gs-4-1",
+      time: 8,
+      title: "The Skank Isolation — Rhythm Before Chords",
+      type: "guitar",
+      what: "Before adding any chords, you need to feel the offbeat in your strumming arm. Mute all strings with your fretting hand (lay your fingers flat across the strings without pressing down). Now strum ONLY on the \"ands\" — the upbeats between the metronome clicks. Your arm swings on every eighth note, but you only let the pick hit strings on the upstrokes. This is the skank stripped to pure rhythm.",
+      setup: "Guitar. Mute all strings with fretting hand. Metronome at 70 BPM.",
+      steps: [
+        { text: "Lay your fretting hand flat across all six strings — don't press down, just touch them lightly so they're completely muted. Strum down and up with constant arm motion at 70 BPM. Every stroke should produce a percussive \"chik\" with no pitch. Get comfortable with the muted sound — this IS the skank texture.", why: "Muting removes all pitch information so you can focus purely on rhythm and arm mechanics. The percussive \"chik\" is exactly what a reggae skank sounds like — short, sharp, rhythmic. You're learning the sound before the technique." },
+        { text: "Now count out loud: \"1 AND 2 AND 3 AND 4 AND.\" Your foot taps on the numbers (1, 2, 3, 4). Your strum arm swings on every syllable (constant motion). But you only LET the pick contact strings on the \"AND\" syllables — the upstrokes. On the numbers, your arm swings past the strings without touching.", why: "Counting out loud while playing locks the rhythm into three systems simultaneously — voice, body (foot), and hands. The critical test: if your pick hits strings at the same time as your foot taps the floor, you're on the DOWNBEAT, which is wrong. Pick hits BETWEEN foot taps." },
+        { text: "Close your eyes. Feel the gap between your foot tap and your strum. That gap IS the offbeat. The tap is the \"1\" — your strum is the \"and\" that lives in the space after the tap. Think of it as an echo: foot... strum... foot... strum. 2 minutes with eyes closed, muted strings.", why: "The offbeat is a physical sensation, not an intellectual concept. Closing your eyes removes visual distractions and forces you to feel the rhythmic relationship between foot and hand. When the gap feels natural — not forced — you've internalized it." },
+        { text: "Speed test: increase the metronome to 80 BPM. Then 85. Then 90. At each tempo, play 8 bars of clean muted skanks. If you fall back onto the downbeat at higher tempos, drop back to 70 and rebuild.", why: "Higher tempos compress the gap between downbeat and upbeat, making it harder to stay on the \"ands.\" Building speed gradually ensures the offbeat feel stays solid rather than collapsing into downbeat strumming under pressure." },
+        { text: "Final check: have someone watch your foot. Or record a video. Your foot should tap on 1-2-3-4 while your hand strikes BETWEEN those taps. If foot and hand land together, you're on the downbeat. The visual proof is unmistakable.", why: "Self-diagnosis is hard with rhythm. External feedback (video or a friend watching) catches the most common beginner error — accidentally syncing hand and foot on the same beat. Once you see it, you can't unsee it." }
+      ],
+      feel: "The skank should feel like a bouncy, springy rhythm — your hand pops off the strings on every upstroke like a rubber ball bouncing. There's a lightness to it, a lift. It should make your head bob on the offbeats, not the downbeats. If your body wants to sway, you've got it.",
+      wrong: "If your strum lands at the same moment as your foot tap, you're on the downbeat — the most common error. Slow down to 60 BPM and exaggerate the gap. Another error: letting the muted strum ring too long. The skank is SHORT — hit and immediately return. Chik, not chhhhhh.",
+      sarah: "Gene, this is the rhythm that makes your body move differently. Reggae doesn't hit you on the \"1\" like rock does — it catches you in the spaces between. The Elovaters, Susto, Pepper — every reggae and reggae-rock band you love lives on this upbeat pulse. Once your arm learns this bounce, it never forgets.",
+      metronome: 70,
+      levelUp: "16 bars of clean muted skanks at 85 BPM. Foot taps on downbeats, hand strikes on upbeats only. No accidental downbeat strums.",
+      rhythmCells: [
+        { name: "Offbeat Skank", pattern: [0.5, 0.5], description: "Strum on the ands only — rest on beats, hit on upbeats" },
+        { name: "Constant Arm", pattern: [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5], description: "Arm swings on every eighth note — full bar of constant motion" }
+      ]
+    },
+    {
+      id: "gs-4-2",
+      time: 8,
+      title: "Adding Chords to the Skank — Am and Em",
+      type: "guitar",
+      what: "Now add real chords to the skank rhythm you just isolated. Start with Am — a chord you already know cold. The difference: instead of letting it ring, you immediately mute it with your palm after each upstroke. Strike on the \"and,\" kill the sound before the next downbeat. The chord should bark — short, sharp, rhythmic. Then switch to Em. Two chords, offbeat only.",
+      setup: "Guitar. Metronome at 70 BPM.",
+      chordVoicings: { chords: ["Am", "Em"] },
+      steps: [
+        { text: "Hold Am. Strum ONLY on the upbeats (the \"ands\") at 70 BPM with constant arm motion. After each upstroke, immediately bring the heel of your strumming hand down onto the strings near the bridge to kill the sound. The chord should last less than a quarter beat — a quick \"chak\" and then silence.", why: "The palm mute is what gives the skank its character. Without it, the chord rings into the next beat and the offbeat groove disappears. The mute creates the silence that makes the upbeat strum pop. Reggae is as much about the silence as the sound." },
+        { text: "Focus on the mute timing: strike the strings on the \"and,\" then mute BEFORE the next downbeat arrives. The window is tiny at 70 BPM — your palm needs to land almost immediately after the strum. Practice this cycle: strum-mute-silence, strum-mute-silence. 16 bars.", why: "The speed of your palm mute determines the skank's texture. A fast mute = short, percussive chop (classic roots reggae). A slightly slower mute = more chord tone rings through (rocksteady feel). Right now, aim for fast — you can loosen it later." },
+        { text: "Switch to Em — same skank rhythm, same immediate palm mute. Em is easier (two fingers), so your fretting hand can relax while your strumming hand focuses on the mute-and-release cycle. 8 bars of Em skank.", why: "Switching chords while maintaining the skank rhythm tests whether the rhythm is in your strumming arm (good) or in your brain (fragile). If the skank falls apart when you change chords, the rhythm isn't physical enough yet." },
+        { text: "Alternate: 4 bars Am skank, 4 bars Em skank. Repeat 4 times. The chord change happens on beat 1, but your first strum doesn't land until the \"and\" of beat 1. That tiny silence after the change IS the reggae feel.", why: "The gap between the chord change (beat 1) and the first skank strum (\"and\" of 1) is one of reggae's most distinctive sounds. It creates a breathing space that makes the groove feel relaxed rather than rushed." },
+        { text: "Record 8 bars: 4 bars Am, 4 bars Em. Listen back. Can you hear the palm mute cutting each chord short? Can you hear the silence between skanks? The silence should feel as loud as the chords.", why: "Self-listening reveals muting problems your hands can't feel. If the chords are ringing too long, your mute is late. If there's no audible chord tone at all, your mute is too early or too aggressive. The sweet spot is a crisp chord burst followed by clean silence." }
+      ],
+      feel: "Each skank should feel like a quick handclap — sharp, percussive, over before you know it. The silence between skanks should feel intentional, like a drummer's rest. Your strumming hand does two jobs: strike and kill. The groove bounces.",
+      wrong: "If the chord rings past the next downbeat, your palm mute is too slow — bring your hand down faster. If there's no chord tone at all (just a muted thud), you're muting too early or pressing too hard with the palm. You need a brief moment of actual chord sound before the mute kills it. If the rhythm keeps collapsing onto downbeats, go back to gs-4-1 muted strings.",
+      sarah: "Gene, listen to The Elovaters' Gimme Love — that clean chop on every upbeat is EXACTLY what you're building here. The chord barely has time to ring before it's silenced. That's not sloppiness — it's precision. The silence between skanks is what makes reggae breathe.",
+      metronome: 70,
+      recorder: true,
+      levelUp: "8 bars alternating Am and Em skank at 80 BPM. Every chord is immediately palm-muted. No chord rings past the downbeat."
+    },
+    {
+      id: "gs-4-3",
+      time: 7,
+      title: "The Mute-and-Release — Controlling Ring Time",
+      type: "guitar",
+      what: "The skank isn't just \"strum and mute\" — it's a spectrum. A super-short mute gives you the classic reggae chop. A slightly longer release (letting the chord ring for an eighth note before muting) gives you rocksteady warmth. An even longer release creates a half-skank feel used in reggae-rock. This exercise teaches you to control exactly how long the chord sings before your palm kills it.",
+      setup: "Guitar. Am chord. Metronome at 75 BPM.",
+      chordVoicings: { chords: ["Am"] },
+      steps: [
+        { text: "Play the Am skank at 75 BPM with the SHORTEST possible ring time — strum on the \"and\" and mute almost instantly. The chord should be a percussive click with the barest hint of pitch. This is the roots reggae chop — think early Bob Marley, Toots and the Maytals. 8 bars.", why: "The shortest ring time produces the most percussive skank — it's almost a drum hit that happens to have pitch. This is the traditional reggae sound, and it's the most disciplined form of the technique. Mastering the short chop first gives you control over everything longer." },
+        { text: "Now lengthen the ring time: let the chord sound for about one eighth note (half the gap between beats) before muting. The chord has audible warmth now — you can hear the Am tonality before the palm kills it. This is rocksteady — smoother, warmer, more melodic. 8 bars.", why: "Rocksteady emerged from ska by slowing down and letting chords ring slightly longer. The extra ring time creates warmth without losing the offbeat groove. You're learning that the mute timing IS the style — same chords, same rhythm, different mute speed = different genre." },
+        { text: "Even longer: let the chord ring for nearly a full beat before muting — the chord sounds almost sustained, but the mute still catches it before the next skank. This is the reggae-rock feel that Pepper and Slightly Stoopid use — more chord, less chop. 8 bars.", why: "SoCal reggae-rock pushes the ring time to the limit — the chord almost sustains fully, but the mute keeps it rhythmic rather than flowing. This longer ring time lets distortion and overdrive creep in, which is how reggae-rock gets its crunch." },
+        { text: "Toggle between all three: 2 bars short chop, 2 bars rocksteady warmth, 2 bars reggae-rock sustain, 2 bars short chop. Feel how the same Am chord on the same offbeat rhythm produces three completely different textures just by changing your mute speed.", why: "Mute timing is your texture knob. Fast mute = percussive roots. Medium mute = warm rocksteady. Slow mute = punchy reggae-rock. You now control a continuous spectrum, not just on/off." },
+        { text: "Choose your favorite of the three textures. Play 16 bars at that mute speed. This is your default skank feel — the one that matches your instinct. Record it.", why: "Your preferred mute speed reveals your natural reggae sub-genre affinity. There's no wrong answer — Gene, your playlist suggests you'll probably gravitate toward the rocksteady or reggae-rock end, but let your hands decide." }
+      ],
+      feel: "Short chop should feel tight and controlled — like snapping your fingers. Rocksteady should feel warm and groovy — like slow dancing. Reggae-rock should feel full and driving — like a car in second gear. Each texture should feel physically different in your strumming hand.",
+      wrong: "If all three ring times sound the same, you're not differentiating enough. Exaggerate: make the short chop absurdly clipped (almost no sound) and the reggae-rock sustain nearly full (just barely muted). The extremes will help you find the middle. If the mute is inconsistent bar to bar, slow the tempo.",
+      sarah: "Gene, this is the secret weapon. Most guitar players learn ONE skank and use it everywhere. You're learning a mute-speed spectrum — which means you can match any reggae sub-genre just by adjusting your palm. The Elovaters sit in the short chop zone. Pepper lives in the reggae-rock sustain zone. You get to pick your spot.",
+      metronome: 75,
+      recorder: true,
+      levelUp: "Can clearly produce three distinct mute speeds (short chop, rocksteady warmth, reggae-rock sustain) on command at 80 BPM. A listener can hear the difference between all three."
+    },
+
+    // ─── PHASE 2: SONG STUDIES ───
+
+    {
+      id: "gs-4-4",
+      time: 10,
+      title: "Song Study: Gimme Love / Jah Werx — The B-F#-E Template",
+      type: "guitar",
+      what: "Two songs from your playlist — Gimme Love (The Elovaters) and Jah Werx (Susto) — share the exact same three-chord progression: B-F#-E. This is the classic reggae I-V-IV in the key of B. It's your first reggae chord template. Learn it with the skank rhythm you've been building, and you'll have two songs in one exercise.",
+      setup: "Guitar. Metronome at 80 BPM (both songs are ~85, start slightly slower).",
+      chordVoicings: { chords: ["B", "F#", "E"] },
+      tracks: [{ name: "Drums Only — Reggae 85", src: "/drums-reggae-85.mp3" }],
+      steps: [
+        { text: "Learn the three chord shapes: B is a barre at fret 2 (x24442), F# is a barre at fret 2 with E-shape (244322), and E is your open E major (022100). If the full barre B is too hard right now, use B7 (x21202) — it works perfectly in reggae. Practice switching between them without any rhythm. Just get the shapes under your fingers.", why: "These three chords are the backbone of more reggae songs than you can count. B-F#-E is I-V-IV in the key of B — the same function as G-D-C or A-E-D, just in a different key. Getting the shapes clean before adding rhythm prevents two problems from colliding." },
+        { text: "Now add the skank: play B on the offbeats for 4 bars, switch to F# for 4 bars, then E for 4 bars, back to B for 4 bars. Use your rocksteady mute speed (medium ring time). The progression is B(4)-F#(4)-E(4)-B(4). Repeat the full cycle twice.", why: "The B-F#-E progression has a particular emotional arc: B is home (stable), F# is a lift (bright tension), E is the resolution (warm landing before returning to B). Feeling this arc while maintaining the skank rhythm is where the song comes alive." },
+        { text: "Speed up to 85 BPM — the actual tempo of both Gimme Love and Jah Werx. Play the full B(4)-F#(4)-E(4)-B(4) cycle at tempo. If the chord changes break your skank, slow down to 80 and try again.", why: "Playing at the song's actual tempo is the goal. At 85 BPM, the offbeat skank has a relaxed, swaying quality — not rushed, not dragging. This tempo is the sweet spot for roots reggae." },
+        { text: "Put on the drums-only reggae track. Play along: B-F#-E-B with the skank at 85 BPM. Feel how the kick drum lands on beat 3 (one-drop) while your skank fills the upbeats. Your guitar and the kick drum are having a rhythmic conversation — you take the ands, the kick takes beat 3.", why: "Playing with a drum track reveals how the skank fits into a full band context. The one-drop kick (beat 3 only) is the rhythmic counterpart to the offbeat skank. Together, they create the classic reggae groove — lots of space, everything in its rhythmic place." },
+        { text: "Sing along: hum or \"la-la\" the vocal melody of Gimme Love (or Jah Werx) while your hands maintain the skank. Don't worry about getting the melody perfect — the point is to keep the skank steady while another part of your brain handles melody. This is multitasking practice.", why: "In a band, you'd be skanking while a singer delivers the melody. Even as a solo player, being able to maintain the skank on autopilot while thinking about something else (melody, lyrics, the next chord change) is essential for performance." }
+      ],
+      feel: "The B-F#-E skank should feel like a lazy Sunday afternoon at the beach — warm, unhurried, swaying. The progression has a gentle rise (B to F#) and a soft landing (F# to E) before cycling back home. If you're tense, you're trying too hard. Reggae is relaxed by definition.",
+      wrong: "If the barre chords are buzzing, focus on clean fretting before speed. A buzzy skank sounds worse than a slow clean one. If the chord changes break the rhythm, simplify: hold each chord for 8 bars instead of 4, giving yourself more time to prepare the switch. If you keep landing on downbeats during chord changes, the change is pulling you off the upbeat — practice the change isolated until it's automatic.",
+      sarah: "Gene, both of these songs are in your heavy rotation. Gimme Love has that classic Elovaters bounce — short chop, island vibes, the kind of skank that makes you nod your head sideways. Jah Werx by Susto proves that the B-F#-E template isn't just roots reggae — Susto gives it an indie-Americana twist with the same three chords. Same skeleton, different skin. That's the power of a great chord progression.",
+      metronome: 85,
+      recorder: true,
+      levelUp: "Play B-F#-E-B skank cycle at 85 BPM for 3 full repetitions with clean chord changes, consistent offbeat rhythm, and audible palm mutes. No downbeat slips during chord transitions."
+    },
+    {
+      id: "gs-4-5",
+      time: 7,
+      title: "Ghost Notes — Percussive Texture Between Skanks",
+      type: "guitar",
+      what: "Ghost notes are the secret ingredient that separates a stiff skank from a living one. They're muted strums (no chord, no pitch) that fill the rhythmic spaces between your skanks. Your arm is already swinging on every eighth note — ghost notes turn those \"miss\" swings into quiet percussive taps. The result: a constant rhythmic texture where the skanks POP out of a bed of muted clicks.",
+      setup: "Guitar. Am chord. Metronome at 80 BPM.",
+      steps: [
+        { text: "Start with a basic Am skank: offbeat strums with palm mute, silence on the downbeats. Now, instead of letting your arm swing through air on the downbeats, let it lightly brush the muted strings — a quiet \"chk\" that's barely audible. These ghost strums fill the silence with rhythmic texture. 8 bars.", why: "Ghost notes transform dead silence into active silence. Your arm was already swinging on every eighth note (constant arm motion) — ghost notes make those swings audible at a very low volume. The skank becomes the LOUD event that pops out of a field of quiet percussion." },
+        { text: "Adjust the dynamic balance: ghost notes should be at about 20% of the volume of your skanks. If the ghosts are too loud, they'll compete with the real skanks and the groove will flatten out. Think of it as: whisper (ghost), SPEAK (skank), whisper (ghost), SPEAK (skank). 8 bars.", why: "The volume contrast between ghost notes and skanks is what creates rhythmic depth. In mixing terms, ghosts are the reverb tail and skanks are the transient attack. The ear groups them into a single rhythmic texture with built-in dynamics." },
+        { text: "Try a variation: add ghost notes on BOTH the downbeat AND immediately after the skank (before the next downbeat). Now every eighth note has SOME sound — alternating between ghost (quiet muted) and skank (loud chord). The rhythm becomes a continuous 16th-note-ish stream. 8 bars.", why: "Filling every rhythmic slot with either a ghost or a skank creates the dense, busy texture heard in ska and dancehall. The chords still pop on the upbeats, but the ghosts create a constant rhythmic propulsion underneath." },
+        { text: "Now apply ghost notes to the B-F#-E progression from the previous exercise. Play B(4)-F#(4)-E(4)-B(4) with offbeat skanks AND ghost notes filling the downbeats. The chord changes should happen inside the ghost-note stream without breaking the rhythmic flow.", why: "Ghost notes during chord changes are the hardest moment — your fretting hand is moving to a new shape while your strumming hand needs to produce a quiet muted strum. The ghost note \"covers\" the transition, making the change sound seamless." },
+        { text: "Record 16 bars: B-F#-E-B with skanks and ghost notes at 85 BPM. Listen back. Can you hear the ghost notes as a subtle texture underneath the skanks? They should be present but not dominant — like a quiet heartbeat under the music.", why: "Self-listening for ghost notes trains your dynamic awareness. In the recording, ghosts should be barely there — felt more than heard. If they jump out of the mix, reduce your ghost-strum intensity." }
+      ],
+      feel: "With ghost notes, the skank should feel like it has a pulse — a constant underlying heartbeat of muted taps with the chord skanks punching through on top. Your arm never stops, and EVERY swing produces some sound — the only question is loud (skank) or quiet (ghost).",
+      wrong: "If ghost notes are as loud as your skanks, the groove goes flat — there's no dynamic contrast. Lighten the ghost strums until they're barely touching the strings. If ghost notes are disrupting your offbeat rhythm, drop them and go back to clean skanks until the upbeat timing is rock solid. Ghosts are decoration, not foundation.",
+      sarah: "Gene, listen closely to any Elovaters or Stick Figure track — there's a constant rhythmic texture underneath the skanks. That's ghost notes. They're the difference between a guitarist who's \"playing reggae\" and one who GROOVES reggae. The ghost notes are what make your head move even when you're not conscious of them.",
+      metronome: 80,
+      chordVoicings: { chords: ["Am", "B", "F#", "E"] },
+      recorder: true,
+      levelUp: "B-F#-E-B at 85 BPM with audible ghost notes between skanks. Ghost notes are at least 50% quieter than skanks. Rhythm stays on the offbeat throughout."
+    },
+    {
+      id: "gs-4-6",
+      time: 10,
+      title: "Song Study: 1999 — Laid-Back Reggae-Surf",
+      type: "guitar",
+      what: "NO CIGAR's 1999 is a reggae-surf hybrid that sits at 85 BPM with four chords: E-B-F#-G#m. It's mellow, behind the beat, and uses the offbeat skank with a longer ring time (the reggae-rock end of your mute spectrum). The G#m adds a minor color that the B-F#-E template didn't have. This song teaches you that reggae isn't just roots — it can be dreamy and surf-inflected too.",
+      setup: "Guitar. Metronome at 80 BPM (target: 85).",
+      chordVoicings: { chords: ["E", "B", "F#", "G#m"] },
+      tracks: [{ name: "E Major Reggae 85", src: "/e-major-reggae-85.mp3" }],
+      steps: [
+        { text: "Learn the four shapes: E major (022100) — open, easy. B — barre at fret 2 (x24442) or B7 (x21202). F# — barre at fret 2 with E shape (244322). G#m — barre at fret 4 (466444). If G#m is new, isolate it: press the barre, strum, check for buzzing. Fix one string at a time.", why: "G#m is your first minor barre chord in the reggae context. The shape is the same as the E minor shape moved up to fret 4 — once you've got it, you can play any minor chord anywhere on the neck. This is a gateway to Level 5's barre chord world." },
+        { text: "Practice the progression without rhythm: E-B-F#-G#m, hold each chord for 4 slow strums, focus on clean transitions. The trickiest change is F# to G#m — both are barre chords, and you need to slide the shape up 2 frets without losing pressure. 4 cycles.", why: "Barre-to-barre transitions require keeping your hand shape intact while sliding. If you lift and re-form the shape, you lose time. The slide technique transfers directly to Level 5." },
+        { text: "Add the skank: E(4 bars)-B(4)-F#(4)-G#m(4) with offbeat strums and medium mute speed (rocksteady feel). Start at 80 BPM. The vibe of 1999 is relaxed and behind the beat — don't rush to the next chord. Let the last skank of each chord ring slightly longer before transitioning.", why: "1999 has a laid-back, hazy quality — it's reggae filtered through a surf lens. The medium mute speed gives it warmth, and the slightly delayed chord changes create the behind-the-beat feel that defines this song." },
+        { text: "Play along with the E Major Reggae backing track at 85 BPM. Feel how the E chord sits at home, B creates lift, F# builds tension, and G#m adds a melancholy shadow before cycling back to E. The minor chord is the emotional twist — it keeps the progression from being too sunny.", why: "Playing with a track in the right key (E major) reveals how your chords sit in a full musical context. The G#m adds emotional depth — it's the vi chord (relative minor), the same chord that makes so many pop and reggae progressions emotionally resonant." },
+        { text: "Try adding ghost notes between skanks while playing the full progression over the backing track. If the ghost notes break your chord changes, drop them during the transition bar and add them back once you've landed on the new chord. Record a full play-through.", why: "Ghost notes during barre chord changes are advanced — your fretting hand is sliding to a new position while your strumming hand produces a quiet muted strum on strings that may not be fully fretted yet. Dropping ghosts during transitions and restarting them after landing is a practical, musical solution." }
+      ],
+      feel: "1999 should feel hazy and sun-bleached — like watching waves through half-closed eyes. The reggae skank provides the groove, but the surf influence softens everything. The G#m chord should feel like a cool shadow passing over warm sand — brief, moody, then back to sunshine.",
+      wrong: "If the G#m barre is buzzing badly, check your technique: bony edge of the index finger, thumb behind the neck (not wrapped over), slight elbow tuck. If the chord changes are choppy, slow to 75 BPM and give each chord 8 bars instead of 4. If the feel is too stiff and precise, loosen up — reggae lives slightly behind the beat, not on top of it.",
+      sarah: "Gene, 1999 is such a vibe — NO CIGAR takes that classic reggae bounce and drenches it in reverb and coastal haze. It's the perfect bridge between the roots reggae of Gimme Love and the more polished reggae-rock you'll get into later. The G#m is the key — it adds that touch of melancholy that keeps the song from being just a party jam.",
+      metronome: 85,
+      recorder: true,
+      levelUp: "E-B-F#-G#m skank progression at 85 BPM for 3 cycles with clean barre chord transitions, consistent offbeat rhythm, and ghost notes on at least 50% of the bars."
+    },
+
+    // ─── PHASE 3: EXPANDING THE FEEL ───
+
+    {
+      id: "gs-4-7",
+      time: 8,
+      title: "Reggae vs. Rock Feel — Same Chords, Different Universe",
+      type: "guitar",
+      what: "Here's the mind-bending part: take the E-B-F#-G#m progression from 1999 and play it as a ROCK song. Downbeat power strums, no palm mute, full ring. It sounds completely different — same chords, different rhythmic world. Then flip it back to reggae. This exercise proves that RHYTHM (not chords) defines genre. You'll toggle between rock and reggae on the same progression.",
+      setup: "Guitar. Metronome at 85 BPM.",
+      chordVoicings: { chords: ["E", "B", "F#", "G#m"] },
+      steps: [
+        { text: "Play E-B-F#-G#m as a ROCK song: downbeat strums (hit on 1-2-3-4), let chords ring fully, no palm mute. Strum hard, let it sustain. This is how a rock band would play these four chords — full, driving, forward. 4 bars per chord, 2 cycles.", why: "Playing the same chords in a rock style creates a visceral contrast. The chords haven't changed — E, B, F#, G#m — but the feel is utterly different. This proves that rhythm and muting technique define the genre, not the chord progression itself." },
+        { text: "Without stopping, switch to REGGAE: same chords, same tempo, but now offbeat skanks with immediate palm mute. Feel the transformation — the energy shifts from pushing forward (rock) to bouncing sideways (reggae). Do 2 cycles.", why: "The instant switch from rock to reggae on the same chords trains your hands to think in rhythmic styles, not just chord shapes. This is how versatile players shift genre mid-song — the chords stay, the rhythm transforms." },
+        { text: "Toggle: 2 bars rock, 2 bars reggae, 2 bars rock, 2 bars reggae. Same chord, same tempo. Your strumming hand is the ONLY thing that changes — fretting hand stays on the same chord. Feel how your body posture shifts: rock pushes forward, reggae leans back.", why: "Rapid toggling forces your strumming arm to switch between two completely different motor patterns. This builds the muscle memory for both styles simultaneously and makes the contrast physically tangible." },
+        { text: "Try a third feel: REGGAE-ROCK HYBRID. Strum on the downbeat AND the upbeat, but mute the downbeat strum and let the upbeat ring. The downbeat becomes a ghost note, the upbeat is the skank. This is the Pepper/Slightly Stoopid approach — busier than roots reggae, groovier than straight rock. 8 bars.", why: "The reggae-rock hybrid is the bridge between the two worlds. It keeps the upbeat emphasis of reggae but adds the drive of rock through the busier strumming pattern. This is the exact feel of Stormtrooper's verses and half the SoCal reggae catalog." },
+        { text: "Record all three back-to-back: 4 bars rock, 4 bars reggae, 4 bars hybrid. Listen for the contrast. Which one makes your head move most? That's your natural groove.", why: "Hearing the three feels in sequence reveals your rhythmic personality. Some players naturally lean toward the forward drive of rock, others toward the bounce of reggae, others toward the hybrid. All are valid — this exercise maps your instinct." }
+      ],
+      feel: "Rock should feel like leaning into the wind. Reggae should feel like swaying in a hammock. The hybrid should feel like bouncing on a trampoline — energetic but springy. The CHORDS are identical — only your body changes.",
+      wrong: "If rock and reggae sound similar, you're not committing to either. Rock needs LOUD, sustained, downbeat-heavy strums. Reggae needs SHORT, muted, upbeat-only strums. Exaggerate both directions. If the toggle feels jerky, give yourself a full bar of silence between styles to reset your arm.",
+      sarah: "Gene, this is how Pepper writes songs — they toggle between clean reggae verses and crunchy rock choruses using the SAME chord progressions. Stormtrooper literally does this: reggae skank verse, power chord chorus, back to skank. Now you can do it too. The chords don't change — your hands do.",
+      metronome: 85,
+      recorder: true,
+      levelUp: "Can cleanly toggle between rock, reggae, and hybrid feels on E-B-F#-G#m at 85 BPM. A listener can identify which style you're playing without being told."
+    },
+    {
+      id: "gs-4-8",
+      time: 10,
+      title: "Song Study: It's a Love — Upbeat Reggae-Ska",
+      type: "guitar",
+      what: "Baskervillain's It's a Love is faster (112 BPM), brighter, and uses five chords: A-E-C#m-B-F#. The upbeat tempo pushes your skank into ska territory — faster skanks, shorter mute windows, more energy. The C#m adds emotional weight, and the five-chord progression gives you more harmonic movement than the three-chord templates you've been playing.",
+      setup: "Guitar. Metronome at 100 BPM (build to 112).",
+      chordVoicings: { chords: ["A", "E", "C#m", "B", "F#"] },
+      tracks: [{ name: "Ska Upbeat 95", src: "/ska-upbeat-95.mp3" }],
+      steps: [
+        { text: "Learn the progression: A(2 bars)-E(2)-C#m(2)-E(2)-A(2)-C#m(2)-B(2)-F#(2). Practice the chord shapes without rhythm first. A and E are open chords you know. C#m is a barre at fret 4 (x46654), B at fret 2 (x24442), F# at fret 2 (244322). Get the barre shapes clean.", why: "Five chords with three barre shapes is a significant step up from three-chord reggae. Isolating the shapes first prevents the common trap of trying to learn chords AND rhythm AND tempo simultaneously — which usually means learning none of them well." },
+        { text: "Add the skank at 100 BPM. Use the short chop mute — ska skanks are clipped and punchy, not warm and sustained like roots reggae. The faster tempo compresses everything: your arm swings faster, the mute window is shorter, the chord changes come quicker. Start with A-E only, 2 bars each, get the tempo locked.", why: "At 112 BPM, the upbeat arrives every 0.27 seconds — significantly faster than the 0.35 seconds at 85 BPM. Starting at 100 BPM gives you breathing room to lock the rhythm before pushing to full tempo." },
+        { text: "Add C#m to the cycle: A(2)-E(2)-C#m(2)-E(2). The C#m change requires a quick slide from open chord territory up to fret 4. Use the ghost note on the transition bar to mask the shift. 4 cycles.", why: "The A→C#m transition is the hardest moment — you're jumping from an open chord to a barre at fret 4. The ghost note technique lets your fretting hand travel while your strumming hand maintains rhythmic continuity." },
+        { text: "Full progression: A(2)-E(2)-C#m(2)-E(2)-A(2)-C#m(2)-B(2)-F#(2) at 105 BPM. Then push to 112 BPM — the actual song tempo. If chord changes break the rhythm, hold the simpler chords (A, E) longer and abbreviate the barre sections.", why: "112 BPM is uptempo for a skank — you're in ska territory now. The energy should feel brighter and more driving than the laid-back 85 BPM of Gimme Love. Your strumming arm will naturally tighten up — resist the urge to tense your shoulder. Loose arm, tight wrist." },
+        { text: "Play along with the ska backing track. The tempo won't perfectly match (track is 95 BPM), but use it for the feel — the bright, bouncing energy of ska. If 112 BPM is too fast with the full progression, stay at 95-100 and work toward full speed over the next few days.", why: "Reggae-ska is higher energy than roots reggae — your body should reflect that. More bounce, more movement, brighter attack. The tempo difference between the track and the song is an opportunity to practice at a comfortable speed while feeling the ska groove." }
+      ],
+      feel: "It's a Love should feel bright, bouncy, and energetic — like the musical equivalent of running downhill. The faster skanks have more urgency than the relaxed 85 BPM roots feel. Your whole body should be moving — this isn't mellow hammock reggae, it's get-up-and-dance ska-reggae.",
+      wrong: "If the skanks are mushy at 112 BPM (no clear mute, chords running into each other), your mute hand is too slow for the tempo. Drop to 95 BPM and practice the short-chop mute until it's instant. If barre chord changes are crashing the rhythm, simplify the progression to A-E-B (dropping C#m and F#) until the skank is solid, then add barres back one at a time.",
+      sarah: "Gene, Baskervillain's vibe is upbeat reggae-ska with surf energy — it's the point where reggae meets the beach party. The five-chord progression gives it more harmonic sophistication than the three-chord templates, and the 112 BPM tempo puts real demands on your skank technique. This is the exercise where your skank has to WORK, not just cruise.",
+      metronome: 112,
+      recorder: true,
+      levelUp: "Full A-E-C#m-B-F# progression at 110+ BPM with clean skanks, immediate mutes, and no rhythmic collapse during barre chord transitions."
+    },
+
+    // ─── PHASE 4: DEEPER RHYTHM & IMPROV ───
+
+    {
+      id: "gs-4-9",
+      time: 7,
+      title: "The One-Drop — Where the Kick Lives",
+      type: "guitar",
+      what: "In roots reggae, the kick drum hits ONLY on beat 3 — not 1, not 2, not 4. Just 3. This is the one-drop, and it creates a massive open space on beat 1 where most other genres have their strongest accent. Your skank lives on the upbeats; the kick lives on 3; beat 1 is EMPTY. Understanding the one-drop means understanding why reggae feels so spacious — almost nothing happens where your instinct says something should.",
+      setup: "Guitar. Am chord. Drums-only reggae track at 85 BPM.",
+      tracks: [{ name: "Drums Only — Reggae 85", src: "/drums-reggae-85.mp3" }],
+      chordVoicings: { chords: ["Am"] },
+      steps: [
+        { text: "Play the drums-only reggae track. Close your eyes and listen for 30 seconds. Feel where the kick drum lands — it's on beat 3, and ONLY beat 3. Count along: 1...2...KICK...4...1...2...KICK...4. The hi-hat may play on other beats, but the kick is exclusively on 3.", why: "The one-drop kick on beat 3 is the rhythmic signature of roots reggae. Most Western music puts the kick on beats 1 and 3 (rock) or 1, 2, 3, 4 (dance). By putting it on 3 ONLY, reggae creates a rhythmic vacuum on beat 1 that gives the music its floating, spacious quality." },
+        { text: "Tap your foot ONLY on beat 3, matching the kick drum. Let beats 1, 2, and 4 pass with no foot tap. This feels strange — your instinct is to tap on 1. Resist. Tap on 3 only. Do this for 1 minute.", why: "Tapping on 3 rewires your internal sense of where the \"strong\" beat lives. In rock, beat 1 is the anchor. In reggae, beat 3 is the anchor. This simple exercise shifts your rhythmic center of gravity." },
+        { text: "Add the Am skank over the drums track. Your skank hits on all four upbeats (\"ands\"), the kick hits on beat 3, and your foot taps on 3. Feel how your skank and the kick drum interlock — they never land at the same time. The skank fills the upbeats; the kick punctuates beat 3. Together they make the full groove.", why: "The skank + one-drop kick is the complete reggae rhythm section in miniature. Guitar provides rhythmic continuity (upbeats), kick provides the anchor (beat 3). Everything else — bass, organ, horns — fills in around these two elements." },
+        { text: "Try emphasizing your skank on the \"and\" of beat 3 — the upbeat right AFTER the kick. Make that particular skank slightly louder than the others. Feel how it creates a call-and-response with the kick: KICK (beat 3) → LOUD SKANK (and of 3). This accent pattern is a classic reggae guitar technique.", why: "Accenting the upbeat after the kick creates a rhythmic dialogue between guitar and drums. The kick says \"HERE\" and the guitar answers \"and HERE.\" This interplay is what makes live reggae feel so locked-in — the musicians are responding to each other in real time." },
+        { text: "Nod your head on beat 3 instead of beat 1. This is the final test: if your body's main accent is on 3, you're hearing the one-drop correctly. Play 8 bars of Am skank over the drum track while nodding on 3. If your nod drifts back to 1, restart.", why: "Body alignment with the one-drop proves you've internalized reggae time-feel, not just the skank technique. When your body accents beat 3, everything you play will naturally sit in the reggae pocket." }
+      ],
+      feel: "The one-drop should feel like a wide-open field with a single tree in the middle. Beat 1 is empty sky. Beat 3 is the tree — the one grounding element. Your skank is the breeze that fills the space between. The overall sensation is spacious, unhurried, and deeply groovy.",
+      wrong: "If you can't stop tapping your foot on beat 1, the rock instinct is overriding the reggae feel. Try this: clap on 3 only (no foot at all) while listening to the drum track. Once the clap feels natural on 3, transfer it to your foot. If your skank accidentally gets louder on beat 1's upbeat, consciously soften it — in one-drop reggae, beat 1 is the quietest moment.",
+      sarah: "Gene, the one-drop is why reggae hits different. It's not just \"chill music\" — it's a fundamentally different relationship with time. Most music says \"HERE is the beat\" on beat 1. Reggae says \"you already know where 1 is — I'm not going to remind you.\" That trust between the musician and the listener is what creates the floating, meditative quality you love in roots reggae.",
+      metronome: 85,
+      levelUp: "Can identify the one-drop kick (beat 3) in the drum track instantly. Can play Am skank with accent on the \"and\" of 3 while nodding/tapping on beat 3, not beat 1."
+    },
+    {
+      id: "gs-4-10",
+      time: 8,
+      title: "Reggae Skank Improv — Dynamic Variation Over a Track",
+      type: "guitar",
+      what: "You have the skank technique, the ghost notes, the mute-speed spectrum, and the one-drop feel. Now improvise. Over a backing track, play a reggae groove using everything you've learned — but add DYNAMIC variation. Loud skanks, quiet skanks, bars of only ghost notes, bars of full aggressive chops. The chord progression stays simple (Am for the whole thing); the creativity is in how you play, not what you play.",
+      setup: "Guitar. Am chord. Backing track.",
+      tracks: [
+        { name: "Reggae One-Drop 85", src: "/reggae-one-drop-85.mp3" },
+        { name: "Dub Reggae 85", src: "/dub-reggae-85.mp3" }
+      ],
+      chordVoicings: { chords: ["Am"] },
+      steps: [
+        { text: "Start the Reggae One-Drop track. Play Am skank at medium volume for 4 bars. Then drop to ghost notes only for 4 bars — muted clicks, barely audible, just enough to keep the rhythm alive. Then come back to full skanks, slightly louder than before. Feel the contrast.", why: "Dynamic drops and returns are how reggae guitarists create tension and release within a single chord. Dropping to ghost notes creates a vacuum that makes the return to full skanks feel powerful. This is arrangement through dynamics, not harmony." },
+        { text: "Try a volume swell: start each 8-bar phrase at whisper volume and gradually increase to full volume by bar 8. Then suddenly drop back to whisper. The chord never changes, the rhythm never changes — only volume. The effect is like waves building and crashing.", why: "Volume swells on a single chord with a constant rhythm create a hypnotic, trance-like quality — the same technique used in dub reggae. The repetition of the swell pattern induces a meditative state in both player and listener." },
+        { text: "Switch between mute speeds: 4 bars of short roots chop, 4 bars of warm rocksteady ring, 4 bars of reggae-rock sustain. The chord is still Am, the rhythm is still offbeat skanks — but the TEXTURE shifts dramatically with each mute-speed change.", why: "Combining mute-speed variation with dynamic variation gives you a two-dimensional control surface: volume (loud/quiet) times texture (short/warm/sustained). This creates more variety on a single chord than most players achieve with four chords." },
+        { text: "Switch to the Dub Reggae track. The dub feel is sparser, more spacious, more effects-heavy. Respond to the track: when the dub effects swell, pull back to ghost notes. When the effects drop out, fill the space with full skanks. Play AGAINST the track — your guitar fills the holes the production leaves.", why: "Playing responsively to a track (rather than just over it) is how session musicians think. Dub reggae is conversational — the effects and the guitar take turns occupying sonic space. This trains your listening as much as your playing." },
+        { text: "Free reggae improv: 5 minutes over either track. Use everything — ghost notes, mute speed variation, dynamic swells, one-drop accents, silence. Stay on Am the entire time. Record it and listen back. Count how many different textures you created without changing the chord.", why: "Extended single-chord improv is the ultimate test of rhythmic creativity. If you can make 5 minutes of Am skank interesting through dynamics, muting, and ghost notes alone, you've internalized the reggae guitarist's toolkit." }
+      ],
+      feel: "This should feel like being a DJ with one chord — you're mixing textures, volumes, and energies in real time. The backing track is your collaborator, and you're responding to it. The groove should feel alive and evolving even though the harmony never moves.",
+      wrong: "If 5 minutes of Am feels boring, you're not using your tools. Force variety: change something every 4 bars. Volume, mute speed, ghost note density, accent placement — SOMETHING must shift. If it still feels monotonous, try adding small melodic touches (Am pentatonic single notes between skanks) to break the pure-rhythm texture.",
+      sarah: "Gene, dub producers like Lee Perry and King Tubby used to take a finished reggae track and strip it to pieces in real time — fading instruments in and out, adding echo, creating space where there used to be sound. You're doing the same thing with your guitar. One chord, infinite variations. That's the dub mentality.",
+      metronome: 85,
+      recorder: true,
+      levelUp: "5-minute Am skank improv that uses at least 4 different dynamic/textural variations (ghost notes, volume swells, mute speed changes, accent shifts). Recording sounds varied and musical, not repetitive."
+    },
+    {
+      id: "gs-4-11",
+      time: 10,
+      title: "Extended Reggae Jam — Song-to-Song Flow",
+      type: "guitar",
+      what: "Your graduation exercise. Play 5 continuous minutes of reggae guitar, cycling through all three song progressions you've learned: B-F#-E (Gimme Love/Jah Werx), E-B-F#-G#m (1999), and A-E-C#m-B-F# (It's a Love). Switch between songs without stopping. Vary your dynamics, mute speed, and ghost note density across the set. This is your first mini-performance — proving the skank is in your body, not just your brain.",
+      setup: "Guitar. Metronome at 85 BPM. No backing track — you ARE the track now.",
+      chordVoicings: { chords: ["B", "F#", "E", "G#m", "A", "C#m"] },
+      steps: [
+        { text: "Start with B-F#-E (Gimme Love feel): 85 BPM, medium mute, relaxed roots vibe. Play 4 full cycles (48 bars total). Get locked into the groove — let the repetition sink in. This is your warm-up.", why: "Starting with the three-chord template you learned first ensures a confident beginning. The familiarity of B-F#-E lets you focus on feel rather than thinking about chord shapes." },
+        { text: "Without stopping, transition to E-B-F#-G#m (1999): same tempo, but shift to a slightly longer mute time for the hazy surf-reggae feel. The transition chord is E — you're already playing E as part of B-F#-E, so use it as the bridge. Play 3 cycles.", why: "Smooth song-to-song transitions are a performance skill. Using a shared chord (E) as the pivot makes the transition seamless. The listener should feel a color shift (new chords) without a rhythmic break." },
+        { text: "Without stopping, shift to A-E-C#m-B-F# (It's a Love feel): push the tempo slightly (not metronomically — just feel it speed up a bit). Tighten the mute for the ska-reggae energy. The transition chord is again E or B — both appear in the previous progression. Play 2 cycles.", why: "The tempo push mimics how a live band naturally builds energy through a set. Moving from 85 BPM roots feel to a brighter ska-adjacent energy creates a satisfying arc: mellow → dreamy → energetic." },
+        { text: "Wind down: return to B-F#-E at the original relaxed tempo. Drop your dynamics — play the last cycle quietly, with lots of ghost notes and gentle skanks. Let the jam dissolve naturally, like a song fading out. End on a final B chord, let it ring without muting.", why: "The wind-down proves you can control energy across a full set. Starting mellow, building energy, then returning to calm creates a musical arc that holds a listener's attention." },
+        { text: "Record the entire 5-minute jam from start to finish. Listen back. Note: where did the groove feel most locked? Where did chord changes disrupt the flow? Where did you get creative with dynamics? This recording is your Level 4 milestone.", why: "The recording captures your complete reggae vocabulary at this moment. Unlike individual exercises, a continuous jam reveals how well techniques integrate under real-time pressure. It's also deeply satisfying to hear yourself play 5 minutes of solid reggae." }
+      ],
+      feel: "This should feel like a mini concert — the first time you've played guitar continuously for 5 minutes with intentional dynamics, style shifts, and song changes. The overall arc should feel like a wave: building, cresting, releasing. Your body should be moving throughout.",
+      wrong: "If the jam falls apart during song transitions, practice the transitions in isolation: last 2 bars of B-F#-E into first 2 bars of E-B-F#-G#m. Repeat until smooth. If 5 minutes feels exhausting, your strumming arm is too tense — reggae is relaxed. Shake out your arm at the 2-minute mark if needed. If everything sounds the same (no dynamic variety), consciously force changes every 8 bars.",
+      sarah: "Gene, this is your first real performance piece. Five minutes of continuous reggae guitar, flowing through three songs from your playlist, with intentional dynamics and energy shifts. This is what it feels like to be a guitarist, not just someone practicing guitar. The Elovaters, Susto, NO CIGAR, Baskervillain — their songs are in your hands now. Play them like they're yours.",
+      metronome: 85,
+      recorder: true,
+      levelUp: "5-minute continuous reggae jam cycling through B-F#-E, E-B-F#-G#m, and A-E-C#m-B-F# with smooth transitions, audible dynamic variation, and no rhythmic collapse. The recording sounds like a musician playing, not a student practicing."
+    }
+  ]
+};

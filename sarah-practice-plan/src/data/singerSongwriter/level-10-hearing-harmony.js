@@ -100,7 +100,7 @@ export const level10 = {
       what: "Beyond major and minor, modes give you 5 more emotional colors. Dorian = jazzy minor. Mixolydian = bluesy major. Phrygian = Spanish/dark. Play the same root chord but change the scale, and the entire mood transforms. Modes are the advanced color palette of melody.",
       steps: [
         { text: "Play Am and sing A natural minor: A-B-C-D-E-F-G. This is the standard minor sound. Melancholic, familiar.", why: "Natural minor is your reference point. Every mode is defined by how it differs from natural minor or major." },
-        { text: "Now sing A Dorian: A-B-C-D-E-F#-G. The ONLY change is F→F#. But that raised 6th makes it jazzy, sophisticated. Play over Am.", why: "Dorian is minor with a bright spot. The raised 6th adds warmth to the melancholy. Khruangbin, Steely Dan, Carlos Santana live here." },
+        { text: "Now sing A Dorian: A-B-C-D-E-F#-G. The ONLY change is F→F#. But that raised 6th makes it jazzy, sophisticated. Play over Am.", why: "Dorian is minor with a bright spot. The raised 6th adds warmth to the melancholy. Skinshape's entire melodic vocabulary lives here — his 'I Didn't Know' (Gm-C-A7-Dm) uses Dorian phrasing over minor chords. Khruangbin and Carlos Santana also call Dorian home." },
         { text: "Try G Mixolydian: G-A-B-C-D-E-F. Major scale with a lowered 7th. Bluesy, rootsy, laid-back. Play over G.", why: "Mixolydian is the sound of classic rock, blues, and folk. The flat 7 adds earthiness. Think Grateful Dead, Allman Brothers." },
         { text: "Improvise 2 minutes in Dorian over Am, then 2 minutes in Mixolydian over G. Each mode colors your improvisation differently. Record both.", why: "Modes expand your melodic palette beyond pentatonic. Each mode gives you a new emotional toolkit for songwriting." }
       ],
@@ -146,7 +146,7 @@ export const level10 = {
       ],
       feel: "Each borrowed chord should hit like an unexpected emotion — a pang of nostalgia, a swell of cinematic wonder. They work because they break the rules of the key, and your ear notices.",
       wrong: "If the borrowed chords just sound 'wrong,' you haven't established the key firmly enough. Play I-IV-V-I several times first to set up G major as home. Then introduce the borrowed chord — the contrast is what creates the effect.",
-      sarah: "Gene, borrowed chords are the secret sauce of your favorite artists. Hermanos Gutiérrez's entire sound is built on bVI. Once you hear it, you'll hear it everywhere — and you'll start using it in your own songs.",
+      sarah: "Gene, borrowed chords are the secret sauce of your favorite artists. Hermanos Gutiérrez's entire sound is built on bVI. Allah-Las use bVII constantly — their 'Long Journey' (A-C-G-D) borrows both the C (bIII) and G (bVII) from A minor to create that floating, modal quality. And that descending minor progression you hear everywhere — Am-G-F-E — uses the bVII (G) and bVI (F) borrowed from natural minor, with the E (V) pulled from harmonic minor for the resolution back to Am. That progression IS the psych-surf sound, and now you know why it works.",
       referencePitches: getPitchRange("G3", "D4"),
       pianoKeys: { notes: ["G3", "Ab3", "Bb3", "B3", "C4", "D4"], label: "G + Borrowed Chords", range: ["G3", "D4"] },
       recorder: true

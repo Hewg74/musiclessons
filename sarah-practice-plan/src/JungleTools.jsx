@@ -2235,6 +2235,30 @@ const SCALES = {
       4: [12, 15],
       5: [0, 3]
     }
+  },
+  "c#m-pentatonic": {
+    name: "C#m Pentatonic",
+    root: "C#",
+    notes: ["C#", "E", "F#", "G#", "B"],
+    positions: { 1: [9, 12], 2: [11, 14], 3: [2, 5], 4: [4, 7], 5: [6, 9] }
+  },
+  "gm-pentatonic": {
+    name: "Gm Pentatonic",
+    root: "G",
+    notes: ["G", "B♭", "C", "D", "F"],
+    positions: { 1: [3, 6], 2: [5, 8], 3: [7, 10], 4: [10, 13], 5: [0, 3] }
+  },
+  "a-natural-minor": {
+    name: "A Natural Minor",
+    root: "A",
+    notes: ["A", "B", "C", "D", "E", "F", "G"],
+    positions: { 1: [5, 8], 2: [7, 10], 3: [9, 12], 4: [12, 15], 5: [0, 3] }
+  },
+  "em-pentatonic": {
+    name: "Em Pentatonic",
+    root: "E",
+    notes: ["E", "G", "A", "B", "D"],
+    positions: { 1: [0, 3], 2: [2, 5], 3: [5, 8], 4: [7, 10], 5: [9, 12] }
   }
 };
 
@@ -5416,6 +5440,31 @@ const CHORD_VOICINGS = {
   "Gb": { frets: "244322", name: "Gb" },
   "Ab": { frets: "466544", name: "Ab" },
   "Bb": { frets: "x13331", name: "Bb" },
+  // Minor chords
+  "C#m": { frets: "x46654", name: "C#m" },
+  "F#m": { frets: "244222", name: "F#m" },
+  "Bbm": { frets: "x13321", name: "Bbm" },
+  // 7th chords
+  "Am7":  { frets: "x02010", name: "Am7" },
+  "Dm7":  { frets: "xx0211", name: "Dm7" },
+  "Em7":  { frets: "022030", name: "Em7" },
+  "Cmaj7": { frets: "x32000", name: "Cmaj7" },
+  "Dmaj7": { frets: "xx0222", name: "Dmaj7" },
+  "Gm7":  { frets: "353333", name: "Gm7" },
+  "C7":   { frets: "x32310", name: "C7" },
+  "A7":   { frets: "x02020", name: "A7" },
+  "E7":   { frets: "020100", name: "E7" },
+  "B7":   { frets: "x21202", name: "B7" },
+  "F#7":  { frets: "242322", name: "F#7" },
+  "G7":   { frets: "320001", name: "G7" },
+  // Sus chords
+  "Dsus2": { frets: "xx0230", name: "Dsus2" },
+  "Asus2": { frets: "x02200", name: "Asus2" },
+  // Power chords
+  "A5":  { frets: "x022xx", name: "A5" },
+  "D5":  { frets: "xx023x", name: "D5" },
+  "E5":  { frets: "022xxx", name: "E5" },
+  "B5":  { frets: "x244xx", name: "B5" },
 };
 
 function makeEmptyCell() { return { chord: null, strum: null, lyric: "" }; }

@@ -140,7 +140,7 @@ export const level12 = {
       ],
       feel: "Stacking contrast should feel like flipping a switch — the song transforms. Verse and chorus should feel like two sides of the same coin: related but unmistakably different.",
       wrong: "If the verse and chorus still sound the same after toggling dimensions, you're not pushing far enough. Exaggerate each dimension until it's almost comical, then dial it back 20%. The 'too much' point teaches you where 'just right' lives.",
-      sarah: "Gene, the Allah-Las are masters of subtle multi-dimensional contrast — their verses and choruses share the same vibe but the shift is unmistakable. It's not one big change, it's five small ones stacking up.",
+      sarah: "Gene, the Allah-Las are masters of subtle multi-dimensional contrast — their verses and choruses share the same vibe but the shift is unmistakable. It's not one big change, it's five small ones stacking up. And here's a power move for your toolkit: the major→minor trick. DOPE LEMON's 'Honey Bones' uses D-Dm-G-Gm — shifting one note (the 3rd) from major to minor within the progression. It creates a 'sunset' feeling — beautiful but ending. modGlyders' 'Geneva Strange' does the same with G→Gm. Try this in your own songs: verse in major, chorus shifts one chord to its minor version. That single changed note transforms the emotional landscape.",
       metronome: 80,
       volumeMeter: true,
       recorder: true
