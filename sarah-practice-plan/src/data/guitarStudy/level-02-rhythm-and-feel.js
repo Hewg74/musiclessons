@@ -96,6 +96,7 @@ export const level2 = {
       time: 10,
       title: "Song Study: Close My Eyes — Dreamy Indie Feel",
       type: "guitar",
+      // UNVERIFIED — D-Bm-G-A is a likely progression based on key/genre analysis but has not been confirmed against 2+ independent tab sources
       what: "The Lagoons' 'Close My Eyes' is a masterclass in dreamy indie guitar — four chords (D-Bm-G-A) at 104 BPM, but the magic is in the behind-the-beat feel and the ghost strums that make it float. You'll learn the progression, then layer in the feel techniques from this level.",
       setup: "Guitar. Metronome at 80 BPM (learn slow, play up to 104).",
       steps: [

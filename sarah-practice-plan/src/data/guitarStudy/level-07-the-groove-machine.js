@@ -37,7 +37,8 @@ export const level7 = {
       sarah: "Gene, this is the entire Pepper formula. Stormtrooper, Stitches, Give It Up — they ALL do this switch. The Hip Abduction too. It's the same move you hear in Slightly Stoopid's live sets when they shift from mellow island vibes to full rock energy. You already have both halves — the skank from Level 4, the power chords from Level 3. This exercise welds them together.",
       metronome: 90,
       tracks: [{ name: "Reggae Rock 100", src: "/reggae-rock-100.mp3" }],
-      recorder: true
+      recorder: true,
+      levelUp: "Can play the SoCal switch — 4 bars clean skank to 4 bars distorted power chords — at 90 BPM with an instant, clean tone transition on beat 1. No hesitation, no fumbled pedal stomps."
     },
     {
       id: "gs-7-2",
@@ -59,7 +60,8 @@ export const level7 = {
       metronome: 75,
       speedLadder: { start: 75, end: 150, increment: 15, bars: 4 },
       chordVoicings: { chords: ["E5", "A5", "D5", "B5"] },
-      recorder: true
+      recorder: true,
+      levelUp: "Can play the Stormtrooper power chord riff (D#5→A#5→F#5) cleanly at 140+ BPM and transition into a clean skank on E without hesitation."
     },
     {
       id: "gs-7-3",
@@ -79,7 +81,8 @@ export const level7 = {
       wrong: "If the skank becomes a sustained chord wash (no percussive chop), your mute is too slow. The instant you strum, your fretting hand should relax to mute the strings. With overdrive, this has to happen FASTER than clean because the sustain fights you. If it sounds like punk and not reggae, check your timing — are you on the offbeats?",
       sarah: "Gene, this is Slightly Stoopid's secret ingredient. Their verses aren't clean reggae — they have this gritty, crunchy skank that sits between reggae and punk. It's what separates SoCal reggae-rock from actual roots reggae. Same offbeat, same bounce, but with teeth. You've got the skank from Level 4 — now give it an edge.",
       metronome: 85,
-      tracks: [{ name: "Reggae Rock 100", src: "/reggae-rock-100.mp3" }, { name: "Drums Only — Reggae 85", src: "/drums-reggae-85.mp3" }]
+      tracks: [{ name: "Reggae Rock 100", src: "/reggae-rock-100.mp3" }, { name: "Drums Only — Reggae 85", src: "/drums-reggae-85.mp3" }],
+      levelUp: "Can play a reggae skank with overdrive at 85 BPM where each chop stays short and percussive — no sustained chord wash — and an experienced listener would call it 'reggae with teeth, not punk with offbeats.'"
     },
 
     // ─── SONG STUDIES ───
@@ -128,7 +131,8 @@ export const level7 = {
       metronome: 60,
       chordVoicings: { chords: ["E", "D", "A", "Bm"] },
       tracks: [{ name: "Surf Rock 120", src: "/surf-rock-120.mp3" }],
-      recorder: true
+      recorder: true,
+      levelUp: "Can play E-D-A-Bm at 100+ BPM with heavy reverb, letting chords wash into each other, with the Bm adding an audible emotional shadow to the major chords — confirmed by recording playback."
     },
 
     // ─── LEAD PLAYING & SOLOING ───
@@ -153,7 +157,8 @@ export const level7 = {
       metronome: 100,
       fretboard: { scale: "am-pentatonic", position: 1, highlight: [] },
       tracks: [{ name: "Reggae Rock 100", src: "/reggae-rock-100.mp3" }, { name: "Drums Only — Reggae 85", src: "/drums-reggae-85.mp3" }],
-      recorder: true
+      recorder: true,
+      levelUp: "Can play a 2-minute Am pentatonic solo over a reggae groove with at least 40% silence between phrases, an audible build-and-release arc, and no note that fights the groove."
     },
 
     // ─── DYNAMICS & FEEL ───
@@ -178,7 +183,8 @@ export const level7 = {
       metronome: 95,
       tracks: [{ name: "Reggae Rock 100", src: "/reggae-rock-100.mp3" }],
       volumeMeter: true,
-      recorder: true
+      recorder: true,
+      levelUp: "Can play an 8-bar whisper verse and 4-bar shout chorus where the volume difference between sections is at least 3x — confirmed by the volume meter showing a dramatic spike at the chorus entry."
     },
     {
       id: "gs-7-8",
@@ -202,7 +208,8 @@ export const level7 = {
         { name: "Reggae One-Drop 85", src: "/reggae-one-drop-85.mp3" },
         { name: "Reggae Rock 100", src: "/reggae-rock-100.mp3" },
         { name: "Drums Only — Reggae 85", src: "/drums-reggae-85.mp3" }
-      ]
+      ],
+      levelUp: "Can play a clean skank over both one-drop and four-on-the-floor backing tracks, matching density to each groove — sparse over one-drop, dense over four-on-the-floor — and articulate the difference."
     },
 
     // ─── PUTTING IT ALL TOGETHER ───
@@ -228,7 +235,8 @@ export const level7 = {
       fretboard: { scale: "am-pentatonic", position: 1, highlight: [] },
       chordVoicings: { chords: ["A5", "D5", "E5"] },
       tracks: [{ name: "Reggae Rock 100", src: "/reggae-rock-100.mp3" }],
-      recorder: true
+      recorder: true,
+      levelUp: "Can play a full 40-bar SoCal piece (skank verse → power chord chorus → pentatonic solo break → final chorus → skank outro) at 100 BPM with clean transitions between all three roles — recorded in one take."
     },
     {
       id: "gs-7-10",

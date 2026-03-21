@@ -5444,6 +5444,7 @@ const CHORD_VOICINGS = {
   "C#m": { frets: "x46654", name: "C#m" },
   "F#m": { frets: "244222", name: "F#m" },
   "Bbm": { frets: "x13321", name: "Bbm" },
+  "G#m": { frets: "466444", name: "G#m" },
   // 7th chords
   "Am7":  { frets: "x02010", name: "Am7" },
   "Dm7":  { frets: "xx0211", name: "Dm7" },
@@ -5544,6 +5545,91 @@ function decompressFromURL(str) {
     const json = new TextDecoder().decode(bytes);
     return JSON.parse(json);
   } catch { return null; }
+}
+
+// ─── ChordVoicingViewer (for exercise inline chord diagrams) ───────────────
+export { CHORD_VOICINGS };
+
+export function ChordVoicingViewer({ theme: T, chords = [], defaultChord }) {
+  const [selected, setSelected] = useState(defaultChord || chords[0] || null);
+  if (!chords.length) return null;
+
+  const playChord = async (fretStr) => {
+    if (!fretStr) return;
+    if (Tone.context.state !== 'running') await Tone.context.resume();
+    const f = fretStr.split("").map(c => c === "x" ? -1 : parseInt(c, 10));
+    const stringMidi = [40, 45, 50, 55, 59, 64]; // E2-A2-D3-G3-B3-E4 (standard guitar tuning)
+    f.forEach((fretNum, i) => {
+      if (fretNum < 0) return;
+      const midi = stringMidi[i] + fretNum;
+      const noteNames = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
+      const note = noteNames[midi % 12] + (Math.floor(midi / 12) - 1);
+      setTimeout(() => {
+        const synth = new Tone.Synth({
+          oscillator: { type: 'triangle' },
+          envelope: { attack: 0.05, decay: 0.3, sustain: 0.6, release: 1.2 }
+        }).toDestination();
+        synth.volume.value = -10;
+        synth.triggerAttackRelease(note, "2n");
+        setTimeout(() => synth.dispose(), 2500);
+      }, i * 70);
+    });
+  };
+
+  return (
+    <div style={{ marginBottom: 24 }}>
+      {/* Chord selector pills */}
+      {chords.length > 1 && (
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 12, justifyContent: "center" }}>
+          {chords.map(ch => (
+            <button key={ch} onClick={() => setSelected(ch)} style={{
+              background: ch === selected ? T.gold : T.bgSoft,
+              color: ch === selected ? "#fff" : T.textDark,
+              border: `1px solid ${ch === selected ? T.gold : T.border}`,
+              borderRadius: 14, padding: "3px 12px", fontSize: 12,
+              fontFamily: T.serif, fontWeight: ch === selected ? 700 : 500,
+              cursor: "pointer", transition: "all 0.15s",
+              letterSpacing: "0.02em",
+            }}>{ch}</button>
+          ))}
+        </div>
+      )}
+      {/* Chord diagrams row */}
+      <div style={{
+        display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center",
+        overflowX: chords.length > 4 ? "auto" : "visible",
+        scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch",
+        padding: "2px 0",
+      }}>
+        {chords.map(ch => {
+          const voicing = CHORD_VOICINGS[ch];
+          if (!voicing) return (
+            <div key={ch} style={{
+              width: 100, height: 130, display: "flex", alignItems: "center", justifyContent: "center",
+              background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radiusMd || 4,
+              scrollSnapAlign: "start",
+            }}>
+              <span style={{ fontSize: 11, color: T.textMuted, fontFamily: T.sans, textAlign: "center" }}>{ch}<br/>?</span>
+            </div>
+          );
+          const isSelected = ch === selected;
+          return (
+            <div key={ch} onClick={() => { setSelected(ch); playChord(voicing.frets); }}
+              role="button" tabIndex={0} aria-label={`Play ${ch} chord`}
+              onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelected(ch); playChord(voicing.frets); } }}
+              style={{
+                scrollSnapAlign: "start", cursor: "pointer",
+                transform: isSelected ? "scale(1)" : "scale(0.92)",
+                opacity: isSelected ? 1 : 0.65,
+                transition: "all 0.15s ease",
+              }}>
+              <ChordDiagram theme={T} frets={voicing.frets} name={voicing.name} />
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
 // ─── ChordDiagram ───────────────────────────────────────────────────────────

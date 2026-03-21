@@ -194,7 +194,7 @@ export const level3 = {
       time: 8,
       title: "Song Study: Something About You — Lo-Fi Indie Feel",
       type: "guitar",
-      what: "Eyedress's Something About You lives in a dreamy, reverb-drenched lo-fi world. The chords are F-Em-Am-Dm — simple shapes you already know, played with a lazy, behind-the-beat feel. No power chords here — this is the other side of Level 3, where restraint and mood replace aggression.",
+      what: "Eyedress's Something About You lives in a dreamy, reverb-drenched lo-fi world. The full verse progression is F-Em-F-Em-Am-Dm-Em — simplified here to the four core chords F-Em-Am-Dm, which are the shapes you already know, played with a lazy, behind-the-beat feel. No power chords here — this is the other side of Level 3, where restraint and mood replace aggression.",
       setup: "Guitar. Lots of reverb if available. Metronome at 110 BPM (we'll slow from the song's 133 BPM to learn the feel first).",
       steps: [
         { text: "Play the progression: F → Em → Am → Dm. These are all open or first-position chords. 4 beats per chord at 110 BPM. Strum gently — this is NOT a power chord song. The vibe is whispered, intimate, slightly sad.", why: "Something About You is the dynamic counterweight to Going Gets Tough and Summer Heat. Same level, opposite energy. Learning to shift between aggressive and gentle on the same instrument is what makes a complete guitarist." },

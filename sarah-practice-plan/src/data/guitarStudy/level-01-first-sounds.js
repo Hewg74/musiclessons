@@ -29,7 +29,7 @@ export const level1 = {
       ],
       feel: "This should feel like a doctor's checkup — neutral, observational, no performance pressure. You're gathering data, not auditioning. The worse it sounds right now, the more dramatic your transformation will be.",
       wrong: "If you find yourself trying to sound impressive, start over. The baseline only works if it captures your actual starting point. Faking a better baseline robs you of the satisfaction of real progress later.",
-      sarah: "Gene, I do this with every new student. The recording is sacred — it's proof of where you started. Months from now you'll listen back and not believe it's the same person. Trust the process. Every guitarist you love — from Angus Young of Allah-Las to Mark Speer of Khruangbin — started somewhere humbler than this.",
+      sarah: "Gene, I do this with every new student. The recording is sacred — it's proof of where you started. Months from now you'll listen back and not believe it's the same person. Trust the process. Every guitarist you love — from Pedrum Siadatian of Allah-Las to Mark Speer of Khruangbin — started somewhere humbler than this.",
       levelUp: "Completed all recordings. You have a clear, honest baseline of your current guitar ability."
     },
 
@@ -54,7 +54,7 @@ export const level1 = {
       ],
       feel: "The pentatonic should feel like a home base — a safe zone where every note sounds good against the drone. There are no wrong notes here. It should feel like a musical playground where everything works. When you hear the notes ring against the drone, you'll feel a warm resonance that tells you you're in the right place.",
       wrong: "If your fingers keep landing on wrong frets, slow down further and go note by note. If notes buzz or sound dead, press closer to the fret wire (not on top of it, just behind it). If it sounds 'off' against the drone, check your tuning — open strings should be E-A-D-G-B-E from low to high.",
-      sarah: "Gene, this scale is your musical mother tongue. Every single guitarist you love uses this shape constantly — Angus Young of Allah-Las plays psych-surf leads in this shape, Mark Speer of Khruangbin builds entire songs from it, Angus Stone of DOPE LEMON noodles in it between chords. Learn it once, use it forever. It's the skeleton key to your entire playlist.",
+      sarah: "Gene, this scale is your musical mother tongue. Every single guitarist you love uses this shape constantly — Pedrum Siadatian of Allah-Las plays psych-surf leads in this shape, Mark Speer of Khruangbin builds entire songs from it, Angus Stone of DOPE LEMON noodles in it between chords. Learn it once, use it forever. It's the skeleton key to your entire playlist.",
       metronome: 60,
       levelUp: "Play Am pentatonic ascending and descending 4 times at 60 BPM with zero wrong notes. Bonus: eyes closed. You can name every note (A-C-D-E-G) as you play it."
     },

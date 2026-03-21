@@ -7,7 +7,7 @@ import {
   Mic, Headphones, Info, AlertCircle, Quote, ArrowRight, Check, 
   Volume2, Sun, Moon
 } from 'lucide-react';
-import { MiniAudioPlayer, AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, VolumeMeter, ChordTransitionTimer, GenreMetronome, SilenceScore, DroneGenerator, TAB_CONTENT, InlineKeyboard, RhythmCellCards, PhraseFormGuide, StrumChartBuilder, ChartListView, makeTemplateChart } from './JungleTools.jsx';
+import { MiniAudioPlayer, AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, ChordVoicingViewer, VolumeMeter, ChordTransitionTimer, GenreMetronome, SilenceScore, DroneGenerator, TAB_CONTENT, InlineKeyboard, RhythmCellCards, PhraseFormGuide, StrumChartBuilder, ChartListView, makeTemplateChart } from './JungleTools.jsx';
 import { acquireKeepalive, releaseKeepalive, setMediaSession, clearMediaSession } from './audioKeepalive.js';
 import { DAYS, KEYBOARD_LEVELS, LOOPER_LEVELS, LESSON_POOL, ALL_NOTES, getPitchRange } from './data/appData.js';
 import { WEEKLY_PLANS, CURRENT_WEEK } from './data/weeklyPlans/index.js';
@@ -1006,7 +1006,7 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
       )}
 
       {/* PANEL C: CONTENT & GUIDES */}
-      {(ex.fretboard || ex.pianoKeys || ex.volumeMeter || ex.rhythmCells || ex.phraseForm || (ex.referencePitches && ex.referencePitches.length > 0) || ex.steps || ex.feel || ex.wrong || ex.sarah || ex.levelUp) && (
+      {(ex.chordVoicings || ex.fretboard || ex.pianoKeys || ex.volumeMeter || ex.rhythmCells || ex.phraseForm || (ex.referencePitches && ex.referencePitches.length > 0) || ex.steps || ex.feel || ex.wrong || ex.sarah || ex.levelUp) && (
         <div style={{ 
           background: T.bgCard, borderRadius: T.radiusMd, border: `1px solid ${T.border}`,
           padding: "24px", marginBottom: 16, boxShadow: T.sm
@@ -1023,6 +1023,11 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
             <div style={{ marginBottom: 24 }}>
               <LivePitchDetector theme={T} referencePitches={ex.referencePitches} inline={true} pitchContour={!!ex.pitchContour} />
             </div>
+          )}
+
+          {/* Chord Voicings */}
+          {ex.chordVoicings && ex.chordVoicings.chords && (
+            <ChordVoicingViewer theme={T} chords={ex.chordVoicings.chords} defaultChord={ex.chordVoicings.defaultChord} />
           )}
 
           {/* Fretboard */}
@@ -1672,7 +1677,7 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
           )}
 
           {/* PANEL C: CONTENT */}
-          {(ex.fretboard || ex.pianoKeys || ex.volumeMeter || ex.rhythmCells || ex.phraseForm || (ex.tabs && TAB_CONTENT[ex.tabs]) || (ex.referencePitches && ex.referencePitches.length > 0)) && (
+          {(ex.chordVoicings || ex.fretboard || ex.pianoKeys || ex.volumeMeter || ex.rhythmCells || ex.phraseForm || (ex.tabs && TAB_CONTENT[ex.tabs]) || (ex.referencePitches && ex.referencePitches.length > 0)) && (
             <div style={{ 
               background: T.bgCard, borderRadius: T.radiusMd, border: `1px solid ${T.border}`,
               padding: "18px", marginBottom: 20, boxShadow: T.sm
@@ -1686,6 +1691,11 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
                 <div style={{ marginBottom: 16 }}>
                   <LivePitchDetector theme={T} referencePitches={ex.referencePitches} inline={true} pitchContour={!!ex.pitchContour} />
                 </div>
+              )}
+
+              {/* Chord Voicings */}
+              {ex.chordVoicings && ex.chordVoicings.chords && (
+                <ChordVoicingViewer theme={T} chords={ex.chordVoicings.chords} defaultChord={ex.chordVoicings.defaultChord} />
               )}
 
               {/* Fretboard & Piano Keys */}
@@ -4140,7 +4150,10 @@ export default function App() {
         const completed = new Set(JSON.parse(saved));
         const filtered = [...completed].filter(id => !id.startsWith("gs-"));
         localStorage.setItem("practice-completed", JSON.stringify(filtered));
-      } catch {}
+      } catch {
+        // Corrupted data — clear guitar progress to prevent stale gs- IDs persisting
+        localStorage.removeItem("practice-completed");
+      }
     }
     localStorage.removeItem("guitar-study-level");
     localStorage.setItem("guitar-v2-migrated", "true");
