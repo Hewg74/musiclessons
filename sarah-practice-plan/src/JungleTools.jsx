@@ -3767,7 +3767,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       background: playing ? T.bgSoft : T.bgCard, 
       border: `1px solid ${playing ? T.plum : T.borderSoft}`,
       boxShadow: playing ? `inset 0 2px 10px ${T.bgSoft}, 0 0 20px ${T.plum}20` : T.shadow,
-      padding: "40px 24px", textAlign: "center", borderRadius: T.radius,
+      padding: "28px 24px", textAlign: "center", borderRadius: T.radius,
       transition: "all 0.4s", overflow: "hidden", margin: "10px 0"
     }}>
       {/* Subtle SVG Grid Background */}
@@ -3779,43 +3779,58 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       </svg>
 
       <div style={{ position: "relative", zIndex: 2 }}>
-        <div style={{ fontSize: 10, color: playing ? T.plum : T.textMuted, fontWeight: 800, letterSpacing: 3, fontFamily: T.sans, textTransform: "uppercase", marginBottom: 12, transition: "color 0.4s" }}>
-          Harmonic Drone Engine
+        <div style={{ fontSize: 16, color: playing ? T.plum : T.textDark, fontWeight: 800, letterSpacing: 1, fontFamily: T.sans, marginBottom: 4, transition: "color 0.4s" }}>
+          Drone
         </div>
-        <div style={{ fontSize: 12, color: T.textMed, fontFamily: T.sans, marginBottom: 24, fontStyle: "italic" }}>
-          Continuous harmonic foundation for ear training.
+        <div style={{ fontSize: 11, color: T.textMuted, fontFamily: T.sans, marginBottom: 24, fontStyle: "italic" }}>
+          Harmonic foundation for ear training
         </div>
         
-        {/* Texture Selector */}
-        <div style={{ display: "flex", justifyContent: "center", gap: 8, flexWrap: "wrap", maxWidth: 500, margin: "0 auto 24px" }}>
+        {/* Texture Selector — Grouped */}
+        <div style={{ maxWidth: 460, margin: "0 auto 24px", display: "flex", flexDirection: "column", gap: 16 }}>
           {[
-            { id: "analog", label: "Analog Pad" },
-            { id: "choir", label: "Ethereal Choir" },
-            { id: "organ", label: "Harmonium" },
-            { id: "pure", label: "Pure Sine" },
-            { id: "strings", label: "Strings" },
-            { id: "tanpura", label: "Tanpura" },
-            { id: "crystal", label: "Crystal Bowl" },
-            { id: "lofi-tape", label: "Lo-Fi Tape" },
-            { id: "surf-tremolo", label: "Surf Tremolo" },
-            { id: "vintage-keys", label: "Vintage Keys" },
-            { id: "dub-sub", label: "Dub Sub" },
-            { id: "warm", label: "Warm Pad" }
-          ].map(t => (
-            <button key={t.id} onClick={() => setTexture(t.id)} style={{
-              background: texture === t.id ? T.plum : T.bgSoft,
-              border: `1px solid ${texture === t.id ? T.plum : T.border}`,
-              color: texture === t.id ? "#fff" : T.textMed,
-              padding: "8px 16px", borderRadius: T.radius, fontSize: 11, fontWeight: 700,
-              cursor: "pointer", fontFamily: T.sans, letterSpacing: 0.5,
-              boxShadow: texture === t.id ? `0 4px 12px ${T.plum}40` : "none",
-              transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)"
-            }}
-            onMouseOver={e => { if(texture !== t.id) { e.currentTarget.style.borderColor = T.textMed; e.currentTarget.style.color = T.textDark; } }}
-            onMouseOut={e => { if(texture !== t.id) { e.currentTarget.style.borderColor = T.border; e.currentTarget.style.color = T.textMed; } }}
-            >
-              {t.label}
-            </button>
+            { label: "FOUNDATIONAL", textures: [
+              { id: "pure", label: "Pure Sine" },
+              { id: "analog", label: "Analog Pad" },
+              { id: "warm", label: "Warm Pad" },
+              { id: "strings", label: "Strings" }
+            ]},
+            { label: "TEXTURAL", textures: [
+              { id: "choir", label: "Ethereal Choir" },
+              { id: "crystal", label: "Crystal Bowl" },
+              { id: "organ", label: "Harmonium" },
+              { id: "tanpura", label: "Tanpura" }
+            ]},
+            { label: "GENRE", textures: [
+              { id: "surf-tremolo", label: "Surf Tremolo" },
+              { id: "lofi-tape", label: "Lo-Fi Tape" },
+              { id: "vintage-keys", label: "Vintage Keys" },
+              { id: "dub-sub", label: "Dub Sub" }
+            ]}
+          ].map(group => (
+            <div key={group.label}>
+              <div style={{ fontSize: 9, fontWeight: 800, color: T.textMuted, fontFamily: T.sans, letterSpacing: 2, textTransform: "uppercase", marginBottom: 8, textAlign: "left" }}>
+                {group.label}
+              </div>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                {group.textures.map(t => (
+                  <button key={t.id} onClick={() => setTexture(t.id)} style={{
+                    background: texture === t.id ? T.plum : T.bgSoft,
+                    border: `1px solid ${texture === t.id ? T.plum : T.border}`,
+                    color: texture === t.id ? "#fff" : T.textMed,
+                    padding: "8px 16px", borderRadius: T.radius, fontSize: 11, fontWeight: 700,
+                    cursor: "pointer", fontFamily: T.sans, letterSpacing: 0.5,
+                    boxShadow: texture === t.id ? `0 4px 12px ${T.plum}40` : "none",
+                    transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)"
+                  }}
+                  onMouseOver={e => { if(texture !== t.id) { e.currentTarget.style.borderColor = T.textMed; e.currentTarget.style.color = T.textDark; } }}
+                  onMouseOut={e => { if(texture !== t.id) { e.currentTarget.style.borderColor = T.border; e.currentTarget.style.color = T.textMed; } }}
+                  >
+                    {t.label}
+                  </button>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
 
@@ -5419,54 +5434,85 @@ const BEAT_LABELS_8 = ["1", "&", "2", "&", "3", "&", "4", "&"];
 // Built-in chord voicings — multi-voicing: each chord maps to an array of { frets, name, pos }
 // pos = short label for the voicing position (e.g., "Open", "5th", "Barre")
 const CHORD_VOICINGS_MULTI = {
+  // ─── Major chords ───
   "C":  [{ frets: "x32010", name: "C", pos: "Open" }, { frets: "x35553", name: "C", pos: "3rd" }, { frets: "8a9988", name: "C", pos: "8th" }],
-  "Cm": [{ frets: "x35543", name: "Cm", pos: "3rd" }, { frets: "8a9888", name: "Cm", pos: "8th" }],
+  "Cm": [{ frets: "x35543", name: "Cm", pos: "3rd" }, { frets: "8a9888", name: "Cm", pos: "8th" }, { frets: "xx5543", name: "Cm", pos: "Partial" }],
   "D":  [{ frets: "xx0232", name: "D", pos: "Open" }, { frets: "x57775", name: "D", pos: "5th" }, { frets: "a97a7a", name: "D", pos: "10th" }],
   "Dm": [{ frets: "xx0231", name: "Dm", pos: "Open" }, { frets: "x57765", name: "Dm", pos: "5th" }, { frets: "a97a6a", name: "Dm", pos: "10th" }],
-  "E":  [{ frets: "022100", name: "E", pos: "Open" }, { frets: "x79997", name: "E", pos: "7th" }],
+  "E":  [{ frets: "022100", name: "E", pos: "Open" }, { frets: "x79997", name: "E", pos: "7th" }, { frets: "xx9997", name: "E", pos: "Partial" }],
   "Em": [{ frets: "022000", name: "Em", pos: "Open" }, { frets: "x79987", name: "Em", pos: "7th" }, { frets: "079000", name: "Em", pos: "7th alt" }],
-  "F":  [{ frets: "133211", name: "F", pos: "1st" }, { frets: "x8a998", name: "F", pos: "8th" }],
-  "Fm": [{ frets: "133111", name: "Fm", pos: "1st" }, { frets: "x8a988", name: "Fm", pos: "8th" }],
-  "G":  [{ frets: "320003", name: "G", pos: "Open" }, { frets: "355433", name: "G", pos: "3rd" }],
-  "Gm": [{ frets: "355333", name: "Gm", pos: "3rd" }, { frets: "x13331", name: "Gm", pos: "Partial" }],
-  "A":  [{ frets: "x02220", name: "A", pos: "Open" }, { frets: "577655", name: "A", pos: "5th" }],
-  "Am": [{ frets: "x02210", name: "Am", pos: "Open" }, { frets: "577555", name: "Am", pos: "5th" }],
-  "B":  [{ frets: "x24442", name: "B", pos: "2nd" }, { frets: "799877", name: "B", pos: "7th" }],
-  "Bm": [{ frets: "x24432", name: "Bm", pos: "2nd" }, { frets: "799777", name: "Bm", pos: "7th" }],
-  "C#": [{ frets: "x46664", name: "C#", pos: "4th" }, { frets: "9bb999", name: "C#", pos: "9th" }],
-  "Db": [{ frets: "x46664", name: "Db", pos: "4th" }],
-  "D#": [{ frets: "x68886", name: "D#", pos: "6th" }],
-  "Eb": [{ frets: "x68886", name: "Eb", pos: "6th" }],
-  "F#": [{ frets: "244322", name: "F#", pos: "2nd" }, { frets: "x9bba9", name: "F#", pos: "9th" }],
-  "Gb": [{ frets: "244322", name: "Gb", pos: "2nd" }],
-  "Ab": [{ frets: "466544", name: "Ab", pos: "4th" }],
-  "Bb": [{ frets: "x13331", name: "Bb", pos: "1st" }, { frets: "688766", name: "Bb", pos: "6th" }],
-  // Minor chords — multiple positions
+  "F":  [{ frets: "133211", name: "F", pos: "1st" }, { frets: "x8a998", name: "F", pos: "8th" }, { frets: "xx3211", name: "F", pos: "Partial" }],
+  "Fm": [{ frets: "133111", name: "Fm", pos: "1st" }, { frets: "x8a988", name: "Fm", pos: "8th" }, { frets: "xx3111", name: "Fm", pos: "Partial" }],
+  "G":  [{ frets: "320003", name: "G", pos: "Open" }, { frets: "355433", name: "G", pos: "3rd" }, { frets: "xx5433", name: "G", pos: "Partial" }],
+  "Gm": [{ frets: "355333", name: "Gm", pos: "3rd" }, { frets: "xx5333", name: "Gm", pos: "Partial" }, { frets: "3x0333", name: "Gm", pos: "Open" }],
+  "A":  [{ frets: "x02220", name: "A", pos: "Open" }, { frets: "577655", name: "A", pos: "5th" }, { frets: "xx7655", name: "A", pos: "Partial" }],
+  "Am": [{ frets: "x02210", name: "Am", pos: "Open" }, { frets: "577555", name: "Am", pos: "5th" }, { frets: "x07565", name: "Am", pos: "7th" }],
+  "B":  [{ frets: "x24442", name: "B", pos: "2nd" }, { frets: "799877", name: "B", pos: "7th" }, { frets: "xx4442", name: "B", pos: "Partial" }],
+  "Bm": [{ frets: "x24432", name: "Bm", pos: "2nd" }, { frets: "799777", name: "Bm", pos: "7th" }, { frets: "xx4432", name: "Bm", pos: "Partial" }],
+  "C#": [{ frets: "x46664", name: "C#", pos: "4th" }, { frets: "9bb999", name: "C#", pos: "9th" }, { frets: "xx6664", name: "C#", pos: "Partial" }],
+  "Db": [{ frets: "x46664", name: "Db", pos: "4th" }, { frets: "9bb999", name: "Db", pos: "9th" }, { frets: "xx6664", name: "Db", pos: "Partial" }],
+  "D#": [{ frets: "x68886", name: "D#", pos: "6th" }, { frets: "bddcbb", name: "D#", pos: "11th" }, { frets: "xx8886", name: "D#", pos: "Partial" }],
+  "Eb": [{ frets: "x68886", name: "Eb", pos: "6th" }, { frets: "bddcbb", name: "Eb", pos: "11th" }, { frets: "xx8886", name: "Eb", pos: "Partial" }],
+  "F#": [{ frets: "244322", name: "F#", pos: "2nd" }, { frets: "x9bba9", name: "F#", pos: "9th" }, { frets: "xx4322", name: "F#", pos: "Partial" }],
+  "Gb": [{ frets: "244322", name: "Gb", pos: "2nd" }, { frets: "x9bba9", name: "Gb", pos: "9th" }, { frets: "xx4322", name: "Gb", pos: "Partial" }],
+  "Ab": [{ frets: "466544", name: "Ab", pos: "4th" }, { frets: "x13341", name: "Ab", pos: "1st" }, { frets: "xx6544", name: "Ab", pos: "Partial" }],
+  "Bb": [{ frets: "x13331", name: "Bb", pos: "1st" }, { frets: "688766", name: "Bb", pos: "6th" }, { frets: "xx3331", name: "Bb", pos: "Partial" }],
+  // ─── Minor chords ───
   "C#m": [{ frets: "x46654", name: "C#m", pos: "4th" }, { frets: "9bb999", name: "C#m", pos: "9th" }, { frets: "x04650", name: "C#m", pos: "Open" }],
+  "Ebm": [{ frets: "x68876", name: "Ebm", pos: "6th" }, { frets: "bddbbb", name: "Ebm", pos: "11th" }, { frets: "xx8876", name: "Ebm", pos: "Partial" }],
   "F#m": [{ frets: "244222", name: "F#m", pos: "2nd" }, { frets: "x04220", name: "F#m", pos: "Open" }, { frets: "x9baa9", name: "F#m", pos: "9th" }],
-  "Bbm": [{ frets: "x13321", name: "Bbm", pos: "1st" }, { frets: "688666", name: "Bbm", pos: "6th" }],
-  "G#m": [{ frets: "466444", name: "G#m", pos: "4th" }, { frets: "x02440", name: "G#m", pos: "Partial" }],
-  // 7th chords — multiple positions
-  "Am7":  [{ frets: "x02010", name: "Am7", pos: "Open" }, { frets: "575555", name: "Am7", pos: "5th" }],
-  "Dm7":  [{ frets: "xx0211", name: "Dm7", pos: "Open" }, { frets: "x57565", name: "Dm7", pos: "5th" }],
-  "Em7":  [{ frets: "022030", name: "Em7", pos: "Open" }, { frets: "020000", name: "Em7", pos: "Easy" }],
-  "Cmaj7": [{ frets: "x32000", name: "Cmaj7", pos: "Open" }, { frets: "x35453", name: "Cmaj7", pos: "3rd" }],
-  "Dmaj7": [{ frets: "xx0222", name: "Dmaj7", pos: "Open" }, { frets: "x57675", name: "Dmaj7", pos: "5th" }],
-  "Gm7":  [{ frets: "353333", name: "Gm7", pos: "3rd" }, { frets: "xx5333", name: "Gm7", pos: "Partial" }],
-  "C7":   [{ frets: "x32310", name: "C7", pos: "Open" }, { frets: "x35353", name: "C7", pos: "3rd" }],
-  "A7":   [{ frets: "x02020", name: "A7", pos: "Open" }, { frets: "575655", name: "A7", pos: "5th" }],
-  "E7":   [{ frets: "020100", name: "E7", pos: "Open" }, { frets: "x79797", name: "E7", pos: "7th" }],
-  "B7":   [{ frets: "x21202", name: "B7", pos: "Open" }, { frets: "797877", name: "B7", pos: "7th" }],
-  "F#7":  [{ frets: "242322", name: "F#7", pos: "2nd" }],
-  "G7":   [{ frets: "320001", name: "G7", pos: "Open" }, { frets: "353433", name: "G7", pos: "3rd" }],
-  // Sus chords
-  "Dsus2": [{ frets: "xx0230", name: "Dsus2", pos: "Open" }],
-  "Asus2": [{ frets: "x02200", name: "Asus2", pos: "Open" }],
-  // Power chords
+  "Bbm": [{ frets: "x13321", name: "Bbm", pos: "1st" }, { frets: "688666", name: "Bbm", pos: "6th" }, { frets: "xx3321", name: "Bbm", pos: "Partial" }],
+  "G#m": [{ frets: "466444", name: "G#m", pos: "4th" }, { frets: "xx4444", name: "G#m", pos: "Partial" }, { frets: "x02440", name: "G#m", pos: "Open" }],
+  // ─── 7th chords ───
+  "Am7":  [{ frets: "x02010", name: "Am7", pos: "Open" }, { frets: "575555", name: "Am7", pos: "5th" }, { frets: "x02013", name: "Am7", pos: "Open alt" }],
+  "Dm7":  [{ frets: "xx0211", name: "Dm7", pos: "Open" }, { frets: "x57565", name: "Dm7", pos: "5th" }, { frets: "xx0111", name: "Dm7", pos: "Easy" }],
+  "Em7":  [{ frets: "022030", name: "Em7", pos: "Open" }, { frets: "020000", name: "Em7", pos: "Easy" }, { frets: "x79787", name: "Em7", pos: "7th" }],
+  "Cmaj7": [{ frets: "x32000", name: "Cmaj7", pos: "Open" }, { frets: "x35453", name: "Cmaj7", pos: "3rd" }, { frets: "xx5500", name: "Cmaj7", pos: "Partial" }],
+  "Dmaj7": [{ frets: "xx0222", name: "Dmaj7", pos: "Open" }, { frets: "x57675", name: "Dmaj7", pos: "5th" }, { frets: "xx0a7a", name: "Dmaj7", pos: "10th" }],
+  "Gm7":  [{ frets: "353333", name: "Gm7", pos: "3rd" }, { frets: "xx5333", name: "Gm7", pos: "Partial" }, { frets: "3x3333", name: "Gm7", pos: "3rd alt" }],
+  "C7":   [{ frets: "x32310", name: "C7", pos: "Open" }, { frets: "x35353", name: "C7", pos: "3rd" }, { frets: "8a98a8", name: "C7", pos: "8th" }],
+  "A7":   [{ frets: "x02020", name: "A7", pos: "Open" }, { frets: "575655", name: "A7", pos: "5th" }, { frets: "x02023", name: "A7", pos: "Open alt" }],
+  "E7":   [{ frets: "020100", name: "E7", pos: "Open" }, { frets: "x79797", name: "E7", pos: "7th" }, { frets: "022130", name: "E7", pos: "Open alt" }],
+  "B7":   [{ frets: "x21202", name: "B7", pos: "Open" }, { frets: "797877", name: "B7", pos: "7th" }, { frets: "x24242", name: "B7", pos: "2nd" }],
+  "F#7":  [{ frets: "242322", name: "F#7", pos: "2nd" }, { frets: "xx4320", name: "F#7", pos: "Partial" }, { frets: "x9b9a9", name: "F#7", pos: "9th" }],
+  "G7":   [{ frets: "320001", name: "G7", pos: "Open" }, { frets: "353433", name: "G7", pos: "3rd" }, { frets: "xx0001", name: "G7", pos: "Easy" }],
+  "D7":   [{ frets: "xx0212", name: "D7", pos: "Open" }, { frets: "x57575", name: "D7", pos: "5th" }, { frets: "a9a8aa", name: "D7", pos: "10th" }],
+  "F7":   [{ frets: "131211", name: "F7", pos: "1st" }, { frets: "x8a898", name: "F7", pos: "8th" }, { frets: "xx3544", name: "F7", pos: "Partial" }],
+  "Bb7":  [{ frets: "x13131", name: "Bb7", pos: "1st" }, { frets: "686766", name: "Bb7", pos: "6th" }, { frets: "xx3334", name: "Bb7", pos: "Partial" }],
+  "Eb7":  [{ frets: "x68696", name: "Eb7", pos: "6th" }, { frets: "xx1023", name: "Eb7", pos: "Partial" }],
+  // ─── Maj7 chords (additional) ───
+  "Fmaj7": [{ frets: "133210", name: "Fmaj7", pos: "1st" }, { frets: "x03210", name: "Fmaj7", pos: "Open" }, { frets: "xx3210", name: "Fmaj7", pos: "Partial" }],
+  "Gmaj7": [{ frets: "320002", name: "Gmaj7", pos: "Open" }, { frets: "355432", name: "Gmaj7", pos: "3rd" }, { frets: "xx5432", name: "Gmaj7", pos: "Partial" }],
+  "Amaj7": [{ frets: "x02120", name: "Amaj7", pos: "Open" }, { frets: "577654", name: "Amaj7", pos: "5th" }, { frets: "x02124", name: "Amaj7", pos: "Open alt" }],
+  "Emaj7": [{ frets: "021100", name: "Emaj7", pos: "Open" }, { frets: "xx9897", name: "Emaj7", pos: "Partial" }],
+  "Bmaj7": [{ frets: "x24342", name: "Bmaj7", pos: "2nd" }, { frets: "799876", name: "Bmaj7", pos: "7th" }],
+  // ─── Minor 7th chords (additional) ───
+  "Cm7":  [{ frets: "x35343", name: "Cm7", pos: "3rd" }, { frets: "8a8888", name: "Cm7", pos: "8th" }, { frets: "xx5343", name: "Cm7", pos: "Partial" }],
+  "F#m7": [{ frets: "242222", name: "F#m7", pos: "2nd" }, { frets: "x04210", name: "F#m7", pos: "Open" }, { frets: "x9b9a9", name: "F#m7", pos: "9th" }],
+  "Bm7":  [{ frets: "x20202", name: "Bm7", pos: "Open" }, { frets: "797777", name: "Bm7", pos: "7th" }, { frets: "x24232", name: "Bm7", pos: "2nd" }],
+  "C#m7": [{ frets: "x46454", name: "C#m7", pos: "4th" }, { frets: "x04400", name: "C#m7", pos: "Open" }, { frets: "9b9999", name: "C#m7", pos: "9th" }],
+  "G#m7": [{ frets: "464444", name: "G#m7", pos: "4th" }, { frets: "xx4444", name: "G#m7", pos: "Partial" }],
+  "Fm7":  [{ frets: "131111", name: "Fm7", pos: "1st" }, { frets: "x8a888", name: "Fm7", pos: "8th" }],
+  "Bbm7": [{ frets: "x13121", name: "Bbm7", pos: "1st" }, { frets: "686666", name: "Bbm7", pos: "6th" }],
+  // ─── Sus chords ───
+  "Dsus2": [{ frets: "xx0230", name: "Dsus2", pos: "Open" }, { frets: "x57755", name: "Dsus2", pos: "5th" }],
+  "Dsus4": [{ frets: "xx0233", name: "Dsus4", pos: "Open" }, { frets: "x57783", name: "Dsus4", pos: "5th" }],
+  "Asus2": [{ frets: "x02200", name: "Asus2", pos: "Open" }, { frets: "577655", name: "Asus2", pos: "5th" }],
+  "Asus4": [{ frets: "x02230", name: "Asus4", pos: "Open" }, { frets: "577755", name: "Asus4", pos: "5th" }],
+  "Esus2": [{ frets: "024400", name: "Esus2", pos: "Open" }, { frets: "x79977", name: "Esus2", pos: "7th" }],
+  "Esus4": [{ frets: "022200", name: "Esus4", pos: "Open" }, { frets: "x79a97", name: "Esus4", pos: "7th" }],
+  "Gsus2": [{ frets: "300033", name: "Gsus2", pos: "Open" }, { frets: "355233", name: "Gsus2", pos: "3rd" }],
+  "Gsus4": [{ frets: "330013", name: "Gsus4", pos: "Open" }, { frets: "355533", name: "Gsus4", pos: "3rd" }],
+  "Csus2": [{ frets: "x30013", name: "Csus2", pos: "Open" }, { frets: "x35533", name: "Csus2", pos: "3rd" }],
+  "Csus4": [{ frets: "x33011", name: "Csus4", pos: "Open" }, { frets: "x35563", name: "Csus4", pos: "3rd" }],
+  // ─── Power chords ───
   "A5":  [{ frets: "x022xx", name: "A5", pos: "Open" }, { frets: "577xxx", name: "A5", pos: "5th" }],
   "D5":  [{ frets: "xx023x", name: "D5", pos: "Open" }, { frets: "x577xx", name: "D5", pos: "5th" }],
   "E5":  [{ frets: "022xxx", name: "E5", pos: "Open" }, { frets: "x799xx", name: "E5", pos: "7th" }],
   "B5":  [{ frets: "x244xx", name: "B5", pos: "2nd" }, { frets: "799xxx", name: "B5", pos: "7th" }],
+  "G5":  [{ frets: "355xxx", name: "G5", pos: "3rd" }, { frets: "3x0xxx", name: "G5", pos: "Open" }],
+  "C5":  [{ frets: "x355xx", name: "C5", pos: "3rd" }, { frets: "8aaxxx", name: "C5", pos: "8th" }],
+  "F5":  [{ frets: "133xxx", name: "F5", pos: "1st" }, { frets: "x8aaxx", name: "F5", pos: "8th" }],
 };
 
 // Backward-compatible accessor: returns first voicing as { frets, name } for StrumChartBuilder
