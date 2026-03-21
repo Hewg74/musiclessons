@@ -7,7 +7,7 @@ import {
   Mic, Headphones, Info, AlertCircle, Quote, ArrowRight, Check, 
   Volume2, Sun, Moon
 } from 'lucide-react';
-import { MiniAudioPlayer, AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, ChordVoicingViewer, VolumeMeter, ChordTransitionTimer, GenreMetronome, SilenceScore, DroneGenerator, TAB_CONTENT, InlineKeyboard, RhythmCellCards, PhraseFormGuide, StrumChartBuilder, ChartListView, makeTemplateChart } from './JungleTools.jsx';
+import { MiniAudioPlayer, AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, ChordVoicingViewer, extractChordsFromExercise, VolumeMeter, ChordTransitionTimer, GenreMetronome, SilenceScore, DroneGenerator, TAB_CONTENT, InlineKeyboard, RhythmCellCards, PhraseFormGuide, StrumChartBuilder, ChartListView, makeTemplateChart } from './JungleTools.jsx';
 import { acquireKeepalive, releaseKeepalive, setMediaSession, clearMediaSession } from './audioKeepalive.js';
 import { DAYS, KEYBOARD_LEVELS, LOOPER_LEVELS, LESSON_POOL, ALL_NOTES, getPitchRange } from './data/appData.js';
 import { WEEKLY_PLANS, CURRENT_WEEK } from './data/weeklyPlans/index.js';
@@ -1025,10 +1025,15 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
             </div>
           )}
 
-          {/* Chord Voicings */}
-          {ex.chordVoicings && ex.chordVoicings.chords && (
-            <ChordVoicingViewer theme={T} chords={ex.chordVoicings.chords} defaultChord={ex.chordVoicings.defaultChord} />
-          )}
+          {/* Chord Voicings — explicit or auto-extracted from exercise text */}
+          {(() => {
+            const explicitChords = ex.chordVoicings?.chords;
+            const autoChords = !explicitChords && ex.type === "guitar" ? extractChordsFromExercise(ex) : null;
+            const chords = explicitChords || (autoChords?.length ? autoChords : null);
+            return chords ? (
+              <ChordVoicingViewer theme={T} chords={chords} defaultChord={ex.chordVoicings?.defaultChord} />
+            ) : null;
+          })()}
 
           {/* Fretboard */}
           {ex.fretboard && (
@@ -1693,10 +1698,15 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
                 </div>
               )}
 
-              {/* Chord Voicings */}
-              {ex.chordVoicings && ex.chordVoicings.chords && (
-                <ChordVoicingViewer theme={T} chords={ex.chordVoicings.chords} defaultChord={ex.chordVoicings.defaultChord} />
-              )}
+              {/* Chord Voicings — explicit or auto-extracted */}
+              {(() => {
+                const explicitChords = ex.chordVoicings?.chords;
+                const autoChords = !explicitChords && ex.type === "guitar" ? extractChordsFromExercise(ex) : null;
+                const chords = explicitChords || (autoChords?.length ? autoChords : null);
+                return chords ? (
+                  <ChordVoicingViewer theme={T} chords={chords} defaultChord={ex.chordVoicings?.defaultChord} />
+                ) : null;
+              })()}
 
               {/* Fretboard & Piano Keys */}
               {ex.fretboard && (

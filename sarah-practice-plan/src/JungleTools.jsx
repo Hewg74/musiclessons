@@ -5559,7 +5559,40 @@ function decompressFromURL(str) {
 }
 
 // ─── ChordVoicingViewer (for exercise inline chord diagrams) ───────────────
-export { CHORD_VOICINGS };
+export { CHORD_VOICINGS, CHORD_VOICINGS_MULTI };
+
+// Auto-extract chord names from exercise text that exist in our voicing dictionary
+export function extractChordsFromExercise(ex) {
+  if (!ex) return [];
+  // Collect all text fields from the exercise
+  const textParts = [ex.what || "", ex.title || ""];
+  if (ex.steps) ex.steps.forEach(s => { textParts.push(s.text || ""); });
+  const blob = textParts.join(" ");
+
+  // Sort chord names longest-first so "C#m" matches before "C#" before "C"
+  const chordNames = Object.keys(CHORD_VOICINGS_MULTI).sort((a, b) => b.length - a.length);
+
+  // Match chord names that appear as whole "words" (preceded by space/start, followed by non-letter or chord boundary)
+  const found = new Set();
+  for (const ch of chordNames) {
+    // Escape special regex chars in chord name (# is literal)
+    const escaped = ch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/#/g, '\\#');
+    // Match chord name preceded by space/punctuation/start and followed by non-alphanumeric (except # which is part of chord names)
+    const re = new RegExp(`(?:^|[\\s,→\\-–—(/])${escaped}(?=[\\s,→\\-–—)/.:;!?]|$)`, 'g');
+    if (re.test(blob)) found.add(ch);
+  }
+  // Return in a musically sensible order: preserve order of first appearance in text
+  const ordered = [];
+  for (const ch of chordNames) {
+    if (found.has(ch) && !ordered.includes(ch)) {
+      // Check first appearance position
+      const idx = blob.indexOf(ch);
+      if (idx >= 0) ordered.push({ ch, idx });
+    }
+  }
+  ordered.sort((a, b) => a.idx - b.idx);
+  return ordered.map(o => o.ch);
+}
 
 function playChordAudio(fretStr) {
   if (!fretStr) return;
