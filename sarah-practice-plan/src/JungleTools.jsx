@@ -138,6 +138,7 @@ export function YouTubeAudioPlayer({ videoId, theme: T, title }) {
   const playerRef = useRef(null);
   const mutexIdRef = useRef(null);
   const syncRafRef = useRef(null);
+  const isWide = useIsWide(900);
   const [isReady, setIsReady] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -419,7 +420,23 @@ export function YouTubeAudioPlayer({ videoId, theme: T, title }) {
           </div>
         </div>
 
+        {/* Right side controls + Speed on desktop */}
         <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+          {isWide && isReady && (
+            <>
+              {[0.5, 0.75, 1].map(s => (
+                <button key={s} onClick={() => setSpeed(s)} style={{
+                  fontSize: 10, padding: "4px 8px", borderRadius: T.radius, cursor: "pointer",
+                  fontWeight: 700, fontFamily: T.sans,
+                  background: speed === s ? T.gold : T.bgSoft,
+                  color: speed === s ? "#fff" : T.textMed,
+                  border: `1px solid ${speed === s ? T.gold : T.border}`,
+                  transition: "all 0.15s",
+                }}>{s}x</button>
+              ))}
+              <div style={{ width: 1, height: 18, background: T.borderSoft, flexShrink: 0 }} />
+            </>
+          )}
           <button onClick={() => setShowLoopSettings(!showLoopSettings)} title="Loop Settings" style={{
             background: isLooping || showLoopSettings ? T.bgSoft : "transparent",
             border: `1px solid ${isLooping ? T.gold : showLoopSettings ? T.border : "transparent"}`,
@@ -433,8 +450,8 @@ export function YouTubeAudioPlayer({ videoId, theme: T, title }) {
         </div>
       </div>
 
-      {/* Speed Control */}
-      {isReady && (
+      {/* Speed Control — mobile only */}
+      {!isWide && isReady && (
         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
           <span style={{ fontSize: 9, color: T.textMuted, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans, marginRight: 2 }}>Speed:</span>
           {[0.5, 0.75, 1].map(s => (
@@ -454,67 +471,98 @@ export function YouTubeAudioPlayer({ videoId, theme: T, title }) {
       {showLoopSettings && (
         <div style={{
           borderTop: `1px solid ${T.borderSoft}`, paddingTop: 12, marginTop: -4,
-          display: "flex", flexDirection: "column", gap: 12,
+          display: "flex", flexDirection: "column", gap: isWide ? 8 : 12,
           animation: 'fade-in-up 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards'
         }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-              <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: T.textDark, fontFamily: T.sans }}>A/B Loop Mode</span>
-              <div style={{ display: "flex", gap: 6, paddingLeft: 12, borderLeft: `1px solid ${T.borderSoft}` }}>
-                <button onClick={skipBack} title="Rewind 10s" style={trayNavBtnStyle(T)}
-                  onPointerDown={e => e.currentTarget.style.transform = "scale(0.85)"}
-                  onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
-                ><SkipBack size={14} /></button>
-                <button onClick={resetSong} title="Restart" style={trayNavBtnStyle(T)}
-                  onPointerDown={e => e.currentTarget.style.transform = "scale(0.85)"}
-                  onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
-                ><RotateCcw size={14} /></button>
+          {isWide ? (
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: T.textDark, fontFamily: T.sans, flexShrink: 0 }}>A/B Loop</span>
+              <div style={{ display: "flex", gap: 4 }}>
+                <button onClick={skipBack} title="Rewind 10s" style={trayNavBtnStyle(T)}><SkipBack size={14} /></button>
+                <button onClick={resetSong} title="Restart" style={trayNavBtnStyle(T)}><RotateCcw size={14} /></button>
+              </div>
+              <button onClick={() => setIsLooping(!isLooping)} style={{
+                background: isLooping ? T.success : T.border, border: "none",
+                width: 36, height: 20, borderRadius: 10, position: "relative",
+                cursor: "pointer", transition: "background 0.3s ease", flexShrink: 0,
+              }}>
+                <div style={{
+                  position: "absolute", top: 2, left: isLooping ? 18 : 2,
+                  width: 16, height: 16, borderRadius: "50%", background: "#fff",
+                  boxShadow: "0 1px 3px rgba(0,0,0,0.2)", transition: "left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
+                }} />
+              </button>
+              <div style={{ width: 1, height: 18, background: T.borderSoft, flexShrink: 0 }} />
+              <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                <span style={{ fontSize: 9, fontWeight: 700, color: T.textMuted, fontFamily: T.sans }}>A</span>
+                <TimeInput time={loopStart} onChange={(t) => { let s = Math.max(0, t); if (s >= loopEnd) s = Math.max(0, loopEnd - 1); setLoopStart(s); }} T={T} />
+                <button onClick={() => nudgeBoundary('A', -0.5)} style={nudgeBtnStyle(T)}>-</button>
+                <button onClick={() => nudgeBoundary('A', 0.5)} style={nudgeBtnStyle(T)}>+</button>
+                <button onClick={() => setBoundary('A')} style={setBtnStyle(T)}>Set</button>
+              </div>
+              <div style={{ width: 1, height: 18, background: T.borderSoft, flexShrink: 0 }} />
+              <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                <span style={{ fontSize: 9, fontWeight: 700, color: T.textMuted, fontFamily: T.sans }}>B</span>
+                <TimeInput time={loopEnd} onChange={(t) => { let e = Math.min(duration, t); if (e <= loopStart) e = Math.min(duration, loopStart + 1); setLoopEnd(e); }} T={T} />
+                <button onClick={() => nudgeBoundary('B', -0.5)} style={nudgeBtnStyle(T)}>-</button>
+                <button onClick={() => nudgeBoundary('B', 0.5)} style={nudgeBtnStyle(T)}>+</button>
+                <button onClick={() => setBoundary('B')} style={setBtnStyle(T)}>Set</button>
               </div>
             </div>
-            <button onClick={() => setIsLooping(!isLooping)} style={{
-              background: isLooping ? T.success : T.border, border: "none",
-              width: 44, height: 24, borderRadius: 12, position: "relative",
-              cursor: "pointer", transition: "background 0.3s ease"
-            }}>
-              <div style={{
-                position: "absolute", top: 2, left: isLooping ? 22 : 2,
-                width: 20, height: 20, borderRadius: "50%", background: "#fff",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.2)", transition: "left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
-              }} />
-            </button>
-          </div>
-          <div style={{ display: 'flex', gap: 12 }}>
-            <div style={{ flex: 1, background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radius, padding: "8px 10px" }}>
-              <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 6 }}>Start (A)</div>
+          ) : (
+            <>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <TimeInput time={loopStart} onChange={(t) => {
-                  let newStart = Math.max(0, t);
-                  if (newStart >= loopEnd) newStart = Math.max(0, loopEnd - 1);
-                  setLoopStart(newStart);
-                }} T={T} />
-                <div style={{ display: 'flex', gap: 4 }}>
-                  <button onClick={() => nudgeBoundary('A', -0.5)} style={nudgeBtnStyle(T)}>-</button>
-                  <button onClick={() => nudgeBoundary('A', 0.5)} style={nudgeBtnStyle(T)}>+</button>
-                  <button onClick={() => setBoundary('A')} style={setBtnStyle(T)}>Set</button>
+                <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                  <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: T.textDark, fontFamily: T.sans }}>A/B Loop Mode</span>
+                  <div style={{ display: "flex", gap: 6, paddingLeft: 12, borderLeft: `1px solid ${T.borderSoft}` }}>
+                    <button onClick={skipBack} title="Rewind 10s" style={trayNavBtnStyle(T)}
+                      onPointerDown={e => e.currentTarget.style.transform = "scale(0.85)"}
+                      onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
+                    ><SkipBack size={14} /></button>
+                    <button onClick={resetSong} title="Restart" style={trayNavBtnStyle(T)}
+                      onPointerDown={e => e.currentTarget.style.transform = "scale(0.85)"}
+                      onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
+                    ><RotateCcw size={14} /></button>
+                  </div>
+                </div>
+                <button onClick={() => setIsLooping(!isLooping)} style={{
+                  background: isLooping ? T.success : T.border, border: "none",
+                  width: 44, height: 24, borderRadius: 12, position: "relative",
+                  cursor: "pointer", transition: "background 0.3s ease"
+                }}>
+                  <div style={{
+                    position: "absolute", top: 2, left: isLooping ? 22 : 2,
+                    width: 20, height: 20, borderRadius: "50%", background: "#fff",
+                    boxShadow: "0 1px 3px rgba(0,0,0,0.2)", transition: "left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
+                  }} />
+                </button>
+              </div>
+              <div style={{ display: 'flex', gap: 12 }}>
+                <div style={{ flex: 1, background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radius, padding: "8px 10px" }}>
+                  <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 6 }}>Start (A)</div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <TimeInput time={loopStart} onChange={(t) => { let s = Math.max(0, t); if (s >= loopEnd) s = Math.max(0, loopEnd - 1); setLoopStart(s); }} T={T} />
+                    <div style={{ display: 'flex', gap: 4 }}>
+                      <button onClick={() => nudgeBoundary('A', -0.5)} style={nudgeBtnStyle(T)}>-</button>
+                      <button onClick={() => nudgeBoundary('A', 0.5)} style={nudgeBtnStyle(T)}>+</button>
+                      <button onClick={() => setBoundary('A')} style={setBtnStyle(T)}>Set</button>
+                    </div>
+                  </div>
+                </div>
+                <div style={{ flex: 1, background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radius, padding: "8px 10px" }}>
+                  <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 6 }}>End (B)</div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <TimeInput time={loopEnd} onChange={(t) => { let e = Math.min(duration, t); if (e <= loopStart) e = Math.min(duration, loopStart + 1); setLoopEnd(e); }} T={T} />
+                    <div style={{ display: 'flex', gap: 4 }}>
+                      <button onClick={() => nudgeBoundary('B', -0.5)} style={nudgeBtnStyle(T)}>-</button>
+                      <button onClick={() => nudgeBoundary('B', 0.5)} style={nudgeBtnStyle(T)}>+</button>
+                      <button onClick={() => setBoundary('B')} style={setBtnStyle(T)}>Set</button>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div style={{ flex: 1, background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radius, padding: "8px 10px" }}>
-              <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 6 }}>End (B)</div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <TimeInput time={loopEnd} onChange={(t) => {
-                  let newEnd = Math.min(duration, t);
-                  if (newEnd <= loopStart) newEnd = Math.min(duration, loopStart + 1);
-                  setLoopEnd(newEnd);
-                }} T={T} />
-                <div style={{ display: 'flex', gap: 4 }}>
-                  <button onClick={() => nudgeBoundary('B', -0.5)} style={nudgeBtnStyle(T)}>-</button>
-                  <button onClick={() => nudgeBoundary('B', 0.5)} style={nudgeBtnStyle(T)}>+</button>
-                  <button onClick={() => setBoundary('B')} style={setBtnStyle(T)}>Set</button>
-                </div>
-              </div>
-            </div>
-          </div>
+            </>
+          )}
         </div>
       )}
     </div>
@@ -526,6 +574,7 @@ export function MiniAudioPlayer({ src, theme: T, title, playbackRate = 1 }) {
   const audioRef = useRef(null);
   const progressRef = useRef(null);
   const mutexIdRef = useRef(null);
+  const isWide = useIsWide(900);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0); // 0 to 1
   const [duration, setDuration] = useState(0);
@@ -771,8 +820,23 @@ export function MiniAudioPlayer({ src, theme: T, title, playbackRate = 1 }) {
           </div>
         </div>
 
-        {/* Inline Transport Controls (Right Side) */}
+        {/* Inline Transport Controls (Right Side) + Speed on desktop */}
         <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+          {isWide && duration > 0 && (
+            <>
+              {[0.5, 0.75, 1].map(s => (
+                <button key={s} onClick={() => setSpeed(s)} style={{
+                  fontSize: 10, padding: "4px 8px", borderRadius: T.radius, cursor: "pointer",
+                  fontWeight: 700, fontFamily: T.sans,
+                  background: speed === s ? T.gold : T.bgSoft,
+                  color: speed === s ? "#fff" : T.textMed,
+                  border: `1px solid ${speed === s ? T.gold : T.border}`,
+                  transition: "all 0.15s",
+                }}>{s}x</button>
+              ))}
+              <div style={{ width: 1, height: 18, background: T.borderSoft, flexShrink: 0 }} />
+            </>
+          )}
           <button onClick={() => setShowLoopSettings(!showLoopSettings)} title="Loop Settings" style={{
             background: isLooping || showLoopSettings ? T.bgSoft : "transparent",
             border: `1px solid ${isLooping ? T.gold : showLoopSettings ? T.border : "transparent"}`,
@@ -786,8 +850,8 @@ export function MiniAudioPlayer({ src, theme: T, title, playbackRate = 1 }) {
         </div>
       </div>
 
-      {/* Speed Control */}
-      {duration > 0 && (
+      {/* Speed Control — mobile only (on desktop it's inline above) */}
+      {!isWide && duration > 0 && (
         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
           <span style={{ fontSize: 9, color: T.textMuted, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans, marginRight: 2 }}>Speed:</span>
           {[0.5, 0.75, 1].map(s => (
@@ -807,76 +871,100 @@ export function MiniAudioPlayer({ src, theme: T, title, playbackRate = 1 }) {
       {showLoopSettings && (
         <div style={{
           borderTop: `1px solid ${T.borderSoft}`, paddingTop: 12, marginTop: -4,
-          display: "flex", flexDirection: "column", gap: 12,
+          display: "flex", flexDirection: "column", gap: isWide ? 8 : 12,
           animation: 'fade-in-up 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards'
         }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-              <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: T.textDark, fontFamily: T.sans }}>A/B Loop Mode</span>
-              {/* Relocated Transport Controls */}
-              <div style={{ display: "flex", gap: 6, paddingLeft: 12, borderLeft: `1px solid ${T.borderSoft}` }}>
-                <button onClick={skipBack} title="Rewind 10s" style={trayNavBtnStyle(T)}
-                  onPointerDown={e => e.currentTarget.style.transform = "scale(0.85)"}
-                  onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
-                >
-                  <SkipBack size={14} />
-                </button>
-                <button onClick={resetSong} title="Restart" style={trayNavBtnStyle(T)}
-                  onPointerDown={e => e.currentTarget.style.transform = "scale(0.85)"}
-                  onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
-                >
-                  <RotateCcw size={14} />
-                </button>
+          {/* Desktop: all on one row — Label + transport + toggle + A/B boundaries */}
+          {isWide ? (
+            <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+              <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: T.textDark, fontFamily: T.sans, flexShrink: 0 }}>A/B Loop</span>
+              <div style={{ display: "flex", gap: 4, flexShrink: 0 }}>
+                <button onClick={skipBack} title="Rewind 10s" style={trayNavBtnStyle(T)}><SkipBack size={14} /></button>
+                <button onClick={resetSong} title="Restart" style={trayNavBtnStyle(T)}><RotateCcw size={14} /></button>
+              </div>
+              <button onClick={() => setIsLooping(!isLooping)} style={{
+                background: isLooping ? T.success : T.border, border: "none",
+                width: 36, height: 20, borderRadius: 10, position: "relative",
+                cursor: "pointer", transition: "background 0.3s ease", flexShrink: 0,
+              }}>
+                <div style={{
+                  position: "absolute", top: 2, left: isLooping ? 18 : 2,
+                  width: 16, height: 16, borderRadius: "50%", background: "#fff",
+                  boxShadow: "0 1px 3px rgba(0,0,0,0.2)", transition: "left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
+                }} />
+              </button>
+              <div style={{ width: 1, height: 18, background: T.borderSoft, flexShrink: 0 }} />
+              <div style={{ display: "flex", alignItems: "center", gap: 4, flexShrink: 0 }}>
+                <span style={{ fontSize: 9, fontWeight: 700, color: T.textMuted, fontFamily: T.sans }}>A</span>
+                <TimeInput time={loopStart} onChange={(t) => { let s = Math.max(0, t); if (s >= loopEnd) s = Math.max(0, loopEnd - 1); setLoopStart(s); }} T={T} />
+                <button onClick={() => nudgeBoundary('A', -0.5)} style={nudgeBtnStyle(T)}>-</button>
+                <button onClick={() => nudgeBoundary('A', 0.5)} style={nudgeBtnStyle(T)}>+</button>
+                <button onClick={() => setBoundary('A')} style={setBtnStyle(T)}>Set</button>
+              </div>
+              <div style={{ width: 1, height: 18, background: T.borderSoft, flexShrink: 0 }} />
+              <div style={{ display: "flex", alignItems: "center", gap: 4, flexShrink: 0 }}>
+                <span style={{ fontSize: 9, fontWeight: 700, color: T.textMuted, fontFamily: T.sans }}>B</span>
+                <TimeInput time={loopEnd} onChange={(t) => { let e = Math.min(duration, t); if (e <= loopStart) e = Math.min(duration, loopStart + 1); setLoopEnd(e); }} T={T} />
+                <button onClick={() => nudgeBoundary('B', -0.5)} style={nudgeBtnStyle(T)}>-</button>
+                <button onClick={() => nudgeBoundary('B', 0.5)} style={nudgeBtnStyle(T)}>+</button>
+                <button onClick={() => setBoundary('B')} style={setBtnStyle(T)}>Set</button>
               </div>
             </div>
-            {/* Beautiful Pill Toggle */}
-            <button onClick={() => setIsLooping(!isLooping)} style={{
-              background: isLooping ? T.success : T.border, border: "none",
-              width: 44, height: 24, borderRadius: 12, position: "relative",
-              cursor: "pointer", transition: "background 0.3s ease"
-            }}>
-              <div style={{
-                position: "absolute", top: 2, left: isLooping ? 22 : 2,
-                width: 20, height: 20, borderRadius: "50%", background: "#fff",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.2)", transition: "left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
-              }} />
-            </button>
-          </div>
-
-          <div style={{ display: 'flex', gap: 12 }}>
-            {/* Start A */}
-            <div style={{ flex: 1, background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radius, padding: "8px 10px" }}>
-              <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 6 }}>Start (A)</div>
+          ) : (
+            /* Mobile: original stacked layout */
+            <>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <TimeInput time={loopStart} onChange={(t) => {
-                  let newStart = Math.max(0, t);
-                  if (newStart >= loopEnd) newStart = Math.max(0, loopEnd - 1);
-                  setLoopStart(newStart);
-                }} T={T} />
-                <div style={{ display: 'flex', gap: 4 }}>
-                  <button onClick={() => nudgeBoundary('A', -0.5)} style={nudgeBtnStyle(T)}>-</button>
-                  <button onClick={() => nudgeBoundary('A', 0.5)} style={nudgeBtnStyle(T)}>+</button>
-                  <button onClick={() => setBoundary('A')} style={setBtnStyle(T)}>Set</button>
+                <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                  <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: T.textDark, fontFamily: T.sans }}>A/B Loop Mode</span>
+                  <div style={{ display: "flex", gap: 6, paddingLeft: 12, borderLeft: `1px solid ${T.borderSoft}` }}>
+                    <button onClick={skipBack} title="Rewind 10s" style={trayNavBtnStyle(T)}
+                      onPointerDown={e => e.currentTarget.style.transform = "scale(0.85)"}
+                      onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
+                    ><SkipBack size={14} /></button>
+                    <button onClick={resetSong} title="Restart" style={trayNavBtnStyle(T)}
+                      onPointerDown={e => e.currentTarget.style.transform = "scale(0.85)"}
+                      onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
+                    ><RotateCcw size={14} /></button>
+                  </div>
+                </div>
+                <button onClick={() => setIsLooping(!isLooping)} style={{
+                  background: isLooping ? T.success : T.border, border: "none",
+                  width: 44, height: 24, borderRadius: 12, position: "relative",
+                  cursor: "pointer", transition: "background 0.3s ease"
+                }}>
+                  <div style={{
+                    position: "absolute", top: 2, left: isLooping ? 22 : 2,
+                    width: 20, height: 20, borderRadius: "50%", background: "#fff",
+                    boxShadow: "0 1px 3px rgba(0,0,0,0.2)", transition: "left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
+                  }} />
+                </button>
+              </div>
+              <div style={{ display: 'flex', gap: 12 }}>
+                <div style={{ flex: 1, background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radius, padding: "8px 10px" }}>
+                  <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 6 }}>Start (A)</div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <TimeInput time={loopStart} onChange={(t) => { let s = Math.max(0, t); if (s >= loopEnd) s = Math.max(0, loopEnd - 1); setLoopStart(s); }} T={T} />
+                    <div style={{ display: 'flex', gap: 4 }}>
+                      <button onClick={() => nudgeBoundary('A', -0.5)} style={nudgeBtnStyle(T)}>-</button>
+                      <button onClick={() => nudgeBoundary('A', 0.5)} style={nudgeBtnStyle(T)}>+</button>
+                      <button onClick={() => setBoundary('A')} style={setBtnStyle(T)}>Set</button>
+                    </div>
+                  </div>
+                </div>
+                <div style={{ flex: 1, background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radius, padding: "8px 10px" }}>
+                  <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 6 }}>End (B)</div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <TimeInput time={loopEnd} onChange={(t) => { let e = Math.min(duration, t); if (e <= loopStart) e = Math.min(duration, loopStart + 1); setLoopEnd(e); }} T={T} />
+                    <div style={{ display: 'flex', gap: 4 }}>
+                      <button onClick={() => nudgeBoundary('B', -0.5)} style={nudgeBtnStyle(T)}>-</button>
+                      <button onClick={() => nudgeBoundary('B', 0.5)} style={nudgeBtnStyle(T)}>+</button>
+                      <button onClick={() => setBoundary('B')} style={setBtnStyle(T)}>Set</button>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-            {/* End B */}
-            <div style={{ flex: 1, background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radius, padding: "8px 10px" }}>
-              <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 6 }}>End (B)</div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <TimeInput time={loopEnd} onChange={(t) => {
-                  let newEnd = Math.min(duration, t);
-                  if (newEnd <= loopStart) newEnd = Math.min(duration, loopStart + 1);
-                  setLoopEnd(newEnd);
-                }} T={T} />
-                <div style={{ display: 'flex', gap: 4 }}>
-                  <button onClick={() => nudgeBoundary('B', -0.5)} style={nudgeBtnStyle(T)}>-</button>
-                  <button onClick={() => nudgeBoundary('B', 0.5)} style={nudgeBtnStyle(T)}>+</button>
-                  <button onClick={() => setBoundary('B')} style={setBtnStyle(T)}>Set</button>
-                </div>
-              </div>
-            </div>
-          </div>
+            </>
+          )}
         </div>
       )}
 
@@ -5165,7 +5253,7 @@ const CHART_SONGS = [
   { id: "iltwyw", name: "I Like The Way You Walk", artist: "The Donkeys", src: "/iltwyw.mp3", bpm: 97, key: "A", tabId: "iltwyw" },
 ];
 
-export function SongPicker({ theme: T, youtubeUrl, onYoutubeChange }) {
+export function SongPicker({ theme: T, youtubeUrl, onYoutubeChange, hidePlayer, onSongChange }) {
   const [songId, setSongId] = useState("");
   const [showTabs, setShowTabs] = useState(false);
   const [ytInput, setYtInput] = useState(youtubeUrl || "");
@@ -5198,26 +5286,68 @@ export function SongPicker({ theme: T, youtubeUrl, onYoutubeChange }) {
     }
   };
 
+  // Notify parent of song changes so it can render the player separately on desktop
+  useEffect(() => {
+    if (onSongChange) onSongChange(song || null);
+  }, [songId]);
+
   return (
-    <div style={{ marginBottom: 16 }}>
-      {/* Dropdown + tabs toggle row */}
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: (song || ytVideoId) ? 8 : 0 }}>
+    <div style={{ marginBottom: hidePlayer ? 0 : 16 }}>
+      {/* Song select or YouTube URL — unified row */}
+      <div style={{
+        display: "flex", alignItems: "center", gap: 8, marginBottom: (!hidePlayer && (song || ytVideoId)) ? 8 : 0,
+        flexWrap: "wrap",
+      }}>
         <Music size={14} style={{ color: T.textMuted, flexShrink: 0 }} />
-        <select
-          value={songId}
-          onChange={e => handleSongChange(e.target.value)}
-          style={{
-            flex: 1, fontSize: 13, fontFamily: T.serif, fontWeight: 600, color: T.textDark,
-            background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radius,
-            padding: "7px 10px", cursor: "pointer", outline: "none",
-            appearance: "auto",
-          }}
-        >
-          <option value="">Choose a song...</option>
-          {CHART_SONGS.map(s => (
-            <option key={s.id} value={s.id}>{s.name} — {s.artist} ({s.bpm} BPM, {s.key})</option>
-          ))}
-        </select>
+
+        {/* Song dropdown — hide when YouTube URL is active */}
+        {!ytVideoId && (
+          <select
+            value={songId}
+            onChange={e => handleSongChange(e.target.value)}
+            style={{
+              flex: 1, minWidth: 140, fontSize: 13, fontFamily: T.serif, fontWeight: 600, color: T.textDark,
+              background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radius,
+              padding: "7px 10px", cursor: "pointer", outline: "none",
+              appearance: "auto",
+            }}
+          >
+            <option value="">Choose a song...</option>
+            {CHART_SONGS.map(s => (
+              <option key={s.id} value={s.id}>{s.name} — {s.artist} ({s.bpm} BPM, {s.key})</option>
+            ))}
+          </select>
+        )}
+
+        {/* Divider — show when no song selected and no YouTube */}
+        {!song && !ytVideoId && (
+          <span style={{ fontSize: 10, color: T.textMuted, fontFamily: T.sans, fontWeight: 500 }}>or</span>
+        )}
+
+        {/* YouTube URL input — compact when song dropdown visible, full-width when active */}
+        <div style={{ display: "flex", alignItems: "center", gap: 6, flex: ytVideoId ? 1 : "0 1 auto", minWidth: ytVideoId ? 0 : 160 }}>
+          <input
+            type="text"
+            value={ytInput}
+            onChange={e => handleYtInputChange(e.target.value)}
+            placeholder={ytVideoId ? "YouTube URL" : "YouTube URL..."}
+            style={{
+              flex: 1, fontSize: 12, fontFamily: T.sans, color: T.textDark,
+              background: T.bgSoft, border: `1px solid ${ytVideoId ? T.gold + "60" : T.border}`,
+              borderRadius: T.radius, padding: "7px 10px", outline: "none",
+              transition: "border-color 0.15s",
+              minWidth: 0,
+            }}
+          />
+          {ytVideoId && (
+            <button onClick={() => { setYtInput(""); if (onYoutubeChange) onYoutubeChange(""); }} style={{
+              fontSize: 9, padding: "5px 8px", borderRadius: T.radius, cursor: "pointer",
+              fontWeight: 700, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1,
+              background: "transparent", color: T.textMuted, border: `1px solid ${T.border}`,
+              flexShrink: 0,
+            }}><X size={12} /></button>
+          )}
+        </div>
 
         {song && song.tabId && TAB_CONTENT[song.tabId] && (
           <button onClick={() => setShowTabs(!showTabs)} style={{
@@ -5231,35 +5361,12 @@ export function SongPicker({ theme: T, youtubeUrl, onYoutubeChange }) {
         )}
       </div>
 
-      {/* YouTube URL input */}
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-        <input
-          type="text"
-          value={ytInput}
-          onChange={e => handleYtInputChange(e.target.value)}
-          placeholder="Paste YouTube URL..."
-          style={{
-            flex: 1, fontSize: 12, fontFamily: T.sans, color: T.textDark,
-            background: T.bgSoft, border: `1px solid ${ytVideoId ? T.gold + "60" : T.border}`,
-            borderRadius: T.radius, padding: "7px 10px", outline: "none",
-            transition: "border-color 0.15s",
-          }}
-        />
-        {ytVideoId && (
-          <button onClick={() => { setYtInput(""); if (onYoutubeChange) onYoutubeChange(""); }} style={{
-            fontSize: 9, padding: "5px 10px", borderRadius: T.radius, cursor: "pointer",
-            fontWeight: 700, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1,
-            background: "transparent", color: T.textMuted, border: `1px solid ${T.border}`,
-          }}>Clear</button>
-        )}
-      </div>
-
-      {/* YouTube player or MiniAudioPlayer — mutually exclusive */}
-      {ytVideoId ? (
+      {/* YouTube player or MiniAudioPlayer — rendered inline when not hidden */}
+      {!hidePlayer && (ytVideoId ? (
         <YouTubeAudioPlayer videoId={ytVideoId} theme={T} title="YouTube" />
       ) : song ? (
         <MiniAudioPlayer src={song.src} theme={T} title={`${song.name} — ${song.artist}`} />
-      ) : null}
+      ) : null)}
 
       {/* Tabs expansion */}
       {showTabs && song && song.tabId && TAB_CONTENT[song.tabId] && (
@@ -5543,6 +5650,10 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   const isWide = useIsWide(900);
   const [chart, setChart] = useState(() => initialChart || makeTemplateChart());
   const [undoStack, setUndoStack] = useState([]);
+  const [practiceMode, setPracticeMode] = useState(false);
+  const [practiceMeasure, setPracticeMeasure] = useState(0); // current measure in practice auto-scroll
+  const practiceBeatRef = useRef(0); // beat counter for practice mode auto-advance
+  const [pickerSong, setPickerSong] = useState(null); // song object from SongPicker for desktop player
   const [activeChordCell, setActiveChordCell] = useState(null); // { m, c } measure + cell index
   const [selectedChip, setSelectedChip] = useState(null); // index in lyricsPool
   const [recentChords, setRecentChords] = useState([]);
@@ -5939,14 +6050,258 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   const activeMeasure = eighthMeasure;
   const activeCol = eighthCol;
 
+  // Practice mode auto-scroll — scroll active measure into view
+  const practiceMeasureRefs = useRef([]);
+  useEffect(() => {
+    if (!practiceMode || activeMeasure < 0) return;
+    const el = practiceMeasureRefs.current[activeMeasure];
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [practiceMode, activeMeasure]);
+
+  // ─── Practice Mode View ──────────────────────────────────────────────────
+  if (practiceMode) {
+    const strumGlyph = (val) => {
+      if (!val) return null;
+      if (val === "D") return "↓";
+      if (val === "U") return "↑";
+      if (val === "X") return "×";
+      return null;
+    };
+
+    return (
+      <div style={{ fontFamily: T.sans, minHeight: "100vh", background: T.bg, padding: isWide ? "20px 40px" : "12px 16px" }}>
+        {/* Practice header — minimal */}
+        <div style={{
+          position: "sticky", top: 0, zIndex: 100, background: T.bg,
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          padding: "12px 0", borderBottom: `1px solid ${T.borderSoft}`,
+          marginBottom: 16,
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <button onClick={onBack} style={{
+              background: "none", border: "none", cursor: "pointer", color: T.textMed, padding: 4,
+            }}>← Back</button>
+            <span style={{ fontSize: isWide ? 22 : 18, fontFamily: T.serif, fontWeight: 600, color: T.textDark }}>
+              {chart.title || "Untitled Chart"}
+            </span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <span style={{ fontSize: 12, color: T.textMuted, fontWeight: 700, fontFamily: T.sans }}>
+              {chart.bpm || 80} BPM
+            </span>
+            {metro && (
+              <button onClick={() => { metro.changeBpm(chart.bpm || 80); metro.playing ? metro.stop() : metro.start(); }} style={{
+                fontSize: 10, padding: "6px 14px", borderRadius: T.radius, cursor: "pointer",
+                fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans,
+                background: metro.playing ? "transparent" : T.gold,
+                color: metro.playing ? T.coral : "#fff",
+                border: `1px solid ${metro.playing ? T.coral : T.gold}`,
+              }}>{metro.playing ? "Stop" : "▶ Play"}</button>
+            )}
+            <button onClick={() => setPracticeMode(false)} style={{
+              fontSize: 10, padding: "6px 14px", borderRadius: T.radius, cursor: "pointer",
+              fontWeight: 700, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1,
+              background: "transparent", color: T.textMed, border: `1px solid ${T.border}`,
+            }}>Edit</button>
+          </div>
+        </div>
+
+        {/* Practice measures — large, clean, read-only */}
+        <div style={isWide ? {
+          display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0,
+          border: `1px solid ${T.border}`, borderRadius: T.radiusMd, overflow: "hidden",
+        } : {}}>
+          {chart.measures.map((measure, mIdx) => {
+            const isActive = activeMeasure === mIdx;
+            // Build column template for practice mode
+            let colTemplate = "";
+            for (let i = 0; i < 8; i++) {
+              colTemplate += "1fr ";
+              if (chart.activeSlots.includes(i) && i < 7) colTemplate += "24px ";
+            }
+            const hasLyrics = measure.cells.some(c => c.lyric);
+
+            return (
+              <div
+                key={mIdx}
+                ref={el => practiceMeasureRefs.current[mIdx] = el}
+                style={{
+                  padding: isWide ? "12px 16px" : "10px 12px",
+                  background: isActive ? T.getTint(T.gold, 0.08) : "transparent",
+                  transition: "background 0.3s",
+                  ...(isWide ? {
+                    borderRight: mIdx % 2 === 0 && mIdx + 1 < chart.measures.length ? `1px solid ${T.borderSoft}` : "none",
+                    borderBottom: mIdx + 2 < chart.measures.length ? `1px solid ${T.borderSoft}` : "none",
+                  } : {
+                    borderBottom: mIdx < chart.measures.length - 1 ? `1px solid ${T.borderSoft}` : "none",
+                  }),
+                }}
+              >
+                {/* Measure number + section label */}
+                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
+                  <span style={{ fontSize: 10, color: T.textMuted, fontWeight: 700, fontFamily: T.sans }}>{mIdx + 1}</span>
+                  {measure.sectionLabel && (
+                    <span style={{ fontSize: 10, fontWeight: 700, color: T.gold, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1 }}>
+                      {measure.sectionLabel}
+                    </span>
+                  )}
+                </div>
+
+                {/* Grid — enlarged for readability */}
+                <div style={{
+                  display: "grid",
+                  gridTemplateColumns: colTemplate,
+                }}>
+                  {/* Beat labels */}
+                  {measure.cells.map((_, cIdx) => {
+                    const label = BEAT_LABELS_8[cIdx];
+                    const isDownbeat = cIdx % 2 === 0;
+                    const isBeatActive = isActive && activeCol === cIdx;
+                    return (
+                      <React.Fragment key={`pb-${cIdx}`}>
+                        <div style={{
+                          textAlign: "center", fontSize: 10, fontFamily: T.sans,
+                          color: isDownbeat ? T.textMed : T.textMuted,
+                          fontWeight: isDownbeat ? 700 : 400,
+                          background: isBeatActive ? T.getTint(T.gold, 0.25) : "transparent",
+                          borderRadius: T.radius, padding: "2px 0",
+                          transition: "background 0.1s",
+                        }}>{label}</div>
+                        {chart.activeSlots.includes(cIdx) && cIdx < 7 && (
+                          <div style={{ textAlign: "center", fontSize: 8, color: T.textMuted, padding: "2px 0" }}>
+                            {cIdx % 2 === 0 ? "e" : "a"}
+                          </div>
+                        )}
+                      </React.Fragment>
+                    );
+                  })}
+
+                  {/* Chord row — large */}
+                  {measure.cells.map((cell, cIdx) => {
+                    let displayChord = cell.chord;
+                    let isSpanContinuation = false;
+                    if (!displayChord) {
+                      for (let j = cIdx - 1; j >= 0; j--) {
+                        if (measure.cells[j].chord) { displayChord = measure.cells[j].chord; isSpanContinuation = true; break; }
+                      }
+                    }
+                    return (
+                      <React.Fragment key={`pc-${cIdx}`}>
+                        <div style={{
+                          textAlign: "center", fontFamily: T.serif,
+                          fontSize: isWide ? 20 : 17, fontWeight: 700,
+                          color: cell.chord ? T.gold : (isSpanContinuation ? T.gold + "30" : "transparent"),
+                          padding: "4px 2px", minHeight: isWide ? 34 : 30,
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                        }}>
+                          {cell.chord ? displayChord : (isSpanContinuation ? "·" : "")}
+                        </div>
+                        {chart.activeSlots.includes(cIdx) && cIdx < 7 && (
+                          <div style={{
+                            textAlign: "center", fontSize: isWide ? 16 : 14, fontFamily: T.serif,
+                            color: T.gold + "60", minHeight: isWide ? 34 : 30,
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                          }}>{measure.between[cIdx]?.chord || ""}</div>
+                        )}
+                      </React.Fragment>
+                    );
+                  })}
+
+                  {/* Strum row — large arrows */}
+                  {measure.cells.map((cell, cIdx) => {
+                    const glyph = strumGlyph(cell.strum);
+                    const isBeatActive = isActive && activeCol === cIdx;
+                    return (
+                      <React.Fragment key={`ps-${cIdx}`}>
+                        <div style={{
+                          textAlign: "center", fontSize: isWide ? 22 : 18,
+                          fontWeight: cell.strum === "D" || cell.strum === "X" ? 700 : 400,
+                          color: cell.strum === "X" ? T.coral : (glyph ? T.textDark : "transparent"),
+                          minHeight: isWide ? 36 : 32,
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                          background: isBeatActive ? T.getTint(T.gold, 0.15) : "transparent",
+                          borderRadius: T.radius, transition: "background 0.1s",
+                        }}>{glyph || ""}</div>
+                        {chart.activeSlots.includes(cIdx) && cIdx < 7 && (
+                          <div style={{
+                            textAlign: "center", fontSize: isWide ? 17 : 14, opacity: 0.7,
+                            color: strumGlyph(measure.between[cIdx]?.strum) ? T.textDark : "transparent",
+                            minHeight: isWide ? 36 : 32,
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                          }}>{strumGlyph(measure.between[cIdx]?.strum) || ""}</div>
+                        )}
+                      </React.Fragment>
+                    );
+                  })}
+
+                  {/* Lyric row — if any lyrics exist in this measure */}
+                  {hasLyrics && measure.cells.map((cell, cIdx) => (
+                    <React.Fragment key={`pl-${cIdx}`}>
+                      <div style={{
+                        textAlign: "center", fontSize: isWide ? 15 : 13,
+                        fontFamily: T.serif, fontStyle: "italic", color: T.textDark,
+                        minHeight: isWide ? 28 : 24,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        overflow: "visible", whiteSpace: "nowrap", position: "relative",
+                      }}>{cell.lyric || ""}</div>
+                      {chart.activeSlots.includes(cIdx) && cIdx < 7 && (
+                        <div style={{
+                          textAlign: "center", fontSize: isWide ? 12 : 10, fontFamily: T.serif,
+                          fontStyle: "italic", color: T.textDark, opacity: 0.7,
+                          minHeight: isWide ? 28 : 24,
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                        }}>{measure.between[cIdx]?.lyric || ""}</div>
+                      )}
+                    </React.Fragment>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Mobile: floating Play/Stop at bottom */}
+        {!isWide && metro && (
+          <div style={{
+            position: "fixed", bottom: 24, left: "50%", transform: "translateX(-50%)",
+            display: "flex", gap: 8, zIndex: 200,
+          }}>
+            <button onClick={() => { metro.changeBpm(chart.bpm || 80); metro.playing ? metro.stop() : metro.start(); }} style={{
+              fontSize: 12, padding: "12px 24px", borderRadius: 24, cursor: "pointer",
+              fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans,
+              background: metro.playing ? T.textDark : T.gold,
+              color: "#fff",
+              border: "none",
+              boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
+            }}>{metro.playing ? "■ Stop" : "▶ Play"}</button>
+            <button onClick={() => setPracticeMode(false)} style={{
+              fontSize: 11, padding: "12px 18px", borderRadius: 24, cursor: "pointer",
+              fontWeight: 700, fontFamily: T.sans,
+              background: T.bgCard, color: T.textMed, border: `1px solid ${T.border}`,
+              boxShadow: "0 4px 16px rgba(0,0,0,0.1)",
+            }}>Edit</button>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div style={{ fontFamily: T.sans }}>
-      {/* Sticky controls zone */}
+      {/* Sticky controls zone — breaks out of maxWidth container on desktop */}
       <div style={{
         position: "sticky", top: 0, zIndex: 100,
         background: T.bg, paddingBottom: 4, marginBottom: 4,
         borderBottom: `1px solid ${T.borderSoft}`,
         boxShadow: "0 2px 8px rgba(44,40,37,0.04)",
+        ...(isWide ? {
+          width: "100vw",
+          marginLeft: "calc(-50vw + 50%)",
+          paddingLeft: "calc(50vw - 50%)",
+          paddingRight: "calc(50vw - 50%)",
+        } : {}),
       }}>
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
@@ -5981,16 +6336,28 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
           <button onClick={shareChart} style={{
             background: "none", border: "none", cursor: "pointer", color: T.textMed, padding: 4,
           }}><Share2 size={16} /></button>
+          <button onClick={() => setPracticeMode(true)} style={{
+            fontSize: 9, padding: "4px 10px", borderRadius: T.radius, cursor: "pointer",
+            fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans,
+            background: T.getTint(T.gold, 0.1), color: T.gold,
+            border: `1px solid ${T.gold}40`,
+          }}>Practice</button>
         </div>
       </div>
 
       {/* Song picker + BPM controls — side by side on desktop */}
       <div style={isWide ? { display: "flex", gap: 24, alignItems: "flex-start" } : {}}>
         <div style={isWide ? { flex: 1 } : {}}>
-          <SongPicker theme={T} youtubeUrl={chart.youtubeUrl || ""} onYoutubeChange={(url) => updateChart(c => { c.youtubeUrl = url; return c; })} />
+          <SongPicker
+            theme={T}
+            youtubeUrl={chart.youtubeUrl || ""}
+            onYoutubeChange={(url) => updateChart(c => { c.youtubeUrl = url; return c; })}
+            hidePlayer={isWide}
+            onSongChange={setPickerSong}
+          />
         </div>
         <div style={isWide ? { flex: "0 0 auto" } : {}}>
-          {/* BPM + controls */}
+          {/* BPM + Play + Tap + Group — merged toolbar */}
           <div style={{ display: "flex", gap: 8, marginBottom: 12, alignItems: "center", flexWrap: "wrap" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
               <span style={{ fontSize: 10, color: T.textMuted, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1 }}>BPM</span>
@@ -6029,9 +6396,27 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
               border: `1px solid ${tapBpm ? T.gold : T.border}`,
               transition: "all 0.15s",
             }}>Tap{tapBpm ? ` ${tapBpm}` : ""}</button>
+
+            {/* Divider */}
+            <div style={{ width: 1, height: 18, background: T.borderSoft, flexShrink: 0 }} />
+
+            {/* Group controls — merged into toolbar */}
+            <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+              <span style={{ fontSize: 9, color: T.textMuted, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans }}>Group</span>
+              {[0, 2, 4, 8].map(g => (
+                <button key={g} onClick={() => updateChart(c => { c.barsPerGroup = g; return c; })} style={{
+                  fontSize: 10, padding: "4px 8px", borderRadius: T.radius, cursor: "pointer",
+                  fontWeight: 700, fontFamily: T.sans,
+                  background: (chart.barsPerGroup || 0) === g ? T.gold : T.bgSoft,
+                  color: (chart.barsPerGroup || 0) === g ? "#fff" : T.textMed,
+                  border: `1px solid ${(chart.barsPerGroup || 0) === g ? T.gold : T.border}`,
+                  transition: "all 0.15s",
+                }}>{g === 0 ? "Off" : g}</button>
+              ))}
+            </div>
           </div>
 
-          {/* Audio sync — Mark Beat 1 + nudge */}
+          {/* Audio sync — Mark Beat 1 + nudge (only shows when song playing) */}
           {songPlaying && (
             <div style={{ display: "flex", gap: 6, marginBottom: 12, alignItems: "center", flexWrap: "wrap" }}>
               <button onClick={markBeatOne} style={{
@@ -6070,20 +6455,13 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
       </div>
       </div>{/* end sticky controls zone */}
 
-      {/* Bars per group */}
-      <div style={{ display: "flex", gap: 6, marginBottom: 12, alignItems: "center" }}>
-        <span style={{ fontSize: 9, color: T.textMuted, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans, marginRight: 4 }}>Group:</span>
-        {[0, 2, 4, 8].map(g => (
-          <button key={g} onClick={() => updateChart(c => { c.barsPerGroup = g; return c; })} style={{
-            fontSize: 10, padding: "4px 10px", borderRadius: T.radius, cursor: "pointer",
-            fontWeight: 700, fontFamily: T.sans,
-            background: (chart.barsPerGroup || 0) === g ? T.gold : T.bgSoft,
-            color: (chart.barsPerGroup || 0) === g ? "#fff" : T.textMed,
-            border: `1px solid ${(chart.barsPerGroup || 0) === g ? T.gold : T.border}`,
-            transition: "all 0.15s",
-          }}>{g === 0 ? "Off" : g}</button>
-        ))}
-      </div>
+      {/* Desktop: full-width audio player below controls */}
+      {isWide && (() => {
+        const ytVideoId = extractYouTubeId(chart.youtubeUrl || "");
+        if (ytVideoId) return <YouTubeAudioPlayer videoId={ytVideoId} theme={T} title="YouTube" />;
+        if (pickerSong) return <MiniAudioPlayer src={pickerSong.src} theme={T} title={`${pickerSong.name} — ${pickerSong.artist}`} />;
+        return null;
+      })()}
 
       {/* Lyrics input */}
       <div style={{
@@ -6154,9 +6532,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
         const groups = bpg > 0
           ? Array.from({ length: Math.ceil(items.length / bpg) }, (_, gi) => items.slice(gi * bpg, (gi + 1) * bpg))
           : [items];
-        // Always grid on individual measures (left-to-right reading order)
-        // Measures 1,2 side-by-side, then 3,4 on next row, etc.
-        const twoColGrid = twoCol ? { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, alignItems: "start" } : {};
+
         return (<div>
         {groups.map((group, gIdx) => (
           <div key={gIdx} style={{
@@ -6167,7 +6543,18 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
               marginBottom: gIdx < groups.length - 1 ? 28 : 8,
               position: "relative",
             } : {}),
-            ...twoColGrid,
+            // Unified container on desktop: single outer border wrapping the grid
+            ...(twoCol ? {
+              borderTop: `1px solid ${T.border}`,
+              borderRight: `1px solid ${T.border}`,
+              borderBottom: `1px solid ${T.border}`,
+              ...(bpg === 0 ? { borderLeft: `1px solid ${T.border}` } : {}),
+              borderRadius: T.radiusMd,
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              overflow: "hidden",
+              marginBottom: bpg > 0 ? (gIdx < groups.length - 1 ? 28 : 8) : 12,
+            } : {}),
           }}>
             {bpg > 0 && (
               <span style={{
@@ -6182,7 +6569,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                 borderBottom: `1px dashed ${T.border}`,
               }} />
             )}
-            {group.map(({ measure, globalIdx: mIdx }) => {
+            {group.map(({ measure, globalIdx: mIdx }, itemIdx) => {
         const isActiveMeasure = activeMeasure === mIdx;
 
         // Build column template: for each main cell, add 1fr, then if slot is active add 24px
@@ -6194,19 +6581,32 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
           }
         }
 
+        // Desktop unified: use inner borders instead of per-card borders
+        const isLeftCol = itemIdx % 2 === 0;
+        const isLastRow = itemIdx >= group.length - 1 || (twoCol && itemIdx >= group.length - 2 && !isLeftCol);
+        const desktopStyle = twoCol ? {
+          borderRight: isLeftCol && itemIdx + 1 < group.length ? `1px solid ${T.borderSoft}` : "none",
+          borderBottom: (twoCol && itemIdx + 2 < group.length) ? `1px solid ${T.borderSoft}` : "none",
+          background: isActiveMeasure ? T.getTint(T.gold, 0.04) : "transparent",
+          transition: "background 0.2s",
+        } : {
+          border: `1px solid ${isActiveMeasure ? T.gold : T.border}`,
+          borderRadius: T.radiusMd,
+          boxShadow: isActiveMeasure ? `0 0 8px ${T.gold}40` : "none",
+          transition: "box-shadow 0.2s, border-color 0.2s",
+        };
+
         return (
           <div key={mIdx} style={{
-            marginBottom: 12, position: "relative",
-            border: `1px solid ${isActiveMeasure ? T.gold : T.border}`,
-            borderRadius: T.radiusMd,
-            boxShadow: isActiveMeasure ? `0 0 8px ${T.gold}40` : "none",
-            transition: "box-shadow 0.2s, border-color 0.2s",
+            marginBottom: twoCol ? 0 : 12, position: "relative",
+            ...desktopStyle,
           }}
           >
             {/* Measure number + section label + delete button */}
             <div style={{
-              position: "absolute", top: -8, left: 8, display: "flex", alignItems: "center", gap: 4,
-              background: T.bg, padding: "0 4px",
+              display: "flex", alignItems: "center", gap: 4,
+              padding: twoCol ? "6px 8px 0" : "0 4px",
+              ...(twoCol ? {} : { position: "absolute", top: -8, left: 8, background: T.bg }),
             }}>
               <span style={{ fontSize: 9, color: T.textMuted, fontWeight: 700, fontFamily: T.sans }}>{mIdx + 1}</span>
               <input
@@ -6219,24 +6619,28 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                   textTransform: "uppercase", letterSpacing: 1,
                   border: "none", background: "transparent", padding: 0, outline: "none",
                   width: measure.sectionLabel ? Math.max(40, measure.sectionLabel.length * 7) : 40,
+                  flex: 1,
                 }}
               />
+              {chart.measures.length > 1 && (
+                <button onClick={(e) => { e.stopPropagation(); removeMeasure(mIdx); }} style={{
+                  background: "none", border: "none",
+                  cursor: "pointer", color: T.textMuted, padding: "0 4px", fontSize: 9,
+                  fontFamily: T.sans, display: "flex", alignItems: "center", gap: 2,
+                  ...(twoCol ? {} : { position: "absolute", top: 0, right: -4, background: T.bg }),
+                }}><X size={10} /></button>
+              )}
             </div>
-            {chart.measures.length > 1 && (
-              <button onClick={(e) => { e.stopPropagation(); removeMeasure(mIdx); }} style={{
-                position: "absolute", top: -8, right: 8, background: T.bg, border: "none",
-                cursor: "pointer", color: T.textMuted, padding: "0 4px", fontSize: 9,
-                fontFamily: T.sans, display: "flex", alignItems: "center", gap: 2,
-              }}><X size={10} /></button>
-            )}
 
             <div style={{
               display: "grid",
-              gridTemplateColumns: `40px ${colTemplate}`,
+              gridTemplateColumns: `${twoCol && !isLeftCol ? "" : "40px "}${colTemplate}`,
               padding: "8px 4px 4px",
             }}>
               {/* Beat labels row */}
-              <div style={{ fontSize: 8, color: T.textMuted, display: "flex", alignItems: "center", justifyContent: "center" }} />
+              {(twoCol && !isLeftCol) ? null : (
+                <div style={{ fontSize: 8, color: T.textMuted, display: "flex", alignItems: "center", justifyContent: "center" }} />
+              )}
               {measure.cells.map((_, cIdx) => {
                 const label = BEAT_LABELS_8[cIdx];
                 const isDownbeat = cIdx % 2 === 0;
@@ -6262,10 +6666,12 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
               })}
 
               {/* Chord row — each cell individually clickable */}
-              <div style={{
-                fontSize: 9, color: T.textMuted, fontWeight: 600, textTransform: "uppercase",
-                letterSpacing: 1, display: "flex", alignItems: "center", justifyContent: "center",
-              }}>Chord</div>
+              {(twoCol && !isLeftCol) ? null : (
+                <div style={{
+                  fontSize: 9, color: T.textMuted, fontWeight: 600, textTransform: "uppercase",
+                  letterSpacing: 1, display: "flex", alignItems: "center", justifyContent: "center",
+                }}>Chord</div>
+              )}
               {measure.cells.map((cell, cIdx) => {
                 // Find which chord is active at this position (could be from a previous cell spanning here)
                 let displayChord = cell.chord;
@@ -6314,10 +6720,12 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
               })}
 
               {/* Strum row */}
-              <div style={{
-                fontSize: 9, color: T.textMuted, fontWeight: 600, textTransform: "uppercase",
-                letterSpacing: 1, display: "flex", alignItems: "center", justifyContent: "center",
-              }}>Strum</div>
+              {(twoCol && !isLeftCol) ? null : (
+                <div style={{
+                  fontSize: 9, color: T.textMuted, fontWeight: 600, textTransform: "uppercase",
+                  letterSpacing: 1, display: "flex", alignItems: "center", justifyContent: "center",
+                }}>Strum</div>
+              )}
               {measure.cells.map((cell, cIdx) => {
                 const sd = strumDisplay(cell.strum);
                 const isActive = isActiveMeasure && activeCol === cIdx;
@@ -6368,10 +6776,12 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
               })}
 
               {/* Lyric row */}
-              <div style={{
-                fontSize: 9, color: T.textMuted, fontWeight: 600, textTransform: "uppercase",
-                letterSpacing: 1, display: "flex", alignItems: "center", justifyContent: "center",
-              }}>Lyric</div>
+              {(twoCol && !isLeftCol) ? null : (
+                <div style={{
+                  fontSize: 9, color: T.textMuted, fontWeight: 600, textTransform: "uppercase",
+                  letterSpacing: 1, display: "flex", alignItems: "center", justifyContent: "center",
+                }}>Lyric</div>
+              )}
               {measure.cells.map((cell, cIdx) => {
                 const hasLyric = cell.lyric && cell.lyric.length > 0;
                 const isActive = isActiveMeasure && activeCol === cIdx;
@@ -6412,10 +6822,12 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
             {/* 16th note slot toggles — positioned between beat columns */}
             <div style={{
               display: "grid",
-              gridTemplateColumns: `40px ${colTemplate}`,
+              gridTemplateColumns: `${twoCol && !isLeftCol ? "" : "40px "}${colTemplate}`,
               padding: "2px 4px 6px",
             }}>
-              <div style={{ fontSize: 8, color: T.textMuted, display: "flex", alignItems: "center", justifyContent: "center" }}>16th</div>
+              {(twoCol && !isLeftCol) ? null : (
+                <div style={{ fontSize: 8, color: T.textMuted, display: "flex", alignItems: "center", justifyContent: "center" }}>16th</div>
+              )}
               {measure.cells.map((_, cIdx) => {
                 const isActive = chart.activeSlots.includes(cIdx);
                 const isLast = cIdx === 7;
@@ -6496,13 +6908,19 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
         );
       })()}
 
-      {/* Sticky lyrics chips tray — pinned above BottomNav */}
+      {/* Sticky lyrics chips tray — pinned above BottomNav, full-width on desktop */}
       {chart.lyricsPool.length > 0 && !lyricsEditing && (
         <div style={{
-          position: "sticky", bottom: 60, zIndex: 99,
+          position: "sticky", bottom: isWide ? 0 : 60, zIndex: 99,
           background: T.bg, padding: "8px 12px",
           borderTop: `1px solid ${T.borderSoft}`,
           boxShadow: "0 -2px 8px rgba(44,40,37,0.04)",
+          ...(isWide ? {
+            width: "100vw",
+            marginLeft: "calc(-50vw + 50%)",
+            paddingLeft: "calc(50vw - 50%)",
+            paddingRight: "calc(50vw - 50%)",
+          } : {}),
         }}>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
             {chart.lyricsPool.map((word, i) => (
@@ -6622,6 +7040,8 @@ export function ChartListView({ theme: T, onSelect, onNew }) {
   const [showImport, setShowImport] = useState(false);
   const [importText, setImportText] = useState("");
   const [importError, setImportError] = useState("");
+  const [deleteToast, setDeleteToast] = useState(null); // { id, chart, timer }
+  const deleteToastRef = useRef(null);
 
   useEffect(() => {
     try {
@@ -6631,13 +7051,47 @@ export function ChartListView({ theme: T, onSelect, onNew }) {
     } catch { setCharts([]); }
   }, []);
 
-  const deleteChart = (id) => {
+  // Commit a pending delete (actually remove from localStorage)
+  const commitDelete = useCallback((id) => {
     try {
       const all = JSON.parse(localStorage.getItem("strumCharts") || "{}");
       delete all[id];
       localStorage.setItem("strumCharts", JSON.stringify(all));
-      setCharts(Object.values(all).sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0)));
     } catch { }
+  }, []);
+
+  const deleteChart = (id) => {
+    // If there's already a pending delete, commit it first
+    if (deleteToastRef.current) {
+      commitDelete(deleteToastRef.current.id);
+      clearTimeout(deleteToastRef.current.timer);
+    }
+
+    const deletedChart = charts.find(c => c.id === id);
+    // Remove from visible list immediately
+    setCharts(prev => prev.filter(c => c.id !== id));
+
+    // Set up undo toast with 5s timer
+    const timer = setTimeout(() => {
+      commitDelete(id);
+      setDeleteToast(null);
+      deleteToastRef.current = null;
+    }, 5000);
+
+    const toast = { id, chart: deletedChart, timer };
+    setDeleteToast(toast);
+    deleteToastRef.current = toast;
+  };
+
+  const undoDelete = () => {
+    if (!deleteToastRef.current) return;
+    clearTimeout(deleteToastRef.current.timer);
+    const restored = deleteToastRef.current.chart;
+    if (restored) {
+      setCharts(prev => [restored, ...prev].sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0)));
+    }
+    setDeleteToast(null);
+    deleteToastRef.current = null;
   };
 
   const handleImport = () => {
@@ -6755,6 +7209,22 @@ export function ChartListView({ theme: T, onSelect, onNew }) {
           </div>
         </div>
       ))}
+
+      {/* Delete undo toast */}
+      {deleteToast && (
+        <div style={{
+          position: "fixed", bottom: 80, left: "50%", transform: "translateX(-50%)",
+          background: T.textDark, color: "#fff", padding: "10px 20px", borderRadius: T.radiusMd,
+          fontSize: 12, fontFamily: T.sans, display: "flex", gap: 12, alignItems: "center",
+          zIndex: 999, boxShadow: T.md,
+        }}>
+          <span>Chart deleted</span>
+          <button onClick={undoDelete} style={{
+            background: T.gold, color: "#fff", border: "none", padding: "4px 12px",
+            borderRadius: T.radius, cursor: "pointer", fontSize: 11, fontWeight: 700,
+          }}>Undo</button>
+        </div>
+      )}
     </div>
   );
 }
