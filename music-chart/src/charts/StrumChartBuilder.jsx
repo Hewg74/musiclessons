@@ -101,6 +101,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   const [customChord, setCustomChord] = useState("");
   const [chordQuality, setChordQuality] = useState(""); // "", "m", "7", "m7", "maj7", "sus2", "sus4", "dim", "aug"
   const [savedShow, setSavedShow] = useState(false);
+  const [shareMsg, setShareMsg] = useState(""); // "Link Copied" or "JSON Copied"
   const [deleteToast, setDeleteToast] = useState(null);
   const [chordVoicing, setChordVoicing] = useState(null); // { m, c }
   const [currentBeat, setCurrentBeat] = useState(-1);
@@ -444,24 +445,25 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   };
 
   // Share
+  const showShareFeedback = (msg) => {
+    setShareMsg(msg);
+    if (savedTimerRef.current) clearTimeout(savedTimerRef.current);
+    savedTimerRef.current = setTimeout(() => setShareMsg(""), 2000);
+  };
   const shareChart = async () => {
     const compressed = compressToURL(chart);
     if (!compressed) return;
     const url = window.location.origin + window.location.pathname + "#chart=" + compressed;
     if (url.length > 2000) {
       try { await navigator.clipboard.writeText(JSON.stringify(chart)); } catch { }
-      setSavedShow(true); // reuse saved indicator as feedback
-      if (savedTimerRef.current) clearTimeout(savedTimerRef.current);
-      savedTimerRef.current = setTimeout(() => setSavedShow(false), 1500);
+      showShareFeedback("JSON Copied");
       return;
     }
     if (navigator.share) {
       try { await navigator.share({ title: chart.title || "Strum Chart", url }); } catch { }
     } else {
       try { await navigator.clipboard.writeText(url); } catch { }
-      setSavedShow(true);
-      if (savedTimerRef.current) clearTimeout(savedTimerRef.current);
-      savedTimerRef.current = setTimeout(() => setSavedShow(false), 1500);
+      showShareFeedback("Link Copied");
     }
   };
 
@@ -776,7 +778,19 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
           }}><Undo2 size={16} /></button>
           <button onClick={shareChart} style={{
             background: "none", border: "none", cursor: "pointer", color: T.textMed, padding: 4,
-          }}><Share2 size={16} /></button>
+            position: "relative",
+          }}>
+            <Share2 size={16} />
+            {shareMsg && (
+              <span style={{
+                position: "absolute", bottom: "calc(100% + 6px)", left: "50%", transform: "translateX(-50%)",
+                fontSize: 9, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase",
+                fontFamily: T.sans, color: "#fff", background: T.success,
+                padding: "4px 10px", borderRadius: T.radiusMd, whiteSpace: "nowrap",
+                animation: "fade-in-up 0.25s ease", boxShadow: T.sm,
+              }}>{shareMsg}</span>
+            )}
+          </button>
           <button onClick={() => setPracticeMode(true)} style={{
             fontSize: 9, padding: "4px 10px", borderRadius: T.radius, cursor: "pointer",
             fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans,
