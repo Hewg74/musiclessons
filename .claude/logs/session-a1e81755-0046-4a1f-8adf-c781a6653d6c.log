@@ -2,3 +2,72 @@
 [2026-03-21T00:37:52.741Z] no keep going! /swarm /research
 [2026-03-21T00:55:07.121Z] also for the fretboard tool make an option so i can wee ALL the frests, also make it so the specail fretted like the 3rd 5th 7th has a dot on the bottom. also from first principles, what other guitar tools would be useful and help? do we have everything we need to crush it?
 [2026-03-21T01:04:10.426Z] lets build it!!
+[2026-03-21T01:20:04.693Z] <task-notification>
+<task-id>ab67a98ea48c66617</task-id>
+<tool-use-id>toolu_01JDRtqWX8vQrSfCBHNLYcFM</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a1e81755-0046-4a1f-8adf-c781a6653d6c\tasks\ab67a98ea48c66617.output</output-file>
+<status>completed</status>
+<summary>Agent "Upgrade L2-L5 guitar exercises" completed</summary>
+<result>No missing `recorder: true` fields. Here is a summary of everything done:
+
+---
+
+## Summary
+
+### Files edited (4 files, 48 exercises total):
+
+1. **`sarah-practice-plan/src/data/guitarStudy/level-02-surf-jangle.js`** -- 11 `levelUp` fields added (gs-2-1 through gs-2-11; gs-2-12 already had one)
+2. **`sarah-practice-plan/src/data/guitarStudy/level-03-psych-garage.js`** -- 11 `levelUp` fields added (gs-3-1 through gs-3-11; gs-3-12 already had one)
+3. **`sarah-practice-plan/src/data/guitarStudy/level-04-reggae-skank.js`** -- 11 `levelUp` fields added (gs-4-2 through gs-4-12; gs-4-1 and gs-4-13 already had them)
+4. **`sarah-practice-plan/src/data/guitarStudy/level-05-desert-blues.js`** -- 10 `levelUp` fields added (gs-5-1 through gs-5-10; gs-5-11 already had one)
+
+### Research enrichments (2-3 "why" fields per level, ~10 total):
+
+- **L2**: Dick Dale's tremolo traced to tarabaki drumming heritage (gs-2-2 step 1); spring reverb as structural instrument, not decoration, with Leo Fender history (gs-2-9 step 3)
+- **L3**: Phrygian Dominant as 5th mode of D harmonic minor with global music context (gs-3-1 step 1); augmented 2nd interval's cross-cultural reach (gs-3-1 step 1 enriched); fuzz compression letting quiet picking cut through, with J Mascis quote (gs-3-4 step 2)
+- **L4**: Nile Rodgers "strumming hand as metronome that never stops" principle (gs-4-2 step 4); reggae guitar as fundamentally a support instrument with mix-placement context (gs-4-4 step 1)
+- **L5**: Ali Farka Toure's modal tunings mirroring njarka/ngoni tradition (gs-5-2 step 1); Tinariwen's timbral consistency + neuroscience on musical entrainment (gs-5-4 step 2); Ali Farka Toure quote "the blues comes from here" (gs-5-10 step 4)
+
+### Verification:
+
+- All 4 files parse without errors
+- All 48 exercises have `levelUp` fields (12 + 12 + 13 + 11)
+- Every `levelUp` is measurable and specific
+- No exercises with "record yourself" in steps are missing `recorder: true`
+- All note names, fret numbers, chord voicings, and strum directions preserved exactly</result>
+<usage><total_tokens>84280</total_tokens><tool_uses>70</tool_uses><duration_ms>514681</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a1e81755-0046-4a1f-8adf-c781a6653d6c\tasks\ab67a98ea48c66617.output
+[2026-03-21T01:20:10.428Z] <task-notification>
+<task-id>ab82a90e99e9f7860</task-id>
+<tool-use-id>toolu_014EUzSJRM7J8kCpXKTJxgKc</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a1e81755-0046-4a1f-8adf-c781a6653d6c\tasks\ab82a90e99e9f7860.output</output-file>
+<status>completed</status>
+<summary>Agent "Upgrade L6-L10 guitar exercises" completed</summary>
+<result>All 54 exercises across all 5 files now have `levelUp` fields. Here is a summary of everything done:
+
+---
+
+**Completed edits across 5 files (54 exercises total):**
+
+**`levelUp` fields added:**
+- **Level 6** (`level-06-improvisation-engine.js`): Added `levelUp` to 13 exercises (gs-6-1 through gs-6-13). gs-6-14 already had one.
+- **Level 7** (`level-07-khruangbin-space.js`): Added `levelUp` to 7 exercises (gs-7-1, gs-7-2, gs-7-4, gs-7-5, gs-7-6, gs-7-7, gs-7-8). gs-7-3 and gs-7-9 already had them.
+- **Level 8** (`level-08-soul-extended-chords.js`): Added `levelUp` to 9 exercises (gs-8-1 through gs-8-9). gs-8-10 already had one.
+- **Level 9** (`level-09-cinematic-guitar.js`): Added `levelUp` to 8 exercises (gs-9-2 through gs-9-9). gs-9-1 and gs-9-10 already had them.
+- **Level 10** (`level-10-full-integration.js`): Added `levelUp` to 10 exercises (gs-10-1 through gs-10-10). gs-10-11 already had one.
+
+**All `levelUp` criteria are measurable and specific** -- e.g., time durations, percentage targets, note counts, playback tests, specific voicings/fret references preserved.
+
+**Research/quote enrichments (2-3 per level, 13 total):**
+- **L6**: PMC improvisation research (trains sensory, motor, memory, adaptability simultaneously), Julian Lage's "exhaust your vocabulary" 45-minute practice, Pressing (1998) on expert improvisers working from short referents.
+- **L7**: Mark Speer -- "I'm not a guitar player -- I play THAT guitar," his reggae/zouk influences, listening to singers more than guitarists (added to gs-7-1, gs-7-2, gs-7-8).
+- **L8**: Dorian as "the soul scale" / "bright minor mode," ghost notes meeting jazz voicings for sophistication without complexity, dominant 9ths with James Brown/Prince/D'Angelo citations (gs-8-1, gs-8-3, gs-8-8).
+- **L9**: Chet Atkins on thumb and fingers as independent voices and economy of motion, Knopfler's fingerpicking born from playing quietly at night (gs-9-2, gs-9-6, gs-9-9).
+- **L10**: Interleaved practice (Frontiers in Psychology) for long-term retention, transcription by ear (Emmanuel, Knopfler, Lage) (gs-10-1 twice, gs-10-6).
+
+**All specificity preserved** -- no note names, fret numbers, chord voicings, or strum directions were made vaguer. All 5 files parse without syntax errors.</result>
+<usage><total_tokens>86221</total_tokens><tool_uses>74</tool_uses><duration_ms>542353</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a1e81755-0046-4a1f-8adf-c781a6653d6c\tasks\ab82a90e99e9f7860.output
+[2026-03-21T01:24:28.900Z] please fix then commit

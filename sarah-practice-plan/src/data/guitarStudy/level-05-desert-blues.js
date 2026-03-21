@@ -136,7 +136,7 @@ export const level5 = {
       sarah: "In Tuareg culture, guitar is communal — multiple players interlock to create the trance. You're channeling that tradition through one instrument. The drone is not just a technique — it's a philosophy. Some things hold steady so other things can move.",
       metronome: 75,
       volumeMeter: true,
-      levelUp: "Play drone + melody for 5 minutes in Drop D: low D on beats 1 & 3, A drone on beat 3, sus pentatonic melody on beats 2 & 4 — with the drone pattern steady throughout and the melody evolving by one note every 30 seconds."
+      levelUp: "Play drone + melody for 5 minutes in Drop D: low D drone on beat 1, A drone on beat 3, sus pentatonic melody on beats 2 & 4. The drone pattern stays rock-steady throughout while the melody evolves by one note every 30 seconds."
     },
     {
       id: "gs-5-7",
@@ -250,7 +250,7 @@ export const level5 = {
       metronome: 75,
       volumeContour: true,
       phraseForm: { pattern: ["Drone", "Melody", "Evolve", "Peak", "Dissolve"], barsPerSection: [8, 12, 20, 16, 8], labels: { Drone: "Drone Alone", Melody: "3-Note Motif", Evolve: "Glacial Change", Peak: "Intensity", Dissolve: "Return to Drone" } },
-      levelUp: "You can sustain a desert blues jam for 15 minutes that evolves gradually, maintains the drone, and doesn't rush. The repetition feels meditative, not monotonous."
+      levelUp: "Sustain a 15-minute desert blues jam in Drop D with the drone present throughout. Use no more than 7 different melody notes total. The piece has a clear 5-part arc (drone alone → 3-note motif → gradual evolution → intensity peak → return to drone). Recording confirms the drone never drops out and the development is glacial, not rushed."
     }
   ]
 };
