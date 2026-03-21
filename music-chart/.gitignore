@@ -25,3 +25,5 @@ dist-ssr
 
 # Backing track MP3s (copied from sarah-practice-plan at build time)
 public/*.mp3
+
+.vercel

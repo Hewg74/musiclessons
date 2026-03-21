@@ -7,7 +7,6 @@ import useIsWide from '../hooks/useIsWide.js';
 import { ChordDiagram } from './ChordDiagram.jsx';
 import { CHORD_VOICINGS } from './chordVoicings.js';
 import { makeEmptyCell, makeEmptyMeasure, makeTemplateChart, compressToURL } from './chartHelpers.js';
-import { MiniAudioPlayer } from '../tools/BackingTrackPlayer.jsx';
 import SongPicker from '../tools/SongPicker.jsx';
 import { YouTubeAudioPlayer, extractYouTubeId } from '../tools/youtube.jsx';
 
@@ -96,7 +95,6 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   const [practiceMode, setPracticeMode] = useState(false);
   const [practiceMeasure, setPracticeMeasure] = useState(0); // current measure in practice auto-scroll
   const practiceBeatRef = useRef(0); // beat counter for practice mode auto-advance
-  const [pickerSong, setPickerSong] = useState(null); // song object from SongPicker for desktop player
   const [activeChordCell, setActiveChordCell] = useState(null); // { m, c } measure + cell index
   const [selectedChip, setSelectedChip] = useState(null); // index in lyricsPool
   const [recentChords, setRecentChords] = useState([]);
@@ -796,7 +794,6 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
             youtubeUrl={chart.youtubeUrl || ""}
             onYoutubeChange={(url) => updateChart(c => { c.youtubeUrl = url; return c; })}
             hidePlayer={isWide}
-            onSongChange={setPickerSong}
           />
         </div>
         <div style={isWide ? { flex: "0 0 auto" } : {}}>
@@ -902,7 +899,6 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
       {isWide && (() => {
         const ytVideoId = extractYouTubeId(chart.youtubeUrl || "");
         if (ytVideoId) return <YouTubeAudioPlayer videoId={ytVideoId} theme={T} title="YouTube" />;
-        if (pickerSong) return <MiniAudioPlayer src={pickerSong.src} theme={T} title={`${pickerSong.name} — ${pickerSong.artist}`} />;
         return null;
       })()}
 
