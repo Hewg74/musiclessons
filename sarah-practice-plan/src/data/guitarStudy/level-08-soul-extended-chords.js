@@ -27,7 +27,7 @@ export const level8 = {
       wrong: "If it sounds identical to minor pentatonic, you're not using the B and F# enough. If it sounds jazzy in a confusing way, simplify your phrases and focus on groove over complexity.",
       sarah: "Dorian is the Goldilocks scale — it's minor enough to have depth, but warm enough to make people move. It's the reason soul music feels the way it does.",
       metronome: 60,
-      // milestone: A Dorian at 60 BPM, F# sounds intentional
+      levelUp: "Improvise with A Dorian over an Am chord for 2 minutes at 60 BPM. The F# appears intentionally at least once every 4 bars — landed on, held, or resolved from. Recording confirms the melody sounds warm and soulful, not just minor."
     },
     {
       id: "gs-8-2",
@@ -44,7 +44,8 @@ export const level8 = {
       feel: "Major 7th chords should feel luxurious and dreamy — like silk instead of cotton. They're the chords you play when you want music to feel elegant.",
       wrong: "If they sound dissonant or wrong, check your fingering — one muted string can ruin a voicing. If they sound too jazzy, simplify your strumming and let the chord speak for itself.",
       sarah: "Major 7ths are the gateway drug to sophisticated harmony. Once you hear them, regular major chords sound naked by comparison.",
-      metronome: 120
+      metronome: 120,
+      levelUp: "Play Cmaj7 (x32000) and Fmaj7 (1x2210) with clean voicings — every intended string rings clearly, no buzzing. Transition between the two in time at 120 BPM. Recording confirms both chords sound dreamy and floating, not thin or dissonant."
     },
     {
       id: "gs-8-3",
@@ -61,7 +62,8 @@ export const level8 = {
       feel: "Dominant 9ths should feel powerful and groovy — like the chord is strutting. When you play G9, you should feel cooler. If you don't, strum harder.",
       wrong: "If the chords sound muddy, make sure you're muting the strings marked 'x' — only strum the strings that are part of the voicing. If the funk vamp sounds stiff, loosen your wrist and let the muting happen naturally.",
       sarah: "The dominant 9th is the most stylish chord in music. It's the chord that makes people nod their heads before they even realize they're doing it.",
-      metronome: 120
+      metronome: 120,
+      levelUp: "Play a G9→C9 funk vamp with 16th-note strumming (Down-up-Down-up per beat) and percussive muting between strums. Sustain for 2 minutes at 120 BPM. The strum is choppy, even, and locked to the beat. Muted strings marked 'x' are silent."
     },
     {
       id: "gs-8-4",
@@ -78,7 +80,8 @@ export const level8 = {
       feel: "These chords should feel like floating — weightless, open, and expansive. They're the musical equivalent of looking at the sky on a clear day.",
       wrong: "If they sound muddy or cluttered, try playing fewer strings. If they sound like regular minor chords, make sure the 9th and 11th are ringing clearly — those are the notes that define the voicing.",
       sarah: "Am9 and Dm11 are the chords that make people close their eyes and sway. They're not showing off — they're creating a feeling. That's what extended harmony is for.",
-      metronome: 60
+      metronome: 60,
+      levelUp: "Play Am9 (x02413 or x05500) and Dm11 (xx0011) alternating every 2 bars at 60 BPM. Both voicings ring clearly with the 9th and 11th audible. Recording confirms a floating, atmospheric sound — not muddy, not thin."
     },
     {
       id: "gs-8-5",
@@ -98,7 +101,8 @@ export const level8 = {
       metronome: 80,
       tracks: [{ name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }],
       pitchContour: true,
-      recorder: true
+      recorder: true,
+      levelUp: "Over the Am9→Dm7→G9→Cmaj7 progression, land a single-note melody on the extension (9th or 11th) of each chord on the downbeat, approaching from a half-step below. Recording confirms you're highlighting the color tones — not just the roots."
     },
     {
       id: "gs-8-6",
@@ -117,7 +121,8 @@ export const level8 = {
       feel: "The progression should feel like a warm bath — enveloping, comfortable, and deep. Each chord should melt into the next with no sharp edges.",
       wrong: "If transitions are clunky, practice just the chord changes without rhythm until they're smooth. If the voicings sound thin, check that all intended strings are ringing.",
       sarah: "This progression is the skeleton key to soul harmony. Learn it in C, then move it to other keys. You'll hear it in every Khruangbin and D'Angelo song.",
-      metronome: 80
+      metronome: 80,
+      levelUp: "Play Am9→Dm7→G9→Cmaj7 with gentle fingerpicking for 8 loops. Transitions are seamless — no gaps or rhythmic hiccups between chords. By loop 4, changes are automatic. Recording sounds like a warm bath of extended harmony."
     },
     {
       id: "gs-8-7",
@@ -137,7 +142,8 @@ export const level8 = {
       wrong: "If your arm gets tired, you're using too much force or too much arm. The motion comes from the wrist — small, loose, efficient. If the ghost notes sound the same as the real strums, you're not releasing fretting hand pressure enough.",
       sarah: "16th-note strumming is the secret weapon of every funk and soul guitarist. Your hand never stops moving — it's always strumming. You just choose which strums the audience hears. That's the magic.",
       metronome: 70,
-      speedLadder: { start: 70, end: 90, increment: 10, bars: 4 }
+      speedLadder: { start: 70, end: 90, increment: 10, bars: 4 },
+      levelUp: "Play 16th-note strumming (Down-up-Down-up per beat) on Am9 at 90 BPM with ghost notes on 'e' and 'a' and real strums on '1' and 'and.' Sustain for 3 minutes. The wrist moves like a pendulum — steady, loose, untiring. Ghost notes sound as 'tchk,' not as chords."
     },
     {
       id: "gs-8-8",
@@ -157,7 +163,8 @@ export const level8 = {
       feel: "The groove should feel like a heartbeat — steady, deep, and unhurried. The extended chords add color without disrupting the rhythm. Ghost notes and harmony become one instrument.",
       wrong: "If the rhythm is unsteady, practice the ghost note pattern alone (no chord changes) until it's locked. If the chords sound cluttered, use smaller fragments — top 3 strings only.",
       sarah: "This is the Skinshape sweet spot — where reggae groove meets jazz harmony. Your right hand does the dancing while your left hand does the painting.",
-      metronome: 90
+      metronome: 90,
+      levelUp: "Play the Am9→Dm7→G9→Cmaj7 progression with ghost note rhythm and behind-the-beat chord stabs, transitioning seamlessly through all 4 chords. Reduce to top-3-string fragments for at least one pass. Recording confirms a deep, funky groove with professional-level ghost note texture."
     },
     {
       id: "gs-8-9",

@@ -1,0 +1,239 @@
+[2026-03-20T03:14:28.919Z] I noticed that our singer-songwriter levels 4, 5, 6, and whatever keep using the same A minor chord over and over again, which is good to get a deep understanding. But I was wondering if we should use other chords as well as other keys in order to get a complete 360-degree mastery of the skills versus being locked into just a set of chords. If so, please look at cutting-edge research science and best practices for retention skill acquisition, especially in this field online, and see what we're missing. /research /swarm
+[2026-03-20T03:24:59.440Z] /plan-reviewer
+[2026-03-20T03:25:02.263Z] /plan-reviewer
+[2026-03-20T03:53:34.284Z] yes lets do it
+[2026-03-20T03:55:35.601Z] <task-notification>
+<task-id>a1f85731a41decb77</task-id>
+<tool-use-id>toolu_01FnxCKpy8udKGJncbe5FQiJ</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\a1f85731a41decb77.output</output-file>
+<status>completed</status>
+<summary>Agent "Find E major reggae backing track" completed</summary>
+<result>I was unable to surface verified YouTube video URLs through web search — Google's indexing of specific YouTube watch pages is limited, and YouTube's own search results page returns JavaScript that tools cannot parse into video listings. Fabricating YouTube URLs would be unreliable and potentially point to wrong or nonexistent videos.
+
+Here is what I can confirm with confidence, plus the best path forward:
+
+---
+
+## What the Research Found
+
+**Confirmed E major reggae tracks (not YouTube-direct URLs):**
+
+- **Sydney Backing Tracks** — "Reggae Drum Backing Track in E Major 100 BPM, Vol. 2" — on Shazam/Apple Music/Spotify. This channel likely has a YouTube presence. Search YouTube for: `Sydney Backing Tracks reggae E major`
+- **Sydney Backing Tracks** — "Reggae Backing Track in E Major for Bass Guitar 70 BPM" — a slower option also in E major
+- **QuistJam** — Has a reggae backing track in key of E (listed on GuitarToneMaster as Jamtrack 489). Search YouTube for: `QuistJam reggae E major`
+- **Gene2020** — "Reggae backing track - E Major" on Spotify (origin unclear, may not be on YouTube)
+
+**Best direct YouTube search strings to use right now:**
+
+1. `reggae backing track E major one drop instrumental`
+2. `Sydney Backing Tracks reggae E major`
+3. `reggae jam track key of E 85 bpm no vocals`
+4. `QuistJam reggae E major backing track`
+
+---
+
+## Why I Cannot Provide Verified YouTube URLs
+
+Web search engines do not reliably surface specific `youtube.com/watch?v=` URLs in results — they return YouTube channel pages, Bandcamp listings, and Shazam pages instead. Any YouTube link I generated without verification would be a guess and likely broken or wrong.
+
+**The most reliable path:** Go directly to YouTube and search `reggae backing track E major one drop instrumental`. The Sydney Backing Tracks channel and QuistJam channel are both high-probability matches based on what research confirmed.
+
+---
+
+Sources:
+- [Reggae Drum Backing Track in E Major 100 BPM, Vol. 2 - Shazam](https://www.shazam.com/en-us/song/1592574277/reggae-drum-backing-track-in-e-major-100-bpm-vol-2)
+- [Reggae Backing Track in E Major for Bass Guitar 70 BPM - Amazon](https://www.amazon.co.uk/Reggae-Backing-Track-Major-Guitar/dp/B09DB4T5YH)
+- [Cool Reggae Backing Track E Major 100 BPM - Apple Music](https://music.apple.com/au/song/cool-reggae-backing-track-e-major-100-bpm/1668423194)
+- [Reggae backing track in the key of E - GuitarToneMaster](https://www.guitartonemaster.com/guitar-backing-tracks/genre/reggae-201)
+- [QuistJam Reggae Blues Jam Backing Track (Bm)](https://quistorama.com/track/1492375/reggae-blues-jam-backing-track-bm)
+- [Reggae backing track - E Major by Gene2020 - Spotify](https://open.spotify.com/track/0GuNjDh0SUZi4mPhfVrOsH)</result>
+<usage><total_tokens>22452</total_tokens><tool_uses>17</tool_uses><duration_ms>104229</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\a1f85731a41decb77.output
+[2026-03-20T03:56:45.763Z] <task-notification>
+<task-id>a5bb6ee437765d417</task-id>
+<tool-use-id>toolu_016dawo8urJrDA2dbE3atPDT</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\a5bb6ee437765d417.output</output-file>
+<status>completed</status>
+<summary>Agent "Find E major surf backing track" completed</summary>
+<result>Based on my extensive research, I want to be transparent with you: web search tools cannot reliably extract actual YouTube video URLs from YouTube's dynamically-rendered search results pages. The search engines also do not index individual YouTube backing track videos with enough specificity to return exact URLs matching all your criteria.
+
+Here is what I did confirm with high confidence:
+
+---
+
+**Verified Tracks Found (with real URLs)**
+
+1. **"Key Of E Minor Surf Rock Extended Play Jam Guitar Backing Track 1960's Style" by Steve Stell**
+   - YouTube ID confirmed: `XgrmoWfM-w0`
+   - URL: `https://www.youtube.com/watch?v=XgrmoWfM-w0`
+   - Note: This is E **minor**, not E major — but the 1960s surf sound is confirmed. Extended play length, instrumental, no vocals.
+
+2. **"El Camarón (Surf Pop Rock Jam Track in E minor)" by Guitar-Inspiration.com**
+   - YouTube URL confirmed: `https://www.youtube.com/watch?v=7ZootldcwNY`
+   - 7:01 length, Dick Dale / Ventures / Hank Marvin style, tremolo picking, reverb-drenched. E minor.
+
+3. **"E - Surf Rock - 145 bpm" by Jonny Kaine's Jam Tracks**
+   - This is confirmed as E **major**, 145 BPM (slightly above your 130 BPM ceiling)
+   - Primary source is Bandcamp: `https://backingjamtracks.bandcamp.com/track/e-surf-rock-145-bpm`
+   - The artist has a YouTube channel at `https://www.youtube.com/user/HomeStudioEssentials` but I could not confirm the specific video URL
+
+---
+
+**Honest caveat:** Both confirmed YouTube URLs are in E minor, not E major. The Jonny Kaine track is explicitly E major but I could not retrieve the YouTube URL directly. Most surf rock is played in minor keys or modal contexts, so E major surf rock backing tracks are genuinely less common.
+
+**Recommended next steps:**
+- Search YouTube directly for `E major surf rock backing track` — the Steve Stell channel (Premium Guitar Backing Tracks) and Jonny Kaine (HomeStudioEssentials) are the two most likely sources to have exactly what you need
+- The Typhoon Jam Tracks surf album on Bandcamp (`https://typhoonjamtracks.bandcamp.com/album/surf-rock-backing-track`) may also be worth checking for key information
+
+Sources:
+- [Key Of E Minor Surf Rock Jam Track - Chordify](https://chordify.net/chords/key-of-e-surf-rock-extended-play-jam-guitar-backing-track-1960s-style-steve-stell)
+- [E - Surf Rock - 145 bpm by Jonny Kaine's Jam Tracks](https://backingjamtracks.bandcamp.com/track/e-surf-rock-145-bpm)
+- [Surf Pop Rock Jam Track in E minor - Guitar Inspiration](https://guitar-inspiration.sellfy.store/p/surf-pop-rock-jam-track-in-e-minor/)
+- [Surf in E Minor - Best Backing Tracks](https://bestbackingtracks.com/track/1303946/surf-in-e-minor-guitar-backing-track)
+- [Typhoon Jam Tracks - Surf Rock Backing Track](https://typhoonjamtracks.bandcamp.com/album/surf-rock-backing-track)
+- [Surf Guitar Instrumental (El Camarón) - Guitar Inspiration](https://www.guitar-inspiration.com/2020/08/09/surf-guitar-instrumental-solo-in-e-minor/)</result>
+<usage><total_tokens>25530</total_tokens><tool_uses>24</tool_uses><duration_ms>125831</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\a5bb6ee437765d417.output
+[2026-03-20T03:56:51.477Z] <task-notification>
+<task-id>a56f00073fc00a2c7</task-id>
+<tool-use-id>toolu_01GqfcAUiJ6GzEPb29taFXTS</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\a56f00073fc00a2c7.output</output-file>
+<status>completed</status>
+<summary>Agent "Find A major reggae backing track" completed</summary>
+<result>Based on my extensive research, I want to be straightforward with you about what I found rather than fabricate YouTube URLs.
+
+## Research Results
+
+**Honest assessment:** Web search tools have significant limitations with surfacing specific YouTube video URLs due to how YouTube's content is indexed. I was able to find one confirmed YouTube video ID through a guitar backing track index site, plus several other leads. Here is what I found with confidence:
+
+---
+
+### Confirmed Track
+
+**"Reggae Guitar Backing Track in A Major"** by ChuckLee775
+- URL: https://www.youtube.com/watch?v=Z5AISm31cqc
+- Key: A major (explicitly stated)
+- Notes: Indexed on GuitarToneMaster.com under reggae/A major. BPM not confirmed via metadata — you'll need to verify tempo on the video itself. Also mirrored on Dailymotion under the same title.
+- Credibility: Found via two independent sources (guitartonemaster.com and dailymotion.com)
+
+---
+
+### Strong Leads to Search Directly on YouTube
+
+These tracks exist but I could not resolve their exact YouTube URLs:
+
+1. **"Reggae Backing Track in A Major 80 BPM"** by Sydney Backing Tracks
+   - Part of their "Reggae Drum Backing Tracks, All Major Keys, 80 BPM, Vol. 3" series (2022)
+   - Confirmed on Spotify and Amazon — Sydney Backing Tracks publishes to YouTube as well
+   - YouTube search: `Sydney Backing Tracks reggae A major 80 BPM`
+
+2. **Nick Neblo's A Major playlist** — he maintains a YouTube playlist specifically for practicing A major scale across multiple genres including reggae/ska/island styles
+   - YouTube channel search: `Nick Neblo backing tracks A major`
+
+---
+
+### Recommendation
+
+For your specific needs (roots reggae, A major, 85 BPM, no vocals, 2+ minutes), the most reliable path is to search YouTube directly with this query:
+
+```
+reggae backing track A major 85 bpm instrumental
+```
+
+The ChuckLee775 video at https://www.youtube.com/watch?v=Z5AISm31cqc is the only URL I can confirm with reasonable confidence. I'd rather give you one verified link than three that might be wrong.
+
+---
+
+Sources:
+- [Guitar Backing Tracks - Reggae - GuitarToneMaster](https://www.guitartonemaster.com/guitar-backing-tracks/genre/reggae-201)
+- [Reggae Guitar Backing Track in A Major - Dailymotion](https://www.dailymotion.com/video/x2u3vov_reggae-guitar-backing-track-in-a-major_music)
+- [Reggae Drum Backing Tracks, All Major Keys 80 BPM Vol. 3 - Amazon](https://www.amazon.com/Reggae-Drum-Backing-Track-Major/dp/B09ZLSCWB1)
+- [Backing Tracks in A Major - Nick Neblo](https://nickneblo.com/backing-tracks-in-a-major/)
+- [Free Reggae Backing Tracks - Wikiloops](https://www.wikiloops.com/tracks/Reggae.php)</result>
+<usage><total_tokens>30497</total_tokens><tool_uses>27</tool_uses><duration_ms>157032</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\a56f00073fc00a2c7.output
+[2026-03-20T04:17:48.079Z] y
+[2026-03-20T05:01:01.558Z] /code-review make sure it all works
+[2026-03-20T05:09:04.335Z] <task-notification>
+<task-id>b8atjxy3r</task-id>
+<tool-use-id>toolu_014dLgs5HVMAjneug9J8bxvw</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\b8atjxy3r.output</output-file>
+<status>completed</status>
+<summary>Background command "Send review prompts to both external models in parallel" completed (exit code 0)</summary>
+</task-notification>
+Read the output file to retrieve the result: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\b8atjxy3r.output
+[2026-03-20T08:02:39.366Z] I think another good set of exercises is forcing me to switch between certain intervals without saying intervals really, but you know, like if I am playing A minor and then I hover around the A and then go up and down, or if I go from A to E to C, or go from A to D, or go from C to E, you know what I'm saying? Like just starting from different places on the key and then jumping to other random places, do we have that type of practice?
+[2026-03-20T08:06:37.912Z] also we need more then just 5 notes, i thought we are having all 7? the first excercise of 4 has 4 notes not all in pentatonic
+[2026-03-20T08:08:08.303Z] is there a reason we have the pentatonic seperated? Its ok if we do, is there a skill aquisition reason to wait to integrate all 7 notes?
+[2026-03-20T08:18:56.734Z] We can also add more things to the plan as well for D and G or whatever you see that's missing. The goal of this is to be as comprehensive as possible so I can master it.
+[2026-03-20T08:19:25.314Z] but if you think its good then we are fine we dont need to add more if its not needed
+[2026-03-20T08:31:52.920Z] also does this include differnet keys as well? So everything we talked about has been implemented.
+[2026-03-20T08:32:04.082Z] also does this include differnet keys as well?
+[2026-03-20T08:33:00.755Z] Well, you know, we can split up L4 if you think it's too big. It's not a big deal. Having a more comprehensive database of exercises is better than worrying about the length. We can always split them up if you're concerned.
+[2026-03-20T08:35:35.418Z] And great, if you think that L4 has too many, let's just split L4 and make it L5 off of it, and then we can just move everything past that up a level. Not a big deal. Make sure with all the exercises that we've done that we've baked in all the information and research that we've done about skill acquisition and learning how to sing and embodying the music with emotions and all the other different angles that we've talked about.
+[2026-03-20T08:44:45.235Z] ok but you didnt answer this part, did we do this? thank you by the way. lets just discuss dont code  yetMake sure with all the exercises that we've done that we've baked in all the information and research that we've done about skill acquisition and learning how to sing and embodying the music with emotions and all the other different angles that we've talked about.
+[2026-03-20T08:46:12.479Z] I think audiation is really, really good. And then, yeah, the self-assessment and structure as well as vocal production science. Yes, please. Yeah, those are all really good. Yeah, look at all the exercises that need that. Let's bake it all in seamlessly. Seamlessly or even if you need to add new exercises, we can do that too. Just make sure that you put the proper tools and audio files in there.
+[2026-03-20T22:24:44.481Z] Is our singing pipeline dialed as well? If you need to do so, you can research more about the best way to learn how to have vocal control and how to sing from scratch. /research
+[2026-03-20T22:51:51.185Z] <task-notification>
+<task-id>aa33d12a32f0aeeaf</task-id>
+<tool-use-id>toolu_01UbAxE7fBaEVaTwsSRu9vxn</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\aa33d12a32f0aeeaf.output</output-file>
+<status>completed</status>
+<summary>Agent "Add vocal exercises L1 L2 L3" completed</summary>
+<result>15 exercises total in Level 2 (including v2e1b and v2e3b), with 3 new ones added (v2e10, v2e11, v2e12). Level 3 has 14 (v3e0-v3e13) with 2 new ones added. All correct.
+
+Here is a summary of what was done:
+
+**File 1: `level-01-the-instrument-itself.js`**
+- Removed `levelUp` from v1e10 ("Level 1 Integration - The Full Warm-Up")
+- Added v1e11 ("Full-Range Siren") with drone, referencePitches, pitchContour, recorder, 5 steps
+- Moved and extended the levelUp to v1e11, appending the siren training text
+
+**File 2: `level-02-tuning-the-instrument.js`**
+- Removed `levelUp` from v2e9 ("Level 2 Integration - Musical Application")
+- Added v2e10 ("Wide-Range Pitch Slides") with drone, referencePitches, pitchContour, recorder, metronome: 60, 5 steps
+- Added v2e11 ("Vowel Modification Through the Break") with drone, referencePitches, pitchContour, recorder, metronome: 70, 5 steps
+- Added v2e12 ("Passaggio in E Major") with drone (root E), referencePitches B3-F#4, pitchContour, recorder, metronome: 80, 4 steps
+- Moved and extended the levelUp to v2e12, appending the vowel modification/pitch slides/multi-key text
+
+**File 3: `level-03-building-the-inner-ear.js`**
+- Removed `levelUp` from v3e11 ("Level Integration - Ear Training Relay")
+- Added v3e12 ("Ears Only - Feedback Fading") with drone (tanpura), referencePitches A3-A4, pitchContour: false (deliberately), recorder, metronome: 70, 5 steps
+- Added v3e13 ("Intervals in Three Keys") with drone, referencePitches E3-A4, pitchContour, recorder, 5 steps
+- Moved and extended the levelUp to v3e13, appending the feedback fading/three-key fluency text
+
+All files maintain balanced braces/brackets and the `]` then `};` closing pattern. All new exercises follow the drone-based pattern with no backing tracks.</result>
+<usage><total_tokens>43753</total_tokens><tool_uses>21</tool_uses><duration_ms>350608</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\aa33d12a32f0aeeaf.output
+[2026-03-20T22:51:56.891Z] <task-notification>
+<task-id>aa1d9b530bf134747</task-id>
+<tool-use-id>toolu_01FTy9Yu3FraeEWm9BbD9tyF</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\aa1d9b530bf134747.output</output-file>
+<status>completed</status>
+<summary>Agent "Add vocal exercises L6 L8 L11" completed</summary>
+<result>All verifications pass. Here is a summary of what was done:
+
+**File 1: `level-06-the-pentatonic-sandbox.js`**
+- Removed `levelUp` from v6e11 (exercise index 11)
+- Added v6e12 "Pentatonic Siren in Three Keys" (7 min, 5 steps, drone A2 analog, metronome 80)
+- v6e12 carries the combined levelUp text
+
+**File 2: `level-08-finding-your-sound.js`**
+- Removed `levelUp` from v8e11 (exercise index 11)
+- Added v8e12 "CCM Voice Lab" (10 min, 5 steps, drone A3 warm)
+- Added v8e13 "Genre Voice Comparison" (8 min, 6 steps including initial melody choice, drone A2 warm)
+- v8e13 carries the combined levelUp text
+
+**File 3: `level-11-scale-freedom.js`**
+- Removed `levelUp` from v11e11 (exercise index 11)
+- Added v11e12 "Scale Freedom Across Keys" (8 min, 4 steps, drone A2 pure)
+- v11e12 carries the combined levelUp text
+
+All 4 new exercises are drone-based with no backing tracks, include `referencePitches`, `pitchContour`, and `recorder`. Exercise counts: Level 6 now has 13 exercises, Level 8 has 14, Level 11 has 13.</result>
+<usage><total_tokens>37616</total_tokens><tool_uses>14</tool_uses><duration_ms>236556</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\a7a312f5-990b-4c89-b34b-95d749456f59\tasks\aa1d9b530bf134747.output

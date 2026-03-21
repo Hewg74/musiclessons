@@ -25,14 +25,15 @@ export const level6 = {
         { name: "Displaced", pattern: [0.5, 1.5], description: "Off-beat accent" }
       ],
       steps: [
-        { text: "Play ONLY the note A (5th fret, high E string). Set metronome to 90. Play A as quarter notes on every beat for 4 bars. Boring? Good. That's the baseline.", why: "The baseline of 'one note, on the beat' is your control group. Everything you do after this is rhythmic improvisation — and the contrast with this boring version proves the power of rhythm." },
+        { text: "Play ONLY the note A (5th fret, high E string). Set metronome to 90. Play A as quarter notes on every beat for 4 bars. Boring? Good. That's the baseline.", why: "PMC research on musical improvisation shows it simultaneously activates sensory processing, motor planning, memory retrieval, and real-time adaptability — more brain regions than almost any other activity. The baseline of 'one note, on the beat' is your control group. Everything you do after this is rhythmic improvisation — and the contrast with this boring version proves the power of rhythm." },
         { text: "Now displace: play A on the 'and' after beat 1, then silence for the rest of the bar. Repeat for 4 bars. Then try placing it on the 'and' of beat 3 only. One note per bar, different placement each time.", why: "Rhythmic displacement means shifting when a note lands within the bar. The same note on beat 1 feels stable. On the 'and' of 2 it feels funky. On beat 4 it feels like a pickup. Placement IS expression." },
         { text: "Explore groupings: play A in a 3-3-2 pattern (three eighth notes, three eighth notes, two eighth notes — a natural syncopation that fits inside 4/4). Accent the first note of each group.", why: "The 3-3-2 grouping creates a lopsided, swinging feel that sounds complex but uses only one note. This rhythmic cell appears in every genre you love — reggae, surf, desert blues." },
-        { text: "Put on Groove Beat 90. Improvise with ONLY the note A for 2 minutes. Use everything: displacement, 3-3-2 groupings, long holds, short staccato jabs, silence. Record yourself.", why: "2 minutes of one-note improv forces you to exhaust your rhythmic vocabulary. When you run out of ideas, sit in silence and wait — a new rhythmic idea will come." }
+        { text: "Put on Groove Beat 90. Improvise with ONLY the note A for 2 minutes. Use everything: displacement, 3-3-2 groupings, long holds, short staccato jabs, silence. Record yourself.", why: "Julian Lage describes his 45-minute improv practice: 'Exhaust your vocabulary, then real creativity begins.' Two minutes of one-note improv forces you through that same threshold — when you run out of ideas, sit in silence and wait. A new rhythmic idea will come from a deeper place." }
       ],
       feel: "When a single note grooves, you'll feel the pocket — the note isn't just sitting on the beat, it's dancing around it. A single note with great rhythm sounds better than a hundred notes with bad rhythm.",
       wrong: "If it sounds boring, your rhythmic vocabulary is too limited — try syncopation, try placing the note on the 'and,' try leaving 4 beats of silence. If it sounds mechanical, you're playing patterns instead of phrases.",
-      sarah: "Gene, this is the exercise that changes everything. Victor Wooten says rhythm is the only thing that can make one note sound like music. Your reggae offbeat training from Level 4 prepared you for this — now apply that rhythmic discipline to lead playing."
+      sarah: "Gene, this is the exercise that changes everything. Victor Wooten says rhythm is the only thing that can make one note sound like music. Your reggae offbeat training from Level 4 prepared you for this — now apply that rhythmic discipline to lead playing.",
+      levelUp: "Record a 2-minute one-note improv (only A) over a groove track that sounds musical — syncopation, displacement, silence, and dynamic variety all present. A listener unfamiliar with the exercise hears a groove, not a drill."
     },
     {
       id: "gs-6-2",
@@ -52,7 +53,8 @@ export const level6 = {
       ],
       feel: "When the percussive elements lock in with the groove, your guitar should feel like a one-person band — drums and melody from one instrument.",
       wrong: "If it sounds like random noise, your percussive hits aren't landing on consistent rhythmic positions. Simplify: slap on 2 and 4, ghost on every other eighth note, and add ONE melodic note per bar.",
-      sarah: "Tommy Guerrero built a career on this — solo guitar that sounds like drums, bass, and lead all at once. Your reggae ghost notes from Level 4 are the foundation. Now they become improv tools."
+      sarah: "Tommy Guerrero built a career on this — solo guitar that sounds like drums, bass, and lead all at once. Your reggae ghost notes from Level 4 are the foundation. Now they become improv tools.",
+      levelUp: "Record a 2-minute passage that is at least 50% percussive (slaps, ghost scratches, punches) with pentatonic fills woven in. On playback, your guitar sounds like a one-person rhythm section — drums and melody from one instrument."
     },
     {
       id: "gs-6-3",
@@ -67,7 +69,7 @@ export const level6 = {
       referencePitches: getPitchRange("A3", "E4"),
       phraseForm: { pattern: "PRVD", barsPerSection: 4, labels: { P: "Present", R: "Repeat", V: "Vary", D: "Deconstruct" } },
       steps: [
-        { text: "PRESENT: choose a 3-note motif from Am pentatonic. Keep it simple and singable — E-D-C, or A-C-D, or G-E-D. Play it once. Stop. Let the silence frame it.", why: "A motif is a musical seed. The best motifs are short enough to remember and sing back. If you can't hum it, it's too complex." },
+        { text: "PRESENT: choose a 3-note motif from Am pentatonic. Keep it simple and singable — E-D-C, or A-C-D, or G-E-D. Play it once. Stop. Let the silence frame it.", why: "A motif is a musical seed. Research on improvisation (Pressing, 1998) shows expert improvisers work from short, memorable 'referents' — not long pre-planned phrases. The best motifs are short enough to remember and sing back. If you can't hum it, it's too complex. Julian Lage keeps his seeds to 3-4 notes: 'The simpler the idea, the more directions it can grow.'" },
         { text: "REPEAT: play the exact same motif 3 more times. Same notes, same rhythm, same dynamics. No variation yet. Repetition tells the listener 'this is important — remember this.'", why: "Repetition is not laziness — it's communication. When you repeat a motif, you're declaring it as the theme. The listener's brain locks onto it." },
         { text: "VARY: change exactly ONE thing. Keep the same rhythm but change one note. OR keep the same notes but change the rhythm. OR play it in a different octave. One variation. Repeat the variation twice.", why: "Single-element variation is the key discipline. Changing everything at once destroys the connection to the original. Changing one thing creates development." },
         { text: "DECONSTRUCT: take just the first 2 notes of your motif. Repeat them. Then just 1 note with the original rhythm. The motif dissolves back into rhythm.", why: "Deconstruction is how phrases end naturally. Instead of stopping abruptly, you gradually simplify until only the essence remains." },
@@ -75,7 +77,8 @@ export const level6 = {
       ],
       feel: "PReVaDe should feel like telling a short story: introduce the character (present), establish them (repeat), add a twist (vary), and bring it home (deconstruct).",
       wrong: "If you changed too many things during 'Vary,' you lost the thread. If the repetitions felt boring, your motif might be too simple. If you never deconstructed, you skipped the most important step.",
-      sarah: "Listen to any Khruangbin song. Mark Speer does exactly this: a short phrase, repeated, slightly varied, then fragmented back to silence. PReVaDe isn't a theory exercise — it's literally how your favorite guitarist improvises."
+      sarah: "Listen to any Khruangbin song. Mark Speer does exactly this: a short phrase, repeated, slightly varied, then fragmented back to silence. PReVaDe isn't a theory exercise — it's literally how your favorite guitarist improvises.",
+      levelUp: "Run 3 complete PReVaDe cycles on 3 different motifs over a backing track. Each cycle is audibly distinct — Present is recognizable, Repeat locks it in, Vary changes exactly one element, Deconstruct dissolves to 1-2 notes. A listener can follow the story of each motif."
     },
     {
       id: "gs-6-4",
@@ -97,7 +100,8 @@ export const level6 = {
       ],
       feel: "When you land on the right chord tone, there's a feeling of clicking into place — the melody and harmony agree. Like stepping on solid ground after walking on sand.",
       wrong: "If landing notes clash with the chord, double-check your chord-tone map. If it sounds like a scale exercise, add more rhythm and space between landing pads.",
-      sarah: "This is the single most important improvisation concept. Chord-tone targeting is what separates 'playing a scale over a progression' from 'improvising over the harmony.' Every note between targets is embellishment — the targets are the story."
+      sarah: "This is the single most important improvisation concept. Chord-tone targeting is what separates 'playing a scale over a progression' from 'improvising over the harmony.' Every note between targets is embellishment — the targets are the story.",
+      levelUp: "Improvise over Am-G-C for 3 minutes, landing on a chord tone (root, 3rd, or 5th) on beat 1 of every chord change at least 80% of the time. Recording confirms your melody follows the harmony — not just the scale."
     },
     {
       id: "gs-6-5",
@@ -117,7 +121,8 @@ export const level6 = {
       ],
       feel: "When rhythm and chord tones align, the solo should feel like it's writing itself. The rhythm drives forward and the notes fall into place.",
       wrong: "If it sounds like a scale exercise, the rhythm has gone flat — bring back the rhythmic motif. If chord changes throw you off, simplify to roots only on beat 1.",
-      sarah: "Gene, this is where your reggae rhythmic training pays off. You already think rhythmically because of Level 4. Now that rhythmic vocabulary becomes your soloing vocabulary."
+      sarah: "Gene, this is where your reggae rhythmic training pays off. You already think rhythmically because of Level 4. Now that rhythmic vocabulary becomes your soloing vocabulary.",
+      levelUp: "Improvise for 3 minutes where a single rhythmic motif travels through Am-G-C, changing notes to match chord tones while the rhythm stays recognizable. Passing tones appear on weak beats only."
     },
     {
       id: "gs-6-6",
@@ -141,7 +146,8 @@ export const level6 = {
       feel: "When you're truly playing WITH the track, it feels like a conversation — you and the track are making music together. Your notes live inside the groove.",
       wrong: "If your playing sounds like it belongs on a different track, you're not listening enough. If you're playing nonstop, you're monologuing instead of conversing.",
       sarah: "Victor Wooten's advice changed everything for musicians who heard it. The backing track is your fluent speaker. Play WITH it, not over it.",
-      metronome: 80
+      metronome: 80,
+      levelUp: "Record 2 minutes over each of two different backing tracks. On playback, your notes land in the track's gaps — when the track is busy you leave space, when it breathes you fill in. A listener hears one band, not guitar-over-track."
     },
     {
       id: "gs-6-7",
@@ -165,7 +171,8 @@ export const level6 = {
       ],
       feel: "Good comping feels like supporting an imaginary vocalist. You're the foundation they stand on, constantly adjusting.",
       wrong: "If all repeats sounded the same, your vocabulary is too narrow. If variations disrupted the groove, they were too dramatic — subtlety is key.",
-      sarah: "Gene, you'll spend 90% of your time in a band comping, not soloing. This exercise makes that 90% creative and alive. Skinshape's rhythm guitar is never the same twice."
+      sarah: "Gene, you'll spend 90% of your time in a band comping, not soloing. This exercise makes that 90% creative and alive. Skinshape's rhythm guitar is never the same twice.",
+      levelUp: "Play the Am-Dm-G progression 8 times, each repeat audibly different — varied voicing, rhythm, dynamic, or register. No two passes sound the same. Recording confirms at least 5 distinct variations."
     },
     {
       id: "gs-6-8",
@@ -187,7 +194,8 @@ export const level6 = {
       ],
       feel: "Varied reggae skanking should feel like a conversation with the drum track — responsive, alive, and never robotic.",
       wrong: "If the groove broke during variations, the change was too large. Keep each change small — one element at a time.",
-      sarah: "Pepper and Slightly Stoopid's guitarists never play the same skank twice. They're constantly micro-varying — that's what makes their rhythm guitar feel alive instead of programmed."
+      sarah: "Pepper and Slightly Stoopid's guitarists never play the same skank twice. They're constantly micro-varying — that's what makes their rhythm guitar feel alive instead of programmed.",
+      levelUp: "Record 3 minutes of reggae rhythmic improv where the skank varies every 2-4 bars — displaced stabs, ghost note density changes, single melodic fills, dynamic shifts. The groove never breaks, but it's never robotic."
     },
     {
       id: "gs-6-9",
@@ -209,7 +217,8 @@ export const level6 = {
       ],
       feel: "The solo should feel like it has a beginning, middle, and end — a narrative arc built from a single idea.",
       wrong: "If the transposition sounds disconnected, check the rhythm. If the inversion sounds random, verify the intervals. If the fragment is boring, your original motif needs a more syncopated rhythm.",
-      sarah: "This is how The Ventures and Allah-Las build surf solos — one lick, developed through repetition and variation. Not shredding. Storytelling with 4 notes."
+      sarah: "This is how The Ventures and Allah-Las build surf solos — one lick, developed through repetition and variation. Not shredding. Storytelling with 4 notes.",
+      levelUp: "Build a 24-bar surf solo from one 4-note Mixolydian lick: Present (4 bars) → Repeat (4) → Transpose up a 4th (4) → Invert (4) → Fragment to 2 notes (4) → Rebuild (4). Record it — each section is recognizably connected to the original motif."
     },
     {
       id: "gs-6-10",
@@ -231,7 +240,8 @@ export const level6 = {
       ],
       feel: "The full arc should feel meditative and profound. 5 minutes of patient development over a drone creates a trance-like quality.",
       wrong: "If you got bored and added complexity too early, you short-circuited the process. The boredom is the point — push through it.",
-      sarah: "Gene, this is Tinariwen's approach married to compositional craft. They've been doing PReVaDe for centuries without calling it that — repeating, slowly varying, dissolving back to the drone."
+      sarah: "Gene, this is Tinariwen's approach married to compositional craft. They've been doing PReVaDe for centuries without calling it that — repeating, slowly varying, dissolving back to the drone.",
+      levelUp: "Sustain a 5-minute desert drone motif arc: 8 exact repetitions of a 3-note motif over an A drone, then vary one note for 8 more, then deconstruct to 1 note, then drone alone. The single changed note on repetition 9 sounds like a revelation, not a random edit."
     },
     {
       id: "gs-6-11",
@@ -253,7 +263,8 @@ export const level6 = {
       feel: "Recovery should feel empowering — every 'wrong' note is a doorway to an interesting phrase. No fear because you know three ways to turn any mistake into music.",
       wrong: "If you freeze after the wrong note, commit to a recovery move immediately. If recoveries sound like corrections, they're too tentative — sell the move.",
       sarah: "Gene, this exercise eliminates fear. Once you know you can recover from any wrong note, there's nothing to be afraid of. Improvisation anxiety comes from fear of mistakes. Kill the fear and the music flows.",
-      metronome: 90
+      metronome: 90,
+      levelUp: "Improvise for 2 minutes, deliberately hitting a wrong note every 20-30 seconds. Use all 3 recovery moves (slide, bend, confidence repeat). On playback, at least 7 out of 10 recoveries sound intentional — a listener can't tell which notes were mistakes."
     },
     {
       id: "gs-6-12",
@@ -274,7 +285,8 @@ export const level6 = {
       ],
       feel: "The genre switches should feel like changing lenses on a camera — the same scene looks different through each one.",
       wrong: "If all three genres sounded the same, you're defaulting to one approach. Exaggerate the differences: reggae = mostly rhythm, surf = melodic and forward, desert = hypnotic and patient.",
-      sarah: "This is where the whole curriculum converges. Reggae rhythm, surf melody, desert patience — three improv approaches from three levels, now unified."
+      sarah: "This is where the whole curriculum converges. Reggae rhythm, surf melody, desert patience — three improv approaches from three levels, now unified.",
+      levelUp: "Cycle through reggae rhythmic improv, surf motif development, and desert drone motif every 4 bars for 3 full rotations (36 bars). Each genre is immediately recognizable on playback — reggae is rhythmic, surf is melodic and forward, desert is hypnotic and patient. Transitions don't break the groove."
     },
     {
       id: "gs-6-13",
@@ -292,7 +304,8 @@ export const level6 = {
       ],
       feel: "When locked in with a real recording, it feels like being in the band. Your guitar fills spaces that the recording left open.",
       wrong: "If you can't hear the recording over your playing, you're too loud. If your improv sounds disconnected, you're not listening — the song dictates your approach.",
-      sarah: "Gene, this is what it feels like to be in a band. Khruangbin, Skinshape, Allah-Las — these are the musicians you want to jam with. Your playlist IS your practice partner."
+      sarah: "Gene, this is what it feels like to be in a band. Khruangbin, Skinshape, Allah-Las — these are the musicians you want to jam with. Your playlist IS your practice partner.",
+      levelUp: "Play along with a full song recording for its entire duration. Follow the vocal (quiet when singing, fill when resting), echo the recording's guitar phrases with variations, and comp during instrumental sections. Second pass recorded — your guitar sounds like it belongs in the mix."
     },
     {
       id: "gs-6-14",

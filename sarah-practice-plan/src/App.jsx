@@ -7,7 +7,7 @@ import {
   Mic, Headphones, Info, AlertCircle, Quote, ArrowRight, Check, 
   Volume2, Sun, Moon
 } from 'lucide-react';
-import { MiniAudioPlayer, AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, VolumeMeter, DroneGenerator, TAB_CONTENT, InlineKeyboard, RhythmCellCards, PhraseFormGuide, StrumChartBuilder, ChartListView, makeTemplateChart } from './JungleTools.jsx';
+import { MiniAudioPlayer, AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, VolumeMeter, ChordTransitionTimer, GenreMetronome, SilenceScore, DroneGenerator, TAB_CONTENT, InlineKeyboard, RhythmCellCards, PhraseFormGuide, StrumChartBuilder, ChartListView, makeTemplateChart } from './JungleTools.jsx';
 import { acquireKeepalive, releaseKeepalive, setMediaSession, clearMediaSession } from './audioKeepalive.js';
 import { DAYS, KEYBOARD_LEVELS, LOOPER_LEVELS, LESSON_POOL, ALL_NOTES, getPitchRange } from './data/appData.js';
 import { WEEKLY_PLANS, CURRENT_WEEK } from './data/weeklyPlans/index.js';
@@ -1706,6 +1706,15 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
 
               {/* Volume Meter */}
               {ex.volumeMeter && <VolumeMeter theme={T} inline={true} volumeContour={!!ex.volumeContour} />}
+
+              {/* Silence Score */}
+              {ex.silenceTarget && <SilenceScore theme={T} target={ex.silenceTarget} />}
+
+              {/* Chord Transition Timer */}
+              {ex.chordTimer && <ChordTransitionTimer theme={T} chords={ex.chordTimer.chords} duration={ex.chordTimer.duration || 60} />}
+
+              {/* Genre Metronome */}
+              {ex.metronomeMode && <GenreMetronome theme={T} mode={ex.metronomeMode} bpm={ex.metronome || 80} />}
 
               {/* Rhythm Cells */}
               {ex.rhythmCells && (

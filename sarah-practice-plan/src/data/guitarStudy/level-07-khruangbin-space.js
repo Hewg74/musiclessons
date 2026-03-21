@@ -17,7 +17,7 @@ export const level7 = {
       type: "guitar",
       what: "Learn chord fragments on the top 3 strings with the root omitted. Am top 3 strings becomes A+C+E, Dm becomes A+D+F. These minimal voicings sound open, ambiguous, and modern — the Khruangbin harmonic palette. The bass player defines the chord; you add color.",
       steps: [
-        { text: "Play Am as a full chord (x02210). Now strip it down to just the top 3 strings: play only the G, B, and E strings. You get the notes A (G string 2nd fret), C (B string 1st fret), E (open high E) — a complete Am triad in a compact, bright voicing.", why: "Removing the root makes the chord ambiguous — it could be several things depending on the bass note underneath. This openness is the Khruangbin sound. The bass player (Laura Lee) defines the chord; Mark Speer adds color." },
+        { text: "Play Am as a full chord (x02210). Now strip it down to just the top 3 strings: play only the G, B, and E strings. You get the notes A (G string 2nd fret), C (B string 1st fret), E (open high E) — a complete Am triad in a compact, bright voicing.", why: "Removing the root makes the chord ambiguous — it could be several things depending on the bass note underneath. This openness is the Khruangbin sound. Mark Speer said: 'I'm not a guitar player — I play THAT guitar.' His influences are reggae and zouk guitarists, not rock players. He listens to singers more than guitarists. The bass player (Laura Lee) defines the chord; Mark Speer adds color — and that division of labor is the whole architecture." },
         { text: "Find 3-note voicings for Dm (top 3 strings of xx0231: A, D, F), Em (open G, open B, open E — the simplest voicing), G (top 3 strings of 320003: G, B, G), and C (top 3 strings of x32010: G, C, E). Each chord is just 2-3 unique notes.", why: "Three-note voicings are transparent — they suggest harmony without declaring it. This leaves room for the bass to define the chord and air to flow between the notes." },
         { text: "Play a progression using only these stripped-down voicings: Am-Dm-G-C with 3 notes each. Strum only the top 3 strings. Notice how airy and spacious it sounds compared to full chords.", why: "Full chords fill the sonic space like oil paint. Three-note voicings are watercolors — lighter, more transparent, more suggestive." },
         { text: "Try playing these voicings with a soft pick attack — barely touching the strings. Let the notes whisper. This is the dynamic foundation for everything in Level 7.", why: "Khruangbin's dynamics are crucial. Soft attack + open voicings = the spacious, floating sound that defines their guitar tone." }
@@ -26,7 +26,8 @@ export const level7 = {
       wrong: "If the chords sound thin or weak, you might be muting strings accidentally — check your fretting. If they sound like full chords, you're including too many strings. If they sound empty, you're not letting the notes sustain long enough.",
       sarah: "Mark Speer said he thinks of his guitar as a melodic instrument, not a rhythm instrument. These voicings blur the line between chords and melody — that's the point. You're not strumming; you're painting.",
       metronome: 80,
-      recorder: true
+      recorder: true,
+      levelUp: "Play the Am-Dm-G-C progression using only 3-note voicings on the top 3 strings with soft pick attack. Each chord rings clearly with no muted strings. Recording confirms the sound is airy and transparent — not thin, not full."
     },
     {
       id: "gs-7-2",
@@ -37,7 +38,7 @@ export const level7 = {
       setup: "Neck pickup if you have a pickup selector. Tone knob rolled back to about 50-60%. No overdrive — clean tone only.",
       steps: [
         { text: "Play an open A string with your normal picking position and force. Listen to the tone — you'll hear an initial 'tick' attack sound followed by the sustain. Now move your picking hand halfway between the bridge and the neck, and reduce your force by half. Pick the same string. The 'tick' vanishes; the note blooms.", why: "Picking position radically changes tone. Near the bridge is bright and snappy. Near the neck is warm and round. Soft force removes the transient attack, letting the note speak without shouting." },
-        { text: "Play a full Am pentatonic phrase with this soft, neck-position attack. Compare it to the same phrase with your normal picking. It should sound like a completely different instrument.", why: "The same notes played with a different attack sound like two different guitars. This is why Mark Speer sounds like nobody else — his tone starts with his hands, not his gear." },
+        { text: "Play a full Am pentatonic phrase with this soft, neck-position attack. Compare it to the same phrase with your normal picking. It should sound like a completely different instrument.", why: "The same notes played with a different attack sound like two different guitars. Mark Speer's influences reveal why: he studied reggae and zouk guitarists — players who prioritize touch and groove over flash. He listens to singers more than guitarists, which is why his phrasing breathes like a vocal line. His tone starts with his hands, not his gear." },
         { text: "Try fingerpicking instead of using a pick. Thumb for bass notes, index and middle fingers for melody. This is the warmest possible tone — fingers are softer than any pick.", why: "Fingers produce almost no transient attack. Many Khruangbin-inspired tones are achieved with hybrid picking (pick + fingers) or pure fingerstyle." },
         { text: "Play a 2-minute improv using only soft attack. If you catch yourself picking hard, consciously pull back. The loudest note you play should be what would normally be your softest.", why: "Resetting your dynamic baseline is the point. You're training your hands to live in a softer world. Once this feels natural, you can choose to play loud — but your default becomes gentle and controlled." }
       ],
@@ -45,7 +46,8 @@ export const level7 = {
       wrong: "If the notes are too quiet to hear, you've gone too soft — find the threshold where notes speak clearly but without any pick attack noise. If they still have that pick 'tick,' you're still too close to the bridge or picking too hard.",
       sarah: "Mark Speer uses flatwound strings, which have no brightness at all. You can get close to that sound with roundwound strings by changing your technique — pick position and attack do 80% of the work. The remaining 20% is the tone knob, which we'll get to next.",
       metronome: 80,
-      volumeMeter: true
+      volumeMeter: true,
+      levelUp: "Play a 2-minute improv using only soft, neck-position pick attack. No pick 'tick' is audible on any note. Recording confirms every note blooms with a warm, round envelope — no transient spike. The loudest note would normally be your softest."
     },
     {
       id: "gs-7-3",
@@ -58,7 +60,7 @@ export const level7 = {
       what: "Play a short phrase. Then wait twice as long as you want to before playing the next one. Record 2 minutes and listen back. Count the silence. Your target: at least 40% of the recording should be silence. This is calibrated to Khruangbin's actual recordings.",
       setup: "Record yourself. Any tone. Backing track optional.",
       steps: [
-        { text: "Play a 3-4 note phrase using any scale you've learned. Then stop. Feel the urge to play again. Count how many seconds you want to wait.", why: "Your instinct will say 'play now!' — that urge to fill silence is what we're training against." },
+        { text: "Play a 3-4 note phrase using any scale you've learned. Then stop. Feel the urge to play again. Count how many seconds you want to wait.", why: "Your instinct will say 'play now!' — that urge to fill silence is what we're training against. Mark Speer (Khruangbin) said: 'Don't be afraid of space. You can spend your time filling up every section of the sonic void, or you can embrace that space.' Most guitar curricula teach you to play more. This exercise teaches you to play less — and that's harder." },
         { text: "Whatever your instinct says, double the wait time. If you want to wait 2 seconds, wait 4. If 4, wait 8. Sit in the silence. Let it become comfortable.", why: "Doubling your natural pause length pushes you into uncomfortable silence. That discomfort is growth." },
         { text: "Play another phrase. Not necessarily a response to the first one — a new thought, born from the silence that preceded it. Continue for 2 minutes.", why: "When silence is long enough, the next phrase isn't a reaction — it's a fresh idea. This creates spacious, meditative music rather than continuous chatter." },
         { text: "Stop recording. Listen back without your guitar in your hands. Count the seconds of silence vs. playing. Calculate the percentage: silence seconds divided by 120 total seconds.", why: "Recording reveals the truth: silence that felt eternal while playing sounds perfectly natural from the outside. And most players discover they left far less space than they thought." },
@@ -66,7 +68,9 @@ export const level7 = {
       ],
       feel: "The silence should eventually feel charged — not empty, but full of potential. Each phrase should feel like it appeared at exactly the right moment, not a second too early.",
       wrong: "If you filled every gap with a note, you didn't trust the silence. If the recording sounds like random notes with awkward pauses, you need to commit more fully to the silence — own it, don't endure it. If you're at 70%+ silence, make sure the notes you DO play are meaningful.",
-      sarah: "Miles Davis said 'It's not the notes you play, it's the notes you don't play.' Khruangbin took that literally. Their songs are more silence than sound, and the silence is what makes the notes matter."
+      sarah: "Miles Davis said 'It's not the notes you play, it's the notes you don't play.' Khruangbin took that literally. Their songs are more silence than sound, and the silence is what makes the notes matter.",
+      silenceTarget: 0.4,
+      levelUp: "Record a 2-minute passage where at least 40% of the time is silence (48+ seconds). Each phrase feels intentional — born from the silence, not filling it. The silence feels musical, not awkward."
     },
     {
       id: "gs-7-4",
@@ -86,7 +90,8 @@ export const level7 = {
       feel: "Behind the beat should feel languid and heavy — like the notes are settling into a warm bath. There's no rush, no urgency. The beat is the current and you're floating on it, not swimming against it.",
       wrong: "If you sound late or sloppy, you're too far behind. If you sound normal, you've drifted back on the beat. The sweet spot is extremely narrow — barely perceptible as 'late' but clearly 'groovy.' Record yourself and compare to the click — you should hear a tiny gap.",
       sarah: "Playing on the beat is a skill. Playing behind the beat on purpose is mastery. It requires knowing exactly where the beat is and choosing to arrive just after it. This is what separates good guitarists from captivating ones.",
-      metronome: 80
+      metronome: 80,
+      levelUp: "Play behind the beat for 2 minutes straight over a backing track, consistently placing notes 20-50ms after the click. Recording confirms a laid-back, languid feel without sounding sloppy or late. Combined with soft attack, the result is unmistakably Khruangbin."
     },
     {
       id: "gs-7-5",
@@ -106,7 +111,8 @@ export const level7 = {
       wrong: "If you can't reach the tone knob without stopping your playing, practice the physical motion separately until it's smooth. If the tonal changes sound random, commit to a plan — bright for rhythm, warm for melody, or vice versa. If you don't hear much difference, check that your tone knob is actually working (some guitars have subtle tone controls).",
       sarah: "This is the exercise that most guitar curricula never include. The tone knob is right there on your guitar, and it changes everything about your sound. Mark Speer treats it as seriously as his note choices — it's not setup, it's performance. Once you start using it, you'll wonder why you ever left it in one position.",
       metronome: 80,
-      recorder: true
+      recorder: true,
+      levelUp: "Play a 2-minute passage alternating between bright tone (knob fully open) for funky phrases and warm tone (knob rolled back to 40%) for melodic phrases. Tone changes happen mid-performance without stopping. Recording reveals two distinct tonal characters from one guitar."
     },
     {
       id: "gs-7-6",
@@ -126,7 +132,8 @@ export const level7 = {
       feel: "Chromatic approach notes should feel like brief shadows passing over the melody — moments of tension that resolve before you fully register them. They add mystery and sophistication without changing the overall character of the phrase.",
       wrong: "If your playing sounds like a chromatic scale exercise, you're using too many approach notes. If the approaches sound like wrong notes, make them shorter — they should be grace notes, not featured pitches. If you called Ab the 'b2 of A,' correct yourself — the b2 of A is Bb. Ab is simply a half-step approach from below. Use the right terminology.",
       sarah: "Khruangbin's global sound comes partly from these chromatic approaches. The same Am pentatonic phrase sounds like blues, Thai funk, or Middle Eastern music depending on which approach notes you add and how you bend them. One technique, infinite flavors.",
-      metronome: 80
+      metronome: 80,
+      levelUp: "Improvise for 2 minutes over Am pentatonic with chromatic approach notes on 30-40% of target notes. Approaches are audibly brief (grace-note length), resolve cleanly into scale tones, and add an exotic flavor without sounding like a chromatic exercise."
     },
     {
       id: "gs-7-7",
@@ -144,7 +151,8 @@ export const level7 = {
       ],
       feel: "Each flavor should transport you to a different place — a smoky club, a vast desert, a Bangkok street market. The pentatonic is the same; the seasoning changes everything.",
       wrong: "If all three sound the same, you're not committing to the character of each flavor. Blues should bend. Desert should repeat with patience. Thai/Middle Eastern should use chromatic approaches with warm tone. Each has a distinct personality — exaggerate the differences.",
-      sarah: "Khruangbin's genius is treating the pentatonic scale as a global language — adding different accents and idioms depending on the song. This exercise gives you the same superpower. You already know the scale. Now you know how to make it speak different languages."
+      sarah: "Khruangbin's genius is treating the pentatonic scale as a global language — adding different accents and idioms depending on the song. This exercise gives you the same superpower. You already know the scale. Now you know how to make it speak different languages.",
+      levelUp: "Toggle between blues, desert, and Thai/Middle Eastern flavors every 4 bars over a backing track. Each flavor is immediately distinguishable — blues bends, desert repetition with quarter-tone bends on B, Thai chromatic approaches with warm tone. Then blend two flavors in one phrase at least twice."
     },
     {
       id: "gs-7-8",
@@ -156,7 +164,7 @@ export const level7 = {
       what: "Build a complete Khruangbin-style piece: a short signature riff, soft attack, lots of space, behind-the-beat phrasing, tone knob work, and slight variation on each repeat. Reference 'Evan Finds the Third Room' or 'People Everywhere' as templates.",
       tracks: [{ name: "Khruangbin Style 80 BPM", src: "/khruangbin-style-80.mp3" }],
       steps: [
-        { text: "Create a short riff — 4-5 notes from Am pentatonic with a distinctive rhythm. Think of it as a signature melody that identifies your 'song.' Play it with soft attack and the tone knob at about 40% (slightly warm).", why: "Khruangbin songs are built on one riff. The riff IS the song. Everything else is variation. Your riff should be melodic enough to be hummed." },
+        { text: "Create a short riff — 4-5 notes from Am pentatonic with a distinctive rhythm. Think of it as a signature melody that identifies your 'song.' Play it with soft attack and the tone knob at about 40% (slightly warm).", why: "Khruangbin songs are built on one riff. The riff IS the song. Everything else is variation. Mark Speer has said he thinks about melodies the way a singer would — singable, memorable, hummable. Your riff should pass the hum test: if you can't sing it away from the guitar, it's too complex for this style." },
         { text: "Play your riff. Leave 4-8 beats of silence. Play a variation — same rhythm, one note different. Silence again. The silence-variation-silence pattern is how Khruangbin structures their guitar parts.", why: "Space frames each statement like a picture frame. Without the space, the variations blur together. With it, each one feels like a deliberate artistic choice." },
         { text: "Put on Khruangbin Style 80. Place every note behind the beat. The riff should feel like it's settling into the groove, not driving it. Your guitar follows the bass and drums, sitting slightly behind — like a shadow.", why: "Khruangbin's guitar never leads — it follows. The bass (Laura Lee) drives the song. Mark Speer colors it. Feeling this follower role is essential to the style." },
         { text: "Over 5 minutes, develop the riff through tiny mutations. Occasionally roll the tone knob — bright for one variation, warm for the next. End with a version that's recognizably related to the original but distinctly different.", why: "This is real-time composition using the motif development technique. The tone knob changes add another dimension of variation beyond just notes and rhythm." },
@@ -164,7 +172,8 @@ export const level7 = {
       ],
       feel: "This should feel cinematic — a soundtrack to a scene that hasn't been filmed. The riff is the theme. The variations are the story. The space is the atmosphere.",
       wrong: "If you're playing too much, you're not Khruangbin yet. If the riff isn't distinctive, it won't survive variation — make it more melodic or rhythmically unique. If everything is on the beat, push it all slightly back. If the tone never changes, use the knob.",
-      sarah: "Khruangbin makes guitar music for people who don't normally listen to guitar music. Their secret is restraint. They play 10% of what they could play, and that 10% is chosen with extraordinary care. This exercise teaches you to think like Mark Speer."
+      sarah: "Khruangbin makes guitar music for people who don't normally listen to guitar music. Their secret is restraint. They play 10% of what they could play, and that 10% is chosen with extraordinary care. This exercise teaches you to think like Mark Speer.",
+      levelUp: "Record a 5-minute Khruangbin-style piece built on one signature riff. The riff mutates through tiny variations, the tone knob shifts between bright and warm, at least one global flavor departure appears, and at least 40% of the recording is silence. The piece sounds like a song, not an exercise."
     },
     {
       id: "gs-7-9",

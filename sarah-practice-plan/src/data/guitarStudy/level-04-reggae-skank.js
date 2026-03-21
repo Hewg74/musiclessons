@@ -17,8 +17,8 @@ export const level4 = {
       type: "guitar",
       what: "Strum ONLY on the 'and' after each metronome click. This is the hardest exercise in the curriculum because it fights every rhythmic instinct you have.",
       steps: [
-        { text: "Set metronome to 80 BPM. Count '1-and-2-and-3-and-4-and.' The clicks are on 1,2,3,4. You play ONLY on the 'and.'", why: "Your body wants to play on the click. Resisting that impulse is what builds real rhythmic independence." },
-        { text: "Start by tapping your foot on the clicks and clapping on the 'ands.' No guitar yet. Just internalize the feeling.", why: "Separating the physical coordination from the guitar makes it easier to learn." },
+        { text: "Set metronome to 80 BPM. Count '1-and-2-and-3-and-4-and.' The clicks are on 1,2,3,4. You strum DOWN ONLY on the 'and' — the silent gap between clicks.", why: "Your body wants to play on the click. Resisting that impulse is what builds real rhythmic independence. Nile Rodgers describes his strumming hand as a metronome that never stops moving — down on the beat, up on the 'and' — but in reggae, you only let the strings sound on the upstroke. The strumming arm moves continuously; only the contact changes." },
+        { text: "Start by tapping your foot on the clicks and clapping on the 'ands.' No guitar yet. Just internalize the feeling. Do this for 30 seconds until the offbeat clap feels natural.", why: "Motor learning research calls this 'task decomposition' — separating coordination challenges into independent subtasks. Your foot learns the downbeat, your hands learn the offbeat, and only then do you combine them with the guitar. Skipping this step is why most players struggle with the skank for weeks instead of days." },
         { text: "Pick up the guitar. Strum a simple Am chord, but ONLY on the 'and.' Let the click pass in silence.", why: "The silence on the downbeat is as important as the strum on the upbeat. The gap is the groove." },
         { text: "Do this for 3 minutes straight without drifting to the downbeat. If you drift, stop and restart.", why: "Consistency is everything. One drift means your internal clock hasn't fully flipped yet." }
       ],
@@ -30,7 +30,7 @@ export const level4 = {
         { name: "Offbeat Skank", pattern: [0.5, 0.5], description: "Silence on beat, stab on 'and'" },
         { name: "One-Drop Kick", pattern: [1, 1, 1, 1], description: "Kick ONLY on beat 3" }
       ],
-      // milestone: offbeat skanks at 80 BPM for 2 minutes without drift
+      levelUp: "Maintain offbeat skanks on Am at 80 BPM for 2 full minutes without drifting to the downbeat. Your foot taps on the click while your strum lands cleanly on every 'and.'"
     },
     {
       id: "gs-4-2",
@@ -42,13 +42,14 @@ export const level4 = {
         { text: "First, understand what a ghost note is: lay your fretting hand lightly across all the strings without pressing them to the frets. Strum. You should hear a percussive 'tchk' with no discernible pitch. That dead, muted strum is a ghost note.", why: "Ghost notes are the rhythmic skeleton of reggae guitar. They fill the spaces between chord stabs with percussion, turning your guitar into both a harmonic and percussive instrument." },
         { text: "Now practice the chop: strum an Am chord normally, then immediately release the fretting hand pressure (don't lift off — just release). The strings go dead. Add the picking hand: after the strum, bring the palm edge onto the strings near the bridge. Two-handed muting is tighter than one hand alone.", why: "Releasing without lifting keeps the strings in contact with the frets but stops them from ringing. Double muting creates the ultra-tight 'tchk' that defines reggae guitar. One hand isn't enough." },
         { text: "Practice the sequence: strum-chop, strum-chop, strum-chop. Each strum should ring for only a split second before the chop kills it. The chop should be almost instantaneous.", why: "The shorter the ring time, the more percussive the skank sounds. Aim for the chord lasting less than an eighth note." },
-        { text: "Put it on the offbeat at 80 BPM. Between the chord stabs, add ghost note strums on the downbeats — these are pure muted hits that keep your strumming hand in constant motion. Pattern: ghost-STAB-ghost-STAB-ghost-STAB-ghost-STAB.", why: "The ghost notes fill the silence between skanks with rhythmic texture. Your arm never stops moving — it's strumming continuously, but alternating between muted ghost hits and open chord stabs." }
+        { text: "Put it on the offbeat at 80 BPM. Between the chord stabs, add ghost note strums on the downbeats — these are pure muted hits that keep your strumming hand in constant motion. Pattern: ghost-STAB-ghost-STAB-ghost-STAB-ghost-STAB.", why: "The ghost notes fill the silence between skanks with rhythmic texture. As Nile Rodgers describes it, the strumming hand is a metronome that never stops — it moves continuously in a constant down-up pattern, but you control which strums make sound and which stay muted. This 'always moving' principle applies to funk, reggae, and any rhythm guitar style. Your arm never stops; only the contact changes." }
       ],
       feel: "The chop should sound like a percussion instrument — tight, short, punchy. When both hands sync up, you'll hear a clean 'tchk' instead of a messy 'brrrng.' The ghost notes should be felt more than heard — a quiet rhythmic pulse underneath the skanks.",
       wrong: "If the chords ring too long, your muting is too slow. If you hear string buzz, you're pressing too hard when you should be releasing. If there's no discernible pitch in the chop, you're muting before the strum. If the ghost notes have pitch bleeding through, press lighter — you want zero pitch, pure percussion.",
       sarah: "Ghost notes are the secret ingredient most people miss when learning reggae guitar. They think the sound is just the offbeat stabs — but it's the muted hits in between that create the continuous groove. Your arm is a metronome. The chop-and-ghost combination is what separates 'strumming on the upbeat' from actual reggae.",
       metronome: 80,
-      volumeMeter: true
+      volumeMeter: true,
+      levelUp: "Play strum-chop pairs at 80 BPM where each chord rings for less than an eighth note before the two-handed mute kills it, and ghost notes between stabs are audible as percussion but carry zero pitched sound."
     },
     {
       id: "gs-4-3",

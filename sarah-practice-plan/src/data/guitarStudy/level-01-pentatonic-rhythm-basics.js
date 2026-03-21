@@ -10,6 +10,26 @@ export const level1 = {
   unlocks: "Surf & Jangle (Level 2)",
   exercises: [
     {
+      id: "gs-1-0",
+      time: 8,
+      title: "Where Are You Right Now? — Guitar Baseline",
+      type: "guitar",
+      recorder: true,
+      what: "Before training anything, capture an honest snapshot of where your guitar playing is today. This is your baseline — you'll come back to this recording after completing Level 10 and hear the difference. No judgment, just data.",
+      setup: "Guitar in tune. Recorder on. No warm-up — we want the raw, unwarmed state.",
+      steps: [
+        { text: "Play the Am pentatonic scale ascending and descending at whatever speed feels comfortable. Don't look up the shape — just play what you know. If you don't know it yet, play any notes on the guitar for 30 seconds.", why: "Your current scale fluency is the most objective baseline. If you already know some scales, this captures your starting speed, tone, and accuracy. If you don't, that's perfect data too — it's where you're starting from." },
+        { text: "Strum a chord progression — Am, C, G, D — 4 strums per chord. If you don't know these chords, strum any chords you know. If you don't know any chords, strum open strings with a steady rhythm.", why: "This captures your current rhythm, chord transition speed, and strumming feel. The recording will reveal things your ears miss in real-time — timing wobbles, muted strings, uneven dynamics." },
+        { text: "Improvise freely for 30 seconds. Play anything that comes to mind — no rules, no right or wrong. Just make sounds on the guitar.", why: "Creative freedom with zero training reveals your natural musical instincts. These instincts are your foundation. In 10 levels, you'll listen back and hear how your instincts have been refined, not replaced." },
+        { text: "Say out loud: 'I am starting guitar training on [today's date]. My comfortable tempo is roughly [X] BPM. I feel [confident/nervous/excited] about this.' Record this statement.", why: "The spoken timestamp creates an emotional anchor. Hearing your own voice state the date and baseline makes your progress viscerally real when you revisit this recording after Level 10." },
+        { text: "Save this recording. Label it 'Guitar Baseline — Level 1 Start.' You will need it later.", why: "The comparison between this recording and your Level 10 Golden Hour Set will be one of the most satisfying moments in your guitar journey. Protect this artifact." }
+      ],
+      feel: "This should feel like a doctor's checkup — neutral, observational, no performance pressure. You are gathering data, not auditioning.",
+      wrong: "If you find yourself trying to sound impressive, start over. The baseline only works if it captures your actual starting point. Faking a better baseline robs you of the satisfaction of real progress later.",
+      sarah: "I do this with every new student. The recording is sacred — it's proof of where you started. Months from now you'll listen back and not believe it's the same person. Trust the process.",
+      levelUp: "Completed all recordings. You have a clear, honest baseline of your current guitar ability."
+    },
+    {
       id: "gs-1-1",
       time: 10,
       title: "Am Pentatonic — The Shape",
@@ -20,7 +40,7 @@ export const level1 = {
       what: "Learn the Am pentatonic scale in 5th position, note by note. This is the most important shape on the guitar — it's the foundation for blues, rock, surf, reggae, and everything else in this curriculum. The notes are A-C-D-E-G.",
       setup: "Clean tone, neck pickup. Metronome at 60 BPM.",
       steps: [
-        { text: "Start on the low E string, 5th fret — that's the note A. Play it, say 'A' out loud. Move to the 8th fret — that's C. Play it, say 'C.' These two notes live on one string.", why: "Saying the note names out loud connects your ears, voice, and fingers. Most guitarists learn shapes without knowing note names — you're building a deeper foundation." },
+        { text: "Start on the low E string, 5th fret — that's the note A. Play it, say 'A' out loud. Move to the 8th fret — that's C. Play it, say 'C.' These two notes live on one string.", why: "Saying the note names out loud connects your ears, voice, and fingers — what music educators call audiation, the ability to hear and think in music. Edwin Gordon's research shows that naming notes while playing them creates three neural pathways simultaneously (auditory, motor, linguistic) instead of one. Most guitarists learn shapes without knowing note names, which means they can play the pattern but can't hear it internally. You're building the deeper foundation that lets you eventually sing what you play and play what you sing." },
         { text: "Move to the A string: 5th fret (D), 7th fret (E). Then the D string: 5th fret (G), 7th fret (A — one octave higher than where you started). Continue through the G string (5th and 7th frets), B string (5th and 8th frets), and high E string (5th and 8th frets).", why: "The pentatonic shape spans all 6 strings in one position. Learning it string by string makes the shape manageable instead of overwhelming." },
         { text: "Play the full shape ascending: low A up to the high A. Then descending: high A back down to low A. One note per metronome click at 60 BPM. No rushing.", why: "Playing with a metronome from day one builds rhythmic discipline. Speed comes from accuracy, not ambition." },
         { text: "Play ascending and descending 4 times in a row without stopping or making a wrong note. If you stumble, restart the count.", why: "4 clean passes proves the shape is in your muscle memory, not just your short-term recall." },
@@ -29,7 +49,8 @@ export const level1 = {
       feel: "The pentatonic should feel like a home base — a safe zone where every note sounds good. There are no 'wrong' notes in this scale. It should feel like a musical playground where everything works.",
       wrong: "If your fingers keep landing on the wrong frets, slow down and go note by note. If you can't play it without looking, spend more time on each string individually. If it sounds 'off,' check your tuning — open strings should be E-A-D-G-B-E from low to high.",
       sarah: "This scale is your musical mother tongue. Every guitarist you love — from Khruangbin to Allah-Las to DOPE LEMON — uses this shape constantly. Learn it once, use it forever.",
-      metronome: 60
+      metronome: 60,
+      levelUp: "Play Am pentatonic ascending and descending 4 times eyes-closed at 60 BPM with zero wrong notes. You can name every note (A-C-D-E-G) as you play it."
     },
     {
       id: "gs-1-2",
@@ -48,7 +69,8 @@ export const level1 = {
       feel: "Each chord should ring clearly — every note sustaining without buzzing or muting. The switch between chords should eventually feel like shifting gears in a car: smooth, automatic, and without looking.",
       wrong: "If strings buzz, your fingers aren't pressing hard enough or they're touching adjacent strings. If a note is dead, check that your fingertip — not the pad — is pressing the string. If chord changes are slow, that's normal. Speed comes from repetition over days, not minutes.",
       sarah: "Five chords is enough to play hundreds of songs. Seriously — Am, C, G, D, and Em cover most of the music you love. The goal right now isn't speed. It's clean sound from each chord.",
-      metronome: 60
+      metronome: 60,
+      levelUp: "All five chords ring clearly with no buzzing or dead strings. You can switch between any two chords in time at 60 BPM with no pause in the strumming pattern."
     },
     {
       id: "gs-1-3",
@@ -67,7 +89,8 @@ export const level1 = {
       feel: "Good strumming feels like breathing — relaxed, automatic, and continuous. Your wrist should be loose, your grip on the pick light, and the motion small. If your arm gets tired, you're using too much muscle.",
       wrong: "If every strum sounds the same volume, add dynamic contrast: louder downs, softer ups. If the rhythm sounds choppy or uneven, slow the metronome down to 50 BPM. If you stop strumming to change chords, practice the strum pattern on muted strings until it's automatic.",
       sarah: "Rhythm is the secret weapon of great guitarists. You can play the wrong chord with perfect rhythm and it sounds good. You can play the right chord with bad rhythm and it sounds terrible. Rhythm first, always.",
-      metronome: 70
+      metronome: 70,
+      levelUp: "Down-up strumming at 70 BPM is even and relaxed for 1 minute straight. Upstrokes are noticeably softer than downstrokes. You can switch chords (Am→C→G→D) every 4 beats without the strum pattern breaking."
     },
     {
       id: "gs-1-4",
@@ -77,7 +100,7 @@ export const level1 = {
       what: "Mute all strings with your fretting hand and improvise RHYTHMS ONLY — no pitch, just percussion. Vary your strum patterns, add accents, leave gaps. This proves rhythm alone can be musical.",
       setup: "Metronome at 70 BPM. Fretting hand lightly mutes all strings.",
       steps: [
-        { text: "Lay your fretting hand flat across all strings — no pressure, just muting. Strum down. You hear a percussive 'tchk' with no pitch. This is a ghost strum — pure rhythm.", why: "Removing pitch from the equation reveals rhythm as its own musical dimension." },
+        { text: "Lay your fretting hand flat across all strings — no pressure, just muting. Strum down. You hear a percussive 'tchk' with no pitch. This is a ghost strum — pure rhythm.", why: "Removing pitch from the equation reveals rhythm as its own musical dimension. This is what motor learning researchers call a 'constraint-led approach' — by removing one variable (pitch), your brain focuses entirely on another (rhythm). Tommy Emmanuel says: 'Without a groove, no one moves.' This exercise proves that rhythm alone IS music." },
         { text: "Strum quarter notes (4 per bar) for 4 bars. Boring, right? Now accent beats 2 and 4 (strum harder on those beats). The same pattern suddenly has a groove.", why: "Accenting 2 and 4 creates a backbeat — the rhythmic foundation of rock, reggae, funk, and blues." },
         { text: "Improvise rhythms for 1 minute. Vary everything: long strums, short stabs, silence, accents, fast scratches, slow hits. No pitch — only rhythm.", why: "Rhythmic improvisation is improvisation. If you can make one minute of muted strumming interesting, you understand that rhythm IS the music." },
         { text: "Record yourself. Listen back. Where did the rhythm groove? Where did it stumble? The moments that grooved are your natural rhythmic voice.", why: "Your natural rhythmic instincts are already there. This exercise reveals them before scales add complexity." }
@@ -90,7 +113,8 @@ export const level1 = {
       rhythmCells: [
         { name: "Backbeat", pattern: [1, 1, 1, 1], description: "Accent beats 2 & 4" },
         { name: "3-3-2", pattern: [0.75, 0.75, 0.5], description: "Afro-Cuban syncopation" }
-      ]
+      ],
+      levelUp: "You can improvise 1 minute of muted-string rhythms with clear dynamic variation (accents on 2 and 4), at least 3 different patterns, and deliberate use of silence. Your recording sounds musical, not random."
     },
     {
       id: "gs-1-5",
@@ -99,7 +123,7 @@ export const level1 = {
       type: "guitar",
       what: "Play ONLY the open A string (5th string). No chords, no scale, just one note. All expression comes from WHEN you play it: on the beat, off the beat, short, long, silent. If one note can groove, rhythm is the real instrument.",
       steps: [
-        { text: "Play the open A string as quarter notes for 8 bars. Steady, even, boring. This is your baseline.", why: "The baseline proves that one note with no rhythm is just a metronome. Everything you do next is rhythmic improvisation." },
+        { text: "Play the open A string as quarter notes for 8 bars. Steady, even, boring. This is your baseline.", why: "The baseline proves that one note with no rhythm variation is just a metronome. Everything you do next is rhythmic improvisation. Constraint-based creativity research shows that limiting options (one note) actually increases originality and depth — your brain redirects all its creative energy into the one remaining variable: rhythm." },
         { text: "Now play A only on beats 2 and 4. Leave beats 1 and 3 silent. Feel the backbeat — this is where reggae lives.", why: "Removing beats 1 and 3 flips the emphasis. Silence on the strong beats creates groove." },
         { text: "Try the 3-3-2 pattern: play A on the 1, the 'and' of 2, and beat 4. This creates a lopsided, swinging feel that appears in every genre you'll learn.", why: "The 3-3-2 grouping is the most universal rhythmic cell in popular music. Learning it on one note means you'll recognize it everywhere." },
         { text: "Freestyle: 2 minutes of one-note improv. Mix everything — backbeats, 3-3-2, long holds, short stabs, silence. Record yourself and listen back.", why: "One note with great rhythm sounds better than a scale played mechanically. This exercise proves that rhythm IS the music." }
@@ -113,7 +137,8 @@ export const level1 = {
         { name: "Backbeat", pattern: [1, 1, 1, 1], description: "Accent beats 2 & 4" },
         { name: "3-3-2", pattern: [0.75, 0.75, 0.5], description: "Afro-Cuban syncopation" },
         { name: "Displaced", pattern: [0.5, 1.5], description: "Off-beat accent" }
-      ]
+      ],
+      levelUp: "You can make a single open A string groove for 2 minutes using backbeats, 3-3-2 patterns, and silence. Your recording has at least 3 distinct rhythmic ideas and sounds intentional."
     },
     {
       id: "gs-1-6",
@@ -133,7 +158,8 @@ export const level1 = {
       feel: "The Eb should feel like a tension note that wants to move. When you land on it and then slide to E, you should feel a tiny release — that's the blues sound. It's like holding your breath and then exhaling.",
       wrong: "If every note sounds the same, you're not lingering on Eb long enough. If your fingers stumble at the new note, slow down — your hand hasn't mapped it yet. If you can't hear the difference between pentatonic and blues scale, play them back to back 5 more times.",
       sarah: "The blue note isn't just a scale degree — it's an emotion. B.B. King built an entire career on knowing exactly when to land on it and when to leave. One note, infinite expression.",
-      metronome: 60
+      metronome: 60,
+      levelUp: "You can play the Am blues scale (A-C-D-Eb-E-G) ascending and descending cleanly at 60 BPM. You can hear the difference between pentatonic and blues scale when you play them back to back. The Eb feels like a deliberate expressive choice, not an accident."
     },
     {
       id: "gs-1-7",
@@ -154,7 +180,8 @@ export const level1 = {
       feel: "A good bend feels like singing — the note rises smoothly to pitch and sits there with intention. A good slide feels like a voice gliding between notes. A good pull-off feels effortless — the second note rings out naturally.",
       wrong: "If your bends land between pitches (sharp or flat), you're guessing instead of listening. Match them to the target fret. If your fingers hurt during bends, you're using one finger instead of three. If pull-offs are silent, you need to flick harder — the pulling motion IS the pick.",
       sarah: "Bending is the great equalizer. A single perfectly bent note has more emotional power than a hundred fast ones. These techniques are what separate someone playing scales from someone playing guitar.",
-      metronome: 70
+      metronome: 70,
+      levelUp: "Half-step bend on the G string 7th fret (D→Eb) lands exactly on pitch. Full-step bend (D→E) lands on pitch and releases smoothly. You can play a slide-bend-release-pulloff combo phrase that sounds like a complete musical sentence."
     },
     {
       id: "gs-1-8",
@@ -174,7 +201,8 @@ export const level1 = {
       metronome: 70,
       recorder: true,
       referencePitches: getPitchRange("A3", "E4"),
-      phraseForm: { pattern: "PRV", barsPerSection: 2, labels: { P: "Present", R: "Repeat", V: "Vary" } }
+      phraseForm: { pattern: "PRV", barsPerSection: 2, labels: { P: "Present", R: "Repeat", V: "Vary" } },
+      levelUp: "You can play a 3-note phrase, repeat it 3 times identically, then vary one element. Your recording shows a clear family resemblance between the original and the variation."
     },
     {
       id: "gs-1-9",
@@ -193,7 +221,8 @@ export const level1 = {
       wrong: "If you're pushing through mistakes to hit higher tempos, you're building bad habits. The ladder only works when each rung is solid before you climb. Speed without accuracy is just noise.",
       sarah: "Speed is a byproduct of relaxation and accuracy. The fastest players in the world practiced slowly for years first. There is no shortcut, and that's actually good news — it means you're doing it right.",
       metronome: 60,
-      speedLadder: { start: 60, end: 90, increment: 10, bars: 4 }
+      speedLadder: { start: 60, end: 90, increment: 10, bars: 4 },
+      levelUp: "You can play the Am pentatonic cleanly at 90 BPM (one note per click) or at 80 BPM with eighth notes (two notes per click). Returning to 60 BPM feels effortlessly slow."
     },
     {
       id: "gs-1-10",
@@ -213,7 +242,8 @@ export const level1 = {
       feel: "This should feel like the easiest, most relaxing playing you've done. If you're tensing up, you're trying too hard. DOPE LEMON's whole aesthetic is 'I'm barely trying and it sounds amazing.' Channel that.",
       wrong: "If it sounds stiff or mechanical, you're playing too 'correctly' — loosen up, strum lazier, lean back. If you can't stay with the backing track, practice without it until the chord changes are automatic.",
       sarah: "DOPE LEMON proves that simple doesn't mean boring. Four chords, played with the right feel, can be the most beautiful sound in the world. This is your first song — remember how it feels.",
-      metronome: 90
+      metronome: 90,
+      levelUp: "You can play Am→C→G→D along with the Groove Beat 90 backing track for 4 full cycles (16 bars) with a laid-back, behind-the-beat feel. Your dynamics vary — softer on Am/C, slightly louder on G/D."
     },
     {
       id: "gs-1-11",
@@ -225,13 +255,14 @@ export const level1 = {
         { text: "Strum Am for 2 bars. On beat 1 of bar 1, pick ONLY the A note (open 5th string) before strumming. Hear how the root grounds the chord.", why: "The root is the anchor. Picking it separately before strumming trains your ear to hear the foundation of each chord." },
         { text: "Move to C. Beat 1: pick the C note (3rd fret, 5th string). Then strum C. Then G: pick G (3rd fret, 6th string). Then D: pick D (open 4th string). Root → strum on every change.", why: "Each root has a different character. A is dark and stable. C is bright. G is open. D is forward-leaning. Hearing them separately reveals their personalities." },
         { text: "Play through Am→C→G→D four times with root picks on every beat 1. The roots should feel like stepping stones across a river — each one solid and intentional.", why: "Root targeting on beat 1 is the simplest form of chord-tone improvisation. It connects melody to harmony with zero theory required." },
-        { text: "Try humming the root note before you play it. Hear it in your head, hum it, then pick it. If you can predict the root, your ear is learning the progression.", why: "Internal hearing (audiation) is the ultimate goal. When you can hear the next root before it arrives, you're truly hearing harmony." }
+        { text: "Try humming the root note before you play it. Hear it in your head, hum it, then pick it. If you can predict the root, your ear is learning the progression.", why: "Internal hearing — what music educator Edwin Gordon calls 'audiation' — is the ultimate goal. It's the musical equivalent of thinking in a language before speaking it. Mark Knopfler learned guitar by listening to records for years before playing — he heard what he wanted first, then worked out how to produce it. When you can hear the next root before it arrives, you're truly hearing harmony, not just executing finger patterns." }
       ],
       feel: "The root pick on beat 1 should feel like arriving home on each chord change — solid, grounded, inevitable. The strum fills in the color around the anchor.",
       wrong: "If the root doesn't 'click' with the chord, double-check the note. If all four roots sound the same to you, play them back to back without strumming — hear the differences.",
       sarah: "Gene, this is the seed of chord-tone targeting — the single most important improvisation concept you'll learn in Level 6. For now, just learn to hear the root. Later you'll target 3rds, 5ths, and 7ths.",
       metronome: 70,
-      referencePitches: ["A3", "C3", "G2", "D3"]
+      referencePitches: ["A3", "C3", "G2", "D3"],
+      levelUp: "You can pick the root note on beat 1 of each chord change (A for Am, C for C, G for G, D for D) and strum the chord on remaining beats. You can hum the root note before you play it on at least 3 out of 4 chords."
     },
     {
       id: "gs-1-12",
@@ -252,7 +283,8 @@ export const level1 = {
       wrong: "If you're playing nonstop with no gaps, you're afraid of silence. Silence is your friend — it makes the notes you DO play matter more. If nothing sounds good to you, simplify: use fewer notes, slower rhythms, more space.",
       sarah: "You just improvised. That might not feel like a big deal, but it is. Most people spend years playing other people's music before they try making their own sounds. You're doing it in Level 1. Trust the process.",
       metronome: 90,
-      phraseForm: { pattern: "CR", barsPerSection: 4, labels: { C: "Call", R: "Response" } }
+      phraseForm: { pattern: "CR", barsPerSection: 4, labels: { C: "Call", R: "Response" } },
+      levelUp: "You can improvise over a backing track for 3+ minutes using call-and-response phrasing. Your phrases have clear starts and stops with silence between them. At least half your phrases use bends, slides, or pull-offs."
     },
     {
       id: "gs-1-13",

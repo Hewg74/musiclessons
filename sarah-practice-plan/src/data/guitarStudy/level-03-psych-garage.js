@@ -18,10 +18,10 @@ export const level3 = {
       drone: { root: "A", octave: 2, texture: "tanpura" },
       referencePitches: ["A2", "B♭2", "C#3", "D3", "E3", "F3", "G3", "A3"],
       fretboard: { scale: "a-phrygian-dominant", position: 1 },
-      what: "Learn A Phrygian Dominant: A-Bb-C#-D-E-F-G. This is the scale behind Dick Dale's 'Misirlou' and the 'Arabic' or 'Egyptian' color in surf and psych rock. The key sound is the augmented 2nd — the unusually large gap between Bb and C# (3 semitones instead of the usual 1 or 2). That gap IS the exotic sound. Note: 'Phrygian Dominant' means the 5th mode of the harmonic minor scale. It's like regular Phrygian (A-Bb-C-D-E-F-G) but with a raised 3rd (C# instead of C).",
+      what: "Learn A Phrygian Dominant: A-Bb-C#-D-E-F-G. This is the scale behind Dick Dale's 'Misirlou' and the 'Arabic' or 'Egyptian' color in surf and psych rock. The key sound is the augmented 2nd — the unusually large gap between Bb and C# (3 semitones instead of the usual 1 or 2). That gap IS the exotic sound. Music theory note: Phrygian Dominant is the 5th mode of the D harmonic minor scale (D-E-F-G-A-Bb-C#-D, starting on the 5th degree A). It's like regular Phrygian (A-Bb-C-D-E-F-G) but with a raised 3rd (C# instead of C).",
       setup: "Clean tone or slight overdrive. This scale sounds great with both.",
       steps: [
-        { text: "Play A Phrygian (regular): A-Bb-C-D-E-F-G. Now raise the C to C# — that single change transforms the scale into Phrygian Dominant: A-Bb-C#-D-E-F-G. Play both scales back to back. The regular Phrygian sounds dark and brooding. The Phrygian Dominant sounds exotic and dangerous.", why: "The raised 3rd (C# instead of C) creates the augmented 2nd interval between Bb and C# — that's 3 semitones, which is larger than a normal step. This wide gap is what sounds 'Arabic' or 'Egyptian' to Western ears." },
+        { text: "Play A Phrygian (regular): A-Bb-C-D-E-F-G. Now raise the C to C# — that single change transforms the scale into Phrygian Dominant: A-Bb-C#-D-E-F-G. Play both scales back to back. The regular Phrygian sounds dark and brooding. The Phrygian Dominant sounds exotic and dangerous.", why: "The raised 3rd (C# instead of C) creates the augmented 2nd interval between Bb and C# — 3 semitones, larger than a normal step. Because Phrygian Dominant is the 5th mode of harmonic minor (start D harmonic minor on its 5th degree, A), it inherits that scale's signature augmented 2nd. This interval appears in music from Andalusia to the Middle East to Bollywood — it's one of the most widely traveled sounds in human music." },
         { text: "Focus on the Bb-C# interval. Go back and forth between just those two notes: Bb (1st fret, A string) to C# (4th fret, A string). That's 3 frets — an augmented 2nd. Play it slowly, then fast. That interval IS the sound of Misirlou, of snake-charmer melodies, of exotic surf guitar.", why: "Training your ear on this specific interval lets you deploy it intentionally. Once you hear it, you'll recognize it in dozens of surf, psych, and world music recordings." },
         { text: "Play the full scale in the 5th fret position. Ascending and descending at 60 BPM. Map it across all 6 strings. The fingering is close to your Am pentatonic but with the Bb and C# altering the shape.", why: "Positioning the scale at the 5th fret keeps you in the same neighborhood as your Am pentatonic — your hand is in familiar territory but producing an entirely different sound." },
         { text: "Create a short riff using just A-Bb-C#-D — only 4 notes. Repeat it in different rhythms. This is the BALTHVS/Misirlou formula: a small handful of notes from this scale, played with conviction, is all you need.", why: "Limitation breeds creativity. Most iconic Phrygian Dominant riffs use only 4-5 notes. The scale's exotic color does the heavy lifting — you don't need to play all 7 notes to sound exotic." },
@@ -30,7 +30,8 @@ export const level3 = {
       feel: "The scale should feel dangerous and exciting — like a snake charmer's melody or a Dick Dale breakdown. The Bb-C# interval should give you chills. If it doesn't, play it louder.",
       wrong: "If it sounds like regular minor, you're not emphasizing the C# enough. If it sounds random, focus on the A-Bb-C#-D core — those 4 notes are the essence. If it sounds timid, play harder — this scale demands conviction.",
       sarah: "Phrygian Dominant is the scale that launched a thousand surf songs. Misirlou, BALTHVS riffs, Mystic Braves solos — they all live here. This is where surf guitar gets dangerous.",
-      metronome: 60
+      metronome: 60,
+      levelUp: "Play A Phrygian Dominant ascending and descending in the 5th fret position at 70 BPM with no hesitation, and create a 4-note riff using A-Bb-C#-D that you can loop 8 times from memory."
     },
     {
       id: "gs-3-2",
@@ -49,7 +50,8 @@ export const level3 = {
       feel: "Power chords should feel primal and satisfying — like punching a wall but in a good way. The simplicity IS the point. Two notes, maximum impact.",
       wrong: "If power chords sound muddy, you're hitting too many strings — strum only 2-3 strings. If they sound thin, add the octave with your pinky. If they sound the same as clean chords, you need more gain on your amp or pedal.",
       sarah: "Power chords are the great democratizer of guitar. You can learn them in 5 minutes and use them for a lifetime. Every punk, rock, and garage song ever written uses them. Simple is powerful.",
-      metronome: 100
+      metronome: 100,
+      levelUp: "Play A5→D5→E5→D5 with three-string power chords (root-5th-octave), all downstrokes, eighth notes at 100 BPM with clean transitions — no dead air or fumbled shapes between chord changes."
     },
     {
       id: "gs-3-3",
@@ -68,7 +70,8 @@ export const level3 = {
       sarah: "Gene, PReVaDe with power chords is the simplest version of this framework. No scales, no theory — just chord shapes and development. You'll use this same approach with melodies in Level 6.",
       metronome: 100,
       recorder: true,
-      phraseForm: { pattern: "PRVD", barsPerSection: 4, labels: { P: "Present", R: "Repeat", V: "Vary", D: "Deconstruct" } }
+      phraseForm: { pattern: "PRVD", barsPerSection: 4, labels: { P: "Present", R: "Repeat", V: "Vary", D: "Deconstruct" } },
+      levelUp: "Perform a full PReVaDe cycle on A5→D5→E5→D5 — Present 4x, Repeat 4x, Vary (swap one chord) 4x, Deconstruct to 1 chord — with smooth transitions and a clear ending on a single A5 ringing out."
     },
     {
       id: "gs-3-4",
@@ -81,13 +84,14 @@ export const level3 = {
       setup: "Overdrive or fuzz pedal if available. If not, pick aggressively near the bridge.",
       steps: [
         { text: "Play a simple Am pentatonic phrase with your normal clean tone. Now add gain (overdrive or fuzz). Play the same phrase. Listen to the differences: notes sustain longer, bends ring out more, and the overall tone is thicker and warmer. The gain is doing work that your fingers did before.", why: "Understanding what gain does to your signal is essential before you can use it musically. The compression from gain means you need LESS picking force to sustain notes — but more precision, because the gain amplifies mistakes too." },
-        { text: "Practice dynamics with gain: play one note very softly, then gradually pick harder. Notice the volume doesn't change as much as it does clean — that's compression. The gain limits your dynamic range. To compensate, use your TONE knob and pick position to create dynamics instead.", why: "With gain, traditional loud/soft dynamics get squashed. Professional fuzz players create dynamics through tone color (brighter = 'louder' feeling, darker = 'softer'), pick position (near bridge = aggressive, near neck = warm), and note density (more notes = more intense, fewer = more spacious)." },
+        { text: "Practice dynamics with gain: play one note very softly, then gradually pick harder. Notice the volume doesn't change as much as it does clean — that's compression. The gain limits your dynamic range. To compensate, use your TONE knob and pick position to create dynamics instead.", why: "Fuzz compresses your signal's dynamic range, which paradoxically lets quiet picking cut through a loud mix — a soft pick attack still produces a full, sustained tone. As J Mascis of Dinosaur Jr. put it: 'I play quietly through loud amps.' Professional fuzz players create dynamics through tone color (brighter = perceived louder, darker = perceived softer), pick position (bridge = aggressive, neck = warm), and note density (more = intense, fewer = spacious)." },
         { text: "Play long, sustained bends with gain. Bend the G string at the 7th fret up a whole step and hold it. With fuzz, the note should sing and sustain for several seconds. Add vibrato (a slight, rhythmic wavering of the bend) by gently pulsing your bending hand. This is the signature sound of psych rock soloing.", why: "Long singing bends are impossible without some form of gain — the note would die too quickly on a clean tone. Vibrato (defined: small, rhythmic pitch oscillations that add warmth and expression) on a sustained bend is the most emotionally powerful technique in rock guitar." },
         { text: "Experiment with feedback: with enough gain, turn up your volume and hold the guitar near the speaker. A single note can bloom into a singing, overtone-rich sustain. This is controlled feedback — not noise, but an instrument. Start with low volumes and approach the speaker slowly.", why: "Controlled feedback is a psych rock texture used by everyone from Jimi Hendrix to Tame Impala. Learning to control it — finding the sweet spot where the note sustains without shrieking — gives you another expressive tool." }
       ],
       feel: "Your guitar should feel alive with gain — notes sustain indefinitely, bends sing, and the tone is thick and warm. Playing with fuzz should feel like having superpowers. A single note can fill a room.",
       wrong: "If it sounds like noise, reduce the gain and play fewer notes. Fuzz amplifies everything, including sloppy technique. If notes are dying quickly even with gain, you might be muting strings accidentally with your fretting hand.",
-      sarah: "Fuzz is a conversation changer. Clean guitar whispers. Fuzz guitar declares. Learn to use that power responsibly — a few great notes beat a hundred sloppy ones."
+      sarah: "Fuzz is a conversation changer. Clean guitar whispers. Fuzz guitar declares. Learn to use that power responsibly — a few great notes beat a hundred sloppy ones.",
+      levelUp: "Sustain a fretted bend with fuzz/overdrive for 4 seconds with controlled vibrato, and demonstrate two dynamic approaches (pick position near bridge vs. near neck) that produce audibly different tones at similar volumes."
     },
     {
       id: "gs-3-5",
@@ -105,7 +109,8 @@ export const level3 = {
       feel: "The minor progression should feel cyclical and hypnotic — like being pulled into a vortex. Each time through should feel slightly more intense than the last, even if you're not changing anything.",
       wrong: "If it sounds like a pop song, you're probably playing on the downbeat with too much brightness. Darken your tone, lean into the minor chords, and let the mood be heavy. If the barre chords are killing you, use the Am version until your hand strength develops.",
       sarah: "Mystic Braves, Tame Impala, BALTHVS — they all build entire songs on progressions like these. Four chords, one mood, infinite depth. The darkness is the point.",
-      metronome: 120
+      metronome: 120,
+      levelUp: "Play both psych progressions (Gm→Dm→C→F and Am→Em→G→D) 4 times each with steady eighth-note strumming, plus the power-chord version with fuzz — and identify the Roman numerals of each chord when asked."
     },
     {
       id: "gs-3-6",
@@ -125,7 +130,8 @@ export const level3 = {
       sarah: "Most guitarists play Level 10 before they learn this. You're getting it in Level 3. When your pentatonic licks match the chords underneath, everything changes.",
       tracks: [{ name: "Psych Rock 120", src: "/psych-rock-120.mp3" }],
       metronome: 120,
-      referencePitches: getPitchRange("A3", "G4")
+      referencePitches: getPitchRange("A3", "G4"),
+      levelUp: "Over the Am→Em→G→D progression, play the root of each chord on beat 1, fill with 2-3 pentatonic notes between changes, and hit at least 2 correct 3rds (C over Am, B over G, etc.) during a 2-minute pass."
     },
     {
       id: "gs-3-7",
@@ -144,7 +150,8 @@ export const level3 = {
       feel: "You should feel slightly out of control — like you're riding a wave that's almost too big. The energy should be reckless but rhythmically precise. Controlled recklessness. Sweat is normal.",
       wrong: "If it sounds sloppy, you've crossed from 'urgent' to 'messy.' Slow down until the energy feels intentional. If your arm cramps up, take a break — downstroke endurance builds over time. If it sounds polished and safe, you're not pushing hard enough.",
       sarah: "Garage rock is controlled recklessness. The Mystic Braves sound like they might fall apart at any second — but they never do. That sweet spot between chaos and precision is the entire genre.",
-      metronome: 120
+      metronome: 120,
+      levelUp: "Play A5→E5→G5→D5 with all downstrokes at 120 BPM for 2 minutes straight — strums placed slightly ahead of the click, arm endurance holding up, rhythm tight even when the forearm burns."
     },
     {
       id: "gs-3-8",
@@ -168,7 +175,8 @@ export const level3 = {
       feel: "Your riff should feel like a mantra — something you could play for 10 minutes without getting tired of it. It should have a physical groove that makes you nod your head involuntarily.",
       wrong: "If the riff is too complex to play on repeat without thinking, simplify. If it doesn't make you move, the rhythm needs work. If it sounds generic, lean harder into the Phrygian Dominant color — the Bb-C# interval is what makes it distinctive.",
       sarah: "The best psych riffs are embarrassingly simple on paper — but unstoppable in practice. Don't overthink it. Find the groove and commit. You're not writing a symphony. You're writing a hypnotic loop.",
-      metronome: 120
+      metronome: 120,
+      levelUp: "Create two contrasting 2-bar riffs — one Phrygian Dominant, one pentatonic — that you can each loop 8 times from memory and alternate in a 4-bar A/B structure over Psych Rock 120."
     },
     {
       id: "gs-3-9",
@@ -192,7 +200,8 @@ export const level3 = {
         { name: "Garage Drive", pattern: [0.5, 0.5, 0.5, 0.5], description: "All downstrokes, accent 1 & 3" },
         { name: "Backbeat Punch", pattern: [1, 1, 1, 1], description: "Accent beats 2 & 4" },
         { name: "Syncopated", pattern: [0.5, 1, 0.5], description: "Off-beat accent pattern" }
-      ]
+      ],
+      levelUp: "Starting from fully muted strings, create a 2-bar accent pattern with 3-4 accented hits, add A5 on only those accents, and produce a groove that sounds like a complete riff — all from one chord and rhythm alone."
     },
     {
       id: "gs-3-10",
@@ -212,7 +221,8 @@ export const level3 = {
       feel: "This should feel like playing in a psych band — rhythmic intensity building to a solo break, then crashing back to the groove. The whole thing should make you want to turn the amp up and play louder.",
       wrong: "If the fills disrupt the rhythm, make them shorter. If the solo doesn't feel connected to the chords, target chord tones. If the energy doesn't build, exaggerate the dynamic differences between loops.",
       sarah: "Mystic Braves songs are simple machines that generate enormous energy. The magic isn't in complexity — it's in commitment. Play every note like it's the most important note you've ever played.",
-      metronome: 120
+      metronome: 120,
+      levelUp: "Play 4 loops of the psych progression with a clear intensity build (loop 1 clean strumming only, loop 4 full energy with fills), then break into an 8-bar pentatonic solo and return smoothly to rhythm strumming."
     },
     {
       id: "gs-3-11",
@@ -232,7 +242,8 @@ export const level3 = {
       feel: "This should feel sultry and rhythmic — like dancing rather than performing. Every note should make you want to move. If you're sitting still, you're not feeling it enough. Let your body sway with the groove.",
       wrong: "If it sounds like standard blues-rock, you need more Latin rhythmic influence — accent the offbeats and syncopate. If the lead lines feel disconnected from the groove, simplify and lock to the beat. If there's no Phrygian color, you're missing the BALTHVS 'exotic' element.",
       sarah: "BALTHVS is Gene's #1 most-listened artist at 6 months. Their magic is making psychedelic guitar sound like it belongs in a Latin club. Groove first, always.",
-      metronome: 90
+      metronome: 90,
+      levelUp: "Play a 4-bar rhythm / 4-bar lead BALTHVS-style cycle over Soul Funk Groove 90 — rhythm uses syncopated A5→D5, lead uses behind-the-beat Am pentatonic with at least one Phrygian Dominant Bb-C# color note per lead section."
     },
     {
       id: "gs-3-12",

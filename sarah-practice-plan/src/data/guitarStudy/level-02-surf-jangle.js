@@ -29,7 +29,8 @@ export const level2 = {
       feel: "Mixolydian should feel brighter and more confident than pentatonic — like stepping out of a smoky club into sunlight. The flatted 7th gives it swagger without sadness.",
       wrong: "If it sounds like a regular major scale, you're probably playing F# instead of F natural. If it sounds bluesy, you've slipped back into pentatonic territory. Listen for the brightness — Mixolydian should make you want to move, not brood.",
       sarah: "Mixolydian is the 'almost happy' scale. It's major enough to feel good but that flatted 7th keeps it interesting. It's why surf guitar never sounds cheesy — there's always an edge. The Ventures used this scale on nearly every instrumental.",
-      metronome: 60
+      metronome: 60,
+      levelUp: "Play G Mixolydian ascending and descending across both positions (3rd fret and 7th fret) at 80 BPM with no hesitation between position shifts, and name the flatted 7th (F natural) when you pass it."
     },
     {
       id: "gs-2-2",
@@ -41,7 +42,7 @@ export const level2 = {
       what: "Develop rapid, even alternate picking on a single string. Tremolo picking is the engine of surf guitar — it turns a single note into a shimmering wave of sound. Alternate picking means strict down-up-down-up — every other stroke changes direction.",
       setup: "Use a medium-thickness pick with a pointed tip. Clean tone with reverb. Relax your wrist completely.",
       steps: [
-        { text: "Pick a single open string (the high E). Alternate down-up-down-up at 80 BPM, eighth notes (2 picks per beat). Every stroke should be the same volume. Focus on your pick hand — the motion comes from the WRIST, not the elbow or forearm. Small, controlled movements.", why: "Even strokes are the foundation. Most players have a louder downstroke and a weaker upstroke — you need to fix that before anything else. Wrist picking is efficient and sustainable. Elbow picking causes fatigue and sounds uneven." },
+        { text: "Pick a single open string (the high E). Alternate down-up-down-up at 80 BPM, eighth notes (2 picks per beat). Every stroke should be the same volume. Focus on your pick hand — the motion comes from the WRIST, not the elbow or forearm. Small, controlled movements.", why: "Even strokes are the foundation. Dick Dale's legendary tremolo was directly influenced by tarabaki (goblet drum) patterns from his Lebanese heritage — he translated hand-drum speed into pick technique. Most players have a louder downstroke and a weaker upstroke — you need to fix that before anything else. Wrist picking is efficient and sustainable; elbow picking causes fatigue and sounds uneven." },
         { text: "Move to a fretted note: 5th fret, B string. Same exercise — alternate picking, even volume. Fretted notes require slightly more pick attack than open strings.", why: "Fretted notes feel different under the pick. Adjusting your pressure for different playing contexts is a core skill." },
         { text: "Build speed: 80, 90, 100 BPM with eighth notes. Then switch to sixteenth notes (4 picks per beat) at 60, then 70 BPM. Sixteenth notes at 60 BPM is the true tremolo sound — that's where the shimmer lives.", why: "Sixteenth notes at 60 BPM = the same pick speed as eighth notes at 120. But the subdivision forces more control. At 70 BPM sixteenths, you're picking at real surf speed." },
         { text: "Record 30 seconds of your best tremolo and listen back. Are the upstrokes as loud as the downstrokes? Does it shimmer evenly, or does it gallop (da-DUM-da-DUM)? Be brutally honest.", why: "Recording reveals what your ears miss in the moment. Uneven tremolo sounds wobbly. Even tremolo sounds like a shimmering wave. The recording is your truth mirror." }
@@ -50,7 +51,8 @@ export const level2 = {
       wrong: "If your arm gets tired after 30 seconds, you're using too much motion — the movement should be tiny, all from the wrist. If the picking sounds galloping (da-DUM-da-DUM instead of even diddle-diddle-diddle), your down and up strokes aren't equal.",
       sarah: "Dick Dale picked so fast it sounded like a machine. But watch his right hand — it's completely relaxed. Tension is the enemy of tremolo. Relax your wrist and the speed will come.",
       metronome: 80,
-      speedLadder: { start: 80, end: 110, increment: 10, bars: 4 }
+      speedLadder: { start: 80, end: 110, increment: 10, bars: 4 },
+      levelUp: "Tremolo pick a single fretted note at 100 BPM sixteenth notes for 30 seconds with even alternate strokes — no galloping, no volume spikes on downstrokes — confirmed by recording playback."
     },
     {
       id: "gs-2-3",
@@ -67,7 +69,8 @@ export const level2 = {
       feel: "Your guitar should sound like a bell choir — bright, ringing, and spacious. The open strings should create a halo of overtones around each chord. When you hit the right voicing with the right touch, the guitar seems to glow.",
       wrong: "If the chords sound muddy, you're strumming too hard or muting open strings accidentally. If they sound thin, check that all the open strings are ringing clearly. If they sound like regular chords, make sure you're using the sus2/open string voicings, not standard shapes.",
       sarah: "Jangle guitar is about finding the magic in simple shapes. One open string can transform a boring chord into something transcendent. This is how Sun Room and Allah-Las make $200 guitars sound like cathedrals.",
-      metronome: 100
+      metronome: 100,
+      levelUp: "Play Dsus2 (xx0230), Asus2 (x02200), G (320003), and Em (022000) in sequence with a light eighth-note strum, all open strings ringing clearly with no muted strings or buzzing."
     },
     {
       id: "gs-2-4",
@@ -86,7 +89,8 @@ export const level2 = {
       sarah: "Gene, dynamics are the secret weapon of every great guitarist. Khruangbin goes from whisper to roar within a single song. Learning to control volume independently of everything else is a superpower.",
       metronome: 100,
       volumeMeter: true,
-      volumeContour: true
+      volumeContour: true,
+      levelUp: "Play the Dsus2→Asus2→G→Em progression four times with four distinct dynamic shapes (steady, crescendo, decrescendo, alternating) where the loudest pass is at least 3x the volume of the quietest — confirmed by the volume contour display."
     },
     {
       id: "gs-2-5",
@@ -105,7 +109,8 @@ export const level2 = {
       feel: "Double stops should ring clearly — both notes sustaining equally. They sound full and powerful compared to single notes, like a two-voice choir. When you slide them chromatically, they should shimmer and glide.",
       wrong: "If one string is muted or buzzing, adjust your fretting-hand angle. If the double stops sound muddy, check that you're not accidentally touching the string between them (especially for 6ths where you skip string 2). If your '3rds' on strings 1&2 sound hollow or open, you're probably playing 4ths — check the fret offset.",
       sarah: "The Ventures built a career on double stops. 'Walk Don't Run' is essentially a double-stop etude disguised as a hit single. Simple idea, perfect execution. Now you know the correct shapes — many guitarists play these wrong for years.",
-      metronome: 100
+      metronome: 100,
+      levelUp: "Walk diatonic 3rds up through G Mixolydian on strings 2 & 3 at 100 BPM with both notes ringing clearly, then play 6ths on strings 1 & 3 descending — no muted or buzzing strings."
     },
     {
       id: "gs-2-6",
@@ -126,7 +131,8 @@ export const level2 = {
       feel: "When a lick sits right in the groove, you'll feel it lock in with the beat — like the phrase was always supposed to be there. That's the pocket. Surf guitar should feel like riding a wave: momentum, energy, and a sense of being carried by the rhythm.",
       wrong: "If you're playing licks as fast as possible with no gaps, it sounds like you're showing off instead of making music. If the licks don't match the beat, you're not listening to the track. Surf is about riding the beat, not fighting it.",
       sarah: "You now have three licks. That's enough for a surf guitar solo — seriously. Three ideas with space between them beats a hundred ideas crammed together every time.",
-      metronome: 120
+      metronome: 120,
+      levelUp: "Play three distinct surf licks (walk-up, tremolo melody, Mixolydian run) over Surf Rock 120 with at least 4 beats of space between each lick, staying in the groove without rushing the entries."
     },
     {
       id: "gs-2-7",
@@ -147,7 +153,8 @@ export const level2 = {
       tracks: [{ name: "Surf Rock 120", src: "/surf-rock-120.mp3" }],
       recorder: true,
       pitchContour: true,
-      referencePitches: getPitchRange("G3", "C5")
+      referencePitches: getPitchRange("G3", "C5"),
+      levelUp: "During a 2-minute improvisation, hit 4 deliberate wrong notes and recover each one using either the slide or confidence-repeat technique — with recoveries smooth enough that a listener can't identify which notes were intentional mistakes on playback."
     },
     {
       id: "gs-2-8",
@@ -168,7 +175,8 @@ export const level2 = {
       recorder: true,
       tracks: [{ name: "Surf Rock 120", src: "/surf-rock-120.mp3" }],
       metronome: 120,
-      referencePitches: getPitchRange("G3", "C5")
+      referencePitches: getPitchRange("G3", "C5"),
+      levelUp: "Catch a spontaneous 3-4 note Mixolydian lick, repeat it exactly, then vary one element — and do this for 3 different licks in a row, all recorded and recognizably related to their originals."
     },
     {
       id: "gs-2-9",
@@ -181,13 +189,14 @@ export const level2 = {
       steps: [
         { text: "The progression uses bright, open voicings. Start with a simple framework: play G major (320003) → Bm (x24432 or the easier xx4432) → Em (022000) → C (x32010). This I-iii-vi-IV movement has the optimistic, sun-soaked quality of Sun Room's writing. Strum with a light, bouncy eighth-note pattern.", why: "Sun Room's chord choices are deliberately simple but voiced with open strings wherever possible. The I-iii-vi-IV movement creates a sense of forward motion that never fully resolves — it keeps cycling, which is the 'endless summer afternoon' feeling." },
         { text: "Replace the standard voicings with jangle versions where you can: instead of G, try G with the open B string ringing (320003 — it already does). Instead of C, try Cadd9 (x32030) — adding the open D string. Instead of Em, let all open strings ring. The more open strings, the more shimmer.", why: "Sun Room's guitar sound is built on letting as many open strings ring as possible. The open strings create a constant shimmering backdrop that makes everything sound bigger than it is." },
-        { text: "Add reverb — as much as you have. Surf-jangle guitar is reverb-dependent. If you don't have reverb, play in a bathroom or stairwell for natural reflection. The reverb is as important as the chords.", why: "Reverb is not decoration in surf-jangle — it's a core part of the instrument. Without it, the same voicings sound flat and thin. With it, they bloom into a three-dimensional sound." },
+        { text: "Add reverb — as much as you have. Surf-jangle guitar is reverb-dependent. If you don't have reverb, play in a bathroom or stairwell for natural reflection. The reverb is as important as the chords.", why: "Spring reverb is structural in surf, not decorative — it was pioneered by Leo Fender in the early 1960s as a built-in amp feature, and it became inseparable from the genre's identity. Dick Dale and The Ventures treated reverb as a second instrument: the metallic splash of the spring tank added shimmer, depth, and the illusion of physical space that defines surf tone. Without it, the same voicings sound flat and thin." },
         { text: "Play the full progression 8 times through, keeping the strum light and bouncy. On the last 2 times, try arpeggiation — pick through each chord one string at a time instead of strumming. Let the notes overlap and ring together.", why: "Arpeggiated jangle creates a more intimate, detailed version of the same progression. It's how Sun Room transitions between big chorus energy and quieter verse sections." }
       ],
       feel: "This should feel like a sunny afternoon at the beach — effortless, bright, and slightly nostalgic. The chords should ring and shimmer. You should feel the warmth of the major harmony.",
       wrong: "If it sounds dark or heavy, you're strumming too hard or using the wrong voicings. If it sounds thin, add more open strings and more reverb. If it sounds stiff, relax your strumming hand and let the wrist be looser.",
       sarah: "Sun Room is proof that you don't need complex chords to make beautiful music. Simple voicings + open strings + reverb + the right attitude = magic. This is Gene's sound.",
-      metronome: 100
+      metronome: 100,
+      levelUp: "Play the G→Bm→Em→C jangle progression 8 times through with open-string voicings (Cadd9 x32030, etc.), light bouncy strum, and a reverb-drenched tone where open strings ring clearly across chord changes."
     },
     {
       id: "gs-2-10",
@@ -206,7 +215,8 @@ export const level2 = {
       feel: "This should feel dreamy and slightly dark — like surf guitar played at midnight. The reverb should fill the space between your notes with atmosphere. Imagine a beach bonfire, not a beach party.",
       wrong: "If it sounds like standard surf guitar, you're playing too bright and too fast. If it sounds like blues, you're bending too much. Allah-Las is straight, dark, and patient — no bends, no flash, just mood.",
       sarah: "The Allah-Las proved that surf guitar doesn't have to be fast or happy. Sometimes the most powerful surf sound is a minor-key riff and a lot of reverb. This is the dark side of the wave.",
-      metronome: 100
+      metronome: 100,
+      levelUp: "Play the Am→C→D→Dm progression 8 times as a hypnotic loop with reverb, letting chords wash into each other — then add a single 2-3 note pentatonic fill on the 9th pass that appears and disappears without disrupting the groove."
     },
     {
       id: "gs-2-11",
@@ -225,7 +235,8 @@ export const level2 = {
       feel: "This should feel meditative and dark — like a single guitar voice in a reverb-filled room. The repetition should become hypnotic. If you close your eyes, you should feel the mood shift from 'playing guitar' to 'inhabiting a sound world.'",
       wrong: "If your leads sound like blues solos, you're bending too much and playing too assertively. Allah-Las leads are STRAIGHT — no bends, no vibrato, just clean notes into reverb. If the lines are too busy, simplify to 3-4 notes and repeat more.",
       sarah: "The Allah-Las style is proof that minor-key surf leads don't need speed or flash. A 4-note loop with the right mood and enough reverb can be more haunting than any shred solo.",
-      metronome: 100
+      metronome: 100,
+      levelUp: "Play a 4-6 note A natural minor melodic loop using slides (not individual picks), with the F note featured, repeating it 8 times over an Am chord with reverb — and it sounds hypnotic and dark, not bluesy."
     },
     {
       id: "gs-2-12",

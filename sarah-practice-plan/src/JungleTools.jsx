@@ -1739,13 +1739,14 @@ function getInterval(noteName, rootName) {
 export function FretboardDiagram({ theme: T, scale, position, highlight = [] }) {
   const [selectedPos, setSelectedPos] = useState(position || 1);
   const [viewMode, setViewMode] = useState("notes"); // 'notes' or 'intervals'
+  const [fullNeck, setFullNeck] = useState(false);
   const scaleData = SCALES[scale] || SCALES["am-pentatonic"];
   const positionsConfig = scaleData.positions || { 1: [5, 8], 2: [7, 10], 3: [9, 12], 4: [12, 15], 5: [0, 3] };
-  const [lo, hi] = positionsConfig[selectedPos] || positionsConfig[1];
+  const [lo, hi] = fullNeck ? [0, 15] : (positionsConfig[selectedPos] || positionsConfig[1]);
 
-  // Expand render range by 1 fret on each side for dot rendering
-  const renderLo = Math.max(0, lo - 1);
-  const renderHi = Math.min(15, hi + 1);
+  // In full neck mode, render everything; otherwise expand by 1 fret for dot rendering
+  const renderLo = fullNeck ? 0 : Math.max(0, lo - 1);
+  const renderHi = fullNeck ? 15 : Math.min(15, hi + 1);
 
   const totalFrets = 16; // 0-15
   const numStrings = 6;
@@ -1754,7 +1755,7 @@ export function FretboardDiagram({ theme: T, scale, position, highlight = [] }) 
   const leftPad = 36;
   const rightPad = 16;
   const topPad = 28;
-  const bottomPad = 20;
+  const bottomPad = 28;
   const fretSpacing = 52;
   const stringSpacing = 22;
 
@@ -1816,7 +1817,7 @@ export function FretboardDiagram({ theme: T, scale, position, highlight = [] }) 
             {scaleData.name}
           </span>
           <span style={{ fontSize: 11, color: T.textMed, letterSpacing: 1, textTransform: 'uppercase' }}>
-            Pos {selectedPos} &middot; Frets {lo}–{hi}
+            {fullNeck ? "Full Neck \u00B7 All Frets" : `Pos ${selectedPos} \u00B7 Frets ${lo}\u2013${hi}`}
           </span>
         </div>
         <div style={{ display: 'flex', gap: 4 }}>
@@ -1847,11 +1848,11 @@ export function FretboardDiagram({ theme: T, scale, position, highlight = [] }) 
           {[1, 2, 3, 4, 5].map(p => (
             <button
               key={p}
-              onClick={() => setSelectedPos(p)}
+              onClick={() => { setSelectedPos(p); setFullNeck(false); }}
               style={{
-                background: selectedPos === p ? T.gold : "transparent",
-                color: selectedPos === p ? "#fff" : T.textMed,
-                border: `1px solid ${selectedPos === p ? T.gold : T.borderSoft}`,
+                background: !fullNeck && selectedPos === p ? T.gold : "transparent",
+                color: !fullNeck && selectedPos === p ? "#fff" : T.textMed,
+                border: `1px solid ${!fullNeck && selectedPos === p ? T.gold : T.borderSoft}`,
                 width: 28, height: 28, borderRadius: T.radius,
                 fontFamily: T.sans, fontSize: 12, fontWeight: 600,
                 cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
@@ -1864,6 +1865,24 @@ export function FretboardDiagram({ theme: T, scale, position, highlight = [] }) 
               {p}
             </button>
           ))}
+          <button
+            onClick={() => setFullNeck(!fullNeck)}
+            style={{
+              background: fullNeck ? T.gold : "transparent",
+              color: fullNeck ? "#fff" : T.textMed,
+              border: `1px solid ${fullNeck ? T.gold : T.borderSoft}`,
+              height: 28, borderRadius: T.radius, padding: "0 10px",
+              fontFamily: T.sans, fontSize: 11, fontWeight: 700,
+              cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+              textTransform: "uppercase", letterSpacing: 1,
+              transition: "all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
+            }}
+            onPointerDown={e => e.currentTarget.style.transform = "scale(0.92)"}
+            onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
+            onPointerLeave={e => e.currentTarget.style.transform = "scale(1)"}
+          >
+            Full
+          </button>
         </div>
       </div>
 
@@ -1890,8 +1909,8 @@ export function FretboardDiagram({ theme: T, scale, position, highlight = [] }) 
             <stop offset="100%" stopColor="#d6c6b3" />
           </radialGradient>
         </defs>
-        {/* Position highlight rectangle */}
-        <rect
+        {/* Position highlight rectangle (hidden in full-neck mode) */}
+        {!fullNeck && <rect
           x={leftPad + lo * fretSpacing}
           y={topPad - 12}
           width={(hi - lo + 1) * fretSpacing}
@@ -1899,7 +1918,7 @@ export function FretboardDiagram({ theme: T, scale, position, highlight = [] }) 
           rx={6}
           fill={T.gold}
           opacity={0.08}
-        />
+        />}
 
         {/* Fret lines (vertical) & Stylized Nut */}
         {Array.from({ length: totalFrets + 1 }, (_, i) => {
@@ -1945,8 +1964,8 @@ export function FretboardDiagram({ theme: T, scale, position, highlight = [] }) 
             textAnchor="middle"
             fontSize={10}
             fontFamily={T.sans}
-            fill={i >= lo && i <= hi ? T.textDark : T.textLight}
-            fontWeight={i >= lo && i <= hi ? 700 : 500}
+            fill={fullNeck ? T.textDark : (i >= lo && i <= hi ? T.textDark : T.textLight)}
+            fontWeight={fullNeck ? 600 : (i >= lo && i <= hi ? 700 : 500)}
           >
             {i}
           </text>
@@ -1975,6 +1994,21 @@ export function FretboardDiagram({ theme: T, scale, position, highlight = [] }) 
             </g>
           );
         })}
+
+        {/* Side dots below the fretboard (like a real guitar neck edge) */}
+        {[3, 5, 7, 9, 15].map(f => (
+          <circle
+            key={`side-dot-${f}`}
+            cx={fretX(f)}
+            cy={topPad + (numStrings - 1) * stringSpacing + 14}
+            r={3}
+            fill={T.textLight}
+            opacity={0.5}
+          />
+        ))}
+        {/* Double dot at fret 12 (octave) */}
+        <circle cx={fretX(12) - 7} cy={topPad + (numStrings - 1) * stringSpacing + 14} r={3} fill={T.textLight} opacity={0.5} />
+        <circle cx={fretX(12) + 7} cy={topPad + (numStrings - 1) * stringSpacing + 14} r={3} fill={T.textLight} opacity={0.5} />
 
         {/* Scale note dots */}
         {dots.map((d, i) => {
@@ -2372,6 +2406,257 @@ const parseChordToNotes = (chordStr, baseOct, type = "chord") => {
   
   return [...new Set(voicing)];
 };
+
+// --- Chord Transition Timer ("One-Minute Changes") ---
+export function ChordTransitionTimer({ theme: T, chords = ["Am", "G"], duration = 60 }) {
+  const [isRunning, setIsRunning] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(duration);
+  const [count, setCount] = useState(0);
+  const [history, setHistory] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('chordTimerHistory') || '[]'); } catch { return []; }
+  });
+  const intervalRef = useRef(null);
+
+  useEffect(() => {
+    if (isRunning && timeLeft > 0) {
+      intervalRef.current = setInterval(() => setTimeLeft(t => t - 1), 1000);
+    } else if (timeLeft === 0 && isRunning) {
+      setIsRunning(false);
+      const entry = { chords: chords.join('→'), count, date: new Date().toISOString().slice(0, 10) };
+      const newHistory = [...history, entry].slice(-20);
+      setHistory(newHistory);
+      localStorage.setItem('chordTimerHistory', JSON.stringify(newHistory));
+    }
+    return () => clearInterval(intervalRef.current);
+  }, [isRunning, timeLeft]);
+
+  const reset = () => { setIsRunning(false); setTimeLeft(duration); setCount(0); };
+  const pairKey = chords.join('→');
+  const pairHistory = history.filter(h => h.chords === pairKey);
+  const best = pairHistory.length ? Math.max(...pairHistory.map(h => h.count)) : 0;
+
+  return (
+    <div style={{ background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radius, padding: 16, marginBottom: 16, fontFamily: T.sans }}>
+      <div style={{ fontSize: 13, fontWeight: 700, color: T.textDark, marginBottom: 8 }}>
+        Chord Transition Timer — {chords.join(' → ')}
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 12 }}>
+        <div style={{ fontSize: 36, fontWeight: 700, color: timeLeft <= 10 && isRunning ? T.coral : T.textDark, fontVariantNumeric: 'tabular-nums', minWidth: 60, textAlign: 'center' }}>
+          {timeLeft}
+        </div>
+        <div style={{ fontSize: 11, color: T.textMed }}>seconds left</div>
+        <div style={{ flex: 1 }} />
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: 48, fontWeight: 800, color: T.gold, lineHeight: 1 }}>{count}</div>
+          <div style={{ fontSize: 10, color: T.textMed, textTransform: 'uppercase', letterSpacing: 1 }}>changes</div>
+        </div>
+      </div>
+      <div style={{ display: 'flex', gap: 8 }}>
+        {!isRunning && timeLeft === duration && (
+          <button onClick={() => setIsRunning(true)} style={{ flex: 1, padding: '10px 0', background: T.gold, color: '#fff', border: 'none', borderRadius: T.radius, fontWeight: 700, fontFamily: T.sans, fontSize: 14, cursor: 'pointer' }}>Start</button>
+        )}
+        {isRunning && (
+          <button onClick={() => setCount(c => c + 1)} style={{ flex: 1, padding: '16px 0', background: T.goldSoft, color: T.goldDark, border: `2px solid ${T.gold}`, borderRadius: T.radius, fontWeight: 800, fontFamily: T.sans, fontSize: 18, cursor: 'pointer' }}>TAP — Clean Change!</button>
+        )}
+        {(isRunning || timeLeft < duration) && (
+          <button onClick={reset} style={{ padding: '10px 16px', background: 'transparent', color: T.textMed, border: `1px solid ${T.borderSoft}`, borderRadius: T.radius, fontWeight: 600, fontFamily: T.sans, fontSize: 12, cursor: 'pointer' }}>Reset</button>
+        )}
+      </div>
+      {timeLeft === 0 && <div style={{ marginTop: 12, padding: 12, background: T.bgCard, borderRadius: T.radius, textAlign: 'center' }}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: T.textDark }}>Done! {count} clean changes in {duration} seconds</div>
+        {best > 0 && <div style={{ fontSize: 12, color: T.textMed, marginTop: 4 }}>Personal best: {best} {count > best ? '— NEW RECORD!' : ''}</div>}
+      </div>}
+      {pairHistory.length > 1 && (
+        <div style={{ marginTop: 8, display: 'flex', gap: 4, alignItems: 'flex-end', height: 40 }}>
+          {pairHistory.slice(-10).map((h, i) => (
+            <div key={i} style={{ flex: 1, height: `${Math.max(4, (h.count / Math.max(...pairHistory.map(x => x.count))) * 36)}px`, background: T.goldSoft, borderRadius: 2, position: 'relative' }} title={`${h.date}: ${h.count}`}>
+              <span style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)', fontSize: 9, color: T.textLight }}>{h.count}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// --- Genre Metronome Accent Modes ---
+export function GenreMetronome({ theme: T, mode = "standard", bpm = 80 }) {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentBeat, setCurrentBeat] = useState(-1);
+  const [selectedMode, setSelectedMode] = useState(mode);
+  const intervalRef = useRef(null);
+  const audioCtxRef = useRef(null);
+
+  const modes = {
+    standard:     { label: "Standard",     pattern: [1, 1, 1, 1, 1, 1, 1, 1], desc: "Even clicks 1-2-3-4" },
+    backbeat:     { label: "Backbeat",      pattern: [0.3, 0, 1, 0, 0.3, 0, 1, 0], desc: "Accent 2 & 4" },
+    "reggae-skank": { label: "Reggae Skank", pattern: [0, 1, 0, 1, 0, 1, 0, 1], desc: "Click ONLY on the 'and'" },
+    "one-drop":   { label: "One-Drop",     pattern: [0, 0, 0, 0, 1, 0, 0, 0], desc: "Accent ONLY beat 3" },
+    shuffle:      { label: "Shuffle",       pattern: [1, 0, 0.5, 1, 0, 0.5, 1, 0], desc: "Triplet swing feel" }
+  };
+
+  const playClick = (volume) => {
+    if (!audioCtxRef.current) audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
+    const ctx = audioCtxRef.current;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.value = volume > 0.8 ? 1000 : 800;
+    gain.gain.setValueAtTime(volume * 0.3, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.05);
+  };
+
+  useEffect(() => {
+    if (isPlaying) {
+      const pattern = modes[selectedMode].pattern;
+      const msPerEighth = (60000 / bpm) / 2;
+      let beat = 0;
+      intervalRef.current = setInterval(() => {
+        const vol = pattern[beat % pattern.length];
+        if (vol > 0) playClick(vol);
+        setCurrentBeat(beat % pattern.length);
+        beat++;
+      }, msPerEighth);
+    }
+    return () => { clearInterval(intervalRef.current); setCurrentBeat(-1); };
+  }, [isPlaying, selectedMode, bpm]);
+
+  const m = modes[selectedMode];
+  return (
+    <div style={{ background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radius, padding: 16, marginBottom: 16, fontFamily: T.sans }}>
+      <div style={{ fontSize: 13, fontWeight: 700, color: T.textDark, marginBottom: 8 }}>
+        Genre Metronome — {m.label} ({bpm} BPM)
+      </div>
+      <div style={{ display: 'flex', gap: 4, marginBottom: 12, flexWrap: 'wrap' }}>
+        {Object.entries(modes).map(([key, val]) => (
+          <button key={key} onClick={() => setSelectedMode(key)} style={{
+            background: selectedMode === key ? T.gold : 'transparent', color: selectedMode === key ? '#fff' : T.textMed,
+            border: `1px solid ${selectedMode === key ? T.gold : T.borderSoft}`, borderRadius: T.radius,
+            padding: '4px 10px', fontSize: 11, fontWeight: 600, fontFamily: T.sans, cursor: 'pointer'
+          }}>{val.label}</button>
+        ))}
+      </div>
+      <div style={{ fontSize: 11, color: T.textMed, marginBottom: 12 }}>{m.desc}</div>
+      {/* Beat visualization */}
+      <div style={{ display: 'flex', gap: 3, marginBottom: 12 }}>
+        {m.pattern.map((vol, i) => (
+          <div key={i} style={{
+            flex: 1, height: 24, borderRadius: 3,
+            background: currentBeat === i ? (vol > 0 ? T.gold : T.coral + '40') : (vol > 0 ? T.goldSoft : T.bgCard),
+            border: `1px solid ${vol > 0 ? T.borderSoft : 'transparent'}`,
+            opacity: vol > 0 ? 1 : 0.4,
+            transition: 'background 0.05s',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 9, color: T.textLight, fontWeight: 600
+          }}>
+            {i % 2 === 0 ? (i / 2 + 1) : '&'}
+          </div>
+        ))}
+      </div>
+      <button onClick={() => setIsPlaying(!isPlaying)} style={{
+        width: '100%', padding: '10px 0', background: isPlaying ? T.coral : T.gold, color: '#fff',
+        border: 'none', borderRadius: T.radius, fontWeight: 700, fontFamily: T.sans, fontSize: 14, cursor: 'pointer'
+      }}>{isPlaying ? 'Stop' : 'Play'}</button>
+    </div>
+  );
+}
+
+// --- Silence Score (post-recording analysis) ---
+export function SilenceScore({ theme: T, target = 0.4 }) {
+  const [isRecording, setIsRecording] = useState(false);
+  const [silencePercent, setSilencePercent] = useState(null);
+  const [recordingTime, setRecordingTime] = useState(0);
+  const analyserRef = useRef(null);
+  const streamRef = useRef(null);
+  const samplesRef = useRef([]);
+  const frameRef = useRef(null);
+  const timerRef = useRef(null);
+
+  const startRecording = async () => {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    streamRef.current = stream;
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const source = ctx.createMediaStreamSource(stream);
+    const analyser = ctx.createAnalyser();
+    analyser.fftSize = 2048;
+    source.connect(analyser);
+    analyserRef.current = analyser;
+    samplesRef.current = [];
+    setSilencePercent(null);
+    setRecordingTime(0);
+    setIsRecording(true);
+
+    const dataArray = new Float32Array(analyser.fftSize);
+    const sampleLoop = () => {
+      analyser.getFloatTimeDomainData(dataArray);
+      let sum = 0;
+      for (let i = 0; i < dataArray.length; i++) sum += dataArray[i] * dataArray[i];
+      const rms = Math.sqrt(sum / dataArray.length);
+      samplesRef.current.push(rms);
+      frameRef.current = requestAnimationFrame(sampleLoop);
+    };
+    sampleLoop();
+    timerRef.current = setInterval(() => setRecordingTime(t => t + 1), 1000);
+  };
+
+  const stopRecording = () => {
+    cancelAnimationFrame(frameRef.current);
+    clearInterval(timerRef.current);
+    streamRef.current?.getTracks().forEach(t => t.stop());
+    setIsRecording(false);
+
+    const samples = samplesRef.current;
+    if (samples.length === 0) return;
+    const threshold = 0.01; // RMS below this = silence
+    const silentSamples = samples.filter(s => s < threshold).length;
+    setSilencePercent(silentSamples / samples.length);
+  };
+
+  const pct = silencePercent !== null ? Math.round(silencePercent * 100) : null;
+  const targetPct = Math.round(target * 100);
+  const hit = pct !== null && pct >= targetPct;
+
+  return (
+    <div style={{ background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radius, padding: 16, marginBottom: 16, fontFamily: T.sans }}>
+      <div style={{ fontSize: 13, fontWeight: 700, color: T.textDark, marginBottom: 8 }}>
+        Silence Score — Target: {targetPct}%
+      </div>
+      {pct !== null && (
+        <div style={{ marginBottom: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+            <span style={{ fontSize: 42, fontWeight: 800, color: hit ? T.gold : T.coral, lineHeight: 1 }}>{pct}%</span>
+            <span style={{ fontSize: 14, color: T.textMed }}>silence</span>
+            {hit && <span style={{ fontSize: 14, color: T.gold, fontWeight: 700 }}>Target hit!</span>}
+          </div>
+          {/* Visual bar */}
+          <div style={{ position: 'relative', height: 12, background: T.bgCard, borderRadius: 6, marginTop: 8, overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', height: '100%', width: `${pct}%`, background: hit ? T.gold : T.coral, borderRadius: 6, transition: 'width 0.5s ease' }} />
+            <div style={{ position: 'absolute', height: '100%', width: 2, left: `${targetPct}%`, background: T.textDark, opacity: 0.5 }} />
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: T.textLight, marginTop: 2 }}>
+            <span>0% (all sound)</span>
+            <span style={{ marginLeft: `${targetPct - 5}%` }}>Target</span>
+            <span>100% (all silence)</span>
+          </div>
+        </div>
+      )}
+      <div style={{ display: 'flex', gap: 8 }}>
+        {!isRecording ? (
+          <button onClick={startRecording} style={{ flex: 1, padding: '10px 0', background: T.gold, color: '#fff', border: 'none', borderRadius: T.radius, fontWeight: 700, fontFamily: T.sans, fontSize: 14, cursor: 'pointer' }}>
+            {pct !== null ? 'Record Again' : 'Start Recording'}
+          </button>
+        ) : (
+          <button onClick={stopRecording} style={{ flex: 1, padding: '10px 0', background: T.coral, color: '#fff', border: 'none', borderRadius: T.radius, fontWeight: 700, fontFamily: T.sans, fontSize: 14, cursor: 'pointer' }}>
+            Stop ({recordingTime}s)
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
 
 // --- Drone Generator Component ---
 export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTexture, defaultMode, defaultPreset, defaultProgression, defaultBpm, defaultStepDuration, inline, onActiveNotesChange }) {
