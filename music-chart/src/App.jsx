@@ -11,12 +11,9 @@ import BottomNav from './components/BottomNav.jsx';
 import PracticeTimerTool from './tools/PracticeTimer.jsx';
 import DroneGenerator from './tools/DroneGenerator.jsx';
 import GenreMetronome from './tools/GenreMetronome.jsx';
-import { AudioPlayer } from './tools/BackingTrackPlayer.jsx';
-import FlightCheck from './tools/FlightCheck.jsx';
 import LivePitchDetector from './tools/LivePitchDetector.jsx';
 import PitchPipe from './tools/PitchPipe.jsx';
 import AudioRecorder from './tools/AudioRecorder.jsx';
-import OfflineTabs from './tools/OfflineTabs.jsx';
 
 // Import chart components
 import { StrumChartBuilder } from './charts/StrumChartBuilder.jsx';
@@ -142,112 +139,58 @@ export default function App() {
         {/* TOOLS TAB — Metronome + all tools combined */}
         {tab === "tools" && (
           <div>
-            <div style={{ textAlign: "center", marginBottom: 24 }}>
-              <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 4, textTransform: "uppercase", color: T.gold, fontFamily: T.sans, marginBottom: 8 }}>
-                Music Chart
+            {/* ── Rhythm ── */}
+            <div style={{ marginBottom: 8 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 3, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, padding: "0 2px 8px" }}>
+                Rhythm
               </div>
-              <div style={{ fontSize: 32, fontWeight: 400, fontFamily: T.serif, color: T.textDark }}>Tools</div>
+              <ToolCard icon="🎛️" title="Metronome" defaultOpen={true}>
+                <MetronomePanel metro={metro} onOpenTapMatch={setTapMatchBpm} />
+              </ToolCard>
+              <ToolCard icon="✋" title="Tap Practice">
+                <div style={{ textAlign: "center", padding: "10px 0" }}>
+                  <p style={{ fontSize: 14, color: T.textMed, marginBottom: 20 }}>
+                    Practice tapping steadily at any BPM. Helps internalize the groove.
+                  </p>
+                  <button onClick={() => setTapMatchBpm(metro.bpm)} style={{
+                    background: T.gold, color: "#fff", border: "none", padding: "12px 24px",
+                    borderRadius: T.radius, cursor: "pointer", fontFamily: T.sans, fontWeight: 600,
+                    textTransform: "uppercase", letterSpacing: 1
+                  }}>
+                    Launch Game
+                  </button>
+                </div>
+              </ToolCard>
+              <ToolCard icon="⏱️" title="Practice Timer">
+                <PracticeTimerTool theme={T} />
+              </ToolCard>
             </div>
 
-            <ToolCard icon="⏱️" title="Practice Timer" defaultOpen={true}>
-              <PracticeTimerTool theme={T} />
-            </ToolCard>
-
-            <ToolCard icon="🎛️" title="Metronome" defaultOpen={true}>
-              <MetronomePanel metro={metro} onOpenTapMatch={setTapMatchBpm} />
-            </ToolCard>
-
-            <ToolCard icon="🌫️" title="Drone Generator" defaultOpen={false}>
-              <DroneGenerator theme={T} />
-            </ToolCard>
-
-            <ToolCard icon="📚" title="Quick Reference" defaultOpen={false}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-                <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans }}>
-                  Quick Reference
-                </div>
-                <button onClick={() => setTapMatchBpm(metro.bpm)} style={{
-                  background: "transparent", border: "none", color: T.gold, fontSize: 11, fontWeight: 600, cursor: "pointer",
-                  fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1, padding: 0
-                }}>
-                  Tap Minigame
-                </button>
+            {/* ── Pitch ── */}
+            <div style={{ marginBottom: 8 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 3, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, padding: "16px 2px 8px" }}>
+                Pitch
               </div>
-              {[
-                { bpm: "78", use: "16th note subdivision (Drill #3)" },
-                { bpm: "120", use: "Surf Rock — fingerpick + count + ooh climbing" },
-                { bpm: "122", use: "Lyric placement + Sol Del Sur tap-along" },
-                { bpm: "165", use: "Island strum (Surf Rock Drum)" },
-                { bpm: "200-244", use: "Main metronome work (Drills #1 & #2)" },
-              ].map((r, i) => (
-                <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: i < 4 ? `1px solid ${T.border}` : "none", fontSize: 13 }}>
-                  <span style={{ color: T.gold, fontWeight: 700, fontFamily: T.sans }}>{r.bpm}</span>
-                  <span style={{ color: T.textLight, fontFamily: T.sans }}>{r.use}</span>
-                </div>
-              ))}
-            </ToolCard>
+              <ToolCard icon="🌫️" title="Drone Generator">
+                <DroneGenerator theme={T} />
+              </ToolCard>
+              <ToolCard icon="🎤" title="Live Pitch Detector">
+                <LivePitchDetector theme={T} />
+              </ToolCard>
+              <ToolCard icon="🎵" title="Pitch Pipe">
+                <PitchPipe theme={T} />
+              </ToolCard>
+            </div>
 
-            <ToolCard icon="🖇️" title="Backing Track Links" defaultOpen={false}>
-              {[
-                { label: "Surf Rock 120 BPM", url: "youtube.com/watch?v=AEf8LF4Xu18" },
-                { label: "Groove Beat 90 BPM", url: "youtube.com/watch?v=n0nEhFAiorg" },
-                { label: "Reggae One Drop 85 BPM", url: "youtube.com/watch?v=1aGp-CnwebE" },
-                { label: "Dub Reggae 85 BPM", url: "youtube.com/watch?v=vmH-xBYBQIg" },
-                { label: "Desert Blues 75 BPM", url: "youtube.com/watch?v=Yfyymjm24Ro" },
-                { label: "Khruangbin Style 80 BPM", url: "youtube.com/watch?v=JlMy52s7qrI" },
-                { label: "Cinematic Western 80 BPM", url: "youtube.com/watch?v=EKPjIt9GzX0" },
-                { label: "Psych Rock 120 BPM", url: "youtube.com/watch?v=eqI_3Mw8go4" },
-                { label: "Deep Soul Groove 80 BPM", url: "youtube.com/watch?v=55MTcCE6ZIk" },
-                { label: "Soul Funk Groove 90 BPM", url: "youtube.com/watch?v=HhPq1J93uMI" },
-                { label: "Surf Rock 165 BPM", url: "youtube.com/watch?v=gBNY43Xlp1Y" },
-                { label: "Groove Beat 80 BPM", url: "youtube.com/watch?v=0vgOdlxSTW0" },
-              ].map((l, i, arr) => (
-                <div key={i} style={{ padding: "8px 0", fontSize: 13, borderBottom: i < arr.length - 1 ? `1px solid ${T.border}` : "none" }}>
-                  <span style={{ color: T.gold, fontFamily: T.sans, fontWeight: 600 }}>{l.label}</span>
-                  <span style={{ color: T.textMuted, marginLeft: 10, fontSize: 11, fontFamily: T.sans }}>{l.url}</span>
-                </div>
-              ))}
-            </ToolCard>
-
-            <ToolCard icon="✅" title="Flight Check" defaultOpen={true}>
-              <FlightCheck theme={T} />
-            </ToolCard>
-
-            <ToolCard icon="✋" title="Tap Practice Minigame">
-              <div style={{ textAlign: "center", padding: "10px 0" }}>
-                <p style={{ fontSize: 14, color: T.textMed, marginBottom: 20 }}>
-                  Practice tapping steadily at any BPM. Helps internalize the groove.
-                </p>
-                <button onClick={() => setTapMatchBpm(metro.bpm)} style={{
-                  background: T.gold, color: "#fff", border: "none", padding: "12px 24px",
-                  borderRadius: T.radius, cursor: "pointer", fontFamily: T.sans, fontWeight: 600,
-                  textTransform: "uppercase", letterSpacing: 1
-                }}>
-                  Launch Game
-                </button>
+            {/* ── Record ── */}
+            <div style={{ marginBottom: 8 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 3, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, padding: "16px 2px 8px" }}>
+                Record
               </div>
-            </ToolCard>
-
-            <ToolCard icon="🎤" title="Live Pitch Detector">
-              <LivePitchDetector theme={T} />
-            </ToolCard>
-
-            <ToolCard icon="🎵" title="Pitch Pipe">
-              <PitchPipe theme={T} />
-            </ToolCard>
-
-            <ToolCard icon="🎙️" title="Quick Recorder">
-              <AudioRecorder theme={T} />
-            </ToolCard>
-
-            <ToolCard icon="📻" title="Backing Tracks">
-              <AudioPlayer theme={T} />
-            </ToolCard>
-
-            <ToolCard icon="🎸" title="Tabs & Lyrics">
-              <OfflineTabs theme={T} />
-            </ToolCard>
-
+              <ToolCard icon="🎙️" title="Quick Recorder">
+                <AudioRecorder theme={T} />
+              </ToolCard>
+            </div>
           </div>
         )}
 
