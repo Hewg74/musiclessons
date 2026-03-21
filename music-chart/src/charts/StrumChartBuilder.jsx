@@ -818,7 +818,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
               <input
                 type="number" min={40} max={280}
                 value={chart.bpm || 80}
-                onChange={e => setChart(c => ({ ...c, bpm: parseInt(e.target.value) || 80, updatedAt: Date.now() }))}
+                onChange={e => { const bpm = parseInt(e.target.value) || 80; setChart(c => ({ ...c, bpm, updatedAt: Date.now() })); if (metro) metro.changeBpm(bpm); }}
                 style={{
                   width: 48, fontSize: 14, fontWeight: 700, textAlign: "center", color: T.textDark,
                   border: `1px solid ${T.border}`, borderRadius: T.radius, background: T.bgSoft,
@@ -827,11 +827,6 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
               />
               {metro && (
                 <>
-                  <button onClick={() => metro.changeBpm(chart.bpm || 80)} style={{
-                    fontSize: 9, background: T.goldSoft, border: "none", padding: "5px 10px",
-                    borderRadius: T.radius, color: T.goldDark, cursor: "pointer", fontWeight: 800,
-                    textTransform: "uppercase", letterSpacing: 1,
-                  }}>Set</button>
                   <button onClick={() => { metro.changeBpm(chart.bpm || 80); metro.playing ? metro.stop() : metro.start(); }} style={{
                     fontSize: 9, padding: "5px 12px", borderRadius: T.radius, cursor: "pointer",
                     fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans,

@@ -19,7 +19,7 @@ export function makeTemplateChart() {
     title: "",
     bpm: 80,
     activeSlots: [],
-    barsPerGroup: 0,
+    barsPerGroup: 2,
     beatOffset: 0,
     measures: [m],
     lyricsPool: [],
