@@ -79,10 +79,453 @@ const TimeInput = ({ time, onChange, T }) => {
   );
 };
 
+// --- Desktop breakpoint hook ---
+function useIsWide(breakpoint = 900) {
+  const [wide, setWide] = React.useState(
+    () => typeof window !== 'undefined' && window.innerWidth >= breakpoint
+  );
+  React.useEffect(() => {
+    const mq = window.matchMedia(`(min-width: ${breakpoint}px)`);
+    const handler = (e) => setWide(e.matches);
+    mq.addEventListener('change', handler);
+    setWide(mq.matches);
+    return () => mq.removeEventListener('change', handler);
+  }, [breakpoint]);
+  return wide;
+}
+
+// --- YouTube API utilities ---
+function loadYouTubeAPI() {
+  return new Promise((resolve) => {
+    if (window.YT && window.YT.Player) { resolve(); return; }
+    if (document.getElementById('yt-iframe-api')) {
+      const existing = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = () => { existing?.(); resolve(); };
+      return;
+    }
+    const tag = document.createElement('script');
+    tag.id = 'yt-iframe-api';
+    tag.src = 'https://www.youtube.com/iframe_api';
+    window.onYouTubeIframeAPIReady = () => resolve();
+    document.head.appendChild(tag);
+  });
+}
+
+function extractYouTubeId(url) {
+  if (!url) return null;
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/,
+    /^([a-zA-Z0-9_-]{11})$/
+  ];
+  for (const p of patterns) {
+    const m = url.match(p);
+    if (m) return m[1];
+  }
+  return null;
+}
+
+// --- Global audio mutex ---
+let audioMutexId = 0;
+function claimAudioMutex() {
+  const id = ++audioMutexId;
+  window.dispatchEvent(new CustomEvent("audioSourceChange", { detail: { id } }));
+  return id;
+}
+
+// --- YouTube Audio Player Component ---
+export function YouTubeAudioPlayer({ videoId, theme: T, title }) {
+  const containerRef = useRef(null);
+  const playerRef = useRef(null);
+  const mutexIdRef = useRef(null);
+  const syncRafRef = useRef(null);
+  const [isReady, setIsReady] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [speed, setSpeed] = useState(1);
+  const [error, setError] = useState(null);
+  const [isLooping, setIsLooping] = useState(false);
+  const [loopStart, setLoopStart] = useState(0);
+  const [loopEnd, setLoopEnd] = useState(0);
+  const [showLoopSettings, setShowLoopSettings] = useState(false);
+
+  // Initialize loopEnd when duration loads
+  useEffect(() => {
+    if (duration > 0 && loopEnd === 0) setLoopEnd(duration);
+  }, [duration, loopEnd]);
+
+  // Load YouTube API and create player
+  useEffect(() => {
+    if (!videoId) return;
+    let destroyed = false;
+    setError(null);
+    setIsReady(false);
+    setIsPlaying(false);
+    setProgress(0);
+    setCurrentTime(0);
+    setDuration(0);
+
+    loadYouTubeAPI().then(() => {
+      if (destroyed) return;
+      if (playerRef.current) {
+        try { playerRef.current.destroy(); } catch {}
+      }
+      playerRef.current = new window.YT.Player(containerRef.current, {
+        videoId,
+        width: 1,
+        height: 1,
+        playerVars: { autoplay: 0, controls: 0, disablekb: 1, modestbranding: 1 },
+        events: {
+          onReady: (e) => {
+            if (destroyed) return;
+            const dur = e.target.getDuration();
+            setDuration(dur);
+            setLoopEnd(prev => prev === 0 ? dur : prev);
+            setIsReady(true);
+          },
+          onStateChange: (e) => {
+            if (destroyed) return;
+            setIsPlaying(e.data === window.YT.PlayerState.PLAYING);
+          },
+          onError: (e) => {
+            if (destroyed) return;
+            const codes = { 2: "Invalid video ID", 5: "Video not supported in HTML5", 100: "Video not found or removed", 101: "Embedding disabled by owner", 150: "Embedding disabled by owner" };
+            setError(codes[e.data] || "Playback error");
+          }
+        }
+      });
+    });
+
+    return () => {
+      destroyed = true;
+      cancelAnimationFrame(syncRafRef.current);
+      if (playerRef.current) {
+        try { playerRef.current.destroy(); } catch {}
+        playerRef.current = null;
+      }
+    };
+  }, [videoId]);
+
+  // Audio mutex — stop if another source claims
+  useEffect(() => {
+    const handler = (e) => {
+      if (mutexIdRef.current && e.detail.id !== mutexIdRef.current) {
+        if (playerRef.current && typeof playerRef.current.pauseVideo === 'function') {
+          try { playerRef.current.pauseVideo(); } catch {}
+        }
+        setIsPlaying(false);
+      }
+    };
+    window.addEventListener("audioSourceChange", handler);
+    return () => window.removeEventListener("audioSourceChange", handler);
+  }, []);
+
+  // rAF sync loop — dispatch songTimeUpdate events
+  useEffect(() => {
+    const dispatch = () => {
+      if (playerRef.current && typeof playerRef.current.getCurrentTime === 'function') {
+        const ct = playerRef.current.getCurrentTime();
+        const dur = playerRef.current.getDuration() || duration;
+
+        // Enforce loop boundary
+        if (isLooping && loopEnd > 0 && ct >= loopEnd) {
+          playerRef.current.seekTo(loopStart, true);
+        }
+
+        setCurrentTime(ct);
+        if (dur > 0) setProgress(ct / dur);
+
+        window.dispatchEvent(new CustomEvent("songTimeUpdate", {
+          detail: { currentTime: ct, isLooping, loopStart, loopEnd, playing: true }
+        }));
+      }
+      syncRafRef.current = requestAnimationFrame(dispatch);
+    };
+    if (isPlaying) {
+      syncRafRef.current = requestAnimationFrame(dispatch);
+    } else {
+      cancelAnimationFrame(syncRafRef.current);
+      window.dispatchEvent(new CustomEvent("songTimeUpdate", { detail: { playing: false } }));
+    }
+    return () => cancelAnimationFrame(syncRafRef.current);
+  }, [isPlaying, isLooping, loopStart, loopEnd, duration]);
+
+  const togglePlay = () => {
+    if (!playerRef.current || !isReady) return;
+    if (isPlaying) {
+      playerRef.current.pauseVideo();
+    } else {
+      // Claim audio mutex
+      mutexIdRef.current = claimAudioMutex();
+      playerRef.current.playVideo();
+    }
+  };
+
+  const handleScrub = (e) => {
+    if (!playerRef.current || !isReady || duration <= 0) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const newProgress = Math.max(0, Math.min(1, clickX / rect.width));
+    const newTime = newProgress * duration;
+    playerRef.current.seekTo(newTime, true);
+    setProgress(newProgress);
+    setCurrentTime(newTime);
+  };
+
+  const skipBack = () => {
+    if (!playerRef.current || !isReady) return;
+    let newTime = Math.max(0, (playerRef.current.getCurrentTime() || 0) - 10);
+    if (isLooping && newTime < loopStart) newTime = loopStart;
+    playerRef.current.seekTo(newTime, true);
+    setCurrentTime(newTime);
+  };
+
+  const resetSong = () => {
+    if (!playerRef.current || !isReady) return;
+    const startT = isLooping ? loopStart : 0;
+    playerRef.current.seekTo(startT, true);
+    setCurrentTime(startT);
+    if (!isPlaying) togglePlay();
+  };
+
+  const setBoundary = (type) => {
+    if (!playerRef.current || !isReady) return;
+    const current = playerRef.current.getCurrentTime();
+    if (type === 'A') {
+      setLoopStart(Math.max(0, Math.min(current, loopEnd - 1)));
+    } else {
+      setLoopEnd(Math.max(loopStart + 1, Math.min(current, duration)));
+    }
+  };
+
+  const nudgeBoundary = (type, amount) => {
+    if (type === 'A') {
+      setLoopStart(prev => Math.max(0, Math.min(prev + amount, loopEnd - 0.5)));
+    } else {
+      setLoopEnd(prev => Math.max(loopStart + 0.5, Math.min(prev + amount, duration)));
+    }
+  };
+
+  // Apply speed
+  useEffect(() => {
+    if (playerRef.current && isReady && typeof playerRef.current.setPlaybackRate === 'function') {
+      try { playerRef.current.setPlaybackRate(speed); } catch {}
+    }
+  }, [speed, isReady]);
+
+  // Error state — show message + link
+  if (error) {
+    return (
+      <div style={{
+        background: T.bgCard, border: `1px solid ${T.border}`,
+        borderRadius: T.radiusMd, padding: "14px 16px", marginBottom: 12,
+        display: "flex", flexDirection: "column", gap: 8,
+      }}>
+        <div style={{ fontSize: 12, color: T.coral, fontFamily: T.sans, fontWeight: 600 }}>
+          YouTube: {error}
+        </div>
+        <a
+          href={`https://www.youtube.com/watch?v=${videoId}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            fontSize: 11, color: T.gold, fontFamily: T.sans, fontWeight: 600,
+            textDecoration: "underline",
+          }}
+        >
+          Open in YouTube
+        </a>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{
+      background: T.bgCard, border: `1px solid ${T.border}`,
+      borderRadius: T.radiusMd, padding: "14px 16px", marginBottom: 12,
+      display: "flex", flexDirection: "column", gap: 12,
+      boxShadow: "0 2px 8px rgba(44,40,37,0.03)"
+    }}>
+      {/* Hidden YouTube player */}
+      <div style={{ position: "absolute", width: 1, height: 1, opacity: 0, pointerEvents: "none", overflow: "hidden" }}>
+        <div ref={containerRef} />
+      </div>
+
+      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+        <button onClick={togglePlay} disabled={!isReady} style={{
+          background: isPlaying ? "transparent" : (isReady ? T.gold : T.borderSoft),
+          border: isPlaying ? `1px solid ${T.gold}` : "none",
+          cursor: isReady ? "pointer" : "default",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          width: 36, height: 36, borderRadius: "50%",
+          boxShadow: isPlaying ? "none" : (isReady ? `0 4px 12px ${T.gold}30` : "none"),
+          transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+          color: isPlaying ? T.gold : "#fff",
+          opacity: isReady ? 1 : 0.5,
+        }}
+          onPointerDown={e => e.currentTarget.style.transform = "scale(0.92)"}
+          onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
+          onPointerLeave={e => e.currentTarget.style.transform = "scale(1)"}
+        >
+          {isPlaying ? <Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" style={{ marginLeft: 2 }} />}
+        </button>
+
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
+          {title && <div style={{ fontSize: 13, fontWeight: 600, color: T.textDark, fontFamily: T.sans }}>{title}</div>}
+          {!isReady && <div style={{ fontSize: 10, color: T.textMuted, fontFamily: T.sans }}>Loading YouTube...</div>}
+
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <span style={{ fontSize: 10, color: T.textLight, fontFamily: T.sans, fontWeight: 500, fontVariantNumeric: "tabular-nums" }}>
+              {formatTime(currentTime)}
+            </span>
+
+            <div
+              onPointerDown={(e) => {
+                handleScrub(e);
+                const onMove = (moveEvent) => handleScrub(moveEvent);
+                const onUp = () => {
+                  window.removeEventListener('pointermove', onMove);
+                  window.removeEventListener('pointerup', onUp);
+                };
+                window.addEventListener('pointermove', onMove);
+                window.addEventListener('pointerup', onUp);
+              }}
+              style={{ flex: 1, height: 24, display: "flex", alignItems: "center", cursor: "pointer" }}
+            >
+              <div style={{ width: "100%", height: 3, background: T.border, borderRadius: 2, position: "relative" }}>
+                {isLooping && duration > 0 && (
+                  <div style={{
+                    position: "absolute", left: `${(loopStart / duration) * 100}%`, right: `${100 - (loopEnd / duration) * 100}%`,
+                    top: -2, bottom: -2, background: T.gold, opacity: 0.2, borderRadius: 2
+                  }} />
+                )}
+                <div style={{
+                  position: "absolute", left: 0, top: 0, bottom: 0,
+                  width: `${progress * 100}%`, background: isLooping ? T.textMed : T.gold, borderRadius: 2
+                }} />
+                <div style={{
+                  position: "absolute", top: "50%", left: `${progress * 100}%`,
+                  width: 10, height: 10, borderRadius: "50%", background: isLooping ? T.textDark : T.gold,
+                  transform: "translate(-50%, -50%)",
+                  boxShadow: "0 1px 3px rgba(0,0,0,0.15)"
+                }} />
+              </div>
+            </div>
+
+            <span style={{ fontSize: 10, color: T.textLight, fontFamily: T.sans, fontWeight: 500, fontVariantNumeric: "tabular-nums" }}>
+              {formatTime(duration)}
+            </span>
+          </div>
+        </div>
+
+        <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+          <button onClick={() => setShowLoopSettings(!showLoopSettings)} title="Loop Settings" style={{
+            background: isLooping || showLoopSettings ? T.bgSoft : "transparent",
+            border: `1px solid ${isLooping ? T.gold : showLoopSettings ? T.border : "transparent"}`,
+            color: isLooping || showLoopSettings ? T.gold : T.textMed, cursor: "pointer",
+            padding: 6, borderRadius: T.radius, display: "flex", alignItems: "center", justifyContent: "center",
+            transition: "all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+            marginLeft: 4
+          }}>
+            <Scissors size={18} />
+          </button>
+        </div>
+      </div>
+
+      {/* Speed Control */}
+      {isReady && (
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <span style={{ fontSize: 9, color: T.textMuted, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans, marginRight: 2 }}>Speed:</span>
+          {[0.5, 0.75, 1].map(s => (
+            <button key={s} onClick={() => setSpeed(s)} style={{
+              fontSize: 10, padding: "4px 10px", borderRadius: T.radius, cursor: "pointer",
+              fontWeight: 700, fontFamily: T.sans,
+              background: speed === s ? T.gold : T.bgSoft,
+              color: speed === s ? "#fff" : T.textMed,
+              border: `1px solid ${speed === s ? T.gold : T.border}`,
+              transition: "all 0.15s",
+            }}>{s}x</button>
+          ))}
+        </div>
+      )}
+
+      {/* Loop Settings */}
+      {showLoopSettings && (
+        <div style={{
+          borderTop: `1px solid ${T.borderSoft}`, paddingTop: 12, marginTop: -4,
+          display: "flex", flexDirection: "column", gap: 12,
+          animation: 'fade-in-up 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+              <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: T.textDark, fontFamily: T.sans }}>A/B Loop Mode</span>
+              <div style={{ display: "flex", gap: 6, paddingLeft: 12, borderLeft: `1px solid ${T.borderSoft}` }}>
+                <button onClick={skipBack} title="Rewind 10s" style={trayNavBtnStyle(T)}
+                  onPointerDown={e => e.currentTarget.style.transform = "scale(0.85)"}
+                  onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
+                ><SkipBack size={14} /></button>
+                <button onClick={resetSong} title="Restart" style={trayNavBtnStyle(T)}
+                  onPointerDown={e => e.currentTarget.style.transform = "scale(0.85)"}
+                  onPointerUp={e => e.currentTarget.style.transform = "scale(1)"}
+                ><RotateCcw size={14} /></button>
+              </div>
+            </div>
+            <button onClick={() => setIsLooping(!isLooping)} style={{
+              background: isLooping ? T.success : T.border, border: "none",
+              width: 44, height: 24, borderRadius: 12, position: "relative",
+              cursor: "pointer", transition: "background 0.3s ease"
+            }}>
+              <div style={{
+                position: "absolute", top: 2, left: isLooping ? 22 : 2,
+                width: 20, height: 20, borderRadius: "50%", background: "#fff",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.2)", transition: "left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
+              }} />
+            </button>
+          </div>
+          <div style={{ display: 'flex', gap: 12 }}>
+            <div style={{ flex: 1, background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radius, padding: "8px 10px" }}>
+              <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 6 }}>Start (A)</div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <TimeInput time={loopStart} onChange={(t) => {
+                  let newStart = Math.max(0, t);
+                  if (newStart >= loopEnd) newStart = Math.max(0, loopEnd - 1);
+                  setLoopStart(newStart);
+                }} T={T} />
+                <div style={{ display: 'flex', gap: 4 }}>
+                  <button onClick={() => nudgeBoundary('A', -0.5)} style={nudgeBtnStyle(T)}>-</button>
+                  <button onClick={() => nudgeBoundary('A', 0.5)} style={nudgeBtnStyle(T)}>+</button>
+                  <button onClick={() => setBoundary('A')} style={setBtnStyle(T)}>Set</button>
+                </div>
+              </div>
+            </div>
+            <div style={{ flex: 1, background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radius, padding: "8px 10px" }}>
+              <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 6 }}>End (B)</div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <TimeInput time={loopEnd} onChange={(t) => {
+                  let newEnd = Math.min(duration, t);
+                  if (newEnd <= loopStart) newEnd = Math.min(duration, loopStart + 1);
+                  setLoopEnd(newEnd);
+                }} T={T} />
+                <div style={{ display: 'flex', gap: 4 }}>
+                  <button onClick={() => nudgeBoundary('B', -0.5)} style={nudgeBtnStyle(T)}>-</button>
+                  <button onClick={() => nudgeBoundary('B', 0.5)} style={nudgeBtnStyle(T)}>+</button>
+                  <button onClick={() => setBoundary('B')} style={setBtnStyle(T)}>Set</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // --- Custom Audio Player Component ---
 export function MiniAudioPlayer({ src, theme: T, title, playbackRate = 1 }) {
   const audioRef = useRef(null);
   const progressRef = useRef(null);
+  const mutexIdRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0); // 0 to 1
   const [duration, setDuration] = useState(0);
@@ -95,6 +538,20 @@ export function MiniAudioPlayer({ src, theme: T, title, playbackRate = 1 }) {
   const [showLoopSettings, setShowLoopSettings] = useState(false);
   const [loopStart, setLoopStart] = useState(0); // seconds
   const [loopEnd, setLoopEnd] = useState(0); // seconds
+
+  // Audio mutex — stop if another source claims
+  useEffect(() => {
+    const handler = (e) => {
+      if (mutexIdRef.current && e.detail.id !== mutexIdRef.current) {
+        if (audioRef.current && !audioRef.current.paused) {
+          audioRef.current.pause();
+          setIsPlaying(false);
+        }
+      }
+    };
+    window.addEventListener("audioSourceChange", handler);
+    return () => window.removeEventListener("audioSourceChange", handler);
+  }, []);
 
   // Initialize loopEnd when duration loads
   useEffect(() => {
@@ -136,7 +593,9 @@ export function MiniAudioPlayer({ src, theme: T, title, playbackRate = 1 }) {
       if (isPlaying) {
         audioRef.current.pause();
       } else {
-        // Stop any other `<audio>` elements playing by dispatching an event that LivePitchDetector also listens to
+        // Stop any other audio sources (including YouTube players) via mutex
+        mutexIdRef.current = claimAudioMutex();
+        // Also stop other <audio> elements
         document.querySelectorAll('audio').forEach(a => {
           if (a !== audioRef.current && !a.paused) a.pause();
         });
@@ -4706,19 +5165,47 @@ const CHART_SONGS = [
   { id: "iltwyw", name: "I Like The Way You Walk", artist: "The Donkeys", src: "/iltwyw.mp3", bpm: 97, key: "A", tabId: "iltwyw" },
 ];
 
-export function SongPicker({ theme: T }) {
+export function SongPicker({ theme: T, youtubeUrl, onYoutubeChange }) {
   const [songId, setSongId] = useState("");
   const [showTabs, setShowTabs] = useState(false);
+  const [ytInput, setYtInput] = useState(youtubeUrl || "");
   const song = CHART_SONGS.find(s => s.id === songId);
+  const ytVideoId = extractYouTubeId(youtubeUrl || "");
+
+  // When YouTube URL prop changes externally, sync local input
+  useEffect(() => {
+    if (youtubeUrl !== undefined) setYtInput(youtubeUrl || "");
+  }, [youtubeUrl]);
+
+  const handleYtInputChange = (val) => {
+    setYtInput(val);
+    const id = extractYouTubeId(val);
+    if (id) {
+      setSongId(""); // Clear dropdown when valid YT URL
+      setShowTabs(false);
+      if (onYoutubeChange) onYoutubeChange(val);
+    } else if (!val.trim()) {
+      if (onYoutubeChange) onYoutubeChange("");
+    }
+  };
+
+  const handleSongChange = (newSongId) => {
+    setSongId(newSongId);
+    setShowTabs(false);
+    if (newSongId && onYoutubeChange) {
+      onYoutubeChange(""); // Clear YouTube when song selected
+      setYtInput("");
+    }
+  };
 
   return (
     <div style={{ marginBottom: 16 }}>
       {/* Dropdown + tabs toggle row */}
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: song ? 8 : 0 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: (song || ytVideoId) ? 8 : 0 }}>
         <Music size={14} style={{ color: T.textMuted, flexShrink: 0 }} />
         <select
           value={songId}
-          onChange={e => { setSongId(e.target.value); setShowTabs(false); }}
+          onChange={e => handleSongChange(e.target.value)}
           style={{
             flex: 1, fontSize: 13, fontFamily: T.serif, fontWeight: 600, color: T.textDark,
             background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radius,
@@ -4744,10 +5231,35 @@ export function SongPicker({ theme: T }) {
         )}
       </div>
 
-      {/* MiniAudioPlayer for selected song */}
-      {song && (
+      {/* YouTube URL input */}
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+        <input
+          type="text"
+          value={ytInput}
+          onChange={e => handleYtInputChange(e.target.value)}
+          placeholder="Paste YouTube URL..."
+          style={{
+            flex: 1, fontSize: 12, fontFamily: T.sans, color: T.textDark,
+            background: T.bgSoft, border: `1px solid ${ytVideoId ? T.gold + "60" : T.border}`,
+            borderRadius: T.radius, padding: "7px 10px", outline: "none",
+            transition: "border-color 0.15s",
+          }}
+        />
+        {ytVideoId && (
+          <button onClick={() => { setYtInput(""); if (onYoutubeChange) onYoutubeChange(""); }} style={{
+            fontSize: 9, padding: "5px 10px", borderRadius: T.radius, cursor: "pointer",
+            fontWeight: 700, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1,
+            background: "transparent", color: T.textMuted, border: `1px solid ${T.border}`,
+          }}>Clear</button>
+        )}
+      </div>
+
+      {/* YouTube player or MiniAudioPlayer — mutually exclusive */}
+      {ytVideoId ? (
+        <YouTubeAudioPlayer videoId={ytVideoId} theme={T} title="YouTube" />
+      ) : song ? (
         <MiniAudioPlayer src={song.src} theme={T} title={`${song.name} — ${song.artist}`} />
-      )}
+      ) : null}
 
       {/* Tabs expansion */}
       {showTabs && song && song.tabId && TAB_CONTENT[song.tabId] && (
@@ -4758,7 +5270,7 @@ export function SongPicker({ theme: T }) {
           <pre style={{
             margin: 0, padding: "12px 16px", background: T.bgSoft,
             fontSize: 11, fontFamily: "'Courier New', monospace",
-            color: T.textDark, whiteSpace: "pre-wrap", wordBreak: "break-word",
+            color: T.textDark, whiteSpace: "pre", overflowX: "auto",
             maxHeight: 280, overflowY: "auto", lineHeight: 1.6,
           }}>{TAB_CONTENT[song.tabId].trim()}</pre>
         </div>
@@ -4823,6 +5335,7 @@ export function makeTemplateChart() {
     measures: [m],
     lyricsPool: [],
     lyricsInput: "",
+    youtubeUrl: "",
     createdAt: Date.now(),
     updatedAt: Date.now(),
   };
@@ -4852,6 +5365,7 @@ function validateAndSanitizeChart(obj) {
       measures: obj.measures,
       lyricsPool: Array.isArray(obj.lyricsPool) ? obj.lyricsPool : [],
       lyricsInput: typeof obj.lyricsInput === "string" ? obj.lyricsInput.slice(0, 5000) : "",
+      youtubeUrl: typeof obj.youtubeUrl === "string" && /^https?:\/\/(www\.)?(youtube\.com|youtu\.be)\//.test(obj.youtubeUrl) ? obj.youtubeUrl.slice(0, 500) : "",
       createdAt: obj.createdAt || Date.now(),
       updatedAt: Date.now(),
     }
@@ -4951,6 +5465,7 @@ export function ChordDiagram({ theme: T, frets, name, onClose }) {
 
 // ─── Bottom Sheet ───────────────────────────────────────────────────────────
 function BottomSheet({ theme: T, open, onClose, children }) {
+  const isWide = useIsWide(900);
   const [visible, setVisible] = useState(false);
   const [animating, setAnimating] = useState(false);
 
@@ -4967,6 +5482,36 @@ function BottomSheet({ theme: T, open, onClose, children }) {
 
   if (!visible) return null;
 
+  // Desktop: side panel from right
+  if (isWide) {
+    return (
+      <div style={{
+        position: "fixed", inset: 0, zIndex: 1000,
+        background: animating ? "rgba(0,0,0,0.2)" : "transparent",
+        transition: "background 0.25s",
+      }} onClick={onClose}>
+        <div style={{
+          position: "absolute", top: 0, right: 0, bottom: 0, width: 340,
+          background: T.bgCard, borderLeft: `1px solid ${T.border}`,
+          boxShadow: "-4px 0 20px rgba(0,0,0,0.1)",
+          transform: animating ? "translateX(0)" : "translateX(100%)",
+          transition: "transform 0.25s cubic-bezier(0.33, 1, 0.68, 1)",
+          overflowY: "auto",
+          padding: "16px 20px 24px",
+        }} onClick={e => e.stopPropagation()}>
+          {/* Close button */}
+          <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 12 }}>
+            <button onClick={onClose} style={{
+              background: "none", border: "none", cursor: "pointer", color: T.textMuted, padding: 4,
+            }}><X size={18} /></button>
+          </div>
+          {children}
+        </div>
+      </div>
+    );
+  }
+
+  // Mobile: bottom sheet
   return (
     <div style={{
       position: "fixed", inset: 0, zIndex: 1000,
@@ -4995,6 +5540,7 @@ function BottomSheet({ theme: T, open, onClose, children }) {
 
 // ─── StrumChartBuilder ──────────────────────────────────────────────────────
 export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSave }) {
+  const isWide = useIsWide(900);
   const [chart, setChart] = useState(() => initialChart || makeTemplateChart());
   const [undoStack, setUndoStack] = useState([]);
   const [activeChordCell, setActiveChordCell] = useState(null); // { m, c } measure + cell index
@@ -5438,85 +5984,90 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
         </div>
       </div>
 
-      {/* Song picker with audio player + tabs */}
-      <SongPicker theme={T} />
-
-      {/* BPM + controls */}
-      <div style={{ display: "flex", gap: 8, marginBottom: 12, alignItems: "center", flexWrap: "wrap" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <span style={{ fontSize: 10, color: T.textMuted, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1 }}>BPM</span>
-          <input
-            type="number" min={40} max={280}
-            value={chart.bpm || 80}
-            onChange={e => setChart(c => ({ ...c, bpm: parseInt(e.target.value) || 80, updatedAt: Date.now() }))}
-            style={{
-              width: 48, fontSize: 14, fontWeight: 700, textAlign: "center", color: T.textDark,
-              border: `1px solid ${T.border}`, borderRadius: T.radius, background: T.bgSoft,
-              padding: "4px 2px", fontFamily: T.sans,
-            }}
-          />
-          {metro && (
-            <>
-              <button onClick={() => metro.changeBpm(chart.bpm || 80)} style={{
-                fontSize: 9, background: T.goldSoft, border: "none", padding: "5px 10px",
-                borderRadius: T.radius, color: T.goldDark, cursor: "pointer", fontWeight: 800,
-                textTransform: "uppercase", letterSpacing: 1,
-              }}>Set</button>
-              <button onClick={() => { metro.changeBpm(chart.bpm || 80); metro.playing ? metro.stop() : metro.start(); }} style={{
-                fontSize: 9, padding: "5px 12px", borderRadius: T.radius, cursor: "pointer",
-                fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans,
-                background: metro.playing ? "transparent" : T.gold,
-                color: metro.playing ? T.coral : "#fff",
-                border: `1px solid ${metro.playing ? T.coral : T.gold}`,
-              }}>{metro.playing ? "Stop" : "▶ Play"}</button>
-            </>
-          )}
+      {/* Song picker + BPM controls — side by side on desktop */}
+      <div style={isWide ? { display: "flex", gap: 24, alignItems: "flex-start" } : {}}>
+        <div style={isWide ? { flex: 1 } : {}}>
+          <SongPicker theme={T} youtubeUrl={chart.youtubeUrl || ""} onYoutubeChange={(url) => updateChart(c => { c.youtubeUrl = url; return c; })} />
         </div>
-        <button onClick={handleTapTempo} style={{
-          fontSize: 9, padding: "5px 10px", borderRadius: T.radius, cursor: "pointer",
-          fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans,
-          background: tapBpm ? T.getTint(T.gold, 0.15) : "transparent",
-          color: tapBpm ? T.gold : T.textMed,
-          border: `1px solid ${tapBpm ? T.gold : T.border}`,
-          transition: "all 0.15s",
-        }}>Tap{tapBpm ? ` ${tapBpm}` : ""}</button>
-      </div>
-
-      {/* Audio sync — Mark Beat 1 + nudge */}
-      {songPlaying && (
-        <div style={{ display: "flex", gap: 6, marginBottom: 12, alignItems: "center", flexWrap: "wrap" }}>
-          <button onClick={markBeatOne} style={{
-            fontSize: 9, padding: "5px 10px", borderRadius: T.radius, cursor: "pointer",
-            fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans,
-            background: chart.beatOffset > 0 ? T.getTint(T.gold, 0.12) : "transparent",
-            color: chart.beatOffset > 0 ? T.gold : T.textMed,
-            border: `1px solid ${chart.beatOffset > 0 ? T.gold : T.border}`,
-            transition: "all 0.15s",
-          }}>Mark Beat 1</button>
-          {chart.beatOffset > 0 && (
-            <>
-              <span style={{ fontSize: 10, color: T.textMuted, fontFamily: T.sans, fontVariantNumeric: "tabular-nums" }}>
-                {chart.beatOffset.toFixed(2)}s
-              </span>
-              <button onClick={() => nudgeBeatOffset(-0.01)} style={{
-                fontSize: 10, padding: "3px 8px", borderRadius: T.radius, cursor: "pointer",
-                background: T.bgSoft, border: `1px solid ${T.border}`, color: T.textMed,
-                fontWeight: 700, fontFamily: T.sans,
-              }}>-10ms</button>
-              <button onClick={() => nudgeBeatOffset(0.01)} style={{
-                fontSize: 10, padding: "3px 8px", borderRadius: T.radius, cursor: "pointer",
-                background: T.bgSoft, border: `1px solid ${T.border}`, color: T.textMed,
-                fontWeight: 700, fontFamily: T.sans,
-              }}>+10ms</button>
-              {songLoopState.isLooping && chart.beatOffset < songLoopState.loopStart && (
-                <span style={{ fontSize: 9, color: T.coral, fontFamily: T.sans, fontWeight: 600 }}>
-                  Re-mark within loop
-                </span>
+        <div style={isWide ? { flex: "0 0 auto" } : {}}>
+          {/* BPM + controls */}
+          <div style={{ display: "flex", gap: 8, marginBottom: 12, alignItems: "center", flexWrap: "wrap" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+              <span style={{ fontSize: 10, color: T.textMuted, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1 }}>BPM</span>
+              <input
+                type="number" min={40} max={280}
+                value={chart.bpm || 80}
+                onChange={e => setChart(c => ({ ...c, bpm: parseInt(e.target.value) || 80, updatedAt: Date.now() }))}
+                style={{
+                  width: 48, fontSize: 14, fontWeight: 700, textAlign: "center", color: T.textDark,
+                  border: `1px solid ${T.border}`, borderRadius: T.radius, background: T.bgSoft,
+                  padding: "4px 2px", fontFamily: T.sans,
+                }}
+              />
+              {metro && (
+                <>
+                  <button onClick={() => metro.changeBpm(chart.bpm || 80)} style={{
+                    fontSize: 9, background: T.goldSoft, border: "none", padding: "5px 10px",
+                    borderRadius: T.radius, color: T.goldDark, cursor: "pointer", fontWeight: 800,
+                    textTransform: "uppercase", letterSpacing: 1,
+                  }}>Set</button>
+                  <button onClick={() => { metro.changeBpm(chart.bpm || 80); metro.playing ? metro.stop() : metro.start(); }} style={{
+                    fontSize: 9, padding: "5px 12px", borderRadius: T.radius, cursor: "pointer",
+                    fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans,
+                    background: metro.playing ? "transparent" : T.gold,
+                    color: metro.playing ? T.coral : "#fff",
+                    border: `1px solid ${metro.playing ? T.coral : T.gold}`,
+                  }}>{metro.playing ? "Stop" : "▶ Play"}</button>
+                </>
               )}
-            </>
+            </div>
+            <button onClick={handleTapTempo} style={{
+              fontSize: 9, padding: "5px 10px", borderRadius: T.radius, cursor: "pointer",
+              fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans,
+              background: tapBpm ? T.getTint(T.gold, 0.15) : "transparent",
+              color: tapBpm ? T.gold : T.textMed,
+              border: `1px solid ${tapBpm ? T.gold : T.border}`,
+              transition: "all 0.15s",
+            }}>Tap{tapBpm ? ` ${tapBpm}` : ""}</button>
+          </div>
+
+          {/* Audio sync — Mark Beat 1 + nudge */}
+          {songPlaying && (
+            <div style={{ display: "flex", gap: 6, marginBottom: 12, alignItems: "center", flexWrap: "wrap" }}>
+              <button onClick={markBeatOne} style={{
+                fontSize: 9, padding: "5px 10px", borderRadius: T.radius, cursor: "pointer",
+                fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans,
+                background: chart.beatOffset > 0 ? T.getTint(T.gold, 0.12) : "transparent",
+                color: chart.beatOffset > 0 ? T.gold : T.textMed,
+                border: `1px solid ${chart.beatOffset > 0 ? T.gold : T.border}`,
+                transition: "all 0.15s",
+              }}>Mark Beat 1</button>
+              {chart.beatOffset > 0 && (
+                <>
+                  <span style={{ fontSize: 10, color: T.textMuted, fontFamily: T.sans, fontVariantNumeric: "tabular-nums" }}>
+                    {chart.beatOffset.toFixed(2)}s
+                  </span>
+                  <button onClick={() => nudgeBeatOffset(-0.01)} style={{
+                    fontSize: 10, padding: "3px 8px", borderRadius: T.radius, cursor: "pointer",
+                    background: T.bgSoft, border: `1px solid ${T.border}`, color: T.textMed,
+                    fontWeight: 700, fontFamily: T.sans,
+                  }}>-10ms</button>
+                  <button onClick={() => nudgeBeatOffset(0.01)} style={{
+                    fontSize: 10, padding: "3px 8px", borderRadius: T.radius, cursor: "pointer",
+                    background: T.bgSoft, border: `1px solid ${T.border}`, color: T.textMed,
+                    fontWeight: 700, fontFamily: T.sans,
+                  }}>+10ms</button>
+                  {songLoopState.isLooping && chart.beatOffset < songLoopState.loopStart && (
+                    <span style={{ fontSize: 9, color: T.coral, fontFamily: T.sans, fontWeight: 600 }}>
+                      Re-mark within loop
+                    </span>
+                  )}
+                </>
+              )}
+            </div>
           )}
         </div>
-      )}
+      </div>
       </div>{/* end sticky controls zone */}
 
       {/* Bars per group */}
@@ -5595,21 +6146,29 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
         }}>♪ Playing — tap grid to pause</div>
       )}
 
-      {/* Measures — grouped by barsPerGroup */}
+      {/* Measures — grouped by barsPerGroup, 2-col on desktop when not playing */}
       {(() => {
         const bpg = chart.barsPerGroup || 0;
+        const twoCol = isWide && !isPlaying && !songPlaying;
         const items = chart.measures.map((m, i) => ({ measure: m, globalIdx: i }));
         const groups = bpg > 0
           ? Array.from({ length: Math.ceil(items.length / bpg) }, (_, gi) => items.slice(gi * bpg, (gi + 1) * bpg))
           : [items];
-        return groups.map((group, gIdx) => (
-          <div key={gIdx} style={bpg > 0 ? {
-            borderLeft: `3px solid ${T.gold}`,
-            paddingLeft: 10,
-            paddingBottom: 4,
-            marginBottom: gIdx < groups.length - 1 ? 28 : 8,
-            position: "relative",
-          } : {}}>
+        // Always grid on individual measures (left-to-right reading order)
+        // Measures 1,2 side-by-side, then 3,4 on next row, etc.
+        const twoColGrid = twoCol ? { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, alignItems: "start" } : {};
+        return (<div>
+        {groups.map((group, gIdx) => (
+          <div key={gIdx} style={{
+            ...(bpg > 0 ? {
+              borderLeft: `3px solid ${T.gold}`,
+              paddingLeft: 10,
+              paddingBottom: 4,
+              marginBottom: gIdx < groups.length - 1 ? 28 : 8,
+              position: "relative",
+            } : {}),
+            ...twoColGrid,
+          }}>
             {bpg > 0 && (
               <span style={{
                 position: "absolute", top: -8, left: -1, fontSize: 8, color: T.gold,
@@ -5719,17 +6278,19 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                 }
                 const hasChord = !!cell.chord;
                 const inSpan = hasChord || isSpanContinuation;
+                const isActiveChordTarget = activeChordCell && activeChordCell.m === mIdx && activeChordCell.c === cIdx;
                 return (
                   <React.Fragment key={`c-${cIdx}`}>
                     <div
                       style={{
                         textAlign: "center", fontFamily: T.serif, fontSize: 14, fontWeight: 700,
                         color: hasChord ? T.gold : (isSpanContinuation ? T.gold + "40" : "transparent"),
-                        background: inSpan ? T.getTint(T.gold, 0.05) : "transparent",
+                        background: isActiveChordTarget ? T.getTint(T.gold, 0.2) : (inSpan ? T.getTint(T.gold, 0.05) : "transparent"),
                         borderRadius: T.radius, padding: "4px 2px", minHeight: 28,
                         cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-                        border: inSpan ? "none" : `1px dashed ${T.borderSoft}`,
-                        transition: "background 0.15s",
+                        border: isActiveChordTarget ? `2px solid ${T.gold}` : (inSpan ? "none" : `1px dashed ${T.borderSoft}`),
+                        transition: "background 0.15s, border-color 0.15s",
+                        boxShadow: isActiveChordTarget ? `0 0 6px ${T.gold}40` : "none",
                       }}
                       onClick={() => handleChordCellTap(mIdx, cIdx)}
                       onTouchStart={() => startLongPress(mIdx, cIdx, "chord")}
@@ -5891,7 +6452,8 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
         );
             })}
           </div>
-        ));
+        ))}
+        </div>);
       })()}
 
       {/* Add measure button */}

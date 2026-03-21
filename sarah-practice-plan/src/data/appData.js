@@ -7,9 +7,28 @@ export const DAYS = CURRENT_WEEK.days;
 export const KEYBOARD_LEVELS = [
   {
     num: 1, name: "The Chop", focus: "Offbeat stabs",
-    duration: "50 min",
+    duration: "60 min",
     setup: "KeyLab 49 connected to Ableton. Open Analog Lab V plugin, browse Farfisa V or Vox Continental V category and pick any combo organ preset. Practice app open in browser for metronome.",
     exercises: [
+      {
+        id: "k1e0", time: 10, title: "Where Are You Right Now? — Keys Baseline", type: "keys",
+        recorder: true,
+        pianoKeys: { notes: ["C4", "E4", "G4"], label: "Play What You Know" },
+        what: "Record a baseline of where you are RIGHT NOW on keys. This recording is sacred — you'll listen back months from now and not believe it's the same person.",
+        setup: "Any organ preset loaded. Recorder ready in the practice app.",
+        steps: [
+          { text: "Play any chords you know on the keyboard. If you don't know any, just hold down any keys that sound good together. 30 seconds.", why: "This captures your current chord vocabulary — whether that's ten chords or zero. Both are fine starting points." },
+          { text: "Try to play an offbeat rhythm on any chord. If you don't know what offbeat means yet, just play a steady rhythm — any rhythm.", why: "This captures your current rhythmic awareness on keys. The offbeat is coming in the very next exercise." },
+          { text: "Try playing with both hands — left hand plays low notes, right hand plays high notes. Any notes, any rhythm. 30 seconds.", why: "Hand independence baseline. Most guitarists starting keys have near-zero two-hand coordination. That's completely normal." },
+          { text: "Free improvise for 30 seconds. Noodle, hold chords, make any sounds. Whatever feels natural.", why: "This captures your musical instincts on keys — what you gravitate toward without instruction." },
+          { text: "Speak into the mic: 'I am starting keys training on [today's date]. Right now I feel [your honest feeling] about playing keyboard.'", why: "The spoken timestamp makes this recording findable and personal. Your future self will thank you." }
+        ],
+        feel: "No pressure. This isn't a test — it's a time capsule. Play badly, play well, play whatever. The only goal is to capture where you are today.",
+        wrong: "There is no wrong here. If you froze up and played nothing, that IS the baseline. Record the silence.",
+        sarah: "I do this with every new student. The recording is sacred — it's proof of where you started. Months from now you'll listen back and not believe it's the same person.",
+        metronome: 80,
+        levelUp: "Recording saved. That's it. You passed."
+      },
       {
         id: "k1e1", time: 10, title: "Single-Chord Offbeat Stab", type: "keys",
         referencePitches: ["C4", "E4", "G4"],
@@ -19,7 +38,7 @@ export const KEYBOARD_LEVELS = [
         steps: [
           { text: "Place right hand on C major: thumb C4, middle finger E4, pinky G4 (1-3-5).", why: "Standard triad fingering. Same shape moves to any root." },
           { text: "Start metronome at 80 BPM. Nod: DOWN on numbers, UP on &'s.", why: "Same nod from your &'s Only drill. The rhythm is already in your body." },
-          { text: "Stab the chord on every & (up-nod). Bounce off the keys like they're hot.", why: "The RELEASE is the skill. Note length = eighth note max. Snatch fingers off quickly." },
+          { text: "Stab the chord on every & (up-nod). Bounce off the keys like they're hot.", why: "The RELEASE is the skill. The Taubman approach to keyboard technique teaches that expressiveness comes from arm weight and release, not finger pressing. On organ — where there's no velocity sensitivity — your attack and release timing IS your entire dynamic vocabulary. A 2017 JASA study found that organ key-click (the percussive transient of a fast key press) functions as an expressive timbral element. Your stab's 'snap' is actually musical." },
           { text: "4-8 bars, rest 10 seconds, repeat 3-4 times.", why: "Short sets. Quality over speed. Same principle as Sarah's counting drills." }
         ],
         feel: "A hiccup between beats. Same groove pocket as your &'s Only vocal drill. The silence on the numbers should feel deliberate.",
@@ -31,6 +50,7 @@ export const KEYBOARD_LEVELS = [
         id: "k1e2", time: 10, title: "Chord Change Chop (I-IV-V)", type: "keys",
         referencePitches: ["C4", "E4", "G4", "F4", "A4"],
         pianoKeys: { notes: ["C4", "E4", "G4", "F4", "A4", "C5", "G4", "B4", "D5"], label: "I-IV-V: C F G" },
+        chordTimer: { chords: ["C", "F", "G"], duration: 60 },
         what: "C(2 bars)-F(2 bars)-G(2 bars)-C(2 bars), chopping on &'s. Same finger shape shifts — thumb-middle-pinky stays 1-3-5.",
         setup: "Same organ preset. Metronome at 76 BPM.",
         steps: [
@@ -47,16 +67,18 @@ export const KEYBOARD_LEVELS = [
       {
         id: "k1e3", time: 10, title: "Bubble Organ", type: "keys",
         pianoKeys: { notes: ["C4", "E4", "G4"], label: "C Major — Bubble Hold" },
+        metronomeMode: "reggae-skank",
         what: "Longer offbeat hold (dotted eighth) — the breathing reggae organ sound. Press-hold-release-silence pattern. The silence before each press = the bounce.",
         setup: "Same organ preset. Metronome at 72 BPM.",
         steps: [
-          { text: "Play C major on the &, but HOLD longer — about 60% of the space between beats.", why: "This is the 'bubble' sound. Bob Marley's keys player Tyrone Downie lived here." },
+          { text: "Play C major on the &, but HOLD longer — about 60% of the space between beats.", why: "This is the 'bubble' — the reggae organ's signature sound. Tyrone Downie, Bob Marley's keyboardist, described it as 'felt more than heard.' Berklee's reggae keyboard analysis shows the bubble uses only the 8-foot drawbar (Hammond's third from left) — a single setting that sits below the vocal and above the bass. The longer hold creates that characteristic breathing pulse that defines roots reggae." },
           { text: "The release creates a brief silence before the next &. That silence IS the bounce.", why: "Press-hold-release-silence. The silence makes it breathe." },
           { text: "Now alternate: 2 bars chop (short stabs), 2 bars bubble (long holds).", why: "Having both textures gives you dynamic range within the same rhythm." },
           { text: "Apply to C-F-G-C progression with bubble feel throughout.", why: "Same chords, different texture. The bubble makes it feel like waves." }
         ],
         feel: "Keys are breathing. Waves lapping on shore. The hold should feel lazy and warm, not tight.",
         wrong: "If the bubble sounds the same as the chop, you're releasing too early. Hold longer — almost until the next beat, then release just before.",
+        sarah: "This is the exact organ sound from Skinshape's 'I Didn't Know' — that breathing reggae pulse. Your Farfisa preset in Analog Lab V has this tone built in.",
         metronome: 72,
         levelUp: "Smoothly alternate chop and bubble at 80 BPM on the I-IV-V-I."
       },
@@ -74,6 +96,7 @@ export const KEYBOARD_LEVELS = [
         ],
         feel: "Darker, more soulful. If major chords are midday sun, minor chords are golden hour. The chop should feel weightier.",
         wrong: "If Am sounds the same as C to you, play them back to back without the metronome. The interval from A to C (minor 3rd) vs A to C# (major 3rd) is the entire emotional difference.",
+        sarah: "Minor reggae is your band's home key. Am-Dm-Em on organ puts you in Skinshape, Peter Tosh, and BALTHVS territory — your exact playlist.",
         metronome: 76,
         levelUp: "Am-Dm-Em-Am at 84 BPM with the same crisp chop as your major progression."
       },
@@ -98,7 +121,7 @@ export const KEYBOARD_LEVELS = [
   },
   {
     num: 2, name: "Sound Good", focus: "Voicings + register",
-    duration: "60 min",
+    duration: "70 min",
     setup: "KeyLab 49 + Ableton + Analog Lab V. Same organ preset, or browse B-3 V category for a drawbar/Hammond-style organ.",
     exercises: [
       {
@@ -125,7 +148,7 @@ export const KEYBOARD_LEVELS = [
         setup: "Organ preset. Metronome at 76 BPM.",
         steps: [
           { text: "Voice-led C-Am-F-G: C = E4-G4-C5 (1st inv), Am = A4-C5-E5 or C4-E4-A4 (1st inv), F = F4-A4-C5 (root), G = G4-B4-D5 (root).", why: "Find inversions where your hand barely moves between chords. Opposite of guitar reshaping." },
-          { text: "Play through C-Am-F-G slowly. Move only 1-2 fingers per change.", why: "Voice leading = minimal movement. Common tones (notes shared between chords) stay put." },
+          { text: "Play through C-Am-F-G slowly. Move only 1-2 fingers per change.", why: "Voice leading is the oldest compositional principle in Western music — Bach's four-part chorale rules live here. On keyboard, it means: shared tones stay put, other voices move by the smallest interval possible. Motor learning research shows minimal hand movement reduces the brain's bilateral coordination penalty. Less motion = cleaner transitions = more musical result." },
           { text: "Chop the progression. Focus on staying in the C4-C5 range.", why: "This range sits above the bass and below the vocal. The keyboard pocket." },
           { text: "Try different inversion combos. Find what sounds best to YOUR ear.", why: "There's no single right answer. Trust your ear training from Sarah's work." }
         ],
@@ -148,6 +171,7 @@ export const KEYBOARD_LEVELS = [
         ],
         feel: "These voicings should sound richer and more interesting than plain triads. The add9 sparkles, the sus2 floats, the sus4 pulls toward resolution.",
         wrong: "If the 4-note voicings feel cramped, spread your hand wider. Fingers 1-2-4-5 skips the middle finger — let it hover.",
+        sarah: "The add9 and sus voicings are what separate your keys sound from generic organ. Cadd9 with tremolo IS the Skinshape/BALTHVS beach sound.",
         metronome: 72,
         levelUp: "Fluent Cadd9-Am-Fsus2-Gsus4-G progression at 80 BPM."
       },
@@ -174,13 +198,14 @@ export const KEYBOARD_LEVELS = [
         what: "Am7, Dm7, G7, Cmaj7 — four-note voicings that are essential for the Khruangbin/indie soul sound. The 7th adds sophistication without complexity. This is the sonic step up from basic triads.",
         setup: "Organ or Rhodes preset. Metronome at 72 BPM.",
         steps: [
-          { text: "Am7: A4-C5-E5-G5 (1-2-4-5) or compact: C4-E4-G4-A4 (1-2-3-5). The G natural is the 7th.", why: "Am7 = Am + the note one whole step below the root. Warmer, jazzier, more soulful." },
+          { text: "Am7: A4-C5-E5-G5 (1-2-4-5) or compact: C4-E4-G4-A4 (1-2-3-5). The G natural is the 7th.", why: "Cory Henry describes the progression from triads to sevenths as moving from the alphabet to words — triads name the chord, but sevenths give it a voice. The added 7th creates a gentle dissonance that wants to resolve, giving your progression forward motion. On Rhodes, velocity controls tone (harder = brighter), so you can make 7th chords shimmer or darken with touch alone." },
           { text: "Dm7: D4-F4-A4-C5 (1-2-4-5). G7: G4-B4-D5-F5 (1-2-4-5).", why: "Dm7 and G7 are the ii-V of C major. This is the backbone of soul, jazz, and Khruangbin." },
           { text: "Cmaj7: C4-E4-G4-B4 (1-2-3-5). The B natural = dreamy, bittersweet major.", why: "Cmaj7 is the most beautiful chord on keys. The major 7th shimmers." },
           { text: "Progression: Cmaj7-Am7-Dm7-G7. Chop it, then try sustained. Both sound great.", why: "This is the classic I-vi-ii-V in 7th chords. Instant sophistication for any song." }
         ],
         feel: "7th chords should sound like an upgrade — richer, more complex, more 'adult' than triads. The Khruangbin/Skinshape sound lives in these voicings.",
         wrong: "If four notes feel awkward, start with just the top three notes of each chord (drop the root). Let the bass player handle the root.",
+        sarah: "Cmaj7-Am7-Dm7-G7 is the Khruangbin progression. You already know this sound from your playlist — now you can play it.",
         metronome: 72,
         levelUp: "Cmaj7-Am7-Dm7-G7 at 80 BPM, chopped and sustained, both clean."
       },
@@ -198,12 +223,30 @@ export const KEYBOARD_LEVELS = [
         feel: "Like detective work. You're listening through the mix to find the keyboard's role. It should feel like zooming in on one layer of a painting.",
         wrong: "If you can't hear the keys at all, pick a different track with more prominent keys. Or try headphones — keys often sit in the stereo sides.",
         levelUp: "Correctly identify the register and approximate voicing on 3 different tracks."
+      },
+      {
+        id: "k2e7", time: 10, title: "Shell Voicings — Drop the Root", type: "keys",
+        referencePitches: ["E4", "G4", "B4", "C5"],
+        pianoKeys: { notes: ["E4", "G4", "B4", "C4", "E4", "G4", "F4", "A4", "C5", "B3", "D4", "F4"], label: "Rootless Shells: Cmaj7-Am7-Dm7-G7" },
+        what: "Drop the root from your 7th chords — the bass player handles it. Cmaj7 becomes E-G-B. Am7 becomes C-E-G. Three notes, maximum clarity, minimum clutter. This is how Booker T. and Billy Preston voiced chords in a band.",
+        setup: "Organ or Rhodes preset. Metronome at 76 BPM.",
+        steps: [
+          { text: "Cmaj7 shell: E4-G4-B4 (fingers 1-3-5). Drop the C — the bassist owns it. Play and listen to how open it sounds.", why: "Berklee ensemble keyboard pedagogy calls this 'functional voicing' — the minimum notes needed to imply the harmony. Three notes cut through a mix better than four." },
+          { text: "Am7 shell: C4-E4-G4 (1-3-5). Dm7 shell: F4-A4-C5 (1-3-5). G7 shell: B3-D4-F4 (1-3-5).", why: "Every shell is a simple triad shape — you already know these hand positions from Phase 1. The root is just absent." },
+          { text: "Play Cmaj7-Am7-Dm7-G7 as shells. Notice: your hand barely moves. Voice leading is almost automatic.", why: "With only 3 notes per chord, common tones between chords are obvious. The voice leading does itself." },
+          { text: "Play along with Groove Beat 90 backing track. Chop the shells. Compare to full 7th chords — hear the difference in clarity.", why: "In a full band, rootless shells sit cleaner in the mix. The bass fills the bottom, you fill the middle. No mud." }
+        ],
+        feel: "Lighter, cleaner, more professional. Shells should feel like you're leaving space on purpose — not like something's missing.",
+        wrong: "If it sounds empty without the root, your ear is used to solo keyboard. In a band context, the bass fills that gap. Trust the ensemble.",
+        sarah: "When you play with your band, the bass and guitar are already covering roots. Doubling the root is the #1 beginner mistake. Shells fix it instantly.",
+        metronome: 76,
+        levelUp: "Cmaj7-Am7-Dm7-G7 as rootless shells at 84 BPM with smooth voice leading and no hesitation at chord changes."
       }
     ]
   },
   {
     num: 3, name: "Lock In", focus: "Play with drums",
-    duration: "50 min",
+    duration: "60 min",
     setup: "KeyLab 49 + Ableton + Analog Lab V (same organ preset). Practice app open in browser — you'll use the Audio Player for backing tracks. Both Ableton and the browser play through the same audio output.",
     exercises: [
       {
@@ -211,8 +254,8 @@ export const KEYBOARD_LEVELS = [
         what: "Right hand chops on &'s (autopilot from Phase 1). Left hand: root note with pinky (5) or thumb (1) on beats 1 & 3. Two hands interleave: LEFT-right-LEFT-right.",
         setup: "Organ preset. Metronome at 72 BPM.",
         steps: [
-          { text: "Right hand: chop C major (1st inversion, E4-G4-C5) on &'s. This should be on autopilot.", why: "Phase 1 skills. If this isn't automatic yet, go back and drill more." },
-          { text: "Left hand: hit C3 (pinky, finger 5) on beats 1 and 3 only.", why: "Left-right-left-right interleaving. Same concept as vocal offbeat drills where nod = downbeat." },
+          { text: "Warm-up: right hand chops C major (1st inversion, E4-G4-C5) on &'s for 8 bars ALONE. Then left hand plays C3 on beats 1 and 3 for 8 bars ALONE. Separate-hand practice before combining.", why: "Motor learning research supports both approaches: separate hands first, then combine. For this type of interleaving (different rhythms per hand), starting each hand independently builds the motor patterns without the coordination tax. Phase 1 chop should be on autopilot — if it's not, go back and drill more." },
+          { text: "Left hand: hit C3 (pinky, finger 5) on beats 1 and 3 only.", why: "Schlaug et al. found that keyboard players have significantly larger anterior corpus callosum — the neural bridge connecting left and right motor cortices. This interleaving drill (left on beats, right on &'s) is the most direct training for that neural adaptation. Your guitar background gives you asymmetric hand coordination, but keyboard independence is a different type — both hands doing identical technique independently." },
           { text: "Apply to C-Am-F-G. Left hand roots: C3, A3, F3, G3.", why: "Both hands change together. Slow to 60 BPM if the coordination falls apart." },
           { text: "Run 4 cycles. Left hand should feel heavy/anchoring, right hand light/percussive.", why: "This is a complete musical picture — bass and harmony from one player." }
         ],
@@ -241,22 +284,25 @@ export const KEYBOARD_LEVELS = [
       {
         id: "k3e3", time: 10, title: "One Drop", type: "keys",
         tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }],
+        metronomeMode: "one-drop",
         what: "Right hand chops on &'s, soften the & of 1 (the 'hole' in one-drop). Left hand root ONLY on beat 3 — aligns with one-drop kick drum. The absence of beat 1 = weightlessness.",
         setup: "Organ preset. Metronome at 76 BPM. Or use the Reggae One Drop backing track.",
         steps: [
-          { text: "Right hand: chop on all &'s, but play the & of 1 softer (ghost it).", why: "The 'hole' on beat 1 is what makes one-drop feel like floating." },
+          { text: "Right hand: chop on all &'s, but play the & of 1 softer (ghost it).", why: "Carlton Barrett invented the one-drop in the early 1970s by removing the kick from beat 1 — creating a rhythmic void the whole band leans into. Tyrone Downie mastered the keyboard version: ghosting beat 1 (barely touching the keys) rather than leaving pure silence, maintaining the pulse without filling the hole. That ghost touch is the difference between 'nothing on 1' and 'intention on 1.'" },
           { text: "Left hand: root note ONLY on beat 3. Nothing on beat 1.", why: "The kick-on-3 + your bass-on-3 = the 'drop' in 'one-drop'." },
           { text: "Am-Dm-G-C progression. Pure indie reggae.", why: "Minor-heavy progression suits the one-drop feel. Melancholy groove." },
           { text: "Accent the & of 3 slightly. This is where the pocket deepens.", why: "The & of 3 lands right after the drop. A slight accent makes the groove bounce." }
         ],
         feel: "Floating. The absence of beat 1 = weightlessness. That's the 'drop' in 'one-drop'. You should feel suspended between beats.",
         wrong: "If the one-drop feel isn't clicking, strip to right hand only and really exaggerate the silence on beat 1. Ghost it until you can barely hear it.",
+        sarah: "One-drop organ is the Carlton Barrett groove from your reggae-rock tracks. The absence of beat 1 is what makes your Reggae One Drop 85 backing track float.",
         metronome: 76,
         pianoKeys: { notes: ["A3", "C4", "E4"], label: "Am", range: ["A2", "E5"] },
         levelUp: "One-drop Am-Dm-G-C at 82 BPM with intentional & of 3 accent."
       },
       {
         id: "k3e4", time: 10, title: "Snare Lock (Backbeat Chop)", type: "keys",
+        metronomeMode: "backbeat",
         what: "Chop ONLY on beats 2 and 4 — right on the snare. This is the half-time chop: less busy, more powerful, locks you to the drummer's backbeat instead of every &.",
         setup: "Organ preset. Play Groove Beat 90 BPM from Audio Player.",
         tracks: [{ name: "Groove Beat 90 BPM", src: "/groove-beat-90.mp3" }],
@@ -286,6 +332,23 @@ export const KEYBOARD_LEVELS = [
         metronome: 80,
         pianoKeys: { notes: ["A3", "C4", "E4", "G4"], label: "Am7", range: ["A2", "G5"] },
         levelUp: "Clean two-hand groove at 120 BPM for a full Am-F-C-G cycle."
+      },
+      {
+        id: "k3e6", time: 10, title: "Charleston Comping", type: "keys",
+        pianoKeys: { notes: ["A3", "C4", "E4", "G4"], label: "Am7 Charleston", range: ["A2", "G5"] },
+        what: "The Charleston rhythm: stab on beat 1, stab on the & of 2, silence on 3 and 4. 'ONE... and-TWO... (rest).' Then learn 'the push' — moving beat 1's stab to the & of 4 in the previous bar. Two named comping patterns for your toolkit.",
+        setup: "Organ preset. Metronome at 84 BPM.",
+        metronomeMode: "standard",
+        metronome: 84,
+        steps: [
+          { text: "Am7 chord. Stab on beat 1, stab on the & of 2. Silence on beats 3 and 4. Count: 'ONE... and-TWO... (rest rest).'", why: "The Charleston rhythm dates to 1920s jazz and appears in nearly every genre since. Herbie Hancock's comping with Miles Davis is built on variations of this pattern. Learning it by name gives you vocabulary, not just feel." },
+          { text: "4 bars Charleston on Am7, 4 bars on Dm7, 4 bars on G7, 4 bars on Cmaj7. Same rhythm, different chords.", why: "The comping pattern stays constant while the harmony moves. This is how pro keyboardists think — rhythm and harmony as separate layers." },
+          { text: "'The Push': move the beat-1 stab to the & of 4 in the PREVIOUS bar. The chord arrives a half beat early, pushing the harmony forward.", why: "Anticipated bass is how reggae and funk players create forward momentum. The chord 'leans' across the barline." },
+          { text: "Alternate: 4 bars Charleston, 4 bars offbeat chop (from Phase 1), 4 bars backbeat (from k3e4). Three comping patterns in rotation.", why: "You now have three named patterns: offbeat chop, backbeat, Charleston. A comping vocabulary, not just one trick." }
+        ],
+        feel: "The silence on beats 3 and 4 should feel loaded with anticipation. The push should feel like the music is leaning forward, pulling you into the next bar.",
+        wrong: "If the push feels awkward, slow to 72 BPM and exaggerate: play the & of 4, then hold through beat 1 of the next bar. Feel the lean.",
+        levelUp: "Am7-Dm7-G7-Cmaj7 with Charleston + push at 90 BPM, then rotate through all three comping patterns without losing the groove."
       }
     ]
   },
@@ -329,17 +392,20 @@ export const KEYBOARD_LEVELS = [
       },
       {
         id: "k4e3", time: 10, title: "The Art of Not Playing", type: "keys",
+        recorder: true,
+        silenceTarget: 0.3,
         what: "Play along with a full song from your rotation (Allah-Las, Skinshape, Sun Room). Rule: be SILENT for at least 30% of the song. Test: is the song better with your keys? Would anyone miss them if removed?",
         setup: "Any preset. Play a full song from Spotify or your library. No metronome — follow the song.",
         steps: [
           { text: "Listen first, full song, no playing. Map: where are the gaps? Where is it already full?", why: "You can't serve a song you haven't listened to. Map before you play." },
           { text: "Play along the second time. Start minimal. Add only what's missing.", why: "Enter late, leave early. The song existed before you added keys." },
-          { text: "You must be SILENT for at least 1/3 of the song. Count the sections you skip.", why: "Restraint is a skill. Silence is a musical choice, not a failure." },
+          { text: "You must be SILENT for at least 1/3 of the song. Count the sections you skip.", why: "Booker T. Jones on recording 'Green Onions': he played about 40% of what he could play because the organ needed room to breathe. Tyrone Downie's approach with Bob Marley was the same — if you're not sure whether to play, don't. Research on musical attention shows listeners track keyboard parts far more in sparse arrangements than dense ones. Less playing = more impact per note." },
           { text: "Test: is the song better with your keys? Would anyone miss them if removed? Both must be yes.", why: "If either answer is no, you played too much or in the wrong places." }
         ],
         feel: "The silences should feel intentional, like a photographer choosing what to leave out of the frame. Your entries should feel like gifts.",
         wrong: "If you can't stop playing, set a physical rule: hands in lap during verses, only play choruses. Build restraint as a habit.",
-        levelUp: "3 songs where your keys part passes both tests."
+        sarah: "Your band already has guitar, bass, and vocals. The keyboard that plays through the whole song is the one nobody notices. The one that enters for 8 bars in the chorus and disappears? That's the one people remember.",
+        levelUp: "3 songs where you are silent for 30%+ of runtime AND your entries measurably improve the song. Record each and listen back — if removing keys wouldn't change the impact, it doesn't count."
       },
       {
         id: "k4e4", time: 10, title: "Build an Intro", type: "keys",
@@ -366,17 +432,18 @@ export const KEYBOARD_LEVELS = [
           { text: "First listen: map the vocal phrases. Where does the singer breathe? Where are the gaps?", why: "The gaps between vocal phrases = your space. Never play over the vocal." },
           { text: "Play along. During vocal phrases: chop very quietly (3/10 volume) or lay out entirely.", why: "The voice is the star. Your job is to support, not compete." },
           { text: "In vocal gaps: slight volume increase (6/10), maybe a small fill or sustained chord.", why: "The gap is your moment to add color. Brief, tasteful, then back to quiet." },
-          { text: "Think of it as a volume conversation: when they're up, you're down. When they breathe, you fill.", why: "This push-pull creates musical breathing. It's what makes great bands sound great." }
+          { text: "Think of it as a volume conversation: when they're up, you're down. When they breathe, you fill.", why: "Herbie Hancock describes ensemble playing as a conversation: you don't talk while someone else is talking. Billy Preston's studio work with the Beatles and Rolling Stones followed this exact principle — swell into vocal gaps, disappear during vocal lines. This push-pull between instruments is what separates a band from five people playing at the same time." }
         ],
         feel: "Like ballroom dancing — you're following, not leading. The vocalist moves, you respond. Your volume should breathe with theirs.",
         wrong: "If you can hear your keys over the vocal at any point, you're too loud. Turn down. Way down. Then turn down more.",
+        sarah: "This is the skill you'll use most in the band. When Court sings, you ghost. When she breathes, you fill. Billy Preston did this for the Beatles.",
         levelUp: "Play along with 3 vocal tracks where your keys complement without ever covering the voice."
       }
     ]
   },
   {
     num: 5, name: "Add Texture", focus: "Pad + tremolo + effects",
-    duration: "50 min",
+    duration: "60 min",
     setup: "KeyLab 49 + Ableton + Analog Lab V. Surf: Farfisa V or Vox Continental V with tremolo/vibrato ON. Pad: Mellotron V category or any warm synth pad. In Ableton: add Reverb (Decay 3s+, Dry/Wet 70%+) and Simple Delay (dotted-eighth, ~30% wet) on the pad channel.",
     exercises: [
       {
@@ -385,12 +452,13 @@ export const KEYBOARD_LEVELS = [
         setup: "Farfisa V or Vox Continental V preset with tremolo ON (medium speed, ~5-6 Hz). Metronome at 120 BPM.",
         steps: [
           { text: "Am chord, hold 4 bars. Don't chop — just hold keys down and let tremolo pulse.", why: "The tremolo does the rhythmic work. You just hold. Totally different skill from chopping." },
-          { text: "Dynamic swells: press keys harder going into each chord change.", why: "Velocity sensitivity creates natural crescendos. The swell = emotional lift." },
+          { text: "Dynamic swells: press keys harder going into each chord change.", why: "On organ — unlike piano — there is no velocity sensitivity. Expression lives entirely in attack timing, release timing, and real-time effect manipulation. The Farfisa's transistor oscillators create a thinner, buzzier tremolo than Hammond's tonewheels — that thin sound is exactly what cuts through a surf-rock mix. Leslie speaker speed switching (slow chorale vs. fast tremolo) is a musical gesture: switch to fast BEFORE a climax so the full swirl arrives on the peak beat." },
           { text: "Am-G-F-E surf turnaround. Hold each chord 2-4 bars.", why: "The classic surf progression. Minor to major descent = melancholy to resolution." },
           { text: "Try with add9 voicings: Am(add9)-Gadd9-Fmaj7-E. Extensions + tremolo = instant surf.", why: "Extended voicings from Phase 2 make tremolo organ sound vintage and rich." }
         ],
         feel: "Should sound like a 1960s beach party. The tremolo creates movement you don't have to play. Your job is just smooth chord changes and dynamic swells.",
         wrong: "If it sounds static, increase tremolo depth or speed. If chord changes are jarring, practice the voice-leading — find inversions with minimal movement.",
+        sarah: "The Am-G-F-E tremolo organ is the Allah-Las and Mystic Braves sound. Your Farfisa preset + this progression = instant surf-psych set piece.",
         metronome: 120,
         pianoKeys: { notes: ["A3", "C4", "E4", "G4"], label: "Am7 Tremolo", range: ["A2", "G5"] },
         levelUp: "Smooth Am-G-F-E with swells at 120 BPM that sounds like vintage surf."
@@ -408,6 +476,7 @@ export const KEYBOARD_LEVELS = [
         ],
         feel: "Lo-fi, reverb-drenched, golden hour. Each note should bloom and fade. The spaces between notes are as important as the notes.",
         wrong: "If it sounds muddy, you're changing chords too fast or playing too many notes. Simplify — fewer notes, more space, more reverb.",
+        sarah: "This is the golden-hour BALTHVS sound. Cadd9 with reverb bloom through your Analog Lab pad preset — instant atmosphere for your band's quiet sections.",
         metronome: 60,
         pianoKeys: { notes: ["C4", "D4", "E4", "G4", "B4"], label: "Cadd9", range: ["C3", "B5"] },
         levelUp: "Cadd9-Am7-Fmaj7-G with reverb bloom and delay arpeggiation that sounds dreamy."
@@ -434,7 +503,7 @@ export const KEYBOARD_LEVELS = [
         setup: "Pad preset with Reverb and Delay. Map a KeyLab encoder to Reverb Dry/Wet and another to Delay Feedback in Ableton (MIDI Learn).",
         steps: [
           { text: "Hold Am7 as a pad. Slowly turn Reverb Dry/Wet from 30% to 100% over 4 bars.", why: "The reverb swell = the sound opening up. Like a camera pulling back to reveal the landscape." },
-          { text: "Now bring it back down to 30% over 4 bars. The sound closes, becomes intimate again.", why: "The ride = expression. You're painting with the effect, not just the notes." },
+          { text: "Now bring it back down to 30% over 4 bars. The sound closes, becomes intimate again.", why: "Ray Manzarek pioneered real-time knob manipulation as musical expression on the Vox Continental. Drawbar manipulation on Hammond is real-time timbral control — pulling out the 16-foot drawbar mid-song is the organ equivalent of a guitarist switching pickups. Your KeyLab 49's nine faders can map directly to Hammond drawbars in Analog Lab V. The ride IS your expression — you're painting with the effect, not just the notes." },
           { text: "Same with Delay Feedback: turn it up and the echoes multiply, stacking into walls of sound.", why: "Delay feedback = controlled chaos. Dial it up for psychedelic moments, back down for clarity." },
           { text: "Combine: swell reverb for 8 bars, add delay, build to a peak, then pull everything back.", why: "This is how Khruangbin and Tommy Guerrero create those spacious, evolving textures." }
         ],
@@ -449,7 +518,7 @@ export const KEYBOARD_LEVELS = [
         what: "Left hand holds a low bass/pad note (C2-C3 range), right hand plays organ chop above. Two sonic layers from one keyboard simultaneously. This is how one keyboard player fills the room.",
         setup: "In Ableton: set up keyboard split or two tracks. Low notes (below C3) route to pad/bass sound, high notes (C3+) route to organ. Or use Analog Lab V split mode.",
         steps: [
-          { text: "Left hand: hold C2 as a bass pad note. Long sustained note with reverb.", why: "The low pad fills the bottom end. In a band context, you'd only do this when the bass player lays out." },
+          { text: "Left hand: hold C2 as a bass pad note. Long sustained note with reverb. Practice holding this for 16 bars without the right hand — get comfortable sustaining a note while doing nothing else.", why: "The low pad fills the bottom end. In a band context, you'd only do this when the bass player lays out. This is a different hand independence challenge from L3 — there, both hands had rhythmic jobs. Here, the left hand sustains while the right hand moves. Your brain has to accept that one hand can be 'still' while the other is 'active.'" },
           { text: "Right hand: chop Am (C4-E4-A4) on &'s above the sustained bass.", why: "Two layers: sustained bottom, rhythmic top. One player, full sound." },
           { text: "Change left hand: move to F2, then G2, then back to A2. Slow whole-note changes.", why: "The bass pad moves like a glacier while the chop dances above it. Tempo contrast between hands." },
           { text: "Try: left hand holds a note, right hand plays surf tremolo chords above. Different texture combo.", why: "Any combination works: pad+chop, pad+tremolo, bass+arpeggiation. Build your combinations." }
@@ -459,12 +528,29 @@ export const KEYBOARD_LEVELS = [
         metronome: 80,
         pianoKeys: { notes: ["A3", "C4", "E4", "G4"], label: "Am7", range: ["A2", "G5"] },
         levelUp: "Sustained bass pad + organ chop over Am-F-G progression, hands fully independent."
+      },
+      {
+        id: "k5e6", time: 10, title: "Two Against Three", type: "keys",
+        pianoKeys: { notes: ["C3", "C4"], label: "Polyrhythm Drill", range: ["C3", "C5"] },
+        what: "Left hand plays 2 evenly spaced notes per beat group. Right hand plays 3. The 'George Washington' mnemonic: 'George' = both hands, 'Wash-' = right alone, '-ing-' = left alone, '-ton' = right alone. The foundational polyrhythm drill.",
+        setup: "Organ preset. Metronome at 60 BPM. Start SLOW — this is brain training, not speed training.",
+        metronome: 60,
+        steps: [
+          { text: "Off the keyboard first. Left hand taps your left knee in half notes (2 per bar). Right hand taps right knee in triplets (3 per bar). Say 'George Wash-ing-ton' out loud to find the pattern.", why: "Removing the keyboard from the equation lets your nervous system focus purely on the coordination. Motor learning research calls this 'task decomposition' — separate the hard part from the instrument." },
+          { text: "Move to the keyboard. Left hand plays C3 (half notes). Right hand plays C4 (triplets). Just single notes. Keep saying 'George Washington' until it locks.", why: "Expert pianists show reduced trans-callosal inhibition — the brain penalty for coordinating bilateral movements. This exercise builds that neural pathway. It takes time, and that's normal." },
+          { text: "Progress: left hand plays C3 root (half notes), right hand plays C major triad arpeggiated as triplets (C4-E4-G4, C4-E4-G4).", why: "Adding pitch to the right hand while keeping the left hand steady. The difficulty is maintaining the polyrhythm when the right hand gets more complex." },
+          { text: "Apply to Am: left hand A2 (half notes), right hand A-C-E triplet arpeggio. Then Dm: left D3, right D-F-A. Cycle through Am-Dm-G-C.", why: "Real musical application of the polyrhythm. If the coordination falls apart at chord changes, stay on one chord until it's automatic." }
+        ],
+        feel: "Disorienting at first — your brain wants both hands on the same grid. When it clicks, it feels like a puzzle piece snapping into place. The two rhythms layer into something richer than either alone.",
+        wrong: "If you can't get the pattern at all, go back to tapping knees without the keyboard. The mnemonic 'George Washington' maps exactly to the attack points. If one hand keeps drifting to the other's rhythm, slow to 50 BPM.",
+        sarah: "This is the exercise that separates keyboard from guitar. On guitar, both hands serve one rhythm. On keys, your hands can live in completely different time signatures. It's weird at first, then it's magic.",
+        levelUp: "2-against-3 on Am chord (left hand half notes, right hand triplet arpeggios) at 72 BPM for 4 bars without the hands drifting to the same rhythm."
       }
     ]
   },
   {
     num: 6, name: "Add Color", focus: "Fills + scales + modes",
-    duration: "60 min",
+    duration: "70 min",
     setup: "KeyLab 49 + Ableton + Analog Lab V. Farfisa V for organ fills, or browse Wurlitzer V / Stage-73 V for a warmer Rhodes melodic tone.",
     exercises: [
       {
@@ -473,7 +559,7 @@ export const KEYBOARD_LEVELS = [
         setup: "Organ preset. Metronome at 76 BPM.",
         steps: [
           { text: "G Mixolydian: G-A-B-C-D-E-F-G. Fingering: thumb G, index A, middle B, thumb crosses under to C, then index D, middle E, ring F, pinky G.", why: "The flat 7th (F natural, not F#) = the reggae/surf color note." },
-          { text: "Chop G chord for 3 bars. On bar 4, play a quick 4-note ascending fill: D-E-F-G.", why: "Fills are 2-4 notes. Brief comment between sentences, not a speech." },
+          { text: "Chop G chord for 3 bars. On bar 4, play a quick 4-note ascending fill: D-E-F-G.", why: "Cory Henry describes organ fills as punctuation, not sentences — a comma here, an exclamation point there. Booker T. Jones: first four drawbars, four notes, the whole song. The constraint of 2-4 notes forces melodic economy. Your fill is a brief comment between phrases, not a speech." },
           { text: "C Mixolydian (C-D-E-F-G-A-Bb-C) over C chord. Same pattern: 3 bars chop, 1 bar fill.", why: "Same idea, different key. Bb is the color note in C Mixolydian." },
           { text: "Practice inserting fills at different points. Always stepwise motion, always brief.", why: "Fills should feel like they grew naturally from the chop, not like a separate event." }
         ],
@@ -500,16 +586,18 @@ export const KEYBOARD_LEVELS = [
       },
       {
         id: "k6e3", time: 10, title: "Dorian Mode for Dub", type: "keys",
+        drone: { root: "D", octave: 3, texture: "analog" },
         what: "D Dorian (D-E-F-G-A-B-C-D) — like D minor but with B natural instead of Bb. The raised 6th = bittersweet, hopeful minor. THE dub/deep reggae mode.",
         setup: "Organ preset. Metronome at 70 BPM. Deep, slow dub tempo.",
         steps: [
-          { text: "D Dorian: D-E-F-G-A-B-C-D. The B natural (not Bb) is the color note.", why: "This one note difference from D natural minor = the entire Dorian character." },
+          { text: "D Dorian: D-E-F-G-A-B-C-D. The B natural (not Bb) is the color note.", why: "D Dorian is the default mode of dub and deep reggae — Augustus Pablo built entire albums around it. Miles Davis's 'So What' is the most famous Dorian composition: one mode, 16 bars, infinite depth. The raised 6th (B natural instead of Bb) creates a bittersweet optimism that separates Dorian from pure minor. That one note difference = the entire Dorian character." },
           { text: "Dm chord chops with occasional Dorian fills emphasizing B natural.", why: "The B natural should appear in most fills. It's the flavor note." },
           { text: "Left hand: deep bass D2 or D3 on beat 3 (one-drop). Right hand: chop + fills.", why: "One-drop bass + Dorian fills = instant dub atmosphere." },
           { text: "Progression: Dm-G-Am-Dm (i-IV-v-i in Dorian). G major contains B natural, highlighting the sound.", why: "The G major chord IS the Dorian sound made harmonic. B natural in both the scale and the chord." }
         ],
         feel: "Melancholy but not depressing — minor key at sunset. Slow dub tempos let every note breathe. The B natural adds a ray of light.",
         wrong: "If it sounds like plain D minor, you're not hitting B natural enough in your fills. Make it deliberate — land on B, let it ring.",
+        sarah: "D Dorian is the mode of your dub-reggae backing track. Augustus Pablo, King Tubby, and your Dub Reggae 85 track all live here. The B natural is the ray of light.",
         metronome: 70,
         pianoKeys: { notes: ["D4", "E4", "F4", "G4", "A4", "B4", "C5"], label: "D Dorian", range: ["D3", "D6"] },
         levelUp: "Dm-G-Am-Dm with Dorian fills at 76 BPM. B natural appears in most fills."
@@ -543,6 +631,7 @@ export const KEYBOARD_LEVELS = [
         ],
         feel: "The blues scale should feel like a cheat code — everything sounds good. The blue note (Eb) adds instant soul to any phrase.",
         wrong: "If licks sound like scale exercises, play fewer notes. A 2-note lick with conviction beats a 6-note lick that sounds rehearsed.",
+        sarah: "The blues scale works over almost everything in your band's key range. Three licks memorized here = three licks you can drop into any live jam without thinking.",
         metronome: 84,
         pianoKeys: { notes: ["A3", "C4", "D4", "E♭4", "E4", "G4"], label: "Am Blues", range: ["A2", "A5"] },
         levelUp: "3 different blues licks inserted naturally into an Am-F-C-G chop at 90 BPM."
@@ -563,16 +652,34 @@ export const KEYBOARD_LEVELS = [
         pianoKeys: { notes: ["A3", "C4", "E4", "G4"], label: "Am7", range: ["A2", "G5"] },
         metronome: 80,
         levelUp: "16th note fills inserted at phrase endings that feel like a natural part of the groove."
+      },
+      {
+        id: "k6e7", time: 10, title: "Comp and Fill", type: "keys",
+        pianoKeys: { notes: ["A3", "C4", "E4", "G4", "A4", "C5", "D5"], label: "Am7 + Pentatonic Fills", range: ["A2", "G5"] },
+        what: "Left hand keeps the comping rhythm going (offbeat chops or Charleston) while right hand plays Mixolydian or pentatonic fills. The left hand NEVER stops for the fill. This is two musicians in one body.",
+        setup: "Organ preset. Metronome at 76 BPM.",
+        metronome: 76,
+        steps: [
+          { text: "Left hand chops Am on &'s — this must be on complete autopilot. If it's not automatic yet, go back to Phase 1.", why: "Cory Henry's gospel organ approach: left hand IS the drummer, holding the groove no matter what the right hand does. If the left hand falters when the right hand enters, the comping isn't automatic enough." },
+          { text: "Right hand: play 2-4 note pentatonic fills (A-C-D-E-G) in the gaps between chops. Start with just one fill every 4 bars.", why: "The fill goes in the SPACE between left-hand chops. Not over them, not replacing them. The left hand keeps time; the right hand comments." },
+          { text: "The left hand NEVER stops for the fill. If it drops out, slow down and play fewer fill notes. One note is fine.", why: "This is the core hand-independence test. The left hand must be unconscious — like walking while talking. If you have to think about the left hand, it's not ready." },
+          { text: "Apply over Am-Dm-G-C. Left hand comps, right hand fills on bar 4 of each chord. Use your Mixolydian fills from k6e1 and blues licks from k6e5.", why: "This synthesizes everything in Level 6: the scales, the licks, the rhythmic fills — all while maintaining the groove underneath. This is the real gig scenario." }
+        ],
+        feel: "Like being two musicians at once. The left hand is the rhythm section, the right hand is the soloist. When it works, it feels effortless — like the fill grows out of the groove.",
+        wrong: "If the left hand drops out during fills, you're trying too much. Reduce to a one-note fill. Build up from there. The comping groove is sacred — it never stops.",
+        sarah: "This is where keyboard becomes a completely different instrument from guitar. On guitar, both hands serve one thing. On keys, you're two musicians at once.",
+        levelUp: "Am-Dm-G-C with continuous left-hand comping and right-hand pentatonic fills on bar 4 of each chord at 84 BPM. Left hand never drops out."
       }
     ]
   },
   {
     num: 7, name: "Full Integration", focus: "Full songs + band rehearsal",
-    duration: "55 min",
+    duration: "65 min",
     setup: "KeyLab 49 + Ableton + Analog Lab V. All sounds. Practice switching presets between sections using Ableton track selection or MIDI mapping.",
     exercises: [
       {
         id: "k7e1", time: 15, title: "Full Song Arrangement", type: "keys",
+        recorder: true,
         pianoKeys: { notes: ["A3", "C4", "E4", "G4"], label: "Am7", range: ["A2", "G5"] },
         what: "Pick a band song. Write out the form (Intro/V/C/V/C/Bridge/C/Outro). Assign textures to each section. Play through without stopping. Record in Ableton and listen back.",
         setup: "All presets available. Ableton recording armed. Use the song's actual tempo.",
@@ -584,6 +691,7 @@ export const KEYBOARD_LEVELS = [
         ],
         feel: "You should feel like you're telling a story. Each section = a chapter. The arrangement should have an arc — build, peak, resolve.",
         wrong: "If all sections sound the same, exaggerate the differences. Verse = whisper quiet, chorus = full volume. Bridge = completely different sound. Make it obvious.",
+        sarah: "This is where all the skills converge into a real band part. Record it in Ableton, listen back, and ask: does this serve the song? Would anyone miss it if it were gone?",
         levelUp: "3+ min arrangement with 3 distinct section treatments recorded in Ableton."
       },
       {
@@ -604,6 +712,7 @@ export const KEYBOARD_LEVELS = [
       },
       {
         id: "k7e3", time: 10, title: "Band Rehearsal Simulation", type: "keys",
+        silenceTarget: 0.3,
         pianoKeys: { notes: ["A3", "C4", "E4"], label: "Am", range: ["A2", "E5"] },
         what: "Play along with a song from your band's repertoire or a reference artist (Allah-Las, Skinshape, Sun Room). Listen through once without playing. Map the gaps. Play along the second time. Lay out for 30%+ of the song.",
         setup: "Any preset. Full song from Spotify or your library. No click — follow the song.",
@@ -615,7 +724,7 @@ export const KEYBOARD_LEVELS = [
         ],
         feel: "You should feel like a film colorist — adding warmth, contrast, atmosphere to something that already works. Not painting over the original.",
         wrong: "If you can't stop playing, set physical rules: no keys in verse 1, only chorus 2 onward. Build restraint through structure.",
-        levelUp: "3 songs with appropriate, complementary parts that pass both tests."
+        levelUp: "3 different songs where you lay out for 30%+ of runtime, use at least 2 textures (chop, pad, tremolo, or silence), and pass both tests: (1) song is better with keys, (2) someone would miss them. Record and verify."
       },
       {
         id: "k7e4", time: 10, title: "Ear Copy a Keyboard Part", type: "keys",
@@ -634,18 +743,38 @@ export const KEYBOARD_LEVELS = [
       },
       {
         id: "k7e5", time: 10, title: "Eyes Closed Performance", type: "keys",
+        recorder: true,
         pianoKeys: { notes: ["A3", "C4", "E4", "F4", "G4"], label: "Am-F-C-G", range: ["A2", "G5"] },
         what: "Play a full 3-minute arrangement without looking at the keyboard. Eyes closed or looking at the audience (the wall). This tests whether muscle memory is truly internalized — if you have to look, you're not ready for the stage.",
         setup: "All presets ready. Pick a song you've arranged in k7e1. No metronome — use internal time or a backing track.",
         steps: [
           { text: "Set up your arrangement: know the form, the preset switches, the voicings for each section.", why: "Preparation. You need to know the plan before you close your eyes." },
-          { text: "Close your eyes. Play the full arrangement. Don't stop for mistakes — recover and keep going.", why: "On stage, you can't look down. You need to find the keys by feel. Mistakes are fine — stopping isn't." },
+          { text: "Close your eyes. Play the full arrangement. Don't stop for mistakes — recover and keep going.", why: "The Taubman approach to keyboard technique emphasizes navigating by interval feel rather than visual reference. Experienced organists develop proprioceptive maps — the physical width of a 3rd, 5th, and octave becomes encoded in hand muscle memory. Motor learning research (Proteau et al.) confirms that eyes-closed practice accelerates proprioceptive encoding compared to visual practice. Mistakes are fine — stopping isn't." },
           { text: "Focus on the FEEL of each chord under your fingers. C major feels different from Am. Learn the hand shapes by touch.", why: "Experienced keyboard players navigate by feel, not sight. The intervals have a physical width you can memorize." },
           { text: "If you get lost, open your eyes for one chord, close again. Over time, you'll need to peek less.", why: "This is a gradual process. Each session, peek less. The goal is zero peeks." }
         ],
         feel: "Liberating. When you don't need to look at the keys, you can watch your bandmates, read the room, connect with the audience. That's performance.",
         wrong: "If you can't find any chords by feel, start smaller: eyes closed for just the verse (one voicing, no changes). Add sections as the muscle memory builds.",
+        sarah: "On stage, you need to watch Court for cues, watch your guitar player for section changes, and read the room. You can't do any of that if you're staring at keys.",
         levelUp: "Full 3-minute arrangement with eyes closed, fewer than 3 peeks."
+      },
+      {
+        id: "k7e6", time: 10, title: "Ostinato Bass + Chords", type: "keys",
+        recorder: true,
+        pianoKeys: { notes: ["A2", "C3", "D3", "E3", "A3", "C4", "E4", "G4"], label: "Am Ostinato + Am7 Chord", range: ["A2", "G5"] },
+        what: "Ray Manzarek-style: left hand plays a repeating bass riff (ostinato) while right hand comps chords above. This is for songs where there's no bass player — one person, full band sound. The most advanced hand independence skill.",
+        setup: "Organ preset (B-3 V or Vox Continental V for that Doors vibe). Metronome at 72 BPM.",
+        metronome: 72,
+        steps: [
+          { text: "Left hand ostinato on Am: A2-C3-D3-E3, one note per beat, ascending. Loop it 8 times until it's automatic. Don't think about it — let it become a motor loop.", why: "Ray Manzarek built The Doors' sound this way — repeating riff patterns in the bass register, not jazz walking bass. He was thinking melodically in the low register, and his left hand wrote basslines 'very difficult to play on a bass guitar' because keyboard bass thinks differently." },
+          { text: "Right hand enters: sustained Am7 chord (C4-E4-G4-A4) or soft chops on beats 2 and 4. Left hand keeps the ostinato going.", why: "The right hand must enter without disrupting the left. Start with just a sustained chord — the easiest right-hand pattern — before adding rhythm." },
+          { text: "Left hand ostinato for each chord: Am: A2-C3-D3-E3, F: F2-A2-C3-A2, C: C3-E3-G3-E3, G: G2-B2-D3-B2. Practice each until automatic.", why: "Each chord gets its own 4-note riff. The shapes are simple — mostly chord tones with one passing tone. Memorize by hand shape, not by thinking." },
+          { text: "Full progression: Am-F-C-G with left hand ostinatos and right hand chords. Record and listen back. Does the bass sound like a bass player?", why: "The test: can a listener hear two instruments (bass + keys) or does it sound like one confused instrument? If it sounds like two, you've got it." }
+        ],
+        feel: "Like being a one-person band. The left hand is the bassist, the right hand is the keyboardist. They're playing together but independently. When it works, the sound is huge.",
+        wrong: "If the left hand loses the riff when the right hand enters, the ostinato isn't automatic yet. Go back to left hand alone and loop it 20 more times. Only add the right hand when the left hand is unconscious.",
+        sarah: "This is for the songs where there's no bass player. Left hand becomes the bass, right hand becomes the keys. One person, full band sound.",
+        levelUp: "Am-F-C-G with left-hand ostinato bass + right-hand chords at 80 BPM for 2 full cycles. Both hands clearly audible as separate musical roles."
       }
     ]
   }

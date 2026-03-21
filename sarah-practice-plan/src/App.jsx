@@ -4362,7 +4362,7 @@ export default function App() {
         </div>
       </div>
 
-      <div style={{ maxWidth: 560, margin: "0 auto", padding: `${tab === "practice" ? 0 : 20}px 16px 90px` }}>
+      <div style={{ maxWidth: tab === "charts" ? 1200 : 560, margin: "0 auto", padding: `${tab === "practice" ? 0 : 20}px 16px 90px` }}>
         {/* PRACTICE TAB — Week plan + Lessons archive + Lesson notes */}
         {tab === "practice" && (
           <div>
