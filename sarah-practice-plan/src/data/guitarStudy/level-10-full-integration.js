@@ -17,8 +17,8 @@ export const level10 = {
       what: "Cycle through blues (Level 1), surf (Level 2), psych-garage (Level 3), reggae (Level 4), desert (Level 5), Khruangbin space (Level 7), soul (Level 8), and cinematic (Level 9) every 4 bars. Every style you've learned, on demand.",
       tracks: [{ name: "Surf Rock 120 BPM", src: "/surf-rock-120.mp3" }],
       steps: [
-        { text: "Start with Surf Rock Beat 120. Bars 1-4: surf tremolo picking (Level 2) — bright Mixolydian, fast picking, forward energy. Bars 5-8: blues bends and pentatonic (Level 1) — dark, behind the beat. Bars 9-12: reggae offbeat skanks (Level 4) — tight chops, offbeat discipline. Keep switching every 4 bars.", why: "Style switching tests whether you've truly internalized each style or just memorized exercises. If you can switch instantly, the style is in your body, not just your head." },
-        { text: "Continue the rotation: bars 13-16: desert blues (Level 5) — sus pentatonic, drone, repetition. Bars 17-20: Khruangbin space (Level 7) — sparse, behind the beat, soft attack. Bars 21-24: cinematic (Level 9) — fingerpicked arpeggios, Phrygian drama, dynamics.", why: "Adding more styles to the rotation demands faster mental switching. Each style requires a completely different physical approach — pick attack, hand position, rhythmic feel, scale choice." },
+        { text: "Start with Surf Rock Beat 120. Bars 1-4: surf tremolo picking (Level 2) — bright Mixolydian, fast picking, forward energy. Bars 5-8: blues bends and pentatonic (Level 1) — dark, behind the beat. Bars 9-12: reggae offbeat skanks (Level 4) — tight chops, offbeat discipline. Keep switching every 4 bars.", why: "Research in Frontiers in Psychology shows that interleaved practice — alternating between different skills in one session — produces significantly better long-term retention than blocked practice (drilling one skill at a time). Style switching tests whether you've truly internalized each style or just memorized exercises. If you can switch instantly, the style is in your body, not just your head. The discomfort of switching IS the learning." },
+        { text: "Continue the rotation: bars 13-16: desert blues (Level 5) — sus pentatonic, drone, repetition. Bars 17-20: Khruangbin space (Level 7) — sparse, behind the beat, soft attack. Bars 21-24: cinematic (Level 9) — fingerpicked arpeggios, Phrygian drama, dynamics.", why: "Adding more styles to the rotation demands faster mental switching — this is interleaved practice in action (Frontiers in Psychology). Each style requires a completely different physical approach — pick attack, hand position, rhythmic feel, scale choice. The cognitive effort of switching is higher than blocked practice, but the retention gains are substantial and well-documented." },
         { text: "Complete the cycle: bars 25-28: soul groove (Level 8) — extended chords, ghost notes, Dorian fills. Then restart from surf. Cycle through the full 8-style rotation twice.", why: "By Level 10, you should have at least 8 distinct approaches to playing over any backing track. This drill tests your fluency in all of them." },
         { text: "Challenge: write style names on cards and flip one every 4 bars. Random order removes the safety of a predictable sequence. If you hesitate on a style, that's where you need more practice.", why: "Random calling simulates real musical situations where you need to access any style at any moment. The styles that feel foreign under pressure reveal your blind spots." }
       ],
@@ -26,7 +26,8 @@ export const level10 = {
       wrong: "If some styles feel foreign or forced, they need more practice in their respective levels. If all the styles sound the same, you're defaulting to one approach — commit more fully to each style's unique character.",
       sarah: "This drill reveals your strengths and weaknesses. The styles that feel easy are your comfort zone. The ones that feel awkward are where you need work. Both are valuable information.",
       phraseForm: { sections: ["Style 1", "Style 2", "Style 3", "Style 4"], barsPerSection: 8 },
-      rhythmCells: ["surf", "reggae", "desert", "soul"]
+      rhythmCells: ["surf", "reggae", "desert", "soul"],
+      levelUp: "Cycle through at least 6 styles (surf, blues, reggae, desert, Khruangbin, soul, cinematic) every 4 bars for 2 full rotations. Each style is immediately recognizable on playback — different pick attack, rhythmic feel, scale choice. Random-order card flips cause no more than 1 beat of hesitation."
     },
     {
       id: "gs-10-2",
@@ -43,7 +44,8 @@ export const level10 = {
       ],
       feel: "When mood matching works, it feels like the music is playing through you — you're not choosing notes, you're channeling the vibe. The backing track and your guitar become one conversation.",
       wrong: "If you played the same style over every backing track, your vocabulary isn't integrated — each track should evoke a different response. If nothing felt instinctive, you may need more time with individual levels before integration.",
-      sarah: "This is the most important exercise in the curriculum. Technique serves expression. If you can make someone feel something specific with your guitar, you've mastered the instrument."
+      sarah: "This is the most important exercise in the curriculum. Technique serves expression. If you can make someone feel something specific with your guitar, you've mastered the instrument.",
+      levelUp: "Play 2 minutes over each of 4 different backing tracks with no planning. On playback, each track evokes a distinctly different style response — the desert track pulls out sus pentatonic, the soul track pulls out extended chords, etc. Your instinctive choices match the mood at least 3 out of 4 times."
     },
     {
       id: "gs-10-3",
@@ -67,7 +69,8 @@ export const level10 = {
       phraseForm: { pattern: "PRVD", barsPerSection: 4 },
       volumeContour: true,
       pitchContour: true,
-      recorder: true
+      recorder: true,
+      levelUp: "Complete a 12-minute round covering all 5 core concepts (rhythm-first, PReVaDe, chord-tone targeting, dynamic shaping, recovery) with 2 minutes each. Each concept is clearly isolated and executed. Recording confirms all 5 feel natural — none require visible struggle."
     },
     {
       id: "gs-10-4",
@@ -84,7 +87,8 @@ export const level10 = {
       ],
       feel: "Interval recognition should feel like recognizing faces — instant, intuitive, and confident. When you hear a 5th, you should know it's a 5th the way you know a friend's face in a crowd.",
       wrong: "If all intervals sound the same, start with just two (3rd vs 5th) until you can distinguish them reliably. If the song references don't help, find songs YOU know that start with those intervals.",
-      sarah: "Ear training isn't glamorous, but it's the skill that unlocks everything else. A guitarist with great ears and basic technique will always outplay a guitarist with great technique and deaf ears."
+      sarah: "Ear training isn't glamorous, but it's the skill that unlocks everything else. A guitarist with great ears and basic technique will always outplay a guitarist with great technique and deaf ears.",
+      levelUp: "Identify at least 4 out of 6 intervals (minor 3rd, major 3rd, perfect 4th, perfect 5th, minor 7th, major 7th) by ear alone in a 10-round blind test. Song reference anchors are internalized — you name the interval within 3 seconds."
     },
     {
       id: "gs-10-5",
@@ -105,7 +109,8 @@ export const level10 = {
       wrong: "If it sounds like an exercise (too predictable), add rhythmic variation and space between targets. If your targets sound wrong, verify: Am9 3rd = C, 7th = G, 9th = B. Dm7 3rd = F, 7th = C. G9 3rd = B, 7th = F, 9th = A. Cmaj7 3rd = E, 7th = B.",
       sarah: "This is the technique that separates noodling from improvising. When every phrase connects to the harmony, your solo tells the same story as the chords. That's real music.",
       pitchContour: true,
-      phraseForm: { sections: ["Am", "C", "G", "Em"], barsPerSection: 4 }
+      phraseForm: { sections: ["Am", "C", "G", "Em"], barsPerSection: 4 },
+      levelUp: "Improvise over Am9→Dm7→G9→Cmaj7 targeting 3rds, 7ths, and extensions on downbeats. Mix targets freely — no two passes through the progression target the same combination. Recording confirms your solo sounds 'inside' the chords, not like a scale running on top."
     },
     {
       id: "gs-10-6",
@@ -114,14 +119,15 @@ export const level10 = {
       type: "guitar",
       what: "Pick a short passage from a favorite artist — 4-8 bars of guitar — and figure it out by ear. No tabs, no YouTube tutorials. Just your ears and your instrument. This is the ultimate musical skill.",
       steps: [
-        { text: "Choose a song you love with a clear guitar part. Start simple — a Khruangbin riff, a Hermanos Gutiérrez arpeggio, a Skinshape melody. Listen to a 4-8 bar section 3 times without your guitar. Hum the melody.", why: "Active listening without your instrument forces your ear to do the work. Humming proves you've internalized the melody before you try to find it on the fretboard." },
+        { text: "Choose a song you love with a clear guitar part. Start simple — a Khruangbin riff, a Hermanos Gutiérrez arpeggio, a Skinshape melody. Listen to a 4-8 bar section 3 times without your guitar. Hum the melody.", why: "Active listening without your instrument forces your ear to do the work. Transcription by ear is how Tommy Emmanuel, Mark Knopfler, and Julian Lage all learned — before tabs existed, it was the only way. Emmanuel transcribed Chet Atkins records by slowing the vinyl to half-speed. Humming proves you've internalized the melody before you try to find it on the fretboard." },
         { text: "Pick up your guitar. Find the first note by trial and error — play notes until one matches. Then the second. Work note by note. This is slow — that's normal. 8 bars might take the full 12 minutes.", why: "Transcription is hard because it requires translating what you hear into fretboard positions. This builds the ear-to-hand connection that defines great musicians." },
         { text: "Focus on getting the melody right first. Rhythm second. Exact voicings third. If you can play the right notes in roughly the right rhythm, that's a success for your first transcription.", why: "Prioritizing melody over precision keeps you from getting frustrated. Even an approximate transcription teaches your ear more than reading perfect tabs." },
         { text: "Compare your version to the original. What did you get right? What did you miss? The mistakes reveal specific ear training gaps: if you missed the rhythm, practice rhythmic dictation. If you missed the notes, practice intervals (gs-10-4).", why: "Self-evaluation after transcription shows you exactly where your ear is strong and where it needs work. Every transcription makes the next one easier. The first one is always the hardest." }
       ],
       feel: "This should feel like detective work — slow, satisfying, and occasionally frustrating. Each note you find should feel like a small victory. The complete transcription should feel like solving a puzzle.",
       wrong: "If you gave up and looked up tabs, try again with an easier passage — maybe just 2 bars. If it took less than 5 minutes, choose something more challenging. If you couldn't find a single note, start by identifying just the key (is it major or minor? What root?).",
-      sarah: "Transcription is how every great musician learned. Before tabs and YouTube, you had to figure it out. There's no shortcut to developing your ear — but there's no more valuable skill either."
+      sarah: "Transcription is how every great musician learned. Before tabs and YouTube, you had to figure it out. There's no shortcut to developing your ear — but there's no more valuable skill either.",
+      levelUp: "Transcribe a 4-8 bar guitar passage from a favorite artist entirely by ear — no tabs, no tutorials. The melody notes are correct (rhythm can be approximate). You can play it back recognizably. Time spent: under 15 minutes for 4 bars."
     },
     {
       id: "gs-10-7",
@@ -140,7 +146,8 @@ export const level10 = {
       feel: "You should feel like a producer — layering parts that serve the whole. Each layer should add something essential, and removing any one layer should feel like something is missing.",
       wrong: "If all three layers sound like the same part, you need more contrast: different registers, different rhythmic density, different techniques. If one layer drowns the others, simplify it.",
       sarah: "This exercise proves you're not just a guitarist — you're a musician. You can think in layers, serve the song, and build something bigger than any single part.",
-      phraseForm: { sections: ["Intro", "Verse", "Chorus", "Bridge", "Outro"], barsPerSection: 8 }
+      phraseForm: { sections: ["Intro", "Verse", "Chorus", "Bridge", "Outro"], barsPerSection: 8 },
+      levelUp: "Build a 1-minute arrangement with 3 recorded layers: rhythm (extended chords + ghost notes), lead (Dorian melody, spacious), and texture (fingerpicked cinematic arpeggios). Each layer adds something essential — removing any one makes the arrangement feel incomplete."
     },
     {
       id: "gs-10-8",
@@ -161,7 +168,8 @@ export const level10 = {
       sarah: "You're playing a full surf-psych set. Opening act: bright surf. Headliner: dark psych. Encore: shimmer jangle. You are the festival.",
       phraseForm: { sections: ["Surf", "Psych", "Jangle", "Garage"], barsPerSection: 16 },
       volumeContour: true,
-      rhythmCells: ["tremolo", "jangle", "power"]
+      rhythmCells: ["tremolo", "jangle", "power"],
+      levelUp: "Record a 15-minute surf-psych set with clear sections: surf tremolo (0-5 min), jangle arpeggios (5-10), psych garage climax (10-14), quiet jangle cooldown (14-15). Transitions flow without stopping. Recording has a clear arc — beginning, climax, and resolution."
     },
     {
       id: "gs-10-9",
@@ -182,7 +190,8 @@ export const level10 = {
       sarah: "The groove set is about depth and feel. Reggae is the heartbeat. Khruangbin is the breath. Soul is the mind. Together, they're the complete groove experience.",
       phraseForm: { sections: ["Soul", "Reggae", "Khruangbin", "Desert"], barsPerSection: 16 },
       volumeContour: true,
-      rhythmCells: ["skank", "ghost", "behind-beat"]
+      rhythmCells: ["skank", "ghost", "behind-beat"],
+      levelUp: "Record a 15-minute groove set flowing from reggae skanks (0-5 min) to Khruangbin space (5-10) to soul extended chords (10-14) back to a single Am7 skank fading to silence (14-15). Each section is recognizably its own style. The groove never breaks during transitions."
     },
     {
       id: "gs-10-10",
@@ -203,7 +212,8 @@ export const level10 = {
       wrong: "If it sounded like practicing, you weren't committed to the storytelling. If there was no dynamic contrast, reread exercise 9-5 and exaggerate the volume changes. If the Phrygian section felt awkward, practice exercise 9-4 more.",
       sarah: "This set is your inner film composer. Most guitarists never think about scoring scenes — they think about playing songs. You're beyond songs. You're creating worlds.",
       phraseForm: { sections: ["Cinematic", "Western", "Tremolo", "Fingerpicked"], barsPerSection: 16 },
-      volumeContour: true
+      volumeContour: true,
+      levelUp: "Record a 15-minute cinematic set: desert drone (0-5 min), fingerpicked arpeggios (5-10), Phrygian drama climax (10-13), dissolve to a single open D drone ringing to silence (13-15). Dynamic range spans from barely audible to full resonant volume. Recording sounds like a film score in miniature."
     },
     {
       id: "gs-10-11",

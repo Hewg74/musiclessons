@@ -69,7 +69,8 @@ export const level4 = {
       feel: "7th chords feel more colorful than regular chords — richer, more complex, slightly jazzy. On the top strings, they sound bright and clear, perfect for skanking. The barre chord should feel like a stretch at first but eventually become natural.",
       wrong: "If the chords sound muddy, you're including too many bass strings. Reggae guitar stays high and clear — let the bass player handle the low end. If the barre chord buzzes, don't give up; adjust your finger angle and thumb position. If your hand cramps, take a break — barre strength builds over days, not minutes.",
       sarah: "Reggae chord voicings are deliberately small and bright. You're not strumming all six strings — you're playing a tight, precise instrument that locks with the hi-hat. And the barre chord is your graduation into moveable harmony. It's hard at first, but it unlocks every chord on every fret. Worth the struggle.",
-      metronome: 80
+      metronome: 80,
+      levelUp: "Play Am7 (x02010), Dm7 (xx0211), Cmaj7 (x32000), and Gm7 barre (353333) in sequence with clean transitions — all notes ring clearly (no buzzing on the barre), and you can switch between all four chords without pausing."
     },
     {
       id: "gs-4-4",
@@ -79,7 +80,7 @@ export const level4 = {
       what: "Learn two essential reggae progressions and their correct theory. Progression 1: Am-D-Am-E (i-IV-i-V in A minor — the D major is a borrowed chord from the parallel major, the E major comes from harmonic minor). Progression 2: Am7-Dm7-G7-Cmaj7 (vi-ii-V-I in C major — this is NOT a ii-V-I; the Am7 is the vi chord).",
       tracks: [{ name: "Reggae One Drop 85 BPM", src: "/reggae-one-drop-85.mp3" }],
       steps: [
-        { text: "Progression 1: Am-D-Am-E. Play 1 bar of each chord, skanking on the offbeat. In A minor, Am is i (home), D major is IV (borrowed from A major — it adds brightness), and E major is V (the dominant, pulling you back to Am). This is the Bob Marley feel — raw, driving, three chords and the truth.", why: "The i-IV-i-V is rawer and more powerful than jazz-influenced progressions. It doesn't resolve smoothly, which gives it tension and forward motion. Most roots reggae uses this kind of simple, strong movement." },
+        { text: "Progression 1: Am-D-Am-E. Play 1 bar of each chord, skanking on the offbeat. In A minor, Am is i (home), D major is IV (borrowed from A major — it adds brightness), and E major is V (the dominant, pulling you back to Am). This is the Bob Marley feel — raw, driving, three chords and the truth.", why: "The i-IV-i-V is rawer and more powerful than jazz-influenced progressions. Reggae guitar is fundamentally a support instrument — its role is to lock with the hi-hat and provide harmonic rhythm, not to dominate. Bob Marley's rhythm guitar sits behind the bass and drums in the mix, occupying the high-mid frequencies that glue everything together. Simple, strong chord movement serves that role better than complex harmony." },
         { text: "Progression 2: Am7-Dm7-G7-Cmaj7. Play 2 bars of each, skanking offbeats. Understanding the theory: in the key of C major, Am7 is the vi chord, Dm7 is the ii chord, G7 is the V chord, and Cmaj7 is the I chord. So this is vi-ii-V-I — a full circle that starts on the relative minor and resolves to the major.", why: "This progression cycles beautifully because each chord leads naturally to the next through voice leading. The resolution to Cmaj7 feels like arriving home. It underpins thousands of reggae, soul, and jazz songs." },
         { text: "Play each progression for 4 minutes with the Reggae One Drop 85 backing track. Focus entirely on the groove — make each repetition feel better than the last.", why: "Reggae progressions are short loops. The magic is in making each cycle groove deeper, not in playing more chords." },
         { text: "Try both progressions at different tempos: 75, 85, 95 BPM. Notice how the feel changes with tempo. Slower is roots/dub territory. Faster pushes toward dancehall energy.", why: "Same chords, different universes. Tempo is a compositional choice that changes the entire mood." }
@@ -87,7 +88,8 @@ export const level4 = {
       feel: "Both progressions should feel like they could cycle forever. Reggae grooves are circular — there's no dramatic ending, just deeper and deeper pocket.",
       wrong: "If the progression sounds like a pop song, you're probably playing on the downbeat instead of the offbeat. If it sounds stilted, your chops aren't tight enough. If it sounds too jazzy, simplify your voicings.",
       sarah: "Bob Marley used maybe 5 chord progressions his entire career. He never needed more because the groove and the message carried everything. The theory isn't the point — the groove is. But knowing vi-ii-V-I vs. i-IV-i-V means you understand what you're playing, not just where your fingers go.",
-      metronome: 85
+      metronome: 85,
+      levelUp: "Play both progressions (Am-D-Am-E and Am7-Dm7-G7-Cmaj7) skanking on offbeats with the Reggae One Drop 85 track, making each 4-minute pass groove deeper with each cycle — and name the Roman numerals of each chord."
     },
     {
       id: "gs-4-5",
@@ -107,7 +109,8 @@ export const level4 = {
       metronome: 85,
       tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }],
       referencePitches: getPitchRange("A3", "E4"),
-      recorder: true
+      recorder: true,
+      levelUp: "Over the Am→D→Am→E progression, pick the correct root on beat 1 of every chord change AND hit at least 2 correct 3rds (C over Am, F# over D, G# over E) during a full 8-repetition pass — all while maintaining the offbeat skank."
     },
     {
       id: "gs-4-6",
@@ -132,7 +135,8 @@ export const level4 = {
         { name: "One-Drop", pattern: [1, 1, 1, 1], description: "Kick on 3 only" },
         { name: "Rockers", pattern: [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5], description: "4-on-the-floor kick" },
         { name: "Steppers", pattern: [1, 1, 1, 1], description: "Heavy march, all beats equal" }
-      ]
+      ],
+      levelUp: "Stomp the kick pattern for one-drop, rockers, and steppers while skanking Am7-Dm7 offbeats — switching riddim every 4 bars without the skank dropping out or the foot losing the kick pattern."
     },
     {
       id: "gs-4-7",
@@ -151,7 +155,8 @@ export const level4 = {
       ],
       feel: "The bubble should feel like a sewing machine — rapid, even, and continuous. When it's working, it creates a shimmering, hypnotic effect that's distinctly different from the simpler 8th note skank.",
       wrong: "If the ghost notes are too loud, the pattern sounds like aggressive strumming instead of a bubble. If the stabs don't pop out, increase the dynamic contrast — softer ghosts, crisper stabs. If your arm tenses up, the tempo is too fast. Drop to 65 BPM.",
-      sarah: "The bubble is what makes modern reggae guitar sound so intricate. It's actually simple — your arm does the same thing over and over. The skill is in the dynamic control between the ghosts and the stabs."
+      sarah: "The bubble is what makes modern reggae guitar sound so intricate. It's actually simple — your arm does the same thing over and over. The skill is in the dynamic control between the ghosts and the stabs.",
+      levelUp: "Play the 16th-note bubble pattern at 75 BPM for 2 minutes with Am7, where the 'and' stabs pop clearly above the ghost-note texture — and maintain the pattern unbroken through an Am7→Dm7 chord change."
     },
     {
       id: "gs-4-8",
@@ -171,7 +176,8 @@ export const level4 = {
       metronome: 85,
       phraseForm: { pattern: ["Standard", "Displaced", "Sparse", "Dense", "Melodic"], barsPerSection: 2, labels: { Standard: "Standard Skank", Displaced: "Displace 1 Stab", Sparse: "No Ghosts", Dense: "16th Ghosts", Melodic: "Add 1 Note" } },
       recorder: true,
-      tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }]
+      tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }],
+      levelUp: "Improvise the reggae skank over Reggae One Drop 85 for 2 minutes without repeating the same 2-bar pattern twice — using stab displacement, ghost density changes, and at least one single melodic note fill."
     },
     {
       id: "gs-4-9",
@@ -189,7 +195,8 @@ export const level4 = {
       wrong: "If you can't recover within one beat, the initial panic is too strong. Slow the metronome to 70 and practice the chop-and-resume move until it's automatic.",
       sarah: "Gene, this is the reggae version of wrong-note recovery. In reggae, rhythm mistakes are more dangerous than wrong notes — landing on the downbeat is the cardinal sin. But now you know how to recover from it instantly.",
       metronome: 85,
-      recorder: true
+      recorder: true,
+      levelUp: "During a 2-minute skank, deliberately land on the downbeat 3 times and recover each within one beat — using either chop-and-resume or lean-in-then-return — so smoothly a listener hears variations, not mistakes."
     },
     {
       id: "gs-4-10",
@@ -209,7 +216,8 @@ export const level4 = {
       feel: "This should feel energetic and fun — the best of both worlds. The reggae bounce combined with surf drive creates something that makes you want to move.",
       wrong: "If the skanks fall apart at 120 BPM, the tempo is challenging your muting technique. Practice the chop at 100 BPM first, then work up. If the lead breaks sound disconnected from the skanks, you're not transitioning smoothly enough — the groove should continue through the lead.",
       sarah: "Pepper figured out that reggae and surf aren't opposites — they're both ocean music. One from the Caribbean, one from California. Same vibe, different expression. This is one of your core genres, Gene — SoCal reggae-rock is in your DNA.",
-      metronome: 120
+      metronome: 120,
+      levelUp: "Skank the Am-D-E progression at 120 BPM with tight chops for 8 bars, drop into a 2-bar Am blues-scale lead break, and snap back to skanking without the groove dropping — repeat the cycle 3 times."
     },
     {
       id: "gs-4-11",
@@ -229,7 +237,8 @@ export const level4 = {
       metronome: 85,
       tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }],
       volumeMeter: true,
-      volumeContour: true
+      volumeContour: true,
+      levelUp: "Play Am7→Dm7→G7→Cmaj7 for 4 cycles with four distinct dynamic levels (whisper, comfortable, full voice, sudden drop to whisper) — where the drop from Cycle 3 to Cycle 4 is dramatic and immediate, confirmed by volume contour."
     },
     {
       id: "gs-4-12",
@@ -252,7 +261,8 @@ export const level4 = {
       sarah: "Reggae is the most disciplined genre in guitar. The discipline IS the art. When you can hold one groove for 12 minutes and make it feel deeper every bar, you've understood something most guitarists never learn.",
       metronome: 85,
       volumeContour: true,
-      volumeMeter: true
+      volumeMeter: true,
+      levelUp: "Jam reggae for 10+ minutes over a backing track with solid offbeat skanks, ghost notes pumping, at least 3 chord changes, 2 tasteful lead breaks (under 2 bars each), and one 4-bar dub space with clean re-entry."
     },
     {
       id: "gs-4-13",

@@ -26,7 +26,8 @@ export const level5 = {
       feel: "The sus pentatonic should feel open and spacious — like standing in a vast landscape with nothing blocking the horizon. It's neither happy nor sad, just vast.",
       wrong: "If it sounds like regular pentatonic, you're playing C instead of B. If it sounds too bright, you might be playing a major scale. The sus pentatonic should feel ambiguous and floating — not cheerful, not mournful.",
       sarah: "One note is the difference between Mississippi Delta blues and Saharan desert blues. Same guitar, same technique, completely different emotional world. That's the power of note choice.",
-      metronome: 60
+      metronome: 60,
+      levelUp: "Play A sus pentatonic (A-B-D-E-G) ascending and descending at 70 BPM in the 5th fret position without accidentally playing C (the minor 3rd), and improvise a 1-minute passage using only A, B, and D."
     },
     {
       id: "gs-5-2",
@@ -36,7 +37,7 @@ export const level5 = {
       what: "Tune your low E string down one whole step to D (Drop D tuning). This gives you a deep bass drone that anchors desert blues melodies. Important: Drop D changes the fret positions on the 6th string — every note is now 2 frets higher than in standard tuning. When you're done, you'll learn how to tune back.",
       setup: "Tuner recommended. You can also tune by ear: play the 4th string (D) and tune the 6th string down until they match, one octave apart.",
       steps: [
-        { text: "Tune the low E string down to D. Pick it alongside the open D string (4th string) — they should sound like the same note, one octave apart. If you have a tuner, watch it go from E to D as you loosen the string.", why: "Drop D gives you a deep, powerful bass drone. Tuareg guitarists often use open tunings for exactly this purpose." },
+        { text: "Tune the low E string down to D. Pick it alongside the open D string (4th string) — they should sound like the same note, one octave apart. If you have a tuner, watch it go from E to D as you loosen the string.", why: "Drop D gives you a deep, powerful bass drone. Ali Farka Toure used modal open tunings with drone strings to mirror the sound of the njarka (single-string fiddle) and ngoni (West African lute) — instruments where a drone is built into the design. By retuning one string, you're adapting the guitar to a tradition where the instrument provides its own harmonic anchor." },
         { text: "IMPORTANT: In Drop D, every fret on the 6th string is shifted. What used to be the 2nd fret (F#) is now E. The 3rd fret (used to be G) is now F. The 5th fret is now G (was A in standard). When you see fret numbers for the 6th string in this level, they refer to Drop D positions.", why: "Understanding the shift prevents confusion. All other strings remain unchanged — only the 6th string moves." },
         { text: "Let the low D ring open while you play the sus pentatonic on the top 3 strings. Alternate: pluck the bass, then a melody note. Bass-melody-melody-bass-melody-melody.", why: "Bass drone + melody is the core texture of desert blues. One guitar sounds like two instruments." },
         { text: "Experiment with fingerpicking: use your thumb for the bass drone and your index and middle fingers for melody notes. The bass should ring continuously underneath.", why: "Fingerpicking or hybrid picking lets you maintain the drone continuously. The bass never stops — it's the heartbeat of the piece." },
@@ -45,7 +46,8 @@ export const level5 = {
       feel: "The drone should feel like a heartbeat underneath the melody — steady, constant, grounding. The melody floats above it like heat shimmer over sand.",
       wrong: "If the bass drone overpowers the melody, play the bass string more softly. If the melody notes are unclear, make sure you're fretting cleanly on the upper strings. If you forget to tune back afterward and your other playing sounds strange, check your 6th string.",
       sarah: "The drone is not background — it's the foundation that makes the melody meaningful. Without it, the melody floats aimlessly. With it, every note has context. Drop D is your portal to the desert.",
-      metronome: 75
+      metronome: 75,
+      levelUp: "Tune to Drop D, play a bass-melody-melody alternating pattern (thumb on 6th string, fingers on top 3 strings) with the sus pentatonic for 2 minutes — drone never drops out — then tune back to standard within 30 seconds."
     },
     {
       id: "gs-5-3",
@@ -68,7 +70,8 @@ export const level5 = {
         { name: "Desert Pulse", pattern: [2], description: "One hit per 2 beats" },
         { name: "Heartbeat", pattern: [0.5, 1.5], description: "Quick double then space" },
         { name: "Walking", pattern: [1, 1], description: "Steady on beats 1 & 3" }
-      ]
+      ],
+      levelUp: "Play 2 minutes of one-string (open D) rhythm improv mixing single hits, heartbeat doubles, and deliberate silences — with a clear groove that a listener could nod along to, confirmed by recording."
     },
     {
       id: "gs-5-4",
@@ -79,7 +82,7 @@ export const level5 = {
       what: "Choose a 4-note phrase from the sus pentatonic. Repeat it 16 times without variation. Only then, change one note. This exercise teaches patience and reveals the trance power of repetition — the core of desert blues.",
       steps: [
         { text: "Choose any 4 notes from the sus pentatonic (A-B-D-E-G). Play them as a short phrase with a simple rhythm. This is your motif.", why: "The motif doesn't need to be clever. Simple phrases become hypnotic through repetition. Complex phrases become exhausting." },
-        { text: "Repeat your motif 16 times. Same notes, same rhythm, same dynamics. No variation. Count each repetition on your fingers if needed.", why: "16 repetitions feels like forever at first. By repetition 8, something changes — the phrase stops being a pattern and becomes a groove." },
+        { text: "Repeat your motif 16 times. Same notes, same rhythm, same dynamics. No variation. Count each repetition on your fingers if needed.", why: "Tinariwen's hypnotic quality comes from timbral consistency plus groove, not harmonic complexity — the same phrase played with the same tone and touch creates a trance state that variation would destroy. Neuroscience research on musical entrainment shows that steady repetition synchronizes brainwave patterns with the rhythm, producing a meditative state after roughly 8-12 cycles. Repetition is the technique; patience is the skill." },
         { text: "On repetition 17, change exactly one note. Listen to how enormous that tiny change feels after 16 repetitions of the same thing.", why: "After 16 repetitions of the same phrase, a single changed note sounds like a revelation. This is the power of patience." },
         { text: "Repeat the new phrase 8 times. Then change another note. Build a piece that evolves glacially over 10 minutes.", why: "Glacial evolution creates narrative without drama. The listener is drawn in by subtlety, not spectacle." }
       ],
@@ -87,7 +90,8 @@ export const level5 = {
       wrong: "If you get bored and change the phrase early, you haven't committed to the process. The boredom is the point — push through it and something shifts. If the phrase is too complex to repeat exactly, simplify it.",
       sarah: "Tinariwen can play the same riff for 10 minutes and it gets MORE interesting, not less. The secret is that repetition reveals depth. Each cycle, you hear something new in the same notes.",
       metronome: 75,
-      phraseForm: { pattern: ["Motif", "Vary1", "Vary2", "Dissolve"], barsPerSection: [16, 8, 8, 8], labels: { Motif: "Original x16", Vary1: "Change 1 Note", Vary2: "Change Another", Dissolve: "Return to Drone" } }
+      phraseForm: { pattern: ["Motif", "Vary1", "Vary2", "Dissolve"], barsPerSection: [16, 8, 8, 8], labels: { Motif: "Original x16", Vary1: "Change 1 Note", Vary2: "Change Another", Dissolve: "Return to Drone" } },
+      levelUp: "Play a 4-note sus pentatonic motif 16 times identically, then change exactly one note on repetition 17 — where the single change is audibly dramatic against the established pattern, confirmed by recording playback."
     },
     {
       id: "gs-5-5",
@@ -109,7 +113,8 @@ export const level5 = {
       recorder: true,
       tracks: [{ name: "Desert Blues 75", src: "/desert-blues-75.mp3" }],
       referencePitches: getPitchRange("A3", "E4"),
-      phraseForm: { pattern: "PRVD", barsPerSection: 8, labels: { P: "Present x8", R: "Vary x8", V: "Reverse x8", D: "Fragment x8" } }
+      phraseForm: { pattern: "PRVD", barsPerSection: 8, labels: { P: "Present x8", R: "Vary x8", V: "Reverse x8", D: "Fragment x8" } },
+      levelUp: "Perform a full PReVaDe cycle over a drone: Present 8x, Vary (one note changed) 8x, Reverse direction 8x, Fragment to 2 notes then 1 note then drone alone — with no variation step containing more than one changed element."
     },
     {
       id: "gs-5-6",
@@ -130,7 +135,8 @@ export const level5 = {
       wrong: "If the drone keeps dropping out, your right hand isn't returning to the bass strings consistently. Practice the bass pattern alone until it's automatic before adding melody. If the melody and drone clash, stick to sus pentatonic notes — they're designed to float over drones.",
       sarah: "In Tuareg culture, guitar is communal — multiple players interlock to create the trance. You're channeling that tradition through one instrument. The drone is not just a technique — it's a philosophy. Some things hold steady so other things can move.",
       metronome: 75,
-      volumeMeter: true
+      volumeMeter: true,
+      levelUp: "Play drone + melody for 5 minutes in Drop D: low D on beats 1 & 3, A drone on beat 3, sus pentatonic melody on beats 2 & 4 — with the drone pattern steady throughout and the melody evolving by one note every 30 seconds."
     },
     {
       id: "gs-5-7",
@@ -151,7 +157,8 @@ export const level5 = {
       tracks: [{ name: "Desert Blues 75", src: "/desert-blues-75.mp3" }],
       recorder: true,
       pitchContour: true,
-      referencePitches: ["B3", "C4"]
+      referencePitches: ["B3", "C4"],
+      levelUp: "During a 2-minute desert improvisation, execute 4 intentional C/B slips — recovering 2 with quarter-tone bends and 2 with blues-commitment phrases — where each recovery sounds musical, not corrective."
     },
     {
       id: "gs-5-8",
@@ -171,7 +178,8 @@ export const level5 = {
       sarah: "Microtonal bending is what separates guitar from piano. The piano can only play the notes that exist. Guitar can play the spaces between. Desert blues lives in those spaces.",
       metronome: 75,
       referencePitches: ["B3", "C4"],
-      pitchContour: true
+      pitchContour: true,
+      levelUp: "Consistently land a quarter-tone bend between B and C (7th fret high E string) — holding it for 2 beats without overshooting to C or falling back to B — on 4 out of 5 attempts, verified by the pitch contour display."
     },
     {
       id: "gs-5-9",
@@ -194,7 +202,8 @@ export const level5 = {
       wrong: "If you get bored and add complexity, you're resisting the process. If the drone keeps dropping out, focus on the right-hand alternation until it's automatic. If the melody notes clash with the drone, stick to A-B-D-E-G — the sus pentatonic was designed for this.",
       sarah: "Tinariwen's music is communal and trance-inducing. When you play their patterns alone, you're participating in a musical tradition that's been creating altered states for centuries. 'Nannuflay' is on your playlist, Gene — this is the sound you love, now in your fingers.",
       metronome: 75,
-      volumeContour: true
+      volumeContour: true,
+      levelUp: "Play a Tinariwen-style piece for 5+ minutes: steady low D drone on 1 & 3, sus pentatonic melody on the upper strings evolving through 3-4 variations, with at least one quarter-tone bend per minute adding vocal quality."
     },
     {
       id: "gs-5-10",
@@ -209,14 +218,15 @@ export const level5 = {
         { text: "Put on Desert Blues 75. Play 4 bars using Am pentatonic: A-C-D-E-G. Play it bluesy — bends, behind the beat, vocal phrasing.", why: "Establishing the blues feel first makes the desert transition more dramatic." },
         { text: "Switch to sus pentatonic: A-B-D-E-G. Change your approach — straighter, more repetitive, patient. Let phrases cycle instead of building narratives.", why: "Desert blues has a different attitude than American blues. It's circular, not narrative. Repetitive, not dramatic." },
         { text: "Toggle back and forth. Listen to how the C (blues) and B (desert) create completely different worlds over the same groove.", why: "One note is the difference. C is the minor 3rd — sad, familiar, defined. B is the 2nd — open, ambiguous, floating between worlds." },
-        { text: "Try blending: use the sus pentatonic but add a quarter-tone bend on the B, pushing it slightly toward C. Where are you now — Mississippi or the Sahara?", why: "The space between B and C is where desert blues and American blues overlap. This gray zone is rich territory for personal expression." }
+        { text: "Try blending: use the sus pentatonic but add a quarter-tone bend on the B, pushing it slightly toward C. Where are you now — Mississippi or the Sahara?", why: "Ali Farka Toure famously stated: 'People say my music is like the blues — it is not the blues. The blues comes from here.' The space between B and C is where both traditions meet. This gray zone is rich territory for personal expression, and the quarter-tone bend is the technique that lets you inhabit both worlds simultaneously." }
       ],
       feel: "The toggle should feel like switching between two landscapes — the Mississippi Delta and the Sahara Desert. Same heat, different terrain.",
       wrong: "If both sections sound the same, you're not committing to the character of each scale. Blues is vocal and bending; desert is repetitive and droning. Change your attitude, not just your notes.",
       sarah: "Ali Farka Toure said the blues came from Africa. When you play both scales, you hear the family resemblance — and the divergence. Same ancestor, different continents.",
       metronome: 75,
       referencePitches: ["B3", "C4"],
-      pitchContour: true
+      pitchContour: true,
+      levelUp: "Toggle between 4 bars of Am pentatonic (bluesy bends, behind the beat) and 4 bars of sus pentatonic (straight, repetitive, patient) over Desert Blues 75 for 3 minutes — with an audible character shift on each toggle, not just a note change."
     },
     {
       id: "gs-5-11",

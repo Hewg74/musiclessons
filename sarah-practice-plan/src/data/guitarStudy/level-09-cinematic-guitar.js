@@ -39,7 +39,7 @@ export const level9 = {
       type: "guitar",
       what: "Play Am (A-C-E), Dm (D-F-A), and Em (E-G-B) as broken arpeggios using your new PIMA technique. One note at a time, letting each note ring into the next. This is the foundation of cinematic guitar: chords dissolved into melody.",
       steps: [
-        { text: "Play Am arpeggio: A (open 5th string, thumb), C (3rd fret, 2nd string... actually, let's use the full chord shape). Fret Am: x02210. Play: thumb on A string (A), index on G string (A), middle on B string (C), ring on high E (E). One note per beat at 70 BPM. Let each note sustain and overlap.", why: "Finger plucking gives you dynamic control over each note. The overlapping sustain creates the lush, reverb-friendly sound that defines cinematic guitar." },
+        { text: "Play Am arpeggio: A (open 5th string, thumb), C (3rd fret, 2nd string... actually, let's use the full chord shape). Fret Am: x02210. Play: thumb on A string (A), index on G string (A), middle on B string (C), ring on high E (E). One note per beat at 70 BPM. Let each note sustain and overlap.", why: "Finger plucking gives you dynamic control over each note that a pick can never match — Chet Atkins called it 'ten picks instead of one.' The overlapping sustain creates the lush, reverb-friendly sound that defines cinematic guitar. Knopfler's fingerpicking was born the same way: playing quietly at night without an amp, the constraint forced economy of motion that became his signature." },
         { text: "Move to Dm: xx0231. Thumb on D string (D), index on G string (A), middle on B string (D), ring on high E (F). Same pattern, same tempo. Then Em: 022000. Thumb on low E (E), index on G string (G), middle on B string (B). Spend 2 minutes on each chord.", why: "These three minor chords form the harmonic backbone of most cinematic guitar music. As arpeggios, they become melodic phrases instead of static chords." },
         { text: "Connect all three: Am→Dm→Em, arpeggiated, no gaps between chords. The last note of one chord should lead smoothly into the first note of the next.", why: "Smooth transitions between arpeggiated chords create the flowing, continuous sound that makes cinematic guitar feel like a soundtrack rather than a chord progression." },
         { text: "Add reverb if you have it. Even a little room reverb transforms these arpeggios. If no reverb, let the notes ring as long as possible — avoid muting strings as you move between them.", why: "Reverb is the secret ingredient of this entire level. It turns simple arpeggios into atmospheric landscapes. Without a pedal, you can simulate the effect by maximizing sustain." }
@@ -48,7 +48,8 @@ export const level9 = {
       wrong: "If the notes sound clipped or staccato, you're muting too early — keep your fingers out of the way of ringing strings. If it sounds muddy, slow down and let fewer notes overlap at once.",
       sarah: "Hermanos Gutierrez build entire songs from simple arpeggios drenched in reverb. The magic isn't complexity — it's letting each note breathe.",
       volumeMeter: true,
-      metronome: 70
+      metronome: 70,
+      levelUp: "Fingerpick Am→Dm→Em arpeggios using PIMA assignment with smooth transitions — no gaps between chords. Each note sustains and overlaps with the next. Recording sounds lush and continuous, like one flowing phrase across all three chords."
     },
     {
       id: "gs-9-3",
@@ -66,7 +67,8 @@ export const level9 = {
       feel: "The notes should feel like they're hovering in the air, pulsing with life. If using a pedal, your picking hand can relax — the effect does the work. If manual, your hands should create an even, wave-like dynamic.",
       wrong: "If you're confusing this with the fast picking from Level 2, stop and reread the distinction. Tremolo effect is about volume modulation, not picking speed. If the manual version sounds choppy rather than wave-like, smooth out your volume changes.",
       sarah: "Tremolo effect is what makes a single guitar sound like an orchestra. Ennio Morricone built entire soundtracks on this one effect. Once you hear it, you can't unhear it in classic Westerns and surf records.",
-      metronome: 80
+      metronome: 80,
+      levelUp: "Demonstrate both tremolo effect (volume pulsing on a sustained note) and tremolo picking (rapid alternate picking) and explain the difference. Play an Am arpeggio melody with tremolo effect at slow, medium, and fast pulse rates. Each rate produces a distinctly different mood."
     },
     {
       id: "gs-9-4",
@@ -86,7 +88,8 @@ export const level9 = {
       tracks: [{ name: "Cinematic Western 80", src: "/cinematic-western-80.mp3" }],
       volumeMeter: true,
       volumeContour: true,
-      recorder: true
+      recorder: true,
+      levelUp: "Play the Am→Dm→Em progression with tremolo, shaping dynamics across it: Am builds from pp to mf, Dm peaks at ff, Em fades to pp. The crescendo and decrescendo are smooth and continuous. Recording has a clear cinematic swell and release."
     },
     {
       id: "gs-9-5",
@@ -105,7 +108,8 @@ export const level9 = {
       ],
       feel: "The Bb should feel like a plot twist — unexpected, dramatic, and meaningful. The rest of your playing provides the context that makes it powerful.",
       wrong: "If everything sounds 'Arabic' or 'Spanish,' you're overusing the Bb. If it just sounds like regular minor, you're not landing on the Bb with enough intention or holding it long enough to register.",
-      sarah: "Phrygian is the scale of drama queens — and I mean that as a compliment. One well-placed Bb is worth more than a hundred fast runs."
+      sarah: "Phrygian is the scale of drama queens — and I mean that as a compliment. One well-placed Bb is worth more than a hundred fast runs.",
+      levelUp: "Improvise over Am for 2 minutes using mostly natural minor notes, dropping the Phrygian Bb at moments of tension. The Bb appears 3-5 times total — each one dramatic and intentional, not overused. Recording sounds cinematic, not 'Arabic scale exercise.'"
     },
     {
       id: "gs-9-6",
@@ -118,13 +122,14 @@ export const level9 = {
       tracks: [{ name: "Cinematic Western 80 BPM", src: "/cinematic-western-80.mp3" }],
       steps: [
         { text: "Play an Am arpeggio (fingerpicked) at 5 volume levels. Level 1: barely audible — your fingers whisper across the strings. Level 2: quiet but present. Level 3: your normal comfortable volume. Level 4: confident and full. Level 5: your maximum resonant volume without harshness. Spend 30 seconds at each level.", why: "Most guitarists have two volumes: on and off. Mapping out 5 distinct levels expands your dynamic vocabulary from a light switch to a dimmer. This control is what makes cinematic guitar work." },
-        { text: "Put on the Cinematic Western Beat 80. Play Am arpeggios starting at Level 1 (whisper) and gradually crescendo to Level 5 over 8 bars. The swell should be smooth and continuous — not sudden jumps.", why: "A gradual crescendo creates anticipation and emotional weight. It's the cinematic equivalent of a slow zoom-in — the audience leans forward without knowing why." },
+        { text: "Put on the Cinematic Western Beat 80. Play Am arpeggios starting at Level 1 (whisper) and gradually crescendo to Level 5 over 8 bars. The swell should be smooth and continuous — not sudden jumps.", why: "A gradual crescendo creates anticipation and emotional weight. Chet Atkins practiced dynamics as rigorously as he practiced notes — he believed the thumb and fingers must function as independent voices, each controlling its own volume. It's the cinematic equivalent of a slow zoom-in — the audience leans forward without knowing why. Economy of motion is the principle: less physical effort, more tonal control." },
         { text: "Now decrescendo: start at Level 5 and fade to Level 1 over 8 bars. The drop should be just as smooth as the build. End in near-silence.", why: "Controlled decrescendo is harder than crescendo — your instinct is to play louder, not softer. The ability to gradually disappear is a cinematic superpower." },
         { text: "Combine: 8 bars crescendo (Level 1→5), hold Level 5 for 2 bars, then drop immediately to Level 1. The sudden drop after the crescendo is one of the most dramatic moves in cinematic guitar.", why: "The sudden drop creates a moment of stunned silence that resonates emotionally. It's the musical equivalent of a camera cutting to black. This is how Hermanos Gutierrez build and release tension." }
       ],
       feel: "The quiet sections should feel intimate and fragile. The loud sections should feel powerful and inevitable. The transitions should feel like breathing — natural and connected.",
       wrong: "If your 'quiet' is still pretty loud, practice playing so softly that you can barely hear yourself. If the crescendo happens all at once instead of gradually, count the bars and spread the change evenly across them.",
-      sarah: "Dynamics are the most underrated tool in guitar. Most players have two settings: on and off. You're learning to use the entire spectrum — and that spectrum is what makes cinematic guitar cinematic."
+      sarah: "Dynamics are the most underrated tool in guitar. Most players have two settings: on and off. You're learning to use the entire spectrum — and that spectrum is what makes cinematic guitar cinematic.",
+      levelUp: "Play Am arpeggios at 5 distinct volume levels (whisper to full resonant volume). Then execute a smooth 8-bar crescendo (Level 1→5), hold for 2 bars, and drop immediately to Level 1. Recording confirms 5 distinguishable dynamics and a dramatic sudden drop."
     },
     {
       id: "gs-9-7",
@@ -144,7 +149,8 @@ export const level9 = {
       ],
       feel: "This should feel like standing in a vast, quiet landscape — a desert canyon, an empty highway at dusk. The guitar should sound lonely, beautiful, and spacious. Let the reverb be the co-performer.",
       wrong: "If it sounds like chord practice, you're changing chords too fast or playing too many notes. Slow down. If the reverb sounds cluttered, reduce the tempo and play fewer notes per bar — give the reverb time to breathe.",
-      sarah: "Hermanos Gutiérrez proved that you don't need speed, complexity, or even lyrics to make guitar music that moves people to tears. Simplicity plus atmosphere equals cinema."
+      sarah: "Hermanos Gutiérrez proved that you don't need speed, complexity, or even lyrics to make guitar music that moves people to tears. Simplicity plus atmosphere equals cinema.",
+      levelUp: "Play the G→A→Bm→Em→E progression fingerpicked with PIMA, building dynamics over 3 cycles from whisper to full voice, then dropping back to whisper on cycle 4. Thumb walks bass notes correctly for each chord. Recording passes the 'soundtrack test' — it sounds like it could score a scene."
     },
     {
       id: "gs-9-8",
@@ -165,7 +171,8 @@ export const level9 = {
       ],
       feel: "You should feel like you're scoring a film scene — every note has purpose, every pause has meaning. The guitar should sound lonely, dramatic, and vast.",
       wrong: "If it sounds like a scale exercise, you're playing too many notes too fast. Slow down. If the pauses feel awkward, lean into them harder — they're the most cinematic part. If the Bb→A resolution doesn't feel dramatic, hold the Bb longer before resolving.",
-      sarah: "This melody is your audition for an imaginary Sergio Leone film. Play it like the camera is slowly zooming in on your face."
+      sarah: "This melody is your audition for an imaginary Sergio Leone film. Play it like the camera is slowly zooming in on your face.",
+      levelUp: "Play a Spaghetti Western melody with Phrygian Bb→A resolution, tremolo effect on sustained notes, and full dynamic contrast (quiet start, swell on bends, silence on pauses). Play it 3 times with slight variation each time. Recording sounds dramatic and cinematic, not like a scale exercise."
     },
     {
       id: "gs-9-9",
@@ -178,14 +185,15 @@ export const level9 = {
       setup: "Phone or looper to record yourself. Reverb recommended.",
       tracks: [{ name: "Cinematic Western 80 BPM", src: "/cinematic-western-80.mp3" }],
       steps: [
-        { text: "Record Layer 1 — Rhythm: fingerpick Am→Dm→Em→Am, 2 bars each, using the P-I-M-A-M-I rolling pattern. Keep it steady and hypnotic. Record 1-2 minutes.", why: "Hermanos Gutiérrez are a duo — one guitar lays the foundation while the other plays melody. You need to create both parts to understand how they interlock." },
+        { text: "Record Layer 1 — Rhythm: fingerpick Am→Dm→Em→Am, 2 bars each, using the P-I-M-A-M-I rolling pattern. Keep it steady and hypnotic. Record 1-2 minutes.", why: "Hermanos Gutiérrez are a duo — one guitar lays the foundation while the other plays melody. Chet Atkins pioneered this 'two-guitar illusion' on solo recordings, treating thumb and fingers as independent voices. You need to create both parts to understand how they interlock — and recording yourself forces you to hold the rhythm part steady, building the independence Atkins considered essential." },
         { text: "Play back your recording. Over it, play slow Am Phrygian melodies — single notes that weave around the chord tones you hear underneath. Use the fingerpicked notes as a roadmap.", why: "Playing over yourself forces you to listen differently. You become both rhythm section and soloist, which develops your ear for arrangement." },
         { text: "Try contrasting your lead with the rhythm: when the rhythm is busy (middle of a rolling pattern), play fewer lead notes. When the rhythm hits a bass note and pauses, add more lead melody.", why: "Good two-guitar arrangements breathe — the parts give each other space. This push-pull dynamic is what makes Hermanos Gutiérrez arrangements compelling." },
         { text: "Switch roles: record a simple Phrygian melody (lead), then play arpeggiated rhythm chords over it. Notice how the same music feels different depending on which part you focus on.", why: "Understanding both roles makes you a better collaborator and a better solo arranger. Every part serves the whole." }
       ],
       feel: "You should feel like you're having a conversation with yourself — the recorded part speaks, and your live part responds. It should feel collaborative, not competitive.",
       wrong: "If your lead drowns out the rhythm, play more quietly. If both parts sound like the same thing, make the lead more melodic (single notes, wider intervals) and the rhythm more percussive (steady pattern, even volume).",
-      sarah: "This is how you start thinking like a band instead of a solo player. Even when you're alone, you can create music that sounds like two people playing. That's the Hermanos Gutiérrez secret."
+      sarah: "This is how you start thinking like a band instead of a solo player. Even when you're alone, you can create music that sounds like two people playing. That's the Hermanos Gutiérrez secret.",
+      levelUp: "Record a rhythm layer (fingerpicked Am→Dm→Em→Am, rolling pattern, 1 minute) and play a melodic Phrygian lead line over it. The lead fills gaps in the rhythm — when rhythm is busy, lead is sparse, and vice versa. Then swap roles. Both recordings sound like two guitarists playing together."
     },
     {
       id: "gs-9-10",
