@@ -5299,6 +5299,20 @@ export function PhraseFormGuide({ theme: T, form }) {
 const CHART_SONGS = [
   { id: "soldelsur", name: "Sol Del Sur", artist: "Sun Room", src: "/sol-del-sur.mp3", bpm: 120, key: "F#", tabId: "soldelsur" },
   { id: "iltwyw", name: "I Like The Way You Walk", artist: "The Donkeys", src: "/iltwyw.mp3", bpm: 97, key: "A", tabId: "iltwyw" },
+  { id: "dope-and-smoke", name: "Dope & Smoke", artist: "DOPE LEMON", src: "/dope-and-smoke.mp3", bpm: 94, key: "Am" },
+  { id: "close-my-eyes", name: "Close My Eyes", artist: "The Lagoons", src: "/close-my-eyes.mp3", bpm: 100, key: "D" },
+  { id: "summer-heat", name: "Summer Heat", artist: "Sun Room", src: "/summer-heat.mp3", bpm: 130, key: "E" },
+  { id: "gimme-love", name: "Gimme Love", artist: "The Elovaters", src: "/gimme-love.mp3", bpm: 85, key: "C" },
+  { id: "jah-werx", name: "Jah Werx", artist: "Susto", src: "/jah-werx.mp3", bpm: 114, key: "B" },
+  { id: "its-a-love", name: "It's a Love", artist: "Baskervillain", src: "/its-a-love.mp3", bpm: 95, key: "A" },
+  { id: "surf-hat", name: "Surf Hat", artist: "Surf Hat", src: "/surf-hat.mp3", bpm: 90, key: "G" },
+  { id: "island-fever", name: "Island Fever", artist: "Billy Changer", src: "/island-fever.mp3", bpm: 85, key: "Fm" },
+  { id: "sunset-garage", name: "Sunset Garage", artist: "Sun Room", src: "/sunset-garage.mp3", bpm: 142, key: "G" },
+  { id: "worship-the-sun", name: "Worship the Sun", artist: "Allah-Las", src: "/worship-the-sun.mp3", bpm: 120, key: "C" },
+  { id: "friends", name: "Friends", artist: "levitation room", src: "/friends.mp3", bpm: 105, key: "Em" },
+  { id: "geneva-strange", name: "Geneva Strangemod", artist: "Glyders", src: "/geneva-strange.mp3", bpm: 110, key: "G" },
+  { id: "catamaran", name: "Catamaran", artist: "Allah-Las", src: "/catamaran.mp3", bpm: 120, key: "Am" },
+  { id: "get-away", name: "Get Away", artist: "Babitha", src: "/get-away.mp3", bpm: 115, key: "E" },
 ];
 
 export function SongPicker({ theme: T, youtubeUrl, onYoutubeChange, hidePlayer, onSongChange }) {
