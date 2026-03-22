@@ -92,7 +92,7 @@ export const level6 = {
       type: "guitar",
       songRef: {
         title: "Worship the Sun — Allah-Las",
-        youtubeId: "vd7GPAm7xYg",
+        src: "/worship-the-sun.mp3",
         note: "Chords from GuitarTabsExplorer: Cmaj7-Dmaj7 (verse), A-G-A-E (chorus). Listen and verify."
       },
       what: "Allah-Las' Worship the Sun IS the Cmaj7-Dmaj7 float in action. The verse rides Cmaj7→Dmaj7 over and over — pure jangle. The chorus shifts to A-G-A-E. (Chords from GuitarTabsExplorer — hit play above to verify.)",
@@ -142,7 +142,7 @@ export const level6 = {
       type: "guitar",
       songRef: {
         title: "Friends — levitation room",
-        youtubeId: "P-cJWkZLy0k",
+        src: "/friends.mp3",
         note: "Verified chords: Em-Dmaj7 (verse), A-Em (chorus). The Dmaj7 voicing IS the jangle."
       },
       what: "levitation room's Friends is NOT standard strumming — the verse is a signature single-note and double-stop riff. The guitarist outlines Em and Dmaj7 using hammer-ons and pull-offs on the G, B, and high E strings, starting around the 7th fret and sliding down into the Dmaj7 shape at the 5th fret. The chord shapes are held as a foundation while the fingers dance above them. The chorus then switches to a relaxed, traditional strum over A-Em — that riff-to-strum contrast is the song's emotional architecture.",
@@ -193,7 +193,7 @@ export const level6 = {
       type: "guitar",
       songRef: {
         title: "Geneva Strangemod — Glyders",
-        youtubeId: "v0on9GtgFhU",
+        src: "/geneva-strange.mp3",
         note: "Chords from Chordify: G-C-D-Gm. Listen and verify — especially the Gm."
       },
       what: "Glyders' Geneva Strangemod uses G-C-D-Gm (Chordify source — hit play to verify). Three major chords that feel sunny, until the Gm arrives and everything shifts. The Gm is the surprise — a major→minor twist.",
@@ -223,7 +223,7 @@ export const level6 = {
       type: "guitar",
       songRef: {
         title: "Catamaran — Allah-Las",
-        youtubeId: "yIJ-RsIO1eA",
+        src: "/catamaran.mp3",
         note: "Chords from GuitarTabsExplorer: Am-C-D-Dm. The D→Dm shift is the emotional core. Listen and verify."
       },
       what: "Allah-Las' Catamaran uses Am-C-D-Dm — a minor progression where the D→Dm shift creates dark restlessness. (Chords from GuitarTabsExplorer — hit play to verify.) The darker side of jangle.",
@@ -250,7 +250,7 @@ export const level6 = {
       type: "guitar",
       songRef: {
         title: "Get Away — Babitha",
-        youtubeId: "eLMBpUk5wPo",
+        src: "/get-away.mp3",
         note: "Chords from Chordify: E-F#-G#m-E7. Note: F# is MAJOR (not F#m). Listen and verify."
       },
       what: "Babitha's Get Away uses E-F#-G#m-E7 (Chordify source — hit play to verify). Note: F# is major, not minor. E7 is the 'lazy jazz chord' — an E major with the D string open, adding the flat 7th. This song mixes barres, open voicings, and jangle.",

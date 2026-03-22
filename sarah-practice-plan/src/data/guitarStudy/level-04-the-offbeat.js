@@ -97,7 +97,7 @@ export const level4 = {
       type: "guitar",
       songRef: {
         title: "Gimme Love — The Elovaters",
-        youtubeId: "QgvK3K3gE7U",
+        src: "/gimme-love.mp3",
         note: "Listen to the offbeat chop — light, bouncy, island vibes. Three open chords in the key of C. Match the feel."
       },
       what: "The Elovaters' Gimme Love is a three-chord reggae tune in the key of C: F-C-G. All open chords — no barres needed. This is reggae with chords you already know from Level 1. The magic is applying the offbeat skank to familiar shapes.",
@@ -125,7 +125,7 @@ export const level4 = {
       type: "guitar",
       songRef: {
         title: "Jah Werx — Susto",
-        youtubeId: "wZr9yQTBGHs",
+        src: "/jah-werx.mp3",
         note: "Listen to the reggae influence on an indie-rock band. B-F#-E with that offbeat bounce. These are barre chords — your first reggae barre workout."
       },
       what: "Susto's Jah Werx uses B-F#-E — three chords in the key of B, all requiring barre chord shapes. This is a step up from Gimme Love's open chords. B is a barre at fret 2, F# is a barre at fret 2 (E-shape), and E is your familiar open chord. The reggae rhythm is the same offbeat skank — now applied to barre shapes.",
@@ -222,7 +222,7 @@ export const level4 = {
       type: "guitar",
       songRef: {
         title: "It's a Love — Baskervillain",
-        youtubeId: "iUsEKsxZV-s",
+        src: "/its-a-love.mp3",
         note: "Chords are from Chordify (A-E-C#m-F#-B) — listen and verify the progression order matches."
       },
       // UNVERIFIED — A-E-C#m-B-F# progression has not been confirmed against 2+ independent tab sources
@@ -252,7 +252,7 @@ export const level4 = {
       type: "guitar",
       songRef: {
         title: "Surf Hat — Surf Hat",
-        youtubeId: "PGvNt8skb9g",
+        src: "/surf-hat.mp3",
         note: "Reggae/ska off-beat chops with dominant 7th voicings. Clean tone with chorus/vibrato effect and spring reverb. Listen for the tight left-hand muting."
       },
       what: "Surf Hat by Surf Hat uses E7-A7-B7-F#7 — all dominant 7th chords. These voicings add a bluesy, unresolved color to the reggae/ska off-beat chops you've been learning. The strum is the same offbeat skank, but the chord shapes are new.",

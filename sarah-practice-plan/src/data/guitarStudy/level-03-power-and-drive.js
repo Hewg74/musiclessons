@@ -118,7 +118,7 @@ export const level3 = {
       type: "guitar",
       songRef: {
         title: "Summer Heat — Sun Room",
-        youtubeId: "hA1XSIRtAp4",
+        src: "/summer-heat.mp3",
         note: "CHORDS NEED EAR VERIFICATION — E-A-B-C#m is our best guess based on Sun Room's patterns. No tab exists. Listen and confirm."
       },
       // UNVERIFIED — Summer Heat chords are E-A-B-C#m based on Sun Room's typical patterns

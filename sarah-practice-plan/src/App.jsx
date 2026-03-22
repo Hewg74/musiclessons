@@ -7,7 +7,7 @@ import {
   Mic, Headphones, Info, AlertCircle, Quote, ArrowRight, Check, 
   Volume2, Sun, Moon
 } from 'lucide-react';
-import { MiniAudioPlayer, AudioPlayer, YouTubeAudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, ChordVoicingViewer, extractChordsFromExercise, VolumeMeter, ChordTransitionTimer, GenreMetronome, SilenceScore, DroneGenerator, TAB_CONTENT, InlineKeyboard, RhythmCellCards, PhraseFormGuide, StrumChartBuilder, ChartListView, makeTemplateChart } from './JungleTools.jsx';
+import { MiniAudioPlayer, AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, ChordVoicingViewer, extractChordsFromExercise, VolumeMeter, ChordTransitionTimer, GenreMetronome, SilenceScore, DroneGenerator, TAB_CONTENT, InlineKeyboard, RhythmCellCards, PhraseFormGuide, StrumChartBuilder, ChartListView, makeTemplateChart } from './JungleTools.jsx';
 import { acquireKeepalive, releaseKeepalive, setMediaSession, clearMediaSession } from './audioKeepalive.js';
 import { DAYS, KEYBOARD_LEVELS, LOOPER_LEVELS, LESSON_POOL, ALL_NOTES, getPitchRange } from './data/appData.js';
 import { WEEKLY_PLANS, CURRENT_WEEK } from './data/weeklyPlans/index.js';
@@ -912,7 +912,7 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
       </div>
 
       {/* PANEL B: TOOLS */}
-      {(tracks.length > 0 || ex.metronome || ex.recorder || ex.drone) && (
+      {(tracks.length > 0 || ex.metronome || ex.recorder || ex.drone || ex.songRef?.src) && (
         <div style={{ 
           background: T.bgCard, borderRadius: T.radiusMd, border: `1px solid ${T.border}`,
           padding: "24px", marginBottom: 16, boxShadow: T.sm
@@ -957,7 +957,7 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
           )}
 
           {/* Song Reference — listen to the actual song */}
-          {ex.songRef?.youtubeId && (
+          {ex.songRef?.src && (
             <div style={{ marginBottom: 24 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
                 <Music size={14} style={{ color: T.gold }} />
@@ -965,7 +965,7 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
                   {ex.songRef.title || "Reference Song"}
                 </div>
               </div>
-              <YouTubeAudioPlayer videoId={ex.songRef.youtubeId} theme={T} title={ex.songRef.title || "Song"} />
+              <MiniAudioPlayer theme={T} src={ex.songRef.src} />
               {ex.songRef.note && (
                 <div style={{ fontSize: 11, color: T.textMed, marginTop: 8, fontStyle: "italic", lineHeight: 1.5 }}>
                   {ex.songRef.note}
@@ -1636,7 +1636,7 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
           </div>
 
           {/* PANEL B: TOOLS */}
-          {(showTimer || tracks.length > 0 || ex.metronome || ex.drone || ex.recorder) && (
+          {(showTimer || tracks.length > 0 || ex.metronome || ex.drone || ex.recorder || ex.songRef?.src) && (
             <div style={{ 
               background: T.bgCard, borderRadius: T.radiusMd, border: `1px solid ${T.border}`,
               padding: "18px", marginBottom: 20, boxShadow: T.sm
@@ -1666,7 +1666,7 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
               )}
 
               {/* Song Reference — listen to the actual song */}
-              {ex.songRef?.youtubeId && (
+              {ex.songRef?.src && (
                 <div style={{ marginBottom: 16 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
                     <Music size={14} style={{ color: dayColor || T.gold }} />
@@ -1674,7 +1674,7 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
                       {ex.songRef.title || "Reference Song"}
                     </div>
                   </div>
-                  <YouTubeAudioPlayer videoId={ex.songRef.youtubeId} theme={T} title={ex.songRef.title || "Song"} />
+                  <MiniAudioPlayer theme={T} src={ex.songRef.src} />
                   {ex.songRef.note && (
                     <div style={{ fontSize: 11, color: T.textMed, marginTop: 6, fontStyle: "italic", lineHeight: 1.5 }}>
                       {ex.songRef.note}

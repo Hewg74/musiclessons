@@ -156,7 +156,7 @@ export const level5 = {
       type: "guitar",
       songRef: {
         title: "Island Fever — Billy Changer",
-        youtubeId: "ywyhzFPiWGY",
+        src: "/island-fever.mp3",
         note: "Chords are from Chordify auto-detect (Fm-Bb-Ab-Eb). Listen and verify — Bb might be Bbm."
       },
       what: "Billy Changer's Island Fever lives in Fm — a darker, dreamier barre world. The progression Fm-Bb-Ab-Eb uses all barre chords (Chordify source — hit play to verify). You can also capo at fret 1 and play Em-A-G-D. Slower (97 BPM) and more spacious than Sol Del Sur — let the chords ring.",
@@ -206,7 +206,7 @@ export const level5 = {
       type: "guitar",
       songRef: {
         title: "Sunset Garage — Sun Room",
-        youtubeId: "wZTxGM4xFNs",
+        src: "/sunset-garage.mp3",
         note: "Listen to the energy — 142 BPM, all open chords, driving strum. This is Sun Room at full throttle. Match the urgency."
       },
       what: "Sun Room's Sunset Garage uses G-Em-C-D in the verse and C-D-G-Em in the chorus — all open chords, but at 142 BPM it's the fastest song in this level. Speed with clean transitions is the challenge. Your barre chord skills from Sol Del Sur prepare your hand for fast transitions — now apply that snap-and-release speed to open chord changes.",

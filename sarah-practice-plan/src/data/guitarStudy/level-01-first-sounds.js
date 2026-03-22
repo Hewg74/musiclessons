@@ -240,7 +240,7 @@ export const level1 = {
       chordVoicings: { chords: ["Am", "D", "Am7", "D7"], defaultChord: "Am" },
       songRef: {
         title: "Dope & Smoke — DOPE LEMON",
-        youtubeId: "6OmF4MZMiYY",
+        src: "/dope-and-smoke.mp3",
         note: "Listen to the lazy strum feel — it's just Am and D alternating with Am7 and D7 creeping in. No G chord. Two chord families, maximum vibe."
       },
       tracks: [{ name: "Groove Beat 90", src: "/groove-beat-90.mp3" }],

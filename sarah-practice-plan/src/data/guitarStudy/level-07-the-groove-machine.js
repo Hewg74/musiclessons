@@ -245,7 +245,7 @@ export const level7 = {
       type: "guitar",
       songRef: {
         title: "Jah Werx — Susto",
-        youtubeId: "TKd2TXAS2fE",
+        src: "/jah-werx.mp3",
         note: "BPM 114. Driving continuous 16th notes — NOT reggae despite sharing the B-F#-E progression from Level 4."
       },
       what: "In Level 4, you learned Susto's B-F#-E as a reggae skank. Now hear what the actual recording sounds like: driving continuous 16th notes at 114 BPM, with chords ringing fully into each other. Same three chords, completely different technique. This is the power of feel — the chord progression doesn't change, but the rhythmic approach transforms it from chill reggae to urgent indie rock.",

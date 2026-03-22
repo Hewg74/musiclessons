@@ -98,7 +98,7 @@ export const level2 = {
       type: "guitar",
       songRef: {
         title: "Close My Eyes (And I Wonder) — The Lagoons",
-        youtubeId: "FcRxkSX4Ark",
+        src: "/close-my-eyes.mp3",
         note: "CHORDS NEED EAR VERIFICATION — D-Bm-G-A is our best guess but no tab exists. Listen and confirm the chords match."
       },
       // UNVERIFIED — D-Bm-G-A is a likely progression based on key/genre analysis but has not been confirmed against 2+ independent tab sources
