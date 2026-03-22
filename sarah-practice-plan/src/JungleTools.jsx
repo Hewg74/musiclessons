@@ -134,7 +134,7 @@ function claimAudioMutex() {
 
 // --- YouTube Audio Player Component ---
 export function YouTubeAudioPlayer({ videoId, theme: T, title }) {
-  const containerRef = useRef(null);
+  const wrapperRef = useRef(null);
   const playerRef = useRef(null);
   const mutexIdRef = useRef(null);
   const syncRafRef = useRef(null);
@@ -157,8 +157,11 @@ export function YouTubeAudioPlayer({ videoId, theme: T, title }) {
   }, [duration, loopEnd]);
 
   // Load YouTube API and create player
+  // IMPORTANT: The YT.Player constructor replaces its target element with an iframe.
+  // We must create the target div imperatively so React doesn't track it — otherwise
+  // React's removeChild crashes when it can't find the original div.
   useEffect(() => {
-    if (!videoId) return;
+    if (!videoId || !wrapperRef.current) return;
     let destroyed = false;
     setError(null);
     setIsReady(false);
@@ -167,12 +170,16 @@ export function YouTubeAudioPlayer({ videoId, theme: T, title }) {
     setCurrentTime(0);
     setDuration(0);
 
+    // Create a disposable div for the YT API — React never sees this node
+    const ytTarget = document.createElement('div');
+    wrapperRef.current.appendChild(ytTarget);
+
     loadYouTubeAPI().then(() => {
       if (destroyed) return;
       if (playerRef.current) {
         try { playerRef.current.destroy(); } catch {}
       }
-      playerRef.current = new window.YT.Player(containerRef.current, {
+      playerRef.current = new window.YT.Player(ytTarget, {
         videoId,
         width: 1,
         height: 1,
@@ -204,6 +211,10 @@ export function YouTubeAudioPlayer({ videoId, theme: T, title }) {
       if (playerRef.current) {
         try { playerRef.current.destroy(); } catch {}
         playerRef.current = null;
+      }
+      // Clean up any leftover DOM nodes the YT API created
+      if (wrapperRef.current) {
+        wrapperRef.current.innerHTML = '';
       }
     };
   }, [videoId]);
@@ -348,10 +359,8 @@ export function YouTubeAudioPlayer({ videoId, theme: T, title }) {
       display: "flex", flexDirection: "column", gap: 12,
       boxShadow: "0 2px 8px rgba(44,40,37,0.03)"
     }}>
-      {/* Hidden YouTube player */}
-      <div style={{ position: "absolute", width: 1, height: 1, opacity: 0, pointerEvents: "none", overflow: "hidden" }}>
-        <div ref={containerRef} />
-      </div>
+      {/* Hidden YouTube player — wrapper ref only, inner div created imperatively */}
+      <div ref={wrapperRef} style={{ position: "absolute", width: 1, height: 1, opacity: 0, pointerEvents: "none", overflow: "hidden" }} />
 
       <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
         <button onClick={togglePlay} disabled={!isReady} style={{
