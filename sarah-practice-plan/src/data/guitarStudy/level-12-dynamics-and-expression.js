@@ -110,7 +110,7 @@ export const level12 = {
       sarah: "Gene, modGlyders' 'Geneva Strange' is the perfect vehicle for this — it's a sunny indie song that gets haunted by that Gm at the end of the progression. And once you hear it, you'll notice the same trick in Cotton Jones' 'Chewing Gum' (the Dm7 is doing the same job) and in Allah-Las' 'Catamaran' (D→Dm shift). This is a harmonic fingerprint across your entire playlist.",
       metronome: 80,
       chordVoicings: { chords: ["G", "Gm", "D", "Dm"] },
-      levelUp: "Can play the modGlypers 'Geneva Strange' progression G-C-D-Gm at 80 BPM with clean chord changes and an audible emotional shift on the Gm."
+      levelUp: "Can play the modGlyders 'Geneva Strange' progression G-C-D-Gm at 80 BPM with clean chord changes and an audible emotional shift on the Gm."
     },
 
     // ─── SONG STUDY: MARSHA ───

@@ -11,8 +11,8 @@ export const level2 = {
   review: {
     label: "Level 1 Check-In",
     time: 5,
-    exercises: ["gs-1-5", "gs-1-10"],
-    prompt: "Play the one-note groove (gs-1-5) — can you groove on one note for 60 seconds? Then play DOPE LEMON style Am→D with behind-the-beat feel (gs-1-10). Both feel natural? Move on."
+    exercises: ["gs-1-7", "gs-1-10"],
+    prompt: "Play the one-note groove (gs-1-7) — can you groove on one note for 60 seconds? Then play DOPE LEMON style Am→D with behind-the-beat feel (gs-1-10). Both feel natural? Move on."
   },
   exercises: [
 

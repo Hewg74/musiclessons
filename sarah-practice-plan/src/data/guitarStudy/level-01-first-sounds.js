@@ -319,9 +319,9 @@ export const level1 = {
       type: "guitar",
       recorder: true,
       metronome: 90,
-      chordVoicings: { chords: ["Am", "D", "G", "D", "Em"] },
+      chordVoicings: { chords: ["Am", "D", "Am7", "D7", "Em"] },
       tracks: [{ name: "Groove Beat 90", src: "/groove-beat-90.mp3" }],
-      what: "The ultimate test of musical internalization: can you sing what you play? Hum the Am pentatonic ascending. Sing the chord roots of Dope & Smoke (A... D... G...) while strumming. If you can sing it, you've truly learned it — it's in your ear, not just in your fingers. This is audiation — the ability to hear music internally.",
+      what: "The ultimate test of musical internalization: can you sing what you play? Hum the Am pentatonic ascending. Sing the chord roots of Dope & Smoke (A... D...) while strumming. If you can sing it, you've truly learned it — it's in your ear, not just in your fingers. This is audiation — the ability to hear music internally.",
       setup: "Guitar. Recorder on. Metronome at 90 BPM.",
       steps: [
         { text: "Without the guitar, hum the Am pentatonic ascending: A-C-D-E-G-A. Can you hear it in your head? Can your voice reproduce it? Don't worry about perfect pitch — relative pitch (the intervals between notes) is what matters.", why: "Singing the scale without the guitar proves it's in your ear, not just in your muscle memory. Gordon's audiation research shows that musicians who can sing what they play learn 3x faster than those who rely on finger patterns alone." },
@@ -333,7 +333,7 @@ export const level1 = {
       feel: "This should feel like a graduation exam — a chance to prove to yourself that you've internalized everything in Level 1. It should feel slightly challenging but achievable. If you can sing the pentatonic and the chord roots while strumming, you're ready for Level 2.",
       wrong: "If you can't hum the pentatonic without the guitar, spend more time with the drone — play each note, sing it, hold it, feel it. If singing while strumming breaks your strum pattern, simplify: strum all downstrokes while singing. The strum can be simple; the singing is what matters. If nothing sounds familiar when you try to sing it, you may need more time with Level 1 — and that's completely fine.",
       sarah: "Gene, this exercise is the bridge between guitar player and musician. Every artist you love — from Father John Misty's confessional folk to DOPE LEMON's hazy grooves to The Polarity's upbeat indie — they can all sing what they play. It's the foundation of songwriting. When your ear and your fingers speak the same language, you stop being someone who plays guitar and start being someone who makes music. That's Level 1 complete.",
-      levelUp: "Can hum the Am pentatonic scale without the guitar. Can sing chord roots (A, D, G) while strumming the Dope & Smoke progression at 90 BPM. Can play a 3-note guitar phrase, put the guitar down, and sing it back accurately."
+      levelUp: "Can hum the Am pentatonic scale without the guitar. Can sing chord roots (A, D) while strumming the Dope & Smoke progression at 90 BPM. Can play a 3-note guitar phrase, put the guitar down, and sing it back accurately."
     }
   ]
 };

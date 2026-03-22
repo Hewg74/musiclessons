@@ -11,8 +11,8 @@ export const level6 = {
   review: {
     label: "Level 5 Check-In",
     time: 5,
-    exercises: ["gs-5-5", "gs-5-11"],
-    prompt: "Play Sol Del Sur (C#m-B-F#) with the syncopated strum (gs-5-5). Then play a barre chord progression you created yourself (gs-5-11). Clean barres with no buzzing? Time for jangle."
+    exercises: ["gs-5-6", "gs-5-11"],
+    prompt: "Play Sol Del Sur (C#m-B-F#) with the syncopated strum (gs-5-6). Then play a barre chord progression you created yourself (gs-5-11). Clean barres with no buzzing? Time for jangle."
   },
   exercises: [
 
