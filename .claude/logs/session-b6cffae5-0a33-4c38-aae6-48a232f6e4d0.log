@@ -1,0 +1,149 @@
+[2026-03-22T01:50:27.430Z]   That's a brilliant idea. Here's the prompt you can give to Gemini with the audio files:
+
+    ---
+    Music Analysis for Guitar Curriculum — Song-by-Song Audio Extraction
+
+    Who You Are
+
+    You are a music analysis AI helping build a personalized guitar curriculum. You will be given audio recordings of songs and asked to extract specific musical details that a     
+    guitarist needs to learn each song accurately.
+
+    Background
+
+    We're building a 14-level guitar curriculum for a student named Gene whose taste centers on psych-surf, reggae-rock, desert blues, and indie-soul. The curriculum teaches guitar 
+    through his actual favorite songs. We already have verified chord progressions from tab sites, but we're missing the nuances — the strum patterns, dynamics, timing feel, picking
+     techniques, and production details that make each song sound like itself rather than a generic chord chart.
+
+    Previous AI research got the chords wrong on 12 out of 35 songs because it was guessing from unreliable sources. We've since verified all chords against Ultimate Guitar tabs.   
+    Now we need the details that only come from actually listening to the music.
+
+    What I Need From You (Per Song)
+
+    For each song I give you, listen to the audio and extract:
+
+    1. Rhythm & Strumming
+
+    - What is the exact strum pattern? (e.g., D-DU-UDU, or describe in words)
+    - Is the guitar strumming, picking individual notes, fingerpicking, or a mix?
+    - Is the feel straight 8ths, swung, shuffled, or syncopated?
+    - Is the guitar playing on the beat, behind the beat, or ahead?
+    - Are there ghost strums (muted percussive hits between chord strums)?
+    - What's the rhythmic relationship to the drums? (e.g., guitar on upbeats while kick is on 3)
+
+    2. Dynamics & Feel
+
+    - How hard/soft is the pick attack?
+    - Does the dynamic level change between verse and chorus?
+    - Are there volume swells, crescendos, or sudden drops?
+    - What's the overall energy level? (lazy/behind-beat vs. driving/urgent)
+    - How much space/silence is there between phrases?
+
+    3. Tone & Effects
+
+    - Is the guitar clean, overdriven, fuzzed, or distorted?
+    - Can you hear reverb? How much — subtle room, medium spring, or drenched?
+    - Any other effects audible? (delay, tremolo, chorus, wah, phaser)
+    - Bright/treble tone or warm/bass-heavy tone?
+    - Does the tone change between sections?
+
+    4. Chord Voicing Details
+
+    - Are the chords played as full open shapes, partial barres, or full barres?
+    - Are there any open strings ringing against fretted notes (jangle)?
+    - Do you hear any chord embellishments? (hammer-ons, pull-offs, sus additions)
+    - Are bass notes prominent or is it all mid/treble strumming?
+
+    5. Song Structure & Arrangement
+
+    - How many distinct guitar parts are there? (one rhythm guitar? two guitars? lead + rhythm?)
+    - What does the guitar do differently in verse vs. chorus vs. bridge?
+    - Are there any standout guitar moments (riffs, fills, solos)?
+    - Does the guitar drop out at any point? For how long?
+
+    6. BPM Confirmation
+
+    - What is the actual BPM? (count it from the audio)
+
+    Output Format
+
+    For each song, give me a structured block like this:
+
+    SONG: [Title] — [Artist]
+    BPM: [exact count from audio]
+    KEY: [if you can confirm]
+
+    STRUM PATTERN: [describe precisely]
+    FEEL: [straight/swung/syncopated] [on-beat/behind-beat/ahead]
+    PICK ATTACK: [soft/medium/hard]
+    GHOST STRUMS: [yes/no, describe]
+
+    TONE: [clean/overdrive/fuzz] + [effects heard]
+    REVERB: [none/subtle/medium/drenched]
+    BRIGHTNESS: [dark-warm / neutral / bright-jangly]
+
+    VOICING STYLE: [open chords / partial barres / full barres / fingerpicked]
+    EMBELLISHMENTS: [hammer-ons, pull-offs, slides, etc.]
+    OPEN STRINGS: [any ringing open strings creating jangle?]
+
+    VERSE GUITAR: [what the guitar does in the verse]
+    CHORUS GUITAR: [what changes in the chorus]
+    BRIDGE/OTHER: [any other sections]
+    GUITAR DROPS: [does it drop out anywhere?]
+
+    STANDOUT MOMENTS: [any riffs, fills, solos, or notable guitar moments]
+
+    TEACHING NOTES: [2-3 sentences on what a student should focus on to capture this song's feel — the "sauce" that makes it sound like itself rather than a chord chart]
+
+    The Songs
+
+    Here are the songs to analyze, in priority order. These are from the student's top 50 most-played tracks:
+
+    Priority 1 — Core song studies used in the curriculum:
+    1. Dope & Smoke — DOPE LEMON (chords: Am, D, Am7, D7)
+    2. Sol Del Sur — Sun Room (chords: C#m, B, F#, E)
+    3. Breakdown — Jack Johnson (chords: G, Bm, Em, D — capo 5)
+    4. Friends — levitation room (chords: Em, Dmaj7, A)
+    5. Gimme Love — The Elovaters (chords: F, C, G)
+    6. Jah Werx — Susto (chords: B, F#, E)
+    7. Real Love Baby — Father John Misty (chords: D, Em, G, A7)
+    8. Going Gets Tough — The Growlers (chords: G, C, Cadd6, Em, D — capo 1)
+    9. Something About You — Eyedress (chords: F, Em, Am, Dm)
+    10. Marsha — Current Swell (chords: Dm, C, G, F, Bb)
+
+    Priority 2 — Used in specific levels:
+    11. Sunset Garage — Sun Room (chords: G, Em, C, D)
+    12. I Didn't Know — Skinshape (chords: Bbmaj7, F, G / Gm, C, A7, Dm)
+    13. Texas Sun — Khruangbin feat. Leon Bridges (chords: Am, G / Em, Bm)
+    14. Rules — Khruangbin (chords: G, Am, F, Em)
+    15. Peace Blossom Boogy — Babe Rainbow (chords: D, G7, A)
+    16. 1999 — NO CIGAR (chords: E, B, F#, A)
+    17. It's a Love — Baskervillain (chords: E, A, C#m, F#, B)
+    18. Surf Hat — Surf Hat (chords: E7, A7, B7, F#7)
+    19. Son of a Beach — The Polarity (chords: F, G, C, Am)
+    20. Coastline — Hollow Coves (chords: G, Bm, A — capo 2, original CGDGGD tuning)
+
+    Priority 3 — Additional songs if time allows:
+    21-50: The remaining tracks from the student's top 50 (I can provide these if you get through the first 20)
+
+    How This Will Be Used
+
+    Your analysis will be directly inserted into guitar exercise descriptions. For example, instead of a generic exercise that says:
+
+    ▎ "Play Am-D with a relaxed strum"
+
+    We want exercises that say:
+
+    ▎ "Play Am-D with a soft pick attack, behind the beat, with ghost strums on the downbeats creating a quiet 'chk-chk' underneath the offbeat chord hits. Listen to how Angus Stone
+     lets the Am ring slightly longer than the D — the Am gets 3 beats of sustain, the D gets a quicker muted chop. Match that asymmetry."
+
+    That level of specificity is what we're after. The chord progressions are already verified — what we need from you is everything ELSE.
+
+    Important Notes
+
+    - If you can't determine something from the audio, say "UNCLEAR — would need isolated guitar track to confirm" rather than guessing
+    - If the guitar is buried in the mix, note that
+    - If there are multiple guitar parts, describe each one separately
+    - The student is a beginner-to-intermediate guitarist, so describe techniques in accessible language
+    - These songs span genres: indie, surf-rock, psych, reggae, soul, desert blues, folk, afrobeat — adjust your analysis vocabulary accordingly
+
+Those are actually not given by MP3s. You're going to have to scrape them online. You can find them and download them for either the YouTube Or just send Gemini the YouTube link because Gemini can read YouTube links really well. Make sure that if you send a YouTube link it is the exact link and we don't get it wrong.

@@ -125,82 +125,124 @@ export const levelN = {
 
 | Level | File Name | Title | Skills | Key Songs (VERIFIED chords) |
 |-------|-----------|-------|--------|----------------------------|
-| 1 | `level-01-first-sounds.js` | First Sounds | Open chords, basic strum, pentatonic, one-note improv | Dope & Smoke (Am-D-G), Son of a Beach (F-G-C-Am), Real Love Baby (D-Em-G), Pattymanajaro (Am-G-C-Em) |
-| 2 | `level-02-rhythm-and-feel.js` | Rhythm & Feel | Strumming dynamics, behind-beat feel, syncopation, blues scale, bends | Close My Eyes (D-Bm-G-A), Mexico (F-C-E-Dm-Am), Foaming (Ab-Eb-Bb) |
+| 1 | `level-01-first-sounds.js` | First Sounds | Open chords, basic strum, pentatonic, one-note improv | Dope & Smoke (Am-D-Am7-D7), Son of a Beach (F-G-C-Am), Real Love Baby (D-Em-G-A7), Pattymanajaro (Am-G-C-Em) |
+| 2 | `level-02-rhythm-and-feel.js` | Rhythm & Feel | Strumming dynamics, behind-beat feel, syncopation, blues scale, bends | Close My Eyes (D-Bm-G-A), Mexico (F-C-G-Am), Foaming (A-G-D capo 1) |
 | 3 | `level-03-power-and-drive.js` | Power & Drive | Power chords, palm muting, fuzz, PReVaDe intro | Going Gets Tough (G-C-D-Em capo1), Summer Heat (E-A-B-C#m), Something About You (F-Em-Am-Dm) |
-| 4 | `level-04-the-offbeat.js` | The Offbeat | Reggae skank, ghost notes, offbeat rhythm, muting | Gimme Love (B-F#-E), Jah Werx (B-F#-E), 1999 (E-B-F#-G#m), It's a Love (A-E-C#m-B-F#) |
-| 5 | `level-05-barre-chord-world.js` | Barre Chord World | Full barre shapes, sliding barres, minor key movement | Sol Del Sur (C#m-B-F#), Island Fever (Fm-Bb-Ab-Eb), Just Yesterday (E-G-A-Em), Sunset Garage (G-B-C-D) |
+| 4 | `level-04-the-offbeat.js` | The Offbeat | Reggae skank, ghost notes, offbeat rhythm, muting | Gimme Love (F-C-G), Jah Werx (B-F#-E), 1999 (E-B-F#-A), It's a Love (E-A-C#m-F#-B) |
+| 5 | `level-05-barre-chord-world.js` | Barre Chord World | Full barre shapes, sliding barres, minor key movement | Sol Del Sur (C#m-B-F#-E), Island Fever (Fm-Bbm-Ab-Eb), Just Yesterday (E-G), Sunset Garage (G-Em-C-D) |
 | 6 | `level-06-jangle-and-shimmer.js` | Jangle & Shimmer | Maj7/sus2 voicings, open string resonance, jangle strum | Friends (Em-Dmaj7), Geneva Strange (G-C-D-Gm), Get Away (E-F#-G#m-E7) |
 | 7 | `level-07-the-groove-machine.js` | The Groove Machine | SoCal reggae-rock switch, rock solos over reggae, distorted skank | Stormtrooper (Pepper), Closer to the Sun (A-G-C-D), Warmth of the Sun (E-D-A-Bm) |
 | 8 | `level-08-desert-and-drone.js` | Desert & Drone | Sus pentatonic, Drop D, drones, quarter-tone bends, patience | Nànnuflày (Tinariwen), 15-min extended jams |
-| 9 | `level-09-extended-harmony.js` | Extended Harmony | 7th chords, Dorian mode, ghost-note grooves, rootless voicings | I Didn't Know (Gm-C-A7-Dm), Chewing Gum (Am-D-Dm7-Dm), Texas Sun (Am-G-Em-D-Bm) |
+| 9 | `level-09-extended-harmony.js` | Extended Harmony | 7th chords, Dorian mode, ghost-note grooves, rootless voicings | I Didn't Know (Bbmaj7-F-G / Gm-C-A7-Dm), Chewing Gum (Am-D-Dm7-Dm), Texas Sun (Am-G-Em-Bm) |
 | 10 | `level-10-global-colors.js` | Global Colors | Afrobeat patterns, bossa rhythm, Persian scale, tone knob, parked wah | Abusey Junction (Kokoroko), Rules (Khruangbin Am-G) |
 | 11 | `level-11-fingerpicking.js` | Fingerpicking | PIMA, Travis picking, duo thinking, percussive slap | Breakdown (G-Bm-Em-D capo5), Coastline (G-Bm-A) |
-| 12 | `level-12-dynamics-and-expression.js` | Dynamics & Expression | Major→minor trick, volume swells, dynamics, Phrygian spice | Marsha (F-G-Bb-C-D-Dm), Peace Blossom Boogy (D-G7-A) |
+| 12 | `level-12-dynamics-and-expression.js` | Dynamics & Expression | Major→minor trick, volume swells, dynamics, Phrygian spice | Marsha (Dm-C-G-F-Bb), Peace Blossom Boogy (D-G7-A) |
 | 13 | `level-13-the-full-palette.js` | The Full Palette | Style switching, scale choice improv, PReVaDe across genres | Multi-style jams, transcription |
 | 14 | `level-14-your-sound.js` | Your Sound | Build your set, performance identity | Gene's own 30-min Golden Hour Set |
 
 ---
 
-## VERIFIED SONG CHORD DATABASE
+## VERIFIED SONG CHORD DATABASE (re-verified March 2026)
 
-Use ONLY these verified chord progressions in exercises. Do NOT guess or hallucinate chords.
+> **IMPORTANT:** This database was re-verified after discovering errors in the initial research (e.g., Dope & Smoke was wrongly listed as Am-D-G when it's actually Am-D-Am7-D7). Every entry below has been checked against Ultimate Guitar tabs. Use ONLY these chords. Do NOT guess.
+>
+> ✅ = Verified from UG tab | ⚠️ = Chordify/secondary only | ❌ = No tab, needs ear transcription
 
-### CONFIRMED (15 songs verified against 2+ independent tab sources):
+### ✅ UG-Verified Songs (use with confidence):
 
-| Song | Artist | Key | BPM | Chords | Notes |
-|------|--------|-----|-----|--------|-------|
-| Sol Del Sur | Sun Room | C#m | ~100 | C#m-B-F# (verse), E-F# (chorus) | Syncopated strum, reggae-adjacent |
-| Dope & Smoke | DOPE LEMON | G | 112 | Am-D-G | 3-chord loop, mellow |
-| Breakdown | Jack Johnson | G (capo 5) | 75 | G-Bm-Em-D | Travis fingerpicking |
-| I Like The Way You Walk | The Donkeys | D/A | 97 | D-Dsus2-A (intro), A-D (verse), B-C#-E-F# (chorus approximate) | Barre chorus |
-| Friends | levitation room | D | 100 | Em-Dmaj7 (verse), A-Em (pre-chorus) | Dmaj7 voicing = the jangle |
-| Going Gets Tough | The Growlers | Ab | 158 | Ab-Db-Eb-Fm (capo 1: G-C-D-Em) | Half-time groove |
-| Something About You | Eyedress | Am | 133 | F-Em-F-Em-Am-Dm-Em | Lo-fi indie |
-| Marsha | Current Swell | F | 116 | F-G-Bb-C-D-Dm | Distinctive intro riff |
-| Real Love Baby | Father John Misty | G | 102 | D-Em-G | Tune down whole step optional |
-| Gimme Love | The Elovaters | B | 86 | B-F#-E | Reggae offbeat |
-| Sunset Garage | Sun Room | G | 142 | G-B-C-D (verse), C-D-G-Em (chorus) | Lead solo available |
-| Just Yesterday | Sun Room | Bm | 130 | E-G-A-Em | Surf-pop |
-| Texas Sun | Khruangbin | G | 111 | Am-G (main), Em-D-Bm (bridge) | Speer melody on top |
-| Jah Werx | Susto | B | 85 | B-F#-E | Reggae influence |
-| Oysters In My Pocket | Royel Otis | A | 168 | A-F#m-Bm-D | Fast indie-pop |
+| Song | Artist | Key | BPM | Chords | Capo | UG Source |
+|------|--------|-----|-----|--------|------|-----------|
+| Dope & Smoke | DOPE LEMON | Am | 112 | **Am, D, Am7, D7** (NO G chord) | None | UG 2931401 |
+| Sol Del Sur | Sun Room | C#m | ~100 | C#m-B-F# (verse), E-F# (chorus) | None | UG+KhmerChords |
+| Breakdown | Jack Johnson | G | 75 | G-Bm-Em-D (verse), G-D/F#-Em-D (chorus) | **Capo 5** | UG ver 3 |
+| I Like The Way You Walk | The Donkeys | D/A | 97 | D-Dsus2-A (verse), B-C#-E-F# (chorus) | None | UG+GuitarTabsExplorer |
+| Friends | levitation room | D | 100 | Em-Dmaj7 (verse), A-Em (chorus) | None | UG+Cifraclub |
+| Going Gets Tough | The Growlers | Ab | 158 | G-C-Cadd6 (intro), C-Em-D (pre), G-D-Em-C (chorus) | **Capo 1** | UG 1674953 |
+| Something About You | Eyedress | Am | 133 | F-Em-Am-Dm (pattern: F-Em-F-Em-Am-Dm-Em) | None | UG official 4630715 |
+| Marsha | Current Swell | **Dm** | 116 | Dm-C-G-F-Bb (verse), G-F-Bb-F-C → Bb-C-Dm (chorus) | None | UG+Cifraclub |
+| Real Love Baby | Father John Misty | G | 102 | **D-Em-G-A7** (std tuning) or E-F#m-A (capo 2) | None or **Capo 2** | UG+Cifraclub |
+| Gimme Love | The Elovaters | **C** | 86 | **F-C-G** (NOT B-F#-E) | None | UG 5290284 |
+| Sunset Garage | Sun Room | G | 142 | **G-Em-C-D** (NOT G-B-C-D) | None | UG 5485764 |
+| Just Yesterday | Sun Room | Bm | 130 | E, G (primary two chords) | None | UG tab+KhmerChords |
+| Texas Sun | Khruangbin | Am | 111 | Am-G (main), Em-Bm (bridge only) | None | UG+GuitarTabsExplorer |
+| Jah Werx | Susto | B | 85 | B-F#-E | None | UG+KhmerChords |
+| Oysters In My Pocket | Royel Otis | **A** | 168 | **A-F#m (verse), Bm-A-D (chorus)** | None | UG+KhmerChords |
+| Peace Blossom Boogy | Babe Rainbow | **D** | ~112 | **D-G7 (main), A (solo only)** | None | UG+KhmerChords |
+| Son of a Beach | The Polarity | C | 110 | F-G-C-Am | None | UG |
+| Foaming | Day We Ran | Bb | 130 | **A-G-D** | **Capo 1** | UG 5050210 |
+| Mexico | Husbands | C | 150 | F-C-G-Am (+ Dm, E) | None | UG 5633340 |
+| Surf Hat | Surf Hat | E | ~100 | E7-A7-B7-F#7 | None | UG 5121190 |
+| I Didn't Know | Skinshape | F/Dm | ? | **Bbmaj7-F-G (intro), Gm-C-F-Bb / Gm-C-A7-Dm (verse)** | None | UG+Guitaretab |
+| Rules | Khruangbin | Am | 74 | **G-Am-F-G-Em-F-Em-Am** | None | UG GP+tabs |
+| Pictures of You | Drugdealer | B | 114 | C#m7-F#m7-B-B6 (verse) | None | UG 4427972 |
 
-### CORRECTED (originally wrong, now fixed):
-- **Peace Blossom Boogy** (Babe Rainbow): Key of D, chords D-G7-A (NOT F#m-D-A-E)
-- **Oysters In My Pocket** (Royel Otis): Key of A, chords A-F#m-Bm-D (NOT C-G-Am-F)
-- **I Didn't Know** (Skinshape): Gm-C-A7-Dm (tab sources show triads, not Gm7-C7-Dm7-A7 — the 7th voicings are a valid stylistic choice but not confirmed in tabs)
+### ⚠️ Secondary-source only (use but flag for ear verification):
 
-### Additional confirmed songs:
-| Song | Artist | Key | BPM | Chords |
-|------|--------|-----|-----|--------|
-| Son of a Beach | The Polarity | C | 110 | F-G-C-Am |
-| Pattymanajaro | Yasawa Group | C | 167 | Am-G-C-Em |
-| 1999 | NO CIGAR | Ab | 85 | E-B-F#-G#m |
-| Warmth of the Sun | levitation room | Am | 122 | E-D-A-Bm |
-| Island Fever | Billy Changer | Fm | 97 | Fm-Bb-Ab-Eb |
-| Mexico | Husbands | C | 150 | F-C-E-Dm-Am |
-| Chewing Gum | Cotton Jones | Am | 120 | Am-D-Dm7-Dm |
-| Geneva Strange | modGlyders | G | ? | G-C-D-Gm |
-| Get Away | Babitha | E | ? | E-F#-G#m-E7 |
-| Close My Eyes | The Lagoons | Bm | 104 | Unverified — use D-Bm-G-A as likely |
-| Baby | Ariel Pink | G | 92 | D-Em-D |
-| Reunited with the Day | The Groovy Nobody | F#m | ? | F#m-B-F#m7-B7 |
-| Pictures of You | Drugdealer | A | 114 | E-Bm-F#m (verse), A-E-D (chorus) |
-| Saving A Life | Richard Houghten | Fm | 114 | Bbm-Fm-Ab-F |
-| Surf Hat | Surf Hat | E | ? | F#7-A7-B7-E7 |
-| Matter of Time | Vandelux | G | 115 | G-C (two-chord) |
-| Foaming | Day We Ran | Bb | 130 | Ab-Eb-Bb-Bbm |
-| Rules | Khruangbin | Am | 74 | G-Am-F-G-Em-F-Em-Am |
+| Song | Artist | Key | Chords | Source | Notes |
+|------|--------|-----|--------|--------|-------|
+| Pattymanajaro | Yasawa Group | C | Am-G-C-Em | Chordify | Not on UG |
+| Get Away | Babitha | E | E-F#(maj)-G#m-E7 | Chordify | F# is MAJOR not minor |
+| It's a Love | Baskervillain | E | E-A-C#m-F#-B | Chordify+ChordU | Not on UG |
+| 1999 | NO CIGAR | Ab | E-B-F#-A | Chordify | UG artist page exists but 403 |
+| Warmth of the Sun | levitation room | Am | E-D-A-Bm-B | ChordU+Chordify | Core: E-D-E pattern |
+| Island Fever | Billy Changer | Fm | Fm-Bbm-Ab-Eb | Chordify auto | No human tab |
+| Chewing Gum | Cotton Jones | Am | Am-D-Dm7-Dm | Chordify | Not on UG |
+| Geneva Strangemod | Glyders | G | G-C-D-Gm | Chordify | Title is "Geneva Strangemod" |
+| Matter of Time | Vandelux | G | G-C | ChordU+Chordify | Two-chord |
+| Reunited with the Day | The Groovy Nobody | F#m | F#m-B-F#m7-B7 | Chordify | Needs ear verify |
+| Baby | Ariel Pink | G | D-Em | ChordU+UG | Two-chord |
+| Saving A Life | Richard Houghten | Fm | Bbm-Fm-Ab-F-Bb | UG GP intro only | Instrumental |
+| Coastline | Hollow Coves | D | G-Bm-A (std approx) | UG | Original tuning CGDGGD capo 7 |
 
-### Songs needing transcription (use cautiously, flag as approximate):
-North Side (Bunchy Tops), for my team (axaero), Candy Flu (Walking Who), Space Garden (Auntie Leo), Summer Heat (Sun Room — likely E-A-B-C#m based on band's patterns), End of Time (The Everywheres), Visions of My Mind (levitation room), Tongue (Edamame), Trust (Hot Flash Heat Wave), I See You (Echo Frame)
+### ❌ No tab found — needs ear transcription:
+North Side (Bunchy Tops), for my team (axaero), Candy Flu (Walking Who), Space Garden (Auntie Leo), **Summer Heat (Sun Room — NO TAB EXISTS anywhere)**, Long Summer (Yalisco), End of Time (The Everywheres), Visions of My Mind (levitation room), Tongue (Edamame), Trust (Hot Flash Heat Wave), I See You (Echo Frame), Close My Eyes (The Lagoons), The West (Les Krills — UG paywalled)
+
+### MAJOR CORRECTIONS from initial research:
+These were WRONG in the first research pass and have been fixed:
+1. **Dope & Smoke**: Was Am-D-**G** → Actually Am-D-Am7-D7 (no G chord at all)
+2. **Gimme Love**: Was **B-F#-E** → Actually **F-C-G** (completely wrong key)
+3. **Sunset Garage**: Was G-**B**-C-D → Actually G-**Em**-C-D (B was wrong)
+4. **Marsha**: Was key of **F** → Actually key of **Dm** (Dm-C-G-F-Bb)
+5. **Real Love Baby**: Was D-Em-G → Actually D-Em-G-**A7** (missing chord)
+6. **Going Gets Tough**: Was Ab-Db-Eb-Fm → Actually **G-C-Cadd6-Em-D (capo 1)** (need playable version)
+7. **I Didn't Know**: Was Gm7-C7-Dm7-A7 → Actually **Bbmaj7-F-G / Gm-C-F-Bb / Gm-C-A7-Dm** (much richer)
+8. **Peace Blossom Boogy**: Was F#m-D-A-E → Actually **D-G7-A** (completely wrong key)
+9. **Oysters In My Pocket**: Was C-G-Am-F → Actually **A-F#m-Bm-D** (completely wrong key)
+10. **Foaming**: Was Ab-Eb-Bb-Bbm → Actually **A-G-D (capo 1)** (need playable version)
+11. **Rules**: Was Am-G → Actually **G-Am-F-G-Em-F-Em-Am** (much more complex)
+12. **Pictures of You**: Was E-Bm-F#m → Actually **C#m7-F#m7-B-B6** (different key, jazz voicings)
+
+---
+
+## ⚠️ RELIABILITY WARNING: What You Can Trust vs. What You Can't
+
+The chord database above was re-verified against UG tabs and is reliable. But **other details from the research may not be**. Here's the breakdown:
+
+### RELIABLE (from artist interviews, rig rundowns, verified sources):
+- **Artist gear** — Speer's flatwound strings, Sun Room's Jazzmaster+Tubescreamer, etc. (from Premier Guitar, Equipboard, band interviews)
+- **General playing approach** — Khruangbin's three-note voicings, Tinariwen's drone-based playing, Skinshape's drums-first process
+- **Genre-level patterns** — reggae offbeat, surf reverb, psych fuzz, desert blues repetition
+- **Harmonic patterns** — descending minor, major→minor trick, etc. (derived from verified chords)
+
+### NOT RELIABLE (may be generic/hallucinated):
+- **Song-specific strum patterns** — "Down, Down-Up, Down-Up" for Sun Room was derived from a general surf description, NOT from analyzing Sol Del Sur specifically
+- **Song-specific BPMs** — automated tools (SongBPM, Tunebat) can be off by 2x on half-time songs
+- **Picking patterns** — "Travis picking for Jack Johnson" is generically correct but the specific pattern for Breakdown wasn't verified note-by-note
+- **Any detail described as "likely" or "probably"**
+
+### WHAT TO DO ABOUT THIS:
+When writing exercises about a specific song:
+1. **Chords** — use the verified database above, these are correct
+2. **Strum patterns** — describe the GENERAL STYLE feel ("laid-back offbeat with muted ghost strums") rather than a precise notation ("D-DU-UDU"). Add: "Listen to the recording and match the feel."
+3. **BPM** — use as approximate starting point. Add: "Adjust metronome to match the recording."
+4. **Tone/effects** — artist-level gear info is reliable. Song-specific tone differences are not verified.
+5. **When in doubt** — write "Listen to [song name] and match the rhythmic feel" rather than prescribing a specific pattern you haven't verified.
 
 ---
 
 ## ARTIST-SPECIFIC GUITAR TECHNIQUES
 
-Reference these when writing `sarah` notes and exercise instructions:
+These are from verified sources (interviews, rig rundowns). Reference in `sarah` notes:
 
 ### Sun Room
 - **Gear:** Jazzmaster + Tubescreamer always-on (low gain, tone shaper) + Fender Deluxe Reverb

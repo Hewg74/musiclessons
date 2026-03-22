@@ -7,7 +7,7 @@ import {
   Mic, Headphones, Info, AlertCircle, Quote, ArrowRight, Check, 
   Volume2, Sun, Moon
 } from 'lucide-react';
-import { MiniAudioPlayer, AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, ChordVoicingViewer, extractChordsFromExercise, VolumeMeter, ChordTransitionTimer, GenreMetronome, SilenceScore, DroneGenerator, TAB_CONTENT, InlineKeyboard, RhythmCellCards, PhraseFormGuide, StrumChartBuilder, ChartListView, makeTemplateChart } from './JungleTools.jsx';
+import { MiniAudioPlayer, AudioPlayer, YouTubeAudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, ChordVoicingViewer, extractChordsFromExercise, VolumeMeter, ChordTransitionTimer, GenreMetronome, SilenceScore, DroneGenerator, TAB_CONTENT, InlineKeyboard, RhythmCellCards, PhraseFormGuide, StrumChartBuilder, ChartListView, makeTemplateChart } from './JungleTools.jsx';
 import { acquireKeepalive, releaseKeepalive, setMediaSession, clearMediaSession } from './audioKeepalive.js';
 import { DAYS, KEYBOARD_LEVELS, LOOPER_LEVELS, LESSON_POOL, ALL_NOTES, getPitchRange } from './data/appData.js';
 import { WEEKLY_PLANS, CURRENT_WEEK } from './data/weeklyPlans/index.js';
@@ -956,6 +956,24 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
             </div>
           )}
 
+          {/* Song Reference — listen to the actual song */}
+          {ex.songRef?.youtubeId && (
+            <div style={{ marginBottom: 24 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                <Music size={14} style={{ color: T.gold }} />
+                <div style={{ fontSize: 10, fontWeight: 900, color: T.textDark, letterSpacing: 1.5, fontFamily: T.sans, textTransform: "uppercase" }}>
+                  {ex.songRef.title || "Reference Song"}
+                </div>
+              </div>
+              <YouTubeAudioPlayer videoId={ex.songRef.youtubeId} theme={T} title={ex.songRef.title || "Song"} />
+              {ex.songRef.note && (
+                <div style={{ fontSize: 11, color: T.textMed, marginTop: 8, fontStyle: "italic", lineHeight: 1.5 }}>
+                  {ex.songRef.note}
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Audio Tracks */}
           {tracks.length > 0 && (
             <div style={{ marginBottom: 24 }}>
@@ -1615,6 +1633,24 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
                       fontFamily: T.sans, textTransform: "uppercase"
                     }}>Reset</button>
                   </div>
+                </div>
+              )}
+
+              {/* Song Reference — listen to the actual song */}
+              {ex.songRef?.youtubeId && (
+                <div style={{ marginBottom: 16 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                    <Music size={14} style={{ color: dayColor || T.gold }} />
+                    <div style={{ fontSize: 10, fontWeight: 900, color: T.textDark, letterSpacing: 1.5, fontFamily: T.sans, textTransform: "uppercase" }}>
+                      {ex.songRef.title || "Reference Song"}
+                    </div>
+                  </div>
+                  <YouTubeAudioPlayer videoId={ex.songRef.youtubeId} theme={T} title={ex.songRef.title || "Song"} />
+                  {ex.songRef.note && (
+                    <div style={{ fontSize: 11, color: T.textMed, marginTop: 6, fontStyle: "italic", lineHeight: 1.5 }}>
+                      {ex.songRef.note}
+                    </div>
+                  )}
                 </div>
               )}
 

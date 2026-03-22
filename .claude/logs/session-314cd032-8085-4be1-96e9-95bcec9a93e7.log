@@ -1,0 +1,1533 @@
+[2026-03-21T11:03:15.699Z]                                                                                                                                                                                       Summary                                                                                                                                                                              
+  Prerequisites completed:                                                                                                                                                             - 4 new scales added to SCALES dict (C#m pentatonic, Gm pentatonic, A natural minor, Em pentatonic)                                                                                
+  - 20+ new chord voicings added (C#m, F#m, Bbm, Am7, Dm7, Em7, Cmaj7, Dmaj7, Gm7, C7, A7, E7, B7, F#7, G7, Dsus2, Asus2, A5, D5, E5, B5)                                              - localStorage migration for guitar progress wipe                                                                                      
+  - index.js updated with 14 level imports                                                                                                                                           
+                                                                                                                                                                                     
+  14 levels written (all by parallel Opus agents):                                                                                                                                   
+                                                                                                                                                                                       ┌───────┬───────────────────────┬──────────────────────┐                                                                                                                             │ Level │         Title         │      Exercises       │                                                                                                                           
+  ├───────┼───────────────────────┼──────────────────────┤                                                                                                                             │ 1     │ First Sounds          │ 13                   │
+  ├───────┼───────────────────────┼──────────────────────┤                                                                                                                           
+  │ 2     │ Rhythm & Feel         │ 12                   │
+  ├───────┼───────────────────────┼──────────────────────┤                                                                                                                             │ 3     │ Power & Drive         │ 11                   │
+  ├───────┼───────────────────────┼──────────────────────┤                                                                                                                             │ 4     │ The Offbeat           │ 11                   │                                                                                                                           
+  ├───────┼───────────────────────┼──────────────────────┤                                                                                                                             │ 5     │ Barre Chord World     │ 11                   │
+  ├───────┼───────────────────────┼──────────────────────┤                                                                                                                             │ 6     │ Jangle & Shimmer      │ 12                   │
+  ├───────┼───────────────────────┼──────────────────────┤                                                                                                                           
+  │ 7     │ The Groove Machine    │ 10                   │
+  ├───────┼───────────────────────┼──────────────────────┤                                                                                                                             │ 8     │ Desert & Drone        │ 14 (11 kept + 3 new) │
+  ├───────┼───────────────────────┼──────────────────────┤                                                                                                                             │ 9     │ Extended Harmony      │ 11                   │                                                                                                                           
+  ├───────┼───────────────────────┼──────────────────────┤                                                                                                                             │ 10    │ Global Colors         │ 11                   │
+  ├───────┼───────────────────────┼──────────────────────┤                                                                                                                             │ 11    │ Fingerpicking         │ 11                   │
+  ├───────┼───────────────────────┼──────────────────────┤                                                                                                                             │ 12    │ Dynamics & Expression │ 11                   │
+  ├───────┼───────────────────────┼──────────────────────┤                                                                                                                             │ 13    │ The Full Palette      │ 9                    │
+  ├───────┼───────────────────────┼──────────────────────┤                                                                                                                             │ 14    │ Your Sound            │ 10                   │
+  ├───────┼───────────────────────┼──────────────────────┤                                                                                                                             │ Total │                       │ ~157 exercises       │
+  └───────┴───────────────────────┴──────────────────────┘                                                                                                                              
+  Old files deleted: 10 legacy level files removed.                                                                                                                                    Build: Clean, no errors.
+                                                                                   
+
+another AI implemented the guitar stuff can you take a DEEP pass to see if they missed anything? feel free to use Opus agents
+[2026-03-21T11:06:34.316Z] <task-notification>
+<task-id>abc13a8bd61bc2811</task-id>
+<tool-use-id>toolu_016njtnrmpxVb1mwfcSoLsn5</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\314cd032-8085-4be1-96e9-95bcec9a93e7\tasks\abc13a8bd61bc2811.output</output-file>
+<status>completed</status>
+<summary>Agent "Audit guitar curriculum structure" completed</summary>
+<result>Now I have a clear picture. In level 7, exercises gs-7-1, gs-7-2, gs-7-3, gs-7-5, gs-7-6, gs-7-7, gs-7-8, and gs-7-9 are all missing the `levelUp` field (8 exercises). Only gs-7-4 and gs-7-10 have it. Let me verify the `metronome` field issue -- some exercises in level 14 seem to lack it deliberately (performance exercises). That's probably intentional for exercises about free exploration.
+
+Now I have all the data needed for a comprehensive audit. Let me compile my findings.
+
+---
+
+## Code Review: Guitar Curriculum (`sarah-practice-plan/src/data/guitarStudy/`)
+
+### Summary
+- Blockers: 0 | Major: 1 | Minor: 2 | Nitpicks: 1
+- Overall Quality: **Good**
+
+---
+
+### 1. index.js -- Import/Export Verification
+
+**PASS.** All 14 imports match the exported variable names from their respective files:
+
+| Import | File | Exported As |
+|--------|------|-------------|
+| `level1` | `level-01-first-sounds.js` | `export const level1` |
+| `level2` | `level-02-rhythm-and-feel.js` | `export const level2` |
+| ... | ... | ... |
+| `level14` | `level-14-your-sound.js` | `export const level14` |
+
+All 14 variables are correctly imported and assembled into the `GUITAR_STUDY` array in order.
+
+---
+
+### 2. Exercise ID Uniqueness
+
+**PASS.** 157 total exercise IDs scanned. Every ID follows the `gs-{level}-{N}` pattern and is unique. No duplicates found. IDs are sequential within each level.
+
+---
+
+### 3. Cross-Reference Integrity (Review Exercises)
+
+**PASS.** Every `review.exercises` reference points to a valid ID in a prior level:
+
+| Level | Reviews | References | Exist? |
+|-------|---------|------------|--------|
+| 2 | L1 Check-In | gs-1-5, gs-1-10 | Yes (L1 has 13 exercises) |
+| 3 | L2 Check-In | gs-2-2, gs-2-7 | Yes (L2 has 12 exercises) |
+| 4 | L3 Check-In | gs-3-2, gs-3-7 | Yes (L3 has 11 exercises) |
+| 5 | L4 Check-In | gs-4-1, gs-4-4 | Yes (L4 has 11 exercises) |
+| 6 | L5 Check-In | gs-5-5, gs-5-11 | Yes (L5 has 11 exercises) |
+| 7 | L6 Check-In | gs-6-3, gs-6-11 | Yes (L6 has 12 exercises) |
+| 8 | L7 Check-In | gs-7-1, gs-7-10 | Yes (L7 has 10 exercises) |
+| 9 | L8 Check-In | gs-8-4, gs-8-11 | Yes (L8 has 14 exercises) |
+| 10 | L9 Check-In | gs-9-4, gs-9-9 | Yes (L9 has 11 exercises) |
+| 11 | L10 Check-In | gs-10-3, gs-10-9 | Yes (L10 has 11 exercises) |
+| 12 | L11 Check-In | gs-11-5, gs-11-11 | Yes (L11 has 11 exercises) |
+| 13 | L12 Check-In | gs-12-3, gs-12-8 | Yes (L12 has 11 exercises) |
+| 14 | L13 Check-In | gs-13-5, gs-13-9 | Yes (L13 has 9 exercises) |
+
+Level 1 correctly has no `review` field. All references are valid.
+
+---
+
+### 4. Unlocks Field Verification
+
+**PASS.** Each level's `unlocks` string matches the next level's title exactly:
+
+| Level | `unlocks` value | Next level's `title` | Match? |
+|-------|----------------|---------------------|--------|
+| 1 | "Rhythm & Feel (Level 2)" | "Rhythm & Feel" | Yes |
+| 2 | "Power & Drive (Level 3)" | "Power & Drive" | Yes |
+| 3 | "The Offbeat (Level 4)" | "The Offbeat" | Yes |
+| 4 | "Barre Chord World (Level 5)" | "Barre Chord World" | Yes |
+| 5 | "Jangle & Shimmer (Level 6)" | "Jangle & Shimmer" | Yes |
+| 6 | "The Groove Machine (Level 7)" | "The Groove Machine" | Yes |
+| 7 | "Desert & Drone (Level 8)" | "Desert & Drone" | Yes |
+| 8 | "Extended Harmony (Level 9)" | "Extended Harmony" | Yes |
+| 9 | "Global Colors (Level 10)" | "Global Colors" | Yes |
+| 10 | "Fingerpicking (Level 11)" | "Fingerpicking" | Yes |
+| 11 | "Dynamics & Expression (Level 12)" | "Dynamics & Expression" | Yes |
+| 12 | "The Full Palette (Level 13)" | "The Full Palette" | Yes |
+| 13 | "Your Sound (Level 14)" | "Your Sound" | Yes |
+
+Level 14 correctly has no `unlocks` field.
+
+---
+
+### 5. Level Numbering
+
+**PASS.** Every file's `level` property matches its filename:
+
+- `level-01-first-sounds.js` -> `level: 1`
+- `level-02-rhythm-and-feel.js` -> `level: 2`
+- ... all 14 verified correct.
+
+---
+
+### 6. Exercise Count
+
+| Level | Title | Exercises |
+|-------|-------|-----------|
+| 1 | First Sounds | 13 |
+| 2 | Rhythm & Feel | 12 |
+| 3 | Power & Drive | 11 |
+| 4 | The Offbeat | 11 |
+| 5 | Barre Chord World | 11 |
+| 6 | Jangle & Shimmer | 12 |
+| 7 | The Groove Machine | 10 |
+| 8 | Desert & Drone | 14 |
+| 9 | Extended Harmony | 11 |
+| 10 | Global Colors | 11 |
+| 11 | Fingerpicking | 11 |
+| 12 | Dynamics & Expression | 11 |
+| 13 | The Full Palette | 9 |
+| 14 | Your Sound | 10 |
+| **Total** | | **157** |
+
+---
+
+### 7. Field Completeness
+
+**Required fields checked:** `id`, `time`, `title`, `type`, `what`, `steps` (with `text` + `why`), `feel`, `wrong`, `sarah`, `metronome`, `levelUp`
+
+**Global counts across all 157 exercises:**
+- `feel`: 157 (all present)
+- `wrong`: 157 (all present)
+- `sarah`: 157 (all present)
+- `levelUp`: **149** (8 missing)
+- `metronome`: 139 (18 exercises lack it -- many intentionally for free-exploration exercises)
+
+---
+
+### Major Issues
+
+#### [M1] 8 exercises in Level 7 are missing the `levelUp` field
+- **File:** `sarah-practice-plan/src/data/guitarStudy/level-07-the-groove-machine.js`
+- **Issue:** Exercises gs-7-1, gs-7-2, gs-7-3, gs-7-5, gs-7-6, gs-7-7, gs-7-8, and gs-7-9 have no `levelUp` field. Only gs-7-4 (line 109) and gs-7-10 (line 257) have it. Every exercise in all other 13 levels includes `levelUp`. This is the only level with this gap -- all other levels have 100% `levelUp` coverage.
+- **Impact:** If the rendering logic uses `levelUp` to show progression criteria or completion gates, these 8 exercises will show nothing. Even if the UI handles missing `levelUp` gracefully, the curriculum design intent is clearly for every exercise to have one (the other 149 exercises all do).
+- **Suggestion:** Add `levelUp` strings to all 8 exercises. For example, gs-7-1 could be: `levelUp: "Can play the SoCal switch (4 bars clean skank → 4 bars distorted power chords) at 100 BPM with an instant, clean transition on beat 1."` Similarly for the others.
+
+---
+
+### Minor Issues
+
+#### [m1] Some exercises intentionally omit `metronome` but inconsistently
+- **Files:** Various exercises across levels 1, 5, 8, 9, 14
+- **Issue:** 18 exercises lack a `metronome` field. This appears intentional for free-exploration exercises (e.g., gs-14-6 "The Quiet Moment" says "No metronome"), baseline recordings (gs-1-1), and shape-building exercises (gs-5-1 through gs-5-3). However, some exercises like gs-9-1 explicitly set `metronome: null` while others simply omit the field. Mixing `null` and `undefined` (omitted) is an inconsistency.
+- **Suggestion:** Decide on one convention: either always include `metronome: null` for exercises without a metronome, or always omit it. The explicit `null` approach is slightly better for documentation -- it signals "no metronome is intentional" vs. "we forgot to add it."
+
+#### [m2] Level 5 (`level-05-barre-chord-world.js`) export starts on line 1 instead of line 3
+- **File:** `sarah-practice-plan/src/data/guitarStudy/level-05-barre-chord-world.js:1`
+- **Issue:** All other 13 level files have a blank line and/or import statement before `export const levelN = {` on line 3. Level 5 starts the export on line 1 and has `level: 5` on line 2 instead of line 4. This is a minor formatting inconsistency -- it does not have the `import { getPitchRange } from "../appData.js"` import that most other files have.
+- **Suggestion:** If level 5 doesn't use `getPitchRange`, the missing import is correct. The line numbering difference is cosmetic. Worth checking whether any exercise in level 5 uses `getPitchRange` -- if not, this is just a style nit.
+
+---
+
+### Nitpicks
+
+#### [N1] gs-8-3 ("Rhythm Drone") has no `setup` field
+- **File:** `sarah-practice-plan/src/data/guitarStudy/level-08-desert-and-drone.js:53`
+- **Issue:** This exercise has `what` but no `setup` field. All other sampled exercises include `setup`. The exercise content implies the setup is "Guitar in Drop D tuning" (context from the previous exercise), but it isn't stated explicitly.
+- **Suggestion:** Add `setup: "Guitar in Drop D tuning (from gs-8-2). Metronome at 75 BPM."` for consistency.
+
+---
+
+### Positive Notes
+
+- **Excellent ID discipline.** 157 exercises across 14 files, zero duplicates, clean sequential numbering. This is rare in hand-authored curriculum data.
+- **Rock-solid cross-references.** All 26 review exercise references (2 per level, 13 levels) point to valid IDs. Zero broken links.
+- **Consistent structure.** The `feel` / `wrong` / `sarah` triad is present in every single exercise -- perfect 157/157 coverage. This gives the curriculum a reliable pedagogical voice.
+- **Thoughtful `unlocks` chain.** The progression from Level 1 through Level 14 is cleanly linked, with the first level omitting `review` and the last level omitting `unlocks`, exactly as expected.
+- **Rich exercise data.** Every exercise has meaningful `steps` with both `text` and `why` fields. The `why` explanations are pedagogically strong -- they connect technique to purpose.
+
+---
+
+### Recommendations
+
+1. **Fix the Level 7 `levelUp` gap** -- this is the only structural issue in the entire curriculum. Add `levelUp` to the 8 missing exercises in `level-07-the-groove-machine.js`.
+2. **Optionally standardize `metronome: null`** for exercises that intentionally omit a metronome, rather than leaving the field absent.
+3. **Consider adding `setup` to gs-8-3** for completeness.</result>
+<usage><total_tokens>90522</total_tokens><tool_uses>43</tool_uses><duration_ms>166886</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\314cd032-8085-4be1-96e9-95bcec9a93e7\tasks\abc13a8bd61bc2811.output
+[2026-03-21T11:08:00.917Z] <task-notification>
+<task-id>aee0a68cea00088b0</task-id>
+<tool-use-id>toolu_019iAG5BGdeNtHJKpH6vQdAS</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\314cd032-8085-4be1-96e9-95bcec9a93e7\tasks\aee0a68cea00088b0.output</output-file>
+<status>completed</status>
+<summary>Agent "Audit exercise quality and sauce" completed</summary>
+<result>I now have a thorough reading of all five guitar curriculum files and the singer-songwriter gold standard. Here is my audit.
+
+---
+
+## Guitar Curriculum Quality Audit: "Sauce" Evaluation
+
+### Summary
+
+- **Overall Verdict**: This curriculum is exceptional. It has significant "sauce" and is clearly NOT generic music school material. The exercises are deeply grounded in Gene's specific artists, use verified chord progressions, weave improvisation throughout, and employ sound pedagogy. There are a handful of issues to flag, mostly minor.
+- Blockers: 1 | Major: 3 | Minor: 5 | Nitpicks: 3
+
+---
+
+### A. Song Grounding
+
+**Rating: Excellent (9/10)**
+
+Every level anchors exercises to specific songs from Gene's listening. Verified songs are used correctly in most cases:
+
+- **Level 1** (`level-01-first-sounds.js`): Dope & Smoke (Am-D-G) is the anchor song (gs-1-10). Real Love Baby (D-Em-G) is gs-1-11. Pattymanajaro (Am-G-C-Em) is referenced in gs-1-3. Son of a Beach gets a mention. Four songs, all from Gene's world.
+- **Level 2** (`level-02-rhythm-and-feel.js`): Close My Eyes (D-Bm-G-A) anchors the level (gs-2-4, gs-2-12). Baby by Ariel Pink (D-Em) is gs-2-8. Mexico by Husbands is gs-2-9.
+- **Level 5** (`level-05-barre-chord-world.js`): Sol Del Sur (C#m-B-F#) is the anchor (gs-5-6). Island Fever by Billy Changer (gs-5-7), Just Yesterday by Sun Room (gs-5-8), Sunset Garage by Sun Room (gs-5-9). Four song studies in one level.
+- **Level 8** (`level-08-desert-and-drone.js`): Nannuflay by Tinariwen is the style anchor (gs-8-9). Bombino (gs-8-12), Vieux Farka Toure (gs-8-14), Ali Farka Toure throughout. No specific "song study" with verified chord progressions here, but the level is appropriately style-focused (Tuareg music doesn't have chord-chart formats).
+- **Level 10** (`level-10-global-colors.js`): Abusey Junction (gs-10-3), Rules by Khruangbin (gs-10-7), BALTHVS cumbia (gs-10-8), Tommy Guerrero (gs-10-9), Rosinha De Valenca (gs-10-4). Five artist-style studies.
+
+**Issues:**
+
+#### [M1] Major: Level 8 has no song study with a verifiable chord progression
+- **File:** `level-08-desert-and-drone.js`
+- **Issue:** While stylistically rich, every song study is "Tinariwen style" or "Bombino style" rather than learning a specific song with specific chords. This is partly justified (Tuareg music is modal/drone-based, not chord-based), but Gene might want to learn ONE specific Tinariwen or Bombino riff note-for-note. Even a simplified transcription of the Nannuflay opening riff would ground the level more concretely.
+- **Suggestion:** Add a note-for-note transcription exercise of the Nannuflay guitar intro (or Bombino's "Tar Hani") as a concrete anchor.
+
+---
+
+### B. Artist-Specific Sauce
+
+**Rating: Outstanding (10/10)**
+
+The `sarah` notes are loaded with artist-specific technical detail. This is NOT generic encouragement. Examples:
+
+- **gs-1-2** (Am Pentatonic): "Angus Young of Allah-Las plays psych-surf leads in this shape, Mark Speer of Khruangbin builds entire songs from it, Angus Stone of DOPE LEMON noodles in it between chords."
+- **gs-5-6** (Sol Del Sur): "Luke from Sun Room plays a Jazzmaster with the Tubescreamer always on -- low gain, just warming the signal, tone shaping. Through a Fender Deluxe Reverb."
+- **gs-10-6** (Parked Wah): "Mark Speer's Khruangbin tone IS the parked wah... a Dunlop Cry Baby parked at about 50%, combined with a DS-1 (gain almost off) and flatwound strings on his Strat with DiMarzio DP186 pickups."
+- **gs-10-7** (Rules): "Mark Speer's Strat with DiMarzio DP186s and D'Addario Chromes flatwounds gives that smooth, rounded tone. His DS-1 is set with gain almost off."
+- **gs-10-9** (Tommy Guerrero): "He's a San Francisco skateboarder who plays a 1980s Japanese Fender Telecaster through clean Fender amps, finger-picked, no effects except a little reverb. His influences are Gabor Szabo and Mulatu Astatke."
+- **gs-8-1** (Sus Pentatonic): Explains that "sus pentatonic" is a Western approximation, not the actual Tuareg scale, and notes the cultural context.
+
+Every `sarah` note names specific gear, specific techniques, specific recordings. This is the opposite of "generic music school."
+
+---
+
+### C. Improv Thread
+
+**Rating: Excellent (9/10)**
+
+Improvisation is woven throughout, not bolted on at the end:
+
+- **Level 1**: gs-1-7 (One-Note Groove) is improv on a single note at exercise 7 of 13. gs-1-12 (First Improv) is a full call-and-response improv. gs-1-8 (blues scale) includes "improvise using ONLY D, Eb, and E."
+- **Level 2**: gs-2-6 includes "call and response with the blues scale." gs-2-10 is full blues improv. gs-2-8 (Baby) includes freeform embellishment.
+- **Level 5**: Less improv-heavy -- this is a technique-focused level (barre chords). Improv appears indirectly through the song studies.
+- **Level 8**: gs-8-3 (Rhythm Drone) is one-string improv. gs-8-4 (Hypnotic Repetition) is constrained improv. gs-8-7 (Desert Recovery) is improv with "wrong note" recovery. gs-8-11 (Extended Desert Jam) is 15 minutes of improv. gs-8-13 (One Note Per Minute) is extreme constraint improv. Improv is deeply woven.
+- **Level 10**: gs-10-10 (Global Fusion Improv) and gs-10-11 (Extended World Jam) are full improv. gs-10-7 (Rules) is essentially a structured improv exercise (play as few notes as possible).
+
+**Issue:**
+
+#### [m1] Minor: Level 5 has no explicit improv exercise
+- **File:** `level-05-barre-chord-world.js`
+- **Issue:** Level 5 is entirely technique and song studies (barre shapes, transitions, sliding). While Gene said "improvisation needs to be part of every single thing," barre chord levels are inherently more mechanical. A short exercise like "improvise a 3-chord barre progression you invent" would satisfy the principle.
+- **Suggestion:** Add one exercise where Gene creates his own barre chord progression and improvises a strum pattern over it.
+
+---
+
+### D. Pedagogy Principles
+
+**Rating: Outstanding (10/10)**
+
+All four pedagogy principles are consistently applied:
+
+1. **Prescribed slow tempo**: Every exercise specifies a starting BPM. gs-1-2: "Metronome at 60 BPM." gs-5-6: "Starting at 70 BPM, target 100." gs-2-9: "Start slow, target 150." Universally applied.
+
+2. **Sleep encouragement**: gs-1-10: "If you can't get past 100 today, stop. Sleep on it. Try 112 tomorrow." gs-2-11: "your brain consolidates during sleep." gs-5-4: "sleep consolidation will do the rest." gs-8-4: "stop and try tomorrow -- your brain consolidates motor patterns during sleep." gs-8-8: "quarter-tone accuracy improves dramatically overnight." Present in every level.
+
+3. **Rep counts with reset conditions**: gs-1-2: "Play ascending and descending 4 times in a row without a wrong note. If you hit a wrong fret, restart the count from zero." gs-5-2: "10 clean strums in a row... If any strum buzzes, restart the count from zero." gs-2-11: "restart the count from zero." Consistently applied.
+
+4. **Constraint-based approach**: gs-1-7 (One-Note Groove): "Play ONLY the open A string." gs-8-13 (One Note Per Minute): extreme constraint. gs-10-7 (Rules): "60% or more of the song is SILENCE." The entire curriculum philosophy is constraint-based.
+
+---
+
+### E. Chord Verification
+
+**Rating: Good -- with one blocker**
+
+#### [B1] BLOCKER: Sol Del Sur chord progression needs verification against the provided database
+- **File:** `level-05-barre-chord-world.js`, gs-5-6 line 132
+- **Issue:** The exercise uses C#m-B-F#, which matches the verified database (CONFIRMED). However, gs-5-6 line 141 introduces a chorus section with "E-F#" that is not in the verified database entry for Sol Del Sur. The provided database only confirms "C#m-B-F#." The chorus chords should be verified before shipping.
+- **Action needed:** Verify whether E-F# is the actual chorus of Sol Del Sur, or if the chorus also uses C#m-B-F#.
+
+#### Verified chords check:
+- **Dope & Smoke (Am-D-G)**: Used in gs-1-10 line 242. **MATCHES** verified database. CORRECT.
+- **Sol Del Sur (C#m-B-F#)**: Used in gs-5-6 line 132. **MATCHES** verified database. CORRECT (verse). Chorus E-F# unverified.
+- **Oysters In My Pocket**: Not used in these five files. N/A.
+- **Peace Blossom Boogy**: Not used in these five files. N/A.
+- **I Didn't Know (Gm-C-A7-Dm)**: Referenced in the Level 9 review prompt (line 15 of level-10). Not directly used as an exercise in these five files.
+
+#### [M2] Major: Close My Eyes (D-Bm-G-A) chords not in verified database
+- **File:** `level-02-rhythm-and-feel.js`, gs-2-4 line 99
+- **Issue:** Close My Eyes by The Lagoons uses D-Bm-G-A. This progression is not in the provided verified database. It may be correct, but it has not been explicitly verified like the other songs. Given that Oysters In My Pocket was CORRECTED from the commonly-found-online version, Close My Eyes chords should also be verified.
+- **Action needed:** Verify D-Bm-G-A against actual tabs/recordings of Close My Eyes.
+
+#### [M3] Major: Island Fever (Fm-Bb-Ab-Eb) chords not in verified database
+- **File:** `level-05-barre-chord-world.js`, gs-5-7 line 155
+- **Issue:** Same concern. Billy Changer's Island Fever uses Fm-Bb-Ab-Eb. Not in the verified database. The exercise itself hedges (offers capo approach with Em-A-G-D), but the primary chords should be verified.
+
+#### [m2] Minor: gs-5-7 has a self-contradicting chord description
+- **File:** `level-05-barre-chord-world.js`, gs-5-7 line 160
+- **Issue:** Step 1 says "Ab (A-shape, fret 4... actually E-shape at fret 4)." The self-correction mid-text reads like a draft note that was never cleaned up. Ab major as an E-shape barre at fret 4 is correct, but the "A-shape, fret 4... actually" phrasing should be cleaned up.
+- **Suggestion:** Replace with: "Ab (E-shape, fret 4)"
+
+---
+
+### F. Quality Comparison to Gold Standard (singer-songwriter level-03-first-notes.js)
+
+**Rating: Matches or exceeds the gold standard**
+
+The singer-songwriter level-03 is the comparison target. Let me evaluate:
+
+| Dimension | SS Level 3 | Guitar Curriculum | Verdict |
+|-----------|-----------|-------------------|---------|
+| Step `why` depth | Excellent -- cites Gordon audiation, Dalcroze eurhythmics, constraint research | Excellent -- cites motor learning research, Edwin Gordon, sleep consolidation | **Tie** |
+| `sarah` artist specificity | Good -- references Tommy Guerrero, Khruangbin, Skinshape, Tinariwen, Ali Farka Toure | Outstanding -- names specific gear (Jazzmaster, Tubescreamer, DiMarzio DP186, D'Addario Chromes flatwounds) | **Guitar wins** |
+| `feel` descriptions | Poetic and specific ("planting feet on warm ground") | Equally poetic ("strumming on a porch at sunset," "heat shimmer over sand") | **Tie** |
+| `wrong` troubleshooting | Detailed ("if you drift off pitch, slow down") | Detailed with physical diagnosis ("if strings buzz, move finger closer to fret wire") | **Tie** |
+| Constraint-based design | Strong (one note, two notes, three notes progression) | Strong (one-note groove, muted strings, 60% silence, one note per minute) | **Tie** |
+| Emotional specificity | Good ("earth and sky") | Outstanding ("golden-hour ache where you're savoring something beautiful that won't last") | **Guitar wins** |
+
+The guitar curriculum matches or exceeds the singer-songwriter gold standard in every dimension. The `sarah` notes in particular are significantly richer in the guitar files because they reference specific gear, specific recording details, and specific artist philosophies.
+
+---
+
+### Additional Issues
+
+#### [m3] Minor: Level 1 references "Angus Young of Allah-Las"
+- **File:** `level-01-first-sounds.js`, gs-1-1 line 32, gs-1-2 line 57
+- **Issue:** The guitarist of Allah-Las is Pedrum Siadatian (lead guitar) and Miles Michaud (rhythm/vocals). There is no "Angus Young" in Allah-Las. Angus Young is from AC/DC. This appears to be a hallucinated detail. The name appears twice.
+- **Severity:** This is factually wrong and Gene would notice immediately.
+- **Fix:** Replace "Angus Young of Allah-Las" with the correct name, or simply say "Allah-Las' guitar lines."
+
+#### [m4] Minor: gs-10-7 (Rules) chord progression contradicts itself
+- **File:** `level-10-global-colors.js`, gs-10-7 line 165
+- **Issue:** The `what` field says "confirmed: G-Am-F-G-Em-F-Em-Am, but the core vamp is Am-G." If the confirmed progression is that complex, calling the exercise "Am-G" is a significant simplification. The exercise correctly focuses on the core vamp, but the parenthetical confirmation text should be cleaned up -- either remove it or explain it better.
+
+#### [m5] Minor: Inconsistent exercise count expectations
+- **File:** `level-01-first-sounds.js`
+- **Issue:** Level 1 has 13 exercises, which is dense for a beginner's first level. The time totals (8+10+10+8+10+6+8+8+6+10+10+8+6 = 108 minutes). That is a LOT for a single level. Compare to SS Level 3 which has exercises with 6-8 minute times. The pedagogy is solid but Gene might feel overwhelmed.
+
+#### [N1] Nitpick: Some backing track references may not exist
+- **Files:** Multiple
+- **Issue:** Tracks like "Desert Blues 75" (`/desert-blues-75.mp3`) are referenced in Level 8 but are not in the known backing track list from MEMORY.md. The known tracks include `desert-blues-75` so this is probably fine, but worth confirming all track files exist.
+
+#### [N2] Nitpick: gs-5-3 (A-Shape Barre) step 4 has confusing F# position description
+- **File:** `level-05-barre-chord-world.js`, gs-5-3 line 73-74
+- **Issue:** "F# at fret 9 is one of the easier positions... But Sol Del Sur uses F# at fret 2." Then step 4 says "Alternative F# position: barre at fret 2 with the A-shape." The two F# positions are discussed across two steps without clear resolution of which one to use. Step 5 then combines them. The flow could be tighter.
+
+#### [N3] Nitpick: Level 10 uses "Afrobeat 100" backing track for cumbia exercise
+- **File:** `level-10-global-colors.js`, gs-10-8 line 204
+- **Issue:** The cumbia stab exercise (gs-10-8) uses the Afrobeat 100 BPM backing track. While the BPM is close to the 95 BPM metronome setting, an Afrobeat feel is different from a cumbia feel. This is acceptable (no cumbia backing track exists) but worth noting.
+
+---
+
+### Positive Notes
+
+1. **The "sauce" is real.** These exercises are clearly written by someone who knows Gene's musical world intimately. DOPE LEMON's "lazy reverb-drenched groove," Sun Room's "Jazzmaster through the Tubescreamer," Khruangbin's "parked wah at 50%" -- this is insider-level detail that would never appear in a generic curriculum.
+
+2. **Improv from day one.** Gene's mandate ("improvisation needs to be part of every single thing") is honored. One-note groove improv appears at exercise 7 of Level 1. Full call-and-response improv is exercise 12 of Level 1. This is not bolted on.
+
+3. **The constraint philosophy is brilliant.** One-note groove, muted string percussion, one-note-per-minute, 60% silence -- these constraint exercises are genuinely creative and produce real musical results. They are the opposite of "learn this scale, now play it fast."
+
+4. **Sleep encouragement is woven naturally.** It never feels like a health lecture -- it is presented as neuroscience-backed practice strategy.
+
+5. **Level 8 (Desert & Drone) is a standout.** The cultural context, the sus pentatonic explanation, the quarter-tone bending, the PReVaDe framework, the 15-minute extended jam, the Bombino electric contrast, the one-note-per-minute exercise -- this is a level that could not exist in a generic curriculum. It is deeply researched and deeply felt.
+
+6. **Level 10's global scope is ambitious and executed well.** Afrobeat interlocking, bossa rhythm, cumbia stabs, parked wah, Tommy Guerrero fingerpicking -- each gets a dedicated exercise with specific artist context, not a superficial survey.
+
+---
+
+### Recommendations (Prioritized)
+
+1. **FIX the "Angus Young of Allah-Las" error** (gs-1-1, gs-1-2). This is a factual error Gene will catch immediately and it undermines trust in the curriculum's authority.
+2. **Verify unconfirmed chord progressions** (Close My Eyes D-Bm-G-A, Island Fever Fm-Bb-Ab-Eb, Sol Del Sur chorus E-F#) against recordings or reliable tabs.
+3. **Clean up the self-correcting text** in gs-5-7 ("A-shape, fret 4... actually E-shape at fret 4").
+4. **Add one improv exercise to Level 5** to honor Gene's "improvisation in every single thing" mandate.
+5. **Consider splitting Level 1** into two sub-levels (1A: Pentatonic + Chords, 1B: Songs + Improv) given the 108-minute total time.
+
+### Relevant Files
+
+- `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\data\guitarStudy\level-01-first-sounds.js` -- factual error at lines 32, 57
+- `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\data\guitarStudy\level-02-rhythm-and-feel.js` -- unverified Close My Eyes chords at line 99
+- `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\data\guitarStudy\level-05-barre-chord-world.js` -- self-contradicting chord description at line 160; unverified Island Fever chords; unverified Sol Del Sur chorus
+- `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\data\guitarStudy\level-08-desert-and-drone.js` -- no issues, outstanding quality
+- `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\data\guitarStudy\level-10-global-colors.js` -- minor chord description issue at line 165</result>
+<usage><total_tokens>94504</total_tokens><tool_uses>16</tool_uses><duration_ms>151001</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\314cd032-8085-4be1-96e9-95bcec9a93e7\tasks\aee0a68cea00088b0.output
+[2026-03-21T11:08:06.665Z] <task-notification>
+<task-id>a4d52c2366e32ed28</task-id>
+<tool-use-id>toolu_01Vyfhc7LDjeoVUhLYUGsP5D</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\314cd032-8085-4be1-96e9-95bcec9a93e7\tasks\a4d52c2366e32ed28.output</output-file>
+<status>completed</status>
+<summary>Agent "Check for missing plan features" completed</summary>
+<result>Perfect! All the required fields are present. Now let me create a comprehensive final report:
+
+## IMPLEMENTATION VERIFICATION REPORT
+
+### WHAT WAS COMPLETED (9/10 REQUIREMENTS)
+
+#### 1. **SCALES additions (C#m-pentatonic, gm-pentatonic, a-natural-minor, em-pentatonic)**
+- **Status**: DONE ✓
+- All 4 scales added to JungleTools.jsx (lines 2239-2262)
+- Each includes name, root, notes array, and position dictionary
+
+#### 2. **CHORD_VOICINGS expansion (22 new chords)**
+- **Status**: DONE ✓
+- All 22 chords added to JungleTools.jsx (lines 5444-5467):
+  - Minor chords: C#m, F#m, Bbm
+  - 7th chords: Am7, Dm7, Em7, Cmaj7, Dmaj7, Gm7, C7, A7, E7, B7, F#7, G7
+  - Sus chords: Dsus2, Asus2
+  - Power chords: A5, D5, E5, B5
+- Each voicing includes correct fret positions and names
+
+#### 3. **ChordVoicingViewer component**
+- **Status**: MISSED (partially)
+  - **What's present**: chordVoicings data fields exist in ALL exercises (confirmed across L1-L14) with format: `chordVoicings: { chords: ["C#m", "B", "F#"], defaultChord?: "C#m" }`
+  - **What's missing**: The React component `ChordVoicingViewer` was NOT built or exported from JungleTools.jsx, and NOT rendered in App.jsx
+  - **Impact**: Exercises have the data structure but no UI to display chord diagrams
+
+#### 4. **localStorage migration**
+- **Status**: DONE ✓
+- Migration code present in App.jsx (lines 4136-4146)
+- Correctly filters out old gs-* exercise IDs and sets guitar-v2-migrated flag
+- Pattern matches specification exactly
+
+#### 5. **Old files deleted**
+- **Status**: DONE ✓
+- All 10 old level files removed from guitarStudy/ directory
+- Confirmed: no level-01-pentatonic-rhythm-basics.js through level-10-full-integration.js remain
+
+#### 6. **14 new level files with correct filenames**
+- **Status**: DONE ✓
+- All 14 files created with correct naming convention:
+  - level-01-first-sounds.js (13 exercises)
+  - level-02-rhythm-and-feel.js (12 exercises)
+  - level-03-power-and-drive.js (11 exercises)
+  - level-04-the-offbeat.js (11 exercises)
+  - level-05-barre-chord-world.js (11 exercises)
+  - level-06-jangle-and-shimmer.js (12 exercises)
+  - level-07-the-groove-machine.js (10 exercises)
+  - level-08-desert-and-drone.js (14 exercises)
+  - level-09-extended-harmony.js (11 exercises)
+  - level-10-global-colors.js (11 exercises)
+  - level-11-fingerpicking.js (11 exercises)
+  - level-12-dynamics-and-expression.js (11 exercises)
+  - level-13-the-full-palette.js (9 exercises)
+  - level-14-your-sound.js (10 exercises)
+  - **Total**: 157 exercises across all levels
+
+#### 7. **Singer-songwriter updates**
+- **Status**: DONE ✓
+- Files modified (Mar 21, 2026):
+  - level-08-melody-building.js: Added behind-the-beat phrasing guidance and Khruangbin reference
+  - level-10-hearing-harmony.js: Added Skinshape/Dorian reference and expanded Allah-Las bVI explanation with chord analysis
+  - level-11-originals-genre-craft.js: Updated reggae original to use B-F#-E progression (verified from student's top 50), added surf-psych original with C#m-B-F# progression from Sol Del Sur with syncopated strum pattern details
+
+#### 8. **PReVaDe framework (phraseForm field)**
+- **Status**: DONE ✓
+- phraseForm field implemented in exercises with correct format: `{ pattern: "PRVD", barsPerSection: 4, labels: { P: "Present", R: "Repeat", V: "Vary", D: "Deconstruct" } }`
+- Confirmed in Level 3 (multiple exercises), Level 8 exercise gs-8-4, and other levels
+- Framework fully integrated into exercise instructions and pedagogy
+
+#### 9. **Level 8 desert blues - keeping 11 old exercises + adding new ones**
+- **Status**: DONE ✓
+- All 11 exercises from old Level 5 renumbered to Level 8:
+  - gs-8-1 to gs-8-5: Carried forward from old level 5 (Sus Pentatonic, Drop D Drone, Rhythm Drone, Hypnotic Repetition, Drone Motif Development)
+  - gs-8-6 to gs-8-11: Remaining 6 from old level 5
+  - gs-8-12 to gs-8-14: 3 new exercises added
+- Total: 14 exercises in Level 8
+
+#### 10. **Backing tracks**
+- **Status**: DONE ✓
+- 25+ MP3 files present in /public/ directory
+- Exercise tracks field correctly references these files with /filename.mp3 format
+- All referenced tracks verified to exist (e.g., /desert-blues-75.mp3, /sol-del-sur.mp3, /drums-soul-funk-90.mp3, /reggae-one-drop-85.mp3)
+
+---
+
+### WHAT WAS MISSED (1/10 REQUIREMENTS)
+
+#### **ChordVoicingViewer Component (Not Implemented)**
+The specification required:
+1. New exported function `ChordVoicingViewer` in JungleTools.jsx (after FretboardDiagram ~line 2595)
+2. Render in App.jsx (after fretboard block, ~line 1034):
+   ```jsx
+   {ex.chordVoicings && (
+     <ChordVoicingViewer theme={T} chords={ex.chordVoicings.chords} defaultChord={ex.chordVoicings.defaultChord} />
+   )}
+   ```
+
+**What exists instead:**
+- Exercise data has chordVoicings fields with chord arrays
+- No UI component to display them
+- Exercises can reference chords but users cannot view interactive chord diagrams
+
+**Files involved**: `/c/Users/hewg7/Documents/GitHub/musiclessons/sarah-practice-plan/src/JungleTools.jsx`, `/c/Users/hewg7/Documents/GitHub/musiclessons/sarah-practice-plan/src/App.jsx`
+
+---
+
+### SUMMARY
+
+The guitar curriculum rework is **95% complete**. All 14 levels with 157 exercises have been created with proper pedagogy, PReVaDe framework, singer-songwriter cross-updates, and data structure. The ONLY missing piece is the visual component to display chord voicings — the data is there but the UI is not.
+
+**Blocking issue**: Until ChordVoicingViewer is built and wired into App.jsx, exercises with chordVoicings fields will have missing interactive chord diagram display functionality.</result>
+<usage><total_tokens>62528</total_tokens><tool_uses>46</tool_uses><duration_ms>133954</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\314cd032-8085-4be1-96e9-95bcec9a93e7\tasks\a4d52c2366e32ed28.output
+[2026-03-21T11:08:18.069Z] <task-notification>
+<task-id>aec424530be8ffb18</task-id>
+<tool-use-id>toolu_01HSYTbmLn6WHUR4C9iwN54J</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\314cd032-8085-4be1-96e9-95bcec9a93e7\tasks\aec424530be8ffb18.output</output-file>
+<status>completed</status>
+<summary>Agent "Verify chord progressions in exercises" completed</summary>
+<result>Now I have all the data I need. Let me compile the findings.
+
+---
+
+## Code Review: Guitar Curriculum Chord Accuracy Audit
+
+### Summary
+- Blockers: 1 | Major: 2 | Minor: 1 | Nitpicks: 0
+- Overall Quality: Needs Work (1 wrong chord progression, 2 unverified-without-caveat issues)
+
+---
+
+### Blockers
+
+#### [B1] WRONG CHORDS: Something About You (Eyedress) -- Simplified/Incomplete Progression
+- **File:** `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\data\guitarStudy\level-03-power-and-drive.js:197`
+- **Issue:** The curriculum states the chords are **F-Em-Am-Dm** (4 chords). The verified progression is **F-Em-F-Em-Am-Dm-Em** (7 chord slots with the F-Em repeated and an additional Em at the end). The curriculum drops the F-Em repetition at the beginning and omits the final Em, presenting a simplified version as if it were the actual song. This is not "wrong" in the sense of having completely incorrect chords (all four chords used do appear in the real progression), but the ordering and repetition structure is materially different from the actual song. The `chordVoicings` array at line 211 lists `["F", "Em", "Am", "Dm"]` -- missing the structural repeat pattern.
+- **Recommendation:** Either update to the full progression **F-Em-F-Em-Am-Dm-Em**, or add a caveat like "simplified from the full verse progression" so students know this is an adaptation, not a transcription.
+
+---
+
+### Major Issues
+
+#### [M1] UNVERIFIED CHORDS: Close My Eyes (The Lagoons) -- Stated as Fact Without Caveat
+- **File:** `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\data\guitarStudy\level-02-rhythm-and-feel.js:99`
+- **Issue:** The chords **D-Bm-G-A** are stated as definitive throughout Level 2 (lines 99, 112, 298, and many sarah/feel comments). These chords are on your UNVERIFIED list. There is no comment in the source code flagging them as unverified, unlike Summer Heat which has an explicit `// UNVERIFIED` comment at line 117 of level-03.
+- **Severity rationale:** This song is the Level 2 anchor -- it appears in the title Song Study, the Full Performance graduation piece, and is referenced ~15 times across the file. If the chords are wrong, a huge chunk of the student's Level 2 work is building incorrect muscle memory.
+- **Suggestion:** Add a `// UNVERIFIED` source comment (matching the Summer Heat pattern) and either verify the chords or add a caveat in the `what` field.
+
+#### [M2] UNVERIFIED CHORDS: It's a Love (Baskervillain) -- Stated as Fact Without Caveat
+- **File:** `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\data\guitarStudy\level-04-the-offbeat.js:190`
+- **Issue:** The chords **A-E-C#m-B-F#** are stated definitively. These chords are on your UNVERIFIED list. No `// UNVERIFIED` comment exists. The song is a major Song Study exercise (gs-4-8) and feeds into the Level 4 graduation jam (gs-4-12, line 264) where students cycle through all three reggae progressions. It also appears in the `chordVoicings` array at line 192.
+- **Suggestion:** Add `// UNVERIFIED` comment and caveat, same as Summer Heat pattern.
+
+---
+
+### Minor Issues
+
+#### [m1] Texas Sun Chord Representation Varies Across Levels
+- **Files:** 
+  - `level-09-extended-harmony.js:187` -- "Am-G for the verses...Em-D-Bm for the bridge"
+  - `level-13-the-full-palette.js:127` -- "Texas Sun (Am-G-Em-D-Bm)"
+  - `level-13-the-full-palette.js:174` -- "Texas Sun (Am-G-Em-D-Bm)"
+- **Issue:** Your verified database says Texas Sun is **Am-G (main)**. The curriculum correctly identifies Am-G as the verse/main progression in Level 9. However, Level 13 flattens the full song into "Am-G-Em-D-Bm" as if all five chords are equally weighted, which could mislead students about the song's structure. The bridge chords (Em-D-Bm) are presented alongside the main Am-G as a single progression, which is technically a simplification of the song form. This is not wrong per se, but the Level 9 treatment is more accurate.
+- **Suggestion:** In Level 13 references, maintain the verse/bridge distinction: "Am-G (verse), Em-D-Bm (bridge)" rather than the flat list.
+
+---
+
+### Songs Verified CORRECT (No Issues Found)
+
+| Song | Verified Chords | Where Used | Status |
+|------|----------------|------------|--------|
+| **Sol Del Sur** (Sun Room) | C#m-B-F# | Level 5 (extensively), Level 6, Level 13, Level 14 | CORRECT |
+| **Dope & Smoke** (DOPE LEMON) | Am-D-G | Level 1 (anchor song), Level 2 refs | CORRECT |
+| **Breakdown** (Jack Johnson) | G-Bm-Em-D capo 5 | Level 11 (line 99: "G-Bm-Em-D...capo on fret 5") | CORRECT |
+| **Friends** (levitation room) | Em-Dmaj7 (verse) | Level 6 (line 138: "Em-Dmaj7") | CORRECT |
+| **Going Gets Tough** (Growlers) | Capo 1: G-C-D-Em | Level 3 (line 95: "Capo 1, shapes are G-C-D-Em") | CORRECT |
+| **Real Love Baby** (FJM) | D-Em-G | Level 1 (line 262) | CORRECT |
+| **Gimme Love** (Elovaters) | B-F#-E | Level 4 (line 95: "B-F#-E") | CORRECT |
+| **Sunset Garage** (Sun Room) | G-B-C-D (verse), C-D-G-Em (chorus) | Level 5 (line 200) | CORRECT |
+| **Just Yesterday** (Sun Room) | E-G-A-Em | Level 5 (line 178) | CORRECT |
+| **Texas Sun** (Khruangbin) | Am-G (main) | Level 9 (line 187) | CORRECT |
+| **Jah Werx** (Susto) | B-F#-E | Level 4 (line 95, paired with Gimme Love) | CORRECT |
+| **Son of a Beach** (Polarity) | F-G-C-Am | Level 1 (line 81, mentioned in sarah note) | CORRECT |
+| **Pattymanajaro** (Yasawa Group) | Am-G-C-Em | Level 1 (line 81, mentioned in sarah note) | CORRECT |
+| **Marsha** (Current Swell) | F-G-Bb-C-D-Dm | Level 12 (line 123) | CORRECT |
+| **Peace Blossom Boogy** (Babe Rainbow) | D-G7-A | Level 12 (line 175: "D-G7-A") | CORRECT |
+| **I Didn't Know** (Skinshape) | Gm-C-A7-Dm (triads) | Level 9 (line 93: "Gm-C-A7-Dm") | CORRECT (see note below) |
+| **Summer Heat** (Sun Room) | E-A-B-C#m | Level 3 (line 118) | UNVERIFIED but **properly flagged** with `// UNVERIFIED` comment at line 117 |
+
+**Note on I Didn't Know:** The curriculum correctly states the triads as Gm-C-A7-Dm at line 93 and then offers the 7th voicing upgrade to Gm7-C7-A7-Dm7 as a stylistic enhancement (line 99). This matches your note that "7th voicings are stylistic." Well handled.
+
+---
+
+### Songs NOT Found in Curriculum
+
+The following songs from your verified/corrected list do **not appear** anywhere in the 14 guitar level files:
+
+- **Oysters In My Pocket** (Royel Otis) -- not mentioned at all. No risk of wrong chords since the song is absent.
+
+---
+
+### Positive Notes
+
+- **Summer Heat has a proper `// UNVERIFIED` comment** at line 117 of level-03, demonstrating the codebase has a pattern for flagging uncertain chords. The two other unverified songs (Close My Eyes, It's a Love) should follow this same pattern.
+- **Peace Blossom Boogy uses the CORRECT chords** (D-G7-A), not the wrong ones (F#m-D-A-E). No fix needed.
+- **I Didn't Know handles the triad/7th distinction perfectly** -- teaches triads first, then upgrades to 7ths as a stylistic choice, matching your note exactly.
+- **Going Gets Tough correctly notes capo 1** and provides the open shapes (G-C-D-Em) rather than the concert-pitch chords (Ab-Db-Eb-Fm).
+- The curriculum is thorough and consistent across levels -- when a song's chords are introduced in one level, later references in Levels 13-14 use the same chords.
+
+### Recommendations (Priority Order)
+
+1. **Verify Close My Eyes (D-Bm-G-A)** -- it is the backbone of Level 2 and has no safety caveat. If wrong, it affects the most student practice time of any unverified song.
+2. **Verify It's a Love (A-E-C#m-B-F#)** -- anchor of Level 4 reggae section.
+3. **Add `// UNVERIFIED` comments** to both songs matching the Summer Heat pattern until verified.
+4. **Update Something About You** to either the full F-Em-F-Em-Am-Dm-Em progression or mark it as a simplified arrangement.
+5. **Normalize Texas Sun references** in Level 13 to maintain verse/bridge distinction.</result>
+<usage><total_tokens>66940</total_tokens><tool_uses>43</tool_uses><duration_ms>159087</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\314cd032-8085-4be1-96e9-95bcec9a93e7\tasks\aec424530be8ffb18.output
+[2026-03-21T11:08:23.719Z] <task-notification>
+<task-id>ae407c32dd2d79eee</task-id>
+<tool-use-id>toolu_0174SFKSmarA3HBMjRTTuFW5</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\314cd032-8085-4be1-96e9-95bcec9a93e7\tasks\ae407c32dd2d79eee.output</output-file>
+<status>completed</status>
+<summary>Agent "Audit technical correctness" completed</summary>
+<result>Good -- `FretboardDiagram` has a fallback to `"am-pentatonic"` if the scale key is missing. This means it won't crash but it would show the wrong scale. All referenced scales exist in the SCALES dict, so this isn't an active issue.
+
+Let me now do a final check on the unique set of all chord names referenced in `chordVoicings` fields vs what's in `CHORD_VOICINGS`.
+
+The chords referenced in guitar study `chordVoicings` fields include: Am, C, G, D, Em, Bm, F, Dm, A, B, F#, C#m, F#m, Fm, Bb, Ab, Eb, E, A5, D5, E5, B5, Am7, Dm7, Em7, Gm7, C7, A7, Cmaj7, Dmaj7, Dsus2, Asus2, E7, G#m, G7, Gm.
+
+Checking against CHORD_VOICINGS dict: C, Cm, D, Dm, E, Em, F, Fm, G, Gm, A, Am, B, Bm, C#, Db, D#, Eb, F#, Gb, Ab, Bb, C#m, F#m, Bbm, Am7, Dm7, Em7, Cmaj7, Dmaj7, Gm7, C7, A7, E7, B7, F#7, G7, Dsus2, Asus2, A5, D5, E5, B5.
+
+**Missing from CHORD_VOICINGS: `G#m`** -- used in level-04 and level-06.
+
+Now I have all findings. Let me compile the review.
+
+---
+
+## Code Review: Guitar Curriculum Implementation
+
+### Summary
+- Blockers: 1 | Major: 1 | Minor: 1 | Nitpicks: 1
+- Overall Quality: Needs Work (one blocker, one major gap)
+
+### Blockers
+
+#### [B1] Missing `G#m` chord voicing in CHORD_VOICINGS dictionary
+- **File:** `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\JungleTools.jsx:5420-5468`
+- **Data files referencing G#m:**
+  - `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\data\guitarStudy\level-04-the-offbeat.js:144` (`["E", "B", "F#", "G#m"]`)
+  - `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\data\guitarStudy\level-04-the-offbeat.js:170` (same)
+  - `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\data\guitarStudy\level-04-the-offbeat.js:266` (`["B", "F#", "E", "G#m", "A", "C#m"]`)
+  - `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\data\guitarStudy\level-06-jangle-and-shimmer.js:232` (`["E", "F#", "G#m", "E7"]`)
+- **Issue:** `G#m` is referenced in `chordVoicings.chords` arrays across 4 exercises in Level 4 (The Offbeat) and Level 6 (Jangle and Shimmer), but no `"G#m"` key exists in the `CHORD_VOICINGS` dictionary. This is currently a **silent** failure because the `chordVoicings` field is never rendered (see Major issue M1). However, the moment a `ChordVoicingViewer` component is wired up, any lookup of `CHORD_VOICINGS["G#m"]` will return `undefined`, causing either a missing diagram or a crash depending on the rendering logic.
+- **Suggestion:** Add `G#m` to CHORD_VOICINGS:
+  ```javascript
+  "G#m": { frets: "466444", name: "G#m" },
+  ```
+
+### Major Issues
+
+#### [M1] `chordVoicings` field on exercises is dead data -- never rendered
+- **File:** `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\App.jsx` (ExerciseCard at line 1459)
+- **Issue:** The `chordVoicings` field is populated on 60+ exercises across all 14 guitar levels, but `App.jsx` contains zero code to consume it. There is no `ChordVoicingViewer` component anywhere in the codebase (not in `JungleTools.jsx`, not in `App.jsx`). The `ExerciseCard` function never checks for `ex.chordVoicings`. The import line at `App.jsx:10` does not import any chord voicing viewer component.
+
+  This means every guitar exercise that specifies `chordVoicings: { chords: [...] }` shows **no chord diagrams** to the user. The data exists, the `CHORD_VOICINGS` dictionary exists, the `ChordDiagram` rendering component exists -- but nothing connects exercises to diagrams.
+
+  Contrast with how `fretboard` works: `App.jsx:1029-1032` checks `ex.fretboard` and renders `<FretboardDiagram>`. An equivalent pattern is needed for `chordVoicings`.
+
+- **Suggestion:** Add rendering in ExerciseCard's Panel C section, similar to the fretboard pattern:
+  ```jsx
+  {ex.chordVoicings && ex.chordVoicings.chords && (
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 24 }}>
+      {ex.chordVoicings.chords.map(chord => {
+        const voicing = CHORD_VOICINGS[chord];
+        return voicing ? <ChordDiagram key={chord} theme={T} frets={voicing.frets} name={voicing.name} /> : null;
+      })}
+    </div>
+  )}
+  ```
+  This would require importing `CHORD_VOICINGS` from `JungleTools.jsx` into `App.jsx` (it is currently not exported -- only `ChordDiagram` is exported).
+
+### Minor Issues
+
+#### [m1] Power chord fret strings use non-standard format with trailing `x`
+- **File:** `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\JungleTools.jsx:5464-5467`
+- **Issue:** Power chord voicings use `x` for muted treble strings (e.g., `"x022xx"` for A5, `"022xxx"` for E5). While the `ChordDiagram` parser at line 5552 handles `x` correctly (maps to -1, rendered as X markers), the visual result shows X marks on strings 1-2 for power chords. This is technically correct but visually cluttered -- most chord diagrams show power chords with just the played strings, omitting the higher strings entirely. This is a cosmetic concern, not a correctness bug.
+
+### Nitpicks
+
+#### [N1] Some guitar level files import `getPitchRange` but never call it
+- **Files:** `level-02-rhythm-and-feel.js`, `level-03-power-and-drive.js`, `level-04-the-offbeat.js`, `level-06-jangle-and-shimmer.js`, `level-09-extended-harmony.js`, `level-10-global-colors.js`, `level-11-fingerpicking.js`, `level-12-dynamics-and-expression.js` (each at line 1)
+- **Issue:** These files all `import { getPitchRange } from "../appData.js"` but grep shows that only `level-01-first-sounds.js` (line 44, 190), `level-08-desert-and-drone.js` (line 115), `level-13-the-full-palette.js`, `level-14-your-sound.js`, and `level-07-the-groove-machine.js` actually call it. The unused imports don't cause errors but add dead code. Vite's tree-shaking handles this at build time, so it has zero runtime impact.
+
+### What Passes Validation
+
+1. **Import chain is sound.** `index.js` imports all 14 level files (level1 through level14), each exports correctly (`export const levelN`), `App.jsx` imports `GUITAR_STUDY` from the index, and `GuitarStudyView` iterates over it.
+
+2. **All 14 level files exist** with correct `level:` field values (1-14) matching their filenames and import order.
+
+3. **All scale references are valid.** The scales used in `fretboard.scale` fields (`am-pentatonic`, `c#m-pentatonic`, `a-sus-pentatonic`, `a-dorian`, `a-phrygian`) all exist in the `SCALES` dictionary. The four new scales (`c#m-pentatonic`, `gm-pentatonic`, `a-natural-minor`, `em-pentatonic`) have correct note arrays and position ranges.
+
+4. **All track `src` paths resolve to existing mp3 files** in `sarah-practice-plan/public/`. Every unique path referenced (`/groove-beat-90.mp3`, `/drums-soul-funk-90.mp3`, `/deep-soul-groove-80.mp3`, `/sol-del-sur.mp3`, `/reggae-rock-100.mp3`, `/surf-rock-120.mp3`, `/drums-surf-120.mp3`, `/drums-reggae-85.mp3`, `/psych-rock-120.mp3`, `/ska-upbeat-95.mp3`, `/e-major-reggae-85.mp3`, `/desert-blues-75.mp3`, `/soul-funk-groove-90.mp3`, `/khruangbin-style-80.mp3`, `/afrobeat-100.mp3`, `/drums-afrobeat-110.mp3`, `/bossa-nova-75.mp3`, `/drums-bossa-75.mp3`, `/a-major-folk-80.mp3`, `/cinematic-western-80.mp3`, `/reggae-one-drop-85.mp3`, `/dub-reggae-85.mp3`) has a corresponding file.
+
+5. **All drone `root` values are valid** -- every drone uses `root: "A"`, which is a valid note name.
+
+6. **All `getPitchRange` calls use valid note names** (e.g., `"A2"`, `"A4"`, `"A3"`, `"E4"`).
+
+7. **All exercise `type` values are `"guitar"`** -- no incorrect types.
+
+8. **All new CHORD_VOICINGS entries have valid 6-character fret strings** using only digits and `x`.
+
+9. **localStorage migration** at `App.jsx:4136-4146` correctly filters out `gs-` prefixed IDs and clears the saved level selection.
+
+10. **`FretboardDiagram`** is properly exported from `JungleTools.jsx` and imported in `App.jsx`.
+
+### Positive Notes
+- The 14-level curriculum data is well-structured and consistent -- every file follows the same schema.
+- Scale definitions are musically correct (checked note arrays against standard theory).
+- Track assignments are genre-appropriate for each level's focus.
+- The migration code cleanly handles the v1-to-v2 transition without data loss in other skill tabs.
+
+### Recommendations (Prioritized)
+1. **Add `"G#m"` to `CHORD_VOICINGS`** -- one-line fix, prevents future crash when chord rendering is wired up.
+2. **Build and wire up chord voicing rendering in ExerciseCard** -- this is the largest missing feature. 60+ exercises have chord data that users cannot see. Export `CHORD_VOICINGS` from JungleTools.jsx and render inline `ChordDiagram` components in the exercise card.
+3. **Clean up unused `getPitchRange` imports** in the 8 level files that don't use it -- low priority, cosmetic only.</result>
+<usage><total_tokens>57939</total_tokens><tool_uses>47</tool_uses><duration_ms>176762</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\314cd032-8085-4be1-96e9-95bcec9a93e7\tasks\ae407c32dd2d79eee.output
+[2026-03-21T11:09:42.751Z] Please, let's fix it all up and let's build that force chord voicing tool as that's a super useful tool. Think about the first principles on how to build that, but first fix everything else up. Make sure the aesthetic matches the rest of the app and the UI UX is beautiful and easy to use and fits within the aesthetical direction and implementation of everything else.
+[2026-03-21T11:24:13.658Z] Okay, but with the chord though, with the viewer, shouldn't we be able to see any type of voicing? As in like what frets to press down? Like in many, many guitar apps. Is that possible right now? I haven't checked it yet.
+[2026-03-21T11:25:13.136Z] And when I say voicing, I mean like different fingering positions for the same chord on different frets
+[2026-03-21T11:25:55.555Z] Yes, exactly. That is right. Make sure it looks really nice and aesthetic. You're doing great.
+[2026-03-21T11:30:39.175Z] Turn naturally on any exercise that has guitar. And then on top of that, will we be able to dynamically pull all the relevant chords and show the voicings for them?
+[2026-03-21T18:02:12.903Z] /ux-thinking what do you reccomend we change?
+[2026-03-21T20:25:00.536Z] ok can we also have more alternate voicings for the chords, also lets clen up the harmonic drone enigne UI too for sound selection
+[2026-03-21T20:31:45.973Z] <task-notification>
+<task-id>a2a3e3ef251f253db</task-id>
+<tool-use-id>toolu_01GrG67PPKgzF5x5HEzV54uG</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\314cd032-8085-4be1-96e9-95bcec9a93e7\tasks\a2a3e3ef251f253db.output</output-file>
+<status>completed</status>
+<summary>Agent "Clean up drone engine UI" completed</summary>
+<result>Build succeeds. Here is a summary of the changes made to `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\JungleTools.jsx`:
+
+**Title (lines 3782-3787):**
+- Changed from "Harmonic Drone Engine" (10px, uppercase, letter-spacing 3) to "Drone" (16px, normal case, letter-spacing 1) -- lighter and more confident
+- Subtitle shortened to "Harmonic foundation for ear training" (11px), tightened spacing (marginBottom 4 between title and subtitle)
+
+**Texture selector (lines 3789-3835):**
+- Replaced flat 12-button grid with 3 grouped sections in a vertical flex column (gap 16px):
+  - **FOUNDATIONAL**: Pure Sine, Analog Pad, Warm Pad, Strings
+  - **TEXTURAL**: Ethereal Choir, Crystal Bowl, Harmonium, Tanpura
+  - **GENRE**: Surf Tremolo, Lo-Fi Tape, Vintage Keys, Dub Sub
+- Each group has a tiny left-aligned label (9px, uppercase, letter-spacing 2, `T.textMuted`)
+- Groups separated by 16px gap -- subtle spacing, no borders
+- Button styling preserved exactly (plum highlight, hover effects, shadow, transitions)
+
+**Outer padding (line 3770):**
+- Reduced from 40px to 28px vertical padding
+
+No audio logic, state management, or any other part of the component was touched.</result>
+<usage><total_tokens>32972</total_tokens><tool_uses>10</tool_uses><duration_ms>88552</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\314cd032-8085-4be1-96e9-95bcec9a93e7\tasks\a2a3e3ef251f253db.output
+[2026-03-21T20:31:51.697Z] <task-notification>
+<task-id>a41fd7a809e367f7e</task-id>
+<tool-use-id>toolu_01AuzV9GMe6ihW7cC82CWKeG</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\314cd032-8085-4be1-96e9-95bcec9a93e7\tasks\a41fd7a809e367f7e.output</output-file>
+<status>completed</status>
+<summary>Agent "Expand chord voicings data" completed</summary>
+<result>All checks pass. Here is a summary of what was done:
+
+**File edited:** `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\JungleTools.jsx` (CHORD_VOICINGS_MULTI at line 5436)
+
+**Changes:**
+
+- **Total chord entries: 40 -> 72** (32 new chords added)
+- **Every chord now has 2+ voicings** (previously many had only 1)
+- **49 of 72 chords have 3+ voicings** (previously only ~10 did)
+
+**What was expanded (existing chords that had 1-2 voicings):**
+- Major: Cm, E, F, Fm, G, Gm, A, Am, B, Bm, C#, Db, D#, Eb, F#, Gb, Ab, Bb -- all brought to 3 voicings
+- Minor: Bbm, G#m -- brought to 3 voicings
+- 7th: Am7, Dm7, Em7, Cmaj7, Dmaj7, Gm7, C7, A7, E7, B7, F#7, G7 -- all brought to 3 voicings
+
+**New chord entries added:**
+- **Ebm** (minor chord, 3 voicings)
+- **D7, F7, Bb7, Eb7** (dominant 7th chords)
+- **Fmaj7, Gmaj7, Amaj7, Emaj7, Bmaj7** (major 7th chords)
+- **Cm7, F#m7, Bm7, C#m7, G#m7, Fm7, Bbm7** (minor 7th chords)
+- **Dsus4, Asus4, Esus2, Esus4, Gsus2, Gsus4, Csus2, Csus4** (sus chords)
+- **G5, C5, F5** (power chords)
+
+The Proxy wrapper (`CHORD_VOICINGS`) below the dictionary was left untouched -- it continues to provide backward compatibility by returning the first voicing for any chord lookup.</result>
+<usage><total_tokens>42608</total_tokens><tool_uses>8</tool_uses><duration_ms>175111</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\314cd032-8085-4be1-96e9-95bcec9a93e7\tasks\a41fd7a809e367f7e.output
+[2026-03-21T20:55:14.653Z] fix pls and push
+[2026-03-22T01:09:02.436Z]  Are you a thousand percent sure you got all the songs right? Because your dope and smoke is different from the actual tabs. Please pull
+  tabs from guitar tabs. Because dope and smoke should be A minor, D, A minor 7, and D7. So I think that there's a lot of mistakes in the      
+  entire thing that we built out.
+[2026-03-22T01:12:23.397Z] <task-notification>
+<task-id>a432ea28ccb1c8c67</task-id>
+<tool-use-id>toolu_014hX2HmGUfCTV31cLrv25KV</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\314cd032-8085-4be1-96e9-95bcec9a93e7\tasks\a432ea28ccb1c8c67.output</output-file>
+<status>completed</status>
+<summary>Agent "Verify chords batch 1 from UG tabs" completed</summary>
+<result>Now I have solid data for all 10 songs. Let me compile the complete verified report.
+
+---
+
+## Chord Verification Report — Batch 1 (Songs 1-10)
+
+---
+
+### 1. "Dope & Smoke" — DOPE LEMON
+
+**SOURCE:** [Guitaretab.com](https://www.guitaretab.com/dope-lemon_dope-and-smoke_428606.html) (mirrors UG tab 2931401)
+
+**CONFIRMED CHORDS:**
+- Intro: Am, D (x6)
+- Verse 1-3: Am, D (alternating throughout)
+- Chorus: Am, D (primary), with Am7 appearing in later chorus repetitions
+- Verse 3 specific: D7 appears once on the line "We can roll any way you wanna roll, baby"
+
+**Capo:** None
+
+**FLAG — PREVIOUSLY CLAIMED vs. ACTUAL:** The previous claim of "Am-D-G" was WRONG. G does not appear in this song at all. The user's correction (Am-D-Am7-D7) is CONFIRMED ACCURATE. All four of those chords are present. The full unique chord set is: **Am, D, Am7, D7**.
+
+---
+
+### 2. "Sol Del Sur" — Sun Room
+
+**SOURCE:** [KhmerChords.com](https://www.khmerchords.com/en/sun-room/sol-del-sur) (mirrors UG tab 3547124)
+
+**CONFIRMED CHORDS:**
+- Intro: C#m - B - F# - C#m - B - F# - C#m - B - F# - E - F#
+- Verses: C#m - B - F# (repeating)
+- Chorus: E - F# - E - F# (with N.C. notation)
+- Interlude/Outro: C#m - B - F#
+
+**Capo:** Not specified (standard tuning)
+
+**Unique chords: C#m, B, F#, E**
+
+---
+
+### 3. "Breakdown" — Jack Johnson
+
+**SOURCE:** Multiple UG versions confirmed via search + E-Chords; highest-rated UG tab is ver 3 ([tabs.ultimate-guitar.com/tab/jack-johnson/breakdown-chords-380325](https://tabs.ultimate-guitar.com/tab/jack-johnson/breakdown-chords-380325))
+
+**CONFIRMED CHORDS (Ver 3 — most played):**
+- Capo: 5th fret
+- Intro: G - Bm - Em - D
+- Verse: G - Bm - Em - D
+- Chorus: G - D/F# - Em - D
+
+**Note:** Ver 2 (no capo) uses C - Em - Am - G. The capo-5 version (Ver 3) with G-Bm-Em-D is the most widely cited and matches what you hear on the recording relative to standard pitch.
+
+---
+
+### 4. "I Like The Way You Walk" — The Donkeys
+
+**SOURCE:** [GuitarTabsExplorer.com](https://www.guitartabsexplorer.com/donkeys-Tabs/i-like-the-way-you-walk-crd.php) (mirrors UG tab 2978423)
+
+**CONFIRMED CHORDS:**
+- Intro: D, Dsus2, A
+- Verses: A, D, Dsus2
+- Chorus: B, Db (C#), E, F#
+- Outro: B, Db, E, A
+
+**Capo:** None (standard tuning)
+
+**Unique chords: D, Dsus2, A, B, C#/Db, E, F#**
+
+---
+
+### 5. "Friends" — Levitation Room
+
+**SOURCE:** [Cifraclub.com](https://www.cifraclub.com/levitation-room/friends/) (mirrors UG tab 2095107)
+
+**CONFIRMED CHORDS:**
+- Intro: Em, Dmaj7 (alternating)
+- Verse: Em, Dmaj7
+- Chorus: A, Em
+- Outro: Dmaj7 (fade)
+
+**Capo:** None (standard tuning, key of D)
+
+**Unique chords: Em, Dmaj7, A**
+
+---
+
+### 6. "Going Gets Tough" — The Growlers
+
+**SOURCE:** [Chords-and-Tabs.net](https://www.chords-and-tabs.net/song/name/the-growlers-going-gets-tough) (mirrors UG tab 1674953)
+
+**CONFIRMED CHORDS:**
+- Capo: 1st fret
+- Intro: G, C, Cadd6
+- Verse: G, C
+- Pre-Chorus: C, Em, D
+- Chorus: G, D, Em, C
+- Outro: G, Em, D, Dadd6, C, Cadd6
+
+**Unique chords: G, C, Cadd6, Em, D, Dadd6**
+
+**Note:** The key without capo is Ab. With capo 1, you finger in G shapes.
+
+---
+
+### 7. "Something About You" — Eyedress ft. Dent May
+
+**SOURCE:** [Gitagram.com](https://www.gitagram.com/chords/something-about-you/) + [ChordsEasy.com](https://chordseasy.com/song/34712/something-about-you) (both mirror UG official tab 4630715)
+
+**CONFIRMED CHORDS:**
+- Key: Am, no capo
+- Verse 1 & 2: F, Em, Am, Dm, Em
+- Pre-Chorus: Dm, Em
+- Chorus: F, Em, Am, Dm, Em
+- Outro: F, Em, Am, Dm, Em
+
+**Capo:** None
+
+**Unique chords: F, Em, Am, Dm**
+
+---
+
+### 8. "Marsha" — Current Swell
+
+**SOURCE:** [Cifraclub.com/current-swell/marsha](https://www.cifraclub.com/current-swell/marsha/) (mirrors UG tab 3232490)
+
+**CONFIRMED CHORDS:**
+- Key: Dm, no capo
+- Verse: Dm, C, G, F, Bb, F, C
+- Chorus: G, F, Bb, F, C — ending resolution: Bb, C, Dm
+- Bridge/Instrumental: Dm, C, G, F, Bb, F, C
+
+**Unique chords: Dm, C, G, F, Bb**
+
+---
+
+### 9. "Real Love Baby" — Father John Misty
+
+**SOURCE:** [Chords-and-Tabs.net](https://www.chords-and-tabs.net/song/name/father-john-misty-real-love-baby) + [Chordband.com](https://www.chordband.com/guitar/father_john_misty_real_love_baby.htm) + [Cifraclub.com](https://www.cifraclub.com/father-john-misty/real-love-baby/)
+
+**CONFIRMED CHORDS:**
+
+There are two legitimate versions depending on tuning approach:
+
+**Version A — FJM's actual tuning (whole step down):**
+- Tuning: D-G-C-F-A-D (drop 1 whole step)
+- No capo
+- Entire song: E - F#m - A (all sections)
+
+**Version B — Standard tuning with capo 2:**
+- Capo: 2nd fret
+- Entire song: E - F#m - A (same shapes, same sound)
+
+**Version C — Standard tuning, no capo (transposed):**
+- D - Em - G - A7 (all sections, intro/verse/chorus identical)
+
+**Simplest playable version: D - Em - G - A7, no capo.**
+
+---
+
+### 10. "Gimme Love" — The Elovaters
+
+**SOURCE:** [UG tab 5290284](https://tabs.ultimate-guitar.com/tab/the-elovaters/gimme-love-chords-5290284) confirmed via multiple search result previews
+
+**CONFIRMED CHORDS:**
+- Intro: F - C - G - C (repeating)
+- Verse: F - C - G - C
+- Chorus: (same F-C-G-C base, confirmed by Chordify as key of C/B depending on version)
+
+**Capo:** Not explicitly stated in the tab. Chordify's audio analysis shows the key as B major (suggesting possible capo or different tuning), but the UG tab presents chords as F-C-G in standard position.
+
+**Unique chords: F, C, G**
+
+---
+
+## Summary Table
+
+| # | Song | Artist | Chords | Capo | Notes |
+|---|------|--------|--------|------|-------|
+| 1 | Dope & Smoke | DOPE LEMON | Am, D, Am7, D7 | None | Previous "G" claim was WRONG. User correction confirmed correct. |
+| 2 | Sol Del Sur | Sun Room | C#m, B, F#, E | None | E appears in chorus; verses are C#m-B-F# |
+| 3 | Breakdown | Jack Johnson | G, Bm, Em, D (or C, Em, Am, G) | Capo 5 (ver 3) | Most-played version uses capo 5 + G shapes |
+| 4 | I Like The Way You Walk | The Donkeys | D, Dsus2, A (verses); B, C#, E, F# (chorus) | None | Key shift in chorus to B major area |
+| 5 | Friends | Levitation Room | Em, Dmaj7 (verse/intro), A, Em (chorus) | None | Very sparse — only 3 unique chords |
+| 6 | Going Gets Tough | The Growlers | G, C, Cadd6, Em, D, Dadd6 | Capo 1 | Real key is Ab; capo 1 + G shapes |
+| 7 | Something About You | Eyedress ft. Dent May | F, Em, Am, Dm | None | Consistent through all sections |
+| 8 | Marsha | Current Swell | Dm, C, G, F, Bb | None | Key of Dm |
+| 9 | Real Love Baby | Father John Misty | D, Em, G, A7 (standard) OR E, F#m, A (FJM tuning) | Capo 2 if using E shapes in standard | Simplest: D-Em-G-A7, no capo |
+| 10 | Gimme Love | The Elovaters | F, C, G | None stated | Key of C; simple 3-chord |
+
+Sources:
+- [DOPE AND SMOKE CHORDS by Dope Lemon - Ultimate-Guitar](https://tabs.ultimate-guitar.com/tab/dope-lemon/dope-and-smoke-chords-2931401)
+- [Dope And Smoke chords - Guitaretab](https://www.guitaretab.com/dope-lemon_dope-and-smoke_428606.html)
+- [SOL DEL SUR CHORDS by Sun Room - Ultimate-Guitar](https://tabs.ultimate-guitar.com/tab/sun-room/sol-del-sur-chords-3547124)
+- [Sol Del Sur Chords - KhmerChords](https://www.khmerchords.com/en/sun-room/sol-del-sur)
+- [BREAKDOWN CHORDS (ver 3) by Jack Johnson - Ultimate-Guitar](https://tabs.ultimate-guitar.com/tab/jack-johnson/breakdown-chords-380325)
+- [I LIKE THE WAY YOU WALK CHORDS by The Donkeys - Ultimate-Guitar](https://tabs.ultimate-guitar.com/tab/the-donkeys/i-like-the-way-you-walk-chords-2978423)
+- [I Like The Way You Walk - GuitarTabsExplorer](https://www.guitartabsexplorer.com/donkeys-Tabs/i-like-the-way-you-walk-crd.php)
+- [FRIENDS CHORDS by Levitation Room - Ultimate-Guitar](https://tabs.ultimate-guitar.com/tab/levitation-room/friends-chords-2095107)
+- [Friends - Levitation Room - Cifraclub](https://www.cifraclub.com/levitation-room/friends/)
+- [GOING GETS TOUGH CHORDS by The Growlers - Ultimate-Guitar](https://tabs.ultimate-guitar.com/tab/the-growlers/going-gets-tough-chords-1674953)
+- [Going Gets Tough - The Growlers - Chords-and-Tabs.net](https://www.chords-and-tabs.net/song/name/the-growlers-going-gets-tough)
+- [SOMETHING ABOUT YOU OFFICIAL CHORDS by Eyedress - Ultimate-Guitar](https://tabs.ultimate-guitar.com/tab/eyedress/something-about-you-official-chords-4630715)
+- [Something About You Chords - Gitagram](https://www.gitagram.com/chords/something-about-you/)
+- [MARSHA CHORDS by Current Swell - Ultimate-Guitar](https://tabs.ultimate-guitar.com/tab/current-swell/marsha-chords-3232490)
+- [Marsha - Current Swell - Cifraclub](https://www.cifraclub.com/current-swell/marsha/)
+- [REAL LOVE BABY CHORDS by Father John Misty - Ultimate-Guitar](https://tabs.ultimate-guitar.com/tab/father-john-misty/real-love-baby-official-chords-2730939)
+- [Real Love Baby - Father John Misty - Chords-and-Tabs.net](https://www.chords-and-tabs.net/song/name/father-john-misty-real-love-baby)
+- [GIMME LOVE CHORDS by The Elovaters - Ultimate-Guitar](https://tabs.ultimate-guitar.com/tab/the-elovaters/gimme-love-chords-5290284)</result>
+<usage><total_tokens>35685</total_tokens><tool_uses>48</tool_uses><duration_ms>164219</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\314cd032-8085-4be1-96e9-95bcec9a93e7\tasks\a432ea28ccb1c8c67.output
+[2026-03-22T01:13:11.981Z] <task-notification>
+<task-id>a2845422662aa2a87</task-id>
+<tool-use-id>toolu_01X1qpe4NKRkiJgyjBAec2Pu</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\314cd032-8085-4be1-96e9-95bcec9a93e7\tasks\a2845422662aa2a87.output</output-file>
+<status>completed</status>
+<summary>Agent "Verify chords batch 3 from UG tabs" completed</summary>
+<result>I now have enough data to compile a comprehensive and accurate report. Let me deliver the findings.
+
+---
+
+## Batch 3 Chord Research — Songs 21-35
+
+---
+
+### 21. "Pattymanajaro" — Yasawa Group
+
+**Source:** Chordify (NO tab on Ultimate Guitar found)
+**UG URL:** NOT LISTED on UG
+**Fallback:** [Chordify](https://chordify.net/chords/pattymanajaro-yasawa-group-topic)
+**Chords:** Am, G, C, Em
+**Key:** C major (relative Am)
+**Capo:** None
+**Notes:** No section breakdown available from Chordify. Song is by Matt Taylor of The Growlers, from "Enter The Chrysalis" (2023). 167 BPM.
+
+---
+
+### 22. "Son of a Beach" — The Polarity
+
+**Source:** Ultimate Guitar — confirmed tab exists
+**UG URL:** [tabs.ultimate-guitar.com/tab/the-polarity/son-of-a-beach-chords-3196226](https://tabs.ultimate-guitar.com/tab/the-polarity/son-of-a-beach-chords-3196226)
+**Chords:** F, G, C, Am
+**Capo:** None reported
+**Notes:** UG page directly confirmed. Direct page fetch blocked by 403, but search metadata confirms chords clearly. Also on Chordify with consistent chords.
+
+---
+
+### 23. "Get Away" — Babitha
+
+**Source:** Chordify (NO tab on Ultimate Guitar found)
+**UG URL:** NOT LISTED on UG
+**Fallback:** [Chordify](https://chordify.net/chords/get-away-babitha-topic)
+**Chords:** E, F# (major), G#m, E7
+**Key:** E major
+**Capo:** None
+**Notes:** Search returned F# major (not F#m) — flag this if previous research listed F#m. The Chordify analysis suggests the chord is F# major, which would be a bVI chord borrowed from parallel minor — less common but plausible for the genre.
+
+---
+
+### 24. "Coastline" — Hollow Coves
+
+**Source:** Ultimate Guitar — confirmed multiple tabs
+**UG URL (ver 1):** [tabs.ultimate-guitar.com/tab/hollow-coves/coastline-chords-2040407](https://tabs.ultimate-guitar.com/tab/hollow-coves/coastline-chords-2040407)
+**UG URL (ver 2):** [tabs.ultimate-guitar.com/tab/hollow-coves/coastline-chords-2467700](https://tabs.ultimate-guitar.com/tab/hollow-coves/coastline-chords-2467700)
+
+**OFFICIAL TUNING (from Hollow Coves' own Twitter):** CGDGGD tuning, Capo 7. Chord shapes: 002000, 440000, 224000.
+
+**Simplified standard tuning version:** Capo 2, chords G, Bm, A (with D appearing in some versions)
+**Key (sounding):** D major
+**Notes:** The band confirmed non-standard tuning on Twitter in 2017. The UG "standard tuning" tabs are approximations using capo 2 with G, Bm, A shapes. Previously claimed chords (G, Bm, A, D) are consistent with this simplified approach.
+
+---
+
+### 25. "Island Fever" — Billy Changer
+
+**Source:** Chordify (NO tab on Ultimate Guitar found)
+**UG URL:** NOT LISTED on UG
+**Fallback:** [Chordify](https://chordify.net/chords/billy-changer-songs/island-fever-chords)
+**Chords:** Fm, Bbm, Ab, Eb (Chordify's auto-detection)
+**Key:** Fm
+**Capo:** None
+**Tempo:** 97 BPM
+**Notes:** Only source is Chordify auto-detection. No human-tabbed version found anywhere.
+
+---
+
+### 26. "Mexico" — Husbands
+
+**Source:** Ultimate Guitar — confirmed tab exists
+**UG URL:** [tabs.ultimate-guitar.com/tab/husbands/mexico-chords-5633340](https://tabs.ultimate-guitar.com/tab/husbands/mexico-chords-5633340)
+**Chords:** F, C, G, Am (also Dm and E in ChordU version)
+**Key:** C major
+**Capo:** None
+**Tempo:** ~150 BPM
+**Notes:** UG tab confirmed. ChordU lists F, C, E, Dm, Am — the E (major) is notable and may indicate a borrowed chord or secondary dominant (V of Am). The core progression is F - C - G - Am cycling.
+
+---
+
+### 27. "Chewing Gum" — Cotton Jones (released as The Cotton Jones Basket Ride)
+
+**Source:** Chordify (NO tab on Ultimate Guitar found for Cotton Jones "Chewing Gum")
+**UG URL:** NOT LISTED on UG (UG has Cotton Jones as an artist but no "Chewing Gum" tab)
+**Fallback:** [Chordify](https://chordify.net/chords/the-cotton-jones-basket-ride-songs/chewing-gum-chords)
+**Chords:** Am, D, Dm7, Dm
+**Key:** A minor
+**Capo:** None
+**Tempo:** 120 BPM
+**Notes:** Released by The Cotton Jones Basket Ride (2008). Multiple sources agree on Am and Dm variants as the core of this song. No UG tab found.
+
+---
+
+### 28. "Geneva Strange" — modGlyders / Glyders
+
+**Source:** Chordify (NO tab on Ultimate Guitar found — note UG has a different Glyders song "Moon Eyes")
+**UG URL:** NOT LISTED on UG for "Geneva Strangemod"
+**Note on song title:** The song is officially titled "Geneva Strangemod" (not "Geneva Strange") on all platforms including Spotify and Shazam.
+**Fallback:** [Chordify](https://chordify.net/chords/geneva-strangemod-glyders-topic)
+**Chords:** G, C, D, Gm
+**Key:** G major / G minor mixed (Gm suggests modal mixture)
+**Capo:** None indicated
+**Notes:** The Gm chord alongside G, C, D is interesting — suggests a blues-inflected or minor-tinged progression. No UG tab exists for this track.
+
+---
+
+### 29. "Close My Eyes (And I Wonder)" — The Lagoons
+
+**Source:** NO TAB FOUND on Ultimate Guitar or Chordify
+**UG URL:** NOT LISTED — confirmed via multiple search variations
+**Notes:** The Lagoons do have a UG artist page, and "Falling" is tabbed there, but "Close My Eyes (And I Wonder)" has no published tab on UG, Chordify, or any indexed chord site. This song appears to have no publicly available chord transcription. Recommend ear transcription or YouTube tutorial search.
+
+---
+
+### 30. "Surf Hat" — Surf Hat
+
+**Source:** Ultimate Guitar — confirmed tab exists
+**UG URL:** [tabs.ultimate-guitar.com/tab/surf-hat/surf-hat-chords-5121190](https://tabs.ultimate-guitar.com/tab/surf-hat/surf-hat-chords-5121190)
+**Chords:** E7, A7, B7, F#7
+**Key:** E (dominant seventh chords throughout — classic surf/blues form)
+**Capo:** None
+**Tempo:** 100 BPM
+**Notes:** All dominant seventh chords is a strong indicator of a 12-bar blues or surf-blues structure in E. Also has an intro tab page: [tabs.ultimate-guitar.com/tab/surf-hat/surf-hat-tabs-5117257](https://tabs.ultimate-guitar.com/tab/surf-hat/surf-hat-tabs-5117257)
+
+---
+
+### 31. "Pictures of You" — Drugdealer (feat. Kate Bollinger)
+
+**Source:** Ultimate Guitar — confirmed multiple tabs
+**UG URL (main):** [tabs.ultimate-guitar.com/tab/drugdealer/pictures-of-you-chords-4427972](https://tabs.ultimate-guitar.com/tab/drugdealer/pictures-of-you-chords-4427972)
+**UG URL (official):** [tabs.ultimate-guitar.com/tab/drugdealer/pictures-of-you-official-chords-4936711](https://tabs.ultimate-guitar.com/tab/drugdealer/pictures-of-you-official-chords-4936711)
+
+**Chord sources are INCONSISTENT — flag this:**
+- ChordU / ChordU: Bm7, F#m7, E, Amaj7 — Key of A major
+- mychords.net (section-labeled): C#m7, F#m7, B, B6 — Key of B major
+- GuitarTabsExplorer: Cm7, F#m7, B, B6 — appears to be a mistranscription (Cm7 vs C#m7)
+
+**Most likely accurate:** Key of B major, chords C#m7 - F#m7 - B - B6 (verse/chorus). The "A major" framing from some sites may be a transposed/capo version.
+**Capo:** Not specified
+**Notes:** The conflicting keys across sources is a genuine discrepancy. The mychords.net section-labeled version (C#m7, F#m7, B) is likely the most accurate as it provides actual lyric-aligned chord placement.
+
+---
+
+### 32. "Saving A Life" — Richard Houghten
+
+**Source:** Ultimate Guitar has a Guitar Pro tab (intro only), not a full chords tab
+**UG URL:** [tabs.ultimate-guitar.com/tab/richard-houghten/saving-a-life-guitar-pro-5779400](https://tabs.ultimate-guitar.com/tab/richard-houghten/saving-a-life-guitar-pro-5779400) — intro interactive tab only
+**Fallback ChordU:** [chordu.com](https://chordu.com/chords-tabs-richard-houghten-saving-a-life-id_FEoBjH6_ScU)
+**Chords:** Bbm, Fm, Ab, F, Bb
+**Key:** Fm (or Bb minor)
+**Capo:** None
+**Tempo:** 114 BPM
+**Notes:** This is an instrumental guitar piece (from "Sonata De Grillo," 2014). No full chord chart on UG — only a Guitar Pro intro tab. The Fm / Bbm / Ab progression is consistent across all sources. The F major chord (not Fm) appears in some versions, suggesting a pivot or borrowed chord.
+
+---
+
+### 33. "Rules" — Khruangbin
+
+**Source:** Ultimate Guitar — confirmed interactive/Guitar Pro tab (no standard chords tab)
+**UG URL (Guitar Pro):** [tabs.ultimate-guitar.com/tab/khruangbin/rules-guitar-pro-3001901](https://tabs.ultimate-guitar.com/tab/khruangbin/rules-guitar-pro-3001901)
+**UG URL (intro tab):** [tabs.ultimate-guitar.com/tab/khruangbin/rules-tabs-3154010](https://tabs.ultimate-guitar.com/tab/khruangbin/rules-tabs-3154010)
+**Chords:** Am, G, Em, C, F
+**Key:** A minor
+**Capo:** None
+**Master sequence (per ChordU):** G - Am - F - G - Em - F - Em - Am
+**Tempo:** 74 BPM (ChordU) / 150 BPM (other sources — likely 75 BPM with half-time feel)
+**Notes:** Khruangbin is known for sparse, looping progressions. The Am-G-F-Em cycle is the dominant pattern. No standard "chords" tab on UG, only Guitar Pro and intro tabs.
+
+---
+
+### 34. "I Didn't Know" — Skinshape
+
+**Source:** Ultimate Guitar — confirmed tab exists
+**UG URL:** [tabs.ultimate-guitar.com/tab/skinshape/i-didnt-know-chords-2573988](https://tabs.ultimate-guitar.com/tab/skinshape/i-didnt-know-chords-2573988)
+
+**Full chord breakdown (from Guitaretab.com, cross-referenced):**
+- **Intro:** Bbmaj7 - F - G (x4)
+- **Verse:** Gm - C - F - Bb / Gm - C - A7 - Dm
+- **Interlude:** Bbmaj7 - F - G (x4)
+- **Verse 2:** Gm - C - F - Bb / Gm - C - A - Dm / Gm - C - F - Bbmaj7
+- **Outro:** Bbmaj7 - F - G (x8)
+
+**Key:** F major (or D minor)
+**Capo:** None
+**Notes:** Consistent across UG, Guitaretab, and ChordU. The Bbmaj7 intro/outro is the signature hook. The verse walks through a smooth Gm - C - F progression.
+
+---
+
+### 35. "Foaming" — Day We Ran
+
+**Source:** Ultimate Guitar — confirmed tab exists
+**UG URL:** [tabs.ultimate-guitar.com/tab/day-we-ran/foaming-chords-5050210](https://tabs.ultimate-guitar.com/tab/day-we-ran/foaming-chords-5050210)
+**Also:** Intro tabs at [tabs.ultimate-guitar.com/tab/day-we-ran/foaming-tabs-5051224](https://tabs.ultimate-guitar.com/tab/day-we-ran/foaming-tabs-5051224)
+**Chords:** A, G, D
+**Capo:** Fret 1
+**Key (sounding):** Bb major (A shapes + capo 1)
+**Notes:** Simple 3-chord song in A (capo 1). Chordify shows Ab, Eb, Bb, Bbm for the sounding key — consistent with capo 1 on A, G, D shapes.
+
+---
+
+## Summary Table
+
+| # | Song | Artist | UG Tab? | Chords | Capo |
+|---|------|---------|---------|--------|------|
+| 21 | Pattymanajaro | Yasawa Group | NO | Am, G, C, Em | None |
+| 22 | Son of a Beach | The Polarity | YES | F, G, C, Am | None |
+| 23 | Get Away | Babitha | NO | E, F# (maj), G#m, E7 | None |
+| 24 | Coastline | Hollow Coves | YES | G, Bm, A (std. approx.) | Capo 2 (std) / Capo 7 CGDGGD (original) |
+| 25 | Island Fever | Billy Changer | NO | Fm, Bbm, Ab, Eb | None |
+| 26 | Mexico | Husbands | YES | F, C, G, Am (+ Dm, E) | None |
+| 27 | Chewing Gum | Cotton Jones | NO | Am, D, Dm7, Dm | None |
+| 28 | Geneva Strange(mod) | Glyders | NO | G, C, D, Gm | None |
+| 29 | Close My Eyes (And I Wonder) | The Lagoons | NO | NO TAB FOUND | — |
+| 30 | Surf Hat | Surf Hat | YES | E7, A7, B7, F#7 | None |
+| 31 | Pictures of You | Drugdealer | YES | C#m7, F#m7, B, B6 (key B) | None |
+| 32 | Saving A Life | Richard Houghten | PARTIAL (GP only) | Bbm, Fm, Ab, F, Bb | None |
+| 33 | Rules | Khruangbin | YES (GP/tabs only) | Am, G, Em, C, F | None |
+| 34 | I Didn't Know | Skinshape | YES | Bbmaj7, F, G / Gm, C, F, Bb, A7, Dm | None |
+| 35 | Foaming | Day We Ran | YES | A, G, D | Capo 1 |
+
+---
+
+## Key Flags / Discrepancies
+
+- **Song 23 (Babitha "Get Away"):** F# is listed as major (not F#m) by Chordify — worth verifying by ear
+- **Song 24 (Hollow Coves "Coastline"):** Original tuning is CGDGGD with capo 7 (confirmed by the band directly on Twitter). Standard-tuning tabs using G/Bm/A capo 2 are approximations only
+- **Song 28 (Glyders):** Official title is "Geneva Strangemod" not "Geneva Strange"
+- **Song 29 (The Lagoons):** NO published tab exists anywhere — confirmed across UG, Chordify, ChordU, and general search
+- **Song 31 (Drugdealer):** Chord key conflict — mychords.net (section-labeled) says B major (C#m7, F#m7, B), while ChordU says A major (Bm7, F#m7, E). The B major reading is more likely correct based on the Cm7 confusion in some sources pointing to C#m7 mislabeled
+- **Song 32 (Richard Houghten):** UG only has Guitar Pro intro tab, no full chord chart
+
+Sources:
+- [Son of a Beach — Ultimate Guitar](https://tabs.ultimate-guitar.com/tab/the-polarity/son-of-a-beach-chords-3196226)
+- [Coastline chords — Ultimate Guitar ver 1](https://tabs.ultimate-guitar.com/tab/hollow-coves/coastline-chords-2040407)
+- [Coastline official tuning — Hollow Coves Twitter](https://x.com/HollowCoves/status/928816255783419904)
+- [Mexico — Ultimate Guitar](https://tabs.ultimate-guitar.com/tab/husbands/mexico-chords-5633340)
+- [Surf Hat — Ultimate Guitar](https://tabs.ultimate-guitar.com/tab/surf-hat/surf-hat-chords-5121190)
+- [Pictures of You — Ultimate Guitar](https://tabs.ultimate-guitar.com/tab/drugdealer/pictures-of-you-chords-4427972)
+- [Pictures of You — mychords.net](https://mychords.net/en/drugdealer/186930-drugdealer-pictures-of-you.html)
+- [Saving A Life — Ultimate Guitar GP tab](https://tabs.ultimate-guitar.com/tab/richard-houghten/saving-a-life-guitar-pro-5779400)
+- [Rules — Ultimate Guitar GP tab](https://tabs.ultimate-guitar.com/tab/khruangbin/rules-guitar-pro-3001901)
+- [I Didn't Know — Ultimate Guitar](https://tabs.ultimate-guitar.com/tab/skinshape/i-didnt-know-chords-2573988)
+- [I Didn't Know — Guitaretab.com](https://www.guitaretab.com/skinshape_i-didnt-know_396688.html)
+- [Foaming — Ultimate Guitar](https://tabs.ultimate-guitar.com/tab/day-we-ran/foaming-chords-5050210)
+- [Pattymanajaro — Chordify](https://chordify.net/chords/pattymanajaro-yasawa-group-topic)
+- [Get Away — Chordify](https://chordify.net/chords/get-away-babitha-topic)
+- [Island Fever — Chordify](https://chordify.net/chords/billy-changer-songs/island-fever-chords)
+- [Chewing Gum — Chordify](https://chordify.net/chords/the-cotton-jones-basket-ride-songs/chewing-gum-chords)
+- [Geneva Strangemod — Chordify](https://chordify.net/chords/geneva-strangemod-glyders-topic)
+- [Mexico — ChordU](https://chordu.com/chords-tabs-husbands-mexico-id_L9o5X16DUgU)
+- [Saving A Life — ChordU](https://chordu.com/chords-tabs-richard-houghten-saving-a-life-id_FEoBjH6_ScU)
+- [Rules — ChordU](https://chordu.com/chords-tabs-khruangbin-rules-id_rYF01U2FdKE)
+- [Pictures of You — ChordU](https://chordu.com/chords-tabs-drugdealer-pictures-of-you-feat-kate-bollinger-official-video--id_qyEld6-BhDo)</result>
+<usage><total_tokens>44239</total_tokens><tool_uses>52</tool_uses><duration_ms>198363</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\314cd032-8085-4be1-96e9-95bcec9a93e7\tasks\a2845422662aa2a87.output
+[2026-03-22T01:18:13.982Z] <task-notification>
+<task-id>ae8bab006c220faf8</task-id>
+<tool-use-id>toolu_01TAFr1UXGLh3x3M5bvCzkYL</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\314cd032-8085-4be1-96e9-95bcec9a93e7\tasks\ae8bab006c220faf8.output</output-file>
+<status>completed</status>
+<summary>Agent "Verify chords batch 2 from UG tabs" completed</summary>
+<result>Now I have enough data. Let me compile the definitive findings.
+
+---
+
+## Batch 2 Chord Research: Songs 11-20 — Verified Findings
+
+---
+
+### Song 11: "Sunset Garage" — Sun Room
+
+**UG URL:** [https://tabs.ultimate-guitar.com/tab/sun-room/sunset-garage-chords-5485764](https://tabs.ultimate-guitar.com/tab/sun-room/sunset-garage-chords-5485764)
+
+**Chords found (cross-referenced UG + Chordify):**
+- **Verse:** G, Em, C, D
+- **Key:** G major
+- No capo indicated
+- 142 BPM
+
+**Notes:** UG tab page confirmed live. Chordify confirms the same chord set. The song is in G with a standard I-vi-IV-V feel.
+
+---
+
+### Song 12: "Just Yesterday" — Sun Room
+
+**UG URL:** [https://tabs.ultimate-guitar.com/tab/sun-room/just-yesterday-tabs-3761384](https://tabs.ultimate-guitar.com/tab/sun-room/just-yesterday-tabs-3761384)
+
+**IMPORTANT FLAG:** The UG listing is categorized as a **TAB** (not a chord tab). KhmerChords shows only two chord shapes: **E and G** ("play each chord twice, strum down-up"). Other sources list E, G, A, Em.
+
+**Chords found:**
+- **Primary:** E, G
+- **Additional (other sources):** A, Em
+- No capo indicated
+- Standard tuning EADGBE
+
+**Notes:** The UG entry is an intro tab, not a full chord chart. Chord information is sparse across all sources — only two chord diagrams confirmed at KhmerChords.
+
+---
+
+### Song 13: "Summer Heat" — Sun Room
+
+**UG URL:** NOT FOUND on Ultimate Guitar.
+
+**STATUS: NO TAB EXISTS ON ULTIMATE GUITAR.** Exhaustive search confirms:
+- No UG page found under any search variation
+- Not listed on KhmerChords Sun Room artist page (only 6 songs listed there: Clementine, Crashed My Bike, Just Yesterday, Sol Del Sur, Something That You're Missing, Summers Here)
+- No results on Chordify, ChordU, or any tab aggregator for this specific title + artist combination
+- The song exists on Spotify/Apple Music (2021, EP "Somewhere Tropical") but has no publicly indexed chord tab
+
+**Flag:** If previous research cited chords for this song, the source cannot be verified. This song has no chord tab available on UG or major tab sites.
+
+---
+
+### Song 14: "Texas Sun" — Khruangbin (feat. Leon Bridges)
+
+**UG URL:** [https://tabs.ultimate-guitar.com/tab/khruangbin/texas-sun-chords-2917748](https://tabs.ultimate-guitar.com/tab/khruangbin/texas-sun-chords-2917748)
+(Also official version: [https://tabs.ultimate-guitar.com/tab/khruangbin/texas-sun-official-chords-3339629](https://tabs.ultimate-guitar.com/tab/khruangbin/texas-sun-official-chords-3339629))
+
+**Chords found (confirmed across UG + GuitarTabsExplorer + multiple sources):**
+- **Intro:** Am - Am - G - G (x4)
+- **Verses:** Am, G (alternating throughout)
+- **Bridge:** Em, Bm (then returns to Am, G)
+- **Outro:** Am, G
+
+**Key:** A minor
+**Capo:** None
+**Tempo:** ~111-116 BPM
+
+**Notes:** Extremely consistent across all sources. The main song is essentially just Am and G, with Em and Bm appearing only in the bridge. No capo.
+
+---
+
+### Song 15: "Jah Werx" — Susto
+
+**UG URL:** [https://tabs.ultimate-guitar.com/tab/susto/jah-werx-chords-2172653](https://tabs.ultimate-guitar.com/tab/susto/jah-werx-chords-2172653)
+
+**Chords found (confirmed across UG + KhmerChords + Chordie):**
+- **All sections (verse, chorus, bridge):** B, F#, E
+- Three-chord song throughout, no variation by section
+
+**Key:** B major
+**Capo:** None
+**Tempo:** 4/4
+
+**Notes:** Every source agrees — B, F#, E only. Consistent and simple. No capo.
+
+---
+
+### Song 16: "Oysters In My Pocket" — Royel Otis
+
+**UG URL:** [https://tabs.ultimate-guitar.com/tab/royel-otis/oysters-in-my-pocket-chords-4176811](https://tabs.ultimate-guitar.com/tab/royel-otis/oysters-in-my-pocket-chords-4176811)
+
+**Chords found (confirmed across UG + KhmerChords + multiple sources):**
+- **Intro:** A, F#m (x2)
+- **Verses:** A, F#m (alternating)
+- **Chorus/Refrain:** Bm, A, D
+
+**Key:** A major
+**Capo:** None specified
+**Tempo:** ~167 BPM
+
+**Notes:** Four chords total: A, F#m, Bm, D. Consistent across all sources.
+
+---
+
+### Song 17: "It's a Love" — Baskervillain
+
+**UG URL:** NOT FOUND on Ultimate Guitar directly. No UG tab page indexed for this song.
+
+**Best available sources:** Chordify + ChordU
+
+**Chords found:**
+- **Full set:** E, A, C#m, F#, B
+- **Core learning sequence:** A - E - C#m - E - A - C#m - B - F#
+
+**Key:** E major
+**Capo:** None (Capo 0)
+**Tempo:** 112 BPM
+
+**Notes:** No UG tab exists for this song. Chordify and ChordU are the only chord sources. Song is released on Bedlam Records (bandcamp). Section-by-section breakdown (verse/chorus/bridge) is not distinguished in available sources.
+
+---
+
+### Song 18: "1999" — NO CIGAR
+
+**UG URL:** NOT FOUND on Ultimate Guitar for a song called "1999" by an artist named "NO CIGAR."
+
+**STATUS: DISAMBIGUATION NEEDED / LIKELY NOT ON UG.** What the search found:
+- UG has an artist page for "NO CIGAR" ([https://www.ultimate-guitar.com/artist/no_cigar_1000451](https://www.ultimate-guitar.com/artist/no_cigar_1000451)) but the page is 403-blocked
+- Chordify has a page: [https://chordify.net/chords/no-cigar-1999-no-cigar](https://chordify.net/chords/no-cigar-1999-no-cigar) — this confirms the artist "NO CIGAR" (distinct from Millencolin) has a song called "1999"
+- All UG search results for "NO CIGAR 1999" return Millencolin tabs, not this band's song
+- Chordify also lists "Say No More," "Concubine," and "Some Nights" by this same NO CIGAR
+
+**Chords from Chordify (Chordify page confirmed to exist):** E, B, F#, A (reported by search summary — Chordify 403-blocked on direct fetch)
+
+**Flag:** No tab exists on Ultimate Guitar for this specific song. Chordify is the only identified chord source. The exact chords need direct Chordify verification but the page URL is confirmed live.
+
+---
+
+### Song 19: "Peace Blossom Boogy" — Babe Rainbow (listed as "The Babe Rainbow" on UG)
+
+**UG URL:** [https://tabs.ultimate-guitar.com/tab/the-babe-rainbow/peace-blossom-boogy-chords-2094601](https://tabs.ultimate-guitar.com/tab/the-babe-rainbow/peace-blossom-boogy-chords-2094601)
+
+**Chords found (confirmed across UG + KhmerChords — detailed fetch succeeded):**
+- **Verses:** D
+- **Chorus:** D, G7 (alternating)
+- **Bridge:** D, G7
+- **Solo section:** D, G7, A
+
+**Key:** D major
+**Capo:** None
+**Time signature:** 4/4
+
+**Notes:** Primarily a two-chord song (D and G7). The A chord appears briefly in the solo/instrumental section only. Very simple. Flag: some other chord sites list D, Dm, G, Bm, E — these appear to be incorrect or alternate arrangements. The KhmerChords detailed fetch returned D and G7 as the confirmed core.
+
+---
+
+### Song 20: "Warmth of the Sun" — Levitation Room
+
+**UG URL:** NOT FOUND on Ultimate Guitar. No UG tab page exists for this song.
+
+**Best sources:** ChordU + Chordify (both confirmed to have pages)
+- Chordify: [https://chordify.net/chords/levitation-room-warmth-of-the-sun-levitation-room](https://chordify.net/chords/levitation-room-warmth-of-the-sun-levitation-room)
+- ChordU: [https://chordu.com/chords-tabs-levitation-room-warmth-of-the-sun-id_wC_DrMK3BAk](https://chordu.com/chords-tabs-levitation-room-warmth-of-the-sun-id_wC_DrMK3BAk)
+
+**Chords found (ChordU fetch succeeded):**
+- **Full set:** E, D, A, Bm, B
+- **Core pattern:** E - D - E (primary)
+
+**Key:** A minor (per ChordU)
+**Capo:** None (Capo 0)
+**Tempo:** ~122 BPM
+
+**Notes:** No UG tab exists. Song appears to move primarily on E and D. The Bm/B and A appear as secondary chords. Section breakdown not available from fetched sources.
+
+---
+
+## Summary of Critical Flags
+
+| # | Song | UG Tab Exists? | Key Findings |
+|---|---|---|---|
+| 11 | Sunset Garage | YES | G, Em, C, D — Key of G, no capo |
+| 12 | Just Yesterday | YES (as tab, not chord tab) | E, G primary; sparse chord data |
+| 13 | Summer Heat | **NO — NOT ON UG** | No tab found anywhere. Cannot verify any previously claimed chords. |
+| 14 | Texas Sun | YES (multiple versions) | Am, G (main); Em, Bm (bridge only). No capo. |
+| 15 | Jah Werx | YES | B, F#, E only. No capo. |
+| 16 | Oysters In My Pocket | YES | A, F#m, Bm, D. No capo. |
+| 17 | It's a Love | **NOT ON UG** | E, A, C#m, F#, B. Chordify/ChordU only. |
+| 18 | 1999 (NO CIGAR) | **NOT ON UG** | Chordify page exists; chords not directly confirmed due to 403 blocks |
+| 19 | Peace Blossom Boogy | YES (as "The Babe Rainbow") | D and G7 primarily; A only in solo. No capo. |
+| 20 | Warmth of the Sun | **NOT ON UG** | E, D, A, Bm, B. Chordify/ChordU only. |
+
+Sources:
+- [SUNSET GARAGE CHORDS by Sun Room — Ultimate-Guitar](https://tabs.ultimate-guitar.com/tab/sun-room/sunset-garage-chords-5485764)
+- [Just Yesterday Tabs by Sun Room — Ultimate-Guitar](https://tabs.ultimate-guitar.com/tab/sun-room/just-yesterday-tabs-3761384)
+- [TEXAS SUN CHORDS by Khruangbin — Ultimate-Guitar](https://tabs.ultimate-guitar.com/tab/khruangbin/texas-sun-chords-2917748)
+- [Texas Sun Official Chords — Ultimate-Guitar](https://tabs.ultimate-guitar.com/tab/khruangbin/texas-sun-official-chords-3339629)
+- [Texas Sun — GuitarTabsExplorer](https://www.guitartabsexplorer.com/khruangbin-Tabs/texas-sun-crd.php)
+- [JAH WERX CHORDS by Susto — Ultimate-Guitar](https://tabs.ultimate-guitar.com/tab/susto/jah-werx-chords-2172653)
+- [Jah Werx — KhmerChords](https://www.khmerchords.com/en/susto/jah-werx)
+- [OYSTERS IN MY POCKET CHORDS by Royel Otis — Ultimate-Guitar](https://tabs.ultimate-guitar.com/tab/royel-otis/oysters-in-my-pocket-chords-4176811)
+- [Oysters in My Pocket — KhmerChords](https://www.khmerchords.com/en/royel-otis/oysters-in-my-pocket)
+- [Baskervillain "It's a Love" — ChordU](https://chordu.com/chords-tabs-baskervillain-its-a-love--id_iUsEKsxZV-s)
+- [Baskervillain "It's a Love" — Chordify](https://chordify.net/chords/baskervillain-its-a-love-bedlamrecords)
+- [NO CIGAR — 1999 — Chordify](https://chordify.net/chords/no-cigar-1999-no-cigar)
+- [NO CIGAR artist page — Ultimate-Guitar](https://www.ultimate-guitar.com/artist/no_cigar_1000451)
+- [PEACE BLOSSOM BOOGY CHORDS by The Babe Rainbow — Ultimate-Guitar](https://tabs.ultimate-guitar.com/tab/the-babe-rainbow/peace-blossom-boogy-chords-2094601)
+- [Peace Blossom Boogy — KhmerChords](https://www.khmerchords.com/en/the-babe-rainbow/peace-blossom-boogy)
+- [Levitation Room "Warmth of the Sun" — Chordify](https://chordify.net/chords/levitation-room-warmth-of-the-sun-levitation-room)
+- [Levitation Room "Warmth of the Sun" — ChordU](https://chordu.com/chords-tabs-levitation-room-warmth-of-the-sun-id_wC_DrMK3BAk)
+- [Sun Room artist page — KhmerChords](https://www.khmerchords.com/artists/1606491?order=old)</result>
+<usage><total_tokens>48173</total_tokens><tool_uses>60</tool_uses><duration_ms>218258</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\314cd032-8085-4be1-96e9-95bcec9a93e7\tasks\ae8bab006c220faf8.output
+[2026-03-22T01:20:13.397Z] Okay, well, what's the execution prompt? We already did this. You're the one that's doing it right now. The curriculum is already done.
+[2026-03-22T01:23:39.431Z] You know, I like that. And then maybe we can have like a real song link in the audio there. And then you can just hit play and you can listen to it like an in-exercise music player. Yeah, let's try to work with what we have and work to the best of our ability.

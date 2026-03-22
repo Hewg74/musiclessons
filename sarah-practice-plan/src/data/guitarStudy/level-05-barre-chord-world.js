@@ -9,8 +9,8 @@ export const level5 = {
   review: {
     label: "Level 4 Check-In",
     time: 5,
-    exercises: ["gs-4-1", "gs-4-4"],
-    prompt: "Play a clean reggae skank on ands-only for 60 seconds (gs-4-1). Then play B-F#-E with the offbeat chop (gs-4-4). Skank is percussive and tight? Ready for barres."
+    exercises: ["gs-4-1", "gs-4-4b"],
+    prompt: "Play a clean reggae skank on ands-only for 60 seconds (gs-4-1). Then play B-F#-E (Jah Werx) with the offbeat chop (gs-4-4b). Skank is percussive and tight? Ready for barres."
   },
   exercises: [
 
@@ -195,24 +195,29 @@ export const level5 = {
     {
       id: "gs-5-9",
       time: 8,
-      title: "Song Study: Sunset Garage — Barre Meets Lead",
+      title: "Song Study: Sunset Garage — Speed and Energy",
       type: "guitar",
-      what: "Sun Room's Sunset Garage uses G-B-C-D in the verse and C-D-G-Em in the chorus — and that B is a barre chord sitting between open chords. At 142 BPM, this is the fastest song yet. The B barre in context of open chords trains your hand to snap in and out of barre position at speed.",
+      songRef: {
+        title: "Sunset Garage — Sun Room",
+        youtubeId: "wZTxGM4xFNs",
+        note: "Listen to the energy — 142 BPM, all open chords, driving strum. This is Sun Room at full throttle. Match the urgency."
+      },
+      what: "Sun Room's Sunset Garage uses G-Em-C-D in the verse and C-D-G-Em in the chorus — all open chords, but at 142 BPM it's the fastest song in this level. Speed with clean transitions is the challenge. Your barre chord skills from Sol Del Sur prepare your hand for fast transitions — now apply that snap-and-release speed to open chord changes.",
       setup: "Guitar. Metronome at 110 BPM, target 142.",
-      chordVoicings: { chords: ["G", "B", "C", "D"] },
+      chordVoicings: { chords: ["G", "Em", "C", "D"] },
       tracks: [{ name: "Drums — Surf 120", src: "/drums-surf-120.mp3" }],
       steps: [
-        { text: "Play the verse: G-B-C-D. G, C, and D are open chords you know well. B is a barre chord (A-shape, fret 2). The challenge is snapping into the B barre and back out to open C — fast. Practice just G → B → C at 80 BPM until the B-to-C transition is smooth.", why: "Isolating the problem transition (B to C) is more efficient than running the whole progression with one weak link. The barre-to-open snap requires releasing all barre tension instantly — the hand must go from clamped to relaxed in one beat." },
-        { text: "Add D and play the full verse: G-B-C-D at 100 BPM. The B is the only barre chord — it should pop out of the open chord flow like a bold accent. Feel how the B chord has a different fullness than the surrounding open chords.", why: "One barre chord among open chords is a common real-world situation. The tonal contrast between the bright open G and the thick barre B is part of what makes this progression interesting." },
-        { text: "Chorus: C-D-G-Em. All open chords — a breather after the verse. Play verse into chorus: G-B-C-D | C-D-G-Em. Feel the shift in energy — verse has the barre tension, chorus releases it.", why: "The verse-chorus dynamic mirrors the barre-open dynamic. The verse has physical tension (barre chord) and harmonic tension (B major in the key of G). The chorus resolves both. This is songcraft." },
-        { text: "Speed up toward 142 BPM. At this tempo, the B barre must be nearly instantaneous — your hand snaps into position, strums, and releases. If you can't hit 142 clean, find your maximum clean tempo and note it. This is a stretch goal.", why: "142 BPM is genuinely fast for barre chord work. Your maximum clean tempo today is your baseline — you'll improve with daily practice. Speed gains in barre transitions come primarily from sleep consolidation, so don't force it in one session." }
+        { text: "Play the verse: G-Em-C-D, each chord 2 beats (half a bar each at this tempo). At 110 BPM first. These are all open chords you know, but at speed the transitions have to be instantaneous. Use the anticipation technique: start moving your fingers DURING the last strum of each chord.", why: "At 142 BPM, you don't have time to 'think then move.' Your fingers must be pre-forming the next chord shape while the current chord is still ringing. This anticipation skill transfers to every fast song." },
+        { text: "Focus on the G→Em transition — it's the fastest because you only need to lift two fingers (both drop to the A and D strings). And Em→C — middle finger stays planted on the D string as an anchor. Identify every anchor finger in this progression.", why: "Anchor fingers are the secret to fast chord changes. G→Em: ring and pinky lift, middle stays. Em→C: middle stays on D string. Finding these shortcuts is how professionals play at speed without thinking." },
+        { text: "Chorus: C-D-G-Em. Same four chords, different order. Play verse into chorus: G-Em-C-D | C-D-G-Em. Feel the energy shift — the verse drives forward, the chorus opens up.", why: "The verse and chorus use identical chords in different order. The musical interest comes from the SEQUENCE, not the harmony. Chord order = emotional arc." },
+        { text: "Push toward 142 BPM. Increase by 10 BPM at a time. Find your maximum clean tempo today and note it. If you can't hit 142, stop at your max and try again tomorrow. Sleep consolidation handles the last 10-15 BPM.", why: "142 BPM is genuinely fast for chord transitions. Your max clean tempo today is your baseline — speed gains come from overnight consolidation, not grinding through fatigue." }
       ],
-      feel: "Sunset Garage is the fastest, most energetic Sun Room track — pure adrenaline. The B barre chord should hit like an exclamation point in the middle of the progression. At full speed, it should feel like the song is barely contained.",
-      wrong: "If the B chord is consistently late (you hear a gap before it), you're reforming the shape from scratch each time. Try pre-forming the B shape while strumming the last beat of G — your hand moves to barre position DURING the G strum, not after it. Anticipation is the secret to fast chord changes.",
-      sarah: "Gene, Sunset Garage (#28 in your top 50) is Sun Room at full throttle — 142 BPM, the fastest thing in this level. That B barre chord between open G and C is the test. And there's a lead solo section in this song that's waiting for you in later levels. For now, nail the rhythm part. The solo is the reward.",
+      feel: "Sunset Garage is pure adrenaline — Sun Room at full throttle. The energy should feel barely contained. If it feels comfortable, you're not playing fast enough. Push the tempo until it's exciting.",
+      wrong: "If transitions have gaps (silence between chords), you're reforming shapes from scratch. Pre-form the next chord DURING the last strum of the current one. If it falls apart above 120 BPM, that's your current ceiling — sleep on it and try again tomorrow.",
+      sarah: "Gene, Sunset Garage (#28 in your top 50) is proof that you don't need barre chords to make intense music — four open chords at 142 BPM is a workout. Sun Room's Luke makes these simple shapes sound urgent through pure strumming energy. There's a lead solo section in this song that's waiting for you in later levels. For now, nail the rhythm at speed.",
       metronome: 110,
       recorder: true,
-      levelUp: "Can play Sunset Garage verse (G-B-C-D) at 130+ BPM with clean B barre chord and no timing gaps. Chorus transition is smooth."
+      levelUp: "Play Sunset Garage verse (G-Em-C-D) and chorus (C-D-G-Em) at 130+ BPM with clean transitions and no timing gaps."
     },
 
     // ─── PHASE 5: IMPROV AND CREATION ───

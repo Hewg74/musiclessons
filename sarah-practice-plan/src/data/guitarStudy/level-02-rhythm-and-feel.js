@@ -12,7 +12,7 @@ export const level2 = {
     label: "Level 1 Check-In",
     time: 5,
     exercises: ["gs-1-5", "gs-1-10"],
-    prompt: "Play the one-note groove (gs-1-5) — can you groove on one note for 60 seconds? Then play DOPE LEMON style Am→D→G with behind-the-beat feel (gs-1-10). Both feel natural? Move on."
+    prompt: "Play the one-note groove (gs-1-5) — can you groove on one note for 60 seconds? Then play DOPE LEMON style Am→D with behind-the-beat feel (gs-1-10). Both feel natural? Move on."
   },
   exercises: [
 
@@ -54,7 +54,7 @@ export const level2 = {
         { text: "Now strum Am just AFTER the click — a tiny fraction of a second late. The click happens, then your strum follows. Think of it as the click is the wave breaking, and your strum is the foam that follows. 8 bars.", why: "Behind-the-beat feel creates the laid-back, sun-drenched quality you hear in every DOPE LEMON and Khruangbin track. The delay is tiny — maybe 50-80 milliseconds — but the vibe change is enormous." },
         { text: "Exaggerate it: play clearly AFTER the click — so late that it almost feels like you're on the wrong beat. Then gradually pull it back until you find the sweet spot: not on the beat, not absurdly late, but floating in the space behind the click. 4 bars exaggerated, 4 bars finding the pocket.", why: "Exaggeration trains the muscle. You need to know where 'too late' is before you can find the pocket. Most beginners under-estimate how far behind they can go before it sounds wrong." },
         { text: "Apply it to a chord change: strum Am (4 bars) → D (4 bars) → G (4 bars), all behind the beat. The chord changes should also be slightly behind — don't rush to get to the next chord. Let each chord linger a breath longer than 'correct.'", why: "Behind-the-beat chord changes are the secret to the relaxed DOPE LEMON vibe. If your chords arrive 'on time' but your strums are behind, it sounds confused. Everything — strums AND changes — lives in the same laid-back pocket." },
-        { text: "Test: record yourself playing Am-D-G on the beat, then behind the beat. Listen back to both. The on-the-beat version should sound stiff and mechanical. The behind-the-beat version should sound warm and groovy. If you can't hear the difference yet, keep practicing — it will click.", why: "Recording and comparing is the fastest way to train your ear for feel. What you hear while playing isn't what the audience hears. The recording tells the truth." }
+        { text: "Test: record yourself playing Am-D on the beat, then behind the beat. Listen back to both. The on-the-beat version should sound stiff and mechanical. The behind-the-beat version should sound warm and groovy. If you can't hear the difference yet, keep practicing — it will click.", why: "Recording and comparing is the fastest way to train your ear for feel. What you hear while playing isn't what the audience hears. The recording tells the truth." }
       ],
       feel: "When you find the behind-the-beat pocket, it feels like floating — like the metronome is pulling you forward but you're choosing to glide. It's the difference between walking urgently and strolling. Your whole body should feel more relaxed.",
       wrong: "If your behind-the-beat strums sound random and sloppy, you're playing late without intention. The difference between 'behind the beat' and 'late' is consistency — behind the beat means EVERY strum is the same distance behind the click. If some strums are on and some are late, that's just messy time. Also: if you're tensing up trying to control the delay, you're overthinking it. Relax your arm and FEEL lazy.",
@@ -62,7 +62,7 @@ export const level2 = {
       metronome: 75,
       tracks: [{ name: "Groove Beat 90", src: "/groove-beat-90.mp3" }],
       recorder: true,
-      levelUp: "Can play a 3-chord progression (Am-D-G) behind the beat for 16 bars with consistent feel — not drifting further behind or snapping back on-the-beat."
+      levelUp: "Can play a 3-chord progression (Am-D) behind the beat for 16 bars with consistent feel — not drifting further behind or snapping back on-the-beat."
     },
 
     // ─── GHOST STRUMS ───
@@ -79,7 +79,7 @@ export const level2 = {
         { text: "Now make the upstrokes (the 'ands') into ghosts: your arm still swings up, but it barely brushes the strings. You should hear the downstrokes clearly and the upstrokes as a faint, percussive whisper. 8 bars.", why: "Ghost strums on the upbeats create the classic behind-the-beat bounce. The arm is doing the same motion, but the upstrokes are relaxed and light. This is how rhythm guitarists add texture without cluttering the groove." },
         { text: "Reverse it: make the downstrokes ghosts and the upstrokes full volume. This feels weird and off-balance at first — lean into it. The accented upstrokes create a reggae-adjacent bounce. 8 bars.", why: "Accenting upstrokes is the gateway to reggae skank (Level 4). Getting comfortable with this inversion now means the offbeat will feel natural later. It also proves your arm motion is truly independent of your accent pattern." },
         { text: "Pattern: full, ghost, ghost, full, ghost, full, ghost, ghost (over 2 beats of eighth notes). This creates a syncopated groove — certain strums pop out while others whisper. Practice this pattern for 8 bars until it grooves.", why: "Irregular ghost patterns create the rhythmic complexity that makes a strum pattern interesting. Your arm still moves like a metronome, but the dynamic variation creates syncopation. This is how one guitarist sounds like a whole rhythm section." },
-        { text: "Apply ghost strums to the Am-D-G progression from Level 1: use any ghost pattern you like, but keep the arm swinging and the ghosts consistent. 16 bars, then record. Listen for the texture — the ghosts should be audible but quiet, like a shaker underneath the guitar.", why: "Ghost strums over chord changes prove that your strumming pattern is independent of your fretting hand. If the ghosts disappear during chord changes, your left hand is disrupting your right hand's groove. They need to be independent." }
+        { text: "Apply ghost strums to the Am-D progression from Level 1: use any ghost pattern you like, but keep the arm swinging and the ghosts consistent. 16 bars, then record. Listen for the texture — the ghosts should be audible but quiet, like a shaker underneath the guitar.", why: "Ghost strums over chord changes prove that your strumming pattern is independent of your fretting hand. If the ghosts disappear during chord changes, your left hand is disrupting your right hand's groove. They need to be independent." }
       ],
       feel: "Ghost strums should feel effortless — like your arm is breathing. The full strums are exhales, the ghosts are inhales. The groove gets a pulse, a heartbeat, that's more alive than straight strumming.",
       wrong: "If you can't hear ANY difference between full strums and ghosts, you're pressing too hard on the ghosts. Lighten your pick grip until the ghost strum is more air than string. If your arm keeps stopping for the ghosts (dead air instead of whisper), your arm is breaking the pendulum. The arm NEVER STOPS — ghosts are light swings, not pauses.",
@@ -220,7 +220,7 @@ export const level2 = {
       time: 8,
       title: "Song Study: Mexico — Fast Strum Energy",
       type: "guitar",
-      what: "Husbands' 'Mexico' is the opposite of behind-the-beat — it's a fast, energetic strum at 150 BPM that drives forward with joyful urgency. Five chords (F-C-E-Dm-Am) at high speed. This is your first encounter with uptempo strumming and how to keep your arm relaxed when the speed demands it.",
+      what: "Husbands' 'Mexico' is the opposite of behind-the-beat — it's a fast, energetic strum at 150 BPM that drives forward with joyful urgency. Four chords (F-C-G-Am) at high speed. This is your first encounter with uptempo strumming and how to keep your arm relaxed when the speed demands it.",
       setup: "Guitar. Metronome at 100 BPM (start slow, target 150).",
       steps: [
         { text: "Learn the five chords: F (xx3211 — just the four-string version for now), C, E, Dm, Am. One-minute changes for the trickiest pairs: F↔C, E↔Dm, Dm↔Am. Target: 20+ per minute for each pair.", why: "Five chords at 150 BPM means fast transitions. The four-string F avoids the full barre (that's Level 5). The E chord appearing in a C-major context is surprising — it's borrowed from the parallel minor and creates harmonic tension." },
@@ -236,7 +236,7 @@ export const level2 = {
       chordVoicings: { chords: ["F", "C", "E", "Dm", "Am"] },
       speedLadder: { start: 100, end: 150, increment: 10, bars: 4 },
       recorder: true,
-      levelUp: "Can play F-C-E-Dm-Am at 140+ BPM with clean chord transitions, constant arm motion, and ghost strums — sounding energetic and joyful, not frantic."
+      levelUp: "Can play F-C-G-Am at 140+ BPM with clean chord transitions, constant arm motion, and ghost strums — sounding energetic and joyful, not frantic."
     },
 
     // ─── IMPROV: BLUES CALL-AND-RESPONSE ───

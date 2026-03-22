@@ -5450,7 +5450,7 @@ const CHORD_VOICINGS_MULTI = {
   "B":  [{ frets: "x24442", name: "B", pos: "2nd" }, { frets: "799877", name: "B", pos: "7th" }, { frets: "xx4442", name: "B", pos: "Partial" }],
   "Bm": [{ frets: "x24432", name: "Bm", pos: "2nd" }, { frets: "799777", name: "Bm", pos: "7th" }, { frets: "xx4432", name: "Bm", pos: "Partial" }],
   "C#": [{ frets: "x46664", name: "C#", pos: "4th" }, { frets: "9bba99", name: "C#", pos: "9th" }, { frets: "xx6664", name: "C#", pos: "Partial" }],
-  "Db": [{ frets: "x46664", name: "Db", pos: "4th" }, { frets: "9bb999", name: "Db", pos: "9th" }, { frets: "xx6664", name: "Db", pos: "Partial" }],
+  "Db": [{ frets: "x46664", name: "Db", pos: "4th" }, { frets: "9bba99", name: "Db", pos: "9th" }, { frets: "xx6664", name: "Db", pos: "Partial" }],
   "D#": [{ frets: "x68886", name: "D#", pos: "6th" }, { frets: "bddcbb", name: "D#", pos: "11th" }, { frets: "xx8886", name: "D#", pos: "Partial" }],
   "Eb": [{ frets: "x68886", name: "Eb", pos: "6th" }, { frets: "bddcbb", name: "Eb", pos: "11th" }, { frets: "xx8886", name: "Eb", pos: "Partial" }],
   "F#": [{ frets: "244322", name: "F#", pos: "2nd" }, { frets: "x9bba9", name: "F#", pos: "9th" }, { frets: "xx4322", name: "F#", pos: "Partial" }],

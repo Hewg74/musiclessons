@@ -90,7 +90,7 @@ export const level6 = {
       time: 8,
       title: "Song Study: Worship the Sun",
       type: "guitar",
-      what: "Allah-Las' Worship the Sun IS the Cmaj7-Dmaj7 float in action. The verse rides Cmaj7→Dmaj7 over and over — pure jangle. The chorus shifts to A-G-A-E — bigger, more open, resolving the dreamy tension of the verse. Learn the whole song structure: dream, then release.",
+      what: "Allah-Las' Worship the Sun IS the Cmaj7-Dmaj7 float in action. The verse rides Cmaj7→Dmaj7 over and over — pure jangle. The chorus shifts to A-G-A-E — bigger, more open, resolving the dreamy tension of the verse. (Chords from GuitarTabsExplorer — listen to the recording and verify the feel matches.)",
       setup: "Guitar. Metronome at the song's tempo (approximately 95 BPM).",
       chordVoicings: { chords: ["Cmaj7", "Dmaj7", "A", "G", "E"] },
       steps: [
@@ -141,15 +141,15 @@ export const level6 = {
       steps: [
         { text: "Play Em (022000). Then Dmaj7 (xx0222). Back and forth, 2 bars each, at 80 BPM first. Listen to how the open E string sustains through BOTH chords — in Em it's the root, in Dmaj7 it's the maj7. Same string, completely different harmonic function.", why: "This is the deeper version of the open string trick: the E doesn't just ring — it changes meaning depending on the chord underneath. In Em, E is home. In Dmaj7, E is the dreamy 7th. Your ear starts to hear one string doing two different jobs." },
         { text: "Bring the tempo to 100 BPM. Play Em-Dmaj7, 2 bars each, with a steady eighth-note strum (constant arm motion, down-up-down-up). Let the strum be gentle — this isn't punk, it's psych. The arm moves at a constant pace; the dynamics are soft.", why: "Friends sits at 100 BPM with a flowing eighth-note strum. The constant arm motion you learned in Level 1 is the engine — but the touch is lighter here. Jangle strumming is about brushing the strings, not attacking them." },
-        { text: "Pre-chorus: shift to A-Em. Play A for 2 bars, Em for 2 bars. Feel how the A chord brings brightness and forward motion — the pre-chorus lifts up from the dreamy verse. Then fall back into Em-Dmaj7 for the verse.", why: "The pre-chorus uses A major — a warmer, more resolved chord that creates contrast with the floating verse. The shift from Em-Dmaj7 (dreamy) to A-Em (directional) is the emotional hinge of the song." },
+        { text: "Pre-chorus: shift to A-Em. Play A for 2 bars, Em for 2 bars. Feel how the A chord brings brightness and forward motion — the chorus lifts up from the dreamy verse. Then fall back into Em-Dmaj7 for the verse.", why: "The chorus uses A major — a warmer, more resolved chord that creates contrast with the floating verse. The shift from Em-Dmaj7 (dreamy) to A-Em (directional) is the emotional hinge of the song." },
         { text: "Full structure: Verse (Em-Dmaj7 x4), Pre-chorus (A-Em x2), Verse (Em-Dmaj7 x4). Play through the whole thing twice. Let the Dmaj7 be the star — that chord IS the song.", why: "Hearing the full structure reveals that Friends is essentially a Dmaj7 delivery vehicle. Everything else exists to set up and release the dreamy maj7 moment. Understanding a song's emotional center helps you play it with intention." },
         { text: "Add feel: during the Em bars, strum slightly harder — it's the minor chord, the grounded moment. During the Dmaj7 bars, strum lighter and let the open strings ring longer. Create a dynamic wave: strong-soft-strong-soft. The song breathes.", why: "Dynamic contrast between chords within a simple pattern creates the illusion of complexity. You're playing two chords, but the dynamic variation makes it feel like a full arrangement." }
       ],
-      feel: "The verse should feel like drifting — Em pulls you gently down, Dmaj7 lifts you up into shimmer. The alternation creates a gentle rocking motion, like a hammock. The pre-chorus should feel like briefly waking up before sinking back into the dream.",
+      feel: "The verse should feel like drifting — Em pulls you gently down, Dmaj7 lifts you up into shimmer. The alternation creates a gentle rocking motion, like a hammock. The chorus should feel like briefly waking up before sinking back into the dream.",
       wrong: "If the Dmaj7 doesn't shimmer, check that the open E string is ringing. If the transition between Em and Dmaj7 is clunky, practice the change in isolation — Em to Dmaj7 requires lifting fingers off the A string while placing them on the D, G, and B strings. If the song feels flat, add the dynamic contrast — louder Em, softer Dmaj7.",
       sarah: "Gene, Friends is one of those songs that sounds simple until you try to play it with the right feel. levitation room comes from the same LA psych scene as Allah-Las — Julian Ducatenzeiler uses a lot of the same open-string tricks. The Dmaj7 in the verse IS the song's identity. When that open E rings over the D chord, you get that golden-hour shimmer that defines the whole genre. This is your vibe, man — this is the sound.",
       metronome: 100,
-      levelUp: "Play the full Friends structure (verse Em-Dmaj7 x4, pre-chorus A-Em x2, verse Em-Dmaj7 x4) at 100 BPM with dynamic contrast (louder Em, softer Dmaj7) and the open E string ringing continuously."
+      levelUp: "Play the full Friends structure (verse Em-Dmaj7 x4, chorus A-Em x2, verse Em-Dmaj7 x4) at 100 BPM with dynamic contrast (louder Em, softer Dmaj7) and the open E string ringing continuously."
     },
 
     // ─── PHASE 4: MAJOR→MINOR SHIFTS ───
@@ -171,16 +171,16 @@ export const level6 = {
       ],
       feel: "The D→Dm shift should feel like a cloud crossing the sun — a subtle, unexpected darkening that makes you more aware of the light that was just there. The G→Gm shift is the same feeling but deeper, with the barre chord adding weight. Together, the D-Dm-G-Gm loop should feel like watching golden hour slowly cool into dusk.",
       wrong: "If D and Dm sound too similar, emphasize the high E string — that's where the 3rd lives, and that's where the shift happens. If Gm buzzes, review your barre technique from Level 5. If the loop sounds random rather than emotional, slow down and listen to each transition — the emotion is in the MOMENT of change, not in the chords themselves.",
-      sarah: "Gene, this is Angus Stone's secret weapon. DOPE LEMON's whole vibe is built on this D→Dm shift — that lo-fi, reverb-drenched, behind-the-beat feel where the chords keep slipping between major and minor like you can't quite hold onto the happy feeling. Cotton Jones does it on Chewing Gum (Am-D-Dm7-Dm). modGlyders do it on Geneva Strange (G-C-D-Gm). It's the same trick everywhere — one fret, one finger, total emotional transformation.",
+      sarah: "Gene, this is Angus Stone's secret weapon. DOPE LEMON's whole vibe is built on this D→Dm shift — that lo-fi, reverb-drenched, behind-the-beat feel where the chords keep slipping between major and minor like you can't quite hold onto the happy feeling. Cotton Jones does it on Chewing Gum (Am-D-Dm7-Dm). modGlyders do it on Geneva Strangemod (G-C-D-Gm). It's the same trick everywhere — one fret, one finger, total emotional transformation.",
       metronome: 75,
       levelUp: "Play D→Dm→G→Gm at 75 BPM with clean chord changes, and describe what happens emotionally at each major→minor transition."
     },
     {
       id: "gs-6-8",
       time: 8,
-      title: "Song Study: Geneva Strange (modGlyders)",
+      title: "Song Study: Geneva Strangemod (modGlyders)",
       type: "guitar",
-      what: "modGlyders' Geneva Strange uses G-C-D-Gm — three major chords that feel like a normal sunny progression, until the Gm arrives and everything shifts. The Gm is the surprise. It's a major→minor moment deployed as a structural twist, not just a passing color.",
+      what: "modGlyders' Geneva Strangemod uses G-C-D-Gm — three major chords that feel like a normal sunny progression, until the Gm arrives and everything shifts. The Gm is the surprise. It's a major→minor moment deployed as a structural twist, not just a passing color.",
       setup: "Guitar. Metronome at 90 BPM (estimated tempo).",
       chordVoicings: { chords: ["G", "C", "D", "Gm"] },
       steps: [
@@ -192,7 +192,7 @@ export const level6 = {
       ],
       feel: "The G-C-D should feel like driving with the windows down on a warm day. The Gm should feel like a cool shadow falling across the car — brief, unexpected, but beautiful. The loop should feel like alternating between sunlight and shade.",
       wrong: "If the Gm doesn't feel surprising, you might be rushing through the G-C-D — slow down and really settle into the major territory before the minor arrives. If the Gm sounds out of place (wrong, not surprising), check your voicing — make sure the Bb is clean. If the whole progression sounds generic, add the dynamic drop on Gm.",
-      sarah: "Gene, Geneva Strange is a perfect example of how one chord can transform a song. G-C-D is the most basic progression on earth — every campfire guitarist knows it. But that Gm at the end turns it into something specific, something with character. This is what separates your taste from 'dude with acoustic guitar' — you hear the shadows in the sunlight.",
+      sarah: "Gene, Geneva Strangemod is a perfect example of how one chord can transform a song. G-C-D is the most basic progression on earth — every campfire guitarist knows it. But that Gm at the end turns it into something specific, something with character. This is what separates your taste from 'dude with acoustic guitar' — you hear the shadows in the sunlight.",
       metronome: 90,
       tracks: [{ name: "Groove Beat 90", src: "/groove-beat-90.mp3" }],
       levelUp: "Play G-C-D-Gm at 90 BPM 4 times through with clean transitions and a dynamic drop on the Gm, and identify the emotional moment where Gm replaces the expected G major."
@@ -205,7 +205,7 @@ export const level6 = {
       time: 8,
       title: "Song Study: Catamaran (Allah-Las)",
       type: "guitar",
-      what: "Allah-Las' Catamaran uses Am-C-D-Dm — a minor progression where the D→Dm shift creates dark restlessness. After the floating verse and the dreamy Worship the Sun, this is the darker side of jangle — the Am-G-F-E descending minor tradition that lives underneath all LA psych-surf.",
+      what: "Allah-Las' Catamaran uses Am-C-D-Dm — a minor progression where the D→Dm shift creates dark restlessness. (Chords from GuitarTabsExplorer — listen to the recording to verify.) This is the darker side of jangle — the Am-G-F-E descending minor tradition that lives underneath all LA psych-surf.",
       setup: "Guitar. Metronome at 90 BPM (estimated).",
       chordVoicings: { chords: ["Am", "C", "D", "Dm"] },
       steps: [

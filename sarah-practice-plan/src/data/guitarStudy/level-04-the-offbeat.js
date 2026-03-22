@@ -91,26 +91,58 @@ export const level4 = {
 
     {
       id: "gs-4-4",
-      time: 10,
-      title: "Song Study: Gimme Love / Jah Werx — The B-F#-E Template",
+      time: 8,
+      title: "Song Study: Gimme Love — The Elovaters (F-C-G)",
       type: "guitar",
-      what: "Two songs from your playlist — Gimme Love (The Elovaters) and Jah Werx (Susto) — share the exact same three-chord progression: B-F#-E. This is the classic reggae I-V-IV in the key of B. It's your first reggae chord template. Learn it with the skank rhythm you've been building, and you'll have two songs in one exercise.",
-      setup: "Guitar. Metronome at 80 BPM (both songs are ~85, start slightly slower).",
+      songRef: {
+        title: "Gimme Love — The Elovaters",
+        youtubeId: "QgvK3K3gE7U",
+        note: "Listen to the offbeat chop — light, bouncy, island vibes. Three open chords in the key of C. Match the feel."
+      },
+      what: "The Elovaters' Gimme Love is a three-chord reggae tune in the key of C: F-C-G. All open chords — no barres needed. This is reggae with chords you already know from Level 1. The magic is applying the offbeat skank to familiar shapes.",
+      setup: "Guitar. Metronome at 80 BPM (song is ~86, start slower). Listen to the song reference first.",
+      chordVoicings: { chords: ["F", "C", "G"] },
+      tracks: [{ name: "Drums Only — Reggae 85", src: "/drums-reggae-85.mp3" }],
+      steps: [
+        { text: "You already know F (from Level 1, simplified version), C, and G. Play F-C-G-C as a loop, 4 beats each chord, with the offbeat skank you've been building. The arm swings on every eighth note; you only hit strings on the 'ands.'", why: "Gimme Love uses chords you already own — the new skill is applying the reggae rhythm to them. This proves that reggae isn't about special chords; it's about the rhythmic feel applied to ANY chords." },
+        { text: "Listen to the song and match the feel: the skank is light and bouncy, not aggressive. The Elovaters have a more pop-reggae approach — the chop isn't as tight as roots reggae. Let the chords ring a little longer before muting.", why: "Different reggae artists use different mute speeds. The Elovaters are on the 'longer ring' end — the chord speaks for a moment before the mute kills it. This creates a warmer, more island-pop feel compared to the tight roots chop." },
+        { text: "Put on the drums-only reggae track. Play F-C-G-C with the skank at 85 BPM. Feel how the kick drum and your guitar interlock — you take the ands, the kick takes beat 3.", why: "Playing with drums reveals how the skank fits in a band context. The one-drop kick (beat 3) is your rhythmic partner." },
+        { text: "Sing along: hum the vocal melody of Gimme Love while maintaining the skank. The point is to keep the rhythm steady while your brain handles melody — this is performance multitasking.", why: "In a band, you'd be skanking while a singer delivers the melody. Being able to maintain the skank on autopilot while thinking about something else is essential." }
+      ],
+      feel: "Light, bouncy, island vibes — like swaying at a beach festival. The Elovaters' reggae is friendly and warm, not heavy. Your skank should match that energy — relaxed, smiling, unhurried.",
+      wrong: "If the F chord is still buzzing, use the simplified version (top 4 strings only). If the skank feels stiff on these open chords, you might be gripping too hard — reggae requires a light touch so you can release quickly for the mute.",
+      sarah: "Gene, Gimme Love is your #10 most-played track. It's beautiful proof that reggae works with the simplest chords — F, C, G in the key of C. You learned these shapes in Level 1. Now they're reggae. Same shapes, completely different world. That's what rhythm does to harmony.",
+      metronome: 85,
+      recorder: true,
+      levelUp: "Play F-C-G-C skank at 85 BPM for 3 full cycles with clean offbeat rhythm, relaxed muting, and no downbeat slips."
+    },
+
+    {
+      id: "gs-4-4b",
+      time: 8,
+      title: "Song Study: Jah Werx — Susto (B-F#-E)",
+      type: "guitar",
+      songRef: {
+        title: "Jah Werx — Susto",
+        youtubeId: "wZr9yQTBGHs",
+        note: "Listen to the reggae influence on an indie-rock band. B-F#-E with that offbeat bounce. These are barre chords — your first reggae barre workout."
+      },
+      what: "Susto's Jah Werx uses B-F#-E — three chords in the key of B, all requiring barre chord shapes. This is a step up from Gimme Love's open chords. B is a barre at fret 2, F# is a barre at fret 2 (E-shape), and E is your familiar open chord. The reggae rhythm is the same offbeat skank — now applied to barre shapes.",
+      setup: "Guitar. Metronome at 80 BPM (song is ~85). Listen to the song reference first.",
       chordVoicings: { chords: ["B", "F#", "E"] },
       tracks: [{ name: "Drums Only — Reggae 85", src: "/drums-reggae-85.mp3" }],
       steps: [
-        { text: "Learn the three chord shapes: B is a barre at fret 2 (x24442), F# is a barre at fret 2 with E-shape (244322), and E is your open E major (022100). If the full barre B is too hard right now, use B7 (x21202) — it works perfectly in reggae. Practice switching between them without any rhythm. Just get the shapes under your fingers.", why: "These three chords are the backbone of more reggae songs than you can count. B-F#-E is I-V-IV in the key of B — the same function as G-D-C or A-E-D, just in a different key. Getting the shapes clean before adding rhythm prevents two problems from colliding." },
-        { text: "Now add the skank: play B on the offbeats for 4 bars, switch to F# for 4 bars, then E for 4 bars, back to B for 4 bars. Use your rocksteady mute speed (medium ring time). The progression is B(4)-F#(4)-E(4)-B(4). Repeat the full cycle twice.", why: "The B-F#-E progression has a particular emotional arc: B is home (stable), F# is a lift (bright tension), E is the resolution (warm landing before returning to B). Feeling this arc while maintaining the skank rhythm is where the song comes alive." },
-        { text: "Speed up to 85 BPM — the actual tempo of both Gimme Love and Jah Werx. Play the full B(4)-F#(4)-E(4)-B(4) cycle at tempo. If the chord changes break your skank, slow down to 80 and try again.", why: "Playing at the song's actual tempo is the goal. At 85 BPM, the offbeat skank has a relaxed, swaying quality — not rushed, not dragging. This tempo is the sweet spot for roots reggae." },
-        { text: "Put on the drums-only reggae track. Play along: B-F#-E-B with the skank at 85 BPM. Feel how the kick drum lands on beat 3 (one-drop) while your skank fills the upbeats. Your guitar and the kick drum are having a rhythmic conversation — you take the ands, the kick takes beat 3.", why: "Playing with a drum track reveals how the skank fits into a full band context. The one-drop kick (beat 3 only) is the rhythmic counterpart to the offbeat skank. Together, they create the classic reggae groove — lots of space, everything in its rhythmic place." },
-        { text: "Sing along: hum or \"la-la\" the vocal melody of Gimme Love (or Jah Werx) while your hands maintain the skank. Don't worry about getting the melody perfect — the point is to keep the skank steady while another part of your brain handles melody. This is multitasking practice.", why: "In a band, you'd be skanking while a singer delivers the melody. Even as a solo player, being able to maintain the skank on autopilot while thinking about something else (melody, lyrics, the next chord change) is essential for performance." }
+        { text: "Learn the barre shapes: B is x24442 (A-shape barre at fret 2). If the full barre is too hard, use B7 (x21202) — it works perfectly in reggae. F# is 244322 (E-shape barre at fret 2). E is your open 022100. Practice switching without rhythm first.", why: "B-F#-E requires barre chords, which is why this exercise follows the open-chord Gimme Love study. You're applying the same reggae rhythm to harder shapes." },
+        { text: "Add the skank: B on offbeats for 4 bars, F# for 4 bars, E for 4 bars, back to B. The barre shapes are harder to mute cleanly — release pressure quickly after each strum for a tight chop.", why: "Barre chord skanks require faster pressure release than open chord skanks. Your hand clamps and releases on every eighth note — it's a workout, but it builds the hand endurance you need for Level 5." },
+        { text: "Play along with the drums-only track at 85 BPM. B-F#-E-B with the skank. Feel the indie-reggae crossover — Susto gives the B-F#-E template an Americana twist.", why: "Susto proves that B-F#-E isn't just roots reggae — different artists bring different attitudes to the same chords. Same skeleton, different skin." },
+        { text: "Compare: play Gimme Love (F-C-G, open chords, pop-reggae) for 2 cycles, then switch to Jah Werx (B-F#-E, barre chords, indie-reggae) for 2 cycles. Same skank rhythm, completely different chord feel.", why: "Switching between open and barre chord reggae in one session trains your hand to adapt. The skank stays constant; only the chord shapes change." }
       ],
-      feel: "The B-F#-E skank should feel like a lazy Sunday afternoon at the beach — warm, unhurried, swaying. The progression has a gentle rise (B to F#) and a soft landing (F# to E) before cycling back home. If you're tense, you're trying too hard. Reggae is relaxed by definition.",
-      wrong: "If the barre chords are buzzing, focus on clean fretting before speed. A buzzy skank sounds worse than a slow clean one. If the chord changes break the rhythm, simplify: hold each chord for 8 bars instead of 4, giving yourself more time to prepare the switch. If you keep landing on downbeats during chord changes, the change is pulling you off the upbeat — practice the change isolated until it's automatic.",
-      sarah: "Gene, both of these songs are in your heavy rotation. Gimme Love has that classic Elovaters bounce — short chop, island vibes, the kind of skank that makes you nod your head sideways. Jah Werx by Susto proves that the B-F#-E template isn't just roots reggae — Susto gives it an indie-Americana twist with the same three chords. Same skeleton, different skin. That's the power of a great chord progression.",
+      feel: "The B-F#-E skank should feel warm and unhurried — a lazy Sunday afternoon. The barre chords give it a thicker, more robust sound than the open-chord Gimme Love. If you're tense, you're gripping too hard.",
+      wrong: "If barre chords buzz, focus on clean fretting before speed — a buzzy skank sounds worse than a slow clean one. If changes break the rhythm, hold each chord for 8 bars instead of 4. If B barre is impossible right now, use B7 and come back to the full barre after Level 5.",
+      sarah: "Gene, Jah Werx is in your top 30. Susto takes the classic reggae template and gives it an indie twist — same B-F#-E that Bob Marley would recognize, but with Susto's rootsy energy. This exercise is your bridge between the open-chord reggae of Gimme Love and the barre-heavy reggae-rock of Level 7 (Pepper, Slightly Stoopid).",
       metronome: 85,
       recorder: true,
-      levelUp: "Play B-F#-E-B skank cycle at 85 BPM for 3 full repetitions with clean chord changes, consistent offbeat rhythm, and audible palm mutes. No downbeat slips during chord transitions."
+      levelUp: "Play B-F#-E-B skank at 85 BPM for 3 cycles with clean barre chords, consistent offbeat rhythm, and audible mutes. Can switch between this and Gimme Love (F-C-G) without stopping."
     },
     {
       id: "gs-4-5",
@@ -139,8 +171,8 @@ export const level4 = {
       time: 10,
       title: "Song Study: 1999 — Laid-Back Reggae-Surf",
       type: "guitar",
-      what: "NO CIGAR's 1999 is a reggae-surf hybrid that sits at 85 BPM with four chords: E-B-F#-G#m. It's mellow, behind the beat, and uses the offbeat skank with a longer ring time (the reggae-rock end of your mute spectrum). The G#m adds a minor color that the B-F#-E template didn't have. This song teaches you that reggae isn't just roots — it can be dreamy and surf-inflected too.",
-      setup: "Guitar. Metronome at 80 BPM (target: 85).",
+      what: "NO CIGAR's 1999 is a reggae-surf hybrid at 85 BPM. The chords are E-B-F#-G#m (some sources show A instead of G#m — listen to the recording and trust your ears). It's mellow, behind the beat, with a longer ring time on the skank. The minor chord (G#m or the alternative A) adds color that the B-F#-E template didn't have. This song teaches you that reggae can be dreamy and surf-inflected.",
+      setup: "Guitar. Metronome at 80 BPM (target: 85). Listen to the song first — verify the 4th chord is G#m or A.",
       chordVoicings: { chords: ["E", "B", "F#", "G#m"] },
       tracks: [{ name: "E Major Reggae 85", src: "/e-major-reggae-85.mp3" }],
       steps: [
@@ -196,7 +228,7 @@ export const level4 = {
         { text: "Learn the progression: A(2 bars)-E(2)-C#m(2)-E(2)-A(2)-C#m(2)-B(2)-F#(2). Practice the chord shapes without rhythm first. A and E are open chords you know. C#m is a barre at fret 4 (x46654), B at fret 2 (x24442), F# at fret 2 (244322). Get the barre shapes clean.", why: "Five chords with three barre shapes is a significant step up from three-chord reggae. Isolating the shapes first prevents the common trap of trying to learn chords AND rhythm AND tempo simultaneously — which usually means learning none of them well." },
         { text: "Add the skank at 100 BPM. Use the short chop mute — ska skanks are clipped and punchy, not warm and sustained like roots reggae. The faster tempo compresses everything: your arm swings faster, the mute window is shorter, the chord changes come quicker. Start with A-E only, 2 bars each, get the tempo locked.", why: "At 112 BPM, the upbeat arrives every 0.27 seconds — significantly faster than the 0.35 seconds at 85 BPM. Starting at 100 BPM gives you breathing room to lock the rhythm before pushing to full tempo." },
         { text: "Add C#m to the cycle: A(2)-E(2)-C#m(2)-E(2). The C#m change requires a quick slide from open chord territory up to fret 4. Use the ghost note on the transition bar to mask the shift. 4 cycles.", why: "The A→C#m transition is the hardest moment — you're jumping from an open chord to a barre at fret 4. The ghost note technique lets your fretting hand travel while your strumming hand maintains rhythmic continuity." },
-        { text: "Full progression: A(2)-E(2)-C#m(2)-E(2)-A(2)-C#m(2)-B(2)-F#(2) at 105 BPM. Then push to 112 BPM — the actual song tempo. If chord changes break the rhythm, hold the simpler chords (A, E) longer and abbreviate the barre sections.", why: "112 BPM is uptempo for a skank — you're in ska territory now. The energy should feel brighter and more driving than the laid-back 85 BPM of Gimme Love. Your strumming arm will naturally tighten up — resist the urge to tense your shoulder. Loose arm, tight wrist." },
+        { text: "Full progression: A(2)-E(2)-C#m(2)-E(2)-A(2)-C#m(2)-B(2)-F#(2) at 105 BPM. Then push to 112 BPM — the actual song tempo. If chord changes break the rhythm, hold the simpler chords (A, E) longer and abbreviate the barre sections.", why: "112 BPM is uptempo for a skank — you're in ska territory now. The energy should feel brighter and more driving than the laid-back 85 BPM of Jah Werx. Your strumming arm will naturally tighten up — resist the urge to tense your shoulder. Loose arm, tight wrist." },
         { text: "Play along with the ska backing track. The tempo won't perfectly match (track is 95 BPM), but use it for the feel — the bright, bouncing energy of ska. If 112 BPM is too fast with the full progression, stay at 95-100 and work toward full speed over the next few days.", why: "Reggae-ska is higher energy than roots reggae — your body should reflect that. More bounce, more movement, brighter attack. The tempo difference between the track and the song is an opportunity to practice at a comfortable speed while feeling the ska groove." }
       ],
       feel: "It's a Love should feel bright, bouncy, and energetic — like the musical equivalent of running downhill. The faster skanks have more urgency than the relaxed 85 BPM roots feel. Your whole body should be moving — this isn't mellow hammock reggae, it's get-up-and-dance ska-reggae.",
@@ -262,22 +294,22 @@ export const level4 = {
       time: 10,
       title: "Extended Reggae Jam — Song-to-Song Flow",
       type: "guitar",
-      what: "Your graduation exercise. Play 5 continuous minutes of reggae guitar, cycling through all three song progressions you've learned: B-F#-E (Gimme Love/Jah Werx), E-B-F#-G#m (1999), and A-E-C#m-B-F# (It's a Love). Switch between songs without stopping. Vary your dynamics, mute speed, and ghost note density across the set. This is your first mini-performance — proving the skank is in your body, not just your brain.",
+      what: "Your graduation exercise. Play 5 continuous minutes of reggae guitar, cycling through all four song progressions you've learned: F-C-G (Gimme Love), B-F#-E (Jah Werx), E-B-F#-G#m (1999), and A-E-C#m-B-F# (It's a Love). Switch between songs without stopping. Vary your dynamics, mute speed, and ghost note density across the set. This is your first mini-performance — proving the skank is in your body, not just your brain.",
       setup: "Guitar. Metronome at 85 BPM. No backing track — you ARE the track now.",
       chordVoicings: { chords: ["B", "F#", "E", "G#m", "A", "C#m"] },
       steps: [
-        { text: "Start with B-F#-E (Gimme Love feel): 85 BPM, medium mute, relaxed roots vibe. Play 4 full cycles (48 bars total). Get locked into the groove — let the repetition sink in. This is your warm-up.", why: "Starting with the three-chord template you learned first ensures a confident beginning. The familiarity of B-F#-E lets you focus on feel rather than thinking about chord shapes." },
-        { text: "Without stopping, transition to E-B-F#-G#m (1999): same tempo, but shift to a slightly longer mute time for the hazy surf-reggae feel. The transition chord is E — you're already playing E as part of B-F#-E, so use it as the bridge. Play 3 cycles.", why: "Smooth song-to-song transitions are a performance skill. Using a shared chord (E) as the pivot makes the transition seamless. The listener should feel a color shift (new chords) without a rhythmic break." },
+        { text: "Start with F-C-G (Gimme Love feel): 85 BPM, open chords, relaxed island vibe. Play 4 full cycles. Get locked into the groove. Then transition to B-F#-E (Jah Werx): switch from open to barre chords without stopping the skank.", why: "Starting with open chords ensures a confident beginning. The transition to barre chords mid-jam is a real-world skill — your hand has to jump from open to barre while the rhythm stays locked." },
+        { text: "Without stopping, transition to E-B-F#-G#m (1999): shift to a longer mute time for the hazy surf-reggae feel. The transition chord is E — you're already playing E as part of B-F#-E, so use it as the bridge. Play 3 cycles.", why: "Smooth song-to-song transitions are a performance skill. Using a shared chord (E) as the pivot makes the transition seamless." },
         { text: "Without stopping, shift to A-E-C#m-B-F# (It's a Love feel): push the tempo slightly (not metronomically — just feel it speed up a bit). Tighten the mute for the ska-reggae energy. The transition chord is again E or B — both appear in the previous progression. Play 2 cycles.", why: "The tempo push mimics how a live band naturally builds energy through a set. Moving from 85 BPM roots feel to a brighter ska-adjacent energy creates a satisfying arc: mellow → dreamy → energetic." },
-        { text: "Wind down: return to B-F#-E at the original relaxed tempo. Drop your dynamics — play the last cycle quietly, with lots of ghost notes and gentle skanks. Let the jam dissolve naturally, like a song fading out. End on a final B chord, let it ring without muting.", why: "The wind-down proves you can control energy across a full set. Starting mellow, building energy, then returning to calm creates a musical arc that holds a listener's attention." },
+        { text: "Wind down: return to F-C-G (Gimme Love) at the original relaxed tempo. Drop your dynamics — play the last cycle quietly, with lots of ghost notes and gentle skanks. Let the jam dissolve naturally. End on a final F chord, let it ring.", why: "The wind-down proves you can control energy across a full set. Starting mellow, building energy, then returning to calm creates a musical arc. Ending on open chords after barre-heavy middle sections gives your hand a rest while sounding intentional." },
         { text: "Record the entire 5-minute jam from start to finish. Listen back. Note: where did the groove feel most locked? Where did chord changes disrupt the flow? Where did you get creative with dynamics? This recording is your Level 4 milestone.", why: "The recording captures your complete reggae vocabulary at this moment. Unlike individual exercises, a continuous jam reveals how well techniques integrate under real-time pressure. It's also deeply satisfying to hear yourself play 5 minutes of solid reggae." }
       ],
       feel: "This should feel like a mini concert — the first time you've played guitar continuously for 5 minutes with intentional dynamics, style shifts, and song changes. The overall arc should feel like a wave: building, cresting, releasing. Your body should be moving throughout.",
-      wrong: "If the jam falls apart during song transitions, practice the transitions in isolation: last 2 bars of B-F#-E into first 2 bars of E-B-F#-G#m. Repeat until smooth. If 5 minutes feels exhausting, your strumming arm is too tense — reggae is relaxed. Shake out your arm at the 2-minute mark if needed. If everything sounds the same (no dynamic variety), consciously force changes every 8 bars.",
+      wrong: "If the jam falls apart during song transitions, practice the transitions in isolation: last 2 bars of B-F#-E (Jah Werx) into first 2 bars of E-B-F#-G#m (1999). Repeat until smooth. If 5 minutes feels exhausting, your strumming arm is too tense — reggae is relaxed. Shake out your arm at the 2-minute mark if needed. If everything sounds the same (no dynamic variety), consciously force changes every 8 bars.",
       sarah: "Gene, this is your first real performance piece. Five minutes of continuous reggae guitar, flowing through three songs from your playlist, with intentional dynamics and energy shifts. This is what it feels like to be a guitarist, not just someone practicing guitar. The Elovaters, Susto, NO CIGAR, Baskervillain — their songs are in your hands now. Play them like they're yours.",
       metronome: 85,
       recorder: true,
-      levelUp: "5-minute continuous reggae jam cycling through B-F#-E, E-B-F#-G#m, and A-E-C#m-B-F# with smooth transitions, audible dynamic variation, and no rhythmic collapse. The recording sounds like a musician playing, not a student practicing."
+      levelUp: "5-minute continuous reggae jam cycling through F-C-G (Gimme Love), B-F#-E (Jah Werx), E-B-F#-G#m (1999), and A-E-C#m-B-F# (It's a Love) with smooth transitions, audible dynamic variation, and no rhythmic collapse. The recording sounds like a musician playing, not a student practicing."
     }
   ]
 };

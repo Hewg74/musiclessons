@@ -227,60 +227,62 @@ This reveals someone whose identity is strongly tied to **surf culture, outdoor 
 
 ## Top 50 Tracks with Guitar Data (12-month, March 2026)
 
-> **Purpose:** Chord progressions, keys, BPMs, and techniques for Gene's most-played songs. Use these as song study vehicles in curriculum exercises. Chords sourced from Ultimate Guitar, Chordify, ChordU, and verified where possible.
+> **Purpose:** Chord progressions, keys, BPMs for Gene's most-played songs. Use as song study vehicles.
+> **VERIFIED March 2026** against Ultimate Guitar tabs (primary) and Chordify (fallback). Each entry marked with source confidence.
+> ✅ = UG tab confirmed | ⚠️ = Chordify/secondary only | ❌ = No tab found, needs ear transcription
 
-| # | Song | Artist | Key | BPM | Chords | Technique/Feel |
-|---|------|--------|-----|-----|--------|----------------|
-| 1 | I Like The Way You Walk | The Donkeys | D/A | 97 | D-Dsus2-A (intro), A-D (verse), B-C#m-E-F# (chorus) | Steady rhythm, barre chorus |
-| 2 | Dope & Smoke | DOPE LEMON | G | 112 | Am-D-G (also Am7-D7-G) | Mellow strumming, warm loose feel |
-| 3 | Breakdown | Jack Johnson | G (capo 5) | 75 | G-Bm-Em-D | Travis fingerpicking |
-| 4 | Sol Del Sur | Sun Room | C#m | 100 | C#m-B-F# | Syncopated strum, reggae-adjacent offbeat |
-| 5 | North Side | The Bunchy Tops | ? | ? | Needs transcription | — |
-| 6 | for my team | axaero | C#m | 98 | Needs transcription | Lo-fi bedroom indie |
-| 7 | Reunited with the Day | The Groovy Nobody | F#m | ? | F#m-B-F#m7-B7 | Psych indie, arpeggios |
-| 8 | Candy Flu | The Walking Who | ? | ? | Needs transcription | Montreal psych-pop |
-| 9 | Marsha | Current Swell | F | 116 | F-G-Bb-C-D-Dm | Distinctive intro riff (tab on UG) |
-| 10 | Gimme Love | The Elovaters | B | 86 | B-F#-E | Reggae offbeat chop |
-| 11 | The West | Les Krills | ? | ? | UG tab exists (paywall) | Indie folk |
-| 12 | Get Away | Babitha | E | ? | E-F#-G#m-E7 | Indie/folk strumming |
-| 13 | Coastline | Hollow Coves | D | 100 | G-Bm-A (verse), G-Bm-A-D (chorus) | Fingerpicking, alt tuning CGDGGD capo 7 |
-| 14 | It's a Love | Baskervillain | E | 112 | A-E-C#m-E-A-C#m-B-F# | Upbeat reggae-ska inflection |
-| 15 | Pattymanajaro | Yasawa Group | C | 167 | Am-G-C-Em | Upbeat island strumming |
-| 16 | Friends | levitation room | D | 100 | Em-Dmaj7 (verse), A-Em (pre-chorus), A-Em-D (chorus) | Dreamy psych, Dmaj7 voicing |
-| 17 | 1999 | NO CIGAR | Ab | 85 | E-B-F#-G#m (barre chords) | Laid-back reggae/surf, offbeat |
-| 18 | Going Gets Tough | The Growlers | Ab | 158 | Ab-Db-Eb-Fm (capo 1: G-C-D-Em) | Surf-psych, half-time groove |
-| 19 | Son of a Beach | The Polarity | C | 110 | F-G-C-Am | Upbeat indie pop |
-| 20 | Space Garden | Auntie Leo | ? | ? | Needs transcription | Psychedelic rock |
-| 21 | Something About You | Eyedress | Am | 133 | F-Em-F-Em-Am-Dm-Em | Indie psych |
-| 22 | Foaming | Day We Ran | ? | ? | Needs transcription | — |
-| 23 | Summer Heat | Sun Room | E | 130 | E-A-B-C#m | Energetic surf strum |
-| 24 | Rules | Khruangbin | Em | 102 | Am-G (Speer melody on top) | Behind-beat, minimal, parked wah |
-| 25 | Long Summer | Yalisco | Ab | 110 | Ab-Fm (two-chord) | Minimal |
-| 26 | Jah Werx | Susto | B | 85 | B-F#-E | Reggae-influenced |
-| 27 | Warmth of the Sun | levitation room | Am | 122 | E-D-A-Bm | Shoegaze/psych, reverb-heavy |
-| 28 | Sunset Garage | Sun Room | G | 142 | G-B-C-D (verse), C-D-G-Em (chorus) | Energetic, lead solo available |
-| 29 | Visions of My Mind | levitation room | C | 118 | Needs transcription | Psych-pop |
-| 30 | Real Love Baby | Father John Misty | G (tune down) | 102 | D-Em-G | Hammer-on/pull-off embellishments |
-| 31 | I Didn't Know (Extended) | Skinshape | Gm | ? | Gm7-C7-Dm7-A7 | Soul/jazz 7th chord groove |
-| 32 | End of Time | The Everywheres | ? | ? | Needs transcription | Psych-pop |
-| 33 | Abusey Junction | Kokoroko | ? | ? | Afrobeat/highlife guitar pattern | Interlocking rhythmic figures |
-| 34 | Just Yesterday | Sun Room | Bm | 130 | E-G-A-Em | Surf-pop |
-| 35 | Island Fever | Billy Changer | Fm | 97 | Fm-Bb-Ab-Eb (capo 1: Em-A-G-D) | Dreamy barre chords |
-| 36 | Tongue | Edamame | ? | ? | Needs transcription | Lo-fi electronic |
-| 37 | Mexico | Husbands | C | 150 | F-C-E-Dm-Am | Indie-pop, fast tempo |
-| 38 | Chewing Gum | Cotton Jones | Am | 120 | Am-D-Dm7-Dm | Psychedelic folk, Dm7 texture |
-| 39 | Matter of Time | Vandelux | C/G | 115 | G-C (two-chord) | Chill indie-electronic |
-| 40 | Geneva Strange | modGlyders | G | ? | G-C-D-Gm | Major→minor shift |
-| 41 | Texas Sun | Khruangbin/Leon Bridges | G | 111 | Am-G (verse), Am-G-Em-D-Bm (full) | Vibrato arm, spring reverb, dub |
-| 42 | Pictures of You | Drugdealer | ? | ? | Needs transcription | Psych-pop |
-| 43 | Saving A Life | Richard Houghten | ? | ? | Needs transcription | Acoustic cinematic |
-| 44 | Peace Blossom Boogy | Babe Rainbow | D | ~112 | D-G7-A (VERIFIED — not F#m) | Psych-pop boogaloo |
-| 45 | Baby | Ariel Pink/DāM-FunK | ? | ? | Needs transcription | Synth-funk |
-| 46 | Oysters In My Pocket | Royel Otis | A | ~168 | A-F#m-Bm-D (VERIFIED — not C-G-Am-F) | Fast indie-pop |
-| 47 | Trust | Hot Flash Heat Wave | F | ? | F-C-Dm-Bb | Indie psych |
-| 48 | I See You | Echo Frame | ? | ? | Needs transcription | — |
-| 49 | Close My Eyes | The Lagoons | D | ? | D-Bm-G-A | Dreamy indie |
-| 50 | Surf Hat | Surf Hat | ? | ? | Needs transcription | Surf rock |
+| # | Song | Artist | Key | BPM | Chords | Capo | Source | Notes |
+|---|------|--------|-----|-----|--------|------|--------|-------|
+| 1 | I Like The Way You Walk | The Donkeys | D/A | 97 | D-Dsus2-A (intro/verse), B-C#-E-F# (chorus) | None | ✅ UG+GuitarTabsExplorer | Chorus shifts to B major area |
+| 2 | Dope & Smoke | DOPE LEMON | Am | 112 | **Am, D, Am7, D7** | None | ✅ UG 2931401 | NO G CHORD. Was wrongly listed as Am-D-G. |
+| 3 | Breakdown | Jack Johnson | G (capo 5) | 75 | G-Bm-Em-D (verse), G-D/F#-Em-D (chorus) | **Capo 5** | ✅ UG ver 3 | Also playable as C-Em-Am-G no capo |
+| 4 | Sol Del Sur | Sun Room | C#m | ~100 | C#m-B-F# (verse), E-F# (chorus) | None | ✅ UG+KhmerChords | Full set: C#m, B, F#, E |
+| 5 | North Side | The Bunchy Tops | ? | ? | ❌ Needs transcription | — | ❌ | No online presence |
+| 6 | for my team | axaero | C#m | 98 | ❌ Needs transcription | — | ❌ | Key from Musicstax only |
+| 7 | Reunited with the Day | The Groovy Nobody | F#m | ? | F#m-B-F#m7-B7 | None | ⚠️ Chordify | Needs ear verification |
+| 8 | Candy Flu | The Walking Who | ? | ? | ❌ Needs transcription | — | ❌ | No tabs anywhere |
+| 9 | Marsha | Current Swell | **Dm** | 116 | **Dm, C, G, F, Bb** | None | ✅ UG+Cifraclub | Key is Dm (was wrongly listed as F). Resolution: Bb-C-Dm |
+| 10 | Gimme Love | The Elovaters | **C** | 86 | **F, C, G** | None | ✅ UG 5290284 | Was WRONGLY listed as B-F#-E. Actually key of C, three chords. |
+| 11 | The West | Les Krills | ? | ? | ❌ UG tab exists but paywalled | — | ❌ | Cannot verify |
+| 12 | Get Away | Babitha | E | ? | E, F#, G#m, E7 | None | ⚠️ Chordify | F# is MAJOR (not F#m) |
+| 13 | Coastline | Hollow Coves | D | 100 | G-Bm-A (verse), G-Bm-A-D (chorus) | **Capo 2** (std) or **Capo 7 CGDGGD** (original) | ✅ UG+band confirmed | Original tuning CGDGGD per band's Twitter |
+| 14 | It's a Love | Baskervillain | E | 112 | E, A, C#m, F#, B | None | ⚠️ Chordify+ChordU | Not on UG |
+| 15 | Pattymanajaro | Yasawa Group | C | 167 | Am, G, C, Em | None | ⚠️ Chordify | Not on UG |
+| 16 | Friends | levitation room | D | 100 | Em-Dmaj7 (verse), A-Em (chorus) | None | ✅ UG+Cifraclub | Dmaj7 is the signature voicing |
+| 17 | 1999 | NO CIGAR | Ab | 85 | E, B, F#, A | None | ⚠️ Chordify | UG has artist page but tab 403-blocked |
+| 18 | Going Gets Tough | The Growlers | Ab | 158 | **G, C, Cadd6, Em, D, Dadd6** | **Capo 1** | ✅ UG 1674953 | Play in G shapes capo 1. Pre-chorus: C-Em-D. Chorus: G-D-Em-C |
+| 19 | Son of a Beach | The Polarity | C | 110 | F, G, C, Am | None | ✅ UG | Standard I-IV-V-vi |
+| 20 | Space Garden | Auntie Leo | ? | ? | ❌ Needs transcription | — | ❌ | No tabs |
+| 21 | Something About You | Eyedress | Am | 133 | F, Em, Am, Dm | None | ✅ UG official 4630715 | Pattern: F-Em-Am-Dm-Em |
+| 22 | Foaming | Day We Ran | Bb | 130 | **A, G, D** | **Capo 1** | ✅ UG 5050210 | Sounds Bb with capo. Simple 3-chord. |
+| 23 | Summer Heat | Sun Room | ? | ? | ❌ **NO TAB EXISTS** | — | ❌ | Not on UG, KhmerChords, or any tab site |
+| 24 | Rules | Khruangbin | Am | 74 | **G-Am-F-G-Em-F-Em-Am** | None | ✅ UG GP+tabs | More complex than previously claimed "Am-G" |
+| 25 | Long Summer | Yalisco | ? | ? | ❌ Needs transcription | — | ❌ | Too new/obscure |
+| 26 | Jah Werx | Susto | B | 85 | B, F#, E | None | ✅ UG+KhmerChords | Three-chord throughout |
+| 27 | Warmth of the Sun | levitation room | Am | 122 | E, D, A, Bm, B | None | ⚠️ ChordU+Chordify | Core pattern: E-D-E. Not on UG. |
+| 28 | Sunset Garage | Sun Room | G | 142 | **G, Em, C, D** | None | ✅ UG 5485764 | Was WRONGLY listed with B chord. Actually Em. |
+| 29 | Visions of My Mind | levitation room | C | 118 | ❌ Needs transcription | — | ❌ | Key/BPM from SongBPM only |
+| 30 | Real Love Baby | Father John Misty | G | 102 | **D, Em, G, A7** (std tuning) or **E, F#m, A** (FJM tuning/capo 2) | None or **Capo 2** | ✅ UG+Cifraclub | Was missing A7. FJM tunes down whole step. |
+| 31 | I Didn't Know (Extended) | Skinshape | F/Dm | ? | **Bbmaj7-F-G (intro/outro), Gm-C-F-Bb / Gm-C-A7-Dm (verse)** | None | ✅ UG+Guitaretab | Much richer than "Gm7-C7-Dm7-A7". Bbmaj7 is the signature. |
+| 32 | End of Time | The Everywheres | ? | ? | ❌ Needs transcription | — | ❌ | No tabs anywhere |
+| 33 | Abusey Junction | Kokoroko | ? | ? | Afrobeat/highlife pattern | — | ⚠️ Genre analysis | Kora-inspired arpeggios |
+| 34 | Just Yesterday | Sun Room | Bm | 130 | E, G (primary) | None | ✅ UG tab (intro) | Sparse — mainly E and G |
+| 35 | Island Fever | Billy Changer | Fm | 97 | Fm, Bbm, Ab, Eb | None | ⚠️ Chordify | Auto-detected, no human tab |
+| 36 | Tongue | Edamame | ? | ? | ❌ Needs transcription | — | ❌ | Electronic — may not be guitar-playable |
+| 37 | Mexico | Husbands | C | 150 | F, C, G, Am (+ Dm, E) | None | ✅ UG 5633340 | Core: F-C-G-Am |
+| 38 | Chewing Gum | Cotton Jones | Am | 120 | Am, D, Dm7, Dm | None | ⚠️ Chordify | Not on UG |
+| 39 | Matter of Time | Vandelux | G | 115 | G, C | None | ⚠️ ChordU+Chordify | Two-chord song |
+| 40 | Geneva Strangemod | Glyders | G | ? | G, C, D, Gm | None | ⚠️ Chordify | Official title is "Geneva Strangemod" |
+| 41 | Texas Sun | Khruangbin/Bridges | Am | 111 | Am-G (verse/main), Em-Bm (bridge) | None | ✅ UG+GuitarTabsExplorer | Mainly Am-G throughout |
+| 42 | Pictures of You | Drugdealer | B | 114 | **C#m7-F#m7-B-B6** (verse), others in chorus | None | ✅ UG 4427972 | Key of B, jazz voicings. Sources conflict on some sections. |
+| 43 | Saving A Life | Richard Houghten | Fm | 114 | Bbm, Fm, Ab, F, Bb | None | ⚠️ UG GP intro only | Instrumental. Only intro tab on UG. |
+| 44 | Peace Blossom Boogy | Babe Rainbow | **D** | ~112 | **D, G7** (+ A in solo) | None | ✅ UG+KhmerChords | Two-chord song. Was wrongly F#m. |
+| 45 | Baby | Ariel Pink/DāM-FunK | G | 92 | D, Em | None | ⚠️ ChordU+UG | Two-chord oscillation |
+| 46 | Oysters In My Pocket | Royel Otis | **A** | ~168 | **A-F#m (verse), Bm-A-D (chorus)** | None | ✅ UG+KhmerChords | Was wrongly C-G-Am-F. |
+| 47 | Trust | Hot Flash Heat Wave | F# | ~113 | ❌ Needs transcription | — | ❌ | Too new (2025) |
+| 48 | I See You | Echo Frame | ? | ? | ❌ Needs transcription | — | ❌ | No tabs |
+| 49 | Close My Eyes | The Lagoons | Bm | 104 | ❌ Needs transcription | — | ❌ | No tabs found |
+| 50 | Surf Hat | Surf Hat | E | ~100 | E7, A7, B7, F#7 | None | ✅ UG 5121190 | All dominant 7ths — surf/blues form |
 
 ---
 
@@ -351,6 +353,6 @@ This reveals someone whose identity is strongly tied to **surf culture, outdoor 
 2. **Minor i-bVII-IV:** C#m-B-F# (Sol Del Sur). F# is major = borrowed from parallel major. Creates Mixolydian ambiguity.
 3. **Major→minor shift:** D-Dm, G-Gm. Appears in DOPE LEMON, modGlyders, Cotton Jones. Same 1960s soul trick.
 4. **Cmaj7-Dmaj7 float:** Allah-Las signature. Two major 7ths a whole step apart. Non-resolving, dreamy.
-5. **Soul 7th cycle:** Gm7-C7-Dm7-A7 (Skinshape). Minor ii-V type jazz motion.
-6. **Three-chord reggae:** B-F#-E / I-V-IV pattern appears in Gimme Love, Jah Werx, Sol Del Sur.
-7. **I-V-vi-IV in A:** A-F#m-Bm-D (Oysters In My Pocket, verified). Same pattern, different key.
+5. **Soul walk:** Bbmaj7-F-G (intro) → Gm-C-F-Bb / Gm-C-A7-Dm (verse) — Skinshape "I Didn't Know". Bbmaj7 is the signature chord.
+6. **Three-chord reggae:** B-F#-E appears in Jah Werx. F-C-G appears in Gimme Love. Sol Del Sur is C#m-B-F# (minor).
+7. **I-V-vi-IV in A:** A-F#m-Bm-D (Oysters In My Pocket). Standard pop pattern in a less common key.
