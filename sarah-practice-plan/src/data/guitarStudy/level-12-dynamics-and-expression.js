@@ -74,7 +74,7 @@ export const level12 = {
       time: 8,
       title: "The DOPE LEMON Trick — D to Dm",
       type: "guitar",
-      what: "Play D major. Now play D minor. Only ONE note changed — F# dropped to F natural — but the entire emotional world shifted. Bright warmth becomes bittersweet ache. This is the 1960s soul ballad trick that DOPE LEMON uses constantly: oscillating between major and minor on the same root. The shift is tiny (one fret) but the feeling is enormous.",
+      what: "Play D major. Now play D minor. Only ONE note changed — F# dropped to F natural — but the entire emotional world shifted. Bright warmth becomes bittersweet ache. This is the classic parallel major-minor trick (Beatles, Motown, soul ballads) that DOPE LEMON uses constantly: oscillating between major and minor on the same root. The shift is tiny (one fret) but the feeling is enormous.",
       setup: "Guitar. Metronome at 80 BPM.",
       steps: [
         { text: "Play D major (xx0232). Hold it and strum 4 times. Feel the brightness — sunny, open, warm. Now play D minor (xx0231). Hold it and strum 4 times. Feel the shift — the brightness curls into something bittersweet, nostalgic, slightly sad. The only difference is one finger moving one fret: the high E string drops from fret 2 (F#) to fret 1 (F).", why: "Hearing the major→minor shift in isolation makes the emotional change undeniable. One semitone — F# to F — transforms the chord's personality completely. This is the smallest possible physical change with the biggest possible emotional impact." },

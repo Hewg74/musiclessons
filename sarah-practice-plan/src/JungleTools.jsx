@@ -5523,8 +5523,8 @@ const CHORD_VOICINGS_MULTI = {
   "Cdim": [{ frets: "x3424x", name: "Cdim", pos: "3rd" }],
   "Ddim": [{ frets: "xx0131", name: "Ddim", pos: "Open" }],
   "Edim": [{ frets: "0120xx", name: "Edim", pos: "Open" }],
-  "Fdim": [{ frets: "1230xx", name: "Fdim", pos: "1st" }],
-  "Gdim": [{ frets: "3454xx", name: "Gdim", pos: "3rd" }],
+  "Fdim": [{ frets: "1231xx", name: "Fdim", pos: "1st" }],
+  "Gdim": [{ frets: "3453xx", name: "Gdim", pos: "3rd" }],
   "Adim": [{ frets: "x0121x", name: "Adim", pos: "Open" }],
   "Bdim": [{ frets: "x2343x", name: "Bdim", pos: "2nd" }],
   // ─── Augmented chords ───
