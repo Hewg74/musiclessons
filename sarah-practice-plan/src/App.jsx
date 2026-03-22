@@ -1805,7 +1805,7 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
                           <div style={{
                             padding: "6px 10px", borderRadius: T.radius, fontSize: 11, fontWeight: 700,
                             fontFamily: T.mono, border: `1px solid ${T.border}`,
-                            background: i === steps.length - 1 ? (accentColor || T.accent) : T.bgSoft,
+                            background: i === steps.length - 1 ? (dayColor || T.accent) : T.bgSoft,
                             color: i === steps.length - 1 ? "#fff" : T.textMed,
                           }}>
                             {bpm} <span style={{ fontSize: 8, opacity: 0.6 }}>BPM</span>
