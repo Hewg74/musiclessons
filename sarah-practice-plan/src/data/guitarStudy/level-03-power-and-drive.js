@@ -114,9 +114,14 @@ export const level3 = {
       time: 8,
       title: "Song Study: Summer Heat — Energetic Surf Strum",
       type: "guitar",
+      songRef: {
+        title: "Summer Heat — Sun Room",
+        youtubeId: "hA1XSIRtAp4",
+        note: "CHORDS NEED EAR VERIFICATION — E-A-B-C#m is our best guess based on Sun Room's patterns. No tab exists. Listen and confirm."
+      },
       // UNVERIFIED — Summer Heat chords are E-A-B-C#m based on Sun Room's typical patterns
-      what: "Sun Room's Summer Heat is pure energy — 130 BPM, four chords (E-A-B-C#m), driving surf strum. This is the bright, aggressive side of the coin from Going Gets Tough's dark brooding. Same power, opposite mood. Luke plays a Jazzmaster with a Tubescreamer always on at low gain — not for distortion, but for warmth and push.",
-      setup: "Guitar. Metronome at 100 BPM (we'll build to 130). Clean tone with slight overdrive if available.",
+      what: "Sun Room's Summer Heat is pure energy — ~130 BPM, likely chords E-A-B-C#m (unverified — hit play above and confirm). This is the bright, aggressive side of the coin from Going Gets Tough's dark brooding. Same power, opposite mood.",
+      setup: "Guitar. Listen to the song — verify chords match. Metronome at 100 BPM (build to 130). Clean tone with slight overdrive.",
       tracks: [{ name: "Surf Rock 120", src: "/surf-rock-120.mp3" }, { name: "Drums — Surf 120", src: "/drums-surf-120.mp3" }],
       steps: [
         { text: "Play the progression: E → A → B → C#m. Use open shapes for E and A, barre or power chord for B (B5 works perfectly here), and C#m can be played as a power chord C#5 at fret 4 on the A string for now. 4 beats per chord at 100 BPM.", why: "Sun Room keeps chord shapes simple — their magic is in the STRUM, not the voicings. Using power chords for B and C#m is perfectly valid and matches the driving energy of the song. You'll learn full barre shapes in Level 5." },

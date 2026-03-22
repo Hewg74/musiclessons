@@ -96,9 +96,14 @@ export const level2 = {
       time: 10,
       title: "Song Study: Close My Eyes — Dreamy Indie Feel",
       type: "guitar",
+      songRef: {
+        title: "Close My Eyes (And I Wonder) — The Lagoons",
+        youtubeId: "FcRxkSX4Ark",
+        note: "CHORDS NEED EAR VERIFICATION — D-Bm-G-A is our best guess but no tab exists. Listen and confirm the chords match."
+      },
       // UNVERIFIED — D-Bm-G-A is a likely progression based on key/genre analysis but has not been confirmed against 2+ independent tab sources
-      what: "The Lagoons' 'Close My Eyes' is a masterclass in dreamy indie guitar — four chords (D-Bm-G-A) at 104 BPM, but the magic is in the behind-the-beat feel and the ghost strums that make it float. You'll learn the progression, then layer in the feel techniques from this level.",
-      setup: "Guitar. Metronome at 80 BPM (learn slow, play up to 104).",
+      what: "The Lagoons' 'Close My Eyes' is a dreamy indie track — we believe the chords are D-Bm-G-A at ~104 BPM, but this hasn't been confirmed by a tab source. Hit play above, listen, and verify the chords match before learning them. The magic is in the behind-the-beat feel and the ghost strums that make it float.",
+      setup: "Guitar. Listen to the song first — verify chords. Metronome at 80 BPM (learn slow, play up to 104).",
       steps: [
         { text: "Learn the four chords in isolation: D, Bm, G, A. If Bm is new, use the easy version (x24432) — three fingers, no full barre needed yet. One-minute changes: D↔Bm, Bm↔G, G↔A. Count your changes. Target: 20+ per minute for each pair.", why: "One-minute changes build the muscle memory for transitions before you worry about feel. The D-Bm transition is the trickiest — your index finger becomes the anchor. Getting 20+ per minute means the transitions are automatic enough to add groove." },
         { text: "Play the full progression: D (4 beats) → Bm (4 beats) → G (4 beats) → A (4 beats). All downstrokes, on the beat, at 80 BPM. Run it 4 times through. This is the skeleton — it should sound stiff and correct right now.", why: "Playing it 'stiff and correct' first gives you a clean baseline. You can't add feel to something you're fumbling through. Get the changes smooth at slow tempo before adding groove." },

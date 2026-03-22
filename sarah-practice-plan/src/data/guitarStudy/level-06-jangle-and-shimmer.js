@@ -90,8 +90,13 @@ export const level6 = {
       time: 8,
       title: "Song Study: Worship the Sun",
       type: "guitar",
-      what: "Allah-Las' Worship the Sun IS the Cmaj7-Dmaj7 float in action. The verse rides Cmaj7→Dmaj7 over and over — pure jangle. The chorus shifts to A-G-A-E — bigger, more open, resolving the dreamy tension of the verse. (Chords from GuitarTabsExplorer — listen to the recording and verify the feel matches.)",
-      setup: "Guitar. Metronome at the song's tempo (approximately 95 BPM).",
+      songRef: {
+        title: "Worship the Sun — Allah-Las",
+        youtubeId: "vd7GPAm7xYg",
+        note: "Chords from GuitarTabsExplorer: Cmaj7-Dmaj7 (verse), A-G-A-E (chorus). Listen and verify."
+      },
+      what: "Allah-Las' Worship the Sun IS the Cmaj7-Dmaj7 float in action. The verse rides Cmaj7→Dmaj7 over and over — pure jangle. The chorus shifts to A-G-A-E. (Chords from GuitarTabsExplorer — hit play above to verify.)",
+      setup: "Guitar. Listen to the song first. Metronome at ~95 BPM.",
       chordVoicings: { chords: ["Cmaj7", "Dmaj7", "A", "G", "E"] },
       steps: [
         { text: "Verse: play Cmaj7→Dmaj7 in a loop, 2 bars each, with the jangle strum you learned in gs-6-3. This IS the verse of Worship the Sun. The entire verse is this two-chord float. Play it 4 times through (16 bars).", why: "Learning that a professionally recorded, critically acclaimed song uses the exact same two-chord pattern you just practiced proves that simplicity works. Allah-Las didn't need more chords — they needed the RIGHT two chords." },
@@ -135,8 +140,13 @@ export const level6 = {
       time: 8,
       title: "Song Study: Friends (levitation room)",
       type: "guitar",
-      what: "levitation room's Friends is built on Em-Dmaj7 — a minor chord dissolving into a major 7th. The verse is just these two chords, and the Dmaj7 with its open E string creates the jangle that defines the song. This is the sound of LA psych-surf at its dreamiest.",
-      setup: "Guitar. Metronome at 100 BPM.",
+      songRef: {
+        title: "Friends — levitation room",
+        youtubeId: "P-cJWkZLy0k",
+        note: "Verified chords: Em-Dmaj7 (verse), A-Em (chorus). The Dmaj7 voicing IS the jangle."
+      },
+      what: "levitation room's Friends is built on Em-Dmaj7 — a minor chord dissolving into a major 7th. The verse is just these two chords, and the Dmaj7 with its open E string creates the jangle. The chorus shifts to A-Em.",
+      setup: "Guitar. Listen to the song. Metronome at 100 BPM.",
       chordVoicings: { chords: ["Em", "Dmaj7", "A"] },
       steps: [
         { text: "Play Em (022000). Then Dmaj7 (xx0222). Back and forth, 2 bars each, at 80 BPM first. Listen to how the open E string sustains through BOTH chords — in Em it's the root, in Dmaj7 it's the maj7. Same string, completely different harmonic function.", why: "This is the deeper version of the open string trick: the E doesn't just ring — it changes meaning depending on the chord underneath. In Em, E is home. In Dmaj7, E is the dreamy 7th. Your ear starts to hear one string doing two different jobs." },
@@ -178,10 +188,15 @@ export const level6 = {
     {
       id: "gs-6-8",
       time: 8,
-      title: "Song Study: Geneva Strangemod (modGlyders)",
+      title: "Song Study: Geneva Strangemod (Glyders)",
       type: "guitar",
-      what: "modGlyders' Geneva Strangemod uses G-C-D-Gm — three major chords that feel like a normal sunny progression, until the Gm arrives and everything shifts. The Gm is the surprise. It's a major→minor moment deployed as a structural twist, not just a passing color.",
-      setup: "Guitar. Metronome at 90 BPM (estimated tempo).",
+      songRef: {
+        title: "Geneva Strangemod — Glyders",
+        youtubeId: "v0on9GtgFhU",
+        note: "Chords from Chordify: G-C-D-Gm. Listen and verify — especially the Gm."
+      },
+      what: "Glyders' Geneva Strangemod uses G-C-D-Gm (Chordify source — hit play to verify). Three major chords that feel sunny, until the Gm arrives and everything shifts. The Gm is the surprise — a major→minor twist.",
+      setup: "Guitar. Listen to the song. Metronome at ~90 BPM.",
       chordVoicings: { chords: ["G", "C", "D", "Gm"] },
       steps: [
         { text: "Play G-C-D in a loop, 1 bar each, with a relaxed strum at 85 BPM. This is a completely standard I-IV-V in G major — the most common progression in pop music. Feel how normal, how predictable it is. Nothing surprising here.", why: "Setting up the expectation is half the trick. G-C-D is so common that your ear relaxes — it knows what's coming. The Gm is going to break that expectation, and the surprise only works if the setup feels predictable." },
@@ -205,8 +220,13 @@ export const level6 = {
       time: 8,
       title: "Song Study: Catamaran (Allah-Las)",
       type: "guitar",
-      what: "Allah-Las' Catamaran uses Am-C-D-Dm — a minor progression where the D→Dm shift creates dark restlessness. (Chords from GuitarTabsExplorer — listen to the recording to verify.) This is the darker side of jangle — the Am-G-F-E descending minor tradition that lives underneath all LA psych-surf.",
-      setup: "Guitar. Metronome at 90 BPM (estimated).",
+      songRef: {
+        title: "Catamaran — Allah-Las",
+        youtubeId: "yIJ-RsIO1eA",
+        note: "Chords from GuitarTabsExplorer: Am-C-D-Dm. The D→Dm shift is the emotional core. Listen and verify."
+      },
+      what: "Allah-Las' Catamaran uses Am-C-D-Dm — a minor progression where the D→Dm shift creates dark restlessness. (Chords from GuitarTabsExplorer — hit play to verify.) The darker side of jangle.",
+      setup: "Guitar. Listen to the song first. Metronome at ~90 BPM.",
       chordVoicings: { chords: ["Am", "C", "D", "Dm"] },
       steps: [
         { text: "Play Am-C-D-Dm, 1 bar each, at 80 BPM. Feel the emotional arc: Am is grounded and minor. C lifts slightly. D opens up — major, bright. Then Dm falls — the brightness collapses into shadow. The D→Dm is the heart of the progression.", why: "This progression tells a story in 4 chords: starting in minor territory (Am), passing through neutral (C), arriving at a bright moment (D), then watching it darken (Dm). The D→Dm shift is the narrative twist — the happy moment that doesn't last." },
@@ -227,8 +247,13 @@ export const level6 = {
       time: 8,
       title: "Song Study: Get Away (Babitha)",
       type: "guitar",
-      what: "Babitha's Get Away uses E-F#-G#m-E7 — a progression that mixes barre chords from Level 5 with the new E7 voicing (020100). E7 is the 'lazy jazz chord' — an E major with the D string left open, adding the flat 7th (D) to create a bluesy, casual quality. This song combines everything: barres, open voicings, and jangle.",
-      setup: "Guitar. Metronome at 85 BPM (estimated).",
+      songRef: {
+        title: "Get Away — Babitha",
+        youtubeId: "eLMBpUk5wPo",
+        note: "Chords from Chordify: E-F#-G#m-E7. Note: F# is MAJOR (not F#m). Listen and verify."
+      },
+      what: "Babitha's Get Away uses E-F#-G#m-E7 (Chordify source — hit play to verify). Note: F# is major, not minor. E7 is the 'lazy jazz chord' — an E major with the D string open, adding the flat 7th. This song mixes barres, open voicings, and jangle.",
+      setup: "Guitar. Listen to the song. Metronome at ~85 BPM.",
       chordVoicings: { chords: ["E", "F#", "G#m", "E7"] },
       steps: [
         { text: "Learn E7 (020100). Start from E major (022100). Lift your ring finger off the D string (2nd fret) to leave it open. The open D string is the flat 7th (D) of E — it adds a bluesy, unresolved quality. Strum E, then E7, back and forth. E is clean. E7 has a lazy, jazzy lean to it.", why: "E7 is another open-string trick — the open D string adds the b7 interval to E major. Like Cmaj7 and Dmaj7, an open string changes the chord's character. But where maj7 is dreamy, the dominant 7th is bluesy and casual." },

@@ -219,9 +219,14 @@ export const level4 = {
       time: 10,
       title: "Song Study: It's a Love — Upbeat Reggae-Ska",
       type: "guitar",
+      songRef: {
+        title: "It's a Love — Baskervillain",
+        youtubeId: "iUsEKsxZV-s",
+        note: "Chords are from Chordify (A-E-C#m-F#-B) — listen and verify the progression order matches."
+      },
       // UNVERIFIED — A-E-C#m-B-F# progression has not been confirmed against 2+ independent tab sources
-      what: "Baskervillain's It's a Love is faster (112 BPM), brighter, and uses five chords: A-E-C#m-B-F#. The upbeat tempo pushes your skank into ska territory — faster skanks, shorter mute windows, more energy. The C#m adds emotional weight, and the five-chord progression gives you more harmonic movement than the three-chord templates you've been playing.",
-      setup: "Guitar. Metronome at 100 BPM (build to 112).",
+      what: "Baskervillain's It's a Love is faster (112 BPM), brighter, and uses five chords: A-E-C#m-B-F# (Chordify source — hit play above to verify). The upbeat tempo pushes your skank into ska territory — faster skanks, shorter mute windows, more energy.",
+      setup: "Guitar. Listen to the song — verify chords. Metronome at 100 BPM (build to 112).",
       chordVoicings: { chords: ["A", "E", "C#m", "B", "F#"] },
       tracks: [{ name: "Ska Upbeat 95", src: "/ska-upbeat-95.mp3" }],
       steps: [

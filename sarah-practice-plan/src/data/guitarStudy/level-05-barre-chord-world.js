@@ -152,8 +152,13 @@ export const level5 = {
       time: 8,
       title: "Song Study: Island Fever — Barre Chords in Fm",
       type: "guitar",
-      what: "Billy Changer's Island Fever lives in Fm — a darker, dreamier barre world. The progression Fm-Bb-Ab-Eb uses all barre chords, or you can capo at fret 1 and play Em-A-G-D (mixing open and barre). Both approaches teach you something different. This song is slower (97 BPM) and more spacious than Sol Del Sur — let the chords ring.",
-      setup: "Guitar. Metronome at 75 BPM.",
+      songRef: {
+        title: "Island Fever — Billy Changer",
+        youtubeId: "ywyhzFPiWGY",
+        note: "Chords are from Chordify auto-detect (Fm-Bb-Ab-Eb). Listen and verify — Bb might be Bbm."
+      },
+      what: "Billy Changer's Island Fever lives in Fm — a darker, dreamier barre world. The progression Fm-Bb-Ab-Eb uses all barre chords (Chordify source — hit play to verify). You can also capo at fret 1 and play Em-A-G-D. Slower (97 BPM) and more spacious than Sol Del Sur — let the chords ring.",
+      setup: "Guitar. Listen to the song — verify chords. Metronome at 75 BPM.",
       chordVoicings: { chords: ["Fm", "Bb", "Ab", "Eb"] },
       tracks: [{ name: "Reggae Rock 100", src: "/reggae-rock-100.mp3" }],
       steps: [
