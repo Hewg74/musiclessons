@@ -187,6 +187,11 @@ export const level8 = {
       time: 12,
       title: "Song Study: Tinariwen Nànnuflày Style",
       type: "guitar",
+      songRef: {
+        title: "Nànnuflày — Tinariwen",
+        src: "/nannuflay.mp3",
+        note: "Desert blues — repetitive, trance-inducing. Listen for the sus pentatonic patterns over the drone."
+      },
       recorder: true,
       fretboard: { scale: "a-sus-pentatonic", position: 2 },
       what: "Build a hypnotic interlocking guitar pattern inspired by Tinariwen's 'Nànnuflày.' Drop D drone bass, repetitive sus pentatonic melody, glacial evolution. Two voices from one guitar — this is a complete desert blues piece.",

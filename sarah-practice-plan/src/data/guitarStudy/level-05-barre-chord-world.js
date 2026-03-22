@@ -130,6 +130,11 @@ export const level5 = {
       time: 10,
       title: "Song Study: Sol Del Sur — The Barre Chord Anthem",
       type: "guitar",
+      songRef: {
+        title: "Sol Del Sur — Sun Room",
+        src: "/sol-del-sur.mp3",
+        note: "The barre chord anthem — F#m-A-E-B at 120 BPM. All barre shapes, no open chords."
+      },
       what: "Sun Room's Sol Del Sur is a three-chord barre masterpiece: C#m-B-F# (i-bVII-IV in C# minor). The F# is major — borrowed from the parallel major key, creating that modal ambiguity that gives the song its restless, sun-drenched ache. This is the anchor song of Level 5. Learn it, feel it, own it.",
       setup: "Guitar. Backing track: Sol Del Sur. Metronome starting at 70 BPM, target 100 BPM.",
       chordVoicings: { chords: ["C#m", "B", "F#"] },
@@ -182,6 +187,11 @@ export const level5 = {
       time: 8,
       title: "Song Study: Just Yesterday — Surf-Pop Energy",
       type: "guitar",
+      songRef: {
+        title: "Just Yesterday — Sun Room",
+        src: "/just-yesterday.mp3",
+        note: "Surf-pop energy — E-G-A-Em at 130 BPM. Same band, completely different energy from Sol Del Sur."
+      },
       what: "Sun Room's Just Yesterday shifts gears — E-G-A-Em at 130 BPM, faster and more energetic than Sol Del Sur. The E and Em are open chords, but G and A can be played as barres for fuller voicing. This song teaches you to mix open and barre chords at speed, choosing the voicing that serves the energy.",
       setup: "Guitar. Metronome at 100 BPM, target 130.",
       chordVoicings: { chords: ["E", "G", "A", "Em"] },

@@ -92,6 +92,11 @@ export const level3 = {
       time: 10,
       title: "Song Study: Going Gets Tough — Half-Time Groove",
       type: "guitar",
+      songRef: {
+        title: "Going Gets Tough — The Growlers",
+        src: "/going-gets-tough.mp3",
+        note: "Half-time groove with power chords. Listen to the reverb-drenched, brooding feel."
+      },
       what: "The Growlers' Going Gets Tough runs at about 158 BPM (felt in half-time at ~79 BPM) with a bass-strum alternation feel that gives it a half-time heaviness. Capo 1, shapes are G-C-D-Em, plus a signature Cadd6 embellishment that IS the sound of this song. This song teaches you alternating bass-strum technique, chord embellishments, and the difference between staccato verses and legato choruses.",
       setup: "Guitar. Capo on fret 1. Metronome at 79 BPM (half-time feel of the actual 158 BPM). Reference the song on your phone.",
       steps: [
@@ -202,6 +207,11 @@ export const level3 = {
       time: 8,
       title: "Song Study: Something About You — Lo-Fi Indie Feel",
       type: "guitar",
+      songRef: {
+        title: "Something About You — Eyedress",
+        src: "/something-about-you.mp3",
+        note: "Lo-fi indie — reverb-drenched, behind the beat. Simple chords, all feel."
+      },
       what: "Eyedress's Something About You lives in a dreamy, reverb-drenched lo-fi world. The full verse progression is F-Em-F-Em-Am-Dm-Em — simplified here to the four core chords F-Em-Am-Dm, which are the shapes you already know, played with a lazy, behind-the-beat feel. No power chords here — this is the other side of Level 3, where restraint and mood replace aggression.",
       setup: "Guitar. Lots of reverb if available. Metronome at 110 BPM (we'll slow from the song's 133 BPM to learn the feel first).",
       steps: [

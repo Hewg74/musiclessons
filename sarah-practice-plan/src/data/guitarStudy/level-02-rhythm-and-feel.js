@@ -200,6 +200,11 @@ export const level2 = {
       time: 8,
       title: "Song Study: Baby — Simple but Expressive",
       type: "guitar",
+      songRef: {
+        title: "Baby — Ariel Pink",
+        src: "/baby-ariel-pink.mp3",
+        note: "Two chords, pure lo-fi feel. Listen for how the dynamics create the whole arrangement."
+      },
       what: "Ariel Pink's 'Baby' uses just two chords — D and Em — at a slow 92 BPM. It sounds deceptively simple, but the magic is in the dynamics and the slightly off-kilter, lo-fi feel. This is your canvas for applying everything from this level: dynamics, behind-the-beat, ghost strums, and bends for embellishment.",
       setup: "Guitar. Metronome at 80 BPM (learn slow, target 92).",
       steps: [
@@ -225,6 +230,11 @@ export const level2 = {
       time: 8,
       title: "Song Study: Mexico — Fast Strum Energy",
       type: "guitar",
+      songRef: {
+        title: "Mexico — Husbands",
+        src: "/mexico-husbands.mp3",
+        note: "Fast strum energy — 150 BPM. Listen to how the constant arm motion stays relaxed even at speed."
+      },
       what: "Husbands' 'Mexico' is the opposite of behind-the-beat — it's a fast, energetic strum at 150 BPM that drives forward with joyful urgency. Four chords (F-C-G-Am) at high speed. This is your first encounter with uptempo strumming and how to keep your arm relaxed when the speed demands it.",
       setup: "Guitar. Metronome at 100 BPM (start slow, target 150).",
       steps: [

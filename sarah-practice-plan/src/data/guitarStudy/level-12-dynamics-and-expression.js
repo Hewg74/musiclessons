@@ -120,6 +120,11 @@ export const level12 = {
       time: 10,
       title: "Song Study: Marsha — Current Swell's Dynamic Masterclass",
       type: "guitar",
+      songRef: {
+        title: "Marsha — Current Swell",
+        src: "/marsha.mp3",
+        note: "Dynamic masterclass — verse whisper to chorus explosion. Listen for the D→Dm shift at the chorus."
+      },
       what: "Current Swell's 'Marsha' is a 6-chord song (Dm-C-G-F-Bb) at 116 BPM with a distinctive intro riff and the D→Dm magic moment. The song starts intimate and builds to full band power — a complete dynamic arc in 4 minutes. You'll learn the chords, the intro riff, and most importantly, the dynamic shape that makes this song breathe.",
       setup: "Guitar. Metronome at 90 BPM (learn slow, target 116). Capo optional.",
       steps: [
@@ -172,6 +177,11 @@ export const level12 = {
       time: 8,
       title: "Song Study: Peace Blossom Boogy — Psych-Pop Boogaloo",
       type: "guitar",
+      songRef: {
+        title: "Peace Blossom Boogy — Babe Rainbow",
+        src: "/peace-blossom-boogy.mp3",
+        note: "Psych-pop boogaloo — only three chords but maximum sunshine energy. Byron Bay surf-garage."
+      },
       what: "Babe Rainbow's 'Peace Blossom Boogy' is D-G7-A at ~112 BPM — three chords with a boogaloo shuffle feel. The G7 (instead of plain G) gives it a bluesy, psych-pop character. This song is all about rhythmic energy and dynamic contrast — quiet verses that explode into jangly, full-volume choruses.",
       setup: "Guitar. Metronome at 90 BPM (learn slow, target 112).",
       steps: [

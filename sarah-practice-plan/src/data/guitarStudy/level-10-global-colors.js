@@ -66,6 +66,11 @@ export const level10 = {
       time: 10,
       title: "Song Study: Abusey Junction Feel",
       type: "guitar",
+      songRef: {
+        title: "Abusey Junction — Kokoroko",
+        src: "/abusey-junction.mp3",
+        note: "London Afrobeat-jazz — warm, golden-hour groove. Listen for the guitar comping rhythm."
+      },
       what: "Kokoroko's Abusey Junction is one of the most beautiful pieces of modern Afrobeat — and it lives in your top 50. This exercise captures its FEEL: warm, golden, swaying. The guitar part is a gentle, arpeggiated figure over a highlife groove. It's not aggressive Afrobeat — it's sunset Afrobeat, Afrobeat with a smile.",
       setup: "Guitar. Clean tone, roll tone knob to 5-6 for warmth. Metronome at 100 BPM.",
       steps: [
@@ -163,6 +168,11 @@ export const level10 = {
       time: 10,
       title: "Song Study: Rules — Am-G, Behind the Beat, 60%+ Silence",
       type: "guitar",
+      songRef: {
+        title: "Rules — Khruangbin",
+        src: "/rules-khruangbin.mp3",
+        note: "Am-G, behind the beat, 60%+ silence. Mark Speer at his most minimal — space IS the music."
+      },
       what: "Khruangbin's Rules is a masterclass in space. The chord progression is just Am-G (confirmed: G-Am-F-G-Em-F-Em-Am, but the core vamp is Am-G). Mark Speer plays a melody on top using three-note voicings and single notes with enormous gaps between phrases. The rule: 60% or more of the song is SILENCE. Your job is to play as LITTLE as possible while still making music.",
       setup: "Guitar. Tone at 5-6. Parked wah if available. Metronome at 74 BPM (original tempo).",
       steps: [

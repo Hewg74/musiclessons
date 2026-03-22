@@ -268,6 +268,11 @@ export const level1 = {
       type: "guitar",
       metronome: 80,
       chordVoicings: { chords: ["D", "Em", "G"], defaultChord: "D" },
+      songRef: {
+        title: "Real Love Baby — Father John Misty",
+        src: "/real-love-baby.mp3",
+        note: "Listen to the D-Em-G progression with the hammer-on embellishments on D. Upbeat, sunny energy — contrast with Dope & Smoke."
+      },
       what: "Your second song uses three chords you already know (D-Em-G) plus one new one (A7). Father John Misty's Real Love Baby is 102 BPM with hammer-on embellishments and a warm, upbeat energy. A7 adds a bluesy tension that pulls you back to D — it's the chord that makes the loop feel alive instead of static.",
       setup: "Guitar. Metronome at 80 BPM (slower than the 102 BPM original). Build up.",
       steps: [

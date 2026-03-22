@@ -92,6 +92,11 @@ export const level7 = {
       time: 10,
       title: "Song Study: Stormtrooper Feel",
       type: "guitar",
+      songRef: {
+        title: "Stormtrooper — Pepper",
+        src: "/stormtrooper.mp3",
+        note: "Power chord riff intro, skank verse, power chord chorus. SoCal reggae-rock structure."
+      },
       what: "Put the pieces together into a full Stormtrooper-style arrangement. Power chord intro (gs-7-2), drop into clean reggae skank for the verse, distorted power chords for the chorus, clean skank outro. This is a full song structure built from the techniques you've been drilling.",
       setup: "Guitar. Clean + distortion ready to switch. Metronome at 100 BPM (building toward 150).",
       steps: [
@@ -116,6 +121,11 @@ export const level7 = {
       time: 8,
       title: "Song Study: Warmth of the Sun — Shoegaze Reverb",
       type: "guitar",
+      songRef: {
+        title: "Warmth of the Sun — levitation room",
+        src: "/warmth-of-the-sun.mp3",
+        note: "Pure LA psych — everything drowns in reverb. Contrast with the aggression of Stormtrooper."
+      },
       what: "levitation room's Warmth of the Sun is a different flavor of psych — reverb-drenched, dreamy, with a progression that floats between major and minor (E–D–A–Bm). This is the counterpoint to Pepper's aggression: where Stormtrooper punches, Warmth of the Sun washes over you. The chords are open and ringing, the strum is slow and atmospheric.",
       setup: "Guitar with reverb (spring reverb ideal — use whatever you have, or even a reverb app). Metronome at 60 BPM (half of 122 — learn slow, then bring up).",
       steps: [

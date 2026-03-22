@@ -172,6 +172,11 @@ export const level4 = {
       time: 10,
       title: "Song Study: 1999 — Laid-Back Reggae-Surf",
       type: "guitar",
+      songRef: {
+        title: "1999 — NO CIGAR",
+        src: "/1999-no-cigar.mp3",
+        note: "Laid-back reggae-surf. Listen for the offbeat skank and the coastal reverb haze."
+      },
       what: "NO CIGAR's 1999 is a reggae-surf hybrid at 85 BPM here (the actual recording is closer to 108 BPM — we'll work up to that). The verified chords are E-B-F#-A (some tabs show G#m instead of A — both work, but A is the verified version). It's mellow, behind the beat, with a longer ring time on the skank. The A adds a bright, open quality that lifts the progression — it's the IV chord — the same role that E plays in Jah Werx (B-F#-E). This song teaches you that reggae can be dreamy and surf-inflected.",
       setup: "Guitar. Metronome at 80 BPM (target: 85).",
       chordVoicings: { chords: ["E", "B", "F#", "A"] },

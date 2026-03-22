@@ -90,6 +90,11 @@ export const level9 = {
       time: 10,
       title: "Song Study: I Didn't Know — Skinshape Soul Cycle",
       type: "guitar",
+      songRef: {
+        title: "I Didn't Know — Skinshape",
+        src: "/i-didnt-know.mp3",
+        note: "Soul cycle — maj7 and m7 chords create a warm, looping groove. One-man-band lo-fi production."
+      },
       what: "Skinshape's 'I Didn't Know' uses Gm-C-A7-Dm — a soul/jazz cycle that loops endlessly with a deep groove. The tab sources show triads (Gm, C, Dm) with A7 as the dominant pivot. Start with the basic triads, then upgrade to 7th voicings (Gm7-C7-A7-Dm7) for the full Skinshape warmth. The groove matters more than the voicing.",
       setup: "Guitar. Metronome at 75 BPM (original is a laid-back soul groove). Volume 6-7 — not loud.",
       chordVoicings: { chords: ["Gm7", "C7", "A7", "Dm7"] },
@@ -161,6 +166,11 @@ export const level9 = {
       time: 8,
       title: "Song Study: Chewing Gum — The 7th That Appears and Vanishes",
       type: "guitar",
+      songRef: {
+        title: "Chewing Gum — Cotton Jones",
+        src: "/chewing-gum.mp3",
+        note: "The 7th that appears and vanishes — Am-D-Dm7 with subtle harmonic shifts. Psychedelic folk."
+      },
       what: "Cotton Jones' 'Chewing Gum' uses Am-D-Dm7-Dm at 120 BPM — a psychedelic folk progression where the 7th chord appears for just one bar, adding a momentary color that shifts the entire mood. The Dm7→Dm transition is the heart of the song: the 7th (C note) appears, then vanishes. Learn to play this subtle trick and deploy it in your own progressions.",
       setup: "Guitar. Metronome at 100 BPM (build up to 120).",
       chordVoicings: { chords: ["Am", "D", "Dm7", "Dm"] },
@@ -184,6 +194,11 @@ export const level9 = {
       time: 9,
       title: "Song Study: Texas Sun — Speer Melody Over Soul Chords",
       type: "guitar",
+      songRef: {
+        title: "Texas Sun — Khruangbin & Leon Bridges",
+        src: "/texas-sun.mp3",
+        note: "Mark Speer's melody floats over soul chords. Listen to the space and the flatwound guitar tone."
+      },
       what: "Khruangbin and Leon Bridges' 'Texas Sun' sits on Am-G for the verses and opens up to Em-Bm for the bridge. At 111 BPM, it's a slow-burning soul groove. The guitar part is NOT a strum — it's Speer-style single-note melody lines floating over the chord changes. Your job: play the chord changes, then add melody on top, then combine them.",
       setup: "Guitar. Metronome at 90 BPM (build to 111). Volume at 7, tone at 5-6 — warm, not bright.",
       chordVoicings: { chords: ["Am", "G", "Em", "Bm"] },

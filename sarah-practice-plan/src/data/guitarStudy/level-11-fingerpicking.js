@@ -93,6 +93,11 @@ export const level11 = {
       time: 12,
       title: "Song Study: Breakdown — Jack Johnson",
       type: "guitar",
+      songRef: {
+        title: "Breakdown — Jack Johnson",
+        src: "/breakdown-jack-johnson.mp3",
+        note: "Simple fingerpicking, three or four chords. The king of less-is-more acoustic guitar."
+      },
       chordVoicings: { chords: ["G", "Bm", "Em", "D"] },
       tracks: [{ name: "A Major Folk 80", src: "/a-major-folk-80.mp3" }],
       recorder: true,
@@ -169,6 +174,11 @@ export const level11 = {
       time: 10,
       title: "Song Study: Coastline Feel — Hollow Coves",
       type: "guitar",
+      songRef: {
+        title: "Coastline — Hollow Coves",
+        src: "/coastline.mp3",
+        note: "Folk fingerpicking with wide-open ocean sound. CGDGGD alternate tuning, capo 7th fret."
+      },
       chordVoicings: { chords: ["G", "Bm", "A", "D"] },
       tracks: [{ name: "A Major Folk 80", src: "/a-major-folk-80.mp3" }],
       recorder: true,
