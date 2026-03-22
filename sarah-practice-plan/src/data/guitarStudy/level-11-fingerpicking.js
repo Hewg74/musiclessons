@@ -133,7 +133,7 @@ export const level11 = {
       wrong: "The #1 mistake is trying to learn thumb and fingers simultaneously. Always start with THUMB ONLY for at least 30 seconds before adding fingers. If the thumb falters when you add fingers, the thumb isn't automatic yet — go back to thumb alone. The #2 mistake is going too fast. 40 BPM is not a suggestion — it's a prescription. Speed kills Travis picking practice.",
       sarah: "Gene, this is the exercise where a lot of guitarists plateau — and where the ones who break through gain a superpower. Jack Johnson, Tommy Emmanuel, John Mayer — they all had to grind this exact thumb independence. It took each of them weeks. Be patient. When the thumb goes on autopilot and the melody floats on top, you'll feel like you've unlocked a cheat code. One guitar, two voices. It's why fingerpickers smile when they play.",
       metronome: 40,
-      speedLadder: { start: 50, end: 80, increment: 10, bars: 4 },
+      speedLadder: { start: 40, end: 80, increment: 10, bars: 4 },
       levelUp: "Play the full Travis pattern (P-alternating-bass + i-m treble) over C for 30 seconds at 50 BPM without the thumb losing its alternation. Then play C→G→Am→Em with Travis pattern at 50 BPM without breaking."
     },
 
@@ -183,7 +183,7 @@ export const level11 = {
       ],
       feel: "Open sky. Salt air. Each note is a bird gliding — it floats, hangs, then another one follows. This isn't the campfire warmth of Breakdown — it's the wide-open coastal luminosity of dawn. If Breakdown is sitting on a porch, Coastline is standing on a cliff overlooking the ocean.",
       wrong: "If your picking is too busy (every beat filled with notes), pull back. Add silence. Leave beats empty. The Coastline feel lives in what you DON'T play as much as what you do. If the Bm barre chord buzzes, try an alternative voicing: x20230 (Bm with open strings) — less accurate but captures the airy quality.",
-      sarah: "Gene, Hollow Coves are two guys from Australia — folk fingerpickers with that wide-open ocean sound. Coastline gets its massive, shimmering sound from the CGDGGD alternate tuning with capo on 2nd fret. The open drone strings ring out through the entire song — when the fingers pick the melody, the surrounding open strings create a wall of resonance. The verse is a rolling 16th-note arpeggio with hammer-ons integrated directly into the picking pattern. The chorus shifts to driving strumming, and because of the tuning, simply strumming open strings sounds enormous. In standard tuning you can't replicate this exactly, but the emotional core translates. The key is space — every note in Coastline has room to breathe. It's the opposite of busy. Think of it as the soundtrack to a sunrise surf check.",
+      sarah: "Gene, Hollow Coves are two guys from Australia — folk fingerpickers with that wide-open ocean sound. Coastline gets its massive, shimmering sound from the CGDGGD alternate tuning with capo on the 7th fret. The open drone strings ring out through the entire song — when the fingers pick the melody, the surrounding open strings create a wall of resonance. The verse is a rolling 16th-note arpeggio with hammer-ons integrated directly into the picking pattern. The chorus shifts to driving strumming, and because of the tuning, simply strumming open strings sounds enormous. In standard tuning you can't replicate this exactly, but the emotional core translates. The key is space — every note in Coastline has room to breathe. It's the opposite of busy. Think of it as the soundtrack to a sunrise surf check.",
       metronome: 70,
       levelUp: "Play the full Coastline structure (verse × 2, chorus × 2) with spacious fingerpicking at 70 BPM. The verse sections are noticeably quieter than the chorus sections. Record and verify the dynamic arc."
     },
@@ -195,7 +195,7 @@ export const level11 = {
       time: 8,
       title: "Gimme Love Revisited — Fingerpicked Reggae",
       type: "guitar",
-      what: "In Level 4, you played Gimme Love (The Elovaters) as a strummed reggae exercise. Now here's how they actually play it: fingerpicked, with the thumb handling bass notes on the downbeat and fingers plucking syncopated notes on the higher strings, plus percussive string slaps on beats 2 and 4.",
+      what: "In Level 4, you played Gimme Love (The Elovaters) as a strummed reggae exercise. Now explore a fingerpicked interpretation: thumb handling bass notes on the downbeat, fingers plucking syncopated notes on the higher strings, plus percussive string slaps on beats 2 and 4. Same three chords, transformed into a solo guitar arrangement.",
       setup: "Acoustic or clean electric. No pick — fingers only. Metronome at 75 BPM.",
       steps: [
         { text: "The thumb anchors: your thumb (P) plays the bass root of each chord on the downbeat. For F, that's the low E string. For C, that's the A string. For G, the low E string. Let the bass note ring.", why: "The alternating bass thumb is the rhythmic foundation. In fingerpicked reggae, the thumb does what the kick drum does — it marks the time." },

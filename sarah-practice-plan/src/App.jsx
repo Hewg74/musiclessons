@@ -1095,18 +1095,19 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
                 <div style={{ fontSize: 9, fontWeight: 800, color: T.textMuted, letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 10 }}>
                   Speed Ladder — {bars} bars each
                 </div>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 4, alignItems: "center" }}>
                   {steps.map((bpm, i) => (
-                    <div key={bpm} style={{
-                      padding: "8px 14px", borderRadius: T.radius, fontSize: 12, fontWeight: 700,
-                      fontFamily: T.mono, border: `1px solid ${T.border}`,
-                      background: i === steps.length - 1 ? (accentColor || T.accent) : T.bgSoft,
-                      color: i === steps.length - 1 ? "#fff" : T.textMed,
-                      display: "flex", alignItems: "center", gap: 6
-                    }}>
-                      {bpm} <span style={{ fontSize: 9, opacity: 0.6 }}>BPM</span>
-                      {i < steps.length - 1 && <span style={{ fontSize: 10, opacity: 0.4, marginLeft: 2 }}>→</span>}
-                    </div>
+                    <React.Fragment key={bpm}>
+                      <div style={{
+                        padding: "8px 14px", borderRadius: T.radius, fontSize: 12, fontWeight: 700,
+                        fontFamily: T.mono, border: `1px solid ${T.border}`,
+                        background: i === steps.length - 1 ? (accentColor || T.accent) : T.bgSoft,
+                        color: i === steps.length - 1 ? "#fff" : T.textMed,
+                      }}>
+                        {bpm} <span style={{ fontSize: 9, opacity: 0.6 }}>BPM</span>
+                      </div>
+                      {i < steps.length - 1 && <span style={{ fontSize: 10, opacity: 0.3 }}>→</span>}
+                    </React.Fragment>
                   ))}
                 </div>
               </div>
@@ -1798,17 +1799,19 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
                     <div style={{ fontSize: 9, fontWeight: 800, color: T.textMuted, letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 8 }}>
                       Speed Ladder — {bars} bars each
                     </div>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 4, alignItems: "center" }}>
                       {steps.map((bpm, i) => (
-                        <div key={bpm} style={{
-                          padding: "6px 10px", borderRadius: T.radius, fontSize: 11, fontWeight: 700,
-                          fontFamily: T.mono, border: `1px solid ${T.border}`,
-                          background: i === steps.length - 1 ? (accentColor || T.accent) : T.bgSoft,
-                          color: i === steps.length - 1 ? "#fff" : T.textMed,
-                          display: "flex", alignItems: "center", gap: 4
-                        }}>
-                          {bpm} <span style={{ fontSize: 8, opacity: 0.6 }}>BPM</span>
-                        </div>
+                        <React.Fragment key={bpm}>
+                          <div style={{
+                            padding: "6px 10px", borderRadius: T.radius, fontSize: 11, fontWeight: 700,
+                            fontFamily: T.mono, border: `1px solid ${T.border}`,
+                            background: i === steps.length - 1 ? (accentColor || T.accent) : T.bgSoft,
+                            color: i === steps.length - 1 ? "#fff" : T.textMed,
+                          }}>
+                            {bpm} <span style={{ fontSize: 8, opacity: 0.6 }}>BPM</span>
+                          </div>
+                          {i < steps.length - 1 && <span style={{ fontSize: 9, opacity: 0.3 }}>→</span>}
+                        </React.Fragment>
                       ))}
                     </div>
                   </div>
