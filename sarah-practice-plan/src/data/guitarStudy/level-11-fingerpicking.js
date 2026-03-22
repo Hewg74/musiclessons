@@ -107,7 +107,7 @@ export const level11 = {
       ],
       feel: "This should feel like sitting on a porch with a coffee. Unhurried, gentle, warm. The guitar almost plays itself. If you're straining or concentrating hard, you're working too hard — Jack Johnson looks half asleep when he plays this. That relaxation IS the technique.",
       wrong: "If the Bm chord buzzes, check that your barre finger is pressing firmly and evenly across all strings. If the picking pattern sounds mechanical and evenly spaced, you're playing like a machine instead of a human — vary the timing slightly, let some notes ring longer. If the thumb keeps hitting the wrong bass string during chord changes, isolate just the bass notes through the whole progression until they're automatic.",
-      sarah: "Gene, Jack Johnson is the king of simple fingerpicking. His whole philosophy is 'less is more' — three or four chords, a gentle picking pattern, and a voice. Breakdown is his signature sound. The capo on 5 puts you in the key of C, which is bright and warm. When you play this on a quiet evening, you'll understand why Johnson sells out arenas with a nylon-string guitar and bare feet.",
+      sarah: "Gene, Jack Johnson is the king of simple fingerpicking. His whole philosophy is 'less is more' — three or four chords, a gentle picking pattern, and a voice. Breakdown is his signature sound. The capo on 5 puts you in the key of C, which is bright and warm. When you play this on a quiet evening, you'll understand why Johnson sells out arenas with a nylon-string guitar and bare feet. The secret sauce of Breakdown is the percussive thumb slap — Jack Johnson's thumb strikes the strings on beats 2 and 4, creating a snare-drum simulation within the fingerpicking pattern. This is what gives the song its groove without a drummer. Also listen for the descending bass walk in the chorus: the bass note drops from G down to D/F# (2nd fret low E) down to Em — that walk creates forward motion. In Breakdown, the guitar IS the entire band — there's no drummer. Your Travis picking provides the bass (thumb), the harmony (fingers), and the percussion (thumb slaps on beats 2 and 4). The voice sits on TOP of this complete rhythm section. The guitar never drops out because without it, there's nothing. This is the ultimate guitar-as-accompaniment exercise.",
       metronome: 65,
       levelUp: "Play the full Breakdown progression (G-Bm-Em-D, capo 5) with continuous fingerpicking at 75 BPM for 3 minutes without breaking the pattern. The bass notes land on the correct strings for each chord."
     },
@@ -133,6 +133,7 @@ export const level11 = {
       wrong: "The #1 mistake is trying to learn thumb and fingers simultaneously. Always start with THUMB ONLY for at least 30 seconds before adding fingers. If the thumb falters when you add fingers, the thumb isn't automatic yet — go back to thumb alone. The #2 mistake is going too fast. 40 BPM is not a suggestion — it's a prescription. Speed kills Travis picking practice.",
       sarah: "Gene, this is the exercise where a lot of guitarists plateau — and where the ones who break through gain a superpower. Jack Johnson, Tommy Emmanuel, John Mayer — they all had to grind this exact thumb independence. It took each of them weeks. Be patient. When the thumb goes on autopilot and the melody floats on top, you'll feel like you've unlocked a cheat code. One guitar, two voices. It's why fingerpickers smile when they play.",
       metronome: 40,
+      speedLadder: { start: 50, end: 80, increment: 10, bars: 4 },
       levelUp: "Play the full Travis pattern (P-alternating-bass + i-m treble) over C for 30 seconds at 50 BPM without the thumb losing its alternation. Then play C→G→Am→Em with Travis pattern at 50 BPM without breaking."
     },
 
@@ -182,9 +183,33 @@ export const level11 = {
       ],
       feel: "Open sky. Salt air. Each note is a bird gliding — it floats, hangs, then another one follows. This isn't the campfire warmth of Breakdown — it's the wide-open coastal luminosity of dawn. If Breakdown is sitting on a porch, Coastline is standing on a cliff overlooking the ocean.",
       wrong: "If your picking is too busy (every beat filled with notes), pull back. Add silence. Leave beats empty. The Coastline feel lives in what you DON'T play as much as what you do. If the Bm barre chord buzzes, try an alternative voicing: x20230 (Bm with open strings) — less accurate but captures the airy quality.",
-      sarah: "Gene, Hollow Coves are two guys from Australia — folk fingerpickers with that wide-open ocean sound. Coastline's original tuning (CGDGGD capo 7) creates all these ringing open strings that standard tuning can't replicate exactly, but the emotional core translates. The key is space — every note in Coastline has room to breathe. It's the opposite of busy. Think of it as the soundtrack to a sunrise surf check.",
+      sarah: "Gene, Hollow Coves are two guys from Australia — folk fingerpickers with that wide-open ocean sound. Coastline gets its massive, shimmering sound from the CGDGGD alternate tuning with capo on 2nd fret. The open drone strings ring out through the entire song — when the fingers pick the melody, the surrounding open strings create a wall of resonance. The verse is a rolling 16th-note arpeggio with hammer-ons integrated directly into the picking pattern. The chorus shifts to driving strumming, and because of the tuning, simply strumming open strings sounds enormous. In standard tuning you can't replicate this exactly, but the emotional core translates. The key is space — every note in Coastline has room to breathe. It's the opposite of busy. Think of it as the soundtrack to a sunrise surf check.",
       metronome: 70,
       levelUp: "Play the full Coastline structure (verse × 2, chorus × 2) with spacious fingerpicking at 70 BPM. The verse sections are noticeably quieter than the chorus sections. Record and verify the dynamic arc."
+    },
+
+    // ─── FINGERPICKED REGGAE ───
+
+    {
+      id: "gs-11-12",
+      time: 8,
+      title: "Gimme Love Revisited — Fingerpicked Reggae",
+      type: "guitar",
+      what: "In Level 4, you played Gimme Love (The Elovaters) as a strummed reggae exercise. Now here's how they actually play it: fingerpicked, with the thumb handling bass notes on the downbeat and fingers plucking syncopated notes on the higher strings, plus percussive string slaps on beats 2 and 4.",
+      setup: "Acoustic or clean electric. No pick — fingers only. Metronome at 75 BPM.",
+      steps: [
+        { text: "The thumb anchors: your thumb (P) plays the bass root of each chord on the downbeat. For F, that's the low E string. For C, that's the A string. For G, the low E string. Let the bass note ring.", why: "The alternating bass thumb is the rhythmic foundation. In fingerpicked reggae, the thumb does what the kick drum does — it marks the time." },
+        { text: "Fingers pluck: after the thumb bass note, your index (i) and middle (m) fingers pluck the B and high E strings together in a syncopated rhythm. These plucks land on the off-beats — the 'and' of beats 2 and 4. Let a small gap between the thumb and the finger pluck.", why: "The syncopated gap between bass and treble creates the reggae 'bounce.' It's the same offbeat emphasis you learned in Level 4, but now divided between two hands instead of one strumming arm." },
+        { text: "Add the percussive slap: on beats 2 and 4, slap the side of your thumb against the lower strings for a 'chk' sound — like a snare hit. This replaces or overlaps with the finger pluck to create a combined percussive-melodic sound.", why: "The thumb slap simulates a snare drum within the fingerpicking pattern. It's the same concept as Jack Johnson's Breakdown technique from earlier in this level — the guitar becomes a one-person rhythm section." },
+        { text: "Chain F-C-G with the full fingerpicked pattern: thumb bass → pause → finger pluck + thumb slap → pause. Repeat for 2 minutes without stopping. Add hammer-ons within the chord shapes (e.g., hammering onto the 2nd fret of the G string while holding C) for melodic movement.", why: "Integrating the hammer-on into the fingerpicked pattern is what makes it sound like music rather than an exercise. The hammer-on adds a brief melody that weaves through the rhythm." }
+      ],
+      feel: "Laid-back and groovy, with a gentle bounce. Your thumb is the bass player, your fingers are the rhythm guitarist, and the slap is the drummer. All three in one hand.",
+      wrong: "If the bass note and finger pluck happen at the same time, add more gap — the syncopation is everything. If the slap is too loud, lighten up — it should blend with the pluck, not overwhelm it. If your hand cramps, you're gripping too hard — keep the fingers relaxed and curved.",
+      sarah: "Gene, remember Gimme Love from Level 4? You played F-C-G as a strummed reggae exercise. Now you're hearing what The Elovaters actually do — they fingerpick it. Same three chords, but the guitar becomes a whole rhythm section: bass, chords, and percussion all from one pair of hands. This is the same principle as Breakdown — the guitar replaces the band. Mastering this transforms you from someone who strums along to someone who commands the entire groove alone.",
+      metronome: 75,
+      levelUp: "Play F-C-G fingerpicked pattern at 75 BPM for 2 minutes with clear bass notes, syncopated finger plucks, and audible percussive slaps on beats 2 and 4.",
+      recorder: true,
+      chordVoicings: { chords: ["F", "C", "G"] }
     },
 
     // ─── DUO THINKING ───

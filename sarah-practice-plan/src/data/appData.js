@@ -43,6 +43,7 @@ export const KEYBOARD_LEVELS = [
         ],
         feel: "A hiccup between beats. Same groove pocket as your &'s Only vocal drill. The silence on the numbers should feel deliberate.",
         wrong: "If stabs land ON the beat, slow to 70 and exaggerate silence on numbers. If notes ring too long, focus on the release speed — fingers off the keys faster.",
+        sarah: "Listen to Skinshape's 'I Didn't Know' — the organ rests on beat 1 and strikes on the off-beats. This syncopated soul/dub style means your hand lifts OFF the keys as fast as it presses down. The staccato is created by key release, not by playing short notes. The audio analysis confirms: Skinshape's chords are cut off almost immediately — the organ acts as a percussion instrument.",
         metronome: 80,
         levelUp: "8 bars of even stabs at 90 BPM with clean release."
       },
@@ -78,7 +79,7 @@ export const KEYBOARD_LEVELS = [
         ],
         feel: "Keys are breathing. Waves lapping on shore. The hold should feel lazy and warm, not tight.",
         wrong: "If the bubble sounds the same as the chop, you're releasing too early. Hold longer — almost until the next beat, then release just before.",
-        sarah: "This is the exact organ sound from Skinshape's 'I Didn't Know' — that breathing reggae pulse. Your Farfisa preset in Analog Lab V has this tone built in.",
+        sarah: "This is the exact organ sound from Skinshape's 'I Didn't Know' — that breathing reggae pulse. Your Farfisa preset in Analog Lab V has this tone built in. Surf Hat uses E7-A7-B7-F#7 — all dominant 7th chords on the organ. The dominant 7ths add a bluesy, unresolved tension to the reggae bubble. Try your offbeat stabs with 7th voicings instead of triads — the sound gets instantly more sophisticated. The 'bubble' is created by LIFTING the keys quickly after each stab — sustain is controlled by key lift, not a pedal.",
         metronome: 72,
         levelUp: "Smoothly alternate chop and bubble at 80 BPM on the I-IV-V-I."
       },
@@ -205,7 +206,7 @@ export const KEYBOARD_LEVELS = [
         ],
         feel: "7th chords should sound like an upgrade — richer, more complex, more 'adult' than triads. The Khruangbin/Skinshape sound lives in these voicings.",
         wrong: "If four notes feel awkward, start with just the top three notes of each chord (drop the root). Let the bass player handle the root.",
-        sarah: "Cmaj7-Am7-Dm7-G7 is the Khruangbin progression. You already know this sound from your playlist — now you can play it.",
+        sarah: "Cmaj7-Am7-Dm7-G7 is the Khruangbin progression. You already know this sound from your playlist — now you can play it. Skinshape's 'I Didn't Know' progression is Bbmaj7-F-G into Gm-C-A7-Dm — all rich 7th voicings in the C4-C5 register. The audio analysis confirms he uses partial voicings on just 3-4 keys, not full chords. Try playing just the 3rd, 5th, and 7th of each chord — that's the Skinshape voicing approach. Less is more.",
         metronome: 72,
         levelUp: "Cmaj7-Am7-Dm7-G7 at 80 BPM, chopped and sustained, both clean."
       },
@@ -222,6 +223,7 @@ export const KEYBOARD_LEVELS = [
         ],
         feel: "Like detective work. You're listening through the mix to find the keyboard's role. It should feel like zooming in on one layer of a painting.",
         wrong: "If you can't hear the keys at all, pick a different track with more prominent keys. Or try headphones — keys often sit in the stereo sides.",
+        sarah: "Khruangbin's keys are almost invisible — 3-note voicings high up, with 60%+ silence. The keys exist to add COLOR, not harmony. Think of them as seasoning, not the main course. DOPE LEMON buries lo-fi keys in reverb — simple chord stabs, rarely playing full voicings, just the top 3 notes of each chord, always behind the beat. When you're ear-copying these parts, you'll be surprised how little is actually being played.",
         levelUp: "Correctly identify the register and approximate voicing on 3 different tracks."
       },
       {
@@ -404,7 +406,7 @@ export const KEYBOARD_LEVELS = [
         ],
         feel: "The silences should feel intentional, like a photographer choosing what to leave out of the frame. Your entries should feel like gifts.",
         wrong: "If you can't stop playing, set a physical rule: hands in lap during verses, only play choruses. Build restraint as a habit.",
-        sarah: "Your band already has guitar, bass, and vocals. The keyboard that plays through the whole song is the one nobody notices. The one that enters for 8 bars in the chorus and disappears? That's the one people remember.",
+        sarah: "Your band already has guitar, bass, and vocals. The keyboard that plays through the whole song is the one nobody notices. The one that enters for 8 bars in the chorus and disappears? That's the one people remember. The audio analysis of Texas Sun reveals the guitar drops out entirely during vocal phrases, entering only to 'answer' the singer. Keys should follow the same principle — lay out during vocals, fill during instrumental spaces. 60%+ silence applies to keys as much as guitar.",
         levelUp: "3 songs where you are silent for 30%+ of runtime AND your entries measurably improve the song. Record each and listen back — if removing keys wouldn't change the impact, it doesn't count."
       },
       {
@@ -458,7 +460,7 @@ export const KEYBOARD_LEVELS = [
         ],
         feel: "Should sound like a 1960s beach party. The tremolo creates movement you don't have to play. Your job is just smooth chord changes and dynamic swells.",
         wrong: "If it sounds static, increase tremolo depth or speed. If chord changes are jarring, practice the voice-leading — find inversions with minimal movement.",
-        sarah: "The Am-G-F-E tremolo organ is the Allah-Las and Mystic Braves sound. Your Farfisa preset + this progression = instant surf-psych set piece.",
+        sarah: "The Am-G-F-E tremolo organ is the Allah-Las and Mystic Braves sound. Your Farfisa preset + this progression = instant surf-psych set piece. Allah-Las use a Farfisa organ with tremolo on almost every track. The tremolo speed defines the psychedelic feel — fast tremolo for energy, slow tremolo for dreaminess. The Cmaj7-to-Dmaj7 movement that creates their guitar jangle works on keys too — try it with the tremolo effect on.",
         metronome: 120,
         pianoKeys: { notes: ["A3", "C4", "E4", "G4"], label: "Am7 Tremolo", range: ["A2", "G5"] },
         levelUp: "Smooth Am-G-F-E with swells at 120 BPM that sounds like vintage surf."

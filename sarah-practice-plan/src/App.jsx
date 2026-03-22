@@ -1024,7 +1024,7 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
       )}
 
       {/* PANEL C: CONTENT & GUIDES */}
-      {(ex.chordVoicings || ex.fretboard || ex.pianoKeys || ex.volumeMeter || ex.rhythmCells || ex.phraseForm || (ex.referencePitches && ex.referencePitches.length > 0) || ex.steps || ex.feel || ex.wrong || ex.sarah || ex.levelUp) && (
+      {(ex.speedLadder || ex.chordVoicings || ex.fretboard || ex.pianoKeys || ex.volumeMeter || ex.rhythmCells || ex.phraseForm || (ex.referencePitches && ex.referencePitches.length > 0) || ex.steps || ex.feel || ex.wrong || ex.sarah || ex.levelUp) && (
         <div style={{ 
           background: T.bgCard, borderRadius: T.radiusMd, border: `1px solid ${T.border}`,
           padding: "24px", marginBottom: 16, boxShadow: T.sm
@@ -1084,6 +1084,34 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
               <PhraseFormGuide form={ex.phraseForm} theme={T} accentColor={accentColor} />
             </div>
           )}
+
+          {/* Speed Ladder */}
+          {ex.speedLadder && (() => {
+            const { start, end, increment, bars } = ex.speedLadder;
+            const steps = [];
+            for (let bpm = start; bpm <= end; bpm += increment) steps.push(bpm);
+            return (
+              <div style={{ marginBottom: 24 }}>
+                <div style={{ fontSize: 9, fontWeight: 800, color: T.textMuted, letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 10 }}>
+                  Speed Ladder — {bars} bars each
+                </div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                  {steps.map((bpm, i) => (
+                    <div key={bpm} style={{
+                      padding: "8px 14px", borderRadius: T.radius, fontSize: 12, fontWeight: 700,
+                      fontFamily: T.mono, border: `1px solid ${T.border}`,
+                      background: i === steps.length - 1 ? (accentColor || T.accent) : T.bgSoft,
+                      color: i === steps.length - 1 ? "#fff" : T.textMed,
+                      display: "flex", alignItems: "center", gap: 6
+                    }}>
+                      {bpm} <span style={{ fontSize: 9, opacity: 0.6 }}>BPM</span>
+                      {i < steps.length - 1 && <span style={{ fontSize: 10, opacity: 0.4, marginLeft: 2 }}>→</span>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
 
           {/* Volume Meter */}
           {ex.volumeMeter && (
@@ -1718,7 +1746,7 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
           )}
 
           {/* PANEL C: CONTENT */}
-          {(ex.chordVoicings || ex.fretboard || ex.pianoKeys || ex.volumeMeter || ex.rhythmCells || ex.phraseForm || (ex.tabs && TAB_CONTENT[ex.tabs]) || (ex.referencePitches && ex.referencePitches.length > 0)) && (
+          {(ex.speedLadder || ex.chordVoicings || ex.fretboard || ex.pianoKeys || ex.volumeMeter || ex.rhythmCells || ex.phraseForm || (ex.tabs && TAB_CONTENT[ex.tabs]) || (ex.referencePitches && ex.referencePitches.length > 0)) && (
             <div style={{ 
               background: T.bgCard, borderRadius: T.radiusMd, border: `1px solid ${T.border}`,
               padding: "18px", marginBottom: 20, boxShadow: T.sm
@@ -1759,6 +1787,33 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
                   )}
                 </div>
               )}
+
+              {/* Speed Ladder */}
+              {ex.speedLadder && (() => {
+                const { start, end, increment, bars } = ex.speedLadder;
+                const steps = [];
+                for (let bpm = start; bpm <= end; bpm += increment) steps.push(bpm);
+                return (
+                  <div style={{ marginBottom: 16 }}>
+                    <div style={{ fontSize: 9, fontWeight: 800, color: T.textMuted, letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 8 }}>
+                      Speed Ladder — {bars} bars each
+                    </div>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+                      {steps.map((bpm, i) => (
+                        <div key={bpm} style={{
+                          padding: "6px 10px", borderRadius: T.radius, fontSize: 11, fontWeight: 700,
+                          fontFamily: T.mono, border: `1px solid ${T.border}`,
+                          background: i === steps.length - 1 ? (accentColor || T.accent) : T.bgSoft,
+                          color: i === steps.length - 1 ? "#fff" : T.textMed,
+                          display: "flex", alignItems: "center", gap: 4
+                        }}>
+                          {bpm} <span style={{ fontSize: 8, opacity: 0.6 }}>BPM</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })()}
 
               {/* Volume Meter */}
               {ex.volumeMeter && <VolumeMeter theme={T} inline={true} volumeContour={!!ex.volumeContour} />}

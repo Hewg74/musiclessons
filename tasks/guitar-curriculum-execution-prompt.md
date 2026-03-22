@@ -214,29 +214,27 @@ These were WRONG in the first research pass and have been fixed:
 
 ---
 
-## ⚠️ RELIABILITY WARNING: What You Can Trust vs. What You Can't
+## RELIABILITY GUIDE: What You Can Trust
 
-The chord database above was re-verified against UG tabs and is reliable. But **other details from the research may not be**. Here's the breakdown:
-
-### RELIABLE (from artist interviews, rig rundowns, verified sources):
-- **Artist gear** — Speer's flatwound strings, Sun Room's Jazzmaster+Tubescreamer, etc. (from Premier Guitar, Equipboard, band interviews)
-- **General playing approach** — Khruangbin's three-note voicings, Tinariwen's drone-based playing, Skinshape's drums-first process
-- **Genre-level patterns** — reggae offbeat, surf reverb, psych fuzz, desert blues repetition
+### TIER 1 — VERIFIED (use with full confidence):
+- **Chord progressions** — re-verified against Ultimate Guitar tabs (see database above)
+- **Artist gear & general approach** — from interviews, rig rundowns (Premier Guitar, Equipboard)
 - **Harmonic patterns** — descending minor, major→minor trick, etc. (derived from verified chords)
 
-### NOT RELIABLE (may be generic/hallucinated):
-- **Song-specific strum patterns** — "Down, Down-Up, Down-Up" for Sun Room was derived from a general surf description, NOT from analyzing Sol Del Sur specifically
-- **Song-specific BPMs** — automated tools (SongBPM, Tunebat) can be off by 2x on half-time songs
-- **Picking patterns** — "Travis picking for Jack Johnson" is generically correct but the specific pattern for Breakdown wasn't verified note-by-note
-- **Any detail described as "likely" or "probably"**
+### TIER 2 — AUDIO-VERIFIED BY GEMINI (use with confidence, check tiers):
+Song-specific technique details have been analyzed from actual YouTube audio by Gemini 3.1 Pro. See `tasks/gemini-song-analysis-results.md` for full analysis of all 20 priority songs.
 
-### WHAT TO DO ABOUT THIS:
-When writing exercises about a specific song:
-1. **Chords** — use the verified database above, these are correct
-2. **Strum patterns** — describe the GENERAL STYLE feel ("laid-back offbeat with muted ghost strums") rather than a precise notation ("D-DU-UDU"). Add: "Listen to the recording and match the feel."
-3. **BPM** — use as approximate starting point. Add: "Adjust metronome to match the recording."
-4. **Tone/effects** — artist-level gear info is reliable. Song-specific tone differences are not verified.
-5. **When in doubt** — write "Listen to [song name] and match the rhythmic feel" rather than prescribing a specific pattern you haven't verified.
+Each finding is marked with a confidence tier:
+- **HEARD** — clearly audible in the audio. **Use these details directly in exercises** with specific technique descriptions.
+- **INFERRED** — likely based on genre/context but not 100% certain from the mix. **Use as general style feel** ("the strum has a laid-back, behind-the-beat reggae feel") rather than precise notation.
+- **UNCLEAR** — couldn't determine from the audio. **Fall back to**: "Listen to [song name] and match the feel."
+
+### WHAT TO DO when writing exercises:
+1. **Chords** — use the verified database above (TIER 1). Ignore any chord names Gemini may have mentioned.
+2. **Strum patterns, BPM, pick attack, muting, transitions** — use the Gemini analysis (TIER 2). For HEARD items, write specific technique descriptions. For INFERRED items, describe the general style feel.
+3. **Tone/effects** — cross-reference Gemini's audio analysis with the artist gear data below. Both are reliable; Gemini adds song-specific tone details.
+4. **Lead techniques, ornaments, signature licks** — use Gemini's HEARD findings to write exercises that teach the actual guitar moves (bends, slides, double stops, etc.)
+5. **When Gemini says UNCLEAR** — write "Listen to [song name] and match the rhythmic feel" rather than guessing.
 
 ---
 

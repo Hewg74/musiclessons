@@ -5505,6 +5505,7 @@ const CHORD_VOICINGS_MULTI = {
   "Gsus4": [{ frets: "330013", name: "Gsus4", pos: "Open" }, { frets: "355533", name: "Gsus4", pos: "3rd" }],
   "Csus2": [{ frets: "x30013", name: "Csus2", pos: "Open" }, { frets: "x35533", name: "Csus2", pos: "3rd" }],
   "Csus4": [{ frets: "x33011", name: "Csus4", pos: "Open" }, { frets: "x35563", name: "Csus4", pos: "3rd" }],
+  "Cadd6": [{ frets: "x32210", name: "Cadd6", pos: "Open" }],
   // ─── Power chords ───
   "A5":  [{ frets: "x022xx", name: "A5", pos: "Open" }, { frets: "577xxx", name: "A5", pos: "5th" }],
   "D5":  [{ frets: "xx023x", name: "D5", pos: "Open" }, { frets: "x577xx", name: "D5", pos: "5th" }],

@@ -17,6 +17,7 @@ export const level8 = {
       type: "guitar",
       what: "Learn the sus pentatonic scale: A-B-D-E-G. It replaces the minor 3rd (C) from the regular Am pentatonic with the 2nd (B). One note difference creates a completely different world — floating, ambiguous, neither major nor minor. Note: this is a Western approximation of Tuareg guitar scales. The actual Tinariwen sound comes from minor pentatonic played over drone strings, creating a suspended quality. The 'sus pentatonic' label is a useful teaching shorthand.",
       fretboard: { scale: "a-sus-pentatonic", position: 2 },
+      speedLadder: { start: 60, end: 90, increment: 10, bars: 4 },
       steps: [
         { text: "Play Am pentatonic: A-C-D-E-G. Now replace C with B: A-B-D-E-G. Play both scales back to back and listen to the difference.", why: "Hearing the two scales side by side reveals how much one note changes the entire character. C is the minor 3rd — dark, bluesy, definitive. B is the 2nd — open, ambiguous, floating." },
         { text: "Play A-B-D-E-G ascending and descending in the 5th fret position. Find the shape — it's close to your pentatonic but the 2nd finger moves one fret down (from the 8th fret on the B string to the 7th).", why: "The new shape is almost the same as pentatonic, which means your fingers will try to play the old pattern. Be deliberate about the B." },

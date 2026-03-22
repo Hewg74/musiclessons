@@ -68,7 +68,7 @@ export const level13 = {
       ],
       feel: "Object writing should feel like a faucet that starts rusty and then runs clear. The first minute is cliches. Minutes 4-10 are where the real material lives. Trust the timer.",
       wrong: "If you're editing as you go — crossing out words, restarting sentences — you're defeating the purpose. The rule is: don't stop writing until the timer stops. Quality control comes AFTER, not during.",
-      sarah: "Gene, your trigger words are chosen for your world — salt is the ocean, rust is the old trucks and railings, tide is the rhythm of island life, ember is the fire pit at sunset. These aren't random. They're YOUR sensory anchors.",
+      sarah: "Gene, your trigger words are chosen for your world — salt is the ocean, rust is the old trucks and railings, tide is the rhythm of island life, ember is the fire pit at sunset. These aren't random. They're YOUR sensory anchors. Your lyric DNA from your top 50 songs is ocean, golden hour, travel, warmth, and coastline. Your aesthetic archetype: 'a beautiful day that you know will end.' Use these as trigger words too: sunset, warm rain, golden hour, plumeria, porch, dusk. These aren't just images — they're the emotional vocabulary your music already speaks.",
       recorder: true
     },
 
@@ -268,7 +268,7 @@ export const level13 = {
       ],
       feel: "The blend should feel like mostly talking to a friend, with one moment per verse where the language catches the light and becomes something more. That moment should surprise even you.",
       wrong: "If every line is elevated, it sounds pretentious. If every line is conversational, it sounds flat. The ratio matters: 3 conversational to 1 elevated is the sweet spot. Don't overdo the poetry.",
-      sarah: "Gene, this is YOUR exercise. Your speaking voice IS your singing voice — that's your superpower. The conversational register is your home base. You just need permission to be poetic for one line per verse. That one line is where your songs become art.",
+      sarah: "Gene, this is YOUR exercise. Your speaking voice IS your singing voice — that's your superpower. The conversational register is your home base. You just need permission to be poetic for one line per verse. That one line is where your songs become art. Look at the lyric styles of your favorite artists: DOPE LEMON uses simple, poetic language — mostly one-syllable words. Skinshape's lyrics are minimal and warm. Allah-Las narrate through imagery, not confession. Your lyric voice should match your musical voice: warm, spacious, observational.",
       metronome: 80,
       referencePitches: getPitchRange("E3", "A4"),
       recorder: true

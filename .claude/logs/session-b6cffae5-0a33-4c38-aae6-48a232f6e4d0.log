@@ -147,3 +147,54 @@
     - These songs span genres: indie, surf-rock, psych, reggae, soul, desert blues, folk, afrobeat — adjust your analysis vocabulary accordingly
 
 Those are actually not given by MP3s. You're going to have to scrape them online. You can find them and download them for either the YouTube Or just send Gemini the YouTube link because Gemini can read YouTube links really well. Make sure that if you send a YouTube link it is the exact link and we don't get it wrong.
+[2026-03-22T02:18:23.618Z] gemini might get the chords wrong ultimatye guitar is better for chord keys but everything gemini is good
+[2026-03-22T02:21:33.015Z] <task-notification>
+<task-id>ac29db7595b338170</task-id>
+<tool-use-id>toolu_01N4MiC4viDLi3wHpRhJjQEq</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\b6cffae5-0a33-4c38-aae6-48a232f6e4d0\tasks\ac29db7595b338170.output</output-file>
+<status>completed</status>
+<summary>Agent "Find Surf Hat YouTube link" completed</summary>
+<result>Found it. The video `PGvNt8skb9g` is titled **"Surf Hat" by Surf Hat off the album Surf Hat**, uploaded by the official `@surfhatband` channel.
+
+---
+
+**Result: Found.**
+
+The YouTube URL for "Surf Hat" by Surf Hat is:
+
+**https://www.youtube.com/watch?v=PGvNt8skb9g**
+
+- Title: "Surf Hat" by Surf Hat off the album Surf Hat
+- Channel: Surf Hat (`@surfhatband`)
+- Channel URL: https://www.youtube.com/channel/UCQz8ABc-_n-QJRC3qzpDLrQ
+
+The song is track 1 on their self-titled 2022 album, by the psych-surf trio from Squamish, BC (Jon Allan, Evan Camm, Adam Ravalia). The band's YouTube handle is `@surfhatband` — their website surfhatmusic.com appears to be down, but their channel is live. The video ID `FQFwHuXULAM` that appeared in one earlier search summary was a hallucination by the search AI — the real ID confirmed via the YouTube oEmbed API is `PGvNt8skb9g`.
+
+Sources:
+- [Surf Hat - MINT Talent Group (provided YouTube channel ID)](https://www.minttalentgroup.com/surf-hat)
+- [Surf Hat on Bandcamp — album tracklist](https://surfhat.bandcamp.com/album/surf-hat)
+- [SURF HAT CHORDS by Surf Hat @ Ultimate-Guitar.Com](https://tabs.ultimate-guitar.com/tab/surf-hat/surf-hat-chords-5121190)
+- [Surf Hat | Last.fm](https://www.last.fm/music/Surf+Hat)
+- [Surf Hat | Spotify](https://open.spotify.com/artist/4fFi5poEqNSf7iv0jOwEFy)
+- [Surf Hat is cresting the wave of good vibes | Georgia Straight](https://www.straight.com/music/surf-hat-is-cresting-wave-of-good-vibes)</result>
+<usage><total_tokens>33930</total_tokens><tool_uses>45</tool_uses><duration_ms>228037</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\b6cffae5-0a33-4c38-aae6-48a232f6e4d0\tasks\ac29db7595b338170.output
+[2026-03-22T02:22:48.455Z] <task-notification>
+<task-id>bo7zzrpvi</task-id>
+<tool-use-id>toolu_01R2M6R4PZrCWmLCZ1cDTF5t</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\b6cffae5-0a33-4c38-aae6-48a232f6e4d0\tasks\bo7zzrpvi.output</output-file>
+<status>completed</status>
+<summary>Background command "Analyze Surf Hat via Gemini API" completed (exit code 0)</summary>
+</task-notification>
+Read the output file to retrieve the result: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\b6cffae5-0a33-4c38-aae6-48a232f6e4d0\tasks\bo7zzrpvi.output
+[2026-03-22T02:31:14.617Z] <task-notification>
+<task-id>b3pzehga2</task-id>
+<tool-use-id>toolu_01WqfJrLzAeZow6AwKiEXQT1</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\b6cffae5-0a33-4c38-aae6-48a232f6e4d0\tasks\b3pzehga2.output</output-file>
+<status>completed</status>
+<summary>Background command "Run Gemini analysis on all 19 songs (one at a time, ~5 min each)" completed (exit code 0)</summary>
+</task-notification>
+Read the output file to retrieve the result: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\b6cffae5-0a33-4c38-aae6-48a232f6e4d0\tasks\b3pzehga2.output
+[2026-03-22T05:49:24.111Z] Now that you've written this, and since you are the expert now, can you go deeply into our singer-songwriter track and our guitar track and see from first principles what would be useful to implement and bake into what we have? You have complete freedom to do however deep of an overhaul or change as you want. It could be light or deep or heavy, whatever you want to do. /swarm
+[2026-03-22T06:46:37.870Z] Okay, great. Is that all we needed for singer-songwriter? Also, do we need to change anything for voice? Please spin up multiple agents to figure it out and do another deep dive to see if we missed anything. Also, before you do that... /review

@@ -44,7 +44,7 @@ export const level12 = {
       ],
       feel: "The chorus should feel like taking a deep breath and letting it out. Expansive, released, open. If the verse is intimate conversation, the chorus is singing from a rooftop.",
       wrong: "If the chorus doesn't feel different from the verse, push the contrast harder. Sing louder, higher, with simpler words. If it feels forced, the range jump might be too large — bring it down a step.",
-      sarah: "Gene, the chorus is where your voice opens up slightly from the porch register — still relaxed, but with more chest resonance and conviction. Not belting — just more present.",
+      sarah: "Gene, the chorus is where your voice opens up slightly from the porch register — still relaxed, but with more chest resonance and conviction. Not belting — just more present. Try the DOPE LEMON major→minor trick for emotional shift between sections: D→Dm, G→Gm — the major version for the hopeful verse, the minor version for the bittersweet chorus. Same chord, one fret changes the 3rd. The emotional effect is like sunset — beautiful but ending. Use this to create a verse→chorus emotional shift that the listener feels in their gut.",
       metronome: 85,
       referencePitches: getPitchRange("B3", "E4"),
       volumeMeter: true,
@@ -122,7 +122,7 @@ export const level12 = {
       ],
       feel: "This should feel like X-raying a building — you're seeing the steel beams behind the beautiful facade. Once you see the structure, you can't un-see it. Every song becomes a lesson.",
       wrong: "If you're just vibing to the song without counting bars and noting dynamics, you're listening for pleasure, not analysis. Use a stopwatch. Write things down. Analysis requires precision.",
-      sarah: "Gene, DOPE LEMON songs sound effortless but they're meticulously structured. Angus Stone knows exactly when to drop the hook, when to peak, when to pull back. Steal his blueprints.",
+      sarah: "Gene, DOPE LEMON songs sound effortless but they're meticulously structured. Angus Stone knows exactly when to drop the hook, when to peak, when to pull back. Steal his blueprints. Try deconstructing Sol Del Sur: 16-bar syncopated intro with the C#m-B-F# cycle, then staccato verses with left-hand choking on the offbeats, then the wide-open legato chorus at 0:50 where the E chord appears for the first time creating lift, then an instrumental break with a surf-rock lead riff, then the final chorus. The architecture IS the dynamics — the contrast between choking and letting ring is the whole song.",
       checklist: true,
       phraseForm: { pattern: ["V", "V", "Ch", "V", "Ch", "Br", "Ch"], barsPerSection: [8, 8, 8, 8, 8, 4, 8] }
     },

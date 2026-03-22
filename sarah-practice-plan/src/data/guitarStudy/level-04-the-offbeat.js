@@ -36,6 +36,7 @@ export const level4 = {
       wrong: "If your strum lands at the same moment as your foot tap, you're on the downbeat — the most common error. Slow down to 60 BPM and exaggerate the gap. Another error: letting the muted strum ring too long. The skank is SHORT — hit and immediately return. Chik, not chhhhhh.",
       sarah: "Gene, this is the rhythm that makes your body move differently. Reggae doesn't hit you on the \"1\" like rock does — it catches you in the spaces between. The Elovaters, Susto, Pepper — every reggae and reggae-rock band you love lives on this upbeat pulse. Once your arm learns this bounce, it never forgets.",
       metronome: 70,
+      speedLadder: { start: 70, end: 90, increment: 10, bars: 4 },
       levelUp: "16 bars of clean muted skanks at 85 BPM. Foot taps on downbeats, hand strikes on upbeats only. No accidental downbeat strums.",
       rhythmCells: [
         { name: "Offbeat Skank", pattern: [0.5, 0.5], description: "Strum on the ands only — rest on beats, hit on upbeats" },
@@ -111,7 +112,7 @@ export const level4 = {
       ],
       feel: "Light, bouncy, island vibes — like swaying at a beach festival. The Elovaters' reggae is friendly and warm, not heavy. Your skank should match that energy — relaxed, smiling, unhurried.",
       wrong: "If the F chord is still buzzing, use the simplified version (top 4 strings only). If the skank feels stiff on these open chords, you might be gripping too hard — reggae requires a light touch so you can release quickly for the mute.",
-      sarah: "Gene, Gimme Love is your #10 most-played track. It's beautiful proof that reggae works with the simplest chords — F, C, G in the key of C. You learned these shapes in Level 1. Now they're reggae. Same shapes, completely different world. That's what rhythm does to harmony.",
+      sarah: "Gene, Gimme Love is your #10 most-played track. It's beautiful proof that reggae works with the simplest chords — F, C, G in the key of C. You learned these shapes in Level 1. Now they're reggae. Same shapes, completely different world. That's what rhythm does to harmony.\n\nHere's something interesting — the original Elovaters recording is actually fingerpicked, not strummed. The guitarist uses thumb bass on the downbeat with syncopated finger plucks and percussive string slaps on beats 2 and 4. You'll learn that fingerpicked version in Level 11. For now, the strummed reggae interpretation works perfectly as your offbeat technique vehicle — same chords, same groove, different right-hand approach.",
       metronome: 85,
       recorder: true,
       levelUp: "Play F-C-G-C skank at 85 BPM for 3 full cycles with clean offbeat rhythm, relaxed muting, and no downbeat slips."
@@ -139,7 +140,7 @@ export const level4 = {
       ],
       feel: "The B-F#-E skank should feel warm and unhurried — a lazy Sunday afternoon. The barre chords give it a thicker, more robust sound than the open-chord Gimme Love. If you're tense, you're gripping too hard.",
       wrong: "If barre chords buzz, focus on clean fretting before speed — a buzzy skank sounds worse than a slow clean one. If changes break the rhythm, hold each chord for 8 bars instead of 4. If B barre is impossible right now, use B7 and come back to the full barre after Level 5.",
-      sarah: "Gene, Jah Werx is in your top 30. Susto takes the classic reggae template and gives it an indie twist — same B-F#-E that Bob Marley would recognize, but with Susto's rootsy energy. This exercise is your bridge between the open-chord reggae of Gimme Love and the barre-heavy reggae-rock of Level 7 (Pepper, Slightly Stoopid).",
+      sarah: "Gene, Jah Werx is in your top 30. Susto takes the classic reggae template and gives it an indie twist — same B-F#-E that Bob Marley would recognize, but with Susto's rootsy energy. This exercise is your bridge between the open-chord reggae of Gimme Love and the barre-heavy reggae-rock of Level 7 (Pepper, Slightly Stoopid).\n\nFun fact — listen to the actual Susto recording and you'll hear something surprising. Jah Werx isn't a reggae skank at all. It's a driving acoustic tune at 114 BPM with continuous 16th notes and bright, jangly chords ringing fully into each other. You're learning the B-F#-E progression here as a reggae exercise because it teaches you the offbeat chop on barre chords — but in Level 7, you'll revisit these same chords at Susto's actual tempo and feel. Same three chords, completely different technique.",
       metronome: 85,
       recorder: true,
       levelUp: "Play B-F#-E-B skank at 85 BPM for 3 cycles with clean barre chords, consistent offbeat rhythm, and audible mutes. Can switch between this and Gimme Love (F-C-G) without stopping."
@@ -184,7 +185,7 @@ export const level4 = {
       ],
       feel: "1999 should feel hazy and sun-bleached — like watching waves through half-closed eyes. The reggae skank provides the groove, but the surf influence softens everything. The G#m chord should feel like a cool shadow passing over warm sand — brief, moody, then back to sunshine.",
       wrong: "If the G#m barre is buzzing badly, check your technique: bony edge of the index finger, thumb behind the neck (not wrapped over), slight elbow tuck. If the chord changes are choppy, slow to 75 BPM and give each chord 8 bars instead of 4. If the feel is too stiff and precise, loosen up — reggae lives slightly behind the beat, not on top of it.",
-      sarah: "Gene, 1999 is such a vibe — NO CIGAR takes that classic reggae bounce and drenches it in reverb and coastal haze. It's the perfect bridge between the roots reggae of Gimme Love and the more polished reggae-rock you'll get into later. The G#m is the key — it adds that touch of melancholy that keeps the song from being just a party jam.",
+      sarah: "Gene, 1999 is such a vibe — NO CIGAR takes that classic reggae bounce and drenches it in reverb and coastal haze. It's the perfect bridge between the roots reggae of Gimme Love and the more polished reggae-rock you'll get into later. The G#m is the key — it adds that touch of melancholy that keeps the song from being just a party jam.\n\nThe actual NO CIGAR recording is faster than you might expect — around 108 BPM with a funky 16th-note rhythm and heavy left-hand muting. The verses are tightly chopped and staccato, then the choruses open up slightly. There's even a melodic guitar solo with expressive whole-step bends. You're learning the offbeat foundation here, but this song has layers you'll come back to.",
       metronome: 85,
       recorder: true,
       levelUp: "E-B-F#-G#m skank progression at 85 BPM for 3 cycles with clean barre chord transitions, consistent offbeat rhythm, and ghost notes on at least 50% of the bars."
@@ -238,10 +239,36 @@ export const level4 = {
       ],
       feel: "It's a Love should feel bright, bouncy, and energetic — like the musical equivalent of running downhill. The faster skanks have more urgency than the relaxed 85 BPM roots feel. Your whole body should be moving — this isn't mellow hammock reggae, it's get-up-and-dance ska-reggae.",
       wrong: "If the skanks are mushy at 112 BPM (no clear mute, chords running into each other), your mute hand is too slow for the tempo. Drop to 95 BPM and practice the short-chop mute until it's instant. If barre chord changes are crashing the rhythm, simplify the progression to A-E-B (dropping C#m and F#) until the skank is solid, then add barres back one at a time.",
-      sarah: "Gene, Baskervillain's vibe is upbeat reggae-ska with surf energy — it's the point where reggae meets the beach party. The five-chord progression gives it more harmonic sophistication than the three-chord templates, and the 112 BPM tempo puts real demands on your skank technique. This is the exercise where your skank has to WORK, not just cruise.",
+      sarah: "Gene, Baskervillain's vibe is upbeat reggae-ska with surf energy — it's the point where reggae meets the beach party. The five-chord progression gives it more harmonic sophistication than the three-chord templates, and the 112 BPM tempo puts real demands on your skank technique. This is the exercise where your skank has to WORK, not just cruise.\n\nThe secret of It's a Love is extreme dynamic contrast. The verse is sparse — slow downstrokes, individual string picking, clean tone with heavy chorus/vibrato modulation creating a wobbly, underwater sound. Then the chorus ERUPTS — driving aggressive 8th notes through thick fuzz. That clean-to-fuzz switch is the emotional engine. When you practice this, exaggerate the contrast: whisper in the verse, shout in the chorus.",
       metronome: 112,
       recorder: true,
       levelUp: "Full A-E-C#m-B-F# progression at 110+ BPM with clean skanks, immediate mutes, and no rhythmic collapse during barre chord transitions."
+    },
+
+    {
+      id: "gs-4-8b",
+      time: 8,
+      title: "Song Study: Surf Hat — Dominant 7th Skank",
+      type: "guitar",
+      songRef: {
+        title: "Surf Hat — Surf Hat",
+        youtubeId: "PGvNt8skb9g",
+        note: "Reggae/ska off-beat chops with dominant 7th voicings. Clean tone with chorus/vibrato effect and spring reverb. Listen for the tight left-hand muting."
+      },
+      what: "Surf Hat by Surf Hat uses E7-A7-B7-F#7 — all dominant 7th chords. These voicings add a bluesy, unresolved color to the reggae/ska off-beat chops you've been learning. The strum is the same offbeat skank, but the chord shapes are new.",
+      setup: "Electric guitar. Clean tone with chorus or vibrato effect if available. Spring reverb. Metronome at 85 BPM.",
+      chordVoicings: { chords: ["E7", "A7", "B7", "F#7"] },
+      steps: [
+        { text: "Learn the four dominant 7th shapes: E7 (020100), A7 (x02020), B7 (x21202), F#7 (242322). Play each one slowly, making sure every string rings clean.", why: "Dominant 7th chords add the flatted 7th scale degree, creating tension that never fully resolves. That's why they sound bluesy and restless — perfect for reggae and surf." },
+        { text: "Play the off-beat skank on E7 only. Mute on the downbeat, strum on the 'and.' Focus on the left-hand squeeze-and-choke technique: press the chord to sound it, immediately relax to kill the ring.", why: "The squeeze-and-choke is what makes reggae guitar percussive. Surf Hat's rhythm guitarist chops every chord staccato — the chord barely rings before it's muted, creating tight 'chk' sounds." },
+        { text: "Add ghost strums: play muted 'chukka' scratches on the downbeats between your voiced upbeat chords. Your right hand moves in continuous 8th notes — the downbeats are muted scratches, the upbeats are voiced chords.", why: "Ghost strums fill the rhythmic space between your chord stabs. They create a continuous percussive bed underneath the melody — the guitar becomes a rhythm instrument." },
+        { text: "Chain all four chords: E7 (4 bars) → A7 (4 bars) → B7 (2 bars) → F#7 (2 bars) → E7. Maintain the staccato skank throughout. Every chord change should be immediate — slide into the new shape from one fret below if needed.", why: "The slide-into-chord technique (approaching from one fret below) is how reggae and ska guitarists make chord changes sound smooth even at speed. It also gives each chord a slight 'wah' attack." }
+      ],
+      feel: "Tight, percussive, and bouncy. Like a spring-loaded rhythm machine. The chorus effect adds a wobbly, underwater quality to the clean chops — surf meets reggae.",
+      wrong: "If the chords ring out too long, you're not muting fast enough — squeeze and immediately release. If the ghost strums are louder than the voiced chords, lighten up on the downbeats. If the F#7 barre buzzes, check your index finger is rolling onto its bony side.",
+      sarah: "Gene, Surf Hat is a psych-surf trio from Squamish, BC. Their self-titled track is the perfect bridge between the reggae skank you've been learning and the surf sound you love. The dom7 voicings (E7, A7, B7, F#7) give it that unresolved, bluesy tension that straight major/minor chords don't have. And listen for the lead guitar — tremolo picking and whammy bar dips over the rhythm chops. That's Level 10+ territory, but the rhythm part is yours right now.",
+      metronome: 85,
+      levelUp: "Play E7-A7-B7-F#7 skank at 85 BPM with clean chord changes, consistent ghost strums, and immediate left-hand muting on every chord. No ringing — every chord is chopped short."
     },
 
     // ─── PHASE 4: DEEPER RHYTHM & IMPROV ───
@@ -280,6 +307,7 @@ export const level4 = {
         { name: "Dub Reggae 85", src: "/dub-reggae-85.mp3" }
       ],
       chordVoicings: { chords: ["Am"] },
+      fretboard: { scale: "am-pentatonic", position: 1 },
       steps: [
         { text: "Start the Reggae One-Drop track. Play Am skank at medium volume for 4 bars. Then drop to ghost notes only for 4 bars — muted clicks, barely audible, just enough to keep the rhythm alive. Then come back to full skanks, slightly louder than before. Feel the contrast.", why: "Dynamic drops and returns are how reggae guitarists create tension and release within a single chord. Dropping to ghost notes creates a vacuum that makes the return to full skanks feel powerful. This is arrangement through dynamics, not harmony." },
         { text: "Try a volume swell: start each 8-bar phrase at whisper volume and gradually increase to full volume by bar 8. Then suddenly drop back to whisper. The chord never changes, the rhythm never changes — only volume. The effect is like waves building and crashing.", why: "Volume swells on a single chord with a constant rhythm create a hypnotic, trance-like quality — the same technique used in dub reggae. The repetition of the swell pattern induces a meditative state in both player and listener." },

@@ -106,7 +106,7 @@ export const level7 = {
       ],
       feel: "This should feel like sitting around a campfire in the Sahara — the heat, the stars, the endless horizon. The music doesn't go anywhere. It just exists.",
       wrong: "If your improvisation sounds busy or like it's 'going somewhere,' you've missed the desert blues aesthetic. Strip away. Fewer notes. More repetition. More space.",
-      sarah: "Gene, Tinariwen is in your top rotation. Hermanos Gutiérrez lives in this same sonic space. This is where your cinematic, sparse side comes out — let the emptiness speak.",
+      sarah: "Gene, Tinariwen is in your top rotation. Hermanos Gutiérrez lives in this same sonic space. This is where your cinematic, sparse side comes out — let the emptiness speak. Desert blues vocals are raw and undecorated — like talking to someone across a fire. No vibrato, no swells, no drama. And the silences between phrases aren't pauses — they're architectural. 2-4 bars of silence is genre-defining, not something to fill. This connects to the surf-psych vocal float from Vocal Level 8 (v8e4) — both genres suppress vibrato — but desert blues is even more stripped down. No reverb cushion, no breathy softness. Just direct voice and space.",
       metronome: 75,
       referencePitches: getPitchRange("A2", "E4"),
       volumeMeter: true,
@@ -129,7 +129,7 @@ export const level7 = {
       ],
       feel: "This should feel like floating in warm water — your voice surfaces occasionally, then sinks back. The space is the music. You're adding seasoning, not the main dish.",
       wrong: "If you're singing too much or too melodically, you've missed the dub aesthetic. Fewer notes. More space. Voice as texture, not melody.",
-      sarah: "Gene, Pepper and Slightly Stoopid's dub side lives here — space, echo, groove. Your voice becomes part of the production, not the star. Let the backing track breathe.",
+      sarah: "Gene, Pepper and Slightly Stoopid's dub side lives here — space, echo, groove. Your voice becomes part of the production, not the star. Let the backing track breathe. Your reggae vocal delivery needs three things: (1) each syllable is a rhythmic event locked to the offbeat, (2) slight nasal focus — think of the sound living in your nose/mask area so you cut through the bass, (3) call-and-response structure — sing a short phrase, then STOP for a full bar. Let the riddim breathe. This comes from Vocal Level 4's behind-the-beat work (v4e3) and Vocal Level 8's reggae texture (v8e3).",
       metronome: 85,
       referencePitches: getPitchRange("A2", "E4"),
       volumeMeter: true,
@@ -489,7 +489,7 @@ export const level7 = {
       ],
       steps: [
         { text: "Round 1 — Reggae: offbeat chop, Am-C-G, 85 BPM. Vocal style: laid-back, choppy phrases, lots of space. All skills: dynamics, emotion, vowels, chord navigation. 3 minutes, record.", why: "Reggae is your comfort zone — start here to warm up. But now integrate everything: dynamic shifts, emotional color, vowel variety, rhythmic play. Not just reggae phrasing — full expression." },
-        { text: "Round 2 — Surf: jangle strum, G-Em-C-D, 120 BPM. Vocal style: breathy, flowing, riding the shimmer. All skills at higher tempo. 3 minutes, record.", why: "Surf is faster — your skills must work at a higher tempo while maintaining quality. If any skill drops out at 120 BPM, it's not fully automated yet." },
+        { text: "Round 2 — Surf: jangle strum, G-Em-C-D, 120 BPM. Vocal style: breathy, flowing, riding the shimmer. Suppress vibrato. Keep your voice at mezzo-piano — quieter than the guitar. Let reverb carry the tone. Your voice is one color in the painting, not the subject. Float behind the beat. Your voice sits INSIDE the guitar reverb, not on top of it — this is the surf-psych vocal float from Vocal Level 8 (v8e4). All skills at higher tempo. 3 minutes, record.", why: "Surf is faster — your skills must work at a higher tempo while maintaining quality. If any skill drops out at 120 BPM, it's not fully automated yet." },
         { text: "Round 3 — Soul: fingerpicked Am-Dm-G-C, 80 BPM. Vocal style: warm, groove-locked, rhythmic. Include the Dm chord (with F). 3 minutes, record.", why: "Soul demands the most rhythmic precision. Three genres back-to-back proves your voice can shift context while maintaining full integration." },
         { text: "Listen to all three recordings. Can you hear how your voice becomes three different singers depending on the genre? That's improvisation fluency.", why: "Genre-shifting is the ultimate proof of fluency. You're not imitating — you're responding to context with your full skill set." }
       ],

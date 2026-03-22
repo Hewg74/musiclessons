@@ -52,7 +52,7 @@ export const level7 = {
         { text: "At 75 BPM, play the sequence: D#5 (2 hits) → A#5 (2 hits) → F#5 (2 hits, let ring). Downstrokes only, palm muted on the hits, lift the mute on the last F#5 to let it sustain. The slide from fret 11 down to fret 2 should feel like a controlled descent.", why: "Starting at half speed lets you nail the slides. The distance from fret 11 to fret 6 to fret 2 is big — your hand travels the whole neck. At half speed, you build the spatial memory for where each chord lives." },
         { text: "Bump to 100 BPM. Same pattern but tighter — the slides need to be faster, the hits sharper. Add a slight accent on the first hit of each power chord. The rhythm should start to feel punchy and aggressive.", why: "100 BPM is closer to the feel — the riff starts to have momentum. The accents create the rhythmic contour that makes it recognizable as a riff, not just three chords." },
         { text: "At 120 BPM, add the transition: play the riff twice (D#5–A#5–F#5, D#5–A#5–F#5), then drop into a clean skank on E for 4 bars. This is the Stormtrooper structure — crunchy intro into reggae verse.", why: "The riff-to-skank transition is the Stormtrooper moment. The drop from heavy distortion to clean skank creates a massive dynamic contrast — it's the reason the song works live." },
-        { text: "Target tempo: 140-150 BPM. Only attempt this after you can play it cleanly at 120. At full speed, the riff becomes a burst of energy — quick, aggressive, then the relief of the reggae groove. Record your best take.", why: "150 BPM is fast for a power chord riff with big slides. If you can play it clean at 140, you're there — the last 10 BPM is feel, not fundamentals. Sleep on it if you plateau." }
+        { text: "Target tempo: 140-150 BPM. Only attempt this after you can play it cleanly at 120. At full speed, the riff becomes a burst of energy — quick, aggressive, then the relief of the reggae groove. Record your best take.", why: "150 BPM is fast for a power chord riff with big slides. If you can play it clean at 140, you're there — the last 10 BPM is feel, not fundamentals. If you plateau at a certain BPM, stop and sleep on it. This isn't a figure of speech — motor learning research shows that fast riff accuracy improves 10-13% overnight. Your brain consolidates the finger patterns during sleep. Practice, sleep, test tomorrow." }
       ],
       feel: "The riff should feel EXPLOSIVE — like a wave crashing. Three quick punches down the neck, each one lower and heavier. When you drop into the clean skank afterward, it should feel like surfacing from underwater — sudden calm after intensity.",
       wrong: "If the slides are sloppy (buzzing, landing on wrong frets), slow WAY down. The most common error is not lifting your fingers enough during the slide — they drag on the frets and create noise. Lift slightly, slide, plant firmly. If you can't get it clean at 75 BPM, spend a full session there before speeding up.",
@@ -237,6 +237,33 @@ export const level7 = {
       tracks: [{ name: "Reggae Rock 100", src: "/reggae-rock-100.mp3" }],
       recorder: true,
       levelUp: "Can play a full 40-bar SoCal piece (skank verse → power chord chorus → pentatonic solo break → final chorus → skank outro) at 100 BPM with clean transitions between all three roles — recorded in one take."
+    },
+    {
+      id: "gs-7-11",
+      time: 8,
+      title: "Jah Werx Revisited — Driving Acoustic 16ths",
+      type: "guitar",
+      songRef: {
+        title: "Jah Werx — Susto",
+        youtubeId: "TKd2TXAS2fE",
+        note: "BPM 114. Driving continuous 16th notes — NOT reggae despite sharing the B-F#-E progression from Level 4."
+      },
+      what: "In Level 4, you learned Susto's B-F#-E as a reggae skank. Now hear what the actual recording sounds like: driving continuous 16th notes at 114 BPM, with chords ringing fully into each other. Same three chords, completely different technique. This is the power of feel — the chord progression doesn't change, but the rhythmic approach transforms it from chill reggae to urgent indie rock.",
+      setup: "Acoustic guitar (preferred) or electric clean with bright tone. Metronome at 90 BPM to start.",
+      steps: [
+        { text: "Start the continuous 16th-note strum: D-U-D-U-D-U-D-U, every note even. Your arm moves in a constant, rapid pendulum. No pauses, no ghost strums — every stroke hits the strings. Play on B major only until the motion is automatic.", why: "This is the opposite of reggae. In Level 4, you learned to strum ONLY on upbeats with muting between. Here, every single 16th note is voiced. The arm never stops and never misses. This continuous motion is the foundation of driving acoustic rock." },
+        { text: "Add dynamic accents: while maintaining the constant 16th-note strum, hit beats 1 and 3 harder. The upbeats stay lighter. Accent > light > light > light, accent > light > light > light. The strumming arm keeps the same speed — only the FORCE changes.", why: "Accenting the downbeats within a constant 16th-note strum creates the driving, urgent feel of Jah Werx. This is how Susto builds energy without changing the pattern — the contrast between loud and soft within the same motion." },
+        { text: "Now let the chords RING. Unlike the reggae chop where you mute immediately, here you hold the B shape and let it sustain fully until the F# arrives. The chords overlap slightly — the tail of B bleeds into the start of F#. That legato overlap is the warmth.", why: "Legato chord transitions create a flowing, connected sound. In reggae, each chord is an isolated stab. In driving acoustic, the chords form a continuous wall of sound. Same progression, opposite philosophy." },
+        { text: "Chain B-F#-E at 90 BPM with continuous 16ths and accented downbeats. Then increase to 100, then 110, aiming for the recording's 114 BPM. Record yourself and compare to the original.", why: "The recording is bright, jangly, and aggressive. If yours sounds muddy, try pressing harder on the barre shapes. If it sounds mechanical, vary the accent dynamics slightly — let beats 2 and 4 breathe a little more." }
+      ],
+      feel: "Urgent and driving, like running downhill. Your arm is a constant engine. The chords flow into each other in a warm, legato wash. This should feel completely different from the same chords in Level 4.",
+      wrong: "If it sounds choppy and percussive, you're still muting like reggae — let the chords ring. If your arm gets tired before 60 seconds, you're gripping the pick too hard — relax your wrist. If the F# barre buzzes at speed, isolate that transition at half tempo.",
+      sarah: "Gene, this is one of the most powerful lessons in the curriculum: same three chords, completely different song. In Level 4, B-F#-E was a chill reggae groove. Here it's a driving acoustic anthem. Susto plays it with aggressive, jangly energy — bright acoustic tone, every 16th note voiced, chords ringing and overlapping. The warm overdrive with medium spring reverb gives it body without muddiness. The difference isn't the chords — it's the FEEL. This is why feel matters more than harmony.",
+      metronome: 90,
+      levelUp: "Play B-F#-E with continuous 16th-note strumming at 110+ BPM for 2 minutes without stopping, with clear dynamic accents on beats 1 and 3, and legato chord transitions where each chord rings fully.",
+      recorder: true,
+      speedLadder: { start: 90, end: 114, increment: 8, bars: 4 },
+      chordVoicings: { chords: ["B", "F#", "E"] }
     },
     {
       id: "gs-7-10",

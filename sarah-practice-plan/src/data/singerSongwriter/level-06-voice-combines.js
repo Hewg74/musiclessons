@@ -110,7 +110,7 @@ export const level6 = {
       ],
       feel: "This should feel like patting your head and rubbing your stomach — initially awkward, then suddenly natural. The 'click' moment when both streams lock in independently is unmistakable.",
       wrong: "If the strum simplifies or stops when you start singing something rhythmically complex, the dual-task is overloading your working memory. Simplify the vocal line until the strum stays rock-solid, then gradually add complexity.",
-      sarah: "Gene, this is THE skill. Every song you love — DOPE LEMON, Skinshape, Babe Rainbow — is someone doing this: independent voice and guitar, simultaneously, making it look effortless.",
+      sarah: "Gene, this is THE skill. Every song you love — DOPE LEMON, Skinshape, Babe Rainbow — is someone doing this: independent voice and guitar, simultaneously, making it look effortless. When your voice enters, match the guitar's rhythmic pocket. If the guitar is behind the beat (like your reggae and surf exercises), your voice needs to be behind the beat too. Not just 'relaxed' — deliberately late. This is the behind-the-beat vocal delivery you explored in Vocal Level 4 (v4e3). Angus Stone and Laura Lee both do this: voice and guitar in the same lazy pocket, arriving together just after the click.",
       metronome: 80,
       referencePitches: getPitchRange("A2", "E4"),
       recorder: true

@@ -247,7 +247,7 @@ export const level9 = {
     {
       id: "ss-9-12",
       time: 10,
-      title: "Ugly First Draft",
+      title: "Quick Song Sketch",
       type: "song",
       what: "Write a complete song sketch in 10 minutes flat. Timer on. Two chords, hum until a melody appears, add whatever words come, create a chorus that lifts. Do NOT edit, restart, or judge. The goal is a finished ugly draft — because finished beats perfect. Creative confidence comes from velocity, not polish.",
       tracks: [{ name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" }, { name: "Drums Only — Soul/Funk 90", src: "/drums-soul-funk-90.mp3" }],
@@ -260,7 +260,7 @@ export const level9 = {
       ],
       feel: "This should feel slightly uncomfortable — like sprinting instead of jogging. The time pressure is intentional. You're building the muscle of finishing, not the muscle of perfecting.",
       wrong: "If you stopped and restarted, you broke the rule. The whole point is to push through the cringe and finish something imperfect. Restart the timer and try again — no restarts allowed.",
-      sarah: "Gene, every Skinshape and DOPE LEMON track started as an ugly draft that someone had the guts to finish. Your first draft doesn't need to be good. It needs to be done. You can polish later — but you can't polish something that doesn't exist.",
+      sarah: "Gene, every Skinshape and DOPE LEMON track started as an ugly draft that someone had the guts to finish. Your first draft doesn't need to be good. It needs to be done. You can polish later — but you can't polish something that doesn't exist. And here's a secret from your favorite artists: if your sketch sounds cluttered, take things OUT. Khruangbin's Mark Speer plays 60%+ silence. Tinariwen repeats the same phrase until it transforms. Tommy Guerrero's guitar sings a single melody line, not chords. Space is composition. The breathing room is what makes the music you love feel alive.",
       recorder: true
     },
     {

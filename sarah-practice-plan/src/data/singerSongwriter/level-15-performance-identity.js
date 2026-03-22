@@ -47,7 +47,7 @@ export const level15 = {
       ],
       feel: "The routine should feel like putting on a costume — once you've done it, you're in character. The transition from 'person sitting with a guitar' to 'performer about to play' should be tangible.",
       wrong: "If you're rushing through the routine to get to playing, you're treating it as a chore instead of a tool. Slow down. The routine IS part of the performance.",
-      sarah: "Gene, every musician you admire has some version of this. It's not superstition — it's conditioning. Your body learns that this sequence means 'we're about to play,' and it responds by settling into readiness.",
+      sarah: "Gene, every musician you admire has some version of this. It's not superstition — it's conditioning. Your body learns that this sequence means 'we're about to play,' and it responds by settling into readiness. Performance anxiety reduction techniques consolidate better with sleep between practice sessions. Run through your pre-performance routine today, then test it tomorrow — you'll find it more automatic.",
       checklist: true,
       recorder: true
     },
@@ -285,7 +285,7 @@ export const level15 = {
       ],
       feel: "This should feel like a moment of recognition — looking back at the path and realizing how far you've come. From autopilot strumming to a personal artistic identity.",
       wrong: "If you can't answer these questions, that's data too. It means you haven't found your voice YET — and that's part of the journey. Keep writing, keep performing, keep listening.",
-      sarah: "Gene, 'Coastal Psychedelic Omnivore' is your listening identity. Now you've built your creating identity. They're related but distinct. Your music comes from your taste, and your taste is uniquely yours.",
+      sarah: "Gene, you've now internalized Allah-Las' jangly maj7 shimmer, DOPE LEMON's major→minor emotion shifts, Skinshape's jazz-influenced 7th chords with dub rhythm, Khruangbin's three-note voicings and 60% silence, and Sun Room's syncopated surf strum. Listen to your recorded originals from Level 11. Do they sound like a coherent artist, or five different people? What's YOUR sound — the thread that connects all five? 'Coastal Psychedelic Omnivore' is your listening identity. Now you've built your creating identity. They're related but distinct. Your music comes from your taste, and your taste is uniquely yours.",
       recorder: true,
       levelUp: "You have a personal catalog of original songs, can perform fingerpicked and strummed pieces with dynamic range, improvise lyrics and melodies in real time, prepare with a consistent pre-performance ritual, maintain process focus during performance, polish songs through systematic vertical editing, arrange for duo singing, build a songwriting volume habit, find and cultivate flow state conditions, reduce performance anxiety through graduated audience exposure, and have discovered your musical identity as a singer-songwriter. You are a singer-songwriter."
     }

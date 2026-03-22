@@ -25,7 +25,7 @@ export const level14 = {
       ],
       feel: "Fingerpicking should feel delicate and rolling — a gentle cascade of notes instead of a strum. The nylon-string sound is warm and intimate. Think Nick Drake, Tommy Guerrero.",
       wrong: "If your fingers are catching or producing uneven volume, slow down. Each note should ring clearly with equal volume. If your thumb keeps hitting the wrong bass string, watch it for a while — then close your eyes and feel.",
-      sarah: "Gene, fingerpicking + singing is the hardest integration in this curriculum. Your right hand needs a completely new autopilot. Be patient — this is Level 1 all over again, just with different fingers. For inspiration: Jack Johnson's 'Breakdown' uses Travis-style picking over G-Bm-Em-D (capo 5) with effortless singing on top — that's the end goal. Hollow Coves' 'Coastline' (G-Bm-A, fingerpicked throughout) even uses an alternate tuning (CGDGGD capo 7) for shimmering open-string resonance. And Tommy Guerrero takes it further — his finger-picked instrumentals treat the guitar as a vocalist, singing a melody line that a human voice would sing. Ethio-jazz flavors, Gabor Szabo influence, melody-as-vocalist. All in your DNA.",
+      sarah: "Gene, fingerpicking + singing is the hardest integration in this curriculum. Your right hand needs a completely new autopilot. Be patient — this is Level 1 all over again, just with different fingers. For inspiration: Jack Johnson's 'Breakdown' (your #3 most-played song) uses Travis picking with percussive thumb slaps on beats 2 and 4 — the guitar becomes a one-person rhythm section. Your Travis picking from Guitar Level 11 (gs-11-5) is the engine here. Hollow Coves' 'Coastline' (G-Bm-A, fingerpicked throughout) even uses an alternate tuning (CGDGGD capo 7) for shimmering open-string resonance. And Tommy Guerrero takes it further — his approach is 'melody-as-vocalist,' the guitar sings a single melody line that a human voice would sing. His fingerpicking on a 1980s Japanese Telecaster through warm Fender amps creates a vocal-like tone. Ethio-jazz flavors, Gabor Szabo influence. All in your DNA.",
       metronome: 60,
       speedLadder: { start: 50, end: 80, increment: 5, bars: 8 },
       recorder: true
@@ -156,7 +156,7 @@ export const level14 = {
       ],
       feel: "Travis picking should feel like your thumb has its own brain — it walks the bass independently while your fingers handle the melody. Two parts, one guitarist.",
       wrong: "If your thumb and fingers are playing at the same time on every beat, you're not alternating. The thumb alternates bass notes BETWEEN the finger picks. Slow down until you can hear the independence.",
-      sarah: "Gene, Travis picking is the technique behind Tommy Guerrero's guitar work. It sounds complex but it's just a thumb alternation with a simple finger pattern on top.",
+      sarah: "Gene, Travis picking is the technique behind Tommy Guerrero's guitar work and Jack Johnson's 'Breakdown.' It sounds complex but it's just a thumb alternation with a simple finger pattern on top. Tommy Guerrero's approach is 'melody-as-vocalist' — the guitar sings a single line where the Travis thumb provides the rhythm section and the fingers provide the vocal melody. That's the power of this technique: you become the whole band.",
       metronome: 55,
       speedLadder: { start: 45, end: 70, increment: 5, bars: 4 },
       recorder: true

@@ -58,7 +58,7 @@ export const level2 = {
       ],
       feel: "When you find the behind-the-beat pocket, it feels like floating — like the metronome is pulling you forward but you're choosing to glide. It's the difference between walking urgently and strolling. Your whole body should feel more relaxed.",
       wrong: "If your behind-the-beat strums sound random and sloppy, you're playing late without intention. The difference between 'behind the beat' and 'late' is consistency — behind the beat means EVERY strum is the same distance behind the click. If some strums are on and some are late, that's just messy time. Also: if you're tensing up trying to control the delay, you're overthinking it. Relax your arm and FEEL lazy.",
-      sarah: "Gene, this one exercise is worth the entire level. Angus Stone (DOPE LEMON) plays behind the beat on everything — that's why 'Dope & Smoke' sounds like a warm bath. Mark Speer from Khruangbin is behind the beat constantly — he once said his guitar playing is 60% silence. The Lagoons have that same dreamy, slightly-late quality in 'Close My Eyes.' This is the feel of your entire playlist. Learn it here, use it forever.",
+      sarah: "Gene, this one exercise is worth the entire level. Listening closely to the recording of 'Dope & Smoke' reveals that Angus Stone plays heavily behind the beat — a classic 'slacker' groove where the guitar arrives just after the metronome click. That's why it sounds like a warm bath. Mark Speer from Khruangbin is behind the beat constantly — he once said his guitar playing is 60% silence. The Lagoons have that same dreamy, slightly-late quality in 'Close My Eyes.' This is the feel of your entire playlist. Learn it here, use it forever.",
       metronome: 75,
       tracks: [{ name: "Groove Beat 90", src: "/groove-beat-90.mp3" }],
       recorder: true,
@@ -72,7 +72,7 @@ export const level2 = {
       time: 8,
       title: "Ghost Strums — The Invisible Groove",
       type: "guitar",
-      what: "A ghost strum is when your arm swings through but barely touches the strings — a whisper of a strum that adds rhythmic texture without volume. It's the secret ingredient in every great rhythm guitarist's playing. Your arm NEVER stops moving (constant arm motion), but some swings are full strums and some are ghosts.",
+      what: "A ghost strum is when your arm swings through but barely touches the strings — a whisper of a strum that adds rhythmic texture without volume. It's the secret ingredient in every great rhythm guitarist's playing. Your arm NEVER stops moving (constant arm motion), but some swings are full strums and some are ghosts. The key insight: constant left-hand muted strums ('chucks') keep a 16th-note rhythm flowing between the actual chord strikes — your right hand never stops moving.",
       setup: "Guitar. Metronome at 80 BPM.",
       steps: [
         { text: "Review constant arm motion: strum Am with your arm swinging on every eighth note — down on downbeats, up on upbeats. ALL eight swings hit the strings at full volume. Feel the pendulum. 8 bars.", why: "Constant arm motion is the foundation from Level 1. Your arm is a pendulum that never stops. Ghost strums are just a variation on which swings make sound — the arm motion stays the same." },

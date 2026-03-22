@@ -34,7 +34,7 @@ export const level13 = {
       ],
       feel: "Each style switch should feel like changing the lighting in a room — same furniture, completely different mood. Surf is bright daylight. Reggae is a warm evening. Fingerpicking is candlelight. Power chords are a strobe. Drone is starlight.",
       wrong: "If all five styles sound similar, you're not committing to the transformation. The reggae should be NOTHING like the surf — different tempo, different attack, different feel. If you're blending styles, isolate each one and exaggerate its defining characteristic before trying to switch.",
-      sarah: "Gene, this is the exercise that proves you've internalized everything. Allah-Las, Pepper, Jack Johnson, Tinariwen — these artists sound NOTHING alike, but they all use simple chord progressions. The magic isn't in the chords. It's in the approach. When you can make Am-G-C-D sound like five different bands, you own the full palette.",
+      sarah: "Gene, this is the exercise that proves you've internalized everything. Allah-Las, Pepper, Jack Johnson, Tinariwen — these artists sound NOTHING alike, but they all use simple chord progressions. The magic isn't in the chords. It's in the approach. When you can make Am-G-C-D sound like five different bands, you own the full palette. Each exercise in this curriculum improves ONE specific skill. Now that you're combining skills, focus on your weakest link. If your chord transitions are clean but your strumming pattern falls apart when you add dynamics, isolate the dynamics — don't try to fix everything at once.",
       metronome: 85,
       chordVoicings: { chords: ["Am", "G", "C", "D"] },
       tracks: [
