@@ -309,7 +309,7 @@ export const level10 = {
       ],
       feel: "The marathon should feel like a workout — demanding but exhilarating. Each key switch is a full-body gear change: Am settles into the belly, Em lifts slightly to the chest, G major opens the mask, E major brightens the face, A major warms the whole torso. By the third run, the switches feel like the body shifting rooms rather than the mind switching scales. The hear-feel-choose cycle is running fast enough to handle key changes in real time — this is embodied key independence.",
       wrong: "If you can't make it through all 5 rounds without freezing, extend to 45-second rounds. If one specific key causes a freeze, spend extra time on that key's pentatonic exercises before attempting the marathon again.",
-      sarah: "Gene, this marathon is the culmination of everything. Am was your starting point. Now you have five musical worlds to draw from — minor, relative minor, major, bright major, warm major. You're not an Am singer anymore. You're a singer who happens to love Am.",
+      sarah: "Gene, this marathon is the culmination of everything. Am was your starting point. Now you have five musical worlds to draw from — minor, relative minor, major, bright major, warm major. You're not an Am singer anymore. You're a singer who happens to love Am. End-of-exercise retrieval: after the marathon, set everything down for 60 seconds. Then from silence, audiate and sing a short phrase in each of the five keys from memory. What you remember IS what you've internalized.",
       referencePitches: getPitchRange("E3", "A4"),
       pitchContour: true,
       recorder: true,

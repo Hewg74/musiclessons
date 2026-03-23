@@ -33,7 +33,7 @@ export const level4 = {
         { text: "Final check: have someone watch your foot. Or record a video. Your foot should tap on 1-2-3-4 while your hand strikes BETWEEN those taps. If foot and hand land together, you're on the downbeat. The visual proof is unmistakable.", why: "Self-diagnosis is hard with rhythm. External feedback (video or a friend watching) catches the most common beginner error — accidentally syncing hand and foot on the same beat. Once you see it, you can't unsee it." }
       ],
       feel: "The skank should feel like a bouncy, springy rhythm — your hand pops off the strings on every upstroke like a rubber ball bouncing. There's a lightness to it, a lift. It should make your head bob on the offbeats, not the downbeats. If your body wants to sway, you've got it.",
-      wrong: "If your strum lands at the same moment as your foot tap, you're on the downbeat — the most common error. Slow down to 60 BPM and exaggerate the gap. Another error: letting the muted strum ring too long. The skank is SHORT — hit and immediately return. Chik, not chhhhhh.",
+      wrong: "If your strum lands at the same moment as your foot tap, you're on the downbeat — the most common error. Every guitarist's first offbeat attempt lands on the downbeat. That's your rhythm brain rewiring, not a flaw. Slow down to 60 BPM and exaggerate the gap. Another error: letting the muted strum ring too long. The skank is SHORT — hit and immediately return. Chik, not chhhhhh.",
       sarah: "Gene, this is the rhythm that makes your body move differently. Reggae doesn't hit you on the \"1\" like rock does — it catches you in the spaces between. The Elovaters, Susto, Pepper — every reggae and reggae-rock band you love lives on this upbeat pulse. Once your arm learns this bounce, it never forgets.",
       metronome: 70,
       speedLadder: { start: 70, end: 90, increment: 10, bars: 4 },
@@ -100,7 +100,7 @@ export const level4 = {
         src: "/gimme-love.mp3",
         note: "Listen to the offbeat chop — light, bouncy, island vibes. Three open chords in the key of C. Match the feel."
       },
-      what: "The Elovaters' Gimme Love is a three-chord reggae tune in the key of C: F-C-G. All open chords — no barres needed. This is reggae with chords you already know from Level 1. The magic is applying the offbeat skank to familiar shapes.",
+      what: "The Elovaters' Gimme Love is a three-chord reggae tune in the key of C: F-C-G. All open chords — no barres needed. Listen to the recording twice before playing — first time, feel the island bounce in your body. Second time, ghost the skank rhythm with your strumming arm. This is reggae with chords you already know from Level 1. The magic is applying the offbeat skank to familiar shapes.",
       setup: "Guitar. Metronome at 80 BPM (song is ~86, start slower). Listen to the song reference first.",
       chordVoicings: { chords: ["F", "C", "G"] },
       tracks: [{ name: "Drums Only — Reggae 85", src: "/drums-reggae-85.mp3" }],
@@ -343,7 +343,7 @@ export const level4 = {
         { text: "Record the entire 5-minute jam from start to finish. Listen back. Note: where did the groove feel most locked? Where did chord changes disrupt the flow? Where did you get creative with dynamics? This recording is your Level 4 milestone.", why: "The recording captures your complete reggae vocabulary at this moment. Unlike individual exercises, a continuous jam reveals how well techniques integrate under real-time pressure. It's also deeply satisfying to hear yourself play 5 minutes of solid reggae." }
       ],
       feel: "This should feel like a mini concert — the first time you've played guitar continuously for 5 minutes with intentional dynamics, style shifts, and song changes. The overall arc should feel like a wave: building, cresting, releasing. Your body should be moving throughout.",
-      wrong: "If the jam falls apart during song transitions, practice the transitions in isolation: last 2 bars of B-F#-E (Jah Werx) into first 2 bars of E-B-F#-A (1999). Repeat until smooth. If 5 minutes feels exhausting, your strumming arm is too tense — reggae is relaxed. Shake out your arm at the 2-minute mark if needed. If everything sounds the same (no dynamic variety), consciously force changes every 8 bars.",
+      wrong: "If the jam falls apart during song transitions, practice the transitions in isolation: last 2 bars of B-F#-E (Jah Werx) into first 2 bars of E-B-F#-A (1999). Repeat until smooth. If 5 minutes feels exhausting, your strumming arm is too tense — reggae is relaxed. Shake out your arm at the 2-minute mark if needed. If everything sounds the same (no dynamic variety), consciously force changes every 8 bars. Final 2 minutes: mix in a technique from Levels 2 or 3 — behind-the-beat feel or a palm mute. Interleaving old skills with new keeps everything fresh.",
       sarah: "Gene, this is your first real performance piece. Five minutes of continuous reggae guitar, flowing through three songs from your playlist, with intentional dynamics and energy shifts. This is what it feels like to be a guitarist, not just someone practicing guitar. The Elovaters, Susto, NO CIGAR, Baskervillain — their songs are in your hands now. Play them like they're yours.",
       metronome: 85,
       recorder: true,

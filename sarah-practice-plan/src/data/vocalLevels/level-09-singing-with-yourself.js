@@ -25,9 +25,9 @@ export const level9 = {
         { text: "Try singing a 3rd BELOW instead. For many people, harmonizing below is easier because the melody stays in your headphone while your voice drops underneath it.", why: "Below-harmonizing keeps the original melody as the 'top voice' in your perception. Your brain naturally tracks the highest pitch as the melody, so singing below feels less like fighting." },
         { text: "Rate yourself honestly: (1) Can't hold a different note at all, (2) Can hold it on sustained notes but lose it when melody moves, (3) Can track moving harmony but it takes intense concentration, (4) Harmony feels natural. Write down your number.", why: "This baseline lets you measure progress. Most guitar-playing singers start at level 2 or 3. By the end of this level, you should be at 4." }
       ],
-      feel: "This diagnostic might feel frustrating -- hearing your own voice and trying to sing something different triggers a deep conflict in the auditory system. That conflict IS the thing you're training. Each session makes the two streams more independent.",
-      wrong: "If you can't hold any harmony at all, simplify: hold one sustained note (like E3) while your recording plays a melody. Just holding a drone against a melody is the first step toward independent harmony.",
-      sarah: "Everyone's brain fights them on this at first. The pitch interference effect is real neuroscience -- your auditory cortex literally tries to pull your voice toward whatever pitch it hears. The only way through is practice, and it happens faster than you'd expect.",
+      feel: "This diagnostic might feel frustrating — hearing your own voice and trying to sing something different triggers a deep conflict in the auditory system. That conflict IS the thing you are training. Each session makes the two streams more independent. If the harmony feels 'wrong' even when it is technically correct, your body is updating its map of what singing sounds like — that disorientation is the new neural pathway forming.",
+      wrong: "If you can't hold any harmony at all, simplify: hold one sustained note (like E3) while your recording plays a melody. Just holding a drone against a melody is the first step toward independent harmony. If harmony feels impossible, remember: this is a trainable neural skill, not a talent you either have or do not. The brain builds the dual-stream pathway through repetition. After your last attempt, wait 60 seconds, then try harmonizing one phrase from memory. That retrieval builds the skill faster than continuous repetition.",
+      sarah: "Everyone's brain fights them on this at first. The pitch interference effect is real neuroscience — your auditory cortex literally tries to pull your voice toward whatever pitch it hears. The only way through is practice, and it happens faster than you'd expect. If harmony feels impossible right now, that is exactly how it is supposed to feel at the start. The brain builds the dual-stream capability through exposure, not talent.",
       levelUp: "Can sustain a harmony a 3rd above your recorded melody for at least 4 bars, with no more than 2 pitch-match slip-ups."
     },
     {
@@ -88,7 +88,7 @@ export const level9 = {
       ],
       feel: "Major 3rds should feel like sunlight. Minor 3rds should feel like moonlight. Both are beautiful, and knowing the difference gives you a painter's control over the emotional palette of your harmonies.",
       wrong: "If you can't hear the difference between major and minor 3rds, play them on guitar first: C-E (major) vs C-Eb (minor). Once you hear the difference on guitar, you'll start hearing it in your voice.",
-      sarah: "This is one of those things that sounds like music theory but is actually just ear training in disguise. You don't need to count half steps -- you need to feel the difference between bright and dark. Your ear already knows. We're just making it conscious.",
+      sarah: "This is one of those things that sounds like music theory but is actually just ear training in disguise. You do not need to count half steps — you need to feel the difference between bright and dark. Your ear already knows. We are just making it conscious. Try both colors and choose which one the song wants — that choice is yours, and your instinct is probably right.",
       levelUp: "Can intentionally choose major or minor 3rd harmony over a melody, and a listener can hear the emotional difference between versions."
     },
     {
@@ -109,7 +109,7 @@ export const level9 = {
         { text: "Experiment with dynamics: melody loud, harmony quiet. Then try harmony louder than melody. Then try both at the same volume. Record each version and compare.", why: "Harmony balance changes the feel dramatically. Usually the melody leads, but some songs sound magical when the harmony is louder -- it creates a dreamy, underwater quality. DOPE LEMON does this constantly." }
       ],
       feel: "When all the voices align, it should feel like a choir in your head. The harmonies should feel like they were always meant to be there -- like uncovering something hidden in the melody.",
-      wrong: "If the harmony drifts out of tune, focus on the problem notes. Often it's one or two intervals that need adjustment, not the whole line. If your voice keeps snapping back to the melody, you're experiencing pitch interference -- this is normal and fades with practice.",
+      wrong: "If the harmony drifts out of tune, focus on the problem notes. Often it is one or two intervals that need adjustment, not the whole line. If your voice keeps snapping back to the melody, you are experiencing pitch interference — this is normal and fades with practice. The snapping is not a deficiency; it is your auditory system doing exactly what it was designed to do. You are training it to do something new, and new always feels wobbly at first.",
       levelUp: "Clean 2-voice self-harmony (melody + 3rd) through a complete verse, recorded and listenable."
     },
     {

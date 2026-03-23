@@ -33,7 +33,7 @@ export const level2 = {
         { text: "One-minute changes with dynamics: alternate Am and D, but play Am loud and D quiet. Then switch. Then try Am crescendo into D. Feel how dynamics create movement between chords.", why: "Dynamic contrast between chords is how artists like DOPE LEMON and The Lagoons create emotional weight with simple progressions. The volume change IS the arrangement." }
       ],
       feel: "You should feel like a volume knob on a stereo — able to dial from 1 to 10 smoothly and land anywhere in between. The guitar should feel responsive to your touch, not one-size-fits-all.",
-      wrong: "If your quiet strumming is still pretty loud, you're gripping the pick too tight. Loosen your grip until the pick almost falls out — that's your whisper grip. If your loud strumming sounds harsh and clanky, you're tensing your arm. Shake it out, stay loose, and let the arm swing naturally with more range.",
+      wrong: "If your quiet strumming is still pretty loud, you're gripping the pick too tight. Loosen your grip until the pick almost falls out — that's your whisper grip. If your loud strumming sounds harsh and clanky, you're tensing your arm. Shake it out, stay loose, and let the arm swing naturally with more range. The awkwardness of extreme dynamics is your hand ADAPTING to a wider range — trust the process.",
       sarah: "Gene, listen to how The Lagoons play 'Close My Eyes' — the verse is practically a whisper, then the chorus opens up with full strums. That contrast IS the song. DOPE LEMON does the same thing — 'Dope & Smoke' floats at low volume and lets certain strums pop out like little waves. That's dynamic control. You're building it right here.",
       metronome: 80,
       volumeMeter: true,
@@ -102,7 +102,7 @@ export const level2 = {
         note: "CHORDS NEED EAR VERIFICATION — D-Bm-G-A is our best guess but no tab exists. Listen and confirm the chords match."
       },
       // UNVERIFIED — D-Bm-G-A is a likely progression based on key/genre analysis but has not been confirmed against 2+ independent tab sources
-      what: "The Lagoons' 'Close My Eyes' is a dreamy indie track — we believe the chords are D-Bm-G-A at ~104 BPM, but this hasn't been confirmed by a tab source. Hit play above, listen, and verify the chords match before learning them. The magic is in the behind-the-beat feel and the ghost strums that make it float.",
+      what: "The Lagoons' 'Close My Eyes' is a dreamy indie track — we believe the chords are D-Bm-G-A at ~104 BPM, but this hasn't been confirmed by a tab source. Hit play above and listen twice — first time, absorb the feel and let your fretting hand ghost the chord shapes. Second time, play along. Your motor system rehearses during focused listening. Verify the chords match before learning them. The magic is in the behind-the-beat feel and the ghost strums that make it float.",
       setup: "Guitar. Listen to the song first — verify chords. Metronome at 80 BPM (learn slow, play up to 104).",
       steps: [
         { text: "Learn the four chords in isolation: D, Bm, G, A. If Bm is new, use the easy version (x24432) — three fingers, no full barre needed yet. One-minute changes: D↔Bm, Bm↔G, G↔A. Count your changes. Target: 20+ per minute for each pair.", why: "One-minute changes build the muscle memory for transitions before you worry about feel. The D-Bm transition is the trickiest — your index finger becomes the anchor. Getting 20+ per minute means the transitions are automatic enough to add groove." },
@@ -190,7 +190,7 @@ export const level2 = {
       wrong: "If your bends are pitchy (somewhere between the starting note and target), you're not pushing hard enough or you don't have the target note in your ear. ALWAYS play the target note first, memorize it, THEN bend. If your fingers hurt after 5 minutes, you're gripping too hard or not using supporting fingers. Take a break — bending builds hand strength over time, and your brain consolidates the skill during sleep.",
       sarah: "Gene, bending is what makes the guitar emotional — it's the closest the instrument gets to the human voice. When you hear those Khruangbin melodies that seem to float and sigh? Mark Speer bends constantly. When Tinariwen's guitar wails across the desert? Quarter-tone bends and half-step bends. Ariel Pink's 'Baby' has those wonky, slightly-bent notes that make the guitar sound like it's talking. Start with accuracy — match the target note every time. The expressive stuff comes once you have control.",
       tracks: [{ name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }],
-      levelUp: "Can consistently bend a half-step and a whole-step to match the target pitch — checked by playing the target note, then bending to match, 10 out of 10 accurate."
+      levelUp: "Can consistently bend a half-step and a whole-step to match the target pitch — checked by playing the target note, then bending to match, 10 out of 10 accurate. Retrieval check: set the guitar down for 60 seconds, then bend to the target pitch from memory without playing the reference first."
     },
 
     // ─── SONG STUDY: BABY ───

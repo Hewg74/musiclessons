@@ -23,8 +23,8 @@ export const level1 = {
         { text: "If both tests passed cleanly for 2+ minutes each: skip to Level 2. If either broke, work through Level 1 — the exercises below will get you there fast.", why: "Honest assessment saves time. Skipping when you're ready is smart. Skipping when you're not is costly." }
       ],
       feel: "This should feel like a checkup, not a test. There's no failure — just information about where to start.",
-      wrong: "If you 'mostly' passed but had a few hiccups, stay in Level 1. 'Mostly autopilot' isn't autopilot. The bar is zero breaks during the conversation.",
-      sarah: "Gene, you've been working through Guitar Study, so your fretting hand has development. This test reveals whether that development has reached the autopilot stage. Be honest with yourself.",
+      wrong: "If you 'mostly' passed but had a few hiccups, stay in Level 1. 'Mostly autopilot' isn't autopilot. The bar is zero breaks during the conversation. If this feels awkward, that's the growth zone — not a sign you can't do this.",
+      sarah: "Gene, you've been working through Guitar Study, so your fretting hand has development. This test reveals whether that development has reached the autopilot stage. You're not learning to be a musician — you already ARE one. This is just calibrating where to focus next.",
       metronome: 90
     },
     {
@@ -41,8 +41,8 @@ export const level1 = {
         { text: "Random order: have someone call out chords, or shuffle them in your head. Switch on beat 1 of each bar.", why: "Muscle memory must work for any transition, not just practiced sequences." }
       ],
       feel: "Each chord change should feel like stepping, not jumping. Your fingers move as a unit, not one at a time. The chord lands on the beat, not after it.",
-      wrong: "If there's a gap between chords (silence where the change happens), your fingers are moving too slowly. If you have to look at your fretting hand, the shapes aren't in muscle memory yet. Slow down and build back up.",
-      sarah: "Gene, you've been working through the Guitar Study — your fretting hand is developing. This level is about making open chords so automatic they become invisible. That's when singing gets possible.",
+      wrong: "If there's a gap between chords (silence where the change happens), your fingers are moving too slowly. If you have to look at your fretting hand, the shapes aren't in muscle memory yet. Slow down and build back up. If this feels clumsy, that's the growth zone — your fingers are building new pathways.",
+      sarah: "Gene, you've been working through the Guitar Study — your fretting hand is developing. This level is about making open chords so automatic they become invisible. That's when singing gets possible. Worth trying: end each session on the transition that felt easiest — leave your fingers with a win.",
       metronome: 90,
       levelUp: "All five chord transitions clean at 90 BPM, random order, 4 times through without a missed change."
     },
@@ -60,8 +60,8 @@ export const level1 = {
         { text: "Once you can talk and strum for 2 minutes straight, try describing something more complex — tell a story, explain how to catch a wave.", why: "More complex speech demands more cognitive load. If the strum holds, you're ready for voice integration." }
       ],
       feel: "When it works, the strumming feels like walking — you don't think about it. Your attention is on what you're saying, and your right hand just keeps going.",
-      wrong: "If you catch yourself stopping mid-sentence to focus on a chord change, or your strum pattern simplifies unconsciously, the guitar part hasn't reached autopilot yet. That's not failure — it's information. Keep drilling the chord changes.",
-      sarah: "This is the most important exercise in the entire curriculum. Everything that follows depends on passing this test. Be honest with yourself — don't fake it.",
+      wrong: "If you catch yourself stopping mid-sentence to focus on a chord change, or your strum pattern simplifies unconsciously, the guitar part hasn't reached autopilot yet. That's not failure — it's the growth zone. Your brain is building a new motor program, and that takes repetition across days, not hours.",
+      sarah: "This is the most important exercise in the entire curriculum. Everything that follows depends on passing this test. Be honest with yourself — and remember, wherever you are right now is exactly the right starting point. The fact that you're here means you're already doing the work.",
       metronome: 90
     },
     {
@@ -95,9 +95,9 @@ export const level1 = {
         { text: "Loop Em for 2 minutes. Don't think about it. Zone out. If you can daydream while chopping, it's autopilot.", why: "Reggae feel is all about relaxation. If you're tense or concentrating, the groove is wrong." },
         { text: "Now try Am. Then switch Em (4 bars) → Am (4 bars). The chop pattern doesn't change — only the chord shape does.", why: "The right hand stays constant while the left hand changes. This is the foundation of singing over reggae guitar." }
       ],
-      feel: "The reggae chop should feel lazy and relaxed — behind the beat, not on top of it. Your right hand bounces off the strings. Think Pepper, Slightly Stoopid, The Hip Abduction.",
+      feel: "The reggae chop should feel lazy and relaxed — behind the beat, not on top of it. Your right hand bounces off the strings. Think Pepper, Slightly Stoopid, The Hip Abduction. Always end on a rep that felt good — however small. Your brain encodes the ending and applies it to the whole session.",
       wrong: "If the chop sounds heavy or sustained, you're pressing too hard or holding the chord too long. It should be staccato — short, sharp, and bouncy. If your timing is stiff, you're thinking too much — let the metronome carry you.",
-      sarah: "Gene, reggae is your genre. This chop is going to be the easiest strum pattern to sing over because it only uses upstrokes on the offbeats. Your voice naturally fills the beats where the guitar is silent.",
+      sarah: "Gene, reggae is YOUR genre — this chop is going to be the easiest strum pattern to sing over because it only uses upstrokes on the offbeats. Your voice naturally fills the beats where the guitar is silent. Pick this track because it calls to you, not because it's assigned.",
       tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }],
       metronome: 85
     },
@@ -114,7 +114,7 @@ export const level1 = {
         { text: "Switch to Em for 4 bars, same pattern. Then G (4) → Em (4) → C (4) → D (4). The jangle never stops.", why: "Chord changes happen inside the continuous strum. Your left hand moves while your right hand keeps going." },
         { text: "Zone-out test: can you jangle for 3 minutes without thinking about it? Put on an Allah-Las track and strum along.", why: "If you can match the feel of a recording while strumming, you've internalized the texture." }
       ],
-      feel: "The jangle should shimmer — it sounds like sunlight on water. Your right hand is a pendulum, never stopping. The sound washes continuously, with chord changes flowing through without breaks.",
+      feel: "The jangle should shimmer — it sounds like sunlight on water. Your right hand is a pendulum, never stopping. The sound washes continuously, with chord changes flowing through without breaks. End each session on a moment that felt good — even just one bar of clean jangle.",
       wrong: "If the strumming sounds choppy or stops between chord changes, you're resetting your right hand at each change. The right hand NEVER stops — it's a perpetual motion machine. If it sounds aggressive, lighten your touch.",
       sarah: "This is the sound of your favorite music, Gene. When you can jangle on autopilot, you've got the right hand for everything from Allah-Las to Babe Rainbow to Sun Room.",
       tracks: [{ name: "Surf Rock 120", src: "/surf-rock-120.mp3" }],
@@ -130,10 +130,10 @@ export const level1 = {
         { text: "Start at 80 BPM. Play G-Em-C-D, 2 bars each, with your surf jangle pattern. No missed changes, no buzzy chords.", why: "80 is relaxed. If you can't do it clean here, faster tempos will be sloppy." },
         { text: "Move to 90 BPM. Same progression. If you fumble, drop back to 80 for one pass before trying 90 again.", why: "Speed ladders only work if you respect the rule: clean before fast." },
         { text: "Continue to 100, then 110 BPM. At 110, you're at the top of your listening sweet spot.", why: "110 BPM covers Khruangbin territory, Sun Room, most surf-rock. If you're clean here, you can play along to your playlists." },
-        { text: "End with one pass at 80 BPM. It should feel absurdly easy now.", why: "Coming back to 80 after 110 resets your baseline and proves the progress." }
+        { text: "End with one pass at 80 BPM. It should feel absurdly easy now. That easy feeling IS the win — let it be the last thing your hands remember.", why: "Coming back to 80 after 110 resets your baseline and proves the progress. Ending on something easy encodes the whole session positively in memory." }
       ],
       feel: "Each tempo should feel like a slightly different genre: 80 is dub-reggae, 90 is roots reggae, 100 is surf-pop, 110 is psych-rock. The feel shifts but the technique stays.",
-      wrong: "If your body tenses up at higher tempos, you're fighting the speed instead of riding it. Relax your shoulders, breathe, and let the tempo carry you.",
+      wrong: "If your body tenses up at higher tempos, you're fighting the speed instead of riding it. Relax your shoulders, breathe, and let the tempo carry you. If the last rep was messy, do one more easy version to finish.",
       sarah: "Gene, this ladder covers your entire Spotify universe. 80-110 BPM is where your music lives. Master this range and you can play along to almost anything in your library.",
       metronome: 80,
       speedLadder: { start: 80, end: 110, increment: 10, bars: 4 }
@@ -150,9 +150,9 @@ export const level1 = {
         { text: "While strumming, describe what you see out the window in full, detailed sentences. Or recite lyrics to a song you know. Speak at normal conversational pace.", why: "The verbal task demands cognitive resources. If the strum survives, those resources are free for singing." },
         { text: "3 minutes. No breaks, no simplification of the strum, no pausing your speech. If the strum breaks, note where and drill that transition.", why: "3 minutes is roughly one song. If autopilot holds for a song's length, you're ready for Level 2." }
       ],
-      feel: "This should feel effortless — like walking and talking at the same time. If it feels like juggling, you need more time at the earlier exercises.",
-      wrong: "If you catch yourself choosing simpler words or shorter sentences to protect the strum, your attention is still split. The strum must be truly invisible.",
-      sarah: "Gene, be ruthlessly honest here. If the strum wavers even once, go back and drill. Everything in Levels 2-11 depends on this autopilot foundation. It's worth getting right.",
+      feel: "This should feel effortless — like walking and talking at the same time. If it feels like juggling, you need more time at the earlier exercises. Always end on something that worked — if the last attempt broke, do one more easy rep to finish.",
+      wrong: "If you catch yourself choosing simpler words or shorter sentences to protect the strum, your attention is still split. The strum must be truly invisible. If this feels hard, that's the growth zone — not a sign you can't do this.",
+      sarah: "Gene, be honest here — and be kind to yourself. If the strum wavers, go back and drill. Everything in Levels 2-15 depends on this autopilot foundation. It's worth getting right. You're not trying to become a guitarist — you already ARE one. This is just deepening what your hands already know.",
       metronome: 90,
       recorder: true,
       levelUp: "Can strum G-Em-C-D at 90 BPM with jangle or offbeat chop while describing your surroundings for 3 full minutes without any strum breaks."
@@ -166,7 +166,7 @@ export const level1 = {
       what: "Hold a single G note (hum or 'ooh') while strumming a G chord. The absolute simplest voice+guitar combination — one sustained note over one chord. Based on Orff's 'sing on one pitch' principle: isolate voice integration to the bare minimum before adding any complexity.",
       setup: "Guitar. Metronome at 90 BPM.",
       steps: [
-        { text: "Strum G on autopilot — your preferred pattern from this level. Get it flowing for 30 seconds without thinking.", why: "The guitar must be invisible before you add voice. If you're still thinking about the strum, it's not ready." },
+        { text: "Before starting: breathe in for 4 counts, then hum-sigh out for 6 counts. Repeat 3 times. This isn't relaxation — it's preparing the instrument. Your vagus nerve directly controls your vocal folds; calming it literally loosens the larynx. Then strum G on autopilot — your preferred pattern from this level. Get it flowing for 30 seconds without thinking.", why: "The vagus nerve innervates the larynx. When the nervous system is activated, the throat tightens. The 4-in/6-out hum-sigh primes the laryngeal environment for voice. The guitar must be invisible before you add voice. If you're still thinking about the strum, it's not ready." },
         { text: "Before you hum, close your eyes and hear the note G forming in your mind. Wait until you can really hear it — not just think about it, but feel it gathering in your chest, a warm low hum waiting to be born. Then let your voice join the drone, matching what you already hear and feel inside. Notice where the vibration settles — G lives low, behind the sternum, a gentle rumble in the ribcage.", why: "This is pre-hearing paired with body awareness — your brain arrives at the pitch and your body locates it before your voice produces it. Even on this first sustained note, you're beginning the embodiment cycle that will guide everything: HEAR the note internally, FEEL where it lives in the body, then PRODUCE it. Zamorano 2025 found that body awareness predicts pitch accuracy even in non-singers (R²=0.41). One note is enough to start building this awareness." },
         { text: "If the strum breaks when you start humming, stop humming immediately. Re-establish the strum for 10 seconds. Then try the hum again, softer — feel it as a vibration in your chest rather than a sound from your throat.", why: "The guitar is always the priority. The voice learns to exist on top of a stable guitar, never at its expense. Thinking of the hum as a body vibration rather than a vocal effort keeps it light and integrated." },
         { text: "Try different vowels on the same G note: 'ooh,' 'ahh,' 'eee.' Notice how each vowel shifts where the vibration lives — 'ooh' stays warm and low in the chest, 'ahh' opens and spreads across the throat, 'eee' lifts the buzz toward the nose and cheekbones. Same pitch, different rooms in the body.", why: "Each vowel opens a different resonant chamber. Your body is already teaching you that pitch and placement are connected — the same note feels different depending on how you shape it. This is the beginning of the body map you'll build throughout the curriculum (Nummenmaa 2024, PNAS: body maps of resonance are cross-culturally universal)." },
@@ -174,7 +174,7 @@ export const level1 = {
       ],
       feel: "This should feel almost too easy — one note, one chord, nothing to think about. That simplicity is the point. But even in this simplicity, notice the vibration: G rumbles behind your sternum like a low tide. If it feels easy AND you can feel where the note lives in your body, your brain has bandwidth left over. That's the bandwidth singing will use.",
       wrong: "If you're trying to sing a melody or vary the pitch, you're jumping ahead. Stay on ONE note. The discipline of simplicity is what makes this exercise work. If the strum still breaks, go back to ss-1-7.",
-      sarah: "Gene, this is the gentlest possible introduction to singing while playing. One note. One chord. If this feels comfortable, you're absolutely ready for Level 2. If it doesn't, that's valuable information — your autopilot needs a bit more time.",
+      sarah: "Gene, this is the gentlest possible introduction to singing while playing. One note. One chord. If this feels comfortable, you're absolutely ready for Level 2. If it doesn't, that's valuable information — not a verdict on who you are. You're already a singer. This is just the first step in expanding what your voice can do.",
       metronome: 90,
       recorder: true,
       referencePitches: getPitchRange("G3", "G3")

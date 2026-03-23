@@ -27,7 +27,7 @@ export const level6 = {
         { text: "Rate your comfort 1-5. Write it down. You'll repeat this diagnostic at level's end to measure growth.", why: "Perceived difficulty decreases as procedural memory strengthens. This number tracks real neural changes over the course of the level." },
         { text: "Notice: did you sing mostly stepwise or skip around? Rhythmic variety or all even notes?", why: "Melodic contour and rhythmic variety are two dimensions of improvisational sophistication. Knowing your starting point helps set realistic targets." }
       ],
-      feel: "Like a musical journal entry — no pressure, just documentation. If it feels scary, that's normal. Your amygdala reads improvisation as mild danger. It calms with exposure.",
+      feel: "Like a musical journal entry — no pressure, just documentation. If it feels scary, that's normal. Your amygdala reads improvisation as mild danger. It calms with exposure. Whatever comes out is exactly right for where you are today — awkwardness here is the sound of a musician expanding their vocabulary.",
       wrong: "If you froze, just sing the scale: A-C-D-E-G-E-D-C-A. Then try deviating — skip a note, repeat one, change rhythm. Even slight departure counts.",
       sarah: "No wrong answers here. This is a snapshot. Some people improvise freely for a minute. Others loop three notes. Both are normal starting points.",
       levelUp: "Complete the 60-second recording and honest self-assessment. Diagnostic, not performance."
@@ -53,7 +53,7 @@ export const level6 = {
       ],
       feel: "Each note has its own body-home. Low A deep in chest. High G behind the eyes. The ascent is a familiar staircase.",
       wrong: "If all notes feel the same, you're throat-singing instead of letting resonance travel. Exaggerate: lean forward on high notes, ground feet on low ones.",
-      sarah: "The pentatonic shows up in West African music, Chinese folk, Scottish ballads, Japanese ceremony, and the blues. Every culture discovered it independently. These five notes are genuinely ancient and deeply human.",
+      sarah: "The pentatonic shows up in West African music, Chinese folk, Scottish ballads, Japanese ceremony, and the blues. Every culture discovered it independently. These five notes are genuinely ancient and deeply human. As you sing each one, notice: which note feels most like home? Which one surprises you? That noticing — paying attention to your own experience — is what separates practice from just going through the motions.",
       levelUp: "Am pentatonic ascending/descending from memory, eyes closed, within 15 cents on Pitch Detector, 1 beat per note."
     },
     {
@@ -121,7 +121,7 @@ export const level6 = {
       ],
       feel: "The drone is a warm bed. No matter where your voice goes in the pentatonic, the drone catches you. Meditative — settle into it.",
       wrong: "Non-stop singing means rambling, not phrasing. Music breathes. If you're only singing root, trust the scale — every note works over the drone.",
-      sarah: "This is where many students discover they can improvise. The drone removes chord-change complexity, the pentatonic removes wrong notes. Double safety net — your creative voice has permission to play.",
+      sarah: "This is where many students discover they can improvise. The drone removes chord-change complexity, the pentatonic removes wrong notes. Double safety net — your creative voice has permission to play. Before you sing, listen to the drone for 30 seconds. Feel it vibrate in your chest. Let your body sync to its frequency. When you finally start singing, the notes will arrive with less effort because your nervous system is already resonating with the root.",
       levelUp: "90-second drone improv using all 5 notes, with silence between phrases, sounding like music not scales."
     },
     {
@@ -195,7 +195,7 @@ export const level6 = {
       ],
       feel: "Jamming with a band. The track is your bandmates — listen, respond, leave space. One voice in a conversation.",
       wrong: "Non-stop singing = monologue. Only 2-3 notes = return to drone exercise. Random sounding = anchor on root A, end on chord tones.",
-      sarah: "This is where practice becomes play. Backing tracks plus pentatonic vocabulary equals making music, not practicing it. That distinction matters.",
+      sarah: "This is where practice becomes play. Backing tracks plus pentatonic vocabulary equals making music, not practicing it. That distinction matters. Listen to the backing track for 30 seconds before singing — let the groove enter your body first. And always end on a phrase that felt musical. Your brain encodes the ending as the summary of the session.",
       levelUp: "2-minute improv that sounds like a real vocal part — musical, spaced, groove-responsive."
     },
     {
@@ -245,7 +245,7 @@ export const level6 = {
       ],
       feel: "Rhythm and melody as one thing. When they integrate, it's 'saying something musical' rather than 'singing notes in a rhythm.'",
       wrong: "Offbeats pulling you off pitch? Separate skills: clap rhythm without pitch, then pitch without rhythm, then combine. Tempo changes hard? More time at each before switching.",
-      sarah: "Levels 4 and 6 merge here. A note without rhythm is a pitch. Rhythm without notes is a beat. Together — music.",
+      sarah: "Levels 4 and 6 merge here. A note without rhythm is a pitch. Rhythm without notes is a beat. Together — music. The difficulty of combining them is the point — interleaving skills from different levels builds more flexible musicianship than perfecting each one in isolation.",
       levelUp: "Pentatonic improv over both reggae and surf rock with audible stylistic adaptation."
     },
     {

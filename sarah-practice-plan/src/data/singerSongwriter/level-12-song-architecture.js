@@ -23,7 +23,7 @@ export const level12 = {
         { text: "Play V1 → V2 back to back. Can you hear the familiarity AND the freshness? The melody should feel like the same speaker telling a continuing story.", why: "The balance of familiar and fresh is the art of verse writing. Too much repetition and the ear tunes out. Too much novelty and it feels like two different songs." }
       ],
       feel: "Good verse writing should feel like telling a story to a friend — each section reveals something new, but the voice stays consistent. The verse lives in your chest: grounded, intimate, the resonance of someone speaking honestly. Your body should feel settled, weight in the chair, breathing low and easy. When the verse melody sits in its natural chest register, the words carry the warmth of the body behind them.",
-      wrong: "If both verses are identical, add variation. If they sound unrelated, keep more of the original melody intact. The sweet spot is 'the same but different.'",
+      wrong: "If both verses are identical, add variation. If they sound unrelated, keep more of the original melody intact. The sweet spot is 'the same but different.' Before you begin: what ONE thing will you listen for? Maybe: 'I want the verse melody to feel like speech.' After: what did you notice? What surprised you? This plan-practice-reflect cycle improves outcomes by 23%.",
       sarah: "Gene, your verses should sound like you talking on the lanai — relaxed, descriptive, in no hurry. The porch register IS the verse voice.",
       metronome: 80,
       referencePitches: getPitchRange("E3", "B3"),

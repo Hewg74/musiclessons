@@ -44,7 +44,7 @@ export const level11 = {
       ],
       feel: "This should feel like a low-pressure jam session — not a test. There are no wrong notes in a diagnostic. The goal is to capture your current state honestly, not to perform well.",
       wrong: "If you catch yourself trying to sound impressive or avoiding 'weird' notes, reset. The diagnostic only works if you sing naturally. Trying to include fancy notes defeats the purpose — we need to see what your default is.",
-      sarah: "Gene, this is just a snapshot. No judgment. When I do this with students, most of them discover they're living in a 4-5 note world without realizing it. That's not a failure — it's a starting point. By the end of this level, you'll hear this recording and barely recognize the limitation.",
+      sarah: "Gene, this is just a snapshot. No judgment. When I do this with students, most of them discover they are living in a 4-5 note world without realizing it. That is not a failure — it is a starting point. You are a musician expanding your vocabulary, and the pentatonic comfort zone you are leaving is the foundation you are building FROM, not a limitation you are escaping. By the end of this level, you will hear this recording and barely recognize the limitation.",
       levelUp: "Honest baseline recording completed. Pentatonic and diatonic comfort ratings documented."
     },
     {
@@ -172,7 +172,7 @@ export const level11 = {
       ],
       feel: "Dorian should feel warm — like a minor key with the lights on. It's melancholy but not heavy. Jazzy but not complex. If natural minor is a rainy day, Dorian is sunset after rain. The F# is the sun breaking through.",
       wrong: "If your improvisation sounds identical to A minor pentatonic, you're avoiding the F# and the B. Make a rule: every other phrase must include F#. If the F# sounds wrong, your guitar might be playing a chord that conflicts — stick with Am or Am7 for the drone. Chords like Fmaj7 will clash with F# because they contain F natural.",
-      sarah: "Gene, Dorian is YOUR mode. Listen to your favorite Khruangbin tracks — half of them are in Dorian. That warm, soulful-but-not-sad sound? That's the raised 6th. Once you internalize this, your reggae and funk improvisations will have a completely different color. You're not learning something new — you're naming something your ear already loves.",
+      sarah: "Gene, Dorian is YOUR mode. Listen to your favorite Khruangbin tracks — half of them are in Dorian. That warm, soulful-but-not-sad sound? That is the raised 6th. Before you start improvising, listen to a Dorian groove for 30 seconds — let the mode enter your body first. Once you internalize this, your reggae and funk improvisations will have a completely different color. You are not learning something new — you are naming something your ear already loves. If the raised 6th feels 'wrong' at first, that is your pentatonic body map updating to include a new note. The strangeness fades within days.",
       levelUp: "2-minute Dorian improvisation over a reggae or Khruangbin-style groove where F# appears naturally and the mode doesn't drift to pentatonic or natural minor."
     },
     {
@@ -217,7 +217,7 @@ export const level11 = {
         }
       ],
       feel: "Mixolydian should feel like cruising with the windows down — momentum without urgency. It's happy but not saccharine. Bluesy but not sad. Open-ended. If Dorian is sunset after rain, Mixolydian is an endless California highway at golden hour.",
-      wrong: "If your melody keeps resolving F up to G every time, you're treating F as a leading tone that needs to resolve. It doesn't. In Mixolydian, F is a resting point. Practice ending phrases ON F — let it be the last note. If that feels wrong, your ear is still in major-scale mode. Give it time.",
+      wrong: "If your melody keeps resolving F up to G every time, you are treating F as a leading tone that needs to resolve. It does not. In Mixolydian, F is a resting point. Practice ending phrases ON F — let it be the last note. If that feels wrong, your ear is still in major-scale mode — that wrongness is your tonal body map updating. The flatted 7th will feel like home within a few sessions of letting it rest unresolved. Give it time.",
       sarah: "Gene, this is the Allah-Las mode. That laid-back, sun-soaked surf sound? Mixolydian. That feeling in their music where everything is chill and nothing needs to resolve? Flatted 7th. Your voice already goes to this place naturally when you sing surf-psych — we're just making it conscious and reliable.",
       levelUp: "2-minute Mixolydian improvisation over a surf or psych groove where F natural appears naturally and the melody embraces open, unresolved phrasing."
     },
@@ -303,7 +303,7 @@ export const level11 = {
       ],
       feel: "Chromatic passing tones should feel like adding spices to a dish. The diatonic scale is the meal — satisfying and complete. Chromatic notes are the cumin, the chili flake, the squeeze of lime. They don't replace the meal; they enhance it with complexity and depth.",
       wrong: "If the chromatic notes sound like wrong notes instead of approach tones, you're either holding them too long (they should be brief, passing) or not resolving them (every chromatic note needs a diatonic landing). If the Pitch Detector shows you're between pitches, you might be sliding instead of stepping — chromatic tones need to be precise half steps, not scoops.",
-      sarah: "Gene, this is the exercise that makes people say 'how does that singer make it sound so smooth?' The answer is chromatic approaches. They hear someone slide effortlessly into notes and think it's talent — it's technique. A half step below your target note, sung quickly, makes every note sound inevitable. You'll hear this in every Khruangbin vocal line once you know what to listen for.",
+      sarah: "Gene, this is the exercise that makes people say 'how does that singer make it sound so smooth?' The answer is chromatic approaches. They hear someone slide effortlessly into notes and think it is talent — it is technique. A half step below your target note, sung quickly, makes every note sound inevitable. You will hear this in every Khruangbin vocal line once you know what to listen for. If chromatic notes feel 'wrong' or risky, that is your ear expanding its definition of what belongs. Every professional singer went through this same expansion.",
       levelUp: "Can apply chromatic approaches (below, above, and enclosure) to a simple melody, and improvise freely using all 12 notes with appropriate resolution."
     },
     {
@@ -437,7 +437,7 @@ export const level11 = {
       ],
       feel: "Like thinking in a different language. At first, you're translating from pentatonic: 'Where would I normally go? OK, now adjust for the mode.' Eventually, the mode becomes the native tongue and you stop translating. That's fluency. Notice how each mode configures your body differently: Dorian's raised 6th brightens the mask and lifts the brow — the sound wants to rise. Mixolydian's lowered 7th relaxes the throat and settles the chest — the sound wants to groove. The mode is not just a scale; it is a physical posture, an emotional stance that your whole body assumes.",
       wrong: "If you drift into pentatonic by the 1-minute mark, the mode isn't internalized yet. Go back to the scale exercise (v11e3 or v11e4) and drill the color note in isolation. Then return to this exercise. If your melodic ideas feel limited ('I keep singing the same phrases'), try starting phrases on the color note instead of the root. New starting notes generate new melodic ideas.",
-      sarah: "Gene, this is the exercise I want you to come back to again and again. Each time you do it, the mode will feel more natural, and your melodic ideas will get more interesting. It's like freewriting — the first draft is always rough, but the 10th session produces gold. Don't judge yourself on the first try. Just keep swimming in the mode.",
+      sarah: "Gene, this is the exercise I want you to come back to again and again. Each time you do it, the mode will feel more natural, and your melodic ideas will get more interesting. It is like freewriting — the first draft is always rough, but the 10th session produces gold. Do not judge yourself on the first try. Just keep swimming in the mode. In your final two minutes, try mixing this modal work with something from a different level — dynamics from L7, rhythmic phrasing from L4. That interleaving builds the most flexible musicianship. End on whatever phrase felt most like music.",
       levelUp: "2-minute modal improvisation where the color note appears naturally (not forced), and at least one memorable melodic phrase features the color note prominently."
     },
     {
@@ -529,7 +529,7 @@ export const level11 = {
       ],
       feel: "Like a painter who started with 5 colors and now has 12. You don't HAVE to use them all in every painting — but knowing they're available means every creative choice is deliberate. The medley should feel like a journey: safe → warm → breezy → free. Each section builds on the last.",
       wrong: "If the sections all sound the same, the mode switches aren't happening. The color notes (F# for Dorian, F for Mixolydian) need to be present. If the chromatic section sounds chaotic, rein it in — use more diatonic notes with occasional chromatic spice. If the pentatonic section sounds boring compared to the rest, good — that contrast is the point. You've outgrown the five-note box.",
-      sarah: "Gene, this is the recording to save. Date it. Put it next to your Level 11 Diagnostic. The difference between those two recordings IS this level. You went from five notes to twelve. From one color to a full palette. From safe to free. That's not practice — that's transformation. And every note of it is yours."
+      sarah: "Gene, this is the recording to save. Date it. Put it next to your Level 11 Diagnostic. The difference between those two recordings IS this level. You went from five notes to twelve. From one color to a full palette. From safe to free. That is not practice — that is transformation. After your final take, set everything down for a full minute. Then sing one more modal phrase from pure memory — no drone, no backing track, just the mode living in your ear. That retrieval is the proof that the mode has moved from your fingers to your voice to your soul."
     },
     {
       id: "v11e12", time: 8, title: "Scale Freedom Across Keys", type: "vocal",

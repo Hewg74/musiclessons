@@ -27,8 +27,8 @@ export const level6 = {
         { text: "Repeat the test daily until you pass it. This is the gateway to everything in this level. No rushing — autonomous guitar is the foundation of singing while playing.", why: "Motor learning research shows the associative-to-autonomous transition takes repetition over days, not hours. Each day's practice moves the skill deeper into procedural memory." }
       ],
       feel: "When you pass this test, the guitar should feel like it's playing itself. Your conscious mind is free — free to watch TV, free to sing, free to improvise. That freedom is the whole point.",
-      wrong: "If you're faking it — staring at the video but not actually following the story — the test doesn't count. Genuine comprehension is the metric. Be honest with yourself.",
-      sarah: "Gene, your strum should be like breathing — you don't think about it. This test proves whether it is. Every exercise in this level assumes you pass it.",
+      wrong: "If you're faking it — staring at the video but not actually following the story — the test doesn't count. Genuine comprehension is the metric. Be honest with yourself. If this is hard, that's the growth zone — your motor system is building procedural memory, and that takes days, not minutes.",
+      sarah: "Gene, your strum should be like breathing — you don't think about it. This test proves whether it is. Every exercise in this level assumes you pass it. You're not learning to be a player — you already ARE one. This just confirms the depth of what your hands already know.",
       metronome: 80
     },
     {
@@ -614,8 +614,8 @@ export const level6 = {
         { text: "Sing chord tones: E-Ab-B over E (remember Ab = G#), A-C#-E over A, B-D#-F# over B7. Navigate these new notes by ear — the drone will guide you.", why: "These chord tones include notes you've rarely or never sung (Ab, C#, D#/Eb, F#). Each one is a new physical vocal experience — different resonance, different breath support." },
         { text: "Free vocal improv over E-A-B7. Sing whatever notes feel right over each chord. 2 minutes, record. Compare to your Am-C-G-Em improv — how does your voice sound different?", why: "Free improvisation in E major with guitar tests the full dual-task in a new key family. The comparison to Am reveals how key-specific your vocal instincts are." }
       ],
-      feel: "This should feel like learning to drive in a new car — the controls are in different places but the skill is the same. Awkwardness is expected and productive.",
-      wrong: "If you're singing Am pentatonic notes (G natural, C natural) over E-A-B7, you're defaulting to familiar muscle memory. Use the drone to find Ab and C# — they're the notes that make E major sound like E major.",
+      feel: "This should feel like learning to drive in a new car — the controls are in different places but the skill is the same. Awkwardness is expected and productive. Always end on something that worked — even one clean chord-tone match in the new key.",
+      wrong: "If you're singing Am pentatonic notes (G natural, C natural) over E-A-B7, you're defaulting to familiar muscle memory. Use the drone to find Ab and C# — they're the notes that make E major sound like E major. If the new placements feel weird, that's proprioceptive recalibration — your body map is updating. Trust the pitch detector over how it feels for the first few sessions.",
       sarah: "Gene, this is where the research on key-specific vocal production gets real. Your voice literally uses different muscles to produce Ab than to produce G. Building this dual-task in E major gives you a second musical identity.",
       drone: { mode: "cycle", progression: ["E", "A", "B7"], bpm: 80, stepDuration: "1m" },
       referencePitches: getPitchRange("E3", "C#4"),
