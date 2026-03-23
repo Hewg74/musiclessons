@@ -5,7 +5,7 @@ export const level6 = {
   duration: "35 min",
   setup: "Guitar for drone/reference. Backing tracks ready. Pitch Detector on.",
   subtitle: "The Pentatonic Sandbox",
-  description: "The pentatonic scale is the safest place to improvise — five notes, zero wrong answers. Every genre Gene loves lives in this scale: the surf melodies of Allah-Las, Khruangbin's vocal lines, reggae hooks, desert blues. This level internalizes the pentatonic so deeply that improvising with it becomes as natural as speaking. It's your improv sandbox — play freely, nothing breaks.",
+  description: "The pentatonic scale is the safest place to improvise — five notes, zero wrong answers. Every genre Gene loves lives in this scale: the surf melodies of Allah-Las, Khruangbin's vocal lines, reggae hooks, desert blues. By now, the hear-feel-choose cycle is becoming second nature: you hear the note in your inner ear, feel where it wants to live in your body, choose what it expresses, and let it out. In this level, the cycle runs in real time during improvisation — not as a checklist but as a single flowing act. Five notes, each with its own body address and emotional color. This level internalizes the pentatonic so deeply that improvising with it becomes as natural as speaking. It's your improv sandbox — play freely, nothing breaks.",
   artists: "Khruangbin, Allah-Las, Tinariwen, DOPE LEMON",
   unlocks: "Whisper to Full Voice (Level 7)",
   review: { label: "Level 4 Check-In", time: 5, exercises: ["v4e2", "v4e4"], prompt: "Sing offbeat vocal phrasing for 1 minute (v4e2). Then do reggae call-and-space with full-bar rests (v4e4). Rhythmic skills erode fast without practice." },
@@ -294,7 +294,7 @@ export const level6 = {
         { text: "Listen to the full recording. Don't judge — observe. Beginning, middle, climax, resolution? Any phrases worth stealing for a song?", why: "Uncomfortable moments often sound most interesting on playback — discomfort means risk, and risk makes music compelling. This teaches you to trust risk-taking over comfort-seeking." },
         { text: "Repeat the v6e0 diagnostic: 60 seconds free over a drone, rate comfort 1-5. Compare to your opening score.", why: "Bookend comparison shows transformation: from 'a scale I know' to 'a vocabulary I use.' The shift is usually dramatic even in one session." }
       ],
-      feel: "A performance, not an exercise. Exercises are about getting right; performances are about communicating. Nervous pressing record? Good — you're treating it as real.",
+      feel: "A performance, not an exercise. Exercises are about getting right; performances are about communicating. Let your body lead: sway with the groove, let your hands trace the contour of your melody in the air, let your weight shift as the dynamics rise and fall. The hear-feel-choose cycle should be running invisibly now — you hear the next note in your mind, feel where it lives, choose what it means, and it appears. That integration is what makes this a performance. Nervous pressing record? Good — you're treating it as real.",
       wrong: "3 minutes felt empty? Back to exercises 4-8, build vocabulary first. Couldn't stop singing? Practice silence — space is a skill, not a deficit.",
       sarah: "Everything in this level built toward these 3 minutes. And this is just the first one. Each repetition deepens your relationship to the pentatonic. The first time is hardest and most important. After this, you know you can improvise. That changes everything."
     },

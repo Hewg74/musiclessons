@@ -5,7 +5,7 @@ export const level12 = {
   title: "Song Architecture",
   subtitle: "Verses tell stories. Choruses tell truths.",
   description:
-    "You can create melodies and feel harmony. Now build complete songs with intentional structure — verse/chorus/bridge, dynamic arcs, intros and outros. Based on Berklee's songwriting sequence: melody and structure are taught together because they're inseparable. A great melody in a bad structure is a wasted melody.",
+    "You can create melodies and feel harmony. Now build complete songs with intentional structure — verse/chorus/bridge, dynamic arcs, intros and outros. Based on Berklee's songwriting sequence: melody and structure are taught together because they're inseparable. A great melody in a bad structure is a wasted melody. Embodied truth: song sections have body arcs. The verse sits in the chest — grounded, storytelling, conversational. The chorus rises to the mask — open, projecting, communal. The bridge might go to the head — intimate, vulnerable, unexpected. Your body tells you when the form needs to shift: there's a physical sensation of needing to rise or ground, and that sensation IS your structural instinct.",
   artists: "DOPE LEMON, Nick Drake, Skinshape, BALTHVS",
   unlocks: "Lyrics & Songcraft (Level 12)",
   review: { label: "Level 10-11 Check-In", time: 5, exercises: ["ss-10-7", "ss-11-6"], prompt: "Play your complete original (ss-10-7). Then improvise over a new progression for 2 minutes (ss-11-6). Both confident? Move on." },
@@ -22,7 +22,7 @@ export const level12 = {
         { text: "Add different words to each verse. Verse 1 sets the scene. Verse 2 develops it — adds detail, a character, or a shift in perspective.", why: "Lyric development across verses creates narrative motion. The song goes somewhere. Each verse adds a new piece to the puzzle." },
         { text: "Play V1 → V2 back to back. Can you hear the familiarity AND the freshness? The melody should feel like the same speaker telling a continuing story.", why: "The balance of familiar and fresh is the art of verse writing. Too much repetition and the ear tunes out. Too much novelty and it feels like two different songs." }
       ],
-      feel: "Good verse writing should feel like telling a story to a friend — each section reveals something new, but the voice (melody) stays consistent. The listener leans in because the story progresses.",
+      feel: "Good verse writing should feel like telling a story to a friend — each section reveals something new, but the voice stays consistent. The verse lives in your chest: grounded, intimate, the resonance of someone speaking honestly. Your body should feel settled, weight in the chair, breathing low and easy. When the verse melody sits in its natural chest register, the words carry the warmth of the body behind them.",
       wrong: "If both verses are identical, add variation. If they sound unrelated, keep more of the original melody intact. The sweet spot is 'the same but different.'",
       sarah: "Gene, your verses should sound like you talking on the lanai — relaxed, descriptive, in no hurry. The porch register IS the verse voice.",
       metronome: 80,
@@ -42,7 +42,7 @@ export const level12 = {
         { text: "Increase your strum intensity for the chorus. More volume, fuller strumming, maybe switch from fingerpick to strum or from chop to full strum.", why: "The guitar reinforces the dynamic shift. A louder, fuller guitar signals 'chorus' to the listener's subconscious." },
         { text: "Play verse → chorus → verse → chorus. The transition into the chorus should feel like a door opening into a bigger room.", why: "The verse-to-chorus transition is the most important moment in the song. It's the payoff for the setup." }
       ],
-      feel: "The chorus should feel like taking a deep breath and letting it out. Expansive, released, open. If the verse is intimate conversation, the chorus is singing from a rooftop.",
+      feel: "The chorus should feel like taking a deep breath and letting it out — the resonance lifts from the chest into the mask. Your posture opens: shoulders back, chin slightly up, the body expanding. If the verse is intimate conversation grounded in the chest, the chorus is singing from a rooftop with the sound vibrating behind your cheekbones. That physical lift IS the chorus. Your body migrates upward, and the song follows.",
       wrong: "If the chorus doesn't feel different from the verse, push the contrast harder. Sing louder, higher, with simpler words. If it feels forced, the range jump might be too large — bring it down a step.",
       sarah: "Gene, the chorus is where your voice opens up slightly from the porch register — still relaxed, but with more chest resonance and conviction. Not belting — just more present. Try the DOPE LEMON major→minor trick for emotional shift between sections: D→Dm, G→Gm — the major version for the hopeful verse, the minor version for the bittersweet chorus. Same chord, one fret changes the 3rd. The emotional effect is like sunset — beautiful but ending. Use this to create a verse→chorus emotional shift that the listener feels in their gut.",
       metronome: 85,
@@ -62,7 +62,7 @@ export const level12 = {
         { text: "Bridge lyrics should shift perspective: if verses are observational ('I see...'), the bridge reflects ('I wonder...'). Or the bridge reveals something the verses hid.", why: "The lyric shift reinforces the musical departure. Bridge lyrics often contain the song's deepest insight or most vulnerable admission." },
         { text: "Full form: V1 → Chorus → V2 → Chorus → Bridge → Final Chorus. The bridge makes the final chorus hit harder.", why: "The departure-return is the most powerful structure in music. Leaving home (bridge) makes coming home (final chorus) feel triumphant." }
       ],
-      feel: "The bridge should feel like stepping off the familiar path into the woods. Brief disorientation, then a new vista. When the chorus returns after the bridge, it should feel like reunion.",
+      feel: "The bridge should feel like stepping off the familiar path into the woods — the resonance might move to the head voice, or narrow into the throat, or settle into an unfamiliar part of the body. Brief disorientation: where does this section live? Not in the chest (verse) or the mask (chorus), but somewhere unexpected. When the chorus returns after the bridge, your body migrates back to the mask and the reunion is physical — you can feel the homecoming in your posture.",
       wrong: "If the bridge sounds like another verse, the chords and melody aren't different enough. Push further away from the song's established patterns. The bridge should feel like a different song for 8 bars.",
       sarah: "Gene, bridges are optional but powerful. Not every song needs one. But when you have one, it's usually the most interesting 8 bars in the song.",
       metronome: 80,
@@ -82,7 +82,7 @@ export const level12 = {
         { text: "Harmonically, move toward the V chord (D if you're in G, E if you're in Am). The V chord creates tension that resolves when the chorus lands on I. Try: pre-chorus ends on V... pause... chorus explodes on I.", why: "The dominant chord is the most tension-heavy chord in the key. Ending the pre-chorus on V is like pulling back a slingshot — the chorus is the release." },
         { text: "Build dynamics through the pre-chorus: start at the verse's mp volume and crescendo to the chorus's f. Increase strum intensity bar by bar. Record the full V → Pre-Chorus → Chorus sequence.", why: "Dynamic building reinforces the melodic and harmonic ramp. All three dimensions — pitch, harmony, volume — should point toward the chorus like arrows." }
       ],
-      feel: "The pre-chorus should feel like the moment on a roller coaster when you're climbing the hill — you know the drop is coming, the anticipation builds, and the chorus is the drop.",
+      feel: "The pre-chorus should feel like the moment on a roller coaster when you're climbing the hill — your body is migrating from the chest (verse) toward the mask (chorus), and you can feel the transition happening in real time. The resonance rises, the breath deepens in preparation, the body leans forward. The anticipation is physical: your whole body knows the chorus is about to arrive before the chord change confirms it.",
       wrong: "If the pre-chorus sounds like another verse, the melody isn't rising enough. If it sounds like an early chorus, it's too high and too loud too soon. The ramp must be clearly between verse and chorus energy.",
       sarah: "Gene, pre-choruses are the secret weapon in psych-surf and reggae-rock. That 2-bar ramp before the chorus drops — Allah-Las do this constantly. It's what makes their choruses hit so hard.",
       metronome: 80,
@@ -175,7 +175,7 @@ export const level12 = {
         { text: "Play the full song following your dynamic map. Exaggerate the differences — whisper the quiet parts, project the loud parts.", why: "Exaggeration in practice creates subtlety in performance. What feels dramatic alone sounds natural to a listener." },
         { text: "Record it. Listen back. Can you hear the dynamic journey? The song should breathe — expanding and contracting like a living thing.", why: "The recording reveals whether your dynamics are audible or imagined. If the loud and quiet parts sound similar, push the contrast further." }
       ],
-      feel: "A dynamically mapped song should feel like a complete emotional journey — arrival, building, peak, release, resolution. Like watching a sunset from start to finish.",
+      feel: "A dynamically mapped song should feel like a complete emotional journey through the body — the quiet intro in the low belly, the verse warming through the chest, the chorus blazing in the mask, the bridge retreating to a private interior space, the final chorus opening the whole body. The dynamic map IS a body map. Each volume level lives in a different physical space, and the journey through dynamics is a journey through your own resonance.",
       wrong: "If the whole song is one volume, your dynamics aren't translating. Push the contrast harder. Whisper. Then project. Then whisper again. The range between soft and loud IS the performance.",
       sarah: "Gene, dynamics are the difference between someone who plays songs and someone who tells stories with music. This is where you become a performer.",
       metronome: 80,
@@ -231,7 +231,7 @@ export const level12 = {
         { text: "Pass 3 — Guitar texture: Play the song focusing ONLY on how you play the guitar. Verse: fingerpick or gentle strum. Chorus: full strum or aggressive rhythm. Bridge: arpeggios or silence. Each section gets a distinct guitar voice.", why: "Guitar texture is the most underused arrangement tool for singer-songwriters. Changing HOW you play the guitar between sections is as powerful as changing WHAT you play." },
         { text: "Pass 4 — Vocal delivery: Sing the song focusing ONLY on how your voice sounds. Verse: intimate, close, conversational. Chorus: open, projected, confident. Bridge: vulnerable, uncertain. Record the full four-pass refined arrangement.", why: "Vocal delivery is the final layer. When melody, dynamics, texture, and delivery all shift between sections, the song transforms from a sequence of chords into a performed piece of art." }
       ],
-      feel: "Each pass should feel like adding a layer of paint. After four passes, the arrangement should feel rich, intentional, and complete — every moment considered, every section distinct.",
+      feel: "Each pass should feel like adding a layer of awareness to the body's experience of the song. After four passes, the arrangement should feel rich, intentional, and physically alive — the verse sits differently in your body than the chorus, the bridge inhabits a different resonance than either. Every section distinct, every transition a body migration.",
       wrong: "If you're trying to fix everything at once, you're ignoring the pass system. ONE element per pass. The power is in isolation — when you focus on dynamics alone, you hear things you miss when juggling everything.",
       sarah: "Gene, this is how producers think. They don't build a mix all at once — they do passes. Melody pass. Dynamics pass. Texture pass. Each pass makes the song 25% better. Four passes and you've got a professional arrangement.",
       volumeContour: true,
@@ -251,7 +251,7 @@ export const level12 = {
         { text: "Practice transitions: verse → chorus (the lift). Chorus → verse (the settle). Verse → bridge (the departure). Bridge → final chorus (the arrival). Each transition is a mini-performance.", why: "Transitions are where songs fall apart or come alive. Smooth transitions create flow; jarring ones break immersion." },
         { text: "Perform the complete song 3 times. Record the 3rd take. Listen back. This is a fully arranged, dynamically mapped original song.", why: "The third take benefits from two warm-up passes. It's usually the take where technique and emotion align." }
       ],
-      feel: "A fully arranged song should feel like a journey with a beginning, middle, and end. When you reach the outro, you should feel like you've been somewhere and returned.",
+      feel: "A fully arranged song should feel like a journey through the body's geography — the intro grounds you in the low belly, the verses warm the chest, the choruses open the mask, the bridge ventures somewhere unfamiliar, and the outro returns you to the quiet place where you started. When you reach the final bars, you should feel like your whole body has been somewhere and returned. The song's form IS the body's arc.",
       wrong: "If the arrangement feels too long, cut the second verse or bridge. If it feels rushed, add 4 bars to the sections that need more space. Structure serves the song, not the other way around.",
       sarah: "Gene, this is album-quality songwriting. A fully arranged original with dynamics, structure, and intention. This is what performing singer-songwriters do.",
       metronome: 80,

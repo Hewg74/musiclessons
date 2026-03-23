@@ -5,7 +5,7 @@ export const level8 = {
   duration: "35 min",
   setup: "Standing. Phone for recording. Reference tracks ready.",
   subtitle: "Finding YOUR Sound",
-  description: "Every great singer has a recognizable texture. Angus Stone's lo-fi whisper, Thom Yorke's falsetto breaks, Bob Marley's rhythmic precision, Laura Lee's psychedelic float. This level explores four genre-specific vocal textures so you can find the combination that sounds like YOU.",
+  description: "Every great singer has a recognizable texture. Angus Stone's lo-fi whisper, Thom Yorke's falsetto breaks, Bob Marley's rhythmic precision, Laura Lee's psychedelic float. Your vocal texture is your body's signature — the unique shape of your throat, the resonance of your skull, the way your breath meets your folds. The embodiment cycle now deepens from 'where does this note live?' to 'what does this note FEEL LIKE?' — warm, breathy, bright, dark, intimate, powerful. Each texture is a different physical configuration: breathiness is a posterior glottal gap, placement is resonance routing, vibrato is muscle oscillation. This level explores four genre-specific vocal textures so you can find the combination that sounds like YOU.",
   artists: "Angus Stone, Thom Yorke, Laura Lee (Khruangbin), DOPE LEMON",
   unlocks: "Singing With Yourself (Level 9)",
   review: { label: "Level 6 Check-In", time: 5, exercises: ["v6e7", "v6e9"], prompt: "Improvise pentatonic vocals over a backing track for 1 minute (v6e7). Then combine pentatonic with rhythmic variation (v6e9). If melodic improv feels stiff, revisit Level 6." },
