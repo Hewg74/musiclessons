@@ -251,7 +251,7 @@ export const level6 = {
         { text: "Pass 2 — Medium: add volume and confidence. More notes, more rhythmic commitment. You're surfing now, not just watching.", why: "The middle dynamic is where most singing happens. This is your 'cruising altitude' — comfortable and flowing." },
         { text: "Pass 3 — Full: open up to full chest voice. Commit to longer phrases, wider intervals, more energy. The jangle shimmer supports your voice at full volume. Record this pass.", why: "Full voice over jangle strum is the Allah-Las, Mystic Braves sound. This is where your surf-psych DNA comes alive." }
       ],
-      feel: "This should feel like a wave building — starting as a gentle swell (whisper), rising through the lineup (medium), and cresting into a full ride (full voice).",
+      feel: "This should feel like a wave building — starting as a gentle swell (whisper), rising through the lineup (medium), and cresting into a full ride (full voice). Each dynamic level lives in a different part of the body: whisper barely engages the chest, medium voice fills the ribcage, full voice reverberates through the whole torso. The hear-feel-choose cycle adapts at each level — at whisper, the body barely moves; at full voice, everything is engaged. The embodiment check: is the full cycle running at all three volumes, or does body awareness only show up at full voice?",
       wrong: "If all three passes sound the same dynamically, you're not committing to the extremes. Make pass 1 absurdly quiet and pass 3 as loud as your porch register allows.",
       sarah: "Gene, this is Allah-Las and Mystic Braves territory. Your surf-psych core. The jangle strum is in your hands — now your voice learns to build and crest over it like a wave.",
       metronome: 90,
@@ -278,7 +278,7 @@ export const level6 = {
         { text: "At full voice, hold for 4 bars, then gradually pull back to whisper over 8 bars. The decrescendo is harder to control but more dramatic.", why: "The fade-back creates a complete dynamic arc: quiet→loud→quiet. This wave-like shape is the emotional engine of Tinariwen and Bombino's music." },
         { text: "3-minute freestyle: sparse desert blues with free dynamic movement. Sometimes whisper, sometimes full, sometimes sudden shifts. Repeat phrases with micro-variations. Record it.", why: "When dynamics and genre feel work together, your voice becomes part of the landscape. The desert blues aesthetic + dynamic control = cinematic power." }
       ],
-      feel: "This should feel cinematic and vast — your voice is a figure in an enormous desert landscape. The dynamic swells are like wind gusts across open space.",
+      feel: "This should feel cinematic and vast — your voice is a figure in an enormous desert landscape. The dynamic swells are like wind gusts across open space. As you swell from whisper to full voice, feel the resonance migrate: whisper lives in the throat and mouth, medium voice engages the chest, full voice opens the whole torso. The dynamic arc is a body arc — the hear-feel-choose cycle tracking volume as a physical sensation, not just a loudness number.",
       wrong: "If your improvisation is busy or melodically complex, you're fighting the desert blues aesthetic. Fewer notes, more repetition. Let the dynamics do the work.",
       sarah: "Gene, this is Tinariwen, Bombino, Hermanos Gutiérrez territory — sparse, cinematic desert. Your voice rides the heat shimmer. Dynamics are the drama.",
       metronome: 75,
