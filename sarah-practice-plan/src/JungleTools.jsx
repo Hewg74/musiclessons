@@ -6,6 +6,7 @@ import {
   Plus, Trash2, Share2, Undo2, ChevronDown, ChevronUp, X, Edit3, Upload
 } from 'lucide-react';
 import { acquireKeepalive, releaseKeepalive, setMediaSession, clearMediaSession } from './audioKeepalive.js';
+import { splitSyllables } from './syllableUtil.js';
 
 // ─── Web Worker timer for background-safe intervals ───────────────────
 // Browser throttles setInterval to ~1Hz in background tabs.
@@ -6265,13 +6266,32 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
       const pool = [...c.lyricsPool, word];
       // Sort pool by original order in lyricsInput
       pool.sort((a, b) => {
-        const ai = allWords.indexOf(a);
-        const bi = allWords.indexOf(b);
+        const findIdx = (w) => {
+          const idx = allWords.indexOf(w);
+          if (idx !== -1) return idx;
+          // Syllable fragment — find parent word's position
+          const clean = w.replace(/-$/, '');
+          return allWords.findIndex(aw => aw.toLowerCase().includes(clean.toLowerCase()));
+        };
+        const ai = findIdx(a);
+        const bi = findIdx(b);
         return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi);
       });
       c.lyricsPool = pool;
       return c;
     });
+  };
+
+  const splitChip = (chipIndex, e) => {
+    e.stopPropagation();
+    const word = chart.lyricsPool[chipIndex];
+    const syllables = splitSyllables(word);
+    if (!syllables) return;
+    updateChart(c => {
+      c.lyricsPool.splice(chipIndex, 1, ...syllables);
+      return c;
+    });
+    setSelectedChip(null);
   };
 
   // Measure management — new measures clone strum pattern from previous
@@ -7273,17 +7293,27 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
           } : {}),
         }}>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-            {chart.lyricsPool.map((word, i) => (
-              <button key={i} onClick={() => setSelectedChip(selectedChip === i ? null : i)} style={{
-                fontSize: 12, fontFamily: T.serif, padding: "4px 10px",
-                borderRadius: 12, cursor: "pointer",
-                background: selectedChip === i ? T.getTint(T.gold, 0.15) : T.getTint(T.coral, 0.08),
-                border: selectedChip === i ? `2px solid ${T.gold}` : `1px solid ${T.coral}30`,
-                color: T.textDark, fontWeight: selectedChip === i ? 600 : 400,
-                transform: selectedChip === i ? "scale(1.05)" : "none",
-                transition: "all 0.15s",
-              }}>{word}</button>
-            ))}
+            {chart.lyricsPool.map((word, i) => {
+              const canSplit = splitSyllables(word) !== null;
+              return (
+                <button key={i} onClick={() => setSelectedChip(selectedChip === i ? null : i)} style={{
+                  fontSize: 12, fontFamily: T.serif, padding: "4px 10px",
+                  borderRadius: 12, cursor: "pointer",
+                  background: selectedChip === i ? T.getTint(T.gold, 0.15) : T.getTint(T.coral, 0.08),
+                  border: selectedChip === i ? `2px solid ${T.gold}` : `1px solid ${T.coral}30`,
+                  color: T.textDark, fontWeight: selectedChip === i ? 600 : 400,
+                  transform: selectedChip === i ? "scale(1.05)" : "none",
+                  transition: "all 0.15s",
+                }}>
+                  {word}
+                  {canSplit && (
+                    <span onClick={(e) => splitChip(i, e)} style={{
+                      marginLeft: 4, opacity: 0.45, fontSize: 10, cursor: "pointer",
+                    }} title="Split into syllables">✂</span>
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
       )}

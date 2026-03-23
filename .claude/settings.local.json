@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(swarm)",
+      "Bash(npx vite:*)",
+      "Bash(npm run:*)"
+    ]
+  }
+}
