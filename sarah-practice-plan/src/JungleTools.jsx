@@ -5722,7 +5722,7 @@ function playChordAudio(fretStr) {
     const n = parseInt(c, 16); // handles 0-9 and a-f
     return isNaN(n) ? -1 : n;
   });
-  const stringMidi = [40, 45, 50, 55, 59, 64]; // E2-A2-D3-G3-B3-E4
+  const stringMidi = [52, 57, 62, 67, 71, 76]; // E3-A3-D4-G4-B4-E5 (one octave up for clarity)
   f.forEach((fretNum, i) => {
     if (fretNum < 0) return;
     const midi = stringMidi[i] + fretNum;
