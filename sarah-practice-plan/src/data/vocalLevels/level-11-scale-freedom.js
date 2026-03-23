@@ -59,7 +59,7 @@ export const level11 = {
       metronome: 72,
       steps: [
         {
-          text: "Play a C note on guitar (3rd fret A string) and let it ring. Sing Do-Re-Mi-Fa-Sol-La-Ti-Do ascending, one note per beat at 72 BPM. Use solfege syllables. Watch the Pitch Detector — every note should land clean.",
+          text: "Play a C note on guitar (3rd fret A string) and let it ring. Sing Do-Re-Mi-Fa-Sol-La-Ti-Do ascending, one note per beat at 72 BPM. Use solfege syllables. As you ascend, feel the vibration climb through your body: Do sits in the chest, Mi warms the throat, Sol brightens the mask, and high Do buzzes near the forehead. The scale is a body journey from low to high. Watch the Pitch Detector — every note should land clean.",
           why: "Solfege syllables are not just a teaching tool — they create distinct motor patterns for each scale degree. Research by neuroscientist Robert Zatorre at McGill shows that singing with syllables activates both the auditory cortex AND the motor planning regions (premotor cortex) simultaneously. Each syllable becomes a physical 'handle' for the abstract concept of a pitch. Singing with solfege literally builds more neural connections per note than singing on 'la' or 'ah.'"
         },
         {
@@ -67,7 +67,7 @@ export const level11 = {
           why: "The brain processes ascending and descending intervals differently. Ascending intervals activate anticipation circuits (the note is 'reaching' for something). Descending intervals activate resolution circuits (the note is 'arriving' somewhere). This is why the same two notes — Fa and Ti — feel different depending on direction. Your auditory cortex is building TWO representations of each note: one for ascending context, one for descending."
         },
         {
-          text: "Isolate the two new notes. Sing Mi-Fa-Mi three times. Really hear the half step between Mi and Fa — it's a tiny interval, just one fret on guitar. Now sing La-Ti-La three times. Another half step. These half steps are what make the major scale different from pentatonic.",
+          text: "Isolate the two new notes. Sing Mi-Fa-Mi three times. Really hear the half step between Mi and Fa — it is a tiny interval, just one fret on guitar. Feel it in your body: Fa creates a subtle tightening, a friction you can sense in your throat and jaw that Mi does not have. Now sing La-Ti-La three times. Another half step. Ti pulls upward — you may feel it as a brightening in the mask, an urgency that wants to resolve to Do. These half steps are what make the major scale different from pentatonic, and they live in the body as tension you can physically feel.",
           why: "Pentatonic scales avoid half steps entirely — that's what makes them sound 'safe' and universally pleasant. The major scale includes two half steps (Mi-Fa and Ti-Do), and these half steps create TENSION. Tension is not a problem — it's the engine of melody. Without tension, music has no forward motion. The half step creates a gravitational pull: Fa wants to fall to Mi, Ti wants to rise to Do. Learning to feel this pull is the foundation of everything in this level."
         },
         {
@@ -100,7 +100,7 @@ export const level11 = {
       metronome: 66,
       steps: [
         {
-          text: "Sing Mi-Fa-Mi four times at 66 BPM. Really hear the half-step rub between Mi and Fa. Mi is the 3rd of the C chord — it belongs. Fa is NOT in the C chord — it's a visitor. Feel how Fa creates friction against the drone.",
+          text: "Sing Mi-Fa-Mi four times at 66 BPM. Really hear the half-step rub between Mi and Fa. Mi is the 3rd of the C chord — it belongs, and your body relaxes into it. Fa is NOT in the C chord — it is a visitor. Feel how Fa creates friction against the drone: a physical tightening in the throat and jaw, a dissonance you sense in your body before your mind names it. That somatic tension is real — PMC5608010 found that dissonant intervals recruit more somatosensory cortex than consonant ones.",
           why: "The interval between Mi (E) and Fa (F) is a half step — the smallest interval in Western music. When you sing Fa over a C major chord, it creates a dissonance called a 'minor 9th' against the root. This dissonance is not an error — it's a tool. The brain's auditory cortex responds to dissonance with heightened attention. Literally: your listener pays more attention when you sing Fa. The resolution to Mi releases that attention into satisfaction. This tension-release cycle is the neurochemical basis of musical emotion."
         },
         {
@@ -150,7 +150,7 @@ export const level11 = {
           why: "Modes are not new scales — they're variations on scales you already know. Dorian differs from natural minor by exactly one note: the 6th degree is raised a half step. This single change transforms the emotional color from dark and heavy (natural minor) to warm and sophisticated (Dorian). Your brain processes this as a 'brightness shift' — the raised 6th adds a major-key flavor to a minor-key context, creating ambiguity that the auditory cortex finds compelling."
         },
         {
-          text: "Isolate the difference: sing E-F-E (natural minor 6th) then E-F#-E (Dorian 6th). Go back and forth 4 times. The F sounds dark and heavy. The F# sounds light and open. This one note defines the mode.",
+          text: "Isolate the difference: sing E-F-E (natural minor 6th) then E-F#-E (Dorian 6th). Go back and forth 4 times. The F sounds dark and heavy — feel how it pulls the resonance downward, settling into the throat. The F# sounds light and open — feel how it lifts the vibration toward the mask, brightening the cheekbones. Each mode has a body posture, and this one-note shift changes where the music lives in your skull.",
           why: "The 6th degree is the 'color note' of Dorian — it's what makes the mode identifiable. When music theorists talk about 'modal color,' they mean the one or two notes that differentiate a mode from its parent scale. Training your ear on this specific note means you can identify Dorian anywhere: in a Khruangbin groove, a Santana solo, or a Miles Davis recording. Categorical perception of the raised 6th is the goal."
         },
         {
@@ -196,7 +196,7 @@ export const level11 = {
           why: "Mixolydian replaces the leading tone (Ti/F#) with a flatted 7th (Te/F). Remember from the tension exercise: Ti pulls strongly toward Do. By flatting it, Mixolydian removes that upward pull. The result is a scale that feels like it could keep going forever — it never fully 'arrives.' This unresolved quality is why Mixolydian is the sound of road music, surf music, and jam bands. The journey matters more than the destination."
         },
         {
-          text: "Isolate the difference: sing E-F#-G (major, resolved) then E-F-G (Mixolydian, open). Go back and forth 4 times. The F# version sounds like 'coming home.' The F version sounds like 'still traveling.'",
+          text: "Isolate the difference: sing E-F#-G (major, resolved) then E-F-G (Mixolydian, open). Go back and forth 4 times. The F# version sounds like 'coming home' — feel how the resolution relaxes your throat and jaw, the tension dissolving as you arrive at G. The F version sounds like 'still traveling' — the throat stays slightly open, the body does not settle, the vibration floats. Mixolydian is a mode you feel in the body as permanent openness, like a breath that never fully exhales.",
           why: "The leading tone (F#) is the strongest resolution note in the major scale — it pulls toward the tonic (G) with almost gravitational force. By flatting it to F, you weaken that pull. The brain still expects resolution, but the resolution is softer, less urgent. This creates a laid-back quality that perfectly matches Gene's 'porch register' vocal style — relaxed, unhurried, content to float."
         },
         {
@@ -281,7 +281,7 @@ export const level11 = {
           why: "The chromatic scale is the complete palette — all 12 notes. Most singers never practice this because songs rarely use all 12 notes consecutively. But the ABILITY to sing any chromatic note accurately means your voice can find any passing tone, any approach note, any blue note on demand. This is like an artist learning to mix every color before painting — even if a painting doesn't use purple, knowing you CAN mix purple gives you freedom."
         },
         {
-          text: "Chromatic approach from below: pick a target note (let's say E). Sing Eb-E (approach from a half step below). Now do it with G: F#-G. And with A: Ab-A. Practice approaching each scale degree from a half step below.",
+          text: "Chromatic approach from below: pick a target note (let's say E). Sing Eb-E (approach from a half step below). Feel the approach note as a brief tension in your throat — a half step of friction that resolves as the vibration settles into the target note's body address. Now do it with G: F#-G. And with A: Ab-A. Each approach creates a tiny physical arc: tension, then arrival. Practice approaching each scale degree from a half step below.",
           why: "Chromatic approach from below is the most common passing tone technique in jazz and soul. It creates a 'scooping' effect — the voice slides into the target note like a saxophone. This approach activates the brain's pitch prediction system: the listener hears the half-step-below note and immediately predicts the target. When the target arrives, the prediction is confirmed, creating a small hit of satisfaction. It's subtle, but it's the difference between singing that sounds studied and singing that sounds effortless."
         },
         {
@@ -335,7 +335,7 @@ export const level11 = {
           why: "Passing tones between chord tones are the simplest way to add melodic interest. The non-chord tone is brief (usually on a weak beat) and resolves immediately to a chord tone (on a strong beat). This creates micro-tension that keeps the ear engaged without disrupting the harmonic foundation. Most pop and rock melodies use exactly this technique — chord tones on strong beats, passing tones on weak beats."
         },
         {
-          text: "Sing the note E continuously (drone on E) while playing all four chords underneath. FEEL how E changes meaning: it's the 5th of Am (stable), the 3rd of C (warm), the 6th of G (colorful), and the 2nd of D (tense). Same note, four different feelings.",
+          text: "Sing the note E continuously (drone on E) while playing all four chords underneath. FEEL how E changes meaning — and how your body responds differently to the same pitch over each chord. Over Am, E is the 5th: stable, the vibration sits comfortably in the mask, your jaw relaxes. Over C, E is the 3rd: warm, the throat colors it. Over G, E is the 6th: colorful, slightly suspended, a brightness behind the cheekbones. Over D, E is the 2nd: tense, your throat tightens subtly, the note wants to move. Same pitch, four different body sensations.",
           why: "This exercise is the single most important demonstration of functional harmony. When you hold one note and change the chords underneath, you experience the fact that notes don't have inherent emotional meaning — they have RELATIONAL meaning. E is not 'happy' or 'sad.' E-over-Am is stable. E-over-D is tense. This relational hearing is what separates a melodist from someone who just sings the right notes. It's the difference between painting and coloring inside the lines."
         },
         {
