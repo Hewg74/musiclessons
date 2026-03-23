@@ -9,7 +9,7 @@ import { CHORD_VOICINGS } from './chordVoicings.js';
 import { makeEmptyCell, makeEmptyMeasure, makeTemplateChart, compressToURL } from './chartHelpers.js';
 import SongPicker from '../tools/SongPicker.jsx';
 import { YouTubeAudioPlayer, extractYouTubeId } from '../tools/youtube.jsx';
-import { splitSyllables } from './syllableUtil.js';
+import { splitSyllables, chipText, chipGroup } from './syllableUtil.js';
 
 const BEAT_LABELS_8 = ["1", "&", "2", "&", "3", "&", "4", "&"];
 
@@ -327,7 +327,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
       });
       c.lyricsPool = words;
       // Clear all placed lyrics
-      c.measures.forEach(m => m.cells.forEach(cell => { cell.lyric = ""; }));
+      c.measures.forEach(m => m.cells.forEach(cell => { cell.lyric = ""; cell.lyricGroupId = null; }));
       return c;
     });
     setLyricsEditing(false);
@@ -336,10 +336,11 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
 
   const placeLyric = (mIdx, cIdx) => {
     if (selectedChip === null) return;
-    const word = chart.lyricsPool[selectedChip];
-    if (!word) return;
+    const item = chart.lyricsPool[selectedChip];
+    if (!item) return;
     updateChart(c => {
-      c.measures[mIdx].cells[cIdx].lyric = word;
+      c.measures[mIdx].cells[cIdx].lyric = chipText(item);
+      c.measures[mIdx].cells[cIdx].lyricGroupId = chipGroup(item);
       c.lyricsPool = c.lyricsPool.filter((_, i) => i !== selectedChip);
       return c;
     });
@@ -347,27 +348,29 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   };
 
   const removePlacedLyric = (mIdx, cIdx) => {
-    const word = chart.measures[mIdx].cells[cIdx].lyric;
-    if (!word) return;
+    const cell = chart.measures[mIdx].cells[cIdx];
+    if (!cell.lyric) return;
     updateChart(c => {
+      const text = c.measures[mIdx].cells[cIdx].lyric;
+      const groupId = c.measures[mIdx].cells[cIdx].lyricGroupId;
       c.measures[mIdx].cells[cIdx].lyric = "";
+      c.measures[mIdx].cells[cIdx].lyricGroupId = null;
+      // Return as tagged fragment or plain string
+      const returned = groupId ? { text, groupId } : text;
       // Re-insert at original position based on lyricsInput order
       const allWords = (c.lyricsInput || "").split(/\s+/).filter(w => w.length > 0).flatMap(w =>
         w.includes("-") ? w.split(/(?<=-)/).filter(s => s.length > 0) : [w]
       );
-      const pool = [...c.lyricsPool, word];
-      // Sort pool by original order in lyricsInput
+      const pool = [...c.lyricsPool, returned];
       pool.sort((a, b) => {
         const findIdx = (w) => {
-          const idx = allWords.indexOf(w);
+          const t = chipText(w);
+          const idx = allWords.indexOf(t);
           if (idx !== -1) return idx;
-          // Syllable fragment — find parent word's position
-          const clean = w.replace(/-$/, '');
+          const clean = t.replace(/-$/, '');
           return allWords.findIndex(aw => aw.toLowerCase().includes(clean.toLowerCase()));
         };
-        const ai = findIdx(a);
-        const bi = findIdx(b);
-        return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi);
+        return (findIdx(a) === -1 ? 999 : findIdx(a)) - (findIdx(b) === -1 ? 999 : findIdx(b));
       });
       c.lyricsPool = pool;
       return c;
@@ -376,11 +379,12 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
 
   const splitChip = (chipIndex, e) => {
     e.stopPropagation();
-    const word = chart.lyricsPool[chipIndex];
-    const syllables = splitSyllables(word);
+    const item = chart.lyricsPool[chipIndex];
+    const syllables = splitSyllables(item);
     if (!syllables) return;
+    const groupId = Date.now();
     updateChart(c => {
-      c.lyricsPool.splice(chipIndex, 1, ...syllables);
+      c.lyricsPool.splice(chipIndex, 1, ...syllables.map(s => ({ text: s, groupId })));
       return c;
     });
     setSelectedChip(null);
@@ -388,40 +392,40 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
 
   const joinChip = (chipIndex, e) => {
     e.stopPropagation();
+    const item = chart.lyricsPool[chipIndex];
+    const groupId = chipGroup(item);
+    if (!groupId) return;
     updateChart(c => {
-      const pool = c.lyricsPool;
-      // Find adjacent fragment group containing this chip
-      let start = chipIndex;
-      while (start > 0 && pool[start - 1].endsWith('-')) start--;
-      let end = chipIndex;
-      while (end < pool.length - 1 && pool[end].endsWith('-')) end++;
-      const poolFrags = pool.slice(start, end + 1);
-      const partial = poolFrags.map(f => f.replace(/-$/, '')).join('');
-      // Find original word from lyricsInput
-      const origWords = (c.lyricsInput || '').split(/\s+/).filter(Boolean);
-      const originalWord = origWords.find(w =>
-        w.toLowerCase().replace(/-/g, '').includes(partial.toLowerCase())
-      ) || partial;
-      // Find placed fragments that belong to this word
-      const fullSyls = splitSyllables(originalWord);
-      if (fullSyls) {
-        const poolSet = new Set(poolFrags);
-        const missingSyls = fullSyls.filter(s => !poolSet.has(s));
-        const missingList = [...missingSyls];
-        // Pull placed fragments back from cells
-        c.measures.forEach(m => {
-          m.cells.forEach(cell => {
-            const idx = missingList.indexOf(cell.lyric);
-            if (idx !== -1) {
-              missingList.splice(idx, 1);
-              cell.lyric = '';
-            }
-          });
+      // Collect all pool fragments with this groupId
+      const poolIdxs = [];
+      c.lyricsPool.forEach((p, i) => { if (chipGroup(p) === groupId) poolIdxs.push(i); });
+      // Reconstruct word from all fragments (pool + placed)
+      const allFragTexts = [];
+      c.lyricsPool.forEach(p => { if (chipGroup(p) === groupId) allFragTexts.push(chipText(p)); });
+      // Pull placed fragments with same groupId back from cells
+      c.measures.forEach(m => {
+        m.cells.forEach(cell => {
+          if (cell.lyricGroupId === groupId) {
+            allFragTexts.push(cell.lyric);
+            cell.lyric = '';
+            cell.lyricGroupId = null;
+          }
         });
-      }
-      // Replace fragment group with original word
-      pool.splice(start, end - start + 1, originalWord);
-      c.lyricsPool = pool;
+      });
+      // Find original word by matching syllable splits (order-independent)
+      const origWords = (c.lyricsInput || '').split(/\s+/).filter(Boolean);
+      const fragsSorted = [...allFragTexts].map(f => f.toLowerCase()).sort().join('|');
+      const originalWord = origWords.find(w => {
+        const syls = splitSyllables(w);
+        if (!syls || syls.length !== allFragTexts.length) return false;
+        return [...syls].map(s => s.toLowerCase()).sort().join('|') === fragsSorted;
+      }) || allFragTexts.map(f => f.replace(/-$/, '')).join('');
+      // Remove pool fragments and insert original word at first fragment's position
+      const insertAt = poolIdxs[0];
+      // Count how many removed items are before insertAt to adjust index
+      const removedBefore = poolIdxs.filter(idx => idx < insertAt).length;
+      c.lyricsPool = c.lyricsPool.filter((_, i) => !poolIdxs.includes(i));
+      c.lyricsPool.splice(insertAt - removedBefore, 0, originalWord);
       return c;
     });
     setSelectedChip(null);
@@ -1432,10 +1436,10 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
           } : {}),
         }}>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-            {chart.lyricsPool.map((word, i) => {
-              const pool = chart.lyricsPool;
-              const isFragment = word.endsWith('-') || (i > 0 && pool[i - 1].endsWith('-'));
-              const canSplit = !isFragment && splitSyllables(word) !== null;
+            {chart.lyricsPool.map((item, i) => {
+              const text = chipText(item);
+              const group = chipGroup(item);
+              const canSplit = !group && splitSyllables(item) !== null;
               return (
                 <button key={i} onClick={() => setSelectedChip(selectedChip === i ? null : i)} style={{
                   fontSize: 12, fontFamily: T.serif, padding: "4px 10px",
@@ -1446,13 +1450,13 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                   transform: selectedChip === i ? "scale(1.05)" : "none",
                   transition: "all 0.15s",
                 }}>
-                  {word}
+                  {text}
                   {canSplit && (
                     <span onClick={(e) => splitChip(i, e)} style={{
                       marginLeft: 4, opacity: 0.45, fontSize: 10, cursor: "pointer",
                     }} title="Split into syllables">✂</span>
                   )}
-                  {isFragment && (
+                  {group && (
                     <span onClick={(e) => joinChip(i, e)} style={{
                       marginLeft: 4, opacity: 0.45, fontSize: 10, cursor: "pointer",
                     }} title="Rejoin syllables">↩</span>
