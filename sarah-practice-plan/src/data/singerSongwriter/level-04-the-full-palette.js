@@ -105,7 +105,7 @@ export const level4 = {
       ],
       feel: "Five notes should feel like unlocking a door — suddenly you have enough colors to paint real pictures. The pentatonic is the sweet spot: enough notes for infinite variety, few enough that every combination sounds good. Freedom without overwhelm.",
       wrong: "If the five notes feel like too many choices, you've ramped too fast. Go back to four notes (ss-4-1) for another session, or start your five-note freestyle by walking stepwise (A-C-D-E-G) rather than leaping randomly. The structure will guide you.",
-      sarah: "Gene, every artist you love lives in the pentatonic — Khruangbin, Skinshape, Allah-Las, Tinariwen, Tommy Guerrero. This five-note scale is the common language of psych-surf, desert blues, reggae, and soul. You now have the full palette. The rest of this level is about making it yours.",
+      sarah: "Gene, every artist you love lives in the pentatonic — Khruangbin, Skinshape, Allah-Las, Tinariwen, Tommy Guerrero. This five-note scale is the common language of psych-surf, desert blues, reggae, and soul. You now have the full palette. The rest of this level is about making it yours. If you've explored Vocal Level 6, this five-note freedom connects to the pentatonic sandbox there — same scale, same body map, different context.",
       drone: { root: "Am", octave: 2, texture: "warm" },
       referencePitches: getPitchRange("A2", "G4"),
       pitchContour: true,
@@ -150,6 +150,7 @@ export const level4 = {
         { text: "Try matching the guitar's emotional intent: if the guitar plays something gentle and stepwise, answer with something gentle. If the guitar plays something rhythmic and punchy, answer in kind. Use the full cycle: hear the guitar's intent, feel it land in your body — does the gentle call settle in your chest? Does the punchy call tighten your shoulders? — then choose a response that lives in the same body region and emotional temperature. Emotional matching creates coherent musical dialogue.", why: "Matching emotion between call and response creates musical coherence — the conversation has a mood. Feeling the call's body location and matching it in the response adds a somatic channel to the emotional matching — you're not just hearing the mood, you're feeling where it lives and responding from that same place." },
         { text: "Now try CONTRASTING: if the guitar plays high and fast (G-E-D), answer low and slow (A... C...). If the guitar is sparse, answer with a flurry. Contrast creates drama and keeps the conversation interesting.", why: "Contrast in call-and-response creates musical tension and release. A conversation where both speakers always agree is boring — a great musical dialogue has agreement AND surprise." },
         { text: "Extended free conversation: 3 minutes of alternating guitar and voice over the backing track. Let the phrases develop — start simple, let them grow more complex as you warm up. During each guitar call, let your response form as a whole-body event: hear the pitch, feel its body address, sense what it wants to express. When the response is vivid inside — not just a pitch but a felt intention — sing it. Some exchanges will be brief; others might extend into longer ideas.", why: "Extended conversation builds musical stamina and depth. Pre-forming the response as a unified pitch-body-emotion event makes each phrase arrive with more conviction. The longer you sustain the dialogue with this embodied attention, the more discoveries emerge." },
+        { text: "Delayed response round: guitar plays a pentatonic call. Now count silently to 5 — hold the entire call vivid in your mind: the notes, the rhythm, the emotional color, the body locations it activated. Then respond. The 5-second gap transforms the conversation from reactive to audiated. Try 3 exchanges with the delay. Notice: does the delay change the QUALITY of your response? Many musicians find their delayed responses are more intentional, more musical.", why: "Systematically delaying the response forces your inner ear to carry the musical conversation alone for 5 seconds. This is pure audiation training embedded in a creative context. Choir directors use progressive gap-lengthening as their primary audiation tool — you're applying it to improvised conversation rather than drilled patterns." },
         { text: "Record the last 2 minutes. Listen back for the moment where guitar and voice were truly in conversation — where the response couldn't have existed without the specific call that preceded it. That's the magic moment.", why: "Identifying moments of genuine musical conversation trains you to recognize (and reproduce) the feeling of real-time musical dialogue. These moments are the seeds of your future songs." }
       ],
       feel: "This should feel like Khruangbin in your living room — Mark plays a pentatonic lick, Laura answers with her voice, the conversation flows naturally. Relaxed, groovy, responsive. Each phrase listens to what came before.",
@@ -557,6 +558,30 @@ export const level4 = {
       metronome: 75,
       recorder: true,
       phraseForm: { pattern: "ABA", barsPerSection: 2, labels: { A: "Guitar Call", B: "Silent Audiation + Voice Response" } }
+    },
+
+    // ─── AUDIATION ENRICHMENT ───
+
+    {
+      id: "ss-4-24",
+      time: 5,
+      title: "Sing and Think — The Vanishing Melody",
+      type: "vocal",
+      what: "Beat omission: sing some notes aloud, audiate others silently in real time. This trains the ability to 'hear ahead' while performing — the bridge between 'hear before you sing' and 'hear while you play.' Choir directors call this the most powerful real-time audiation exercise.",
+      setup: "Drone on A. Metronome at 70 BPM. No guitar needed.",
+      drone: { root: "Am", octave: 2, texture: "pure" },
+      referencePitches: getPitchRange("A2", "G4"),
+      metronome: 70,
+      steps: [
+        { text: "Warm-up: sing A-C-D-E all aloud, one note per beat, quarter notes against the drone. Just four notes ascending. Feel the body map: A in the chest, C in the throat, D between throat and mask, E at the mask. Do this 4 times until it's automatic.", why: "Establishing the melodic pattern with full external sound gives your audiation something concrete to hold onto when notes start vanishing. The body map is your anchor." },
+        { text: "First omission: sing A-C aloud, THINK D-E silently. Keep the beat — the silent notes occupy the same time as the sung ones. After the silence, sing A again. Did you land on the right A? The body should feel like it continued the upward journey (throat to mask) even during the silent notes.", why: "Beat omission — singing some notes while internally audiating others — trains real-time switching between external production and internal hearing. This is how experienced musicians 'hear ahead' while playing. The body map continues even through silence, giving you a somatic anchor." },
+        { text: "More omission: sing A aloud, THINK C-D-E silently, sing A again. Only two notes are audible — the beginning and the end. Did you return to the same A? The internal journey (chest → throat → between → mask → back to chest) should feel vivid even though most of it was silent.", why: "Audiating three notes in real time while maintaining beat, pitch, and body awareness is a significant challenge. The return to A tests whether your internal tracking maintained the correct pitch level through the silent passage." },
+        { text: "Full vanishing: sing A aloud → C-D-E-G all silent (four beats of internal singing) → A aloud again. The entire pentatonic ascending passage happens inside your head. Only the bookend As are audible. Did your inner ear carry the full journey?", why: "Four beats of silent pentatonic ascending is a demanding audiation task. But this is exactly what happens when a musician 'hears' a phrase internally before singing it — the music exists fully formed inside before any sound emerges. The bookend technique (sing-silence-sing) gives you immediate verification." },
+        { text: "Creative application: make up a 4-note phrase from the pentatonic. Sing the first note aloud, think the middle two silently, sing the last note aloud. Try 5 different phrases. Which ones are easiest to hold internally? Stepwise motion (A-C-D-E) is usually easier than leaps (A-E-C-G).", why: "Applying beat omission to improvised phrases (rather than just scales) bridges the gap to real musical performance. Noticing which interval patterns are easier to audiate builds awareness of your inner ear's strengths." }
+      ],
+      feel: "The silent beats should feel FULL, not empty — your voice has stopped but your inner musician keeps singing. When you re-enter with sound and land on the right note, there's a satisfying click of confirmation.",
+      wrong: "If you're humming or whispering during the 'silent' beats, you're bypassing the audiation. The entire point is internal hearing without sound. If landing on the return note is consistently wrong, simplify: omit only one note instead of two or three.",
+      sarah: "Gene, this is what happens inside every great improviser's head — they're hearing music continuously even when they're not playing. The notes they DON'T play are just as audiated as the ones they do. You're building that continuous inner stream."
     }
   ]
 };

@@ -2,7 +2,7 @@ import { getPitchRange } from "../appData.js";
 
 export const level3 = {
   num: 3, name: "Building the Inner Ear", focus: "Solfege, intervals, pitch imagery, auditory training",
-  duration: "35 min",
+  duration: "49 min",
   setup: "Guitar for reference tones. Quiet room. Pitch Detector on.",
   subtitle: "Building the Inner Ear",
   description: "Before you can sing freely — float a melody over a Khruangbin groove, improvise over a reggae one-drop — your brain needs an internal map of pitch. This level builds that map: pre-hearing notes, recognizing intervals, naming scale degrees, holding pitches in memory. By the end, you won't just react to pitch — you'll navigate it.",
@@ -45,11 +45,13 @@ export const level3 = {
         { text: "Repeat with F3, F#3, G3, G#3. Full listen-imagine-sing cycle each time. Track accuracy.", why: "Ascending toward the passaggio, the forward model matters more — the voice does unpredictable things near the break." },
         { text: "Now WITHOUT guitar. Think of E3 — really hear it internally — then sing. Check with guitar after.", why: "Generating from memory requires a stronger internal representation. If you're within a semitone, the forward model is working." },
         { text: "Try F3, then G3 from memory alone. Is there a note your brain 'knows' better than others?", why: "Most people have anchor pitches. As a guitar player, open-string pitches like E and A are probably yours. We build outward from anchors." },
+        { text: "Extended hold: play E3. Listen 3 seconds. Stop the string. Now hold the full forward model in silence for 10 seconds — the pitch, the chest buzz, the emotional grounding. Count slowly to 10. Then sing. Check. 3 rounds. The 10-second hold pushes past echoic memory (which fades at ~4 seconds) into actively maintained audiation.", why: "10-second holds are the core training zone for the forward model. Your auditory cortex must sustain the pitch representation without any external reinforcement. The body-location anchor (chest warmth) gives you a second channel that can support the pitch when pure auditory imagery wavers." },
+        { text: "Stretch goal: play E3, stop, hold the forward model for 20 seconds. This is hard — your mind will wander. When it does, gently return to all three channels. Even a faint representation at 20 seconds counts as real progress. If you can feel the chest warmth even when the pitch fades, that's your body serving as an audiation anchor.", why: "20-second holds push into advanced audiation territory. Progressive gap-lengthening (3s → 5s → 10s → 20s) is the single highest-leverage audiation exercise used in choir training. The body channel often outlasts the auditory channel — the proprioceptive memory of pitch persists even when the mental sound fades." },
         { text: "Final round: play a note, wait 5 seconds of silence, imagine 3 seconds, then sing.", why: "Longer delay strengthens auditory working memory — like holding a weight longer makes the muscle stronger." }
       ],
       feel: "Singing should feel like ARRIVING somewhere you knew you were going — not just the right pitch, but the right body sensation and the right emotional quality. The note shouldn't surprise you in any channel. It should feel like recognition: 'Yes, that's the sound, that's the place in my body, that's what it means.'",
       wrong: "If you're skipping the imagination step, you're training reaction, not prediction. The silence IS the exercise. If you can't hear it mentally, try humming barely audibly to bridge the gap. The 'forward model' is literally a prediction — your brain predicts what E3 will sound like, where it will vibrate, and what it will feel like. The prediction error (the gap between what you imagined and what came out) is the learning signal. Your brain uses that error to update the model. This is why the listen-imagine-sing-check cycle works: each check refines the prediction for next time.",
-      sarah: "Brain scans show trained musicians activate auditory cortex BEFORE playing a note. Untrained musicians activate it AFTER. Every listen-imagine-sing cycle rewires that timing. You are literally changing your brain's activation sequence — that is not a metaphor.",
+      sarah: "Brain scans show trained musicians activate auditory cortex BEFORE playing a note. Untrained musicians activate it AFTER. Every listen-imagine-sing cycle rewires that timing. You are literally changing your brain's activation sequence — that is not a metaphor. If you're also doing the Singer-Songwriter track, you'll meet this same audiation cycle there — hearing the note, feeling its body address, choosing its meaning before singing. Same skill, different context.",
       metronome: 60,
       levelUp: "Generate 3 out of 5 pitches from memory within one semitone, confirmed by Pitch Detector."
     },
@@ -111,6 +113,7 @@ export const level3 = {
         { text: "Harder: Do-Re OUT LOUD. Mi-Fa-Sol SILENTLY. La OUT LOUD. Three silent notes = more drift time.", why: "Like walking with eyes closed — longer silence means more drift. Most people drift flat because the brain conservatively under-estimates pitch without feedback." },
         { text: "Hardest: just Do OUT LOUD. Re-Mi-Fa-Sol-La-Ti SILENTLY. Do(C4) OUT LOUD. Did you hit the octave?", why: "Six silent degrees is hard even for trained musicians. If you're within a semitone of C4, your inner ear is remarkably strong." },
         { text: "Move to G: Do = G3. Sing Do-Re-Mi aloud, think Fa-Sol silently, sing La aloud. Is La on E4?", why: "Changing keys tests whether your imagery is flexible or locked to C. The higher La adds a physical range challenge on top of the tracking challenge." },
+        { text: "Beat omission with a melodic phrase: instead of an ascending scale, try a simple melodic fragment — Do-Mi-Sol-Mi (C-E-G-E). Sing the first note aloud, THINK the next two silently, sing the last one aloud. Did you land on the right Mi? Try different fragments: Sol-Mi-Do-Re, La-Sol-Mi-Do. This is beat omission applied to real melodic shapes, not just scales — it trains real-time audiation during musical phrasing.", why: "Beat omission (singing some notes, internally audiating others) is a technique choir directors use to build real-time audiation DURING performance. Applying it to melodic fragments instead of scales bridges the gap between 'hear before you sing' and 'hear while you play.' This is the technique that makes experienced musicians able to 'hear ahead' of what they're singing." },
         { text: "Cool-down: full scale aloud again. Notice how vivid each note feels after the silent work.", why: "After imagery training, full-voice singing feels easier — like taking off ankle weights. The forced processing sharpened your forward model." }
       ],
       feel: "Silent portions should feel like intense inner concentration — your prediction engine generating notes without external confirmation. When you re-enter with sound, the right note should feel like it was waiting for you. Silent notes are predictions without execution — pure model training.",
@@ -312,6 +315,64 @@ export const level3 = {
       wrong: "If all three keys feel equally impossible, you may need more time with single-key interval practice (v3e3) before adding multi-key work. The multi-key exercise builds on single-key competence — it does not replace it. Also: make sure you actually CHANGE the drone when switching keys. Singing E major intervals over an Am drone is a different exercise entirely (and much harder).",
       sarah: "Real music changes keys constantly — even within a single song. If your ear only works in Am, you can only sing in Am. This exercise breaks that limitation. By the time you finish Level 3, intervals should feel the same SIZE in every key, even though they sound different. That is abstract interval hearing — the foundation of musical fluency. The discomfort of switching keys IS the exercise — your brain learns most during those transitions, not during the comfortable stretches.",
       levelUp: "Complete the full 6-section relay with no section below 50% accuracy. Record and review. Practice with pitch feedback OFF for long-term retention, and navigate intervals across three keys (Am, E major, A major) with cross-key fluency."
+    },
+
+    // ─── AUDIATION ENRICHMENT (stretch exercises) ───
+
+    {
+      id: "v3e14", time: 8, title: "The Silence Ladder — How Long Can You Hold It?", type: "vocal",
+      drone: { root: "A", octave: 2, texture: "pure" },
+      what: "A systematic audiation endurance test using solfege. The drone plays, then stops. How long can you hold the note alive in your mind — pitch, body location, emotional quality — before it fades? Start with 3 seconds and climb.",
+      setup: "Drone on A. Pitch Detector on. Quiet room. No guitar needed.",
+      referencePitches: getPitchRange("A2", "E4"),
+      pianoKeys: { notes: ["A3", "C4", "E4"], label: "Do-Mi-Sol", range: ["A3", "E4"] },
+      pitchContour: true,
+      steps: [
+        { text: "Rung 1 — 3 seconds: Drone on A (Do). Listen 10 seconds. Drone off. Hold Do internally for 3 seconds — hear the pitch, feel the chest warmth, hold the sense of home. Sing. Check. 3 rounds.", why: "3 seconds is your baseline — confirming the skill before climbing. This mirrors the holds you've done in v3e1." },
+        { text: "Rung 2 — 5 seconds: Same process, 5-second hold. You're crossing from echoic memory (automatic, fades ~4 seconds) into active audiation (maintained, requires effort). 3 rounds.", why: "The echoic-to-active transition is the most important threshold in audiation training. Past 4 seconds, your auditory cortex must actively sustain the representation." },
+        { text: "Rung 3 — 10 seconds: Drone on → off → 10 seconds of silence. Keep your hand on your chest as a somatic anchor — the physical touch can help sustain the body-address channel when the auditory channel wavers. 3 rounds.", why: "10-second holds are the core audiation training zone. The hand-on-chest technique leverages Zamorano's finding (2025) that body awareness supports pitch accuracy — giving the somatic channel a physical anchor stabilizes the whole representation." },
+        { text: "Rung 4 — 15 seconds: Drone on → off → 15 seconds. If the pitch fades, notice WHEN — that's your current audiation endurance. Don't force it; just observe. 2 rounds.", why: "15 seconds pushes past most beginners' limits. Knowing your fade-point gives you a training target. The progressive ladder approach is the single highest-leverage audiation exercise used in choir training worldwide." },
+        { text: "Rung 5 — 20 seconds (stretch goal): Drone on → off → 20 seconds. Even a faint, drifted version of Do at 20 seconds is a genuine accomplishment. 1 round.", why: "20 seconds requires sustained active audiation — well beyond echoic memory. Most untrained singers lose the pitch by 8-10 seconds. Reaching for 20 seconds, even imperfectly, builds the neural pathways." },
+        { text: "Two-note ladder: Drone on → sing Do then Sol (A then E) → drone off → hold both notes and their body locations (chest, mask) for 5 seconds → sing Do-Sol → check. Then try 10 seconds. Holding an interval is harder than holding a single note.", why: "Multi-note audiation requires maintaining not just pitches but the RELATIONSHIP between them — the wide, clean interval of the perfect 5th. This bridges single-note audiation and hearing melodies internally." },
+        { text: "Triad ladder: Drone on → sing Do-Mi-Sol slowly → drone off → hold the complete triad for 5 seconds: three pitches, three body locations (chest-throat-mask), three emotional colors. Then sing. How much survived?", why: "Triadic audiation with full embodiment is the capstone. You're maintaining three simultaneous pitch-body-emotion representations in silence. This is how melodies form inside a musician's mind before reaching the instrument." }
+      ],
+      feel: "Each rung should feel like a meditation on endurance. Short rungs feel achievable; longer ones feel like a reach. Wherever your pitch fades is simply your current edge — edges move with practice.",
+      wrong: "No humming, whispering, or sound during holds. If you consistently lose pitch before 5 seconds, spend more time with v3e1's basic forward model before climbing the ladder.",
+      sarah: "Gene, this is the gym for your inner ear. Nobody hits 20 seconds on the first try. But every rung you climb makes your internal hearing stronger. The musicians who can hold a pitch in silence for 15+ seconds tend to have the best pitch accuracy, the most expressive timing, and that uncanny ability to 'hear' a melody before playing it."
+    },
+    {
+      id: "v3e15", time: 3, title: "Generation Check — Triad from Silence", type: "vocal",
+      what: "The ultimate audiation test for Level 3: no drone, no guitar, no reference. Can you generate Do, Mi, and Sol from pure internal hearing? This is generation, not recognition — producing pitch from nothing but your inner ear.",
+      setup: "Pitch Detector on. No drone. No guitar. Complete silence.",
+      referencePitches: getPitchRange("A2", "E4"),
+      pianoKeys: { notes: ["A3", "C#4", "E4"], label: "Do-Mi-Sol", range: ["A3", "E4"] },
+      pitchContour: true,
+      steps: [
+        { text: "Complete silence. Close your eyes. Reach for Do (A) inside you — not from a recent memory, but from your body. Where does A live? Feel the chest warmth gathering. When the pitch is as vivid as you can make it, sing. Check with pitch detector. 3 rounds.", why: "Single-note generation from silence tests whether Do has been fully internalized through all the forward model and drone work. The body address (chest warmth) serves as a second reference channel when pure pitch memory wavers." },
+        { text: "Now Mi (C# in A major, or C in Am — whichever key you've been working in). From silence, feel where Mi lives — brighter than Do, forward in the throat/jaw. Sing. Check. 3 rounds.", why: "Mi is defined by its relationship to Do — generating it from silence requires internalizing the major or minor 3rd interval, not just an absolute pitch. If it's difficult, try hearing Do first (silently), then feeling the relationship upward to Mi." },
+        { text: "Sol (E). From silence, feel the mask brightness, the openness of the 5th. Sing. Check. 3 rounds.", why: "Sol's body address (mask/cheekbones) is distinctive. The vibration-rising body map you've built this level is now being tested as an independent pitch-generation tool." },
+        { text: "The full test: from silence, sing Do-Mi-Sol as a slow ascending phrase. No stopping. Let each note's body address hand off to the next — chest to jaw to mask. Then try Sol-Mi-Do descending. Check after each attempt.", why: "Multi-note generation from silence is the capstone. You're producing intervals and a complete somatic journey from pure internal hearing. Even approximate accuracy means your inner ear has internalized the triad as an embodied structure." }
+      ],
+      feel: "This should feel like reaching into silence and finding music there — like your body remembers the notes even when nothing is playing.",
+      wrong: "If you can't find any notes from silence, that's not failure — it means more time with the drone-based forward model exercises (v3e1). Generation from silence is a milestone, not a requirement.",
+      sarah: "Gene, this is a checkpoint, not a gate. If you can find even one of the three notes from pure silence, your audiation is developing. Most people find Do (the most practiced) and struggle with Mi. Wherever you are is exactly where you should be."
+    },
+    {
+      id: "v3e16", time: 3, title: "Two-Note Sandbox — Free Improvisation", type: "vocal",
+      drone: { root: "A", octave: 2, texture: "warm" },
+      what: "Using only two notes — A (Do) and E (Sol) — make up small phrases over the drone. No rules, no right or wrong. This is the simplest possible improvisation, and it tests whether your audiation can generate music, not just reproduce it.",
+      setup: "Drone on A. No guitar needed. Pitch Detector optional.",
+      referencePitches: getPitchRange("A3", "E4"),
+      pitchContour: true,
+      recorder: true,
+      steps: [
+        { text: "Drone on A. Using only A and E, make up small phrases. Vary rhythm — long A, short bursts of E, silence, then E leading into A. No plan, no targets. Just explore what lives between home and the sky. 2 minutes.", why: "Gordon's audiation framework shows that audiation isn't fully functional until the learner can generate novel phrases that 'fit' a tonal context. Two-note improvisation is the simplest possible generative test — and it reveals whether you've internalized the tonal relationship between root and 5th." },
+        { text: "Now try with more intention: before each phrase, hear it forming inside you — 2-3 notes, with a rhythm. Commit to what you hear. Then sing it. The phrase should feel like recognition, not invention. 2 minutes.", why: "Audiating before improvising transforms random note production into intentional musical creation. When the phrase you sing matches what you heard internally, that's the audiation-to-production loop working in real time." },
+        { text: "Record one final minute of free two-note play. Listen back — find one moment that surprised you. That surprise is your inner ear discovering something your conscious mind didn't plan.", why: "Self-listening for surprising moments builds creative awareness. The gap between what you planned and what emerged is where musicality lives." }
+      ],
+      feel: "This should feel playful and low-pressure — like doodling with your voice. There are no wrong notes with just root and 5th over an Am drone.",
+      wrong: "If you find yourself stuck on a single repeated pattern, break it: try a different rhythm, a different dynamic, or just silence followed by a new phrase. If you're accidentally singing notes other than A and E, come back to the two-note palette — the constraint IS the exercise.",
+      sarah: "Gene, this is play, not performance. If you sing something ugly, laugh and try again. Improvisation begins with permission. If you're also doing the Singer-Songwriter track, this is similar to the two-note exercises in Level 3 there — same skill, different context. Tinariwen builds entire songs on root and 5th. Two notes, deeply felt, is real music."
     }
   ]
 };

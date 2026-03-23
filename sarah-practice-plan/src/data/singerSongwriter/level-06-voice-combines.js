@@ -644,6 +644,23 @@ export const level6 = {
       recorder: true,
       metronome: 85,
       levelUp: "Can pass the TV Test for guitar autonomy, hum/speak/sustain over chord changes, combine any two improvisation skills — rhythm + dynamics, chord changes + emotion, genre feel + vowel shapes — navigate chord changes by feeling root gravity, place voice behind/on/ahead of the beat deliberately, paint with notes as emotional colors across changing harmonic palettes, distinguish swing from straight feel, vary rhythmic density as a compositional tool, create complementary vocal rhythms that interlock with guitar grooves, perform dual-task singing in Em-centered and E major progressions, and navigate cross-key transitions between Am and E major families — while strumming, without either skill degrading when the other is added."
+    },
+    {
+      id: "ss-6-28",
+      time: 3,
+      title: "Bone Channel Awareness",
+      type: "vocal",
+      what: "A quick introduction to bone-conducted feedback — the internal vibration channel that expert singers rely on for pitch accuracy. Cover your ears, sing, and discover a whole dimension of sound you've been ignoring.",
+      setup: "No guitar needed. Quiet room.",
+      referencePitches: getPitchRange("A2", "E4"),
+      steps: [
+        { text: "Sing A on 'ahh' at comfortable volume. Listen to yourself through the room. Now gently cover both ears with your palms and sing the same note at the same volume. The sound transforms — louder, richer, more resonant, coming from inside your skull. That's bone conduction: your vocal folds vibrating directly through your skull bones to your inner ear. Note: you may instinctively sing louder with ears covered (Lombard effect). Keep the same volume.", why: "Stanford bone conduction research confirms that vocal fold vibrations travel through skull bones to the cochlea. Blocking air-conducted sound makes this internal channel vivid. Singers who develop awareness of this channel have a pitch reference that works in any acoustic environment." },
+        { text: "With ears covered, sing A → C → E slowly. Feel how each pitch vibrates in a different part of the skull: A in the lower jaw and chest, C in the mid-throat, E higher at the cheekbones. This bone-conducted vibration map mirrors the chest-throat-mask body map you've been building.", why: "The bone-conducted vibration map IS the physical basis of the somatic pitch map. Lower frequencies transmit through larger bones (jaw, sternum); higher frequencies through smaller facial bones (cheekbones, nose bridge). With air blocked, these differences become unmistakable." },
+        { text: "Uncover your ears and sing A → C → E again. Now notice BOTH channels: the room sound AND the bone vibration. You've always had two feedback systems — now you're aware of both. The bone channel is your portable tuning fork.", why: "Dual-channel awareness is the foundation of advanced vocal proprioception. If you're also doing the Vocal track, Level 6 has a deeper version of this exercise called 'The Shift' that explores bone conduction in more detail." }
+      ],
+      feel: "Covering your ears should feel like discovering a hidden room in a house you've lived in for years. The bone-conducted sound is more intimate, more physical than air-conducted sound.",
+      wrong: "Don't strain — keep the same volume with ears covered as without. If you can't feel pitch differences through bone conduction, try humming instead of singing open vowels.",
+      sarah: "Gene, this takes about 3 minutes but it'll change how you hear yourself forever. The bone channel is always there — in practice rooms, on stage, in the shower. Once you notice it, you can use it as a reference even in noisy environments."
     }
   ]
 };

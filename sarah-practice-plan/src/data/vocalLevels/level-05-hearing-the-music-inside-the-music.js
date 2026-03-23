@@ -2,7 +2,7 @@ import { getPitchRange } from "../appData.js";
 
 export const level5 = {
   num: 5, name: "Ear Training & Harmony", focus: "Intervals, chord tones, hearing changes, melodic dictation",
-  duration: "35 min",
+  duration: "43 min",
   setup: "Guitar for chord references. Quiet room. Pitch Detector on.",
   subtitle: "Hearing the Music Inside the Music",
   description: "Your ear is the most important instrument you own. When you hear chord tones inside a chord, you are hearing with your BODY — the root grounds you in the chest, the third colors the throat, the fifth opens the mask. Harmonic hearing is somatic, not just auditory. Dissonant intervals recruit more somatosensory cortex than consonant ones (PMC5608010) — your body literally feels harmony, not just hears it. These exercises train you to hear chord tones, sing intervals, track harmonic changes, and build melodies from what you hear -- not what you've memorized. The hear-feel-choose cycle deepens here: hear the chord, feel which tones pull at your body, choose which one to voice, produce it, compare. Jeff Buckley and Nick Drake could hear music inside chords that other people missed.",
@@ -260,6 +260,35 @@ export const level5 = {
       wrong: "If it still feels like a series of isolated exercises, you need more practice on the individual skills before integration. The integration works when the component skills are automatic enough to blend. If you're still consciously thinking 'find the root... now the 3rd... now the 5th,' stay with the individual exercises for another week before attempting this integration.",
       sarah: "Gene, this is the exercise where you realize that ear training is not a separate skill — it IS musicianship. Everything you have learned in this level — hearing chord tones, singing intervals, tracking harmony, creating melodies — is what musicians do when they play. You are not learning about music; you are learning to BE a musician. In your final two minutes, mix the ear work with something from a different level — a dynamic arc from L7, a rhythmic phrase from L4. That interleaving is where the deepest integration happens. End on whatever moment felt most like real music-making.",
       levelUp: "A 2-minute free-form vocal improvisation over an unfamiliar backing track that demonstrates accurate chord tone singing, smooth melodic contour, and confident harmonic navigation — without any planning or analysis."
+    },
+    {
+      id: "v5e11", time: 3, title: "Generation Check — Chord Tones from Silence", type: "vocal",
+      what: "From complete silence, with no external reference, can you generate the chord tones of C major and Am? This tests whether harmonic relationships have been internalized deeply enough to produce from pure internal hearing.",
+      setup: "Pitch Detector on. No drone. No guitar. Complete silence.",
+      referencePitches: getPitchRange("A2", "E4"),
+      pitchContour: true,
+      steps: [
+        { text: "Complete silence. Close your eyes. Imagine a C major chord — feel its bright, open quality. Now from that internal hearing, sing the root (C). Check with pitch detector. Then the 3rd (E). Then the 5th (G). Each note found from the imagined chord, not from a played reference.", why: "Generating chord tones from an imagined harmonic context tests whether you've internalized harmonic relationships — not just individual pitches, but the notes that BELONG to a chord. This is the musical equivalent of spelling a word from memory rather than copying it." },
+        { text: "Now imagine Am — feel the shift to something darker, more intimate. From that internal hearing, sing A, then C, then E. Check each. The same notes (C and E) appear in both chords — but they feel different in each harmonic context. C in C major is the root (stable, grounded). C in Am is the minor 3rd (aching, emotional).", why: "Context-dependent note quality is the foundation of harmonic hearing. The same pitch carries different emotional and functional weight depending on the chord. Generating notes from imagined harmonic contexts builds functional hearing — you're not just audiating pitches but audiating their role within a harmony." },
+        { text: "Final test: alternate imagined chords. Hear C major → sing its 5th (G). Hear Am → sing its 5th (E). Hear C major → sing its 3rd (E). Hear Am → sing its 3rd (C). Rapid context switching from silence tests how fluidly you can shift between harmonic worlds in your internal hearing.", why: "Rapid harmonic context switching is what happens in real time when you listen to a chord progression. Each chord creates a new context that redefines every note's function. Building this skill from silence means you're developing the internal harmonic awareness that lets musicians 'hear' a progression before it happens." }
+      ],
+      feel: "This should feel like finding music inside silence — reaching into your internal harmonic memory and pulling out specific notes by their function within a chord.",
+      wrong: "If you can't generate notes from imagined chords, that's diagnostic: you need more time with the chord-tone singing exercises (v5e1, v5e3). Generation from silence is a milestone checkpoint, not a requirement for moving forward.",
+      sarah: "Gene, this is where all the ear training comes together. If you can hear a chord in your head and sing any note from it — that's the skill that lets you improvise over changes, write harmony parts, and hear what a song needs before you play it."
+    },
+    {
+      id: "v5e12", time: 5, title: "The Silent Exercise — Mental Rehearsal", type: "listen",
+      what: "Choose any exercise from Level 3. Don't sing it — run it entirely in your imagination. Hear every note, feel every body location, sense every emotional shift. Research shows mental rehearsal activates nearly the same neural pathways as physical practice.",
+      setup: "Nothing. Sit comfortably. Eyes closed. Pick a Level 3 exercise you've completed.",
+      steps: [
+        { text: "Choose a Level 3 exercise you know well (v3e1 Forward Model, v3e4 Silent Scale, or v3e14 Silence Ladder are good choices). Read through its steps to refresh your memory. Now set everything down. Close your eyes.", why: "Mental rehearsal works best on material you've already practiced physically. The neural pathways exist — you're strengthening them through imagination." },
+        { text: "Run the entire exercise in your imagination at real tempo. Hear every note vividly. Feel every body location — chest warmth for low notes, mask brightness for high ones. Sense every emotional shift. Don't make any sound. Don't move your hands. Just live the exercise silently inside.", why: "Aarhus University 2021 found that imagined singing activates nearly the same neural real estate as actual singing. Silent rehearsal is not a lesser form of practice — it IS practice. It produces equivalent learning gains in approximately one-third the time of physical practice." },
+        { text: "Rate your vividness 1-5. 1 = couldn't hold any notes internally. 3 = heard some, lost others. 5 = the exercise played in your head as vividly as doing it aloud. Your rating IS your audiation development score.", why: "Self-assessment of imagery vividness is the most practical measure of audiation strength. The gap between physical ability and mental vividness is your audiation gap — it closes with practice." },
+        { text: "If below 3: do the exercise aloud, then try the silent version again. Physical practice refreshes the neural trace; mental practice strengthens it. Compare your two ratings.", why: "Physical-then-mental sequencing is the most efficient way to build audiation. The physical practice lays down the neural representation; the mental practice reinforces it without fatigue." }
+      ],
+      feel: "This should feel deeply meditative — dreaming music with your eyes closed. The room is silent but your internal experience is rich with pitch, body sensation, and emotion.",
+      wrong: "If you catch yourself humming or moving, gently stop. The exercise is purely internal. If you can't hold any musical content mentally, that's not failure — more physical practice is needed first.",
+      sarah: "Gene, this is practice you can do anywhere — before sleep, waiting in line, on a road trip. Musicians who combine physical and mental rehearsal improve faster than those who only practice physically. Your inner ear gets stronger even when no one can hear it working."
     }
   ]
 };
