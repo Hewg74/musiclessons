@@ -258,12 +258,13 @@ export const level2 = {
 
     {
       id: "gs-2-10",
-      time: 8,
+      time: 9,
       title: "Blues Scale Improv — Call and Response with Dynamics",
       type: "guitar",
       what: "Improvise over a backing track using the A blues scale. But here's the constraint: every phrase must have a dynamic contour — start quiet and build, or start loud and fade, or accent one note. No even-volume runs allowed. Combine everything: blues scale, bending, dynamic control, and behind-the-beat phrasing.",
       setup: "Guitar. Backing track. No metronome — play with the track's groove.",
       steps: [
+        { text: "Before playing, close your eyes over the backing track. Hear a short 3-note phrase in your mind — not on the fretboard, in your EARS. Hum it. Then find those notes on the guitar and play them with a dynamic shape. Start each phrase from audiation, not from finger patterns.", why: "Starting from audiation (hearing internally before playing) ensures your phrases come from musical intention, not muscle memory. Aarhus 2021 showed that combined imagery + playing produces equal learning in 1/3 the time. Even if you can only pre-hear 1 out of 3 notes, that one intentional note anchors the phrase." },
         { text: "Play 3-note phrases from the A blues scale. Each phrase must have a dynamic shape: start quiet and build to the last note, OR start loud and taper off. No flat dynamics. Leave 4 beats of silence between phrases. 2 minutes.", why: "Dynamic contour within a phrase is what separates an improviser from someone running scales. A 3-note phrase that builds from whisper to shout tells a story. A 3-note phrase at even volume is a scale exercise." },
         { text: "Add bends to your phrases: at least one bend per phrase. Bend into the blue note (Eb), or bend from D to E (whole step). The bend should be the emotional peak of the phrase — the loudest, most expressive moment. 2 minutes.", why: "Bends as dynamic peaks create the classic blues guitar 'cry.' When the bend is the loudest note in the phrase, it becomes the emotional climax — the note the listener leans into." },
         { text: "Call and response with yourself: play a quiet 3-note phrase (the call), wait 4 beats, then answer with a louder variation (the response). The response should use the same notes but with more intensity — bigger bends, more volume, more attitude. 2 minutes.", why: "Call-and-response with dynamic contrast is the foundation of blues soloing. The call asks a question quietly, the response answers it boldly. This creates dramatic arc within improvisation." },

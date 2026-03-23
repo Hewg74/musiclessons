@@ -241,7 +241,7 @@ export const level5 = {
 
     {
       id: "gs-5-10",
-      time: 8,
+      time: 9,
       title: "Barre Chord Improv — Build Your Own Loop",
       type: "guitar",
       what: "Pick any 3 barre chords. Any frets, any shapes. Create a loop. You now have the entire neck available — every major and minor chord in every key. The constraint is simple: all three chords must be barre chords, and the progression must loop smoothly. Find something that moves you, then loop it for 3 minutes.",
@@ -249,6 +249,7 @@ export const level5 = {
       fretboard: { scale: "c#m-pentatonic", position: 1 },
       tracks: [{ name: "Drums — Reggae 85", src: "/drums-reggae-85.mp3" }, { name: "Drums — Surf 120", src: "/drums-surf-120.mp3" }],
       steps: [
+        { text: "Before touching the fretboard, close your eyes and hear the kind of chord progression you want — dark and moody? Bright and uplifting? Floating and ambiguous? Don't worry about notes or positions. Just feel the MOOD. Hold that mood in your mind. Then open your eyes and start exploring.", why: "Audiating the emotional target before exploring creates a filter — your ear knows what it's looking for, so it recognizes matching chords faster. Without a target mood, exploration becomes random browsing. With one, it becomes intentional discovery. This is how songwriters work: feel first, chords second." },
         { text: "Exploration: slide an E-shape minor barre slowly up the neck, landing at random frets. Strum each chord for a few beats. Listen. Which positions grab your ear? Mark 3-4 that sound good to you. Don't think about chord names — use your ear.", why: "Ear-first exploration builds musical intuition. Theory can tell you which chords 'should' work together, but your ear knows which ones actually move YOU. The fretboard is a palette — browse it like browsing colors." },
         { text: "Pick 3 of your favorite positions. Try them in different orders: 1-2-3, 2-3-1, 3-1-2. One order will feel most natural — that's your loop. Play it at 90 BPM, 4 beats per chord, repeating.", why: "Chord order determines the emotional arc of a progression. The same three chords in different orders create different feelings — one order might feel like a question, another like an answer, another like a journey." },
         { text: "Try mixing E-shape and A-shape barres. If all your chords are E-shape (rooted on string 6), try replacing one with an A-shape (rooted on string 5) at a nearby fret. Hear how the different root string changes the bass character of the progression.", why: "Mixing barre shapes adds bass movement to your progression. E-shape roots are on string 6 (lower), A-shape roots on string 5 (slightly higher). The bass line created by the root notes IS a melody — make it interesting." },

@@ -292,7 +292,7 @@ export const level1 = {
 
     {
       id: "gs-1-12",
-      time: 8,
+      time: 9,
       title: "First Improv — Call & Response Over a Backing Track",
       type: "guitar",
       drone: { root: "A", octave: 2, texture: "analog" },
@@ -304,6 +304,7 @@ export const level1 = {
       setup: "Guitar. Backing track playing. Drone on A optional. Recorder on.",
       steps: [
         { text: "Start the backing track (Deep Soul Groove 80 BPM). Listen for 8 beats without playing — just absorb the groove, feel the tempo, find the pulse in your body. Nod your head, tap your foot. Don't touch the guitar until the groove is in your body.", why: "Listening before playing is the most underrated musical skill. Professional musicians listen for the groove before they enter. Jumping in immediately leads to playing AT the track instead of WITH it. 8 beats of listening transforms your first phrase from random notes into a musical response." },
+        { text: "Before you play your first phrase, try this: hear a note in your head. Any note from the Am pentatonic. Can you imagine what it sounds like before your fingers touch the string? Hum it quietly. Then find it on the fretboard and play it. That note was YOUR choice — your ear chose it, not your fingers.", why: "This is the seed of audiation — hearing music internally before playing it. Gordon's research shows that musicians who hear before they play develop 3x faster than those who let fingers lead. You don't need to do this for every note yet — just starting with ONE intentional note sets the right foundation. The rest of the improv can flow naturally." },
         { text: "Play a 2-note phrase from the Am pentatonic — just two notes, any two. Then STOP. Leave 4 beats of silence. Let the backing track fill the space. Then play another 2-note phrase. Short bursts with lots of space.", why: "Space is the beginner improviser's best friend. Two notes with space sounds intentional and musical. Twelve notes crammed together sounds nervous and scattered. Every guitarist you admire — Mark Speer, Tommy Guerrero — leaves more silence than sound." },
         { text: "Gradually expand: try 3-note phrases, then 4-note phrases. But always leave at least 2 beats of silence between phrases. The silence is not 'dead air' — it's part of the music. The backing track fills it.", why: "Building phrase length gradually prevents the common trap of 'note diarrhea' — playing everything you know as fast as possible. Your phrases should be like sentences in a conversation: say something meaningful, then breathe." },
         { text: "Try using the blue note (Eb) in one of your phrases. Bend into it from D, hold the tension for a beat, then resolve to E. Feel how one note of tension transforms the entire phrase from 'pleasant' to 'expressive.'", why: "Introducing the blue note into improvisation is where the blues scale earns its name. The tension-resolution cycle gives your phrases emotional arc — they go somewhere instead of just existing. This is the difference between playing notes and telling a story." },
