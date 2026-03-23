@@ -23,7 +23,7 @@ export const level2 = {
         { text: "Finally, say the chord NAME on beat 1 of each new chord: 'G... 2, 3, 4, C... 2, 3, 4, D... 2, 3, 4, G...' The chord name replaces '1' at each change.", why: "Naming the chord on the change links your voice to the harmonic rhythm. This is the first step toward singing different words on different chords." }
       ],
       feel: "Counting should feel rhythmic and locked in — your voice becomes part of the groove, not a distraction from it. When the numbers and strums align perfectly, you'll feel a satisfying click. Always end on a rep that felt locked — let that be the last body memory.",
-      wrong: "If counting makes your strum hesitate, the autopilot isn't solid enough. Go back to Level 1 for another session. If your counting drifts off-beat, focus on matching the metronome click with both your strum AND your voice simultaneously. If this feels awkward, that's the growth zone — not a sign something's wrong.",
+      wrong: "If counting makes your strum hesitate, the autopilot isn't solid enough. Go back to Level 1 for another session. If your counting drifts off-beat, focus on matching the metronome click with both your strum AND your voice simultaneously. If this feels awkward, that's the rewiring phase — not a sign something's wrong.",
       sarah: "Gene, this might feel silly — counting out loud while strumming. But it's the gentlest possible voice-over-guitar exercise. Numbers before words. Words before melody. Every step earns the next one. You're already doing it — that's what matters.",
       metronome: 90,
       recorder: true

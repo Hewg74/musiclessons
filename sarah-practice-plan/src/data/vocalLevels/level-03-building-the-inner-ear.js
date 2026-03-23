@@ -267,7 +267,7 @@ export const level3 = {
         { text: "Record the full relay. Listen back. Where did you stumble? Those are next session's priorities.", why: "Your in-the-moment perception differs from reality. The recording is objective. Efficient practice targets weaknesses." }
       ],
       feel: "Like a workout — engaging, not exhausting. Each section uses a different ear muscle. When the improvisation sounds musical, your inner ear is developing.",
-      wrong: "Overwhelming? Go back to individual exercises until comfortable. The relay integrates skills — it does not build them. Always end this relay on an exercise you feel strong in — your brain encodes the ending as the takeaway for the whole session.",
+      wrong: "Overwhelming? Go back to individual exercises until comfortable. The relay integrates skills — it does not build them. Always end this relay on an exercise you feel strong in — close with confidence, and that's the feeling you'll carry forward.",
       sarah: "Imperfect attempts at combined skills drive neural integration faster than perfect isolated attempts. Your brain learns most during SWITCHES between modes — the stumbles aren't failures, they're the learning events.",
       metronome: 80
     },

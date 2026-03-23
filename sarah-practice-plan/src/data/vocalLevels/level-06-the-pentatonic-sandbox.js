@@ -195,7 +195,7 @@ export const level6 = {
       ],
       feel: "Jamming with a band. The track is your bandmates — listen, respond, leave space. One voice in a conversation.",
       wrong: "Non-stop singing = monologue. Only 2-3 notes = return to drone exercise. Random sounding = anchor on root A, end on chord tones.",
-      sarah: "This is where practice becomes play. Backing tracks plus pentatonic vocabulary equals making music, not practicing it. That distinction matters. Listen to the backing track for 30 seconds before singing — let the groove enter your body first. And always end on a phrase that felt musical. Your brain encodes the ending as the summary of the session.",
+      sarah: "This is where practice becomes play. Backing tracks plus pentatonic vocabulary equals making music, not practicing it. That distinction matters. Listen to the backing track for 30 seconds before singing — let the groove enter your body first. And always end on a phrase that felt musical. Your final phrase is what your body carries into tomorrow.",
       levelUp: "2-minute improv that sounds like a real vocal part — musical, spaced, groove-responsive."
     },
     {

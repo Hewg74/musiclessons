@@ -151,7 +151,7 @@ export const level1 = {
         { text: "3 minutes. No breaks, no simplification of the strum, no pausing your speech. If the strum breaks, note where and drill that transition.", why: "3 minutes is roughly one song. If autopilot holds for a song's length, you're ready for Level 2." }
       ],
       feel: "This should feel effortless — like walking and talking at the same time. If it feels like juggling, you need more time at the earlier exercises. Always end on something that worked — if the last attempt broke, do one more easy rep to finish.",
-      wrong: "If you catch yourself choosing simpler words or shorter sentences to protect the strum, your attention is still split. The strum must be truly invisible. If this feels hard, that's the growth zone — not a sign you can't do this.",
+      wrong: "If you catch yourself choosing simpler words or shorter sentences to protect the strum, your attention is still split. The strum must be truly invisible. If this feels hard, that's the adaptation edge — not a sign you can't do this.",
       sarah: "Gene, be honest here — and be kind to yourself. If the strum wavers, go back and drill. Everything in Levels 2-15 depends on this autopilot foundation. It's worth getting right. You're not trying to become a guitarist — you already ARE one. This is just deepening what your hands already know.",
       metronome: 90,
       recorder: true,

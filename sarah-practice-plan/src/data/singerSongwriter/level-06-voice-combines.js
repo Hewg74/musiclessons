@@ -27,7 +27,7 @@ export const level6 = {
         { text: "Repeat the test daily until you pass it. This is the gateway to everything in this level. No rushing — autonomous guitar is the foundation of singing while playing.", why: "Motor learning research shows the associative-to-autonomous transition takes repetition over days, not hours. Each day's practice moves the skill deeper into procedural memory." }
       ],
       feel: "When you pass this test, the guitar should feel like it's playing itself. Your conscious mind is free — free to watch TV, free to sing, free to improvise. That freedom is the whole point.",
-      wrong: "If you're faking it — staring at the video but not actually following the story — the test doesn't count. Genuine comprehension is the metric. Be honest with yourself. If this is hard, that's the growth zone — your motor system is building procedural memory, and that takes days, not minutes.",
+      wrong: "If you're faking it — staring at the video but not actually following the story — the test doesn't count. Genuine comprehension is the metric. Be honest with yourself. If this is hard, that's the place where new patterns form — your motor system is building procedural memory, and that takes days, not minutes.",
       sarah: "Gene, your strum should be like breathing — you don't think about it. This test proves whether it is. Every exercise in this level assumes you pass it. You're not learning to be a player — you already ARE one. This just confirms the depth of what your hands already know.",
       metronome: 80
     },

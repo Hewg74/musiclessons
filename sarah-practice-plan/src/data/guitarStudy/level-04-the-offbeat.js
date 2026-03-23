@@ -100,7 +100,7 @@ export const level4 = {
         src: "/gimme-love.mp3",
         note: "Listen to the offbeat chop — light, bouncy, island vibes. Three open chords in the key of C. Match the feel."
       },
-      what: "The Elovaters' Gimme Love is a three-chord reggae tune in the key of C: F-C-G. All open chords — no barres needed. Listen to the recording twice before playing — first time, feel the island bounce in your body. Second time, ghost the skank rhythm with your strumming arm. This is reggae with chords you already know from Level 1. The magic is applying the offbeat skank to familiar shapes.",
+      what: "The Elovaters' Gimme Love is a three-chord reggae tune in the key of C: F-C-G. All open chords — no barres needed. Listen and ghost the skank rhythm before playing. This is reggae with chords you already know from Level 1. The magic is applying the offbeat skank to familiar shapes.",
       setup: "Guitar. Metronome at 80 BPM (song is ~86, start slower). Listen to the song reference first.",
       chordVoicings: { chords: ["F", "C", "G"] },
       tracks: [{ name: "Drums Only — Reggae 85", src: "/drums-reggae-85.mp3" }],
