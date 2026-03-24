@@ -2,7 +2,7 @@ import { getPitchRange } from "../appData.js";
 
 export const level4 = {
   num: 4, name: "Rhythm & Phrasing", focus: "Vocal timing, behind-the-beat, reggae delivery",
-  duration: "35 min",
+  duration: "40 min",
   setup: "Metronome or backing track. 85-90 BPM. No guitar unless noted.",
   subtitle: "Singing IN the Beat",
   description: "Great singers don't just sing the right notes -- they sing them at the right time. Rhythm is embodied before it is vocal. Your body pulses, your chest bounces, your breath syncs to the groove -- all before a single note leaves your mouth. The hear-feel-choose cycle for rhythm: hear the groove internally, feel where the pulse lives in your body (does it sit in your chest? your hips? your nodding head?), choose your rhythmic placement relative to that pulse, then sing. This level trains the vocal timing skills that separate karaoke from artistry: on-beat precision, offbeat phrasing, and the behind-the-beat delivery that defines reggae, surf, and psych vocals.",
