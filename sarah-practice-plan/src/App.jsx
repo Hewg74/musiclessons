@@ -703,26 +703,18 @@ function FlowProgressRail({ exercises, currentIndex, completed, onJump, accentCo
         const isDone = completed.has(ex.id);
         const isCurrent = i === currentIndex;
         const color = accentColor || T.gold;
-        const dotSize = isCurrent ? 12 : 8;
         return (
-          <button key={ex.id} onClick={() => onJump(i)}
-            aria-label={`Exercise ${i + 1}: ${ex.title}${isDone ? " (done)" : isCurrent ? " (current)" : ""}`}
-            aria-current={isCurrent ? "step" : undefined}
-            style={{
-              width: 32, height: 32,
-              display: "flex", alignItems: "center", justifyContent: "center",
-              background: "transparent", border: "none", cursor: "pointer", padding: 0,
-              WebkitTapHighlightColor: "transparent"
-            }}>
-            <div style={{
-              width: dotSize, height: dotSize, borderRadius: "50%",
-              background: isDone ? T.success : (isCurrent ? color : T.border),
-              boxShadow: isCurrent ? `0 0 0 3px ${color}30` : "none",
-              opacity: isDone ? 1 : (isCurrent ? 1 : 0.4),
-              transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-              animation: isCurrent ? "pulse-ring 2s infinite" : "none",
-            }} />
-          </button>
+          <button key={ex.id} onClick={() => onJump(i)} title={ex.title} style={{
+            width: isCurrent ? 12 : 8, height: isCurrent ? 12 : 8,
+            borderRadius: "50%", border: "none", cursor: "pointer", padding: 0,
+            minWidth: isCurrent ? 12 : 8,
+            background: isDone ? T.success : (isCurrent ? color : T.border),
+            boxShadow: isCurrent ? `0 0 0 3px ${color}30` : "none",
+            opacity: isDone ? 1 : (isCurrent ? 1 : 0.4),
+            transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+            animation: isCurrent ? "pulse-ring 2s infinite" : "none",
+            WebkitTapHighlightColor: "transparent"
+          }} />
         );
       })}
     </div>
