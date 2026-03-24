@@ -236,7 +236,6 @@ export default function App() {
       {/* Mobile Bottom Navigation */}
       <BottomNav tab={tab} setTab={setTab} isDark={isDark} />
 
-      <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;600;700&display=swap" rel="stylesheet" />
     </div>
   );
 }

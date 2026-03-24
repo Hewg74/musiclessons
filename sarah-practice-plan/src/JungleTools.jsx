@@ -8,17 +8,29 @@ import {
 import { acquireKeepalive, releaseKeepalive, setMediaSession, clearMediaSession } from './audioKeepalive.js';
 import { splitSyllables, chipText, chipGroup } from './syllableUtil.js';
 
-// ─── Shared AudioContext for mic features ─────────────────────────────
-// All mic features (pitch detector, volume meter, recorder, silence score) MUST
-// use Tone.js's AudioContext instead of creating their own. Multiple AudioContexts
-// confuse Bluetooth profile switching (A2DP ↔ HFP/SCO) and cause quality drops,
-// crackles, and state corruption. With a single context, the mic is just another
-// input node — disconnecting it doesn't disrupt playback at all.
-function getSharedAudioContext() {
-  const toneCtx = Tone.getContext()?.rawContext;
-  if (toneCtx) return toneCtx;
-  // Fallback: Tone hasn't initialized yet (shouldn't happen in normal flow)
+// ─── Mic AudioContext helper ──────────────────────────────────────────
+// Mic features use a SEPARATE AudioContext from Tone.js's playback context.
+// This is critical: if the mic shares Tone's context, the browser keeps the audio
+// session in "play-and-record" mode even after the mic stream is stopped (because
+// the context is still alive playing the drone). A separate context lets us close
+// it completely when the mic stops, which signals the OS to exit "play-and-record"
+// and restore full playback quality on Bluetooth.
+//
+// The key to avoiding the old bugs: close the mic context IMMEDIATELY and
+// SYNCHRONOUSLY when stopping — don't defer, don't try resume-then-close.
+function createMicContext() {
   return new (window.AudioContext || window.webkitAudioContext)();
+}
+
+// Close a mic AudioContext immediately, then signal other audio components
+// to recover from OS-level ducking. The 'micReleased' event tells the drone
+// to cycle Tone.js's context (suspend→resume) so the OS exits "play-and-record"
+// mode and restores full playback volume on Bluetooth/speakers.
+function closeMicContext(ctx) {
+  if (!ctx || ctx.state === 'closed') return;
+  try { ctx.close(); } catch {}
+  // Fire after a tick so the context.close() has begun processing
+  setTimeout(() => window.dispatchEvent(new CustomEvent('micReleased')), 50);
 }
 
 // ─── Web Worker timer for background-safe intervals ───────────────────
@@ -1317,8 +1329,8 @@ export function AudioRecorder({ theme: T, inline = false }) {
       setIsRecording(true);
       setAudioURL(null); // clear previous
 
-      // Setup audio visualization using shared Tone.js context (avoids Bluetooth profile switching)
-      const audioCtx = getSharedAudioContext();
+      // Setup audio visualization — separate context so closing it exits play-and-record mode
+      const audioCtx = createMicContext();
       audioCtxRef.current = audioCtx;
       const analyser = audioCtx.createAnalyser();
       analyser.fftSize = 2048;
@@ -1378,7 +1390,7 @@ export function AudioRecorder({ theme: T, inline = false }) {
 
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
       requestRef.current = null;
-      // Don't close audioCtxRef — it's the shared Tone.js context
+      closeMicContext(audioCtxRef.current);
       audioCtxRef.current = null;
       analyserRef.current = null;
     }
@@ -1394,7 +1406,7 @@ export function AudioRecorder({ theme: T, inline = false }) {
         mediaRecorderRef.current.stream.getTracks().forEach(t => t.stop());
       }
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
-      // Don't close audioCtxRef — it's the shared Tone.js context
+      closeMicContext(audioCtxRef.current);
       audioCtxRef.current = null;
       analyserRef.current = null;
     };
@@ -1615,12 +1627,6 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
 
   const startDetection = async () => {
     try {
-      // Ensure Tone.js context is running before we attach mic nodes to it
-      if (Tone.context.state !== 'running') {
-        try { await Tone.start(); } catch {}
-        try { await Tone.context.resume(); } catch {}
-      }
-
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: false,
@@ -1630,9 +1636,9 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
       });
       streamRef.current = stream;
 
-      // Use Tone.js's AudioContext — NOT a separate one. Multiple AudioContexts
-      // cause Bluetooth to flip between A2DP/HFP profiles, degrading quality.
-      const audioCtx = getSharedAudioContext();
+      // Separate AudioContext for mic — closing it fully exits "play-and-record"
+      // mode so Bluetooth can return to high-quality A2DP playback
+      const audioCtx = createMicContext();
       audioContextRef.current = audioCtx;
 
       const analyser = audioCtx.createAnalyser();
@@ -1678,9 +1684,10 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
       streamRef.current.getTracks().forEach(t => t.stop());
       streamRef.current = null;
     }
-    // Disconnect mic nodes from the shared context (do NOT close it — it's Tone.js's)
+    // Disconnect mic nodes and close the mic context immediately
     if (hpFilterRef.current) { try { hpFilterRef.current.disconnect(); } catch {} hpFilterRef.current = null; }
     if (sourceRef.current) { try { sourceRef.current.disconnect(); } catch {} sourceRef.current = null; }
+    closeMicContext(audioContextRef.current);
     audioContextRef.current = null;
     analyserRef.current = null;
     pitchBufRef.current = null;
@@ -2690,15 +2697,11 @@ export function VolumeMeter({ theme: T, inline = false, volumeContour = false })
 
   const startMeter = async () => {
     try {
-      if (Tone.context.state !== 'running') {
-        try { await Tone.start(); } catch {}
-        try { await Tone.context.resume(); } catch {}
-      }
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: { echoCancellation: false, autoGainControl: false, noiseSuppression: false }
       });
       streamRef.current = stream;
-      const audioCtx = getSharedAudioContext();
+      const audioCtx = createMicContext();
       audioContextRef.current = audioCtx;
       const analyser = audioCtx.createAnalyser();
       analyser.fftSize = 256;
@@ -2738,7 +2741,7 @@ export function VolumeMeter({ theme: T, inline = false, volumeContour = false })
     requestRef.current = null;
     if (streamRef.current) { streamRef.current.getTracks().forEach(t => t.stop()); streamRef.current = null; }
     if (sourceRef.current) { try { sourceRef.current.disconnect(); } catch {} sourceRef.current = null; }
-    // Don't close audioContextRef — it's the shared Tone.js context
+    closeMicContext(audioContextRef.current);
     audioContextRef.current = null;
     analyserRef.current = null;
     setDbLevel(-60);
@@ -3131,7 +3134,7 @@ export function GenreMetronome({ theme: T, mode = "standard", bpm = 80 }) {
   };
 
   const playClick = (volume) => {
-    if (!audioCtxRef.current) audioCtxRef.current = getSharedAudioContext();
+    if (!audioCtxRef.current) audioCtxRef.current = Tone.getContext()?.rawContext || new (window.AudioContext || window.webkitAudioContext)();
     const ctx = audioCtxRef.current;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
@@ -3213,13 +3216,9 @@ export function SilenceScore({ theme: T, target = 0.4 }) {
   const timerRef = useRef(null);
 
   const startRecording = async () => {
-    if (Tone.context.state !== 'running') {
-      try { await Tone.start(); } catch {}
-      try { await Tone.context.resume(); } catch {}
-    }
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     streamRef.current = stream;
-    const ctx = getSharedAudioContext();
+    const ctx = createMicContext();
     audioCtxRef.current = ctx;
     const source = ctx.createMediaStreamSource(stream);
     sourceRef.current = source;
@@ -3254,7 +3253,7 @@ export function SilenceScore({ theme: T, target = 0.4 }) {
     if (streamRef.current) { streamRef.current.getTracks().forEach(t => t.stop()); streamRef.current = null; }
     if (sourceRef.current) { try { sourceRef.current.disconnect(); } catch {} sourceRef.current = null; }
     analyserRef.current = null;
-    // Don't close audioCtxRef — it's the shared Tone.js context
+    closeMicContext(audioCtxRef.current);
     audioCtxRef.current = null;
     setIsRecording(false);
 
@@ -3327,7 +3326,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
   const [playing, setPlaying] = useState(false);
   const [root, setRoot] = useState(defaultRoot || "C");
   const [octave, setOctave] = useState(defaultOctave || 2);
-  const [volume, setVolume] = useState(-6);
+  const [volume, setVolume] = useState(0);
   const [texture, setTexture] = useState(defaultTexture || "analog");
   const [mode, setMode] = useState(defaultMode || (preset ? "cycle" : "manual"));
   const [progression, setProgression] = useState(defaultProgression || (preset ? preset.chords : ["C", "C", "F", "G", "Am", "Am", "F", "G"]));
@@ -3454,6 +3453,47 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     };
   }, []);
 
+  // Recover from OS audio ducking after mic is released.
+  // When getUserMedia runs, the OS ducks all output (~6-10dB). Even after the mic
+  // context is closed, the OS keeps Tone.js's context in "play-and-record" mode.
+  // Fix: briefly cycle Tone.js's context (suspend→resume) with a smooth fade to
+  // avoid crackles, then re-trigger the chord at full volume.
+  useEffect(() => {
+    const handleMicReleased = async () => {
+      if (!playing || !synthRef.current || !userGainRef.current) return;
+      try {
+        const savedNotes = previousNotesRef.current;
+        const savedVolume = volume;
+        // 1. Fade out smoothly (50ms — inaudible)
+        userGainRef.current.gain.cancelScheduledValues(Tone.now());
+        userGainRef.current.gain.rampTo(0, 0.05);
+        // 2. After fade: release voices, suspend context
+        await new Promise(r => setTimeout(r, 80));
+        if (!synthRef.current || stoppedRef.current) return;
+        try { synthRef.current.releaseAll(); } catch {}
+        const rawCtx = Tone.getContext()?.rawContext;
+        if (rawCtx && rawCtx.state === 'running') {
+          await rawCtx.suspend();
+          // 3. Brief pause so OS exits play-and-record mode
+          await new Promise(r => setTimeout(r, 150));
+          await rawCtx.resume();
+        }
+        // 4. Wait for context to stabilize
+        await new Promise(r => setTimeout(r, 100));
+        if (!synthRef.current || stoppedRef.current) return;
+        // 5. Re-trigger chord and fade back in
+        if (savedNotes.length > 0) {
+          synthRef.current.triggerAttack(savedNotes);
+          previousNotesRef.current = savedNotes;
+        }
+        userGainRef.current.gain.cancelScheduledValues(Tone.now());
+        userGainRef.current.gain.rampTo(Tone.dbToGain(savedVolume), 0.15);
+      } catch {}
+    };
+    window.addEventListener('micReleased', handleMicReleased);
+    return () => window.removeEventListener('micReleased', handleMicReleased);
+  }, [playing, volume]);
+
   useEffect(() => {
     let effectSynth = null;
     let effectNodes = [];
@@ -3462,13 +3502,13 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     let newNodes = [];
 
     // Master bus — static gain staging, no dynamic compression (compressors pump on sustained drones)
-    const masterGain = new Tone.Gain(0.35);
+    const masterGain = new Tone.Gain(0.7);
     // User volume control — AFTER effects, signal is already at safe levels
     const userGain = new Tone.Gain(Tone.dbToGain(volume));
     // Highpass to kill sub-rumble
     const lowcut = new Tone.Filter(40, "highpass");
-    // Safety limiter — true safety net only, should rarely engage
-    const limiter = new Tone.Limiter(-3).toDestination();
+    // Safety limiter — catches peaks from effects/resonance, keeps output clean
+    const limiter = new Tone.Limiter(-1).toDestination();
 
     masterGain.chain(userGain, lowcut, limiter);
     userGainRef.current = userGain;
@@ -3479,7 +3519,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       const chorus = new Tone.Chorus({ frequency: 2, delayTime: 3, depth: 0.6 }).connect(masterGain).start();
       const filter = new Tone.Filter(800, "lowpass").connect(chorus);
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -14,
+        volume: -6,
         oscillator: { type: "sawtooth" },
         envelope: { attack: 2.5, decay: 0.1, sustain: 1, release: 2 }
       }).connect(filter);
@@ -3491,7 +3531,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       const reverb = new Tone.Freeverb({ roomSize: 0.9, dampening: 2000 }).connect(masterGain);
       const filter = new Tone.Filter(1500, "lowpass").connect(reverb);
       synth = new Tone.PolySynth(Tone.FMSynth, {
-        volume: -14,
+        volume: -6,
         harmonicity: 1.01, modulationIndex: 2,
         oscillator: { type: "sine" },
         modulation: { type: "triangle" },
@@ -3505,7 +3545,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       const chorus = new Tone.Chorus(2, 4, 0.8).connect(masterGain).start();
       const eq = new Tone.EQ3(2, -2, -6).connect(chorus);
       synth = new Tone.PolySynth(Tone.AMSynth, {
-        volume: -14,
+        volume: -6,
         harmonicity: 1.005,
         oscillator: { type: "square" },
         modulation: { type: "square" },
@@ -3517,7 +3557,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     }
     else if (texture === "pure") {
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -14,
+        volume: -6,
         oscillator: { type: "sine" },
         envelope: { attack: 1, decay: 0, sustain: 1, release: 2 }
       }).connect(masterGain);
@@ -3528,7 +3568,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       const chorus = new Tone.Chorus({ frequency: 1.5, delayTime: 3, depth: 0.7 }).connect(reverb).start();
       const filter = new Tone.Filter(1200, "lowpass").connect(chorus);
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -14,
+        volume: -6,
         oscillator: { type: "sawtooth" },
         envelope: { attack: 3, decay: 0.1, sustain: 1, release: 2 }
       }).connect(filter);
@@ -3540,7 +3580,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       const phaser = new Tone.Phaser({ frequency: 0.2, octaves: 3, baseFrequency: 200 }).connect(masterGain);
       const filter = new Tone.Filter(3000, "lowpass").connect(phaser);
       synth = new Tone.PolySynth(Tone.FMSynth, {
-        volume: -14,
+        volume: -6,
         harmonicity: 2.01, modulationIndex: 3,
         oscillator: { type: "sawtooth" },
         modulation: { type: "sine" },
@@ -3553,7 +3593,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     else if (texture === "crystal") {
       const reverb = new Tone.Freeverb({ roomSize: 0.95, dampening: 1000 }).connect(masterGain);
       synth = new Tone.PolySynth(Tone.FMSynth, {
-        volume: -14,
+        volume: -6,
         harmonicity: 1.005, modulationIndex: 1.5,
         oscillator: { type: "sine" },
         modulation: { type: "sine" },
@@ -3568,7 +3608,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       const filter = new Tone.Filter(1000, "lowpass").connect(vibrato);
       const chorus = new Tone.Chorus(4, 2.5, 0.4).connect(filter).start();
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -14,
+        volume: -6,
         oscillator: { type: "triangle" },
         envelope: { attack: 1.5, decay: 0.5, sustain: 0.8, release: 2 }
       }).connect(chorus);
@@ -3580,7 +3620,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       const tremolo = new Tone.Tremolo(4, 0.8).connect(reverb).start();
       const filter = new Tone.Filter(1500, "lowpass").connect(tremolo);
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -14,
+        volume: -6,
         oscillator: { type: "triangle" },
         envelope: { attack: 0.8, decay: 0.2, sustain: 0.8, release: 2 }
       }).connect(filter);
@@ -3592,7 +3632,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       const chorus = new Tone.Chorus(2, 3, 0.6).connect(phaser).start();
       const filter = new Tone.Filter(800, "lowpass").connect(chorus);
       synth = new Tone.PolySynth(Tone.FMSynth, {
-        volume: -14,
+        volume: -6,
         harmonicity: 2,
         modulationIndex: 1.5,
         oscillator: { type: "sine" },
@@ -3606,7 +3646,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     else if (texture === "dub-sub") {
       const filter = new Tone.Filter(150, "lowpass", -24).connect(masterGain);
       synth = new Tone.PolySynth(Tone.FMSynth, {
-        volume: -14,
+        volume: -6,
         harmonicity: 1, modulationIndex: 0.5,
         oscillator: { type: "sine" },
         modulation: { type: "triangle" },
@@ -3622,7 +3662,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       const chorus = new Tone.Chorus({ frequency: 0.8, delayTime: 4, depth: 0.6 }).connect(reverb).start();
       const filter = new Tone.Filter(700, "lowpass").connect(chorus);
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -14,
+        volume: -6,
         oscillator: { type: "triangle" },
         envelope: { attack: 2.5, decay: 0.3, sustain: 0.9, release: 2.5 }
       }).connect(filter);
@@ -3634,7 +3674,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     // Fallback for unknown textures — default to pure sine
     if (!synth) {
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -14,
+        volume: -6,
         oscillator: { type: "sine" },
         envelope: { attack: 1, decay: 0, sustain: 1, release: 2 }
       }).connect(masterGain);
@@ -4437,13 +4477,13 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
               </div>
               <div style={{ flex: 1, display: "flex", alignItems: "center", position: "relative" }}>
                 <div style={{ position: "absolute", left: 0, right: 0, height: 6, background: T.bgSoft, borderRadius: 3, border: `1px solid ${T.borderSoft}`, pointerEvents: "none" }} />
-                <div style={{ position: "absolute", left: 0, width: `${(volume + 40) / 40 * 100}%`, height: 6, background: playing ? T.plum : T.textMed, borderRadius: 3, pointerEvents: "none", transition: "background 0.4s" }} />
-                <input type="range" min={-40} max={0} value={volume}
+                <div style={{ position: "absolute", left: 0, width: `${(volume + 40) / 46 * 100}%`, height: 6, background: playing ? T.plum : T.textMed, borderRadius: 3, pointerEvents: "none", transition: "background 0.4s" }} />
+                <input type="range" min={-40} max={6} value={volume}
                   onChange={e => setVolume(Number(e.target.value))}
                   style={{ width: "100%", opacity: 0, height: 24, cursor: "pointer", position: "relative", zIndex: 10 }} />
                 {/* Custom Thumb */}
                 <div style={{
-                  position: "absolute", left: `calc(${(volume + 40) / 40 * 100}% - 8px)`, width: 16, height: 16,
+                  position: "absolute", left: `calc(${(volume + 40) / 46 * 100}% - 8px)`, width: 16, height: 16,
                   background: "#fff", border: `2px solid ${playing ? T.plum : T.textMed}`, borderRadius: "50%", 
                   pointerEvents: "none", boxShadow: "0 2px 4px rgba(0,0,0,0.1)", transition: "border-color 0.4s"
                 }} />

@@ -1,1 +1,1031 @@
 [2026-03-24T06:52:07.901Z] /ux-thinking what would it say about this app? /swarm to find all the angles
+[2026-03-24T07:08:33.939Z] <task-notification>
+<task-id>ac03ca7bfb61cafb7</task-id>
+<tool-use-id>toolu_01K3uXg37WGqYDT3YEg5Ffix</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\9f3c3ffb-50b3-4949-a3d6-83d6d15d90ed\tasks\ac03ca7bfb61cafb7.output</output-file>
+<status>completed</status>
+<summary>Agent "Code quality review both apps" completed</summary>
+<result>I now have a thorough understanding of both codebases. Let me compile the comprehensive review.
+
+---
+
+## Code Review: Music Lessons Monorepo
+
+### Summary
+- Critical: 3 | High: 8 | Medium: 9 | Low: 5
+- Overall Quality: **Needs Work** (sarah-practice-plan) | **Good** (music-chart)
+
+The sarah-practice-plan app is a functionally rich music education tool, but its monolithic architecture has become a serious liability. The music-chart extraction proves the team knows how to modularize -- the gap between the two codebases is stark and informative.
+
+---
+
+### Critical Issues
+
+#### [C1] Mutable singleton `T` breaks React's rendering contract
+- **File:** `sarah-practice-plan/src/App.jsx:23-68` and `music-chart/src/theme.js:1-77`
+- **Severity:** Critical
+- **Issue:** `T` is a mutable module-scope object. `applyTheme()` calls `Object.assign(T, ...)` which mutates it in place. React components read `T.gold`, `T.textDark` etc. directly in render -- but since `T` is not React state and Object.assign does not trigger re-renders, any component that has already rendered with the old theme values will display stale colors until something else forces a re-render. This affects **both apps**.
+- **Why it works today:** The `isDark` state change at the App level triggers a full re-render of the entire tree, which happens to re-read `T`. But any memoized component (`React.memo`, `useMemo`, `useCallback` with `T` values captured in closure) will break silently.
+- **Suggestion:** Use React Context for the theme, or at minimum wrap `T` in a `useRef` + force-update pattern. The music-chart extraction was a missed opportunity to fix this.
+
+#### [C2] Transient Tone.js synth creation without guaranteed disposal
+- **File:** `sarah-practice-plan/src/App.jsx:1553-1563`
+- **Issue:** `playNote()` creates a new `Tone.Synth` on every call, then relies on a `setTimeout(() => synth.dispose(), 2000)` for cleanup. This pattern appears at lines 845, 859, 1563, and 4317. If the component unmounts before the 2-second timer fires, the synth leaks. Rapid tapping creates many concurrent synths. Over a long practice session, this accumulates Web Audio nodes that are never garbage collected.
+```javascript
+// Current pattern (4 locations)
+const synth = new Tone.Synth({...}).toDestination();
+synth.triggerAttackRelease(note, "2n");
+setTimeout(() => { try { synth.dispose(); } catch {} }, 2000);
+```
+- **Suggestion:** Pool a small set of synths (2-3) and reuse them, or use `Tone.Draw.schedule` with the synth's `onsilence` event to dispose deterministically.
+
+#### [C3] No code splitting -- entire app loads upfront
+- **File:** `sarah-practice-plan/src/App.jsx:1-10` (single import of everything)
+- **Issue:** App.jsx (4600 lines) imports JungleTools.jsx (7200 lines), which imports Tone.js, canvas-confetti, YouTube API, syllable utilities, etc. The entire 11,800-line codebase plus all audio sample URLs are parsed and loaded on first paint, even if the user only visits the Practice tab. The curriculum data files (vocalLevels ~900KB, singerSongwriter ~748KB, guitarStudy significant) are all eagerly imported.
+- **Suggestion:** Use `React.lazy()` + `Suspense` for tab-level splitting. Each skill view (VoiceView, GuitarStudyView, etc.) and the tools/charts tabs should be lazy-loaded. This alone would cut initial bundle parse time by ~70%.
+
+---
+
+### High Issues
+
+#### [H1] 64+ empty catch blocks suppress errors silently
+- **File:** Throughout `sarah-practice-plan/src/` (64 occurrences in JungleTools.jsx alone, 16 in App.jsx)
+- **Issue:** The codebase has 80+ instances of `catch { }` or `catch(e) { }` with no logging, no user feedback, no error boundary. Critical operations like `localStorage.getItem/setItem`, audio context initialization, `getUserMedia`, and theme parsing all silently swallow errors. If localStorage is full (5MB quota), all save operations fail silently -- the user loses progress without knowing.
+- **Suggestion:** At minimum, add `console.warn` in catch blocks. For user-facing operations (save progress, mic access), show a toast or inline error.
+
+#### [H2] VoiceView, GuitarStudyView, SingerSongwriterView, KeysView, LooperView are copy-pasted
+- **File:** `sarah-practice-plan/src/App.jsx:2105-3987`
+- **Issue:** These five skill tab views follow the exact same pattern: level pill selector, progress bar, level description, exercise list. The only differences are: accent color, data source, and a few field names (`num` vs `level`). This is ~1,800 lines of near-identical code. The "sticky level pills" section is literally copied 5 times with only the color variable changed.
+- **Suggestion:** Extract a generic `CurriculumView` component parameterized by: levels array, accent color, level key field, and optional header component (VowelMap for Voice). This would reduce ~1,800 lines to ~400.
+
+#### [H3] localStorage has no schema versioning, migrations are fragile
+- **File:** `sarah-practice-plan/src/App.jsx:4192-4265`
+- **Issue:** Four separate migration blocks check for migration flags (`ss-level-migration-v1`, `ss-level-migration-v2`, `weekly-id-migration-v1`, `guitar-v2-migrated`) with inline JSON parsing inside `try/catch {}` (silent). There is no central migration runner, no version number, no rollback capability. Each migration mutates `practice-completed` in place. If a migration partially fails (e.g., JSON parse succeeds but the re-save hits quota), data is corrupted.
+- **Suggestion:** Implement a simple migration runner: store a `schema-version` key, run all migrations with version > current sequentially, only bump version after success. Log migration results.
+
+#### [H4] CustomEvent bus for inter-component communication is fragile and undocumented
+- **File:** `sarah-practice-plan/src/App.jsx` and `JungleTools.jsx` (10 CustomEvent dispatches across 2 files)
+- **Issue:** The app uses 5+ distinct CustomEvent types (`metroBeat`, `metroBeatAudio`, `exerciseOpen`, `audioSourceChange`, `songTimeUpdate`) dispatched on `window`. These form an implicit pub/sub system with no TypeScript types, no documentation of event contracts, no way to discover all listeners, and no guaranteed cleanup. For example, `exerciseOpen` is used for an accordion-style "only one open at a time" pattern -- but if any listener fails to remove its handler, it silently leaks.
+- **Suggestion:** If sticking with events, create a typed event bus module that documents all event names and payload shapes. Better: use React Context or Zustand for shared state.
+
+#### [H5] `useMetronome` is duplicated between the two apps
+- **File:** `sarah-practice-plan/src/App.jsx:212-445` vs `music-chart/src/tools/Metronome.jsx:1-50+`
+- **Issue:** The metronome hook, synth creation, sound kit definitions, and accent config are copy-pasted between the two apps. This is ~450 lines of complex audio scheduling logic that will inevitably drift. Bugs fixed in one app won't be fixed in the other.
+- **Suggestion:** While the CLAUDE.md says "do not try to keep them in sync," the metronome is pure audio logic with no app-specific dependencies. It could be a shared npm package or a Git submodule, or at minimum, whenever a bug is fixed in one, a note should be filed for the other.
+
+#### [H6] 12+ refs manually synced to state in useMetronome
+- **File:** `sarah-practice-plan/src/App.jsx:251-263`
+- **Issue:** The metronome hook maintains 12 `useRef` values that are manually synced to their corresponding `useState` values via individual `useEffect` calls. This is a code smell for "I need to read current state inside a Tone.js callback but can't use state directly." It's correct but extremely error-prone -- adding a new parameter requires adding both a state and a ref plus a sync effect.
+```javascript
+useEffect(() => { beatConfigRef.current = beatConfig; }, [beatConfig]);
+useEffect(() => { soundKitRef.current = soundKit; }, [soundKit]);
+// ... 10 more identical patterns
+```
+- **Suggestion:** Use `useRef` as the source of truth and only trigger re-renders when the UI needs to update (the `beat` field already does this correctly). Or use `useReducer` with a ref to the current state.
+
+#### [H7] Font loading via `<link>` inside render body
+- **File:** `sarah-practice-plan/src/App.jsx:4412` and `music-chart/src/App.jsx:239`
+- **Issue:** Both apps render `<link href="https://fonts.googleapis.com/css2?family=..." rel="stylesheet" />` inside the component JSX, at the bottom of the render output. This means the font link is added to the DOM after the first paint, causing a flash of unstyled text on every full page load. It also re-inserts the link element on every re-render (React will dedupe the DOM node, but it's semantically wrong).
+- **Suggestion:** Move the font link to `index.html` `<head>`, or use `@font-face` declarations in CSS with `font-display: swap`.
+
+#### [H8] `useTimer` hook uses `setInterval` with state-based condition
+- **File:** `sarah-practice-plan/src/App.jsx:447-461`
+- **Issue:** The timer hook starts a `setInterval` when `on && sec > 0`, but the effect re-runs on every `sec` change (since `sec` is a dependency). This means `clearInterval` + `setInterval` fires every second, creating a new interval each time. While functionally correct (the old one is cleared), it's inefficient and can drift. When `sec` reaches 0, the interval is not cleared immediately -- it runs one more tick before the effect re-runs.
+- **Suggestion:** Use a single `setInterval` that runs while `on` is true, and check `sec > 0` inside the callback. Or use `requestAnimationFrame` with a timestamp delta.
+
+---
+
+### Medium Issues
+
+#### [M1] JungleTools.jsx exports 20+ components from a single file
+- **File:** `sarah-practice-plan/src/JungleTools.jsx` (7200 lines)
+- **Issue:** This file contains: MiniAudioPlayer, AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, ChordVoicingViewer, VolumeMeter, ChordTransitionTimer, GenreMetronome, SilenceScore, DroneGenerator, TAB_CONTENT, InlineKeyboard, RhythmCellCards, PhraseFormGuide, StrumChartBuilder, ChartListView, YouTubeAudioPlayer, SongPicker, and numerous helper functions. The music-chart app already proves these can be split into ~20 focused files averaging 300-700 lines each.
+- **Natural split points:** `tools/` (each tool its own file), `charts/` (StrumChartBuilder, ChartListView, ChordDiagram, helpers), `audio/` (YouTube player, audio mutex, backing tracks), `shared/` (formatTime, parseTime, TimeInput, useIsWide).
+
+#### [M2] Inline styles everywhere -- no CSS extraction
+- **File:** Throughout both apps
+- **Issue:** Nearly 100% of styling is done via `style={{...}}` objects. This means: no hover states without JS workarounds (the `onPointerEnter/Leave` pattern is used extensively), no media queries, no CSS variables for theming, no pseudo-elements, and every re-render creates new style objects. The `<style>` tag in JSX (App.jsx:4419-4448) defines keyframes inline.
+- **Suggestion:** This is a design choice, not a bug. But the `onPointerEnter/onPointerLeave` for hover states (seen dozens of times in RhythmCellCards, StrumChartBuilder, etc.) is verbose and fragile. CSS classes would be cleaner.
+
+#### [M3] `useIsWide` hook is duplicated
+- **File:** `sarah-practice-plan/src/JungleTools.jsx:97-109` vs `music-chart/src/hooks/useIsWide.js`
+- **Issue:** The responsive breakpoint hook is defined inline in JungleTools.jsx in the sarah-practice-plan app, but properly extracted to its own file in music-chart.
+
+#### [M4] `playNote` creates synths that can accumulate
+- **File:** `sarah-practice-plan/src/App.jsx:1553-1563`
+- **Issue:** Each tap on a reference pitch creates a new `Tone.Synth`. If a user taps rapidly (which musicians do when checking intervals), they could create 10+ simultaneous synths before the first one's 2-second disposal timer fires.
+
+#### [M5] YouTube player cleanup uses `innerHTML = ''`
+- **File:** `sarah-practice-plan/src/JungleTools.jsx:230-232`
+- **Issue:** The YouTube player cleanup sets `wrapperRef.current.innerHTML = ''`, which is a brute-force DOM wipe. If React or another component has references to child nodes, this can cause stale reference errors. The code has a good comment explaining why this is needed (YT API replaces target elements), but `innerHTML = ''` bypasses React's virtual DOM entirely.
+
+#### [M6] DroneGenerator texture switching creates complex audio graph teardown
+- **File:** `sarah-practice-plan/src/JungleTools.jsx:3500-3698`
+- **Issue:** The drone generator creates elaborate Tone.js signal chains (synth -> filter -> chorus -> reverb -> limiter) for each texture. When switching textures rapidly, old chains are disposed via timers (`disposeTimersRef`). The code is aware of this risk (good comments), but the cleanup logic is complex and easy to break.
+
+#### [M7] Magic numbers throughout
+- **File:** Throughout both apps
+- **Issue:** Font sizes (9, 10, 11, 13, 15, 18, 32, 44), spacing values (4, 6, 8, 12, 16, 20, 24, 32), and breakpoints (900) appear as raw numbers everywhere. The theme object `T` defines some design tokens but not a type scale or spacing scale.
+
+#### [M8] No error boundaries
+- **File:** Both apps
+- **Issue:** Neither app has a React Error Boundary. If any component throws during render (e.g., corrupt localStorage data, missing curriculum exercise field), the entire app white-screens.
+
+#### [M9] `FloatingMetronome` adds click listener with `setTimeout`
+- **File:** `sarah-practice-plan/src/App.jsx:4008`
+- **Issue:** `setTimeout(() => window.addEventListener("click", handleGlobalClick), 50)` is a race condition workaround. If React batches a state update and the 50ms timer fires before the click event propagates, the expanded menu closes immediately. This is fragile timing-dependent code.
+- **Suggestion:** Use a `useRef` flag set on the next animation frame to indicate "ready to accept outside clicks."
+
+---
+
+### Low Issues / Nitpicks
+
+#### [L1] `console.log` left in production code
+- **File:** `sarah-practice-plan/src/App.jsx:146` (`console.log(\`Loaded samples for ${kit}\`)`)
+- **Issue:** Debug logging for sample loading. Minor but clutters the console.
+
+#### [L2] `LyricGrid` component has hardcoded lyrics
+- **File:** `sarah-practice-plan/src/App.jsx:543-587`
+- **Issue:** This appears to be a static demo component with hardcoded lyrics and a hardcoded BPM comment ("Gold columns = metronome click (122 BPM)").
+
+#### [L3] `unlocked` set is always all levels for Voice and Singer-Songwriter
+- **File:** `sarah-practice-plan/src/App.jsx:2117` and `3646`
+- **Issue:** `const unlocked = new Set(VOCAL_LEVELS.map(l => l.num))` -- this creates a set of ALL levels, making unlock logic dead code. Guitar Study has real unlock logic (localStorage-based progressive unlock), but Voice and Singer-Songwriter unlock everything immediately. This is likely intentional but the code still checks `isUnlocked` in the rendering, making it misleading.
+
+#### [L4] Inconsistent event naming conventions
+- **Issue:** `metroBeat` (camelCase), `metroBeatAudio` (camelCase), `exerciseOpen` (camelCase), `audioSourceChange` (camelCase), `songTimeUpdate` (camelCase) -- at least consistent casing, but no namespace prefix to avoid collisions with third-party code.
+
+#### [L5] Both apps load Google Fonts at render time
+- **File:** Both `App.jsx` files
+- **Issue:** As noted in H7, but additionally: the font URL is hardcoded in JSX rather than imported through the build system, meaning font loading is invisible to the build tool's optimization.
+
+---
+
+### Positive Notes
+
+1. **Audio architecture is solid.** The shared AudioContext strategy (JungleTools.jsx lines 12-22) to avoid Bluetooth A2DP/HFP switching is a sophisticated and well-documented solution to a real-world audio problem. The comments explain the "why" clearly.
+
+2. **Metronome engine is well-designed.** Using `Tone.Loop` with `Tone.Draw.schedule` for visual/audio separation is the correct Tone.js pattern. The visibility change handler (App.jsx:380-399) that pauses/resumes the Transport to prevent event backlogs on screen-off shows real-world mobile experience.
+
+3. **music-chart demonstrates the correct architecture.** The extraction from sarah-practice-plan to music-chart was done well: proper file structure (tools/, charts/, components/, hooks/), each component in its own file, shared theme in a module, helper functions extracted. This is the target architecture.
+
+4. **YIN pitch detection implementation.** The pitch detector in JungleTools.jsx implements the YIN algorithm with parabolic interpolation and confidence gating. This is a non-trivial DSP algorithm implemented correctly with good comments explaining CMND, threshold selection, and sub-sample precision.
+
+5. **Web Worker timer for background tabs.** The `createTimerWorker` pattern (JungleTools.jsx:27-45) correctly works around browser throttling of `setInterval` in background tabs. The cleanup (`terminateWorker` with `URL.revokeObjectURL`) is proper.
+
+6. **Audio mutex pattern.** The `claimAudioMutex()` / `audioSourceChange` event pattern ensures only one audio source plays at a time. Simple and effective.
+
+---
+
+### Recommendations (Prioritized)
+
+1. **Extract sarah-practice-plan's CurriculumView.** Unify VoiceView/GuitarStudyView/SingerSongwriterView/KeysView/LooperView into one parameterized component. Saves ~1,400 lines with zero behavior change. Lowest risk, highest impact on maintainability.
+
+2. **Split JungleTools.jsx.** Follow the music-chart file structure as a template. Each tool becomes its own file. This is mechanical work -- the music-chart already proves the component boundaries.
+
+3. **Add React.lazy() for tab-level code splitting.** Wrap each tab's content in `React.lazy()` + `Suspense`. The curriculum data files alone are ~2MB that don't need to load until the user visits that skill tab.
+
+4. **Fix the theme singleton.** Either use React Context (proper solution) or add a `themeVersion` counter state that forces re-renders when theme changes (pragmatic workaround).
+
+5. **Add a localStorage abstraction.** Create `storage.ts` with `get(key, schema)` / `set(key, value)` / `migrate(version, fn)` that handles JSON parse errors, quota errors, and migration versioning in one place.
+
+6. **Add error boundaries.** A single `ErrorBoundary` at the App level with "Something went wrong, reload" prevents white-screen crashes.
+
+7. **Pool transient synths.** Replace the "create synth, setTimeout dispose" pattern with a 2-3 synth pool for `playNote()`.
+
+---
+
+### Structural Comparison: sarah-practice-plan vs music-chart
+
+| Dimension | sarah-practice-plan | music-chart |
+|-----------|-------------------|-------------|
+| Largest file | 7,200 lines (JungleTools.jsx) | 1,470 lines (StrumChartBuilder.jsx) |
+| Files in src/ | 3 code files | 27 code files |
+| Avg lines/component | ~600 (2 monoliths) | ~350 |
+| Theme | Inline in App.jsx | Extracted to theme.js |
+| Hooks | Inline in monolith | Extracted to hooks/ |
+| Shared utilities | Inline | Extracted to shared.jsx, chartHelpers.js |
+| Code splitting | None | None (but smaller bundle) |
+| Component reuse | Copy-paste x5 skill views | Proper composition |
+
+The music-chart app is a working proof that the sarah-practice-plan can be modularized. The extraction was done correctly -- the question is when to apply the same discipline back to the parent app.</result>
+<usage><total_tokens>102992</total_tokens><tool_uses>35</tool_uses><duration_ms>183949</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\9f3c3ffb-50b3-4949-a3d6-83d6d15d90ed\tasks\ac03ca7bfb61cafb7.output
+[2026-03-24T07:08:47.151Z] <task-notification>
+<task-id>aca04d93c735eab63</task-id>
+<tool-use-id>toolu_01JxqPpbnEeaYZHJnNH2Zaib</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\9f3c3ffb-50b3-4949-a3d6-83d6d15d90ed\tasks\aca04d93c735eab63.output</output-file>
+<status>completed</status>
+<summary>Agent "Security audit of both apps" completed</summary>
+<result>I have enough data to complete the audit. Let me compile the full report.
+
+---
+
+## Security Review: musiclessons Monorepo (sarah-practice-plan + music-chart)
+
+### Summary
+- Critical: 1 | High: 1 | Medium: 4 | Low: 4
+- Overall Risk: **HIGH**
+
+---
+
+### Critical Findings
+
+#### [VULN-001] Vercel OIDC Token Committed to Repository
+
+- **File:** `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\.vercel\.env.development.local:2`
+- **Risk:** CRITICAL
+- **Observe:** The file contains a full JWT OIDC token:
+  ```
+  VERCEL_OIDC_TOKEN="eyJhbGciOiJSUzI1NiIs..."
+  ```
+- **Hypothesize:** The `.gitignore` at the repo root only ignores `transcripts/*.txt`. There is no `.env`, `.vercel`, or `node_modules` entry. This token is almost certainly committed to git history.
+- **Verify:** The JWT payload (decoded) contains: owner `hewg74-gmailcoms-projects`, project `sarah-practice-plan`, environment `development`. Even though this token has an expiration (the `exp` field), it exposes your Vercel team name, project ID, and the token pattern to anyone with repo access. If this is a public repo, it is actively exposed.
+- **Impact:** If the repo is public (GitHub), anyone can see your Vercel project structure. The token itself is likely expired (created around epoch 1772839266), but the `.gitignore` gap means future tokens or secrets could also be committed without noticing.
+- **Recommendation:**
+  1. **Immediately** add to `.gitignore`: `.vercel/`, `.env*`, `node_modules/`, `dist/`
+  2. Rotate any Vercel tokens if the repo has ever been public
+  3. Run `git rm --cached -r sarah-practice-plan/.vercel/` to remove from tracking
+  4. Consider using `git filter-branch` or BFG Repo-Cleaner to purge from history
+
+---
+
+### High Findings
+
+#### [VULN-002] URL Hash Chart Import Bypasses Validation in Both Apps
+
+- **File:** `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\App.jsx:4371-4391`
+- **File:** `C:\Users\hewg7\Documents\GitHub\musiclessons\music-chart\src\App.jsx:44-58`
+- **Risk:** HIGH
+- **Observe:** When loading a chart from `#chart=<base64>`, both apps decode and parse the JSON, then immediately save it to localStorage and render it -- **without calling `validateAndSanitizeChart()`**:
+  ```javascript
+  // sarah-practice-plan/src/App.jsx:4373-4386
+  if (hash.startsWith("#chart=")) {
+    try {
+      const data = hash.slice(7);
+      const binary = atob(data);
+      const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
+      const json = new TextDecoder().decode(bytes);
+      const chart = JSON.parse(json);
+      if (chart && chart.measures) {
+        setActiveChart(chart);   // <-- NO validation
+        const all = JSON.parse(localStorage.getItem("strumCharts") || "{}");
+        all[chart.id] = chart;   // <-- attacker controls chart.id
+        localStorage.setItem("strumCharts", JSON.stringify(all));
+      }
+    } catch { }
+  }
+  ```
+  The music-chart app has the identical pattern at `App.jsx:46-56`.
+- **Hypothesize:** An attacker can craft a malicious URL with a base64-encoded chart containing: (a) excessively large data to fill localStorage, (b) an `id` field set to overwrite existing charts, (c) arbitrary extra fields that get persisted. The `validateAndSanitizeChart()` function exists and is called for JSON import, but is completely skipped for URL hash import.
+- **Verify:** The validation function does use an allowlist of fields and sanitizes `title`, `youtubeUrl`, etc. But it is never invoked on the URL hash path. The JSON import path (`ChartListView.jsx:70-71`) correctly calls it. This is a real gap.
+- **Impact:** A shared link could inject a chart with an oversized payload (localStorage quota exhaustion, denial of service), overwrite another chart by controlling the `id` field, or include unexpected fields that may be consumed by downstream components.
+- **Recommendation:** Call `validateAndSanitizeChart()` on the decoded chart object before saving it to state or localStorage. Both apps need this fix:
+  ```javascript
+  const result = validateAndSanitizeChart(chart);
+  if (result.chart) {
+    setActiveChart(result.chart);
+    // save result.chart, not raw chart
+  }
+  ```
+
+---
+
+### Medium Findings
+
+#### [VULN-003] Cell-Level Data in `measures` Not Sanitized by validateAndSanitizeChart
+
+- **File:** `C:\Users\hewg7\Documents\GitHub\musiclessons\music-chart\src\charts\chartHelpers.js:54`
+- **File:** `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\JungleTools.jsx:5779`
+- **Risk:** MEDIUM
+- **Observe:** The validation function uses an allowlist for top-level chart fields but passes `obj.measures` through without sanitizing individual cells:
+  ```javascript
+  measures: obj.measures,  // raw pass-through, no cell-level validation
+  ```
+  Each cell is expected to be `{ chord: string|null, strum: string|null, lyric: string }`, and `between` should be an object with similar entries. But no checks enforce this shape.
+- **Hypothesize:** An attacker could inject cells with extremely long string values (chord: a 100KB string), unexpected types (chord: `{toString: ...}`), or extra properties. Since React renders `cell.chord` and `cell.lyric` as text children in JSX (e.g., `{cell.lyric || ""}`), React's escaping prevents XSS. However, unbounded string lengths could cause rendering performance issues.
+- **Verify:** React's JSX text interpolation (`{value}`) auto-escapes HTML, so XSS via chord/lyric names is **not exploitable** through normal rendering. There is no `dangerouslySetInnerHTML` usage for chart data. The single `innerHTML = ''` usage at `JungleTools.jsx:231` is for YouTube cleanup and uses a literal empty string, which is safe. However, the lack of cell-level validation means DoS via enormous strings is possible.
+- **Impact:** Performance degradation or UI breakage from malformed cell data. No XSS risk due to React's escaping.
+- **Recommendation:** Add cell-level validation in `validateAndSanitizeChart()`:
+  ```javascript
+  for (const cell of m.cells) {
+    cell.chord = typeof cell.chord === "string" ? cell.chord.slice(0, 20) : null;
+    cell.strum = ["D","U","X",null].includes(cell.strum) ? cell.strum : null;
+    cell.lyric = typeof cell.lyric === "string" ? cell.lyric.slice(0, 100) : "";
+  }
+  ```
+
+#### [VULN-004] Attacker-Controlled `chart.id` Can Overwrite Any Saved Chart
+
+- **File:** `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\App.jsx:4385`
+- **File:** `C:\Users\hewg7\Documents\GitHub\musiclessons\music-chart\src\App.jsx:53`
+- **Risk:** MEDIUM
+- **Observe:** When loading from URL hash, `chart.id` comes from the attacker-controlled JSON and is used as the key in `strumCharts`:
+  ```javascript
+  all[chart.id] = chart;
+  localStorage.setItem("strumCharts", JSON.stringify(all));
+  ```
+- **Hypothesize:** If the victim has existing saved charts, an attacker can craft a shared URL where `chart.id` matches an existing chart's ID, silently overwriting the victim's saved chart data.
+- **Verify:** The `validateAndSanitizeChart()` function generates a fresh ID (`"chart_" + Date.now()`), which would prevent this -- but it is not called on the URL hash path (see VULN-002).
+- **Impact:** Data loss -- a victim's existing chart can be overwritten by a carefully crafted shared link.
+- **Recommendation:** Always generate a fresh `id` for URL-imported charts, or use `validateAndSanitizeChart()` which already does this.
+
+#### [VULN-005] Incomplete `.gitignore` -- Build Artifacts and Dependencies Tracked
+
+- **File:** `C:\Users\hewg7\Documents\GitHub\musiclessons\.gitignore`
+- **Risk:** MEDIUM
+- **Observe:** The `.gitignore` only has one entry:
+  ```
+  transcripts/*.txt
+  ```
+- **Hypothesize:** `dist/`, `assets/`, `node_modules/`, `.vercel/`, `.env*` are likely committed or trackable. The `dist/` and `assets/` directories with compiled JS bundles are present in the repo root.
+- **Verify:** The Glob results showed `dist/assets/index-2B2XHGE2.js`, `assets/index-WvoEFII7.js`, `sw.js`, and `workbox-*.js` files at the repo root level, confirming build artifacts are tracked.
+- **Impact:** Build artifacts bloat the repo and could contain source maps. The `.vercel/` directory exposure (VULN-001) is the most serious consequence.
+- **Recommendation:** Add a comprehensive `.gitignore`:
+  ```
+  node_modules/
+  dist/
+  assets/
+  .vercel/
+  .env*
+  *.local
+  sw.js
+  workbox-*.js
+  ```
+
+#### [VULN-006] `activeSlots` Array Not Validated for Content Type
+
+- **File:** `C:\Users\hewg7\Documents\GitHub\musiclessons\music-chart\src\charts\chartHelpers.js:51`
+- **Risk:** MEDIUM
+- **Observe:**
+  ```javascript
+  activeSlots: Array.isArray(obj.activeSlots) ? obj.activeSlots : [],
+  ```
+  The validation checks that `activeSlots` is an array but does not validate that its elements are numbers in the valid range (0-7). Similarly, `lyricsPool` is checked with `Array.isArray()` but its elements are not validated.
+- **Hypothesize:** A malicious chart could set `activeSlots` to a very large array or include non-number values. The rendering code uses `chart.activeSlots.includes(cIdx)` where `cIdx` is 0-7, so non-number values would simply never match (no crash). However, a massive array (e.g., 100K elements) would cause `includes()` to run slowly on every render cycle.
+- **Impact:** Minor performance degradation from oversized arrays. No crash or data corruption.
+- **Recommendation:** Validate array contents:
+  ```javascript
+  activeSlots: Array.isArray(obj.activeSlots) ? obj.activeSlots.filter(n => typeof n === "number" && n >= 0 && n <= 7) : [],
+  ```
+
+---
+
+### Low Findings
+
+#### [VULN-007] Extensive Empty `catch {}` Blocks Swallow Errors Silently
+
+- **Files:** Approximately 60+ instances across both apps
+- **Risk:** LOW
+- **Observe:** Both codebases use `catch {}` and `catch { }` extensively for Tone.js operations, localStorage access, clipboard operations, and migration logic. Examples:
+  - `App.jsx:4388` (URL chart loading)
+  - `App.jsx:1329` (flow session logging)
+  - `JungleTools.jsx:6198` (chart auto-save)
+- **Impact:** Errors during chart import, localStorage operations, or audio setup are silently swallowed. If localStorage becomes corrupted, the user gets no feedback. For audio operations this is reasonable (audio APIs throw frequently on mobile), but for data persistence it could mask data loss.
+- **Recommendation:** For data operations (localStorage read/write, chart import), add at minimum a `console.warn()` or a user-visible fallback message. Audio `catch {}` blocks are acceptable as-is.
+
+#### [VULN-008] YouTube Iframe Loaded Without Explicit Sandbox Attributes
+
+- **File:** `C:\Users\hewg7\Documents\GitHub\musiclessons\music-chart\src\tools\youtube.jsx:104`
+- **File:** `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\JungleTools.jsx:196`
+- **Risk:** LOW
+- **Observe:** The YouTube player is created via `new window.YT.Player(containerRef, { ... })` which lets the YouTube IFrame API create the iframe. The `playerVars` include `{ autoplay: 0, controls: 0, disablekb: 1, modestbranding: 1 }` but there is no `sandbox` attribute.
+- **Verify:** The YouTube IFrame API does not support sandbox attribute configuration -- it manages its own iframe. YouTube's iframe is same-origin with `youtube.com` and cannot access the parent page's DOM due to browser same-origin policy. The YouTube IFrame API is the standard, Google-recommended approach.
+- **Impact:** Minimal. The YouTube iframe is cross-origin and sandboxed by browser same-origin policy. This is a best-practice observation, not a real vulnerability.
+- **Recommendation:** No action needed. YouTube's IFrame API handles this correctly.
+
+#### [VULN-009] CustomEvents on `window` Can Be Spoofed by Browser Extensions or DevTools
+
+- **File:** `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\App.jsx:341-374`
+- **Risk:** LOW
+- **Observe:** The app uses `window.dispatchEvent(new CustomEvent('metroBeat', ...))` and `window.dispatchEvent(new CustomEvent('audioSourceChange', ...))` as an event bus. Any code running in the same page context (browser extensions, DevTools) can dispatch these events.
+- **Impact:** An attacker with page-level access could spoof metronome beats or audio source changes, but this would only affect the UI state (visual beat indicators, audio muting). No data integrity or security impact. If an attacker has page-level JS access, they already have full control.
+- **Recommendation:** No action needed. This is a standard React pattern and the events carry no sensitive data.
+
+#### [VULN-010] PWA Service Worker Caches All Static Assets Up to 20MB
+
+- **File:** `C:\Users\hewg7\Documents\GitHub\musiclessons\music-chart\vite.config.js:33-36`
+- **File:** `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\vite.config.js:46-49`
+- **Risk:** LOW
+- **Observe:**
+  ```javascript
+  workbox: {
+    globPatterns: ['**/*.{js,css,html,ico,png,svg,mp3,wav,m4a,webm}'],
+    maximumFileSizeToCacheInBytes: 20 * 1024 * 1024
+  }
+  ```
+  The `registerType: 'autoUpdate'` is configured, and the `onNeedRefresh` handler prompts the user to reload.
+- **Verify:** The `autoUpdate` + `onNeedRefresh` combination is the Vite PWA recommended approach. The service worker is generated by Workbox (a Google library) with precache manifests containing content hashes. Cache poisoning would require compromising the build pipeline itself.
+- **Impact:** Minimal. Stale content is handled by the update prompt. The 20MB cache limit is generous but reasonable for audio files.
+- **Recommendation:** No action needed. Standard Workbox configuration.
+
+---
+
+### Recommendations (Priority Order)
+
+1. **[IMMEDIATE] Fix `.gitignore` and remove committed secrets** (VULN-001, VULN-005). Add `.vercel/`, `.env*`, `node_modules/`, `dist/`, `assets/` to `.gitignore`. Remove the `.vercel` directory from git tracking. If the repo has ever been public, consider it compromised and rotate Vercel credentials.
+
+2. **[HIGH] Add `validateAndSanitizeChart()` to URL hash import path** (VULN-002, VULN-004). This is a 3-line fix in each app's `useEffect` that handles `#chart=`. The validation function already exists and is already called for JSON text import -- it just needs to also be called for URL import.
+
+3. **[MEDIUM] Add cell-level validation** (VULN-003, VULN-006). Sanitize `chord`, `strum`, `lyric` values and `activeSlots` array contents inside `validateAndSanitizeChart()`.
+
+4. **[LOW] Add `console.warn()` to data-related `catch` blocks** (VULN-007). Audio catch blocks are fine as-is, but localStorage and chart import operations should at minimum log warnings.
+
+### Limitations of This Review
+
+- This is a static code review only. No dynamic testing (fuzzing, penetration testing) was performed.
+- The `dist/` and `assets/` build artifact bundles were not reviewed for source maps or additional secrets.
+- Dependency versions (`package.json`) were not audited for known CVEs. Running `npm audit` on both apps is recommended.
+- No Content Security Policy (CSP) headers were checked (this is a Vercel deployment config concern, not in-code).</result>
+<usage><total_tokens>73029</total_tokens><tool_uses>42</tool_uses><duration_ms>198447</duration_ms></usage>
+<worktree><worktreePath>C:\Users\hewg7\Documents\GitHub\musiclessons\.claude\worktrees\agent-aca04d93</worktreePath><worktreeBranch>worktree-agent-aca04d93</worktreeBranch></worktree>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\9f3c3ffb-50b3-4949-a3d6-83d6d15d90ed\tasks\aca04d93c735eab63.output
+[2026-03-24T07:09:00.446Z] <task-notification>
+<task-id>a979045a2b7ce1513</task-id>
+<tool-use-id>toolu_012Moo2dX3zTp3oH1Y7taeP7</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\9f3c3ffb-50b3-4949-a3d6-83d6d15d90ed\tasks\a979045a2b7ce1513.output</output-file>
+<status>completed</status>
+<summary>Agent "Devil's advocate on UX decisions" completed</summary>
+<result>I now have thorough evidence from the codebase. Let me compose the devil's advocate review.
+
+---
+
+## Devil's Advocate Review: UX Audit Recommendations for musiclessons Monorepo
+
+### Summary
+
+Seven UX audit recommendations were made for a two-app music lesson monorepo serving exactly two users (Gene, a music student, and Sarah Glass, his teacher). I have read the actual source code in both `sarah-practice-plan/src/` and `music-chart/src/` to ground each counter-argument. Several recommendations are weaker than they appear when tested against the reality of the codebase and its user base.
+
+---
+
+### 1. "Flow Mode should be the primary CTA"
+
+**Assumption being challenged:** That Flow Mode is "hidden" and that sequential practice is the dominant use case.
+
+**Counter-arguments:**
+
+Flow Mode is already available in **three distinct locations** -- not one. It appears at the DayView level via `StartFlowButton` (line 1974 of App.jsx), inside every expanded ExerciseCard (line 1608-1622), and at the top of every skill level view (VoiceView line 2214, GuitarStudyView line 3622, SingerSongwriterView line 3756). The DayView button is visible *without* expanding any card -- it sits right next to the day's completion percentage at the top of the day's exercise list. Calling it "hidden" is inaccurate.
+
+The ExerciseCard-level Flow button is actually a **feature, not a bug**. When Gene clicks Flow Start from inside an expanded exercise card, it calls `onStartFlow(exercises, dayColor, Math.max(0, startIdx))` (line 1612), which starts Flow Mode *at that specific exercise*, not at the beginning. This is the cherry-picking behavior the audit would destroy by making Flow Mode the primary entry point. If Flow Mode becomes a top-level "Start Practice" button, what happens to the ability to jump into the middle of a level?
+
+The browse-first pattern matches the actual mental model of a lesson app. Gene's weekly plan has 7 days, each with 3-6 exercises (visible in `week-2026-03-23.js`). He needs to see what is on a given day, check what he has already completed, and decide where to focus. The ExerciseCard collapse/expand pattern (with auto-close behavior on lines 1528-1541) makes this efficient: expand a card, read the "what" and "setup", then either do it inline or enter Flow.
+
+**Risk of the recommendation:** Promoting Flow Mode as the primary CTA would create a "just press play" experience that undermines Gene's agency. He is not following a Peloton workout -- he is a music student navigating a curriculum with 5 skill tracks and 500+ exercises. Browse-first is pedagogically correct.
+
+**Verdict:** Weak recommendation. Flow Mode has three entry points and the card-level entry is deliberately designed for mid-level jumping. No change needed.
+
+---
+
+### 2. "Day pills should auto-highlight today"
+
+**Assumption being challenged:** That the app can meaningfully know what "today" is in terms of the practice plan.
+
+**Counter-arguments:**
+
+The weekly plan's "days" are not calendar days. Look at the data structure in `week-2026-03-23.js`: Day 1 is "Foundation Reset", Day 2 is presumably something else. The `DAYS` array (exported from `appData.js` line 5: `export const DAYS = CURRENT_WEEK.days`) is a fixed sequence of 7 themed practice days. There is no `date` field on individual days -- only the week has a `weekOf: "2026-03-23"` and `lessonDate: "2026-03-16"`.
+
+To auto-highlight, you would need to map Day 1 to Monday, Day 2 to Tuesday, etc. But Gene might not practice on a fixed schedule. He might do Day 1 on Wednesday, skip Thursday, do Day 2 and Day 3 on Friday. The audit assumes a 1:1 mapping between practice days and calendar days that does not exist in the data model or in Gene's life.
+
+The current default is `useState(DAYS[0])` (line 4269). Gene taps the pill he wants. This takes approximately 200ms of effort. The "problem" being solved is trivial.
+
+Worse, auto-highlighting the wrong day would be actively confusing. If it is Saturday and the app highlights "Day 6: Vocal Integration" but Gene already did that on Thursday and wants to redo Day 3, the auto-highlight is wrong and misleading.
+
+**Verdict:** Weak recommendation. The "day" concept is pedagogical, not calendrical. Manual selection gives Gene accurate control at negligible cost.
+
+---
+
+### 3. "Per-step completion tracking within exercises"
+
+**Assumption being challenged:** That finer-grained tracking improves the practice experience.
+
+**Counter-arguments:**
+
+The codebase already has step-level tracking -- but deliberately only for exercises that opt in. The `stepDone` state exists at line 1522 (`const [stepDone, setStepDone] = useState({})`), and the checklist UI renders when `ex.checklist` is truthy (line 1884). Exercises without `checklist: true` show numbered step indicators instead (line 1894-1898). This is a deliberate design choice: some exercises are sequential procedures (check off each step), while others are holistic activities where step-by-step tracking makes no sense.
+
+Consider an exercise like "Full Count Endurance" (id: `w0323-d1e1`). Its steps are: set metronome, say counts, tap, set timer for 2 minutes. Checking off "set metronome" as a separate tracked step is absurd -- it is a setup instruction, not a practice milestone. The exercise is complete when Gene can do 2 minutes non-stop. That is a binary outcome.
+
+The `stepDone` state is also ephemeral -- it lives in component state, not localStorage. This means it resets when the card collapses or when Gene navigates away. This is intentional. Step progress within an exercise is *session-level* context, not *persistent* progress. Making it persistent would require answering: if Gene checked 3 of 4 steps yesterday, is the exercise 75% done today? No -- he needs to redo the whole exercise each session because music practice is not linear accumulation.
+
+The current completion model is clean: `completed` is a `Set` of exercise IDs in localStorage (line 4270-4278). An exercise is done or not done. Adding fractional completion would complicate the data model, the UI (what does the progress pill show -- 3/4?), and the semantics (what does "complete" mean?).
+
+**Who benefits?** Not Gene -- he is the one practicing and knows whether he did the exercise. Not Sarah -- she does not have read access to his localStorage. This feature has no consumer.
+
+**Verdict:** Weak recommendation. Step tracking already exists where appropriate (`ex.checklist`). Making it universal would add friction and semantic confusion for no user benefit.
+
+---
+
+### 4. "The two-app split should continue"
+
+**Assumption being challenged:** That maintaining two independent apps is the right architecture.
+
+**Counter-arguments for merging back:**
+
+The music-chart app (`music-chart/src/`) has 35 source files. The sarah-practice-plan chart builder is the same code living inside `JungleTools.jsx` (7200 lines). Every time a bug is fixed in the metronome, drone generator, pitch detector, chart builder, or any other tool, it must be fixed in *both* codebases. The CLAUDE.md files explicitly say the apps "have diverged" and "do not try to keep them in sync." This means bugs fixed in one app are silently unfixed in the other.
+
+The divergences are trivial:
+- SongPicker: YouTube-only vs. YouTube + local MP3 dropdown
+- BPM sync: auto vs. manual "Set" button
+- Default chart grouping: 2 bars vs. none
+
+These are configuration flags, not architectural differences. They could be props or environment variables in a shared codebase.
+
+music-chart has no users other than Gene. The project memory says "music-chart-xi.vercel.app" -- there is no indication anyone else uses it. Gene already has all the same tools in sarah-practice-plan. The standalone chart site exists so Gene can share chart URLs that do not require the full lesson app, but the lesson app also decodes the same `#chart=` URLs.
+
+The maintenance burden is real and growing. The music-chart `CLAUDE.md` lists 35 files across `tools/`, `charts/`, `components/`, and `hooks/`. That is 35 files that duplicate code from `JungleTools.jsx` and `App.jsx`. When the theme system changes, chord voicings are updated, or the metronome gets a new sound kit, both apps need updating.
+
+**Counter-arguments for keeping the split:**
+
+The modular structure of music-chart is genuinely cleaner. Imports are explicit. Components have clear boundaries. If sarah-practice-plan were ever refactored, music-chart is the reference architecture. Merging back would lose this.
+
+Also: the lesson app's monolith means any change to the chart builder risks breaking curriculum rendering, Flow Mode, or exercise completion. The separate app provides a safe sandbox for chart/tool development.
+
+**Verdict:** This is the one recommendation that deserves the most scrutiny. The current split creates real maintenance debt (duplicated tools across 7200 lines + 35 files). The strongest argument for keeping it is deployment isolation -- a broken chart builder should not take down the lesson app. But a monorepo with shared packages would give both benefits. The audit's recommendation to "continue the split" avoids the hard question of whether the split was the right choice in the first place.
+
+---
+
+### 5. "localStorage-only is a data risk"
+
+**Assumption being challenged:** That Gene's data is at serious risk.
+
+**Counter-arguments:**
+
+The app stores exactly the following in localStorage (from grepping the codebase):
+- `practice-completed`: a Set of exercise IDs (strings like `w0323-d1e1`)
+- `voice-current-level`, `guitar-study-level`, `songwriter-level`, `keys-current-level`, `looper-current-level`: single integers
+- `guitar-study-unlocked`: an array of level numbers
+- `flow-sessions`: session log (capped at 100 entries, line 1327)
+- `theme`: "light" or "dark"
+- `skill-tab`: the last-viewed skill tab
+- `strumCharts`: saved chart data
+
+The critical data is `practice-completed` (which exercises Gene has done) and `strumCharts` (charts he has built). Everything else is trivially recoverable -- Gene knows what level he is on.
+
+Gene uses this on his phone as a PWA. The service worker is registered via `vite-plugin-pwa` (line 3 of main.jsx: `import { registerSW } from 'virtual:pwa-register'`). PWA localStorage is not cleared by normal browser cache clearing -- you have to explicitly delete site data or uninstall the PWA. This is far more durable than the audit implies.
+
+The audit's alternative (cloud sync) would require: authentication, a database, a server, API endpoints, conflict resolution for offline edits, and ongoing hosting costs. For two users. The ROI is negative.
+
+A JSON export/import button would take 30 minutes to build and fully addresses the risk. `JSON.stringify({completed: [...completed], charts: localStorage.getItem('strumCharts')})` as a downloadable file, with a file picker for import. Done.
+
+**Verdict:** The risk is real but overstated. A JSON export button is the correct response, not cloud sync. The PWA service worker provides more durability than the audit acknowledges.
+
+---
+
+### 6. "Accessibility is a P0 concern"
+
+**Assumption being challenged:** That accessibility is the highest priority for this app.
+
+**Counter-arguments:**
+
+The user base is exactly two people: Gene and Sarah. Both are sighted, both use touch devices. There is no public-facing usage, no legal exposure (this is not a commercial product), and no indication that either user needs assistive technology.
+
+The codebase uses inline styles throughout (no semantic HTML, no ARIA attributes). Retrofitting accessibility into 4600 lines of App.jsx and 7200 lines of JungleTools.jsx would be a massive effort. Every `<div onClick={...}>` would need to become a `<button>`. Every step indicator, progress rail, and day pill would need ARIA labels. The FlowMode swipe navigation (lines 1285-1302) has no keyboard equivalent. The metronome visualization has no screen reader announcement.
+
+This is easily 40-80 hours of work for an app with two known users who do not need it.
+
+The opportunity cost is enormous. Those 40-80 hours could be spent on: curriculum content (Gene is at Level 3 of Singer-Songwriter -- there are 12 more levels to work through), new tools, or fixing actual bugs.
+
+"P0" means "drop everything and fix this." That is plainly wrong for a personal-use app with two sighted users.
+
+**Verdict:** Weak recommendation. Accessibility is important in general, but P0 for a 2-user personal app with no assistive technology needs is a misallocation of effort. If the app ever becomes a product, this becomes P1. Right now it is P3 at best.
+
+---
+
+### 7. "The monolith should be refactored"
+
+**Assumption being challenged:** That large files are inherently problematic and that modularization improves outcomes.
+
+**Counter-arguments:**
+
+music-chart was modularized. It has 35 files. Let us look at what that bought:
+- `theme.js` (extracted from App.jsx): 40-50 lines that were previously inline. Now requires an import in every file that uses `T`.
+- `hooks/useIsWide.js`: 15 lines. Previously defined inline in JungleTools.jsx.
+- `tools/shared.jsx`: `formatTime`, `parseTime`, `TimeInput` -- utility functions that were previously co-located with their only consumers.
+- `components/ToolCard.jsx` and `components/BottomNav.jsx`: extracted from App.jsx.
+
+The modularized music-chart App.jsx is ~200 lines. But the total codebase is the same amount of code spread across 35 files. When debugging "why does the drone cycle mode drift in background tabs," you now need to trace through `DroneGenerator.jsx` -> `workerTimer.js` -> `audioKeepalive.js` instead of searching within one file. The monolith has a single `Ctrl+F` surface.
+
+The sarah-practice-plan monolith **works**. It ships. Gene practices with it daily (per the project memory). It has survived multiple curriculum additions (Voice 14 levels, Guitar 14 levels, Singer-Songwriter 15 levels, Keys 7 levels, Looper 10 levels), weekly plan rotations, dark mode, Flow Mode, chart sharing, and tool additions -- all within the monolith.
+
+Refactoring 11,800 lines of working, actively-used code introduces regression risk. The app has no test suite (no test files appear in the glob results). A refactor without tests is a bug factory. Every extracted component is a new opportunity for a broken import, a missing prop, or a state-sharing bug.
+
+The LLM that maintains this code (Claude) handles large files well. Gene is not maintaining this code by hand -- he prompts an AI. The monolith is arguably *better* for AI-assisted development because the full context is in one file, reducing the need for multi-file reasoning.
+
+**Verdict:** Moderate recommendation, but the timing is wrong. Without a test suite, refactoring is high-risk. The monolith is not causing user-facing problems. If refactoring happens, it should follow test coverage, not precede it.
+
+---
+
+### Which Recommendations Survive Scrutiny
+
+**Survives strongly:**
+- None are "must-do" as stated.
+
+**Survives with modifications:**
+- **Recommendation 4 (two-app split)** -- the audit says "continue," but the real answer is more nuanced. The duplicated maintenance burden is the single biggest technical risk in this codebase. A shared-package monorepo approach would be better than either "continue split" or "merge back." This is the strongest issue the audit raised, even though it reached the wrong conclusion.
+- **Recommendation 5 (localStorage risk)** -- survives as "add a JSON export button." The audit's framing of the risk is correct; its implied solution (cloud sync) is wrong.
+
+**Weaker than they appear:**
+- **Recommendation 1 (Flow Mode CTA)** -- Flow Mode already has three entry points including a top-level button per day/level. The audit missed this.
+- **Recommendation 2 (auto-highlight today)** -- days are pedagogical, not calendrical. Auto-highlighting would be wrong more often than right.
+- **Recommendation 3 (per-step tracking)** -- already exists where appropriate via `ex.checklist`. Universal step tracking adds friction for zero user benefit.
+- **Recommendation 6 (accessibility P0)** -- correct concern, wildly wrong priority level for a 2-user personal app.
+- **Recommendation 7 (refactor monolith)** -- correct long-term, but dangerous without test coverage. The monolith is not causing problems today.
+
+### Confidence
+
+- **Overall risk level**: LOW -- the app works, ships, and serves its users. The audit found real observations but overweighted them.
+- **Recommendation**: APPROVE_WITH_CHANGES -- add JSON export, reconsider the two-app maintenance burden, deprioritize the rest.
+- **Strongest objection**: The two-app split creates growing maintenance debt across 7200+ duplicated lines with no synchronization mechanism, and the audit recommended continuing it without acknowledging this cost.
+
+### Key Files Referenced
+
+- `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\App.jsx` -- 4600-line monolith containing FlowMode, ExerciseCard, DayView, all tab routing, completion tracking
+- `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\JungleTools.jsx` -- 7200-line tools/charts file duplicated across both apps
+- `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\main.jsx` -- PWA service worker registration
+- `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\data\weeklyPlans\week-2026-03-23.js` -- weekly plan structure showing days are not calendar-mapped
+- `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\src\data\appData.js` -- DAYS export from current week
+- `C:\Users\hewg7\Documents\GitHub\musiclessons\music-chart\src\App.jsx` -- modularized app shell for comparison</result>
+<usage><total_tokens>52489</total_tokens><tool_uses>25</tool_uses><duration_ms>168741</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\9f3c3ffb-50b3-4949-a3d6-83d6d15d90ed\tasks\a979045a2b7ce1513.output
+[2026-03-24T07:09:56.527Z] <task-notification>
+<task-id>aaae57b4a8ff5f6c2</task-id>
+<tool-use-id>toolu_0114M4Bb1XTbrBdS3P5vy99G</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\9f3c3ffb-50b3-4949-a3d6-83d6d15d90ed\tasks\aaae57b4a8ff5f6c2.output</output-file>
+<status>completed</status>
+<summary>Agent "UX heuristic evaluation" completed</summary>
+<result>I now have a thorough picture of both codebases. Here is the complete UX evaluation.
+
+---
+
+## UX Review: Music Lessons Monorepo (sarah-practice-plan + music-chart)
+
+### Summary
+- Critical Issues: 4
+- Major Issues: 9
+- Minor Issues: 11
+- Accessibility Issues: 8
+- Overall UX Score: 6.5 / 10
+
+Both apps share strong visual design DNA and genuine craft in their interaction patterns. The issues are concentrated in three areas: near-total absence of ARIA semantics, a navigation split that creates cognitive overhead for the target user (a single musician), and a small number of interaction gaps that would cause real friction during active practice sessions.
+
+---
+
+## Critical Issues
+
+### [UX-001] No `aria-label` on any navigation button — screen readers receive only icon names
+- **Heuristic:** #4 Consistency and Standards / WCAG 4.1.2
+- **Apps:** Both
+- **Location:** `sarah-practice-plan/src/App.jsx` line 4149 — `BottomNav`; `music-chart/src/components/BottomNav.jsx` line 8
+- **Issue:** Every `<button>` in both bottom navigation bars renders only a Lucide icon and a bare `<span className="nav-label">`. The icon itself has no `aria-label` and the Lucide SVG does not carry accessible text. A screen reader announces "Music Practice" / "Sparkles Skills" etc. because it reads the SVG title (browser-dependent and inconsistent), or reads only the label text. More critically, the _active state_ is communicated only by CSS class and color (`#d4a373` gold). There is no `aria-current="page"` on the active item.
+- **Impact:** Screen reader users cannot reliably navigate between the four primary tabs. The active-state color alone fails WCAG 1.4.1 (use of color as sole differentiator).
+- **Fix:**
+  ```jsx
+  <button
+    className={`nav-item ${tab === "practice" ? "active" : ""}`}
+    onClick={() => setTab("practice")}
+    aria-label="Practice tab"
+    aria-current={tab === "practice" ? "page" : undefined}
+  >
+  ```
+  Add `aria-hidden="true"` to the Lucide icon so the text label is the sole announced name.
+
+---
+
+### [UX-002] `outline: none` on all buttons and inputs — keyboard focus is invisible
+- **Heuristic:** #6 Recognition Rather Than Recall / WCAG 2.4.7 (Focus Visible, Level AA)
+- **Apps:** Both
+- **Location:** `sarah-practice-plan/src/index.css` line 22; `music-chart/src/index.css` line 22; plus explicit `outline: "none"` on individual inputs at `music-chart/src/charts/StrumChartBuilder.jsx` lines 829, 1003, 1133, 1548
+- **Issue:** Both `index.css` files globally reset `button { outline: none; }`. While `music-chart/src/App.css` defines a `.counter:focus-visible` rule, that class is only on the Vite boilerplate counter component — it is never applied to any of the app's actual interactive elements. Every button, range slider, and text input is invisible to keyboard users when focused.
+- **Impact:** The app is entirely non-navigable by keyboard. Any musician who uses a keyboard with a tablet stand (common practice setup) has no visual affordance for focus state. This is a WCAG Level AA failure.
+- **Fix:** Replace the global `outline: none` reset with a `:focus-visible` override that provides a visible ring:
+  ```css
+  button:focus-visible,
+  input:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid #d4a373; /* T.gold */
+    outline-offset: 2px;
+  }
+  button { outline: none; } /* only suppress on non-keyboard interaction */
+  ```
+
+---
+
+### [UX-003] Flow Mode swipe gesture conflicts with browser back gesture and scroll
+- **Heuristic:** #3 User Control and Freedom / #5 Error Prevention
+- **App:** sarah-practice-plan
+- **Location:** `App.jsx` lines 1285–1303 (`onTouchStart` / `onTouchEnd` in `FlowMode`)
+- **Issue:** The swipe-left / swipe-right gesture to navigate between exercises in Flow Mode uses a threshold of `Math.abs(dx) < 80 || Math.abs(dx) < Math.abs(dy) * 2`. On iOS, the system-level back-swipe gesture triggers from the left edge at exactly this distance range. Users attempting to go back to the previous exercise routinely trigger a browser navigation instead of an in-app exercise change. Additionally, the gesture is completely undiscoverable — there is no visual affordance (no "swipe" hint, no edge indicator, no instructional text).
+- **Impact:** Users either accidentally exit the app entirely, or never discover the swipe feature exists. The only visible navigation is the progress rail dots (8–12px tap targets, well below the 44px minimum).
+- **Fix:** Add `touch-action: pan-y` CSS to the Flow container so horizontal swipes are handled by the app but vertical scrolling by the browser. Provide a visible hint on first launch. Ensure the progress rail dots are wrapped in a button with `min-width: 44px; min-height: 44px` with the visual dot centered inside.
+
+---
+
+### [UX-004] `ToolCard` header uses `<div onClick>` instead of `<button>` — not keyboard accessible
+- **Heuristic:** #4 Consistency and Standards / WCAG 4.1.2
+- **Apps:** Both — sarah-practice-plan (`JungleTools.jsx` equivalent) and music-chart/src/components/ToolCard.jsx line 11
+- **Location:** `music-chart/src/components/ToolCard.jsx` line 11
+- **Issue:** The collapsible `ToolCard` header that expands and collapses each tool panel is implemented as `<div onClick={...}>`. This is not reachable by keyboard (no tab stop), is not announced as a button to screen readers, and has no `aria-expanded` state. There are approximately 12 ToolCard instances in the Tools tab of sarah-practice-plan alone.
+- **Impact:** Keyboard users cannot open any tool. Screen reader users receive no indication that a section is expandable or what its current state is.
+- **Fix:**
+  ```jsx
+  <button
+    onClick={() => setOpen(!open)}
+    aria-expanded={open}
+    style={{ /* existing styles + width: "100%", text-align: left */ }}
+  >
+  ```
+  Add `role="region"` and `aria-labelledby` to the collapsible content panel.
+
+---
+
+## Major Issues
+
+### [UX-005] No loading or error state when audio samples fail to load
+- **Heuristic:** #1 Visibility of System Status / #9 Error Recovery
+- **App:** sarah-practice-plan (and music-chart)
+- **Location:** `App.jsx` lines 139–148 (`createSynth`), line 336 (`synth.loaded !== false` guard)
+- **Issue:** When Tone.js `Sampler` loads WAV/MP3 files, the code uses a guard `synth.loaded !== false` before triggering. However there is no UI feedback for the loading state. If a user taps "Start" before samples load (a common scenario on slow mobile connections), the metronome will start but play silently — beats are scheduled and the visual BPM number updates, but no sound is produced. There is no spinner, no "Loading sounds..." message, and no error if samples fail entirely.
+- **Impact:** A user thinks the metronome is broken or their phone audio is muted. High friction at a crucial practice-starting moment.
+- **Fix:** Track `samplerLoaded` state. Show a brief "Loading..." label on the Start button until all active kit samples are confirmed loaded. On `onerror`, display a fallback message: "Sound samples failed to load — try refreshing."
+
+---
+
+### [UX-006] Skills tab for sarah-practice-plan has 5 sub-tabs but they don't scroll horizontally on very narrow phones
+- **Heuristic:** #8 Aesthetic and Minimalist Design / Mobile usability
+- **App:** sarah-practice-plan
+- **Location:** `App.jsx` lines 4601–4613 (skill sub-tabs section)
+- **Issue:** The five skill sub-tabs (Voice, Guitar, Singer-Songwriter, Keys, Looper) are rendered in a `<div>` with `display: "flex"` and `borderBottom`. "Singer-Songwriter" is 17 characters. On a 375px-wide phone at the minimum comfortable font size (13px), these five tabs cannot all fit horizontally. There is no `overflowX: "auto"` or `scrollable` setting on this container, unlike the day-pills and level-pills which correctly use `hide-scrollbar` with horizontal scroll. The container uses `flexShrink: 0, whiteSpace: "nowrap"` on each tab button but no scroll on the parent — labels will overflow or compress.
+- **Impact:** On narrow screens, "Singer-Songwriter" is either clipped or forces the layout to overflow outside the viewport.
+- **Fix:** Add `overflowX: "auto"` and the `.hide-scrollbar` class to the skill sub-tabs container, matching the pattern already used for day pills at line 4505.
+
+---
+
+### [UX-007] Flow Mode exit confirmation only works by pressing "Exit" — no keyboard Escape support, no focus trap
+- **Heuristic:** #3 User Control and Freedom / WCAG 2.1 (Keyboard)
+- **App:** sarah-practice-plan
+- **Location:** `App.jsx` lines 1405–1441 (exit confirmation dialog in `FlowMode`)
+- **Issue:** The exit confirmation modal is a `<div>` styled to look like a dialog. It has no `role="dialog"`, no `aria-modal="true"`, no `aria-labelledby`, and no focus trap. Focus is not moved into the modal when it opens. There is no `keydown` listener for the Escape key to cancel. The "Stay" / "Exit" buttons render in the modal but a keyboard user pressing Tab will continue to tab through the underlying Flow content behind the overlay rather than being contained in the modal.
+- **Impact:** Screen reader users cannot interact with the confirmation dialog. Keyboard users who accidentally trigger exit have no way to recover without clicking.
+- **Fix:** Add `role="dialog"`, `aria-modal="true"`, an `aria-labelledby` pointing to the "Exit Flow?" heading, a `useEffect` that moves focus to the first button on open, and a `keydown` listener that calls `setShowExitConfirm(false)` on `Escape`.
+
+---
+
+### [UX-008] BPM range input (`<input type="range">`) has no accessible label
+- **Heuristic:** WCAG 1.3.1 Info and Relationships; 4.1.2 Name, Role, Value
+- **Apps:** Both
+- **Location:** `App.jsx` line 2291 (sarah-practice-plan MetronomePanel); `music-chart/src/tools/Metronome.jsx` line 471
+- **Issue:** The main BPM slider renders as `<input type="range" min={40} max={280} value={metro.bpm} ...>` with no associated `<label>`, no `aria-label`, and no `aria-valuetext`. A screen reader announces the current value as a number with no context for what the number represents. The `accentColor` and `outline: "none"` suppress the browser's default focus indicator.
+- **Impact:** Screen reader users hear "40" to "280" with no indication this is a BPM control. Users navigating by keyboard cannot see the focused state on the slider.
+- **Fix:**
+  ```jsx
+  <input
+    type="range"
+    aria-label="Tempo in BPM"
+    aria-valuetext={`${metro.bpm} BPM`}
+    min={40} max={280}
+    value={metro.bpm}
+    ...
+  />
+  ```
+
+---
+
+### [UX-009] Dark mode does not respect `prefers-color-scheme` system setting
+- **Heuristic:** #2 Match Between System and Real World / User Expectation
+- **Apps:** Both
+- **Location:** `App.jsx` lines 4174–4181 (sarah-practice-plan); `music-chart/src/App.jsx` lines 23–29
+- **Issue:** Both apps initialize theme from `localStorage.getItem("theme")`. If no value is saved, they default to light mode. Neither app checks `window.matchMedia("(prefers-color-scheme: dark)")` for the system preference. Users who have their OS set to dark mode at night will open the app in light mode and have to manually toggle it every session until they explicitly save a preference.
+- **Impact:** A practice app used in low-light environments (late-night sessions are common for musicians) will blast white at full brightness with no respect for the system setting.
+- **Fix:**
+  ```js
+  const saved = localStorage.getItem("theme");
+  const dark = saved === "dark" || (saved === null && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  ```
+
+---
+
+### [UX-010] Progress rail dots in Flow Mode are 8–12px tap targets with no accessible label
+- **Heuristic:** Mobile Usability / WCAG 2.5.5 Target Size
+- **App:** sarah-practice-plan
+- **Location:** `App.jsx` lines 706–720 (`FlowProgressRail`)
+- **Issue:** Each exercise navigation dot is rendered as a `<button>` with `width: isCurrent ? 12 : 8` and `height: isCurrent ? 12 : 8` with `padding: 0`. These are 8px–12px tap targets against the WCAG 2.5.5 recommended 44px minimum. The `title={ex.title}` attribute provides a tooltip on hover (desktop), but on mobile there is no accessible name at all announced to screen readers, and the tap target is approximately 1/5 the minimum recommended size. For a 15-exercise set, users must precisely hit a circle smaller than a grain of rice.
+- **Impact:** Users miss taps repeatedly, jumping to wrong exercises. The feature is effectively unusable for motor-impaired users.
+- **Fix:** Maintain the small visual dot inside a larger transparent hit area:
+  ```jsx
+  <button
+    style={{ width: 44, height: 44, display: "flex", alignItems: "center", justifyContent: "center",
+             background: "transparent", border: "none", padding: 0, cursor: "pointer" }}
+    aria-label={`Go to exercise ${i + 1}: ${ex.title}`}
+    aria-current={isCurrent ? "step" : undefined}
+    onClick={() => onJump(i)}
+  >
+    <div style={{ width: size, height: size, borderRadius: "50%", /* existing visual styles */ }} />
+  </button>
+  ```
+
+---
+
+### [UX-011] `<link>` tag for Google Fonts rendered inside the React component tree, not in `<head>`
+- **Heuristic:** #1 Visibility of System Status (perceived performance)
+- **Apps:** Both
+- **Location:** `sarah-practice-plan/src/App.jsx` line 4793; `music-chart/src/App.jsx` line 239
+- **Issue:** Both apps render `<link href="https://fonts.googleapis.com/...">` as a child of the root `<div>`. React renders this into the body, not the `<head>`. Browsers handle this inconsistently — some will apply it, but the font is loaded late in the rendering cycle, causing a flash of unstyled text (FOUT) with the system fallback (`-apple-system`, `Segoe UI`, etc.) before Playfair Display and Lato load. The fonts are declared as high-priority in `index.css` via `@import` already, so this `<link>` tag is redundant and potentially causes a double-load.
+- **Impact:** Users see a brief layout shift as Playfair Display (a large serif) loads in — the 44px header text reflows noticeably. On slow connections this can take 2–3 seconds.
+- **Fix:** Remove the `<link>` tags from the component render and rely solely on the `@import` in `index.css`, or move them into `index.html`'s `<head>` with `rel="preload"`.
+
+---
+
+### [UX-012] "Backing Track Links" tool shows bare YouTube URLs as unclickable text
+- **Heuristic:** #6 Recognition Rather Than Recall
+- **App:** sarah-practice-plan
+- **Location:** `App.jsx` lines 4687–4706
+- **Issue:** The "Backing Track Links" ToolCard renders a list like `{ label: "Surf Rock 120 BPM", url: "youtube.com/watch?v=AEf8LF4Xu18" }` where the URL is displayed as non-linked text (a `<span>`). The URL is not prefixed with `https://` and is not wrapped in `<a>`. Users who want to open the link must manually copy-paste it and prepend the protocol. This is particularly painful on mobile where there is no keyboard copy shortcut.
+- **Impact:** A feature intended to provide quick access to backing tracks becomes a friction point requiring manual URL entry.
+- **Fix:** Either make these clickable links with `href={"https://" + l.url}` and `target="_blank" rel="noopener"`, or better yet, integrate these URLs directly into the Backing Tracks audio player that already exists in the same tab.
+
+---
+
+## Accessibility Issues
+
+### [A11Y-001] No semantic heading hierarchy — entire app uses styled `<div>` elements
+- **WCAG:** 1.3.1 Info and Relationships (Level A)
+- **Apps:** Both
+- **Issue:** All section titles, level names, exercise titles, and page headings are `<div>` elements with font styling. Not a single `<h1>`, `<h2>`, or `<h3>` appears in App.jsx or music-chart/src/App.jsx. Screen reader users relying on heading navigation (a primary skip-navigation technique) find a completely flat document with no landmarks.
+- **Fix:** Map the visual hierarchy to semantic headings. The app title ("Practice Plan") should be `<h1>`. Tab section titles ("Skills", "Tools") should be `<h2>`. Level names should be `<h3>`. Exercise titles in Flow Mode should be `<h2>` (as they are the primary page content).
+
+### [A11Y-002] No skip-navigation link
+- **WCAG:** 2.4.1 Bypass Blocks (Level A)
+- **Apps:** Both
+- **Issue:** There is no "Skip to main content" link. On the Practice tab, a keyboard user must tab through the full header, all 7 day-pill buttons, before reaching any exercise content.
+- **Fix:** Add a visually-hidden-until-focused link as the first element in the DOM: `<a href="#main-content" class="skip-link">Skip to main content</a>`.
+
+### [A11Y-003] Confetti animation on exercise completion uses `disableForReducedMotion: true` — but the audio chime still plays
+- **WCAG:** 2.3.3 Animation from Interactions (Level AAA — but worth noting)
+- **App:** sarah-practice-plan
+- **Location:** `App.jsx` lines 4323–4333
+- **Issue:** The confetti correctly passes `disableForReducedMotion: true` to the canvas-confetti library. However, the audio completion chime at lines 4307–4317 (PolySynth C major chord) fires unconditionally. For users with sensory sensitivities who have reduced motion enabled, unexpected audio surprises can be equally disorienting.
+- **Note:** This is Level AAA and may be intentional — the audio feedback IS valuable for practice. The point is the reduced-motion check is incomplete if the goal is to be fully respectful of that preference.
+
+### [A11Y-004] Color contrast — `T.textMuted` (#b8b2ab) on white background fails WCAG AA
+- **WCAG:** 1.4.3 Contrast (Level AA) — minimum 4.5:1 for normal text
+- **Apps:** Both
+- **Issue:** The light theme defines `textMuted: "#b8b2ab"` against `bg: "#ffffff"`. The contrast ratio is approximately 2.8:1, well below the 4.5:1 minimum for normal text. This color is used extensively for secondary labels, status text, BPM "unit" labels, navigation inactive state, and timestamps.
+- **Additionally:** `textLight: "#8c867f"` on white gives approximately 3.6:1 — still below AA for text smaller than 18px bold or 24px regular.
+- **Fix:** Darken `textMuted` to approximately `#767069` (4.5:1 on white) and `textLight` to `#6b6560`.
+
+### [A11Y-005] Interactive SVG dots and decorative SVGs lack `aria-hidden`
+- **WCAG:** 4.1.2 Name, Role, Value
+- **Apps:** Both
+- **Issue:** Decorative SVGs such as the grid pattern background in MetronomePanel (`App.jsx` line 2271–2276) and the chevron arrows in FlowStepView (lines 746, 756) are rendered inline. Without `aria-hidden="true"`, screen readers attempt to read these SVGs and may announce "circle" or "path" elements.
+- **Fix:** Add `aria-hidden="true"` to all decorative SVGs. For the functional chevron in ToolCard (`music-chart/src/components/ToolCard.jsx` line 19), use `aria-hidden="true"` since the button already has a text label.
+
+### [A11Y-006] `<pre>` block for guitar tabs has no horizontal scroll announcement for screen readers
+- **WCAG:** 1.3.1 Info and Relationships
+- **App:** sarah-practice-plan
+- **Location:** `App.jsx` line 1143 (TAB_CONTENT pre block)
+- **Issue:** The guitar tabs displayed in a `<pre>` with `overflowX: "auto"` can extend 60–80 characters wide. There is no `role="region"`, `aria-label`, or announcement that the content scrolls horizontally.
+- **Fix:** Add `role="region" aria-label="Guitar tab notation — scrollable"` and ensure the `<pre>` has `tabindex="0"` so keyboard users can focus and scroll it.
+
+### [A11Y-007] `ReviewCheckIn` expand/collapse is a `<div onClick>` — same pattern as ToolCard
+- **WCAG:** 4.1.2 Name, Role, Value
+- **App:** sarah-practice-plan
+- **Location:** `App.jsx` lines 654–675
+- **Issue:** The `ReviewCheckIn` component renders a `<div onClick={() => setOpen(!open)}>` with no `role`, no `aria-expanded`, and no `tabindex`. The expand/collapse state is communicated only by the `▾` / `▸` characters.
+- **Fix:** Replace the outer `<div>` with `<button>`, add `aria-expanded={open}`, and use `aria-label="Review check-in, tap to expand"`.
+
+### [A11Y-008] Timer ring SVG has no accessible live region announcement
+- **WCAG:** 4.1.3 Status Messages
+- **App:** sarah-practice-plan
+- **Location:** `App.jsx` lines 523–541 (`TimerRing`)
+- **Issue:** When the practice timer completes (`done ? "✓" : fmt`), the status change from time remaining to a checkmark is visible but never announced to screen readers. There is no `aria-live="polite"` region or `role="timer"`.
+- **Fix:** Add `role="timer"` and `aria-live="polite"` to the inner time display div, and `aria-label={done ? "Timer complete" : `${fmt} remaining`}`.
+
+---
+
+## Information Architecture Analysis
+
+### Tab structure (sarah-practice-plan)
+
+The four-tab structure (Practice / Skills / Tools / Charts) creates a conceptual split that may not match how a musician thinks during an actual practice session:
+
+- **Practice** contains the weekly plan plus the exercise archive plus lesson notes — three conceptually distinct things in one tab.
+- **Skills** contains the curriculum tracks, which is arguably the most important long-term content, but it is tab 2 not tab 1.
+- **Tools** and **Charts** are separated from the exercises that need them. When a user is in Skills > Guitar > Level 4 and sees an exercise that says "set your metronome to 85 BPM," they must leave Skills, navigate to Tools, adjust the BPM, then navigate back — losing their scroll position in the process.
+
+The in-exercise metronome widget (line 938–959) and the drone widget address this for some exercises, but only for exercises that explicitly declare `ex.metronome: true` or `ex.drone: true`. The full metronome panel (beats-per-bar editor, sound kit selector, speed builder) is only accessible by leaving the exercise entirely.
+
+**Recommendation:** The "Flow Mode" solves most of this within its context by bundling the tool inline. The larger opportunity is: every exercise card could have a persistent "Tools" drawer that slides up to expose the metronome + drone without navigating away, rather than the current pattern where only some exercises get inline tools.
+
+### Navigation depth (sarah-practice-plan)
+- Practice tab, Day 1 exercise: 0 taps (visible on load)
+- Skills > Singer-Songwriter > Level 3 exercise: 3 taps (Skills tab → songwriter sub-tab → level pill → exercise is visible)
+- Flow Mode (from Skills): 4 taps (Skills → skill sub-tab → level → Start Flow button)
+
+The depth is reasonable, but the level pills use scroll snap with `scrollSnapType: "x mandatory"` — this snaps the pill bar to a full pill width, which means if a user is at Level 8, they cannot simply swipe to Level 9; the snap requires a specific velocity or they bounce back to Level 8. This is a subtle friction point.
+
+### Discoverability gaps
+- **Flow Mode:** The "Start Flow" button is rendered via `StartFlowButton` at the top-right of each level. Its appearance varies slightly by tab (no description of what "Flow" does for first-time users). No onboarding hint exists.
+- **Chart sharing:** The `#chart=` URL loading is entirely invisible — there is no button, hint, or share sheet entry point visible in the ChartListView. The share functionality is inside the chart builder behind a `Share2` icon, discoverable only after creating a chart.
+- **Speed Builder:** Located inside the Metronome panel which itself is inside a ToolCard — 2 levels of collapse before the feature is visible.
+
+---
+
+## Interaction Design Analysis
+
+### Positive patterns
+
+- The audio keepalive system (`audioKeepalive.js`) is thoughtfully engineered — the `visibilitychange` handler that pauses and resumes Tone.Transport cleanly is excellent, preventing beat-burst on tab return.
+- The `confetti({ disableForReducedMotion: true, ... })` usage shows motion sensitivity awareness.
+- The floating metronome with drag-to-BPM-change is a delightful power-user feature. The dead-zone for tap vs. drag (`Math.abs(e.clientY - startY) < 5`) is well-tuned.
+- The undo stack in `StrumChartBuilder` (10-deep) is excellent — one of the few explicit undo implementations in the codebase.
+- Timer completion chime (a gentle E5 triangle wave at -14dB) is a considerate audio design choice.
+- The `FlowErrorBoundary` around `FlowExerciseBody` is excellent defensive engineering — exercise data errors don't crash the whole session.
+- Both apps handle `safe-area-inset-bottom` for iPhone notched displays correctly in the floating metronome and bottom nav.
+- Dark mode colors are meaningfully adapted (not just a filter), with per-semantic-category overrides.
+
+### Gaps in feedback loops
+
+1. **Completing an exercise (non-Flow Mode):** The `toggleComplete` function plays a C major chord and fires confetti. There is no visual change to the exercise card itself to confirm it is marked done. The card stays identical except for a checkbox/button state change that may not be visible without scrolling to it.
+
+2. **Saving a chart:** `savedShow` state in `StrumChartBuilder` controls a "Saved!" flash, but there is no toast notification system — the saved state is a boolean that renders inline text near the title. If the user is scrolled down, they miss it entirely.
+
+3. **Tap Tempo:** In the main `MetronomePanel`, `handleTapTempo` updates the BPM with no confirmation animation on the BPM number itself. The number just changes. In the floating metronome, the tap is acknowledged by `tapPulse` briefly scaling the dot — this is better, but inconsistent.
+
+### Error states
+
+There are effectively no error state UIs in either app. The pattern throughout is:
+```js
+try { ... } catch { /* ignore */ }
+```
+or
+```js
+try { ... } catch (e) { console.error("Audio play failed", e); }
+```
+
+When audio fails (Tone.js permission denied, AudioContext suspended, microphone permission denied), users see nothing. For the pitch detector (`LivePitchDetector`), a microphone permission denial likely renders a silent, non-updating component with no message.
+
+---
+
+## Mobile Usability
+
+### Touch targets
+- Bottom nav buttons: full-width, 64px height — correct.
+- Day pills: `padding: "8px 20px"` — approximately 36px height. Below 44px minimum.
+- Level pills: same padding — borderline.
+- Progress rail dots: 8–12px — severely below minimum (covered in UX-003, UX-010).
+- Exercise "Complete" buttons in card view: `padding: "12px 24px"` — approximately 44px, acceptable.
+- Floating metronome play button: `width: 36, height: 36` — below minimum.
+
+### Floating metronome + bottom nav clearance
+
+The floating metronome stacks correctly above the bottom nav using `bottom: 64px` with a `@supports (padding-bottom: env(safe-area-inset-bottom))` rule at `music-chart/src/index.css` lines 218–222. This is implemented correctly.
+
+However, when the floating metronome is expanded (`isExpanded: true` in `App.jsx` line 3994), it uses `maxHeight: "80vh"` and `height: "auto"`. The expanded panel grows upward from `bottom: 64px`. On small phones (667px viewport height), an expanded metronome can cover 70%+ of the screen, entirely obscuring the exercise content behind it. There is no indication of how to collapse it beyond the chevron button.
+
+### Scroll behavior
+The sticky level pill bar uses `scrollSnapType: "x mandatory"` on the scroll container. On iOS, mandatory scroll snap can interfere with natural swipe velocity — users expect a free-glide to any position and the snap locks feel mechanical. `scroll-snap-type: x proximity` would be less aggressive.
+
+---
+
+## Recommendations
+
+### Priority 1 — Quick wins with high impact (1–2 hours each)
+1. Add `aria-current="page"` and `aria-label` to all bottom nav buttons in both apps (UX-001).
+2. Replace `outline: none` with `button:focus-visible { outline: 2px solid #d4a373; }` in both `index.css` files (UX-002).
+3. Wrap the ToolCard `<div onClick>` in a `<button>` with `aria-expanded` (UX-004).
+4. Add `aria-label` and `aria-valuetext` to all BPM sliders (UX-008).
+5. Fix the system dark mode preference detection in both App.jsx init functions (UX-009).
+6. Move the Google Fonts `<link>` tags out of the React component tree into `index.html` (UX-011).
+
+### Priority 2 — Interaction improvements (half-day each)
+7. Increase tap targets for Flow Mode progress rail dots to 44px hit area (UX-010).
+8. Add heading semantics (`<h1>`, `<h2>`, `<h3>`) throughout both apps (A11Y-001).
+9. Add `role="dialog"`, focus trap, and Escape key handler to the Flow Mode exit confirmation (UX-007).
+10. Make Backing Track Links into actual clickable `<a>` elements with `https://` prefix (UX-012).
+
+### Priority 3 — Structural improvements (1+ day each)
+11. Add a loading state for Tone.js Sampler initialization so users know when the metronome sound is ready (UX-005).
+12. Add error UI for microphone permission denial in LivePitchDetector and AudioRecorder.
+13. Add `touch-action: pan-y` to Flow Mode container to prevent iOS back-swipe conflicts (UX-003).
+14. Fix the skill sub-tabs overflow on narrow screens using the existing `hide-scrollbar` pattern (UX-006).
+15. Darken `textMuted` and `textLight` to meet WCAG 4.5:1 contrast ratio (A11Y-004).
+
+---
+
+## Relevant Source Files
+
+- `C:/Users/hewg7/Documents/GitHub/musiclessons/sarah-practice-plan/src/App.jsx` — all navigation, Flow Mode, BottomNav, MetronomePanel, exercise rendering
+- `C:/Users/hewg7/Documents/GitHub/musiclessons/sarah-practice-plan/src/index.css` — global CSS reset including `outline: none`
+- `C:/Users/hewg7/Documents/GitHub/musiclessons/music-chart/src/components/BottomNav.jsx` — music-chart bottom nav
+- `C:/Users/hewg7/Documents/GitHub/musiclessons/music-chart/src/components/ToolCard.jsx` — collapsible div-as-button pattern
+- `C:/Users/hewg7/Documents/GitHub/musiclessons/music-chart/src/index.css` — same `outline: none` reset
+- `C:/Users/hewg7/Documents/GitHub/musiclessons/music-chart/src/charts/StrumChartBuilder.jsx` — undo stack, BottomSheet, inline `outline: "none"` on inputs
+- `C:/Users/hewg7/Documents/GitHub/musiclessons/music-chart/src/App.jsx` — dark mode init, Google Fonts link placement</result>
+<usage><total_tokens>88880</total_tokens><tool_uses>29</tool_uses><duration_ms>250461</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\9f3c3ffb-50b3-4949-a3d6-83d6d15d90ed\tasks\aaae57b4a8ff5f6c2.output
+[2026-03-24T07:11:36.368Z] Explain in plain English what you are proposing to me.
+[2026-03-24T07:13:06.146Z] The other proposed fixes.
+[2026-03-24T07:15:12.952Z] Okay, cool. Let's do number four. If number six, it will be a clean update without breaking anything, we can do that too. Number eight needs to be elegant and look good. We don't want to make it ugly. Number nine, I think, is a good thing to implement. Yeah, that's it.
