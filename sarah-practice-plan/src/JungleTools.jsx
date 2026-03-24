@@ -3501,34 +3501,35 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     let synth;
     let newNodes = [];
 
-    // Master bus — static gain staging, no dynamic compression (compressors pump on sustained drones)
-    const masterGain = new Tone.Gain(0.7);
+    // Master bus — conservative gain staging to prevent distortion.
+    // 5 correlated voices at -12dB each ≈ -5dB peak → masterGain 0.45 → ~-12dB → safe headroom
+    const masterGain = new Tone.Gain(0.45);
     // User volume control — AFTER effects, signal is already at safe levels
     const userGain = new Tone.Gain(Tone.dbToGain(volume));
     // Highpass to kill sub-rumble
     const lowcut = new Tone.Filter(40, "highpass");
     // Safety limiter — catches peaks from effects/resonance, keeps output clean
-    const limiter = new Tone.Limiter(-1).toDestination();
+    const limiter = new Tone.Limiter(-3).toDestination();
 
     masterGain.chain(userGain, lowcut, limiter);
     userGainRef.current = userGain;
     newNodes.push(masterGain, userGain, lowcut, limiter);
 
     // Shared reverb bus — one Freeverb for all textures, saves CPU on mobile.
-    // Each texture sets its own send level (0 = dry, 0.7 = very wet).
-    // roomSize and dampening are updated per-texture on the same instance.
-    const reverb = new Tone.Freeverb({ roomSize: 0.6, dampening: 2500 }).connect(masterGain);
+    // Reverb return has its own gain (0.5) to prevent wet signal from overloading masterGain.
+    const reverbReturn = new Tone.Gain(0.5).connect(masterGain);
+    const reverb = new Tone.Freeverb({ roomSize: 0.6, dampening: 2500 }).connect(reverbReturn);
     const reverbSend = new Tone.Gain(0); // default dry, each texture sets its level
     reverbSend.connect(reverb);
-    newNodes.push(reverb, reverbSend);
+    newNodes.push(reverbReturn, reverb, reverbSend);
 
-    // Helper: connect synth chain to both dry path and reverb send
+    // Helper: connect synth chain's last effect to both dry path and reverb send
     const connectWithReverb = (source, sendLevel, roomSz, damp) => {
       source.connect(masterGain);    // dry path
       source.connect(reverbSend);    // wet path
       reverbSend.gain.value = sendLevel;
-      reverb.roomSize.value = roomSz;
-      reverb.dampening.value = damp;
+      reverb.roomSize.value = roomSz;  // roomSize is a Signal — use .value
+      reverb.dampening = damp;         // dampening is a plain setter — no .value
     };
 
     if (texture === "analog") {
@@ -3537,7 +3538,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       const filter = new Tone.Filter(500, "lowpass").connect(chorus);
       connectWithReverb(chorus, 0.3, 0.5, 3000);
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -6,
+        volume: -12,
         oscillator: { type: "sawtooth" },
         envelope: { attack: 2.5, decay: 0.1, sustain: 1, release: 2 }
       }).connect(filter);
@@ -3551,7 +3552,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       const filter = new Tone.Filter(1200, "lowpass").connect(chorus);
       connectWithReverb(chorus, 0.55, 0.85, 1500);
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -6,
+        volume: -12,
         oscillator: { type: "sine" },
         envelope: { attack: 3, decay: 0.1, sustain: 1, release: 2 }
       }).connect(filter);
@@ -3564,7 +3565,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       const filter = new Tone.Filter(2000, "lowpass").connect(chorus);
       connectWithReverb(chorus, 0.4, 0.5, 3500);
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -6,
+        volume: -12,
         oscillator: { type: "sine" },
         envelope: { attack: 1.5, decay: 0.1, sustain: 1, release: 1.5 }
       }).connect(filter);
@@ -3574,7 +3575,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     else if (texture === "pure") {
       // Pure sine — clean reference tone, no processing
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -6,
+        volume: -12,
         oscillator: { type: "sine" },
         envelope: { attack: 1, decay: 0, sustain: 1, release: 2 }
       }).connect(masterGain);
@@ -3586,7 +3587,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       const filter = new Tone.Filter(600, "lowpass").connect(chorus);
       connectWithReverb(chorus, 0.5, 0.7, 2500);
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -6,
+        volume: -12,
         oscillator: { type: "sawtooth" },
         envelope: { attack: 3, decay: 0.1, sustain: 1, release: 2 }
       }).connect(filter);
@@ -3600,7 +3601,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       const filter = new Tone.Filter(1500, "lowpass").connect(phaser);
       connectWithReverb(phaser, 0.35, 0.5, 3000);
       synth = new Tone.PolySynth(Tone.FMSynth, {
-        volume: -6,
+        volume: -12,
         harmonicity: 1.003, modulationIndex: 0.8,
         oscillator: { type: "sine" },
         modulation: { type: "sine" },
@@ -3613,7 +3614,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     else if (texture === "crystal") {
       // Crystal bowl: FM shimmer with massive reverb wash
       synth = new Tone.PolySynth(Tone.FMSynth, {
-        volume: -6,
+        volume: -12,
         harmonicity: 1.005, modulationIndex: 1.5,
         oscillator: { type: "sine" },
         modulation: { type: "sine" },
@@ -3621,7 +3622,6 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
         modulationEnvelope: { attack: 4, decay: 0.1, sustain: 1, release: 2 }
       });
       connectWithReverb(synth, 0.7, 0.95, 1000);
-      synth.connect(masterGain);
       synth.maxPolyphony = 10;
     }
     else if (texture === "lofi-tape") {
@@ -3631,7 +3631,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       const chorus = new Tone.Chorus({ frequency: 0.8, delayTime: 3, depth: 0.4 }).connect(filter).start();
       connectWithReverb(vibrato, 0.25, 0.4, 2000);
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -6,
+        volume: -12,
         oscillator: { type: "triangle" },
         envelope: { attack: 1.5, decay: 0.1, sustain: 1, release: 2 }
       }).connect(chorus);
@@ -3644,7 +3644,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       const filter = new Tone.Filter(1200, "lowpass").connect(tremolo);
       connectWithReverb(tremolo, 0.45, 0.8, 4000);
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -6,
+        volume: -12,
         oscillator: { type: "triangle" },
         envelope: { attack: 1.5, decay: 0.1, sustain: 1, release: 2 }
       }).connect(filter);
@@ -3657,7 +3657,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       const filter = new Tone.Filter(1000, "lowpass").connect(chorus);
       connectWithReverb(chorus, 0.35, 0.5, 3000);
       synth = new Tone.PolySynth(Tone.FMSynth, {
-        volume: -6,
+        volume: -12,
         harmonicity: 1.5, modulationIndex: 0.8,
         oscillator: { type: "sine" },
         modulation: { type: "sine" },
@@ -3672,7 +3672,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       const filter = new Tone.Filter(300, "lowpass", -12);
       connectWithReverb(filter, 0.15, 0.3, 2000);
       synth = new Tone.PolySynth(Tone.FMSynth, {
-        volume: -6,
+        volume: -12,
         harmonicity: 1, modulationIndex: 1,
         oscillator: { type: "sine" },
         modulation: { type: "triangle" },
@@ -3688,7 +3688,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       const filter = new Tone.Filter(700, "lowpass").connect(chorus);
       connectWithReverb(chorus, 0.4, 0.6, 2500);
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -6,
+        volume: -12,
         oscillator: { type: "triangle" },
         envelope: { attack: 2.5, decay: 0.3, sustain: 0.9, release: 2.5 }
       }).connect(filter);
@@ -3702,7 +3702,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       const filter = new Tone.Filter(500, "lowpass").connect(chorus);
       connectWithReverb(chorus, 0.7, 0.95, 800);
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -6,
+        volume: -12,
         oscillator: { type: "sine" },
         envelope: { attack: 4, decay: 0.1, sustain: 1, release: 3 }
       }).connect(filter);
@@ -3716,7 +3716,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       const filter = new Tone.Filter(400, "lowpass").connect(chorus);
       connectWithReverb(chorus, 0.6, 0.9, 1000);
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -6,
+        volume: -12,
         oscillator: { type: "sine" },
         envelope: { attack: 5, decay: 0.1, sustain: 1, release: 4 }
       }).connect(filter);
@@ -3727,7 +3727,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     // Fallback for unknown textures — default to pure sine
     if (!synth) {
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -6,
+        volume: -12,
         oscillator: { type: "sine" },
         envelope: { attack: 1, decay: 0, sustain: 1, release: 2 }
       }).connect(masterGain);
@@ -3745,9 +3745,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     }
 
     return () => {
-      // Force-dispose any synths still pending from previous texture switches.
-      // If user switches textures rapidly, old synths are waiting on 2.5s timers —
-      // cancel those timers and dispose immediately so they don't pile up.
+      // Cancel any pending disposal timers from previous rapid switches
       disposeTimersRef.current.forEach(({ timer, synth: s, nodes }) => {
         clearTimeout(timer);
         try { s.releaseAll(); } catch {}
@@ -3759,30 +3757,24 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       });
       disposeTimersRef.current = [];
 
-      // Fade out the old chain smoothly before disposing to prevent clicks
-      const oldUserGain = userGainRef.current;
-      if (oldUserGain) {
-        try {
-          oldUserGain.gain.cancelScheduledValues(Tone.now());
-          oldUserGain.gain.rampTo(0, 0.05);
-        } catch {}
-      }
+      // Immediate silence — release voices and disconnect everything right away.
+      // The new texture's useEffect creates a fresh audio chain, so the old one
+      // must be torn down quickly to avoid two chains fighting for the destination.
       if (effectSynth) {
-        // Wait for fade, then release voices
-        setTimeout(() => {
-          try { effectSynth.releaseAll(); } catch {}
-        }, 80);
-        // Wait for release tails to decay, then stop + dispose everything
-        const disposeTimer = setTimeout(() => {
-          try { effectSynth.dispose(); } catch {}
-          effectNodes.forEach(node => {
-            try { if (node.stop) node.stop(); } catch {}
-            try { node.dispose(); } catch {}
-          });
-          disposeTimersRef.current = disposeTimersRef.current.filter(e => e.timer !== disposeTimer);
-        }, 2500);
-        disposeTimersRef.current.push({ timer: disposeTimer, synth: effectSynth, nodes: effectNodes });
+        try { effectSynth.releaseAll(); } catch {}
       }
+      // Quick dispose after a microtask to let releaseAll take effect
+      const disposeTimer = setTimeout(() => {
+        if (effectSynth) {
+          try { effectSynth.dispose(); } catch {}
+        }
+        effectNodes.forEach(node => {
+          try { if (node.stop) node.stop(); } catch {}
+          try { node.dispose(); } catch {}
+        });
+        disposeTimersRef.current = disposeTimersRef.current.filter(e => e.timer !== disposeTimer);
+      }, 100);
+      disposeTimersRef.current.push({ timer: disposeTimer, synth: effectSynth, nodes: effectNodes });
     };
   }, [texture]); // re-run only when texture changes
 
