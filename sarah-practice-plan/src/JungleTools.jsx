@@ -8,23 +8,17 @@ import {
 import { acquireKeepalive, releaseKeepalive, setMediaSession, clearMediaSession } from './audioKeepalive.js';
 import { splitSyllables, chipText, chipGroup } from './syllableUtil.js';
 
-// ─── Bluetooth audio recovery ─────────────────────────────────────────
-// When getUserMedia opens a mic, Bluetooth earbuds switch from A2DP (high-quality
-// music) to HFP/SCO (low-quality hands-free). Even after stopping the mic,
-// the browser often doesn't switch back. Cycling Tone.js's AudioContext
-// (suspend → resume) nudges the browser to re-evaluate the audio route.
-function recoverAudioRoute() {
-  setTimeout(() => {
-    try {
-      const ctx = Tone.getContext()?.rawContext;
-      if (ctx && ctx.state === 'running') {
-        ctx.suspend().then(() => {
-          // Small delay to let the OS release the SCO profile
-          setTimeout(() => ctx.resume().catch(() => {}), 200);
-        }).catch(() => {});
-      }
-    } catch {}
-  }, 300); // Wait for mic AudioContext to fully close first
+// ─── Shared AudioContext for mic features ─────────────────────────────
+// All mic features (pitch detector, volume meter, recorder, silence score) MUST
+// use Tone.js's AudioContext instead of creating their own. Multiple AudioContexts
+// confuse Bluetooth profile switching (A2DP ↔ HFP/SCO) and cause quality drops,
+// crackles, and state corruption. With a single context, the mic is just another
+// input node — disconnecting it doesn't disrupt playback at all.
+function getSharedAudioContext() {
+  const toneCtx = Tone.getContext()?.rawContext;
+  if (toneCtx) return toneCtx;
+  // Fallback: Tone hasn't initialized yet (shouldn't happen in normal flow)
+  return new (window.AudioContext || window.webkitAudioContext)();
 }
 
 // ─── Web Worker timer for background-safe intervals ───────────────────
@@ -1323,8 +1317,8 @@ export function AudioRecorder({ theme: T, inline = false }) {
       setIsRecording(true);
       setAudioURL(null); // clear previous
 
-      // Setup audio visualization
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      // Setup audio visualization using shared Tone.js context (avoids Bluetooth profile switching)
+      const audioCtx = getSharedAudioContext();
       audioCtxRef.current = audioCtx;
       const analyser = audioCtx.createAnalyser();
       analyser.fftSize = 2048;
@@ -1384,19 +1378,9 @@ export function AudioRecorder({ theme: T, inline = false }) {
 
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
       requestRef.current = null;
-      // Resume before close — closing a suspended AudioContext is unreliable on mobile
-      if (audioCtxRef.current && audioCtxRef.current.state !== 'closed') {
-        const ctx = audioCtxRef.current;
-        audioCtxRef.current = null;
-        const doClose = () => ctx.close().catch(() => {});
-        if (ctx.state === 'suspended') {
-          ctx.resume().then(doClose).catch(doClose);
-        } else {
-          doClose();
-        }
-      }
-      // Cycle Tone.js context to nudge Bluetooth back to A2DP from HFP/SCO
-      recoverAudioRoute();
+      // Don't close audioCtxRef — it's the shared Tone.js context
+      audioCtxRef.current = null;
+      analyserRef.current = null;
     }
   };
 
@@ -1410,16 +1394,9 @@ export function AudioRecorder({ theme: T, inline = false }) {
         mediaRecorderRef.current.stream.getTracks().forEach(t => t.stop());
       }
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
-      if (audioCtxRef.current && audioCtxRef.current.state !== 'closed') {
-        const ctx = audioCtxRef.current;
-        audioCtxRef.current = null;
-        const doClose = () => ctx.close().catch(() => {});
-        if (ctx.state === 'suspended') {
-          ctx.resume().then(doClose).catch(doClose);
-        } else {
-          doClose();
-        }
-      }
+      // Don't close audioCtxRef — it's the shared Tone.js context
+      audioCtxRef.current = null;
+      analyserRef.current = null;
     };
   }, []);
 
@@ -1638,6 +1615,12 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
 
   const startDetection = async () => {
     try {
+      // Ensure Tone.js context is running before we attach mic nodes to it
+      if (Tone.context.state !== 'running') {
+        try { await Tone.start(); } catch {}
+        try { await Tone.context.resume(); } catch {}
+      }
+
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: false,
@@ -1647,7 +1630,9 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
       });
       streamRef.current = stream;
 
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      // Use Tone.js's AudioContext — NOT a separate one. Multiple AudioContexts
+      // cause Bluetooth to flip between A2DP/HFP profiles, degrading quality.
+      const audioCtx = getSharedAudioContext();
       audioContextRef.current = audioCtx;
 
       const analyser = audioCtx.createAnalyser();
@@ -1688,30 +1673,18 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
 
     if (requestRef.current) cancelAnimationFrame(requestRef.current);
     requestRef.current = null;
-    // Stop mic tracks first — releases hardware immediately
+    // Stop mic tracks — releases hardware immediately, lets Bluetooth return to A2DP
     if (streamRef.current) {
       streamRef.current.getTracks().forEach(t => t.stop());
       streamRef.current = null;
     }
+    // Disconnect mic nodes from the shared context (do NOT close it — it's Tone.js's)
     if (hpFilterRef.current) { try { hpFilterRef.current.disconnect(); } catch {} hpFilterRef.current = null; }
     if (sourceRef.current) { try { sourceRef.current.disconnect(); } catch {} sourceRef.current = null; }
-    // Resume before close — closing a suspended AudioContext is unreliable on mobile
-    // and can leave the browser's audio subsystem in a corrupted state
-    if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
-      const ctx = audioContextRef.current;
-      audioContextRef.current = null;
-      const doClose = () => ctx.close().catch(() => {});
-      if (ctx.state === 'suspended') {
-        ctx.resume().then(doClose).catch(doClose);
-      } else {
-        doClose();
-      }
-    }
+    audioContextRef.current = null;
     analyserRef.current = null;
     pitchBufRef.current = null;
     contourRangeRef.current = { min: null, max: null };
-    // Cycle Tone.js context to nudge Bluetooth back to A2DP from HFP/SCO
-    recoverAudioRoute();
   };
 
   useEffect(() => {
@@ -2717,11 +2690,15 @@ export function VolumeMeter({ theme: T, inline = false, volumeContour = false })
 
   const startMeter = async () => {
     try {
+      if (Tone.context.state !== 'running') {
+        try { await Tone.start(); } catch {}
+        try { await Tone.context.resume(); } catch {}
+      }
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: { echoCancellation: false, autoGainControl: false, noiseSuppression: false }
       });
       streamRef.current = stream;
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const audioCtx = getSharedAudioContext();
       audioContextRef.current = audioCtx;
       const analyser = audioCtx.createAnalyser();
       analyser.fftSize = 256;
@@ -2761,22 +2738,11 @@ export function VolumeMeter({ theme: T, inline = false, volumeContour = false })
     requestRef.current = null;
     if (streamRef.current) { streamRef.current.getTracks().forEach(t => t.stop()); streamRef.current = null; }
     if (sourceRef.current) { try { sourceRef.current.disconnect(); } catch {} sourceRef.current = null; }
-    // Resume before close — closing a suspended AudioContext is unreliable on mobile
-    if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
-      const ctx = audioContextRef.current;
-      audioContextRef.current = null;
-      const doClose = () => ctx.close().catch(() => {});
-      if (ctx.state === 'suspended') {
-        ctx.resume().then(doClose).catch(doClose);
-      } else {
-        doClose();
-      }
-    }
+    // Don't close audioContextRef — it's the shared Tone.js context
+    audioContextRef.current = null;
     analyserRef.current = null;
     setDbLevel(-60);
     setHistory([]);
-    // Cycle Tone.js context to nudge Bluetooth back to A2DP from HFP/SCO
-    recoverAudioRoute();
   };
 
   useEffect(() => {
@@ -3165,7 +3131,7 @@ export function GenreMetronome({ theme: T, mode = "standard", bpm = 80 }) {
   };
 
   const playClick = (volume) => {
-    if (!audioCtxRef.current) audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
+    if (!audioCtxRef.current) audioCtxRef.current = getSharedAudioContext();
     const ctx = audioCtxRef.current;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
@@ -3247,9 +3213,13 @@ export function SilenceScore({ theme: T, target = 0.4 }) {
   const timerRef = useRef(null);
 
   const startRecording = async () => {
+    if (Tone.context.state !== 'running') {
+      try { await Tone.start(); } catch {}
+      try { await Tone.context.resume(); } catch {}
+    }
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     streamRef.current = stream;
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const ctx = getSharedAudioContext();
     audioCtxRef.current = ctx;
     const source = ctx.createMediaStreamSource(stream);
     sourceRef.current = source;
@@ -3284,20 +3254,9 @@ export function SilenceScore({ theme: T, target = 0.4 }) {
     if (streamRef.current) { streamRef.current.getTracks().forEach(t => t.stop()); streamRef.current = null; }
     if (sourceRef.current) { try { sourceRef.current.disconnect(); } catch {} sourceRef.current = null; }
     analyserRef.current = null;
-    // Resume before close — closing a suspended AudioContext is unreliable on mobile
-    if (audioCtxRef.current && audioCtxRef.current.state !== 'closed') {
-      const ctx = audioCtxRef.current;
-      audioCtxRef.current = null;
-      const doClose = () => ctx.close().catch(() => {});
-      if (ctx.state === 'suspended') {
-        ctx.resume().then(doClose).catch(doClose);
-      } else {
-        doClose();
-      }
-    }
+    // Don't close audioCtxRef — it's the shared Tone.js context
+    audioCtxRef.current = null;
     setIsRecording(false);
-    // Cycle Tone.js context to nudge Bluetooth back to A2DP from HFP/SCO
-    recoverAudioRoute();
 
     const samples = samplesRef.current;
     if (samples.length === 0) return;
