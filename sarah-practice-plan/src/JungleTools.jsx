@@ -8,6 +8,25 @@ import {
 import { acquireKeepalive, releaseKeepalive, setMediaSession, clearMediaSession } from './audioKeepalive.js';
 import { splitSyllables, chipText, chipGroup } from './syllableUtil.js';
 
+// ─── Bluetooth audio recovery ─────────────────────────────────────────
+// When getUserMedia opens a mic, Bluetooth earbuds switch from A2DP (high-quality
+// music) to HFP/SCO (low-quality hands-free). Even after stopping the mic,
+// the browser often doesn't switch back. Cycling Tone.js's AudioContext
+// (suspend → resume) nudges the browser to re-evaluate the audio route.
+function recoverAudioRoute() {
+  setTimeout(() => {
+    try {
+      const ctx = Tone.getContext()?.rawContext;
+      if (ctx && ctx.state === 'running') {
+        ctx.suspend().then(() => {
+          // Small delay to let the OS release the SCO profile
+          setTimeout(() => ctx.resume().catch(() => {}), 200);
+        }).catch(() => {});
+      }
+    } catch {}
+  }, 300); // Wait for mic AudioContext to fully close first
+}
+
 // ─── Web Worker timer for background-safe intervals ───────────────────
 // Browser throttles setInterval to ~1Hz in background tabs.
 // Web Worker timers are NOT throttled, so drone cycle mode stays accurate.
@@ -1376,6 +1395,8 @@ export function AudioRecorder({ theme: T, inline = false }) {
           doClose();
         }
       }
+      // Cycle Tone.js context to nudge Bluetooth back to A2DP from HFP/SCO
+      recoverAudioRoute();
     }
   };
 
@@ -1689,6 +1710,8 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
     analyserRef.current = null;
     pitchBufRef.current = null;
     contourRangeRef.current = { min: null, max: null };
+    // Cycle Tone.js context to nudge Bluetooth back to A2DP from HFP/SCO
+    recoverAudioRoute();
   };
 
   useEffect(() => {
@@ -2752,6 +2775,8 @@ export function VolumeMeter({ theme: T, inline = false, volumeContour = false })
     analyserRef.current = null;
     setDbLevel(-60);
     setHistory([]);
+    // Cycle Tone.js context to nudge Bluetooth back to A2DP from HFP/SCO
+    recoverAudioRoute();
   };
 
   useEffect(() => {
@@ -3271,6 +3296,8 @@ export function SilenceScore({ theme: T, target = 0.4 }) {
       }
     }
     setIsRecording(false);
+    // Cycle Tone.js context to nudge Bluetooth back to A2DP from HFP/SCO
+    recoverAudioRoute();
 
     const samples = samplesRef.current;
     if (samples.length === 0) return;
