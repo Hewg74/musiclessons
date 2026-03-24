@@ -833,16 +833,18 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
     if (timer.pct >= 100 && !timerDone) {
       setTimerDone(true);
       // Play a gentle chime
-      try {
-        if (Tone.context.state !== "running") Tone.context.resume();
-        const synth = new Tone.Synth({
-          oscillator: { type: "triangle" },
-          envelope: { attack: 0.1, decay: 0.3, sustain: 0.2, release: 1.5 }
-        }).toDestination();
-        synth.volume.value = -14;
-        synth.triggerAttackRelease("E5", "4n");
-        setTimeout(() => synth.dispose(), 2000);
-      } catch { }
+      (async () => {
+        try {
+          if (Tone.context.state !== "running") await Tone.context.resume();
+          const synth = new Tone.Synth({
+            oscillator: { type: "triangle" },
+            envelope: { attack: 0.1, decay: 0.3, sustain: 0.2, release: 1.5 }
+          }).toDestination();
+          synth.volume.value = -14;
+          synth.triggerAttackRelease("E5", "4n");
+          setTimeout(() => { try { synth.dispose(); } catch {} }, 2000);
+        } catch { }
+      })();
     }
   }, [timer.pct, timerDone]);
 
@@ -854,7 +856,7 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
     }).toDestination();
     synth.volume.value = -8;
     synth.triggerAttackRelease(note.replace('♭', 'b'), "2n");
-    setTimeout(() => synth.dispose(), 2000);
+    setTimeout(() => { try { synth.dispose(); } catch {} }, 2000);
   };
 
   const tracks = ex.tracks || [];
@@ -1558,7 +1560,7 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
     }).toDestination();
     synth.volume.value = -8;
     synth.triggerAttackRelease(note.replace('♭', 'b'), "2n");
-    setTimeout(() => synth.dispose(), 2000);
+    setTimeout(() => { try { synth.dispose(); } catch {} }, 2000);
   };
 
   const tracks = ex.tracks || [];
@@ -4302,19 +4304,21 @@ export default function App() {
         next.add(id);
 
         // Play a nice completion chord!
-        try {
-          if (Tone.context.state !== "running") Tone.context.resume();
-          const synth = new Tone.PolySynth(Tone.Synth, {
-            oscillator: { type: "sine" },
-            envelope: { attack: 0.05, decay: 0.1, sustain: 0.3, release: 1 }
-          }).toDestination();
-          synth.volume.value = -12;
-          const now = Tone.now();
-          synth.triggerAttackRelease(["C4", "E4", "G4", "C5"], "8n", now);
-          setTimeout(() => synth.dispose(), 2000);
-        } catch (e) {
-          console.error("Audio play failed", e);
-        }
+        (async () => {
+          try {
+            if (Tone.context.state !== "running") await Tone.context.resume();
+            const synth = new Tone.PolySynth(Tone.Synth, {
+              oscillator: { type: "sine" },
+              envelope: { attack: 0.05, decay: 0.1, sustain: 0.3, release: 1 }
+            }).toDestination();
+            synth.volume.value = -12;
+            const now = Tone.now();
+            synth.triggerAttackRelease(["C4", "E4", "G4", "C5"], "8n", now);
+            setTimeout(() => { try { synth.dispose(); } catch {} }, 2000);
+          } catch (e) {
+            console.error("Audio play failed", e);
+          }
+        })();
 
         confetti({
           particleCount: 45,

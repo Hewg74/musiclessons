@@ -1364,8 +1364,17 @@ export function AudioRecorder({ theme: T, inline = false }) {
       setIsRecording(false);
 
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
+      requestRef.current = null;
+      // Resume before close — closing a suspended AudioContext is unreliable on mobile
       if (audioCtxRef.current && audioCtxRef.current.state !== 'closed') {
-        audioCtxRef.current.close().catch(console.error);
+        const ctx = audioCtxRef.current;
+        audioCtxRef.current = null;
+        const doClose = () => ctx.close().catch(() => {});
+        if (ctx.state === 'suspended') {
+          ctx.resume().then(doClose).catch(doClose);
+        } else {
+          doClose();
+        }
       }
     }
   };
@@ -1381,7 +1390,14 @@ export function AudioRecorder({ theme: T, inline = false }) {
       }
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
       if (audioCtxRef.current && audioCtxRef.current.state !== 'closed') {
-        audioCtxRef.current.close().catch(console.error);
+        const ctx = audioCtxRef.current;
+        audioCtxRef.current = null;
+        const doClose = () => ctx.close().catch(() => {});
+        if (ctx.state === 'suspended') {
+          ctx.resume().then(doClose).catch(doClose);
+        } else {
+          doClose();
+        }
       }
     };
   }, []);
@@ -1629,6 +1645,7 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
       hpFilter.connect(analyser);
       sourceRef.current = source;
 
+      stoppedDetectionRef.current = false;
       setIsActive(true);
       emaFreqRef.current = null;
       stableMidiRef.current = null;
@@ -1641,16 +1658,33 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
     }
   };
 
+  const stoppedDetectionRef = useRef(true);
+
   const stopDetection = () => {
+    stoppedDetectionRef.current = true;
     setIsActive(false);
     setPitchState({ note: '—', cents: 0, active: false, closestRef: null, refFeedback: '' });
 
     if (requestRef.current) cancelAnimationFrame(requestRef.current);
-    if (streamRef.current) streamRef.current.getTracks().forEach(t => t.stop());
-    if (hpFilterRef.current) hpFilterRef.current.disconnect();
-    if (sourceRef.current) sourceRef.current.disconnect();
+    requestRef.current = null;
+    // Stop mic tracks first — releases hardware immediately
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(t => t.stop());
+      streamRef.current = null;
+    }
+    if (hpFilterRef.current) { try { hpFilterRef.current.disconnect(); } catch {} hpFilterRef.current = null; }
+    if (sourceRef.current) { try { sourceRef.current.disconnect(); } catch {} sourceRef.current = null; }
+    // Resume before close — closing a suspended AudioContext is unreliable on mobile
+    // and can leave the browser's audio subsystem in a corrupted state
     if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
-      audioContextRef.current.close().catch(console.error);
+      const ctx = audioContextRef.current;
+      audioContextRef.current = null;
+      const doClose = () => ctx.close().catch(() => {});
+      if (ctx.state === 'suspended') {
+        ctx.resume().then(doClose).catch(doClose);
+      } else {
+        doClose();
+      }
     }
     analyserRef.current = null;
     pitchBufRef.current = null;
@@ -1660,6 +1694,20 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
   useEffect(() => {
     return stopDetection; // Cleanup on unmount
   }, []);
+
+  // Stop mic when app goes to background — mic has no reason to run in background,
+  // and leaving it open causes audio subsystem corruption on resume
+  useEffect(() => {
+    if (!isActive) return;
+    const handleVisibility = () => {
+      if (document.hidden) {
+        // Fully stop — mic in background causes audio corruption on many mobile browsers
+        stopDetection();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => document.removeEventListener("visibilitychange", handleVisibility);
+  }, [isActive]);
 
   const detectPitch = () => {
     if (!analyserRef.current) return;
@@ -1833,7 +1881,7 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
       handleSilence(true);
     }
 
-    if (analyserRef.current) {
+    if (analyserRef.current && !stoppedDetectionRef.current) {
       requestRef.current = requestAnimationFrame(detectPitch);
     }
   };
@@ -2354,7 +2402,7 @@ export function FretboardDiagram({ theme: T, scale, position, highlight = [] }) 
     }).toDestination();
     synth.volume.value = -8;
     synth.triggerAttackRelease(noteStr.replace('♭', 'b'), "2n");
-    setTimeout(() => synth.dispose(), 2000);
+    setTimeout(() => { try { synth.dispose(); } catch {} }, 2000);
   };
 
   // Build dots: for each string, for each fret in renderLo..renderHi, check if it's a scale note
@@ -2687,10 +2735,19 @@ export function VolumeMeter({ theme: T, inline = false, volumeContour = false })
   const stopMeter = () => {
     setIsActive(false);
     if (requestRef.current) cancelAnimationFrame(requestRef.current);
-    if (streamRef.current) streamRef.current.getTracks().forEach(t => t.stop());
-    if (sourceRef.current) sourceRef.current.disconnect();
+    requestRef.current = null;
+    if (streamRef.current) { streamRef.current.getTracks().forEach(t => t.stop()); streamRef.current = null; }
+    if (sourceRef.current) { try { sourceRef.current.disconnect(); } catch {} sourceRef.current = null; }
+    // Resume before close — closing a suspended AudioContext is unreliable on mobile
     if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
-      audioContextRef.current.close().catch(console.error);
+      const ctx = audioContextRef.current;
+      audioContextRef.current = null;
+      const doClose = () => ctx.close().catch(() => {});
+      if (ctx.state === 'suspended') {
+        ctx.resume().then(doClose).catch(doClose);
+      } else {
+        doClose();
+      }
     }
     analyserRef.current = null;
     setDbLevel(-60);
@@ -2698,15 +2755,18 @@ export function VolumeMeter({ theme: T, inline = false, volumeContour = false })
   };
 
   useEffect(() => {
-    return () => {
-      if (requestRef.current) cancelAnimationFrame(requestRef.current);
-      if (streamRef.current) streamRef.current.getTracks().forEach(t => t.stop());
-      if (sourceRef.current) sourceRef.current.disconnect();
-      if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
-        audioContextRef.current.close().catch(console.error);
-      }
-    };
+    return stopMeter; // Cleanup on unmount
   }, []);
+
+  // Stop mic when app goes to background — prevents audio corruption on resume
+  useEffect(() => {
+    if (!isActive) return;
+    const handleVisibility = () => {
+      if (document.hidden) stopMeter();
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => document.removeEventListener("visibilitychange", handleVisibility);
+  }, [isActive]);
 
   // Determine bar color based on dB level
   const barColor = dbLevel >= -6 ? T.coral : dbLevel >= -20 ? T.gold : T.success;
@@ -3154,6 +3214,8 @@ export function SilenceScore({ theme: T, target = 0.4 }) {
   const [silencePercent, setSilencePercent] = useState(null);
   const [recordingTime, setRecordingTime] = useState(0);
   const analyserRef = useRef(null);
+  const audioCtxRef = useRef(null);
+  const sourceRef = useRef(null);
   const streamRef = useRef(null);
   const samplesRef = useRef([]);
   const frameRef = useRef(null);
@@ -3163,7 +3225,9 @@ export function SilenceScore({ theme: T, target = 0.4 }) {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     streamRef.current = stream;
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    audioCtxRef.current = ctx;
     const source = ctx.createMediaStreamSource(stream);
+    sourceRef.current = source;
     const analyser = ctx.createAnalyser();
     analyser.fftSize = 2048;
     source.connect(analyser);
@@ -3175,7 +3239,8 @@ export function SilenceScore({ theme: T, target = 0.4 }) {
 
     const dataArray = new Float32Array(analyser.fftSize);
     const sampleLoop = () => {
-      analyser.getFloatTimeDomainData(dataArray);
+      if (!analyserRef.current) return;
+      analyserRef.current.getFloatTimeDomainData(dataArray);
       let sum = 0;
       for (let i = 0; i < dataArray.length; i++) sum += dataArray[i] * dataArray[i];
       const rms = Math.sqrt(sum / dataArray.length);
@@ -3187,9 +3252,24 @@ export function SilenceScore({ theme: T, target = 0.4 }) {
   };
 
   const stopRecording = () => {
-    cancelAnimationFrame(frameRef.current);
-    clearInterval(timerRef.current);
-    streamRef.current?.getTracks().forEach(t => t.stop());
+    if (frameRef.current) cancelAnimationFrame(frameRef.current);
+    frameRef.current = null;
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = null;
+    if (streamRef.current) { streamRef.current.getTracks().forEach(t => t.stop()); streamRef.current = null; }
+    if (sourceRef.current) { try { sourceRef.current.disconnect(); } catch {} sourceRef.current = null; }
+    analyserRef.current = null;
+    // Resume before close — closing a suspended AudioContext is unreliable on mobile
+    if (audioCtxRef.current && audioCtxRef.current.state !== 'closed') {
+      const ctx = audioCtxRef.current;
+      audioCtxRef.current = null;
+      const doClose = () => ctx.close().catch(() => {});
+      if (ctx.state === 'suspended') {
+        ctx.resume().then(doClose).catch(doClose);
+      } else {
+        doClose();
+      }
+    }
     setIsRecording(false);
 
     const samples = samplesRef.current;
@@ -3198,6 +3278,17 @@ export function SilenceScore({ theme: T, target = 0.4 }) {
     const silentSamples = samples.filter(s => s < threshold).length;
     setSilencePercent(silentSamples / samples.length);
   };
+
+  // Cleanup on unmount
+  useEffect(() => { return stopRecording; }, []);
+
+  // Stop mic when app goes to background
+  useEffect(() => {
+    if (!isRecording) return;
+    const handleVisibility = () => { if (document.hidden) stopRecording(); };
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => document.removeEventListener("visibilitychange", handleVisibility);
+  }, [isRecording]);
 
   const pct = silencePercent !== null ? Math.round(silencePercent * 100) : null;
   const targetPct = Math.round(target * 100);
@@ -3273,6 +3364,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
   const stepCountRef = useRef(0);
   const userGainRef = useRef(null);
   const workerRef = useRef(null);
+  const disposeTimersRef = useRef([]);  // Track pending synth disposal timeouts
 
   const notes = ["C", "C#", "D", "E♭", "E", "F", "F#", "G", "A♭", "A", "B♭", "B"];
 
@@ -3574,6 +3666,20 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     }
 
     return () => {
+      // Force-dispose any synths still pending from previous texture switches.
+      // If user switches textures rapidly, old synths are waiting on 2.5s timers —
+      // cancel those timers and dispose immediately so they don't pile up.
+      disposeTimersRef.current.forEach(({ timer, synth: s, nodes }) => {
+        clearTimeout(timer);
+        try { s.releaseAll(); } catch {}
+        try { s.dispose(); } catch {}
+        nodes.forEach(node => {
+          try { if (node.stop) node.stop(); } catch {}
+          try { node.dispose(); } catch {}
+        });
+      });
+      disposeTimersRef.current = [];
+
       // Fade out the old chain smoothly before disposing to prevent clicks
       const oldUserGain = userGainRef.current;
       if (oldUserGain) {
@@ -3588,14 +3694,15 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
           try { effectSynth.releaseAll(); } catch {}
         }, 80);
         // Wait for release tails to decay, then stop + dispose everything
-        setTimeout(() => {
+        const disposeTimer = setTimeout(() => {
           try { effectSynth.dispose(); } catch {}
           effectNodes.forEach(node => {
-            // Stop effects with internal oscillators (Chorus, Tremolo, LFO) before disposal
             try { if (node.stop) node.stop(); } catch {}
             try { node.dispose(); } catch {}
           });
+          disposeTimersRef.current = disposeTimersRef.current.filter(e => e.timer !== disposeTimer);
         }, 2500);
+        disposeTimersRef.current.push({ timer: disposeTimer, synth: effectSynth, nodes: effectNodes });
       }
     };
   }, [texture]); // re-run only when texture changes
@@ -4472,7 +4579,7 @@ export function InlineKeyboard({
     }).toDestination();
     synth.volume.value = -18;
     synth.triggerAttackRelease(n.replace('♭', 'b'), "2n");
-    setTimeout(() => synth.dispose(), 2000);
+    setTimeout(() => { try { synth.dispose(); } catch {} }, 2000);
   };
 
   const whiteKeys = [];
