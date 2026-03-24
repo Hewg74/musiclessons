@@ -1473,7 +1473,7 @@ const MIN_FREQ = 70; // ~D2 — practical singing floor
 const MAX_FREQ = 1050; // ~C6
 const RMS_THRESHOLD = 0.01; // -40dB silence gate (research standard)
 const YIN_THRESHOLD = 0.12; // CMND dip threshold — tighter = fewer false positives
-const CONFIDENCE_GATE = 0.30; // Reject frames where CMND dip > this (low confidence)
+const CONFIDENCE_GATE = 0.38; // Reject frames where CMND dip > this (loosened for soft singing / head voice)
 
 function autoCorrelate(buffer, sampleRate) {
   // YIN pitch detection with confidence output
@@ -1546,8 +1546,8 @@ function midiToNoteString(midi) {
 function getCentsOffset(freq, midi) {
   const targetFreq = 440 * Math.pow(2, (midi - 69) / 12);
   const cents = Math.round(1200 * Math.log2(freq / targetFreq));
-  // Round to nearest 5 to prevent jitter
-  return Math.round(cents / 5) * 5;
+  // Round to nearest 10 to reduce wobble in display
+  return Math.round(cents / 10) * 10;
 }
 
 export function LivePitchDetector({ theme: T, referencePitches = [], inline = false, pitchContour = false }) {
@@ -1780,8 +1780,8 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
           else if (ratio > 0.45 && ratio < 0.55) correctedFreq = cleanFreq * 2;
         }
 
-        // 4. EMA smoothing — alpha 0.4 balances responsiveness + stability
-        const alpha = 0.4;
+        // 4. EMA smoothing — alpha 0.28 for smoother display (less wobble, ~50ms more lag)
+        const alpha = 0.28;
         const semitoneJump = emaFreqRef.current
           ? Math.abs(12 * Math.log2(correctedFreq / emaFreqRef.current))
           : Infinity;
@@ -1795,10 +1795,10 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
         const midi = freqToMidi(smoothedFreq);
         const cents = getCentsOffset(smoothedFreq, midi);
 
-        // 3. Hysteresis for Note Display — 120ms for singing responsiveness
+        // 3. Hysteresis for Note Display — 180ms prevents flicker during slides/scoops
         const now = Date.now();
         if (midi !== stableMidiRef.current) {
-          if (now - lastNoteUpdateRef.current > 120) {
+          if (now - lastNoteUpdateRef.current > 180) {
             stableMidiRef.current = midi;
             lastNoteUpdateRef.current = now;
           }
