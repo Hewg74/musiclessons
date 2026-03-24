@@ -1546,8 +1546,8 @@ function midiToNoteString(midi) {
 function getCentsOffset(freq, midi) {
   const targetFreq = 440 * Math.pow(2, (midi - 69) / 12);
   const cents = Math.round(1200 * Math.log2(freq / targetFreq));
-  // Round to nearest 10 to reduce wobble in display
-  return Math.round(cents / 10) * 10;
+  // Round to nearest 5 to reduce wobble in display
+  return Math.round(cents / 5) * 5;
 }
 
 export function LivePitchDetector({ theme: T, referencePitches = [], inline = false, pitchContour = false }) {
