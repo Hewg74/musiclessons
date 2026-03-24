@@ -582,6 +582,29 @@ export const level4 = {
       feel: "The silent beats should feel FULL, not empty — your voice has stopped but your inner musician keeps singing. When you re-enter with sound and land on the right note, there's a satisfying click of confirmation.",
       wrong: "If you're humming or whispering during the 'silent' beats, you're bypassing the audiation. The entire point is internal hearing without sound. If landing on the return note is consistently wrong, simplify: omit only one note instead of two or three.",
       sarah: "Gene, this is what happens inside every great improviser's head — they're hearing music continuously even when they're not playing. The notes they DON'T play are just as audiated as the ones they do. You're building that continuous inner stream."
+    },
+
+    {
+      id: "ss-4-25",
+      time: 5,
+      title: "The Groove Dropout — Can You Hold the Pocket?",
+      type: "vocal",
+      what: "The rhythm equivalent of the drone mute. The metronome plays, then goes silent. Can you hold the groove alive in your body through the silence and land back on the beat when it returns? This is rhythm audiation — internally generating pulse without external reinforcement.",
+      setup: "Metronome at 80 BPM. Guitar optional. Backing track optional.",
+      metronome: 80,
+      tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }, { name: "Drums Only — Soul/Funk 90", src: "/drums-soul-funk-90.mp3" }],
+      referencePitches: getPitchRange("A2", "G4"),
+      steps: [
+        { text: "Warm-up: strum Am on autopilot with the metronome at 80 BPM. Sing a simple pentatonic phrase — any notes, any rhythm. Lock into the groove for 1 minute. Feel where the pulse lives in your body — your foot, your head-nod, your breathing.", why: "Establishing a strong physical groove before the dropout ensures you have something to hold onto when the external reference disappears. The pulse should live in your body, not just your ears." },
+        { text: "Rung 1 — 1 bar dropout: Count along with the metronome: 1-2-3-4, 1-2-3-4. On the third bar, STOP the metronome (or close your eyes and imagine it stops). Keep strumming and singing through 1 bar of silence (4 beats). Start the metronome again. Did you land on beat 1? Were you ahead or behind? Try 3 times.", why: "1 bar of rhythmic silence is the baseline — short enough to succeed but long enough to test whether your internal pulse is running independently. Most people drift slightly ahead (rushing) without external reinforcement." },
+        { text: "Rung 2 — 2 bar dropout: Metronome plays 2 bars, goes silent for 2 bars, returns. Keep the groove alive through 8 beats of silence. Strum, sing, feel the pulse in your body. When the metronome returns, check: are you still in the pocket?", why: "2 bars doubles the cognitive load. Your internal clock must sustain tempo for twice as long without correction. The strumming provides a secondary rhythmic reference — your hands help your ear hold the time." },
+        { text: "Rung 3 — 4 bar dropout: Metronome plays 2 bars, goes silent for 4 full bars (16 beats). This is HARD. Your foot becomes your anchor — keep it tapping. Sing through the silence. When the metronome returns after 4 bars... are you still there?", why: "4 bars of unsupported groove is the equivalent of the 20-second pitch hold — it pushes past what casual timing can sustain and into genuine rhythm audiation. The foot tap is your somatic anchor, just as the hand-on-chest was for pitch holds. Motor rhythm is more resilient than cognitive rhythm because it lives in the cerebellum and basal ganglia, which are less affected by cognitive load." },
+        { text: "Try it with the backing track instead of the metronome: play the Reggae One Drop for 4 bars, pause it, sing and strum through 4 bars of silence, resume. The groove is richer — can you hold the entire feel (not just the tempo) in your body? The shuffle of the hi-hat, the weight of the one-drop on beat 3, the space on beat 1?", why: "Holding a full groove in silence is harder than holding just a tempo because a groove has feel, swing, and emphasis patterns beyond mere pulse. This is the rhythm equivalent of holding a triad vs. holding a single note — more information to maintain internally." },
+        { text: "Stretch goal: no metronome, no backing track. From silence, generate a groove at ~80 BPM from your body alone. Foot tap, strum, sing. After 8 bars, start the metronome. How close is your internal tempo to 80? The gap is your current rhythm audiation accuracy.", why: "Generating tempo from silence — like generating pitch from silence — is the ultimate rhythm audiation test. Your body has absorbed 80 BPM through hours of practice. Now you're testing whether that absorption has become internalized enough to recall independently." }
+      ],
+      feel: "The dropout moments should feel like the ground disappearing — and then discovering you can still walk. When the metronome returns and you're right on the beat, there's a deep satisfaction: your internal clock works.",
+      wrong: "If you consistently rush (land ahead of the returning metronome), your internal tempo is too fast — a common pattern under the slight anxiety of no reference. Try consciously slowing 5% during the silence. If you consistently drag (land behind), you may be losing energy without the external push — try keeping the foot tap slightly more emphatic during silence.",
+      sarah: "Gene, this is the rhythm version of everything you've been doing with the drone. The drone taught your ear to hold pitch in silence. Now the groove dropout teaches your body to hold time in silence. Same principle, different domain. Every reggae musician you love has this skill — the one-drop only works if every player is generating beat 1 internally, together, without anyone playing it."
     }
   ]
 };
