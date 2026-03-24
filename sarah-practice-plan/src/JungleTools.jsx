@@ -2963,7 +2963,9 @@ const parseChordToNotes = (chordStr, baseOct, type = "chord") => {
     return [...new Set([getNote(0, -1), getNote(0, 0), getNote(0, 1)])];
   }
 
-  // Full lush pad chord voicing
+  // Full lush pad chord voicing — root-heavy for proper drone balance
+  // Root is tripled across octaves so it dominates; color tones (3rd, 5th, 7th)
+  // sit higher and thinner. This matches how real tanpura/shruti drones work.
   let third = 4;
   let fifth = 7;
   let seventh = null;
@@ -2978,13 +2980,14 @@ const parseChordToNotes = (chordStr, baseOct, type = "chord") => {
   else if (q.includes('7')) seventh = 10;
 
   let voicing = [
-    getNote(0, -1),    // Sub bass
-    getNote(0, 0),     // Root
-    getNote(fifth, 0), // Fifth
-    getNote(third, 1)  // Third (spread up an octave)
+    getNote(0, -1),    // Sub root (lowest)
+    getNote(0, 0),     // Root (main)
+    getNote(0, 1),     // Root octave (reinforces root dominance)
+    getNote(fifth, 0), // Fifth (supports root, stays low)
+    getNote(third, 1)  // Third (color, spread up — quieter perceptually at same gain because root has 3 voices)
   ];
   if (seventh !== null) voicing.push(getNote(seventh, 1));
-  
+
   return [...new Set(voicing)];
 };
 
