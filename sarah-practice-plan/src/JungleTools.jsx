@@ -3501,9 +3501,9 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     let synth;
     let newNodes = [];
 
-    // Master bus — conservative gain staging to prevent distortion.
-    // 5 correlated voices at -12dB each ≈ -5dB peak → masterGain 0.45 → ~-12dB → safe headroom
-    const masterGain = new Tone.Gain(0.45);
+    // Master bus — gain staging balanced for loudness without clipping.
+    // 5 correlated voices at -12dB each ≈ -5dB peak → masterGain 0.65 → ~-9dB → 6dB headroom before limiter
+    const masterGain = new Tone.Gain(0.65);
     // User volume control — AFTER effects, signal is already at safe levels
     const userGain = new Tone.Gain(Tone.dbToGain(volume));
     // Highpass to kill sub-rumble
@@ -3533,40 +3533,39 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     };
 
     if (texture === "analog") {
-      // Analog pad: sawtooth filtered hard, slow chorus, gentle movement
+      // Analog pad: classic synth — sawtooth through filter with slow sweep
       const chorus = new Tone.Chorus({ frequency: 0.5, delayTime: 3, depth: 0.4 }).start();
-      const filter = new Tone.Filter(500, "lowpass").connect(chorus);
+      const filter = new Tone.Filter(600, "lowpass").connect(chorus);
       connectWithReverb(chorus, 0.3, 0.5, 3000);
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -12,
+        volume: -14,  // sawtooth has more harmonic energy than sine/triangle
         oscillator: { type: "sawtooth" },
         envelope: { attack: 2.5, decay: 0.1, sustain: 1, release: 2 }
       }).connect(filter);
       synth.maxPolyphony = 10;
-      const lfo = new Tone.LFO(0.05, 350, 550).connect(filter.frequency).start();
+      const lfo = new Tone.LFO(0.05, 350, 650).connect(filter.frequency).start();
       newNodes.push(chorus, filter, lfo);
     }
     else if (texture === "choir") {
-      // Ethereal choir: sine voices with wide slow chorus, big reverb
-      const chorus = new Tone.Chorus({ frequency: 0.3, delayTime: 5, depth: 0.8 }).start();
-      const filter = new Tone.Filter(1200, "lowpass").connect(chorus);
-      connectWithReverb(chorus, 0.55, 0.85, 1500);
+      // Ethereal choir: multiple detuned sine voices = natural chorus, breathy
+      const filter = new Tone.Filter(1800, "lowpass");
+      connectWithReverb(filter, 0.55, 0.85, 1500);
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -12,
-        oscillator: { type: "sine" },
-        envelope: { attack: 3, decay: 0.1, sustain: 1, release: 2 }
+        volume: -17,  // fat 3-copy: -5dB louder than single osc
+        oscillator: { type: "fatsine", spread: 30, count: 3 },
+        envelope: { attack: 3, decay: 0.1, sustain: 1, release: 2.5 }
       }).connect(filter);
       synth.maxPolyphony = 10;
-      newNodes.push(chorus, filter);
+      newNodes.push(filter);
     }
     else if (texture === "organ") {
-      // Harmonium: sine drawbars with Leslie-style chorus, warm reverb
-      const chorus = new Tone.Chorus({ frequency: 1, delayTime: 3, depth: 0.5 }).start();
-      const filter = new Tone.Filter(2000, "lowpass").connect(chorus);
+      // Harmonium: layered sine partials like organ drawbars (16', 8', 4', 2⅔')
+      const chorus = new Tone.Chorus({ frequency: 1, delayTime: 3, depth: 0.4 }).start();
+      const filter = new Tone.Filter(2500, "lowpass").connect(chorus);
       connectWithReverb(chorus, 0.4, 0.5, 3500);
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -12,
-        oscillator: { type: "sine" },
+        volume: -16,  // custom partials sum louder than single sine
+        oscillator: { type: "custom", partials: [1, 0.8, 0, 0.4, 0, 0.2, 0, 0.1] },
         envelope: { attack: 1.5, decay: 0.1, sustain: 1, release: 1.5 }
       }).connect(filter);
       synth.maxPolyphony = 10;
@@ -3582,18 +3581,17 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       synth.maxPolyphony = 10;
     }
     else if (texture === "strings") {
-      // String section: sawtooth filtered low, wide chorus for ensemble feel
-      const chorus = new Tone.Chorus({ frequency: 0.4, delayTime: 6, depth: 0.8 }).start();
-      const filter = new Tone.Filter(600, "lowpass").connect(chorus);
-      connectWithReverb(chorus, 0.5, 0.7, 2500);
+      // String section: fat detuned sawtooths = instant ensemble, heavily filtered
+      const filter = new Tone.Filter(500, "lowpass");
+      connectWithReverb(filter, 0.5, 0.7, 2500);
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -12,
-        oscillator: { type: "sawtooth" },
-        envelope: { attack: 3, decay: 0.1, sustain: 1, release: 2 }
+        volume: -17,  // fat 3-copy sawtooth: very loud before filter
+        oscillator: { type: "fatsawtooth", spread: 25, count: 3 },
+        envelope: { attack: 3, decay: 0.1, sustain: 1, release: 2.5 }
       }).connect(filter);
       synth.maxPolyphony = 10;
-      const lfo = new Tone.LFO(0.04, 400, 700).connect(filter.frequency).start();
-      newNodes.push(chorus, filter, lfo);
+      const lfo = new Tone.LFO(0.04, 350, 600).connect(filter.frequency).start();
+      newNodes.push(filter, lfo);
     }
     else if (texture === "tanpura") {
       // Tanpura: gentle FM beating with phaser shimmer
@@ -3601,7 +3599,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       const filter = new Tone.Filter(1500, "lowpass").connect(phaser);
       connectWithReverb(phaser, 0.35, 0.5, 3000);
       synth = new Tone.PolySynth(Tone.FMSynth, {
-        volume: -12,
+        volume: -14,  // FM adds sidebands
         harmonicity: 1.003, modulationIndex: 0.8,
         oscillator: { type: "sine" },
         modulation: { type: "sine" },
@@ -3614,7 +3612,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     else if (texture === "crystal") {
       // Crystal bowl: FM shimmer with massive reverb wash
       synth = new Tone.PolySynth(Tone.FMSynth, {
-        volume: -12,
+        volume: -14,  // FM adds sidebands
         harmonicity: 1.005, modulationIndex: 1.5,
         oscillator: { type: "sine" },
         modulation: { type: "sine" },
@@ -3625,24 +3623,23 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       synth.maxPolyphony = 10;
     }
     else if (texture === "lofi-tape") {
-      // Lo-fi tape: gentle wobble, warm filter, subtle chorus
-      const vibrato = new Tone.Vibrato({ frequency: 0.4, depth: 0.03 });
-      const filter = new Tone.Filter(800, "lowpass").connect(vibrato);
-      const chorus = new Tone.Chorus({ frequency: 0.8, delayTime: 3, depth: 0.4 }).connect(filter).start();
+      // Lo-fi tape: warm triangle with noticeable pitch wobble + tape saturation
+      const vibrato = new Tone.Vibrato({ frequency: 0.5, depth: 0.06 });
+      const filter = new Tone.Filter(900, "lowpass").connect(vibrato);
       connectWithReverb(vibrato, 0.25, 0.4, 2000);
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -12,
-        oscillator: { type: "triangle" },
-        envelope: { attack: 1.5, decay: 0.1, sustain: 1, release: 2 }
-      }).connect(chorus);
+        volume: -15,  // fat 2-copy: ~3dB louder than single osc
+        oscillator: { type: "fattriangle", spread: 15, count: 2 },
+        envelope: { attack: 1.5, decay: 0.3, sustain: 0.85, release: 2 }
+      }).connect(filter);
       synth.maxPolyphony = 10;
-      newNodes.push(vibrato, filter, chorus);
+      newNodes.push(vibrato, filter);
     }
     else if (texture === "surf-tremolo") {
-      // Surf tremolo: gentle shimmer, not pulsing — subtle amplitude modulation
+      // Surf tremolo: triangle with gentle amplitude shimmer + spring reverb feel
       const tremolo = new Tone.Tremolo(3, 0.3).start();
       const filter = new Tone.Filter(1200, "lowpass").connect(tremolo);
-      connectWithReverb(tremolo, 0.45, 0.8, 4000);
+      connectWithReverb(tremolo, 0.5, 0.8, 4000);
       synth = new Tone.PolySynth(Tone.Synth, {
         volume: -12,
         oscillator: { type: "triangle" },
@@ -3652,32 +3649,32 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       newNodes.push(tremolo, filter);
     }
     else if (texture === "vintage-keys") {
-      // Vintage keys: clean FM with gentle chorus, warm filter
+      // Vintage keys: FM electric piano character — bell-like overtones, chorus width
       const chorus = new Tone.Chorus({ frequency: 0.6, delayTime: 4, depth: 0.5 }).start();
-      const filter = new Tone.Filter(1000, "lowpass").connect(chorus);
+      const filter = new Tone.Filter(1200, "lowpass").connect(chorus);
       connectWithReverb(chorus, 0.35, 0.5, 3000);
       synth = new Tone.PolySynth(Tone.FMSynth, {
-        volume: -12,
-        harmonicity: 1.5, modulationIndex: 0.8,
+        volume: -14,  // FM adds sidebands
+        harmonicity: 3, modulationIndex: 0.6,
         oscillator: { type: "sine" },
         modulation: { type: "sine" },
-        envelope: { attack: 1, decay: 0.2, sustain: 0.9, release: 1.5 },
-        modulationEnvelope: { attack: 1, decay: 0.2, sustain: 0.9, release: 1.5 }
+        envelope: { attack: 1, decay: 0.4, sustain: 0.7, release: 2 },
+        modulationEnvelope: { attack: 1, decay: 0.8, sustain: 0.3, release: 2 }
       }).connect(filter);
       synth.maxPolyphony = 10;
       newNodes.push(chorus, filter);
     }
     else if (texture === "dub-sub") {
-      // Dub sub: deep but audible on earbuds — raised filter, gentle harmonics
+      // Dub sub: deep but audible — sub sine with harmonic overtone layer
       const filter = new Tone.Filter(300, "lowpass", -12);
       connectWithReverb(filter, 0.15, 0.3, 2000);
       synth = new Tone.PolySynth(Tone.FMSynth, {
-        volume: -12,
-        harmonicity: 1, modulationIndex: 1,
+        volume: -14,  // FM adds sidebands
+        harmonicity: 1, modulationIndex: 1.2,
         oscillator: { type: "sine" },
         modulation: { type: "triangle" },
-        envelope: { attack: 0.5, decay: 0.2, sustain: 1, release: 1 },
-        modulationEnvelope: { attack: 0.5, decay: 0.2, sustain: 1, release: 1 }
+        envelope: { attack: 0.8, decay: 0.2, sustain: 1, release: 1 },
+        modulationEnvelope: { attack: 0.8, decay: 0.2, sustain: 1, release: 1 }
       }).connect(filter);
       synth.maxPolyphony = 10;
       newNodes.push(filter);
@@ -3697,31 +3694,29 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       newNodes.push(chorus, filter, lfo);
     }
     else if (texture === "ocean") {
-      // Ocean: ambient wash — wide stereo, massive reverb, very low filter
-      const chorus = new Tone.Chorus({ frequency: 0.2, delayTime: 8, depth: 0.9 }).start();
-      const filter = new Tone.Filter(500, "lowpass").connect(chorus);
-      connectWithReverb(chorus, 0.7, 0.95, 800);
+      // Ocean: ambient wash — fat triangle for body, massive reverb, very low filter
+      const filter = new Tone.Filter(500, "lowpass");
+      connectWithReverb(filter, 0.7, 0.95, 800);
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -12,
-        oscillator: { type: "sine" },
+        volume: -17,  // fat 3-copy: -5dB louder than single osc
+        oscillator: { type: "fattriangle", spread: 40, count: 3 },
         envelope: { attack: 4, decay: 0.1, sustain: 1, release: 3 }
       }).connect(filter);
       synth.maxPolyphony = 10;
       const lfo = new Tone.LFO(0.03, 300, 600).connect(filter.frequency).start();
-      newNodes.push(chorus, filter, lfo);
+      newNodes.push(filter, lfo);
     }
     else if (texture === "breath") {
-      // Breath: ultra-minimal meditation drone — disappears into the background
-      const chorus = new Tone.Chorus({ frequency: 0.15, delayTime: 5, depth: 0.5 }).start();
-      const filter = new Tone.Filter(400, "lowpass").connect(chorus);
-      connectWithReverb(chorus, 0.6, 0.9, 1000);
+      // Breath: ultra-minimal meditation drone — soft sine, heavy reverb, barely there
+      const filter = new Tone.Filter(400, "lowpass");
+      connectWithReverb(filter, 0.65, 0.9, 1000);
       synth = new Tone.PolySynth(Tone.Synth, {
-        volume: -12,
+        volume: -14,
         oscillator: { type: "sine" },
         envelope: { attack: 5, decay: 0.1, sustain: 1, release: 4 }
       }).connect(filter);
       synth.maxPolyphony = 10;
-      newNodes.push(chorus, filter);
+      newNodes.push(filter);
     }
 
     // Fallback for unknown textures — default to pure sine
@@ -3738,10 +3733,21 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     effectNodes = newNodes;
     synthRef.current = synth;
 
-    if (playing && (mode === "manual" || mode === "single")) {
-      const chordNotes = parseChordToNotes(root, octaveRef.current, mode === "single" ? "single" : "chord");
-      if (chordNotes) synth.triggerAttack(chordNotes);
-      previousNotesRef.current = chordNotes || [];
+    // Re-trigger the sound on the new synth if currently playing.
+    // Without this, switching textures mid-play causes silence until next trigger.
+    if (playing) {
+      if (mode === "cycle") {
+        // In cycle mode, re-trigger whatever chord was playing before the switch
+        const savedNotes = previousNotesRef.current;
+        if (savedNotes && savedNotes.length > 0) {
+          synth.triggerAttack(savedNotes);
+        }
+      } else {
+        // Manual/single mode
+        const chordNotes = parseChordToNotes(root, octaveRef.current, mode === "single" ? "single" : "chord");
+        if (chordNotes) synth.triggerAttack(chordNotes);
+        previousNotesRef.current = chordNotes || [];
+      }
     }
 
     return () => {
