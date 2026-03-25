@@ -20,7 +20,7 @@ export const level4 = {
       title: "Adding the Bridge — D",
       type: "vocal",
       what: "Four notes now: A, C, D, E. D sits between C and E — it's the bridge, the passing tone, the note that makes STEPWISE MOTION possible. Before D, you had to leap between C and E. Now you can walk: C-D-E or E-D-C. Smooth, connected, flowing.",
-      setup: "Guitar. Drone on A. Metronome at 75 BPM.",
+      setup: "Guitar. Drone on A. Metronome at 75 BPM. Voice check: jaw loose, tongue tip on bottom teeth. D is new territory — let it arrive easily.",
       steps: [
         { text: "Review your triad: sing A-C-E ascending, E-C-A descending, against the drone. Feel the leap between C and E — it's a gap, a jump, a skip. You've been jumping this gap for a while now. Today you fill it.", why: "Feeling the C-to-E gap before filling it makes the new note's purpose visceral. You'll understand WHY D matters because you'll feel the difference it makes." },
         { text: "Sing D against the drone. Hold it for 8 beats. Feel how D is different from the triad notes — it's less stable, more restless. D wants to move. It pulls toward C or toward E. It's a bridge, not a destination.", why: "D is the 4th scale degree — a passing tone that creates movement and tension. Unlike the stable root, 3rd, and 5th, D has an inherent pull that drives melodies forward. It's the oil that makes the engine run." },
@@ -45,7 +45,7 @@ export const level4 = {
       title: "Stepwise Wandering",
       type: "vocal",
       what: "Now that D bridges C and E, walk through your four notes using primarily stepwise motion: A-C-D-E-D-C-A. Each note leads gently to the next. No big leaps. Stepwise motion is the most natural melodic movement — it's how we sing intuitively.",
-      setup: "Guitar. Metronome at 80 BPM. Optional backing track.",
+      setup: "Guitar. Metronome at 80 BPM. Optional backing track. Voice check: if this is your first exercise today, 30 seconds of lip trills (brrr) to wake up the voice.",
       tracks: [{ name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" }],
       steps: [
         { text: "Strum Am on autopilot. Sing the ascending walk: A-C-D-E. One note per beat, slow and deliberate. As you step from A to C, feel the vibration shift from chest to throat — the ache of the minor 3rd arriving in your jaw. As you reach D, notice it's lighter, more mobile, pulling upward. As you arrive at E, feel the resonance climb into the mask. Each step isn't just a pitch change — it's a body change. Then descend: E-D-C-A, feeling the vibration settle back down through throat to chest. Repeat 4 times.", why: "Stepwise ascending and descending is the most basic melodic exercise — and the most useful. The majority of notes in most melodies move by step, not by leap. Tracking the body-location shift as pitch moves makes each step a somatic event, not just an interval." },
@@ -68,7 +68,7 @@ export const level4 = {
       title: "Four-Note Conversation",
       type: "vocal",
       what: "Guitar-voice call and response with A, C, D, E. The conversation now has stepwise motion available — smoother, more melodic phrases. Notice how adding ONE note (D) transforms the conversation from triadic jumps to flowing lines.",
-      setup: "Guitar. Metronome at 80 BPM.",
+      setup: "Guitar. Metronome at 80 BPM. Voice check: land on notes from above — place each pitch like setting down a glass, no scooping.",
       steps: [
         { text: "Play a short guitar phrase using A, C, D, E — try a stepwise phrase like C-D-E-D (walking up and back). During the guitar call, listen with your whole body: feel your vocal response forming before you sing it. Where will it start — in the chest warmth of A, the throat-ache of C? Let the response crystallize inside, then answer with your voice.", why: "The conversation now has stepwise motion available. Guitar phrases sound smoother, voice responses can flow — the musical dialogue gains a new quality of connectedness. Feeling the response form before singing it bridges reaction and composition." },
         { text: "Make the guitar call use a LEAP (A up to E). Make the voice answer use STEPS (E-D-C-A walking down). Before singing, hear E forming in the mask — feel its brightness gathering behind the nose bridge. Then step down: E settles, D drops between chest and throat, C lands in the jaw with its ache, A arrives home in the sternum. The stepping-down response lets the vibration settle gradually from mask back to chest — a physical unwinding that mirrors the musical resolution.", why: "Mixing leaps and steps between call and response adds a new dimension to the dialogue. The body experiences the contrast too: leaps teleport the resonance, steps let it migrate. Pre-feeling the starting note before the descent makes the whole body journey intentional." },
@@ -93,7 +93,7 @@ export const level4 = {
       title: "The Full Palette — Adding G",
       type: "vocal",
       what: "Five notes: A, C, D, E, G. The Am pentatonic — the most universal scale in music. G is the highest note in your palette, the peak, the reach. Every culture on earth uses this five-note scale. With these five notes, you can improvise over ANY song in the key of Am. No wrong notes. Complete freedom.",
-      setup: "Guitar. Drone on A. Metronome at 80 BPM.",
+      setup: "Guitar. Drone on A. Metronome at 80 BPM. Voice check: G is near your gear-shift zone. Narrow the vowel (ah → uh) and use LESS air, not more.",
       steps: [
         { text: "Before starting: breathe in for 4 counts, then hum-sigh out for 6 counts. Repeat 3 times. G is the highest note in your palette — your vagus nerve may tighten the throat when you reach for it. This primes the laryngeal environment for the new range. Then review your four notes: sing A-C-D-E ascending, E-D-C-A descending against the drone. This is your known world. Now you're about to add the final note — the peak of the palette.", why: "The vagus nerve directly controls the vocal folds. Higher notes can trigger nervous system activation that constricts the throat. The hum-sigh primes the instrument. Reviewing the four-note palette before expanding it grounds you in familiar territory. Each addition has been gradual — root, 5th, 3rd, bridge. G is the capstone." },
         { text: "Sing G against the drone. Hold it for 8 beats. Feel the reach — G is the highest note in your palette, the farthest from home. It has a quality of uplift, of aspiration, of reaching for something. It's the peak of the mountain.", why: "G is the minor 7th — it creates a gentle tension that wants to resolve back down. It's the 'reach' note, the one that creates the most melodic interest when it leads back to familiar territory." },
@@ -121,7 +121,7 @@ export const level4 = {
       title: "Pentatonic Rhythm Play",
       type: "vocal",
       what: "All five pentatonic notes with full rhythmic freedom. Apply everything you've learned: long holds, short bursts, syncopation, silence, dynamic shifts. Five notes and infinite rhythms. This is where the scale becomes a living, breathing musical vocabulary.",
-      setup: "Guitar. Metronome at 80 BPM. Backing track.",
+      setup: "Guitar. Metronome at 80 BPM. Backing track. Voice check: breathe from the barrel — ribs expanded sideways. The barrel holds even when dynamics change.",
       tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }, { name: "Drums Only — Bossa 75", src: "/drums-bossa-75.mp3" }, { name: "Drums Only — Soul/Funk 90", src: "/drums-soul-funk-90.mp3" }],
       steps: [
         { text: "Play the backing track. Just LISTEN for 30 seconds with eyes closed. Feel where the groove lives in your body — the kick in your chest, the snare in your head-nod, the hi-hat in your breathing. When your body is moving with the groove, THEN pick up your instrument. This isn't patience — it's neural entrainment, priming your motor system through focused listening. Then strum Am on autopilot with the backing track. Sing pentatonic notes (A-C-D-E-G) using ONLY whole notes — one note per bar. Slow, deliberate, letting each note breathe. Before each note, run the full cycle: hear it in your head, feel where it will resonate in your body, sense what emotional color it carries — then let it become sound. At this tempo you have time for all three channels. A whole bar of chest-warmth feels completely different from a whole bar of mask-brightness.", why: "30 seconds of focused listening primes the motor system through neural entrainment — your brain starts rehearsing the groove before you play a note. Starting with whole notes forces intentional note choice. When each note lasts a full bar, the selection matters — you're composing in slow motion. With time to pre-hear, pre-feel, and pre-choose, each note arrives as a complete sensory event — pitch, body, emotion unified." },
@@ -144,7 +144,7 @@ export const level4 = {
       title: "Pentatonic Conversation",
       type: "vocal",
       what: "The full guitar-voice conversation with all 5 pentatonic notes. Guitar plays a short pentatonic phrase, voice answers with a pentatonic phrase. Now the conversation has full melodic range — contour, stepwise motion, leaps, emotional color. This is real improvisation.",
-      setup: "Guitar. Metronome at 80 BPM. Backing track.",
+      setup: "Guitar. Metronome at 80 BPM. Backing track. Voice check: if throat tightens during the conversation, sigh (haaa) to reset. Porch register — easy, not pushed.",
       tracks: [{ name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" }],
       steps: [
         { text: "Play a short pentatonic guitar phrase (Am pentatonic, frets 5-8 on the top strings). Keep it 3-5 notes. Then answer with your voice: sing a pentatonic phrase that responds to the guitar's contour and emotion. During the guitar call, the drone anchors you — from that anchor, feel your response forming before you sing it. Hear the intervals from the root. Which notes want to answer the guitar's question? Let them crystallize inside before they come out.", why: "The pentatonic conversation is the culmination of all your call-and-response work. With five notes, both guitar and voice have full melodic range — the conversation sounds like two musicians playing together. Using the drone as anchor while composing your response internally bridges the gap between reactive singing and audiated improvisation." },
@@ -168,7 +168,7 @@ export const level4 = {
       title: "Free Exploration — Am Pentatonic",
       type: "vocal",
       what: "The exercise that was previously #1 — but now you've EARNED it. Strum Am on autopilot and sing any combination of A, C, D, E, G in any order, any rhythm, for 3 minutes straight. No target phrase, no compositional goal. Just wander through the full pentatonic. After the gradual ramp, this freedom feels completely different — you KNOW these notes.",
-      setup: "Guitar. Drone on A. Metronome at 80 BPM.",
+      setup: "Guitar. Drone on A. Metronome at 80 BPM. Voice check: tongue tip on bottom teeth. Shoulders dropped. Quick body scan — where is tension hiding?",
       steps: [
         { text: "Strum Am on autopilot. Turn on the drone. Close your eyes. Begin singing any pentatonic notes in any order, any rhythm. No rules. No targets. Just wander — but wander with your whole body. As each note arrives, notice where it vibrates: the chest-warmth of A, the throat-ache of C, the mobile lightness of D, the mask-openness of E, the forehead-reach of G. Let your ear and your body choose the next note together, not your brain.", why: "Open-ended exploration is Kratus Level 1 — pure creative play. With body-mapping active, the wandering has a somatic dimension: you're exploring a body geography alongside a pitch set. Each note is a place, not just a sound." },
         { text: "Sing for at least 3 minutes without stopping. When you run out of ideas, simplify — go back to two notes, or one note, and let the complexity rebuild naturally. The music never stops, even when it gets simple.", why: "Extended improvisation builds stamina and trust. The moments when you 'run out of ideas' are exactly when the interesting stuff happens — your conscious mind stops trying, and your instincts take over." },
@@ -195,7 +195,7 @@ export const level4 = {
       title: "Major Palette — G Major",
       type: "vocal",
       what: "Apply the same palette thinking to G major. Root G (earth), major 3rd B (gold/sunshine — brighter than the minor 3rd!), 5th D (sky). The major triad has a COMPLETELY different emotional color — warm, open, bright. Your pentatonic exploration was in minor. Now feel major.",
-      setup: "Guitar. Drone on G. Metronome at 80 BPM.",
+      setup: "Guitar. Drone on G. Metronome at 80 BPM. Voice check: for higher notes, think DOWN not UP. Imagine the note is below you and you're stepping onto it.",
       steps: [
         { text: "Strum G on autopilot. Turn on the drone (G). Sing the root G — hold it for 8 beats. This is a new home. It feels similar to A (stable, grounded) but the surrounding notes will be different colors.", why: "Establishing a new root resets your palette. You've lived in Am for the entire level — G major is a new tonal world with different emotional colors." },
         { text: "Sing the 5th (D) — hold for 8 beats. Open sky, just like E was over Am. The 5th always has this quality — spacious, stable, expansive. Same relationship, new notes.", why: "The 5th has the same character regardless of the chord — it's always the 'sky.' Recognizing this consistency across different chords builds your understanding of how chord tones work universally." },
@@ -219,7 +219,7 @@ export const level4 = {
       title: "Palette Switching — Am to G",
       type: "vocal",
       what: "Alternate between Am palette (A-C-E, blue) and G palette (G-B-D, gold) every 4 bars. Feel the color shift as the chord changes. This is the foundation of singing over chord progressions — each chord gives you a new palette of colors to paint with.",
-      setup: "Guitar. Metronome at 80 BPM.",
+      setup: "Guitar. Metronome at 80 BPM. Voice check: less air for higher notes. The crack happens when you push more air. Try singing G quieter than E.",
       steps: [
         { text: "Strum Am for 4 bars while singing A-C-E (blue palette). Then switch to G for 4 bars while singing G-B-D (gold palette). Repeat the cycle 4 times. Feel the emotional shift at each chord change — blue to gold, gold to blue.", why: "Palette switching is the foundation of singing over chord progressions. Each chord change brings a new set of colors — the singer's job is to hear the shift and respond with the appropriate palette." },
         { text: "Focus on the moment of the switch. As the chord changes from Am to G, three things shift simultaneously: the PITCH palette changes from blue (A-C-E) to gold (G-B-D), the BODY resonance migrates — C's throat-ache gives way to B's brighter, more forward buzz — and the EMOTIONAL temperature warms from melancholy to sunlight. Notice which note makes the biggest change: C (minor 3rd, blue, sitting in the throat) becomes B (major 3rd, gold, projecting forward). That one note shift changes everything — pitch, body, emotion all at once.", why: "The 3rd is the hinge between major and minor. Tracking the shift across all three channels — pitch, body, emotion — makes the chord change a full-spectrum event rather than just a note swap." },
@@ -245,7 +245,7 @@ export const level4 = {
       title: "Vowel Shape Exploration",
       type: "vocal",
       what: "Sing pentatonic notes while cycling through vowels: 'ooh' (intimate), 'ahh' (open), 'eee' (bright), 'oh' (warm), 'ay' (forward). Each vowel creates a different resonant space in your body. Your vowel choices will become a signature part of your vocal style.",
-      setup: "Guitar. Metronome at 80 BPM. Strum Am.",
+      setup: "Guitar. Metronome at 80 BPM. Strum Am. Voice check: jaw loose — like about to yawn. Vowels narrower as you go higher (ah → uh → oo).",
       steps: [
         { text: "Strum Am on autopilot. Before singing, hear A forming in your chest — feel the warmth gathering behind the sternum. Now shape your mouth into a small 'ooh' circle and let the note emerge. Sing pentatonic notes on 'ooh' for 1 minute. As you move between notes, track two body maps at once: the PITCH map (A in chest, C in throat, D between them, E in mask, G reaching toward the forehead) AND the VOWEL map ('ooh' concentrates resonance behind the lips and deep in the chest). Notice how 'ooh' pulls every note slightly downward in the body — even E, which normally lives in the mask, feels warmer and more contained on 'ooh.' The vibration feels private, intimate. 'Ooh' is where lullabies and quiet confessions live.", why: "'Ooh' is the most intimate vowel — it focuses your breath into a narrow stream and creates a warm, close sound. Tracking both the pitch body-map and the vowel body-map simultaneously builds a two-dimensional somatic awareness: every note-vowel combination has its own unique body address." },
         { text: "Switch to 'ahh' for 1 minute. Open your mouth wide. Feel how 'ahh' opens the throat and projects into the room — the resonance expands from a point to a sphere. The same pentatonic notes now buzz through your whole jaw, throat, and upper chest. Same pitch, completely different body experience. 'Ahh' fills a room because it fills your body first.", why: "'Ahh' is the most open vowel — it projects naturally and carries emotion. The body-location shift from 'ooh' (concentrated, private) to 'ahh' (expanded, projecting) is dramatic and worth tracking consciously." },
@@ -266,7 +266,7 @@ export const level4 = {
       title: "Breath as Phrase",
       type: "vocal",
       what: "One breath = one phrase. Inhale, sing pentatonic notes for the length of your breath, stop when the air runs out. The breath shapes the phrase naturally — no counting, no planning. Your lungs become the composer.",
-      setup: "Guitar. Metronome at 80 BPM. Backing track.",
+      setup: "Guitar. Metronome at 80 BPM. Backing track. Voice check: barrel breath for long phrases — ribs stay expanded. Air comes from the barrel, not the throat.",
       tracks: [{ name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }],
       steps: [
         { text: "Strum Am on autopilot over the backing track. Take a deep breath — and during that inhale, let your phrase begin forming inside: hear the first notes, feel where they'll start in your body, sense what emotional color they carry. Then exhale and sing pentatonic notes (A-C-D-E-G) for as long as your breath lasts — then stop. Don't gasp for more air. Just stop. Silence until your next natural inhale. The inhale is where the hear-feel-choose cycle runs; the exhale is where it becomes music.", why: "Breath-phrase coupling is how natural phrasing develops. Your lungs determine phrase length — not a metronome, not a bar count. Making the inhale the audiation and embodiment moment transforms breathing from a mechanical necessity into a creative act." },
@@ -288,7 +288,7 @@ export const level4 = {
       title: "The Power of Silence",
       type: "vocal",
       what: "Strum Am for 4 bars. Sing pentatonic notes for 2 bars. Rest for 2 bars. Repeat. Then: sing 1 bar, rest 3. Then: sing a single note, rest 7 bars. Explore how silence creates anticipation and makes each note more powerful.",
-      setup: "Guitar. Metronome at 80 BPM. Backing track.",
+      setup: "Guitar. Metronome at 80 BPM. Backing track. Voice check: if your voice feels tired, do 5 lip trills and a sigh. Fatigue usually means you're pushing.",
       tracks: [{ name: "Cinematic Western 80", src: "/cinematic-western-80.mp3" }],
       steps: [
         { text: "Strum Am over the backing track. Sing pentatonic phrases for 2 bars, then rest (no voice) for 2 bars. Repeat this cycle 4 times. Let the silence feel intentional, not empty. The guitar and backing track fill the space.", why: "Silence is a musical element, not an absence. Planned rests create anticipation — the listener leans in, waiting for the next sound. The space between phrases is where the music breathes." },
@@ -311,7 +311,7 @@ export const level4 = {
       title: "Sing-Along Absorption",
       type: "vocal",
       what: "Pick a backing track and LISTEN for 30 seconds — hear where the groove breathes, where the accents fall, where silence lives. Then hum along, matching the track's energy and phrasing patterns. No chord tones to hit, no rules — just absorb the groove through your body. Mirror neuron research shows that active listening IS motor rehearsal.",
-      setup: "Guitar optional. One backing track of your choice.",
+      setup: "Guitar optional. One backing track of your choice. Voice check: porch register. Your voice should feel like talking on a pitch — warm, easy, no strain.",
       tracks: [
         { name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" },
         { name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" },
@@ -355,7 +355,7 @@ export const level4 = {
       title: "Pentatonic Groove Palette",
       type: "vocal",
       what: "Bridge exercise: now that you own the full pentatonic, apply it to groove contexts. Sing pentatonic phrases over two contrasting backing tracks — notice how the same five notes feel completely different depending on the groove underneath. The palette is fixed; the feel transforms everything.",
-      setup: "Guitar. Metronome at 80 BPM. Backing tracks.",
+      setup: "Guitar. Metronome at 80 BPM. Backing tracks. Voice check: for quiet singing, the barrel holds — only the volume dial turns down.",
       tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }, { name: "Desert Blues 75", src: "/desert-blues-75.mp3" }],
       steps: [
         { text: "Play the Reggae One Drop track. Strum Am on autopilot. Sing pentatonic phrases (A-C-D-E-G) that fit the reggae pocket — bouncy, offbeat, laid-back. Notice how the reggae groove changes WHERE the notes live in your body: does the bounce make the resonance more mobile, more buoyant? The notes might feel lighter, higher in the chest, almost floating on the offbeat. Let the groove shape your note choices, your phrasing, and your physical sensation. 2 minutes.", why: "The reggae groove pulls specific rhythmic responses from you. Your pentatonic notes will land differently — more offbeat, more space, more bounce. Tracking the body-location shift that the groove creates adds a somatic dimension to genre awareness." },
@@ -420,6 +420,7 @@ export const level4 = {
       title: "Syncopation",
       type: "vocal",
       what: "Sing notes BETWEEN the guitar strums — on the 'ands' instead of the beats. This is syncopation: the secret ingredient that makes vocal melodies feel alive instead of robotic. Now that you own the full pentatonic, apply syncopation to your five-note vocabulary — the rhythmic displacement makes every note choice more interesting. Based on Stoloff's approach: rhythmic displacement before melodic complexity.",
+      setup: "Guitar. Metronome at 80 BPM. Voice check: breathe from the barrel. If the throat squeezes, sigh (haaa) to reset.",
       steps: [
         { text: "Strum Am at 80 BPM, simple downstrokes on beats 1-2-3-4. Before you sing, hear A gathering in your chest — feel the warmth behind the sternum forming before it becomes sound. Now sing A — but ONLY on the 'and' after beat 1. Strum... sing... strum... rest... strum... rest... strum... rest. Even with syncopation, the body address stays constant: A lives in the chest whether it lands on the beat or between beats.", why: "Singing between strums is the opposite of what your brain wants to do. It wants to sync voice and hand. Separating them is the key to interesting rhythm. Anchoring the note in its body address before syncopating it ensures the audiation-somatic connection survives the rhythmic displacement." },
         { text: "Now sing on the 'and' of beats 1 AND 3. Two syncopated notes per bar. The voice lands between strums. Notice how singing on the 'and' creates a physical tension — your body wants to sync with the guitar, but you're deliberately displacing. Feel that tension in your chest and shoulders: the strum pulls one way, your voice floats the other. That tension IS syncopation, felt in the body.", why: "Two offbeat notes per bar creates the reggae vocal feel. The physical sensation of displacement — body pulled between two rhythmic magnets — is syncopation as a somatic experience, not just a rhythmic concept." },
@@ -463,7 +464,7 @@ export const level4 = {
       title: "Whisper to Full Voice",
       type: "vocal",
       what: "Dynamic range exploration with pentatonic notes. Move from barely audible whisper to full chest voice and back — with all five pentatonic notes available. Dynamics in isolation: same chord, same scale, just volume as a creative variable.",
-      setup: "Guitar. Metronome at 80 BPM. Strum Am softly.",
+      setup: "Guitar. Metronome at 80 BPM. Strum Am softly. Voice check: whisper uses different muscles than full voice — both are valid. Keep the barrel engaged for both.",
       steps: [
         { text: "Strum Am very softly. Sing pentatonic notes in a near-whisper — your voice should barely rise above the guitar. Whisper-singing lives in the throat and mouth — feel how the vibration barely reaches the chest. It's contained, private, intimate — this is your most personal body location, your DOPE LEMON register. Hold notes, drift between pitches, keep everything quiet and close.", why: "Singing quietly requires more breath control than singing loudly. It also creates intimacy — the listener leans in. At whisper volume, the resonance lives in the smallest, most contained body space." },
         { text: "Gradually increase volume over 8 bars until you're singing pentatonic phrases at full chest voice. As volume rises, feel the vibration traveling: throat → chest → ribs → whole torso. You're not just getting louder — you're waking up more of your body. The strum should get louder too — guitar and voice grow together. By full voice, your entire torso is a resonating chamber.", why: "A volume crescendo is the simplest form of musical drama. Tracking the resonance expansion from throat to full body makes the crescendo a somatic journey, not just a volume knob. You're literally inhabiting more of your physical instrument as intensity builds." },
@@ -492,7 +493,7 @@ export const level4 = {
       title: "Scaffolded Audiation — Building the Inner Palette",
       type: "vocal",
       what: "You can't audiate what you've never heard. This exercise teaches you HOW to internalize notes using a scaffolding sequence: anchor (drone) → play the note externally → listen/absorb → mute → hold internally → re-sing → check. Every step is grounded in something you've already heard. You're not pulling notes from thin air — you're catching echoes and extending them.",
-      setup: "Guitar. Drone on A. Pitch detector on. Metronome at 70 BPM (extra slow — this is deep internal work).",
+      setup: "Guitar. Drone on A. Pitch detector on. Metronome at 70 BPM (extra slow — this is deep internal work). Voice check: for sustained notes, keep the ribs expanded. The air lasts longer with barrel support.",
       steps: [
         { text: "The Echo Method: play A on your guitar — a single, clear note. Listen for 3 full seconds. Just absorb it. Now mute the string. The echo lingers in your ear — hold it. Don't let it fade. Within 3 seconds of muting, re-sing A. Check with the pitch detector. This is the easiest audiation possible — you're catching the echo while it's still ringing in your head. Try it 3 times.", why: "The echo method is the foundation of all audiation scaffolding. Gordon's discrimination learning says external hearing MUST precede internal hearing. By catching the echo within 3 seconds, you're working with the brain's echoic memory — the automatic sensory trace that persists for 3-4 seconds after a sound stops. You're not 'creating' the pitch from nothing — you're HOLDING what's already there." },
         { text: "Extending the Echo: same note (A), same process — play, listen, mute. But now wait 5 seconds before re-singing. The echo fades, but your brain must SUSTAIN it actively. It takes effort now. Try it. Then extend to 8 seconds. By 8 seconds, echoic memory has faded — you're sustaining A through active audiation, not passive echo. That's the shift.", why: "Echoic memory fades at roughly 3-4 seconds. Beyond that, you're no longer catching an echo — you're actively maintaining a pitch representation in working memory. This is the transition from passive hearing to active audiation. Extending the delay trains your brain to sustain notes internally for longer, which is the prerequisite for hearing phrases before singing them." },
@@ -516,7 +517,7 @@ export const level4 = {
       title: "Pentatonic Audiation — Hear Three, Then Four",
       type: "vocal",
       what: "You learned to hear A and E silently in Level 3 (ss-3-8). Two notes, two colors on your inner canvas. Now expand that canvas: hear THREE pentatonic notes internally (A, C, D — earth, blue, bridge), then four, then all five. The constraint: hear the phrase in your head for a full bar before singing it. Your inner ear paints the phrase; your voice traces what's already been composed inside.",
-      setup: "Guitar on autopilot (Am). Drone on A. Metronome at 75 BPM (slow — audiation needs time).",
+      setup: "Guitar on autopilot (Am). Drone on A. Metronome at 75 BPM (slow — audiation needs time). Voice check: tongue tip on bottom teeth. Jaw loose. Porch register.",
       steps: [
         { text: "Warm up your inner ear: hear A silently for 4 beats, then sing it. Hear E silently for 4 beats, then sing it. This is ss-3-8 territory — you already know how to do this with two notes. Confirm the skill is still there.", why: "Revisiting the two-note audiation from Level 3 re-establishes the neural pathway before expanding it. If two notes feel easy, your inner ear is warmed up and ready for more colors." },
         { text: "Add C — the blue note. Hear C silently against the drone for 4 beats. Really HEAR it — feel its ache, its minor-3rd pull. Then sing it. Did it match? Now you have three colors on your inner canvas: earth (A), blue (C), bridge (D). Cycle through all three: silent A, sing A, silent C, sing C, silent D, sing D.", why: "Three-note audiation is qualitatively harder than two — your inner ear must distinguish between three colors instead of toggling between two. The drone provides the harmonic context that makes each note's character vivid even in silence." },
@@ -540,7 +541,7 @@ export const level4 = {
       title: "Audiated Conversation — Hear It, Then Sing It",
       type: "vocal",
       what: "Call-and-response with a twist: during the 'silence' bars, you're not resting — you're COMPOSING your response internally. Guitar calls in bars 1-2, then 2 bars of silence where you hear your pentatonic response in your head, then you sing that pre-heard response in bars 5-6. The silence IS the audiation. Those 2 bars of rest aren't empty — your brain is composing the response.",
-      setup: "Guitar. Drone on A. Metronome at 75 BPM. Backing track optional.",
+      setup: "Guitar. Drone on A. Metronome at 75 BPM. Backing track optional. Voice check: land from above. Barrel breath. Body scan — tension creeps.",
       tracks: [{ name: "Desert Blues 75", src: "/desert-blues-75.mp3" }],
       steps: [
         { text: "Start simple — back to two notes, just like Level 3. Play a 2-note guitar call using A and E (bars 1-2). Then 2 bars of silence: hear your voice response (also just A and E) forming in your head. Then sing your pre-heard response (bars 5-6). Did what came out match what you heard in the silence? The 2-bar gap between call and response is your audiation window.", why: "Starting with two-note responses connects directly to ss-3-8's audiation work. The call-and-response format gives the audiation a PURPOSE — you're not just hearing notes in a vacuum, you're composing a reply. Purpose makes audiation stick." },
@@ -569,7 +570,7 @@ export const level4 = {
       title: "Sing and Think — The Vanishing Melody",
       type: "vocal",
       what: "Beat omission: sing some notes aloud, audiate others silently in real time. This trains the ability to 'hear ahead' while performing — the bridge between 'hear before you sing' and 'hear while you play.' Choir directors call this the most powerful real-time audiation exercise.",
-      setup: "Drone on A. Metronome at 70 BPM. No guitar needed.",
+      setup: "Drone on A. Metronome at 70 BPM. No guitar needed. Voice check: during silent beats, keep your throat open — the body prepares for re-entry even in silence.",
       drone: { root: "Am", octave: 2, texture: "pure" },
       referencePitches: getPitchRange("A2", "G4"),
       metronome: 70,
@@ -591,7 +592,7 @@ export const level4 = {
       title: "The Groove Dropout — Can You Hold the Pocket?",
       type: "vocal",
       what: "The rhythm equivalent of the drone mute. The metronome plays, then goes silent. Can you hold the groove alive in your body through the silence and land back on the beat when it returns? This is rhythm audiation — internally generating pulse without external reinforcement.",
-      setup: "Metronome at 80 BPM. Guitar optional. Backing track optional.",
+      setup: "Metronome at 80 BPM. Guitar optional. Backing track optional. Voice check: jaw loose, breathe from the barrel. Groove lives in the body, not the throat.",
       metronome: 80,
       tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }, { name: "Drums Only — Soul/Funk 90", src: "/drums-soul-funk-90.mp3" }],
       referencePitches: getPitchRange("A2", "G4"),
