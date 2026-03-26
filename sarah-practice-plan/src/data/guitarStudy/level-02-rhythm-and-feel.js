@@ -211,11 +211,11 @@ export const level2 = {
         { text: "Learn the two chords: D (xx0232) and Em (022000). These are both open chords you know from Level 1. One-minute changes: D↔Em. Target: 30+ changes per minute. This should be fast — these are simple shapes.", why: "Even though these chords are 'easy,' one-minute changes at 30+ prove they're truly automatic. The simpler the chord progression, the more your FEEL has to carry the song. No hiding behind complex changes." },
         { text: "Play the progression: D (8 beats) → Em (8 beats) → D (8 beats). Just two chords rocking back and forth. Straight strumming on the beat at 80 BPM. 4 loops. Notice how repetitive and plain it sounds — this is the skeleton.", why: "The skeleton version of 'Baby' reveals how much feel contributes to the song's identity. Two chords, straight rhythm, no dynamics = boring. The feel you'll add in the next steps IS the song." },
         { text: "Add behind-the-beat feel: same two chords, but everything floats behind the click. Then add ghost strums on the upbeats. Then add dynamics: let the D chord ring quieter and the Em push slightly louder. 4 loops with all three feel elements.", why: "Layering feel elements (behind-beat + ghosts + dynamics) is how simple progressions become expressive. Ariel Pink's lo-fi aesthetic is built on this — nothing technically complex, everything emotionally intentional." },
-        { text: "Add a bluesy embellishment: on the D chord, try a hammer-on from open D string to fret 2. On the Em chord, try a single-note bend (fret 7, G string, half-step bend). These tiny ornaments add personality without changing the song.", why: "Embellishments are the 'accent' in your guitar voice. A hammer-on adds bounce, a bend adds emotion. Used sparingly, they transform a plain strum into something personal and expressive." },
+        { text: "Add a bluesy embellishment: on the D chord, try a hammer-on from open D string to fret 2. On the Em chord, try a single-note bend (fret 7, G string, whole-step bend up to E — the root of Em). These tiny ornaments add personality without changing the song.", why: "Embellishments are the 'accent' in your guitar voice. A hammer-on adds bounce, a bend adds emotion. Used sparingly, they transform a plain strum into something personal and expressive." },
         { text: "Full performance: play D-Em-D for 2 minutes straight with all feel elements and embellishments. Behind the beat, ghost strums, dynamics, occasional hammer-ons and bends. Record it. This should sound like a lazy afternoon on a warm porch — simple, expressive, alive.", why: "Extended performance builds endurance and lets the groove deepen. Two minutes on two chords forces you to find variation within constraint — which is exactly what makes a great rhythm guitarist." }
       ],
       feel: "This should feel intimate and slightly strange — Ariel Pink's music has a warped, lo-fi quality like a cassette tape that's been played too many times. The behind-the-beat feel creates that dreamy warped quality. If it feels too 'clean' and 'correct,' mess it up a little — let a ghost strum be louder than intended, let a bend go slightly sharp.",
-      wrong: "If it sounds like a beginner exercise (stiff, mechanical, even volume), you haven't committed to the dynamics. The D should breathe differently than the Em. If the bends sound random, make sure you're targeting a specific pitch (half-step bend to Eb). If the overall feel is rushed, slow the metronome to 72 and really lean into the laid-back pocket.",
+      wrong: "If it sounds like a beginner exercise (stiff, mechanical, even volume), you haven't committed to the dynamics. The D should breathe differently than the Em. If the bends sound random, make sure you're targeting a specific pitch (whole-step bend from D to E on fret 7, G string). If the overall feel is rushed, slow the metronome to 72 and really lean into the laid-back pocket.",
       sarah: "Gene, Ariel Pink is the king of lo-fi feel — his recordings sound like they were made on a 4-track in a bedroom, and that's the whole point. 'Baby' is barely a song structurally — two chords, a vibe, done. But it GROOVES because of the feel. This is your exercise in making less = more. When you can make two chords sound this good, three chords will sound like a symphony.",
       metronome: 80,
       chordVoicings: { chords: ["D", "Em"] },
@@ -235,7 +235,7 @@ export const level2 = {
         src: "/mexico-husbands.mp3",
         note: "Fast strum energy — 150 BPM. Listen to how the constant arm motion stays relaxed even at speed."
       },
-      what: "Husbands' 'Mexico' is the opposite of behind-the-beat — it's a fast, energetic strum at 150 BPM that drives forward with joyful urgency. Four chords (F-C-G-Am) at high speed. This is your first encounter with uptempo strumming and how to keep your arm relaxed when the speed demands it.",
+      what: "Husbands' 'Mexico' is the opposite of behind-the-beat — it's a fast, energetic strum at 150 BPM that drives forward with joyful urgency. Five chords (F-C-E-Dm-Am) at high speed. This is your first encounter with uptempo strumming and how to keep your arm relaxed when the speed demands it.",
       setup: "Guitar. Metronome at 100 BPM (start slow, target 150).",
       steps: [
         { text: "Learn the five chords: F (xx3211 — just the four-string version for now), C, E, Dm, Am. One-minute changes for the trickiest pairs: F↔C, E↔Dm, Dm↔Am. Target: 20+ per minute for each pair.", why: "Five chords at 150 BPM means fast transitions. The four-string F avoids the full barre (that's Level 5). The E chord appearing in a C-major context is surprising — it's borrowed from the parallel minor and creates harmonic tension." },
@@ -251,7 +251,7 @@ export const level2 = {
       chordVoicings: { chords: ["F", "C", "E", "Dm", "Am"] },
       speedLadder: { start: 100, end: 150, increment: 10, bars: 4 },
       recorder: true,
-      levelUp: "Can play F-C-G-Am at 140+ BPM with clean chord transitions, constant arm motion, and ghost strums — sounding energetic and joyful, not frantic."
+      levelUp: "Can play F-C-E-Dm-Am at 140+ BPM with clean chord transitions, constant arm motion, and ghost strums — sounding energetic and joyful, not frantic."
     },
 
     // ─── IMPROV: BLUES CALL-AND-RESPONSE ───

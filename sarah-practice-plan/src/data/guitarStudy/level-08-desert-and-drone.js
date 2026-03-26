@@ -20,7 +20,7 @@ export const level8 = {
       speedLadder: { start: 60, end: 90, increment: 10, bars: 4 },
       steps: [
         { text: "Play Am pentatonic: A-C-D-E-G. Now replace C with B: A-B-D-E-G. Play both scales back to back and listen to the difference.", why: "Hearing the two scales side by side reveals how much one note changes the entire character. C is the minor 3rd — dark, bluesy, definitive. B is the 2nd — open, ambiguous, floating." },
-        { text: "Play A-B-D-E-G ascending and descending in the 5th fret position. Find the shape — it's close to your pentatonic but the 2nd finger moves one fret down (from the 8th fret on the B string to the 7th).", why: "The new shape is almost the same as pentatonic, which means your fingers will try to play the old pattern. Be deliberate about the B." },
+        { text: "Play A-B-D-E-G ascending and descending in the 5th fret position. Find the shape — it's close to your pentatonic but the shape changes on the high E string (fret 8 moves to fret 7) and the low E string (fret 8 moves to fret 7) — C becomes B.", why: "The new shape is almost the same as pentatonic, which means your fingers will try to play the old pattern. Be deliberate about the B." },
         { text: "Emphasize the B note — land on it, hold it, let it ring. This is the note that defines the desert sound.", why: "The 2nd (B in Am) creates harmonic ambiguity — is this major or minor? Neither. It's floating. That ambiguity is the desert blues feel." },
         { text: "Improvise with just A, B, and D. Three notes. One minute. See how much music you can make with almost nothing.", why: "Desert blues is built from minimal materials used with maximum patience. Less is the whole point." }
       ],
@@ -172,7 +172,7 @@ export const level8 = {
       time: 5,
       title: "Desert Recovery",
       type: "guitar",
-      what: "While playing sus pentatonic over the drone, occasionally slip and play C (the minor 3rd from Am pentatonic) instead of B (the 2nd from sus pentatonic). Then recover: bend the C down toward B (a quarter-tone bend recovery), or repeat the C 3 times to make it 'blues' before returning to sus pentatonic. The 'wrong' note becomes a genre bridge.",
+      what: "While playing sus pentatonic over the drone, occasionally slip and play C (the minor 3rd from Am pentatonic) instead of B (the 2nd from sus pentatonic). Then recover: slide from C down to B (a quick half-step slide recovery), or repeat the C 3 times to make it 'blues' before returning to sus pentatonic. The 'wrong' note becomes a genre bridge.",
       steps: [
         { text: "Play a sus pentatonic phrase over the desert drone: A-B-D-E-G. After 4 bars, 'slip' and play C instead of B. Let the C ring — it changes the color from desert to blues instantly.", why: "C vs. B is a one-fret difference with a massive mood shift. C is the minor 3rd (blues/sadness). B is the 2nd (openness/desert). Hearing the contrast is ear training." },
         { text: "RECOVERY MOVE 1 — THE QUARTER-TONE BEND: bend the C slightly toward B (not a full half-step, just a quarter-tone). The note hovers between blues and desert — this is the sound of Tinariwen, who live between Western and non-Western tuning.", why: "Quarter-tone recovery is unique to desert blues. Instead of fixing the 'wrong' note, you land in the space between the two scales. This is where the genre's magic lives." },
