@@ -7012,27 +7012,6 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                     );
                   })}
 
-                  {/* Lyric row — if any lyrics exist in this measure */}
-                  {hasLyrics && measure.cells.map((cell, cIdx) => (
-                    <React.Fragment key={`pl-${cIdx}`}>
-                      <div style={{
-                        textAlign: "center", fontSize: isWide ? 15 : 13,
-                        fontFamily: T.serif, fontStyle: "italic", color: T.textDark,
-                        minHeight: isWide ? 28 : 24,
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                        overflow: "visible", whiteSpace: "nowrap", position: "relative",
-                      }}>{cell.lyric || ""}</div>
-                      {chart.activeSlots.includes(cIdx) && cIdx < 7 && (
-                        <div style={{
-                          textAlign: "center", fontSize: isWide ? 12 : 10, fontFamily: T.serif,
-                          fontStyle: "italic", color: T.textDark, opacity: 0.7,
-                          minHeight: isWide ? 28 : 24,
-                          display: "flex", alignItems: "center", justifyContent: "center",
-                        }}>{measure.between[cIdx]?.lyric || ""}</div>
-                      )}
-                    </React.Fragment>
-                  ))}
-
                   {/* Note row — show for all measures when any measure has notes (consistent height) */}
                   {anyNotes && measure.cells.map((cell, cIdx) => {
                     const isBeatActive = isActive && activeCol === cIdx;
@@ -7058,6 +7037,27 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                       </React.Fragment>
                     );
                   })}
+
+                  {/* Lyric row — if any lyrics exist in this measure */}
+                  {hasLyrics && measure.cells.map((cell, cIdx) => (
+                    <React.Fragment key={`pl-${cIdx}`}>
+                      <div style={{
+                        textAlign: "center", fontSize: isWide ? 15 : 13,
+                        fontFamily: T.serif, fontStyle: "italic", color: T.textDark,
+                        minHeight: isWide ? 28 : 24,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        overflow: "visible", whiteSpace: "nowrap", position: "relative",
+                      }}>{cell.lyric || ""}</div>
+                      {chart.activeSlots.includes(cIdx) && cIdx < 7 && (
+                        <div style={{
+                          textAlign: "center", fontSize: isWide ? 12 : 10, fontFamily: T.serif,
+                          fontStyle: "italic", color: T.textDark, opacity: 0.7,
+                          minHeight: isWide ? 28 : 24,
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                        }}>{measure.between[cIdx]?.lyric || ""}</div>
+                      )}
+                    </React.Fragment>
+                  ))}
                 </div>
               </div>
             );
@@ -7216,6 +7216,35 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                 }}>{g === 0 ? "Off" : g}</button>
               ))}
             </div>
+
+            {/* Divider */}
+            <div style={{ width: 1, height: 18, background: T.borderSoft, flexShrink: 0 }} />
+
+            {/* 16th note toggle */}
+            <button onClick={() => {
+              updateChart(c => {
+                const allOn = [0, 1, 2, 3, 4, 5, 6].every(s => c.activeSlots.includes(s));
+                if (allOn) {
+                  // Turn off — only remove slots that have no content
+                  c.activeSlots = c.activeSlots.filter(s => {
+                    return c.measures.some(m => {
+                      const b = m.between[s];
+                      return b && (b.chord || b.strum || b.lyric || b.note);
+                    });
+                  });
+                } else {
+                  c.activeSlots = [0, 1, 2, 3, 4, 5, 6];
+                }
+                return c;
+              });
+            }} style={{
+              fontSize: 9, padding: "4px 10px", borderRadius: T.radius, cursor: "pointer",
+              fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans,
+              background: chart.activeSlots.length === 7 ? T.getTint(T.gold, 0.15) : "transparent",
+              color: chart.activeSlots.length === 7 ? T.gold : T.textMed,
+              border: `1px solid ${chart.activeSlots.length > 0 ? T.gold : T.border}`,
+              transition: "all 0.15s",
+            }}>16th {chart.activeSlots.length > 0 ? "On" : "Off"}</button>
           </div>
 
           {/* Audio sync — Mark Beat 1 + nudge (only shows when song playing) */}
@@ -7577,49 +7606,6 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                 );
               })}
 
-              {/* Lyric row */}
-              {(twoCol && !isLeftCol) ? null : (
-                <div style={{
-                  fontSize: 9, color: T.textMuted, fontWeight: 600, textTransform: "uppercase",
-                  letterSpacing: 1, display: "flex", alignItems: "center", justifyContent: "center",
-                }}>Lyric</div>
-              )}
-              {measure.cells.map((cell, cIdx) => {
-                const hasLyric = cell.lyric && cell.lyric.length > 0;
-                const isActive = isActiveMeasure && activeCol === cIdx;
-                const isTarget = selectedChip !== null && !hasLyric;
-                return (
-                  <React.Fragment key={`l-${cIdx}`}>
-                    <div
-                      style={{
-                        textAlign: "center", fontSize: hasLyric && cell.lyric.length > 5 ? 11 : 13,
-                        fontFamily: T.serif, fontStyle: "italic", color: T.textDark,
-                        minHeight: 28, display: "flex", alignItems: "center", justifyContent: "center",
-                        cursor: "pointer", borderRadius: T.radius,
-                        border: isTarget ? `1px dashed ${T.gold}` : (hasLyric ? "none" : `1px dashed ${T.borderSoft}`),
-                        background: isActive ? T.getTint(T.gold, 0.1) : (isTarget ? T.getTint(T.gold, 0.05) : "transparent"),
-                        overflow: "visible", whiteSpace: "nowrap", position: "relative", zIndex: hasLyric ? 1 : 0,
-                        transition: "background 0.15s, border-color 0.15s",
-                      }}
-                      onClick={() => {
-                        if (isPlaying) return;
-                        if (hasLyric) { removePlacedLyric(mIdx, cIdx); }
-                        else if (selectedChip !== null) { placeLyric(mIdx, cIdx); }
-                      }}
-                    >
-                      {hasLyric ? cell.lyric : (isTarget ? "·" : "")}
-                    </div>
-                    {chart.activeSlots.includes(cIdx) && cIdx < 7 && (
-                      <div style={{
-                        textAlign: "center", fontSize: 10, fontFamily: T.serif, fontStyle: "italic",
-                        minHeight: 28, display: "flex", alignItems: "center", justifyContent: "center",
-                        opacity: 0.7, color: T.textDark,
-                      }}>{measure.between[cIdx]?.lyric || ""}</div>
-                    )}
-                  </React.Fragment>
-                );
-              })}
-
               {/* Note row */}
               {(twoCol && !isLeftCol) ? null : (
                 <div style={{
@@ -7724,49 +7710,51 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                   </React.Fragment>
                 );
               })}
-            </div>
 
-            {/* 16th note slot toggles — positioned between beat columns */}
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: `${twoCol && !isLeftCol ? "" : "40px "}${colTemplate}`,
-              padding: "2px 4px 6px",
-            }}>
+              {/* Lyric row */}
               {(twoCol && !isLeftCol) ? null : (
-                <div style={{ fontSize: 8, color: T.textMuted, display: "flex", alignItems: "center", justifyContent: "center" }}>16th</div>
+                <div style={{
+                  fontSize: 9, color: T.textMuted, fontWeight: 600, textTransform: "uppercase",
+                  letterSpacing: 1, display: "flex", alignItems: "center", justifyContent: "center",
+                }}>Lyric</div>
               )}
-              {measure.cells.map((_, cIdx) => {
-                const isActive = chart.activeSlots.includes(cIdx);
-                const isLast = cIdx === 7;
+              {measure.cells.map((cell, cIdx) => {
+                const hasLyric = cell.lyric && cell.lyric.length > 0;
+                const isActive = isActiveMeasure && activeCol === cIdx;
+                const isTarget = selectedChip !== null && !hasLyric;
                 return (
-                  <React.Fragment key={`slot-${cIdx}`}>
-                    <div style={{
-                      display: "flex", justifyContent: "center", alignItems: "center",
-                    }}>
-                      {!isLast && (
-                        <button onClick={() => toggleSlot(cIdx)} style={{
-                          width: 22, height: 18, borderRadius: 9, cursor: "pointer",
-                          border: `1px solid ${isActive ? T.gold : T.border}`,
-                          background: isActive ? T.getTint(T.gold, 0.15) : "transparent",
-                          color: isActive ? T.gold : T.textMuted,
-                          fontSize: 9, fontWeight: 700, fontFamily: T.sans,
-                          display: "flex", alignItems: "center", justifyContent: "center",
-                          padding: 0, transition: "all 0.15s",
-                        }}>{isActive ? "−" : "+"}</button>
-                      )}
+                  <React.Fragment key={`l-${cIdx}`}>
+                    <div
+                      style={{
+                        textAlign: "center", fontSize: hasLyric && cell.lyric.length > 5 ? 11 : 13,
+                        fontFamily: T.serif, fontStyle: "italic", color: T.textDark,
+                        minHeight: 28, display: "flex", alignItems: "center", justifyContent: "center",
+                        cursor: "pointer", borderRadius: T.radius,
+                        border: isTarget ? `1px dashed ${T.gold}` : (hasLyric ? "none" : `1px dashed ${T.borderSoft}`),
+                        background: isActive ? T.getTint(T.gold, 0.1) : (isTarget ? T.getTint(T.gold, 0.05) : "transparent"),
+                        overflow: "visible", whiteSpace: "nowrap", position: "relative", zIndex: hasLyric ? 1 : 0,
+                        transition: "background 0.15s, border-color 0.15s",
+                      }}
+                      onClick={() => {
+                        if (isPlaying) return;
+                        if (hasLyric) { removePlacedLyric(mIdx, cIdx); }
+                        else if (selectedChip !== null) { placeLyric(mIdx, cIdx); }
+                      }}
+                    >
+                      {hasLyric ? cell.lyric : (isTarget ? "·" : "")}
                     </div>
-                    {/* Spacer for interstitial column if active */}
-                    {isActive && !isLast && (
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                        <span style={{ fontSize: 7, color: T.gold, fontWeight: 600 }}>
-                          {cIdx % 2 === 0 ? "e" : "a"}
-                        </span>
-                      </div>
+                    {chart.activeSlots.includes(cIdx) && cIdx < 7 && (
+                      <div style={{
+                        textAlign: "center", fontSize: 10, fontFamily: T.serif, fontStyle: "italic",
+                        minHeight: 28, display: "flex", alignItems: "center", justifyContent: "center",
+                        opacity: 0.7, color: T.textDark,
+                      }}>{measure.between[cIdx]?.lyric || ""}</div>
                     )}
                   </React.Fragment>
                 );
               })}
             </div>
+
           </div>
         );
             })}
