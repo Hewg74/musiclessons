@@ -805,9 +805,21 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
               <div
                 key={mIdx}
                 ref={el => practiceMeasureRefs.current[mIdx] = el}
+                onClick={() => {
+                  if (!loopSelecting) return;
+                  if (loopStart === null) {
+                    setLoopStart(mIdx);
+                  } else if (loopEnd === null) {
+                    if (mIdx < loopStart) { setLoopEnd(loopStart); setLoopStart(mIdx); }
+                    else if (mIdx === loopStart) { setLoopStart(null); }
+                    else { setLoopEnd(mIdx); }
+                    setLoopSelecting(false);
+                  }
+                }}
                 style={{
                   padding: isWide ? "12px 16px" : "10px 12px",
-                  background: isActive ? T.getTint(T.gold, 0.08) : (isInLoop || isLoopStartOnly) ? T.getTint(T.gold, 0.04) : "transparent",
+                  cursor: loopSelecting ? "pointer" : "default",
+                  background: isActive ? T.getTint(T.gold, 0.08) : "transparent",
                   transition: "background 0.3s",
                   borderLeft: (isInLoop || isLoopStartOnly) ? `3px solid ${T.gold}` : "3px solid transparent",
                   ...(isWide ? {
@@ -820,29 +832,10 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
               >
                 {/* Measure number + section label */}
                 <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
-                  <span
-                    onClick={() => {
-                      if (!loopSelecting) return;
-                      if (loopStart === null) {
-                        setLoopStart(mIdx);
-                      } else if (loopEnd === null) {
-                        if (mIdx < loopStart) { setLoopEnd(loopStart); setLoopStart(mIdx); }
-                        else if (mIdx === loopStart) { setLoopStart(null); }
-                        else { setLoopEnd(mIdx); }
-                        setLoopSelecting(false);
-                      }
-                    }}
-                    style={{
-                      fontSize: 10, fontWeight: 700, fontFamily: T.sans,
-                      cursor: loopSelecting ? "pointer" : "default",
-                      color: (isInLoop || isLoopStartOnly) ? T.gold : T.textMuted,
-                      background: (isInLoop || isLoopStartOnly) ? T.getTint(T.gold, 0.12)
-                        : loopSelecting ? T.getTint(T.gold, 0.06) : T.getTint(T.textMuted, 0.06),
-                      padding: "2px 6px", borderRadius: 8, userSelect: "none",
-                      transition: "all 0.15s",
-                      ...(loopSelecting ? { border: `1px solid ${T.gold}40` } : {}),
-                    }}
-                  >{mIdx + 1}</span>
+                  <span style={{
+                    fontSize: 10, fontWeight: 700, fontFamily: T.sans,
+                    color: (isInLoop || isLoopStartOnly) ? T.gold : T.textMuted,
+                  }}>{mIdx + 1}</span>
                   {measure.sectionLabel && (
                     <span style={{ fontSize: 10, fontWeight: 700, color: T.gold, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1 }}>
                       {measure.sectionLabel}
@@ -1412,11 +1405,11 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
         const desktopStyle = twoCol ? {
           borderRight: isLeftCol && itemIdx + 1 < group.length ? `1px solid ${T.borderSoft}` : "none",
           borderBottom: (twoCol && itemIdx + 2 < group.length) ? `1px solid ${T.borderSoft}` : "none",
-          background: isActiveMeasure ? T.getTint(T.gold, 0.04) : (isInEditLoop || isEditLoopStart) ? T.getTint(T.gold, 0.03) : "transparent",
+          background: isActiveMeasure ? T.getTint(T.gold, 0.04) : "transparent",
           borderLeft: (isInEditLoop || isEditLoopStart) ? `3px solid ${T.gold}` : "3px solid transparent",
           transition: "background 0.2s",
         } : {
-          border: `1px solid ${isActiveMeasure ? T.gold : (isInEditLoop || isEditLoopStart) ? T.gold : T.border}`,
+          border: `1px solid ${isActiveMeasure ? T.gold : T.border}`,
           borderRadius: T.radiusMd,
           borderLeft: (isInEditLoop || isEditLoopStart) ? `3px solid ${T.gold}` : undefined,
           boxShadow: isActiveMeasure ? `0 0 8px ${T.gold}40` : "none",
@@ -1424,8 +1417,19 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
         };
 
         return (
-          <div key={mIdx} style={{
+          <div key={mIdx} onClick={() => {
+            if (!loopSelecting) return;
+            if (loopStart === null) {
+              setLoopStart(mIdx);
+            } else if (loopEnd === null) {
+              if (mIdx < loopStart) { setLoopEnd(loopStart); setLoopStart(mIdx); }
+              else if (mIdx === loopStart) { setLoopStart(null); }
+              else { setLoopEnd(mIdx); }
+              setLoopSelecting(false);
+            }
+          }} style={{
             marginBottom: twoCol ? 0 : 12, position: "relative",
+            cursor: loopSelecting ? "pointer" : "default",
             ...desktopStyle,
           }}
           >
@@ -1435,28 +1439,10 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
               padding: twoCol ? "6px 8px 0" : "0 4px",
               ...(twoCol ? {} : { position: "absolute", top: -8, left: 8, background: T.bg }),
             }}>
-              <span
-                onClick={() => {
-                  if (!loopSelecting) return;
-                  if (loopStart === null) {
-                    setLoopStart(mIdx);
-                  } else if (loopEnd === null) {
-                    if (mIdx < loopStart) { setLoopEnd(loopStart); setLoopStart(mIdx); }
-                    else if (mIdx === loopStart) { setLoopStart(null); }
-                    else { setLoopEnd(mIdx); }
-                    setLoopSelecting(false);
-                  }
-                }}
-                style={{
-                  fontSize: 9, fontWeight: 700, fontFamily: T.sans,
-                  cursor: loopSelecting ? "pointer" : "default",
-                  color: (isInEditLoop || isEditLoopStart) ? T.gold : T.textMuted,
-                  ...(loopSelecting ? {
-                    background: T.getTint(T.gold, 0.06), padding: "1px 5px", borderRadius: 6,
-                    border: `1px solid ${T.gold}40`,
-                  } : {}),
-                }}
-              >{mIdx + 1}</span>
+              <span style={{
+                fontSize: 9, fontWeight: 700, fontFamily: T.sans,
+                color: (isInEditLoop || isEditLoopStart) ? T.gold : T.textMuted,
+              }}>{mIdx + 1}</span>
               <input
                 type="text"
                 value={measure.sectionLabel || ""}
