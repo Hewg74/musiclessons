@@ -932,16 +932,19 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                   {/* Note row — show for all measures when any measure has notes */}
                   {anyNotes && measure.cells.map((cell, cIdx) => {
                     const isBeatActive = isActive && activeCol === cIdx;
+                    const noteOct = cell?.note ? parseInt(cell.note.slice(-1)) || 4 : 4;
+                    const pitchOpacity = cell?.note ? 0.4 + (noteOct - 2) * 0.15 : 0;
                     return (
                       <React.Fragment key={`pn-${cIdx}`}>
                         <div style={{
                           textAlign: "center", fontSize: isWide ? 13 : 11,
                           fontFamily: T.sans, fontWeight: 600,
-                          color: T.note,
+                          color: cell?.note ? T.note : "transparent",
+                          opacity: cell?.note ? pitchOpacity : 1,
                           minHeight: isWide ? 24 : 20,
                           display: "flex", alignItems: "center", justifyContent: "center",
                           background: isBeatActive && cell?.note ? T.getTint(T.note, 0.15) : "transparent",
-                          borderRadius: T.radius, transition: "background 0.1s",
+                          borderRadius: T.radius, transition: "background 0.1s, opacity 0.15s",
                         }}>{cell?.note || ""}</div>
                         {chart.activeSlots.includes(cIdx) && cIdx < 7 && (
                           <div style={{
@@ -1624,6 +1627,10 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                         onClick={() => {
                           if (isPlaying) return;
                           if (pickerOpen) { setNotePicker(null); return; }
+                          if (hasNote) {
+                            const oct = parseInt(cell.note.slice(-1));
+                            if (oct >= 2 && oct <= 6) setNoteOctave(oct);
+                          }
                           setNotePicker({ m: mIdx, c: cIdx, between: false });
                         }}
                         style={{
@@ -1631,7 +1638,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                           color: hasNote ? T.note : T.textMuted + "60",
                           minHeight: 26, display: "flex", alignItems: "center", justifyContent: "center",
                           cursor: "pointer", borderRadius: T.radius,
-                          background: pickerOpen ? T.getTint(T.note, 0.08) : hasNote ? T.getTint(T.note, 0.05) : "transparent",
+                          background: pickerOpen ? T.getTint(T.note, 0.08) : hasNote ? T.getTint(T.note, 0.03 + (parseInt(cell.note?.slice(-1) || "4") - 2) * 0.02) : "transparent",
                           transition: "background 0.15s, color 0.15s",
                         }}
                       >
