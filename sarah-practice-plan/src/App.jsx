@@ -4207,7 +4207,7 @@ export default function App() {
         }
       `}</style>
       {/* Header */}
-      {tab !== "skills" && (
+      {tab !== "skills" && tab !== "charts" && (
         <div style={{ background: T.bgCard, borderBottom: `1px solid ${T.border}`, position: "relative", display: "flex", flexDirection: "column", alignItems: "center" }}>
           <div style={{ padding: "48px 24px 32px", width: "100%", maxWidth: 640, position: "relative" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
