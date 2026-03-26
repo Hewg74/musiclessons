@@ -7189,67 +7189,68 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
           />
         </div>
         <div style={isWide ? { flex: "0 0 auto" } : {}}>
-          {/* Row 1: Playback — BPM + Play/Stop + Tap */}
-          <div style={{ display: "flex", gap: 8, marginBottom: 8, alignItems: "center" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-              <span style={{ fontSize: 10, color: T.textMuted, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1 }}>BPM</span>
-              <input
-                type="text" inputMode="numeric" pattern="[0-9]*"
-                value={chart.bpm === undefined ? "" : chart.bpm}
-                onChange={e => {
-                  const raw = e.target.value.replace(/[^0-9]/g, "");
-                  if (raw === "") {
-                    setChart(c => ({ ...c, bpm: undefined, updatedAt: Date.now() }));
-                  } else {
-                    const v = Math.min(280, parseInt(raw));
-                    setChart(c => ({ ...c, bpm: v, updatedAt: Date.now() }));
-                  }
-                }}
-                onBlur={() => {
-                  if (!chart.bpm || chart.bpm < 40) setChart(c => ({ ...c, bpm: 80, updatedAt: Date.now() }));
-                  if (metro) metro.changeBpm(chart.bpm || 80);
-                }}
-                style={{
-                  width: 48, fontSize: 14, fontWeight: 700, textAlign: "center", color: T.textDark,
-                  border: `1px solid ${T.border}`, borderRadius: T.radius, background: T.bgSoft,
-                  padding: "4px 2px", fontFamily: T.sans,
-                }}
-              />
-              {metro && (
-                <button onClick={() => { metro.changeBpm(chart.bpm || 80); metro.playing ? metro.stop() : metro.start(); }} style={{
-                  fontSize: 9, padding: "5px 12px", borderRadius: T.radius, cursor: "pointer",
-                  fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans,
-                  background: metro.playing ? "transparent" : T.gold,
-                  color: metro.playing ? T.coral : "#fff",
-                  border: `1px solid ${metro.playing ? T.coral : T.gold}`,
-                }}>{metro.playing ? "Stop" : "▶ Play"}</button>
-              )}
+          {/* Toolbar: BPM + Play + Tap (left) | pill toggles (right) */}
+          <div style={{ display: "flex", gap: 8, marginBottom: 8, alignItems: "center", justifyContent: "space-between", flexWrap: "wrap" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                <span style={{ fontSize: 10, color: T.textMuted, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1 }}>BPM</span>
+                <input
+                  type="text" inputMode="numeric" pattern="[0-9]*"
+                  value={chart.bpm === undefined ? "" : chart.bpm}
+                  onChange={e => {
+                    const raw = e.target.value.replace(/[^0-9]/g, "");
+                    if (raw === "") {
+                      setChart(c => ({ ...c, bpm: undefined, updatedAt: Date.now() }));
+                    } else {
+                      const v = Math.min(280, parseInt(raw));
+                      setChart(c => ({ ...c, bpm: v, updatedAt: Date.now() }));
+                    }
+                  }}
+                  onBlur={() => {
+                    if (!chart.bpm || chart.bpm < 40) setChart(c => ({ ...c, bpm: 80, updatedAt: Date.now() }));
+                    if (metro) metro.changeBpm(chart.bpm || 80);
+                  }}
+                  style={{
+                    width: 48, fontSize: 14, fontWeight: 700, textAlign: "center", color: T.textDark,
+                    border: `1px solid ${T.border}`, borderRadius: T.radius, background: T.bgSoft,
+                    padding: "4px 2px", fontFamily: T.sans,
+                  }}
+                />
+                {metro && (
+                  <button onClick={() => { metro.changeBpm(chart.bpm || 80); metro.playing ? metro.stop() : metro.start(); }} style={{
+                    fontSize: 9, padding: "5px 12px", borderRadius: T.radius, cursor: "pointer",
+                    fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans,
+                    background: metro.playing ? "transparent" : T.gold,
+                    color: metro.playing ? T.coral : "#fff",
+                    border: `1px solid ${metro.playing ? T.coral : T.gold}`,
+                  }}>{metro.playing ? "Stop" : "▶ Play"}</button>
+                )}
+              </div>
+              <button onClick={handleTapTempo} style={{
+                fontSize: 9, padding: "5px 10px", borderRadius: T.radius, cursor: "pointer",
+                fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans,
+                background: tapBpm ? T.getTint(T.gold, 0.15) : "transparent",
+                color: tapBpm ? T.gold : T.textMed,
+                border: `1px solid ${tapBpm ? T.gold : T.border}`,
+                transition: "all 0.15s",
+              }}>Tap{tapBpm ? ` ${tapBpm}` : ""}</button>
             </div>
-            <button onClick={handleTapTempo} style={{
-              fontSize: 9, padding: "5px 10px", borderRadius: T.radius, cursor: "pointer",
-              fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans,
-              background: tapBpm ? T.getTint(T.gold, 0.15) : "transparent",
-              color: tapBpm ? T.gold : T.textMed,
-              border: `1px solid ${tapBpm ? T.gold : T.border}`,
-              transition: "all 0.15s",
-            }}>Tap{tapBpm ? ` ${tapBpm}` : ""}</button>
-          </div>
 
-          {/* Row 2: Chart settings — pill group */}
-          {(() => {
-            const pillStyle = (active) => ({
-              fontSize: 9, padding: "4px 10px", cursor: "pointer",
-              fontWeight: 700, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 0.5,
-              background: active ? T.getTint(T.gold, 0.1) : "transparent",
-              color: active ? T.gold : T.textMuted,
-              border: "none", borderRight: `1px solid ${T.borderSoft}`,
-              transition: "all 0.15s",
-            });
-            return (
-            <div style={{
-              display: "inline-flex", borderRadius: T.radiusMd, border: `1px solid ${T.border}`,
-              overflow: "hidden", marginBottom: 8,
-            }}>
+            {/* Chart settings — pill group (right side) */}
+            {(() => {
+              const pillStyle = (active) => ({
+                fontSize: 9, padding: "4px 8px", cursor: "pointer",
+                fontWeight: 700, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 0.5,
+                background: active ? T.getTint(T.gold, 0.1) : "transparent",
+                color: active ? T.gold : T.textMuted,
+                border: "none", borderRight: `1px solid ${T.borderSoft}`,
+                transition: "all 0.15s",
+              });
+              return (
+              <div style={{
+                display: "inline-flex", borderRadius: T.radiusMd, border: `1px solid ${T.border}`,
+                overflow: "hidden",
+              }}>
               {/* 16th */}
               <button onClick={() => {
                 updateChart(c => {
@@ -7296,6 +7297,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
             </div>
             );
           })()}
+          </div>
 
           {/* Group panel — expands below */}
           {showGroupPanel && (
