@@ -6240,6 +6240,8 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   const [notePicker, setNotePicker] = useState(null);
   const [noteOctave, setNoteOctave] = useState(4);
   const [showGroupPanel, setShowGroupPanel] = useState(false);
+  const [notesMuted, setNotesMuted] = useState(false);
+  const notesMutedRef = useRef(false);
   const notePickerRef = useRef(null);
 
   // Click-outside to dismiss note picker
@@ -6347,6 +6349,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   numMeasuresRef.current = chart.measures.length;
   loopStartRef.current = loopStart;
   loopEndRef.current = loopEnd;
+  notesMutedRef.current = notesMuted;
   chartRef.current = chart;
 
   // Note synth setup/cleanup
@@ -6364,8 +6367,9 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   useEffect(() => {
     const handleNoteAudio = (e) => {
       const { beat, bar, time } = e.detail;
-      if (bar === undefined || time === undefined) return; // guard: stop event has no bar/time
-      if (Tone.context.state !== "running") return; // iOS AudioContext guard
+      if (bar === undefined || time === undefined) return;
+      if (Tone.context.state !== "running") return;
+      if (notesMutedRef.current) return;
       // Bar 0 = countdown, skip note playback
       const realBar = bar - 1;
       if (realBar < 0) return;
@@ -7185,8 +7189,8 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
           />
         </div>
         <div style={isWide ? { flex: "0 0 auto" } : {}}>
-          {/* BPM + Play + Tap — compact toolbar */}
-          <div style={{ display: "flex", gap: 8, marginBottom: 12, alignItems: "center", flexWrap: "wrap" }}>
+          {/* Row 1: Playback — BPM + Play/Stop + Tap */}
+          <div style={{ display: "flex", gap: 8, marginBottom: 8, alignItems: "center" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
               <span style={{ fontSize: 10, color: T.textMuted, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1 }}>BPM</span>
               <input
@@ -7229,75 +7233,73 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
               border: `1px solid ${tapBpm ? T.gold : T.border}`,
               transition: "all 0.15s",
             }}>Tap{tapBpm ? ` ${tapBpm}` : ""}</button>
-
-            {/* Divider */}
-            <div style={{ width: 1, height: 18, background: T.borderSoft, flexShrink: 0 }} />
-
-            {/* 16th note toggle */}
-            <button onClick={() => {
-              updateChart(c => {
-                const allOn = [0, 1, 2, 3, 4, 5, 6].every(s => c.activeSlots.includes(s));
-                if (allOn) {
-                  c.activeSlots = c.activeSlots.filter(s => {
-                    return c.measures.some(m => {
-                      const b = m.between[s];
-                      return b && (b.chord || b.strum || b.lyric || b.note);
-                    });
-                  });
-                } else {
-                  c.activeSlots = [0, 1, 2, 3, 4, 5, 6];
-                }
-                return c;
-              });
-            }} style={{
-              fontSize: 9, padding: "4px 10px", borderRadius: T.radius, cursor: "pointer",
-              fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans,
-              background: chart.activeSlots.length === 7 ? T.getTint(T.gold, 0.15) : "transparent",
-              color: chart.activeSlots.length === 7 ? T.gold : T.textMed,
-              border: `1px solid ${chart.activeSlots.length > 0 ? T.gold : T.border}`,
-              transition: "all 0.15s",
-            }}>16th</button>
-
-            {/* Loop toggle — also in edit mode */}
-            {loopStart !== null && loopEnd !== null ? (
-              <span
-                onClick={() => { setLoopStart(null); setLoopEnd(null); setLoopSelecting(false); }}
-                style={{
-                  fontSize: 9, fontWeight: 700, fontFamily: T.sans,
-                  color: T.gold, background: T.getTint(T.gold, 0.1),
-                  padding: "4px 8px", borderRadius: T.radius, cursor: "pointer",
-                  border: `1px solid ${T.gold}40`, userSelect: "none",
-                }}
-              >
-                Loop {loopStart + 1}–{loopEnd + 1} ×
-              </span>
-            ) : (
-              <button onClick={() => {
-                if (loopSelecting) { setLoopSelecting(false); setLoopStart(null); }
-                else { setLoopSelecting(true); }
-              }} style={{
-                fontSize: 9, padding: "4px 10px", borderRadius: T.radius, cursor: "pointer",
-                fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans,
-                background: loopSelecting ? T.getTint(T.gold, 0.15) : "transparent",
-                color: loopSelecting ? T.gold : T.textMed,
-                border: `1px solid ${loopSelecting ? T.gold : T.border}`,
-              }}>{loopSelecting ? "Cancel" : "Loop"}</button>
-            )}
-
-            {/* Group — expandable */}
-            <button onClick={() => setShowGroupPanel(!showGroupPanel)} style={{
-              fontSize: 9, padding: "4px 10px", borderRadius: T.radius, cursor: "pointer",
-              fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans,
-              background: showGroupPanel ? T.getTint(T.gold, 0.15) : "transparent",
-              color: (chart.barsPerGroup || 0) > 0 ? T.gold : T.textMed,
-              border: `1px solid ${(chart.barsPerGroup || 0) > 0 || showGroupPanel ? T.gold : T.border}`,
-              transition: "all 0.15s",
-            }}>Group{(chart.barsPerGroup || 0) > 0 ? ` ${chart.barsPerGroup}` : ""}</button>
           </div>
 
-          {/* Group panel — expands below toolbar */}
+          {/* Row 2: Chart settings — pill group */}
+          {(() => {
+            const pillStyle = (active) => ({
+              fontSize: 9, padding: "4px 10px", cursor: "pointer",
+              fontWeight: 700, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 0.5,
+              background: active ? T.getTint(T.gold, 0.1) : "transparent",
+              color: active ? T.gold : T.textMuted,
+              border: "none", borderRight: `1px solid ${T.borderSoft}`,
+              transition: "all 0.15s",
+            });
+            return (
+            <div style={{
+              display: "inline-flex", borderRadius: T.radiusMd, border: `1px solid ${T.border}`,
+              overflow: "hidden", marginBottom: 8,
+            }}>
+              {/* 16th */}
+              <button onClick={() => {
+                updateChart(c => {
+                  const allOn = [0, 1, 2, 3, 4, 5, 6].every(s => c.activeSlots.includes(s));
+                  if (allOn) {
+                    c.activeSlots = c.activeSlots.filter(s => c.measures.some(m => {
+                      const b = m.between[s];
+                      return b && (b.chord || b.strum || b.lyric || b.note);
+                    }));
+                  } else {
+                    c.activeSlots = [0, 1, 2, 3, 4, 5, 6];
+                  }
+                  return c;
+                });
+              }} style={pillStyle(chart.activeSlots.length > 0)}>16th</button>
+
+              {/* Loop */}
+              <button onClick={() => {
+                if (loopStart !== null && loopEnd !== null) {
+                  setLoopStart(null); setLoopEnd(null); setLoopSelecting(false);
+                } else if (loopSelecting) {
+                  setLoopSelecting(false); setLoopStart(null);
+                } else {
+                  setLoopSelecting(true);
+                }
+              }} style={{
+                ...pillStyle(loopStart !== null || loopSelecting),
+                color: (loopStart !== null && loopEnd !== null) ? T.gold : loopSelecting ? T.gold : T.textMuted,
+              }}>
+                {loopStart !== null && loopEnd !== null ? `Loop ${loopStart + 1}–${loopEnd + 1}` : loopSelecting ? "Cancel" : "Loop"}
+              </button>
+
+              {/* Notes mute */}
+              <button onClick={() => setNotesMuted(!notesMuted)} style={{
+                ...pillStyle(!notesMuted && chart.measures.some(m => m.cells.some(c => c?.note))),
+                color: notesMuted ? T.coral : chart.measures.some(m => m.cells.some(c => c?.note)) ? T.note : T.textMuted,
+              }}>{notesMuted ? "Notes ✕" : "Notes"}</button>
+
+              {/* Group */}
+              <button onClick={() => setShowGroupPanel(!showGroupPanel)} style={{
+                ...pillStyle((chart.barsPerGroup || 0) > 0 || showGroupPanel),
+                borderRight: "none",
+              }}>Group{(chart.barsPerGroup || 0) > 0 ? ` ${chart.barsPerGroup}` : ""}</button>
+            </div>
+            );
+          })()}
+
+          {/* Group panel — expands below */}
           {showGroupPanel && (
-            <div style={{ display: "flex", gap: 4, marginBottom: 12, alignItems: "center", animation: "fade-in-up 0.15s ease" }}>
+            <div style={{ display: "flex", gap: 4, marginBottom: 8, alignItems: "center", animation: "fade-in-up 0.15s ease" }}>
               <span style={{ fontSize: 9, color: T.textMuted, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans }}>Bars per group:</span>
               {[0, 2, 4, 8].map(g => (
                 <button key={g} onClick={() => { updateChart(c => { c.barsPerGroup = g; return c; }); setShowGroupPanel(false); }} style={{
@@ -7312,7 +7314,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
             </div>
           )}
 
-          {/* Loop selection instruction bar — in edit mode */}
+          {/* Loop selection instruction bar */}
           {loopSelecting && loopStart === null && (
             <div style={{
               textAlign: "center", padding: "8px 12px", marginBottom: 8,
