@@ -7769,13 +7769,17 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                               const noteStr = n + noteOctave;
                               const isSelected = cell?.note === noteStr;
                               return (
-                                <button key={n} onClick={(e) => {
+                                <button key={n} onClick={async (e) => {
                                   e.stopPropagation();
                                   updateChart(c => {
                                     c.measures[mIdx].cells[cIdx].note = noteStr;
                                     return c;
                                   });
-                                  try { Tone.start(); noteSynthRef.current?.triggerAttackRelease(noteStr, "8n"); } catch (_) {}
+                                  try {
+                                    await Tone.start();
+                                    if (Tone.context.state !== "running") await Tone.context.resume();
+                                    noteSynthRef.current?.triggerAttackRelease(noteStr, "8n");
+                                  } catch (_) {}
                                   setNotePicker(null);
                                 }} style={{
                                   fontSize: 10, fontWeight: 600, fontFamily: T.sans,
