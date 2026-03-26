@@ -368,6 +368,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   // Strum cell handlers — cycle: D → U → X → null (rest/blank) → D
   const cycleStrum = (mIdx, cIdx) => {
     if (isPlaying) return;
+    if (longPressRef.current === "fired") return;
     const cur = chart.measures[mIdx].cells[cIdx].strum;
     let next;
     if (!cur) next = "D";
@@ -1542,11 +1543,11 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                         transition: "background 0.15s, border-color 0.15s",
                         boxShadow: isActiveChordTarget ? `0 0 6px ${T.gold}40` : "none",
                       }}
-                      onClick={() => handleChordCellTap(mIdx, cIdx)}
-                      onTouchStart={() => startLongPress(mIdx, cIdx, "chord")}
-                      onTouchEnd={endLongPress}
-                      onMouseDown={() => startLongPress(mIdx, cIdx, "chord")}
-                      onMouseUp={endLongPress}
+                      onClick={(e) => { e.stopPropagation(); handleChordCellTap(mIdx, cIdx); }}
+                      onTouchStart={(e) => { e.stopPropagation(); startLongPress(mIdx, cIdx, "chord"); }}
+                      onTouchEnd={(e) => { e.stopPropagation(); endLongPress(); }}
+                      onMouseDown={(e) => { e.stopPropagation(); startLongPress(mIdx, cIdx, "chord"); }}
+                      onMouseUp={(e) => { e.stopPropagation(); endLongPress(); }}
                     >
                       {hasChord ? displayChord : (isSpanContinuation ? "·" : "·")}
                     </div>
@@ -1587,11 +1588,11 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                         transition: "background 0.15s",
                         userSelect: "none",
                       }}
-                      onClick={() => cycleStrum(mIdx, cIdx)}
-                      onTouchStart={() => startLongPress(mIdx, cIdx, "strum")}
-                      onTouchEnd={endLongPress}
-                      onMouseDown={() => startLongPress(mIdx, cIdx, "strum")}
-                      onMouseUp={endLongPress}
+                      onClick={(e) => { e.stopPropagation(); cycleStrum(mIdx, cIdx); }}
+                      onTouchStart={(e) => { e.stopPropagation(); startLongPress(mIdx, cIdx, "strum"); }}
+                      onTouchEnd={(e) => { e.stopPropagation(); endLongPress(); }}
+                      onMouseDown={(e) => { e.stopPropagation(); startLongPress(mIdx, cIdx, "strum"); }}
+                      onMouseUp={(e) => { e.stopPropagation(); endLongPress(); }}
                     >
                       {sd ? sd.glyph : "·"}
                     </div>
@@ -1633,7 +1634,8 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                   <React.Fragment key={`n-${cIdx}`}>
                     <div ref={pickerOpen ? notePickerRef : null} style={{ position: "relative" }}>
                       <div
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           if (isPlaying) return;
                           if (pickerOpen) { setNotePicker(null); return; }
                           if (hasNote) {
@@ -1752,7 +1754,8 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                         overflow: "visible", whiteSpace: "nowrap", position: "relative", zIndex: hasLyric ? 1 : 0,
                         transition: "background 0.15s, border-color 0.15s",
                       }}
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
                         if (isPlaying) return;
                         if (hasLyric) { removePlacedLyric(mIdx, cIdx); }
                         else if (selectedChip !== null) { placeLyric(mIdx, cIdx); }
