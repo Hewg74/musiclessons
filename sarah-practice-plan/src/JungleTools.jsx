@@ -6228,6 +6228,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   // Section loop state
   const [loopStart, setLoopStart] = useState(null); // measure index or null
   const [loopEnd, setLoopEnd] = useState(null);
+  const [loopSelecting, setLoopSelecting] = useState(false); // true when in loop selection mode
   const loopStartRef = useRef(null);
   const loopEndRef = useRef(null);
 
@@ -6350,11 +6351,11 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   // Note synth setup/cleanup
   useEffect(() => {
     noteSynthRef.current = new Tone.PolySynth(Tone.Synth, {
-      oscillator: { type: "sine" },
-      envelope: { attack: 0.01, decay: 0.1, sustain: 0.15, release: 0.2 },
+      oscillator: { type: "triangle" },
+      envelope: { attack: 0.005, decay: 0.15, sustain: 0.05, release: 0.4 },
     }).toDestination();
     noteSynthRef.current.maxPolyphony = 2;
-    noteSynthRef.current.volume.value = -8;
+    noteSynthRef.current.volume.value = -3;
     return () => { noteSynthRef.current?.dispose(); noteSynthRef.current = null; };
   }, []);
 
@@ -6809,9 +6810,10 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
             </span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            {loopStart !== null && loopEnd !== null && (
+            {/* Loop button */}
+            {loopStart !== null && loopEnd !== null ? (
               <span
-                onClick={() => { setLoopStart(null); setLoopEnd(null); }}
+                onClick={() => { setLoopStart(null); setLoopEnd(null); setLoopSelecting(false); }}
                 style={{
                   fontSize: 10, fontWeight: 700, fontFamily: T.sans,
                   color: T.gold, background: T.getTint(T.gold, 0.1),
@@ -6819,8 +6821,22 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                   border: `1px solid ${T.gold}40`, userSelect: "none",
                 }}
               >
-                Loop: {loopStart + 1}–{loopEnd + 1} ×
+                Loop {loopStart + 1}–{loopEnd + 1} ×
               </span>
+            ) : (
+              <button onClick={() => {
+                if (loopSelecting) {
+                  setLoopSelecting(false); setLoopStart(null);
+                } else {
+                  setLoopSelecting(true);
+                }
+              }} style={{
+                fontSize: 10, padding: "3px 10px", borderRadius: 10, cursor: "pointer",
+                fontWeight: 700, fontFamily: T.sans,
+                background: loopSelecting ? T.getTint(T.gold, 0.15) : "transparent",
+                color: loopSelecting ? T.gold : T.textMed,
+                border: `1px solid ${loopSelecting ? T.gold : T.border}`,
+              }}>{loopSelecting ? "Cancel" : "Loop"}</button>
             )}
             <span style={{ fontSize: 12, color: T.textMuted, fontWeight: 700, fontFamily: T.sans }}>
               {chart.bpm || 80} BPM
@@ -6834,13 +6850,31 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                 border: `1px solid ${metro.playing ? T.coral : T.gold}`,
               }}>{metro.playing ? "Stop" : "▶ Play"}</button>
             )}
-            <button onClick={() => { setLoopStart(null); setLoopEnd(null); setPracticeMode(false); }} style={{
+            <button onClick={() => { setLoopStart(null); setLoopEnd(null); setLoopSelecting(false); setPracticeMode(false); }} style={{
               fontSize: 10, padding: "6px 14px", borderRadius: T.radius, cursor: "pointer",
               fontWeight: 700, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1,
               background: "transparent", color: T.textMed, border: `1px solid ${T.border}`,
             }}>Edit</button>
           </div>
         </div>
+
+        {/* Loop selection instruction bar */}
+        {loopSelecting && loopStart === null && (
+          <div style={{
+            textAlign: "center", padding: "8px 12px", marginBottom: 8,
+            background: T.getTint(T.gold, 0.08), borderRadius: T.radiusMd,
+            border: `1px solid ${T.gold}30`,
+            fontSize: 12, fontWeight: 600, fontFamily: T.sans, color: T.gold,
+          }}>Tap the start measure</div>
+        )}
+        {loopSelecting && loopStart !== null && loopEnd === null && (
+          <div style={{
+            textAlign: "center", padding: "8px 12px", marginBottom: 8,
+            background: T.getTint(T.gold, 0.08), borderRadius: T.radiusMd,
+            border: `1px solid ${T.gold}30`,
+            fontSize: 12, fontWeight: 600, fontFamily: T.sans, color: T.gold,
+          }}>Tap the end measure</div>
+        )}
 
         {/* Countdown overlay */}
         {countdownBeat >= 0 && (
@@ -6893,34 +6927,30 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                 <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
                   <span
                     onClick={() => {
-                      if (loopStart !== null && loopEnd !== null) {
-                        // Loop is active — clear and restart
-                        setLoopStart(null); setLoopEnd(null);
-                      } else if (loopStart === null) {
+                      if (!loopSelecting) return; // only respond in selection mode
+                      if (loopStart === null) {
                         setLoopStart(mIdx);
-                      } else {
-                        // loopStart set, loopEnd not yet
+                      } else if (loopEnd === null) {
                         if (mIdx < loopStart) { setLoopEnd(loopStart); setLoopStart(mIdx); }
-                        else if (mIdx === loopStart) { setLoopStart(null); } // tap same = cancel
+                        else if (mIdx === loopStart) { setLoopStart(null); }
                         else { setLoopEnd(mIdx); }
+                        setLoopSelecting(false);
                       }
                     }}
                     style={{
-                      fontSize: 10, fontWeight: 700, fontFamily: T.sans, cursor: "pointer",
+                      fontSize: 10, fontWeight: 700, fontFamily: T.sans,
+                      cursor: loopSelecting ? "pointer" : "default",
                       color: (isInLoop || isLoopStartOnly) ? T.gold : T.textMuted,
-                      background: (isInLoop || isLoopStartOnly) ? T.getTint(T.gold, 0.12) : T.getTint(T.textMuted, 0.06),
+                      background: (isInLoop || isLoopStartOnly) ? T.getTint(T.gold, 0.12)
+                        : loopSelecting ? T.getTint(T.gold, 0.06) : T.getTint(T.textMuted, 0.06),
                       padding: "2px 6px", borderRadius: 8, userSelect: "none",
                       transition: "all 0.15s",
+                      ...(loopSelecting ? { border: `1px solid ${T.gold}40` } : {}),
                     }}
                   >{mIdx + 1}</span>
                   {measure.sectionLabel && (
                     <span style={{ fontSize: 10, fontWeight: 700, color: T.gold, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1 }}>
                       {measure.sectionLabel}
-                    </span>
-                  )}
-                  {isLoopStartOnly && (
-                    <span style={{ fontSize: 9, color: T.textMuted, fontFamily: T.sans, fontStyle: "italic" }}>
-                      tap another to set loop end
                     </span>
                   )}
                 </div>
@@ -7078,7 +7108,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
               border: "none",
               boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
             }}>{metro.playing ? "■ Stop" : "▶ Play"}</button>
-            <button onClick={() => { setLoopStart(null); setLoopEnd(null); setPracticeMode(false); }} style={{
+            <button onClick={() => { setLoopStart(null); setLoopEnd(null); setLoopSelecting(false); setPracticeMode(false); }} style={{
               fontSize: 11, padding: "12px 18px", borderRadius: 24, cursor: "pointer",
               fontWeight: 700, fontFamily: T.sans,
               background: T.bgCard, color: T.textMed, border: `1px solid ${T.border}`,
