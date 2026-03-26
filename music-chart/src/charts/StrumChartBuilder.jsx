@@ -230,7 +230,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
       setEighthCol(-1); setEighthMeasure(-1);
       lastBeatRef.current = -1; lastBarRef.current = -1;
       countdownActiveRef.current = false; setCountdownBeat(-1);
-      try { noteSynthRef.current?.triggerRelease(); } catch (_) {}
+      noteSynthRef.current?.releaseAll();
     };
     window.addEventListener("metroBeat", handler);
     let stopTimer;
@@ -252,10 +252,11 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
 
   // Note synth setup/cleanup
   useEffect(() => {
-    noteSynthRef.current = new Tone.Synth({
+    noteSynthRef.current = new Tone.PolySynth(Tone.Synth, {
       oscillator: { type: "triangle" },
       envelope: { attack: 0.005, decay: 0.2, sustain: 0.3, release: 0.6 },
     }).toDestination();
+    noteSynthRef.current.maxPolyphony = 8;
     noteSynthRef.current.volume.value = 4;
     return () => { noteSynthRef.current?.dispose(); noteSynthRef.current = null; };
   }, []);
