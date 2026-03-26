@@ -28,6 +28,7 @@ let T = {
   success: "#7f9e88", successSoft: "#f0f5f2",
   warm: "#d97d54", warmSoft: "#f9f0ec",
   coral: "#d68383", coralSoft: "#f9f0f0",
+  note: "#5b9e8f",
   plum: "#9e829c", plumSoft: "#f5f0f4",
   slate: "#6b8e9f", slateSoft: "#f0f4f6",
   serif: "'Playfair Display',serif",
