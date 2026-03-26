@@ -6925,9 +6925,8 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                 style={{
                   padding: isWide ? "12px 16px" : "10px 12px",
                   cursor: loopSelecting ? "pointer" : "default",
-                  background: isActive ? T.getTint(T.gold, 0.08) : "transparent",
+                  background: isActive ? T.getTint(T.gold, 0.08) : (isInLoop || isLoopStartOnly) ? T.getTint(T.gold, 0.04) : "transparent",
                   transition: "background 0.3s",
-                  borderLeft: (isInLoop || isLoopStartOnly) ? `3px solid ${T.gold}` : "3px solid transparent",
                   ...(isWide ? {
                     borderRight: mIdx % 2 === 0 && mIdx + 1 < chart.measures.length ? `1px solid ${T.borderSoft}` : "none",
                     borderBottom: mIdx + 2 < chart.measures.length ? `1px solid ${T.borderSoft}` : "none",
@@ -7501,13 +7500,12 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
         const desktopStyle = twoCol ? {
           borderRight: isLeftCol && itemIdx + 1 < group.length ? `1px solid ${T.borderSoft}` : "none",
           borderBottom: (twoCol && itemIdx + 2 < group.length) ? `1px solid ${T.borderSoft}` : "none",
-          background: isActiveMeasure ? T.getTint(T.gold, 0.04) : "transparent",
-          borderLeft: (isInEditLoop || isEditLoopStart) ? `3px solid ${T.gold}` : "3px solid transparent",
+          background: isActiveMeasure ? T.getTint(T.gold, 0.04) : (isInEditLoop || isEditLoopStart) ? T.getTint(T.gold, 0.03) : "transparent",
           transition: "background 0.2s",
         } : {
           border: `1px solid ${isActiveMeasure ? T.gold : T.border}`,
           borderRadius: T.radiusMd,
-          borderLeft: (isInEditLoop || isEditLoopStart) ? `3px solid ${T.gold}` : undefined,
+          background: (isInEditLoop || isEditLoopStart) ? T.getTint(T.gold, 0.03) : undefined,
           boxShadow: isActiveMeasure ? `0 0 8px ${T.gold}40` : "none",
           transition: "box-shadow 0.2s, border-color 0.2s",
         };
@@ -7726,15 +7724,14 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                         }}
                         style={{
                           textAlign: "center", fontSize: 11, fontFamily: T.sans, fontWeight: 600,
-                          color: hasNote ? T.note : T.textMuted,
-                          minHeight: 28, display: "flex", alignItems: "center", justifyContent: "center",
+                          color: hasNote ? T.note : T.textMuted + "60",
+                          minHeight: 26, display: "flex", alignItems: "center", justifyContent: "center",
                           cursor: "pointer", borderRadius: T.radius,
-                          border: `1px dashed ${hasNote ? T.note : T.borderSoft}`,
-                          background: pickerOpen ? T.getTint(T.note, 0.08) : "transparent",
-                          transition: "all 0.15s",
+                          background: pickerOpen ? T.getTint(T.note, 0.08) : hasNote ? T.getTint(T.note, 0.05) : "transparent",
+                          transition: "background 0.15s, color 0.15s",
                         }}
                       >
-                        {hasNote ? cell.note : "—"}
+                        {hasNote ? cell.note : "·"}
                       </div>
                       {/* Note picker popover */}
                       {pickerOpen && (() => {
