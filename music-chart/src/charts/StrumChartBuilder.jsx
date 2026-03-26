@@ -1675,6 +1675,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                                     c.measures[mIdx].cells[cIdx].note = noteStr;
                                     return c;
                                   });
+                                  try { Tone.start(); noteSynthRef.current?.triggerAttackRelease(noteStr, "8n"); } catch (_) {}
                                   setNotePicker(null);
                                 }} style={{
                                   fontSize: 10, fontWeight: 600, fontFamily: T.sans,
