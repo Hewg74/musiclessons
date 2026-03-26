@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import * as Tone from 'tone';
 import {
   Plus, Trash2, Share2, Undo2, X, Edit3, Upload
 } from 'lucide-react';
@@ -122,6 +123,38 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   const bpmRef = useRef(80);
   const numMeasuresRef = useRef(1);
 
+  // Countdown state — bar 0 is countdown, bar 1+ is real playback
+  const [countdownBeat, setCountdownBeat] = useState(-1);
+  const countdownActiveRef = useRef(false);
+
+  // Section loop state
+  const [loopStart, setLoopStart] = useState(null);
+  const [loopEnd, setLoopEnd] = useState(null);
+  const loopStartRef = useRef(null);
+  const loopEndRef = useRef(null);
+
+  // Note tone playback refs
+  const noteSynthRef = useRef(null);
+  const chartRef = useRef(chart);
+
+  // Note picker state
+  const [notePicker, setNotePicker] = useState(null);
+  const [noteOctave, setNoteOctave] = useState(4);
+  const notePickerRef = useRef(null);
+
+  // Click-outside to dismiss note picker
+  useEffect(() => {
+    if (!notePicker) return;
+    const handler = (e) => {
+      if (notePickerRef.current && !notePickerRef.current.contains(e.target)) {
+        setNotePicker(null);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    document.addEventListener("touchstart", handler);
+    return () => { document.removeEventListener("mousedown", handler); document.removeEventListener("touchstart", handler); };
+  }, [notePicker]);
+
   // Audio sync state
   const [songPlaying, setSongPlaying] = useState(false);
   const [songLoopState, setSongLoopState] = useState({ isLooping: false, loopStart: 0, loopEnd: 0 });
@@ -180,6 +213,13 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
       if (bar !== undefined) {
         setCurrentBar(bar);
         lastBarRef.current = bar;
+        if (bar === 0) {
+          countdownActiveRef.current = true;
+          setCountdownBeat(beat);
+        } else if (countdownActiveRef.current) {
+          countdownActiveRef.current = false;
+          setCountdownBeat(-1);
+        }
       }
       setIsPlaying(true);
     };
@@ -187,6 +227,8 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
       setIsPlaying(false); setCurrentBeat(-1); setCurrentBar(-1);
       setEighthCol(-1); setEighthMeasure(-1);
       lastBeatRef.current = -1; lastBarRef.current = -1;
+      countdownActiveRef.current = false; setCountdownBeat(-1);
+      noteSynthRef.current?.releaseAll();
     };
     window.addEventListener("metroBeat", handler);
     let stopTimer;
@@ -202,6 +244,58 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   // Keep refs current so rAF loop always reads latest values
   bpmRef.current = chart.bpm || 80;
   numMeasuresRef.current = chart.measures.length;
+  loopStartRef.current = loopStart;
+  loopEndRef.current = loopEnd;
+  chartRef.current = chart;
+
+  // Note synth setup/cleanup
+  useEffect(() => {
+    noteSynthRef.current = new Tone.PolySynth(Tone.Synth, {
+      oscillator: { type: "sine" },
+      envelope: { attack: 0.01, decay: 0.1, sustain: 0.15, release: 0.2 },
+    }).toDestination();
+    noteSynthRef.current.maxPolyphony = 2;
+    noteSynthRef.current.volume.value = -8;
+    return () => { noteSynthRef.current?.dispose(); noteSynthRef.current = null; };
+  }, []);
+
+  // Note playback via metroBeatAudio (sample-accurate timing)
+  useEffect(() => {
+    const handleNoteAudio = (e) => {
+      const { beat, bar, time } = e.detail;
+      if (bar === undefined || time === undefined) return;
+      if (Tone.context.state !== "running") return;
+      const realBar = bar - 1;
+      if (realBar < 0) return;
+      const nm = numMeasuresRef.current;
+      const ls = loopStartRef.current;
+      const le = loopEndRef.current;
+      let measure;
+      if (ls !== null && le !== null && ls <= le) {
+        measure = ls + (realBar % (le - ls + 1));
+      } else {
+        measure = realBar % nm;
+      }
+      const ch = chartRef.current;
+      if (!ch?.measures?.[measure]) return;
+      const bpm = bpmRef.current;
+      const eighthDur = 60 / bpm / 2;
+      const downCol = beat * 2;
+      const downCell = ch.measures[measure].cells[downCol];
+      if (downCell?.note && noteSynthRef.current) {
+        try { noteSynthRef.current.triggerAttackRelease(downCell.note, "16n", time); } catch (e) { console.debug("note synth:", e); }
+      }
+      const andCol = downCol + 1;
+      if (andCol < 8) {
+        const andCell = ch.measures[measure].cells[andCol];
+        if (andCell?.note && noteSynthRef.current) {
+          try { noteSynthRef.current.triggerAttackRelease(andCell.note, "16n", time + eighthDur); } catch (e) { console.debug("note synth:", e); }
+        }
+      }
+    };
+    window.addEventListener("metroBeatAudio", handleNoteAudio);
+    return () => window.removeEventListener("metroBeatAudio", handleNoteAudio);
+  }, []);
 
   // rAF loop for 8th-note interpolation (when metronome plays, no song audio)
   useEffect(() => {
@@ -216,9 +310,22 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
       const subBeat = elapsed >= quarterMs / 2 ? 1 : 0;
       const col = lastBeatRef.current * 2 + subBeat;
       const nm = numMeasuresRef.current;
-      const measure = lastBarRef.current >= 0 ? lastBarRef.current % nm : 0;
-      setEighthCol(col);
-      setEighthMeasure(measure);
+      const realBar = lastBarRef.current - 1;
+      if (realBar < 0) {
+        setEighthCol(-1);
+        setEighthMeasure(-1);
+      } else {
+        const ls = loopStartRef.current;
+        const le = loopEndRef.current;
+        let measure;
+        if (ls !== null && le !== null && ls <= le) {
+          measure = ls + (realBar % (le - ls + 1));
+        } else {
+          measure = realBar % nm;
+        }
+        setEighthCol(col);
+        setEighthMeasure(measure);
+      }
       beatRafRef.current = requestAnimationFrame(animate);
     };
     beatRafRef.current = requestAnimationFrame(animate);
@@ -578,8 +685,10 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
       return null;
     };
 
+    const anyNotes = chart.measures.some(m => m.cells.some(c => c?.note));
+
     return (
-      <div style={{ fontFamily: T.sans, minHeight: "100vh", background: T.bg, padding: isWide ? "20px 40px" : "12px 16px" }}>
+      <div style={{ fontFamily: T.sans, minHeight: "100vh", background: T.bg, padding: isWide ? "20px 40px" : "12px 16px 100px 16px" }}>
         {/* Practice header — minimal */}
         <div style={{
           position: "sticky", top: 0, zIndex: 100, background: T.bg,
@@ -596,6 +705,19 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
             </span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            {loopStart !== null && loopEnd !== null && (
+              <span
+                onClick={() => { setLoopStart(null); setLoopEnd(null); }}
+                style={{
+                  fontSize: 10, fontWeight: 700, fontFamily: T.sans,
+                  color: T.gold, background: T.getTint(T.gold, 0.1),
+                  padding: "3px 8px", borderRadius: 10, cursor: "pointer",
+                  border: `1px solid ${T.gold}40`, userSelect: "none",
+                }}
+              >
+                Loop: {loopStart + 1}–{loopEnd + 1} ×
+              </span>
+            )}
             <span style={{ fontSize: 12, color: T.textMuted, fontWeight: 700, fontFamily: T.sans }}>
               {chart.bpm || 80} BPM
             </span>
@@ -608,7 +730,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                 border: `1px solid ${metro.playing ? T.coral : T.gold}`,
               }}>{metro.playing ? "Stop" : "▶ Play"}</button>
             )}
-            <button onClick={() => setPracticeMode(false)} style={{
+            <button onClick={() => { setLoopStart(null); setLoopEnd(null); setPracticeMode(false); }} style={{
               fontSize: 10, padding: "6px 14px", borderRadius: T.radius, cursor: "pointer",
               fontWeight: 700, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1,
               background: "transparent", color: T.textMed, border: `1px solid ${T.border}`,
@@ -616,13 +738,27 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
           </div>
         </div>
 
+        {/* Countdown overlay */}
+        {countdownBeat >= 0 && (
+          <div key={countdownBeat} style={{
+            textAlign: "center", padding: "24px 0 16px",
+            fontSize: 48, fontWeight: 800, fontFamily: T.sans,
+            color: T.gold, letterSpacing: 4,
+            animation: "fadeIn 0.15s ease-out",
+          }}>
+            {countdownBeat + 1}
+          </div>
+        )}
+
         {/* Practice measures — large, clean, read-only */}
         <div style={isWide ? {
           display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0,
-          border: `1px solid ${T.border}`, borderRadius: T.radiusMd, overflow: "hidden",
+          border: `1px solid ${T.border}`, borderRadius: T.radiusMd, overflow: "hidden", paddingBottom: 8,
         } : {}}>
           {chart.measures.map((measure, mIdx) => {
             const isActive = activeMeasure === mIdx;
+            const isInLoop = loopStart !== null && loopEnd !== null && mIdx >= loopStart && mIdx <= loopEnd;
+            const isLoopStartOnly = loopStart !== null && loopEnd === null && mIdx === loopStart;
             // Build column template for practice mode
             let colTemplate = "";
             for (let i = 0; i < 8; i++) {
@@ -637,8 +773,9 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                 ref={el => practiceMeasureRefs.current[mIdx] = el}
                 style={{
                   padding: isWide ? "12px 16px" : "10px 12px",
-                  background: isActive ? T.getTint(T.gold, 0.08) : "transparent",
+                  background: isActive ? T.getTint(T.gold, 0.08) : (isInLoop || isLoopStartOnly) ? T.getTint(T.gold, 0.04) : "transparent",
                   transition: "background 0.3s",
+                  borderLeft: (isInLoop || isLoopStartOnly) ? `3px solid ${T.gold}` : "3px solid transparent",
                   ...(isWide ? {
                     borderRight: mIdx % 2 === 0 && mIdx + 1 < chart.measures.length ? `1px solid ${T.borderSoft}` : "none",
                     borderBottom: mIdx + 2 < chart.measures.length ? `1px solid ${T.borderSoft}` : "none",
@@ -649,10 +786,34 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
               >
                 {/* Measure number + section label */}
                 <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
-                  <span style={{ fontSize: 10, color: T.textMuted, fontWeight: 700, fontFamily: T.sans }}>{mIdx + 1}</span>
+                  <span
+                    onClick={() => {
+                      if (loopStart !== null && loopEnd !== null) {
+                        setLoopStart(null); setLoopEnd(null);
+                      } else if (loopStart === null) {
+                        setLoopStart(mIdx);
+                      } else {
+                        if (mIdx < loopStart) { setLoopEnd(loopStart); setLoopStart(mIdx); }
+                        else if (mIdx === loopStart) { setLoopStart(null); }
+                        else { setLoopEnd(mIdx); }
+                      }
+                    }}
+                    style={{
+                      fontSize: 10, fontWeight: 700, fontFamily: T.sans, cursor: "pointer",
+                      color: (isInLoop || isLoopStartOnly) ? T.gold : T.textMuted,
+                      background: (isInLoop || isLoopStartOnly) ? T.getTint(T.gold, 0.12) : T.getTint(T.textMuted, 0.06),
+                      padding: "2px 6px", borderRadius: 8, userSelect: "none",
+                      transition: "all 0.15s",
+                    }}
+                  >{mIdx + 1}</span>
                   {measure.sectionLabel && (
                     <span style={{ fontSize: 10, fontWeight: 700, color: T.gold, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1 }}>
                       {measure.sectionLabel}
+                    </span>
+                  )}
+                  {isLoopStartOnly && (
+                    <span style={{ fontSize: 9, color: T.textMuted, fontFamily: T.sans, fontStyle: "italic" }}>
+                      tap another to set loop end
                     </span>
                   )}
                 </div>
@@ -764,6 +925,32 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                       )}
                     </React.Fragment>
                   ))}
+
+                  {/* Note row — show for all measures when any measure has notes */}
+                  {anyNotes && measure.cells.map((cell, cIdx) => {
+                    const isBeatActive = isActive && activeCol === cIdx;
+                    return (
+                      <React.Fragment key={`pn-${cIdx}`}>
+                        <div style={{
+                          textAlign: "center", fontSize: isWide ? 13 : 11,
+                          fontFamily: T.sans, fontWeight: 600,
+                          color: T.note,
+                          minHeight: isWide ? 24 : 20,
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                          background: isBeatActive && cell?.note ? T.getTint(T.note, 0.15) : "transparent",
+                          borderRadius: T.radius, transition: "background 0.1s",
+                        }}>{cell?.note || ""}</div>
+                        {chart.activeSlots.includes(cIdx) && cIdx < 7 && (
+                          <div style={{
+                            textAlign: "center", fontSize: isWide ? 10 : 9, fontFamily: T.sans,
+                            color: T.note, opacity: 0.6,
+                            minHeight: isWide ? 24 : 20,
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                          }}>{measure.between[cIdx]?.note || ""}</div>
+                        )}
+                      </React.Fragment>
+                    );
+                  })}
                 </div>
               </div>
             );
@@ -784,7 +971,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
               border: "none",
               boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
             }}>{metro.playing ? "■ Stop" : "▶ Play"}</button>
-            <button onClick={() => setPracticeMode(false)} style={{
+            <button onClick={() => { setLoopStart(null); setLoopEnd(null); setPracticeMode(false); }} style={{
               fontSize: 11, padding: "12px 18px", borderRadius: 24, cursor: "pointer",
               fontWeight: 700, fontFamily: T.sans,
               background: T.bgCard, color: T.textMed, border: `1px solid ${T.border}`,
@@ -1326,6 +1513,107 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                         minHeight: 28, display: "flex", alignItems: "center", justifyContent: "center",
                         opacity: 0.7, color: T.textDark,
                       }}>{measure.between[cIdx]?.lyric || ""}</div>
+                    )}
+                  </React.Fragment>
+                );
+              })}
+
+              {/* Note row */}
+              {(twoCol && !isLeftCol) ? null : (
+                <div style={{
+                  fontSize: 9, color: T.note, fontWeight: 600, textTransform: "uppercase",
+                  letterSpacing: 1, display: "flex", alignItems: "center", justifyContent: "center",
+                }}>Note</div>
+              )}
+              {measure.cells.map((cell, cIdx) => {
+                const hasNote = !!cell?.note;
+                const pickerOpen = notePicker && notePicker.m === mIdx && notePicker.c === cIdx && !notePicker.between;
+                return (
+                  <React.Fragment key={`n-${cIdx}`}>
+                    <div ref={pickerOpen ? notePickerRef : null} style={{ position: "relative" }}>
+                      <div
+                        onClick={() => {
+                          if (isPlaying) return;
+                          if (pickerOpen) { setNotePicker(null); return; }
+                          setNotePicker({ m: mIdx, c: cIdx, between: false });
+                        }}
+                        style={{
+                          textAlign: "center", fontSize: 11, fontFamily: T.sans, fontWeight: 600,
+                          color: hasNote ? T.note : T.textMuted,
+                          minHeight: 28, display: "flex", alignItems: "center", justifyContent: "center",
+                          cursor: "pointer", borderRadius: T.radius,
+                          border: `1px dashed ${hasNote ? T.note : T.borderSoft}`,
+                          background: pickerOpen ? T.getTint(T.note, 0.08) : "transparent",
+                          transition: "all 0.15s",
+                        }}
+                      >
+                        {hasNote ? cell.note : "—"}
+                      </div>
+                      {pickerOpen && (() => {
+                        const xShift = cIdx >= 6 ? "translateX(-80%)" : cIdx <= 1 ? "translateX(-20%)" : "translateX(-50%)";
+                        return (
+                        <div style={{
+                          position: "absolute", top: "100%", left: "50%", transform: xShift,
+                          zIndex: 200, background: T.bgCard || T.bg, border: `1px solid ${T.border}`,
+                          borderRadius: T.radiusMd, padding: 8, boxShadow: "0 4px 16px rgba(0,0,0,0.15)",
+                          minWidth: 180,
+                        }}>
+                          <div style={{ display: "flex", gap: 4, marginBottom: 6, justifyContent: "center" }}>
+                            {[2, 3, 4, 5, 6].map(oct => (
+                              <button key={oct} onClick={(e) => { e.stopPropagation(); setNoteOctave(oct); }} style={{
+                                fontSize: 10, fontWeight: noteOctave === oct ? 800 : 400, fontFamily: T.sans,
+                                padding: "2px 6px", borderRadius: 6, cursor: "pointer",
+                                border: noteOctave === oct ? `1px solid ${T.note}` : `1px solid ${T.borderSoft}`,
+                                background: noteOctave === oct ? T.getTint(T.note, 0.12) : "transparent",
+                                color: noteOctave === oct ? T.note : T.textMuted,
+                              }}>Oct {oct}</button>
+                            ))}
+                          </div>
+                          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 3 }}>
+                            {["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"].map(n => {
+                              const noteStr = n + noteOctave;
+                              const isSelected = cell?.note === noteStr;
+                              return (
+                                <button key={n} onClick={(e) => {
+                                  e.stopPropagation();
+                                  updateChart(c => {
+                                    c.measures[mIdx].cells[cIdx].note = noteStr;
+                                    return c;
+                                  });
+                                  setNotePicker(null);
+                                }} style={{
+                                  fontSize: 10, fontWeight: 600, fontFamily: T.sans,
+                                  padding: "4px 2px", borderRadius: 4, cursor: "pointer",
+                                  border: isSelected ? `1px solid ${T.note}` : `1px solid ${T.borderSoft}`,
+                                  background: isSelected ? T.note : "transparent",
+                                  color: isSelected ? "#fff" : T.textDark,
+                                }}>
+                                  {n}
+                                </button>
+                              );
+                            })}
+                          </div>
+                          {hasNote && (
+                            <button onClick={(e) => {
+                              e.stopPropagation();
+                              updateChart(c => { delete c.measures[mIdx].cells[cIdx].note; return c; });
+                              setNotePicker(null);
+                            }} style={{
+                              width: "100%", marginTop: 6, fontSize: 10, fontWeight: 600, fontFamily: T.sans,
+                              padding: "4px 0", borderRadius: 4, cursor: "pointer",
+                              border: `1px solid ${T.coral}`, background: "transparent", color: T.coral,
+                            }}>× Clear</button>
+                          )}
+                        </div>
+                        );
+                      })()}
+                    </div>
+                    {chart.activeSlots.includes(cIdx) && cIdx < 7 && (
+                      <div style={{
+                        textAlign: "center", fontSize: 9, fontFamily: T.sans,
+                        color: T.note, opacity: 0.6,
+                        minHeight: 28, display: "flex", alignItems: "center", justifyContent: "center",
+                      }}>{measure.between[cIdx]?.note || ""}</div>
                     )}
                   </React.Fragment>
                 );
