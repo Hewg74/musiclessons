@@ -738,6 +738,15 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                 border: `1px solid ${loopSelecting ? T.gold : T.border}`,
               }}>{loopSelecting ? "Cancel" : "Loop"}</button>
             )}
+            {chart.measures.some(m => m.cells.some(c => c?.note)) && (
+              <button onClick={() => setNotesMuted(!notesMuted)} style={{
+                fontSize: 10, padding: "3px 10px", borderRadius: 10, cursor: "pointer",
+                fontWeight: 700, fontFamily: T.sans,
+                background: notesMuted ? T.getTint(T.coral, 0.1) : T.getTint(T.note, 0.1),
+                color: notesMuted ? T.coral : T.note,
+                border: `1px solid ${notesMuted ? T.coral : T.note}40`,
+              }}>{notesMuted ? "Notes ✕" : "Notes ♪"}</button>
+            )}
             <span style={{ fontSize: 12, color: T.textMuted, fontWeight: 700, fontFamily: T.sans }}>
               {chart.bpm || 80} BPM
             </span>
