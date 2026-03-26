@@ -156,15 +156,38 @@ export default function AudioRecorder({ theme: T, inline = false }) {
         </div>
 
         {audioURL && inline && !isRecording && (
-          <div style={{ flex: 1 }}>
-            <MiniAudioPlayer theme={T} src={audioURL} />
+          <div style={{ flex: 1, display: "flex", alignItems: "center", gap: 6 }}>
+            <div style={{ flex: 1 }}><MiniAudioPlayer theme={T} src={audioURL} /></div>
+            <button onClick={() => {
+              const a = document.createElement("a");
+              a.href = audioURL;
+              a.download = `recording-${new Date().toISOString().slice(0, 19).replace(/[T:]/g, "-")}.webm`;
+              a.click();
+            }} style={{
+              fontSize: 8, padding: "4px 8px", borderRadius: T.radius, cursor: "pointer",
+              fontWeight: 700, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 0.5,
+              background: "transparent", color: T.textMed, border: `1px solid ${T.border}`,
+              whiteSpace: "nowrap",
+            }}>Save</button>
           </div>
         )}
       </div>
 
       {audioURL && !inline && !isRecording && (
         <div style={{ marginTop: 20 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: T.textMuted, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1.5, fontFamily: T.sans }}>Latest Take</div>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: T.textMuted, textTransform: 'uppercase', letterSpacing: 1.5, fontFamily: T.sans }}>Latest Take</div>
+            <button onClick={() => {
+              const a = document.createElement("a");
+              a.href = audioURL;
+              a.download = `recording-${new Date().toISOString().slice(0, 19).replace(/[T:]/g, "-")}.webm`;
+              a.click();
+            }} style={{
+              fontSize: 9, padding: "4px 10px", borderRadius: T.radius, cursor: "pointer",
+              fontWeight: 700, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1,
+              background: "transparent", color: T.textMed, border: `1px solid ${T.border}`,
+            }}>Save to Device</button>
+          </div>
           <MiniAudioPlayer theme={T} src={audioURL} />
         </div>
       )}

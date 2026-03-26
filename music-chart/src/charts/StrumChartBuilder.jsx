@@ -11,6 +11,7 @@ import { makeEmptyCell, makeEmptyMeasure, makeTemplateChart, compressToURL } fro
 import SongPicker from '../tools/SongPicker.jsx';
 import { YouTubeAudioPlayer, extractYouTubeId } from '../tools/youtube.jsx';
 import { splitSyllables, chipText, chipGroup } from './syllableUtil.js';
+import AudioRecorder from '../tools/AudioRecorder.jsx';
 
 const BEAT_LABELS_8 = ["1", "&", "2", "&", "3", "&", "4", "&"];
 
@@ -144,6 +145,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   const [showGroupPanel, setShowGroupPanel] = useState(false);
   const [notesMuted, setNotesMuted] = useState(false);
   const notesMutedRef = useRef(false);
+  const [showRecorder, setShowRecorder] = useState(false);
   const notePickerRef = useRef(null);
 
   // Click-outside to dismiss note picker
@@ -748,6 +750,13 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                 border: `1px solid ${notesMuted ? T.coral : T.note}40`,
               }}>{notesMuted ? "Notes ✕" : "Notes ♪"}</button>
             )}
+            <button onClick={() => setShowRecorder(!showRecorder)} style={{
+              fontSize: 10, padding: "3px 10px", borderRadius: 10, cursor: "pointer",
+              fontWeight: 700, fontFamily: T.sans,
+              background: showRecorder ? T.getTint(T.coral, 0.1) : "transparent",
+              color: showRecorder ? T.coral : T.textMed,
+              border: `1px solid ${showRecorder ? T.coral : T.border}40`,
+            }}>Rec</button>
             <span style={{ fontSize: 12, color: T.textMuted, fontWeight: 700, fontFamily: T.sans }}>
               {chart.bpm || 80} BPM
             </span>
@@ -784,6 +793,13 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
             border: `1px solid ${T.gold}30`,
             fontSize: 12, fontWeight: 600, fontFamily: T.sans, color: T.gold,
           }}>Tap the end measure</div>
+        )}
+
+        {/* Recorder in practice mode */}
+        {showRecorder && (
+          <div style={{ marginBottom: 8 }}>
+            <AudioRecorder theme={T} inline />
+          </div>
         )}
 
         {/* Countdown overlay */}
@@ -1203,8 +1219,13 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
 
               <button onClick={() => setShowGroupPanel(!showGroupPanel)} style={{
                 ...pillStyle((chart.barsPerGroup || 0) > 0 || showGroupPanel),
-                borderRight: "none",
               }}>Group{(chart.barsPerGroup || 0) > 0 ? ` ${chart.barsPerGroup}` : ""}</button>
+
+              <button onClick={() => setShowRecorder(!showRecorder)} style={{
+                ...pillStyle(showRecorder),
+                borderRight: "none",
+                color: showRecorder ? T.coral : T.textMuted,
+              }}>Rec</button>
             </div>
             );
           })()}
@@ -1224,6 +1245,13 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                   transition: "all 0.15s",
                 }}>{g === 0 ? "Off" : g}</button>
               ))}
+            </div>
+          )}
+
+          {/* Recorder panel */}
+          {showRecorder && (
+            <div style={{ marginBottom: 8 }}>
+              <AudioRecorder theme={T} inline />
             </div>
           )}
 

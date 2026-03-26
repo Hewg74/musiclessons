@@ -1449,15 +1449,38 @@ export function AudioRecorder({ theme: T, inline = false }) {
         </div>
 
         {audioURL && inline && !isRecording && (
-          <div style={{ flex: 1 }}>
-            <MiniAudioPlayer theme={T} src={audioURL} />
+          <div style={{ flex: 1, display: "flex", alignItems: "center", gap: 6 }}>
+            <div style={{ flex: 1 }}><MiniAudioPlayer theme={T} src={audioURL} /></div>
+            <button onClick={() => {
+              const a = document.createElement("a");
+              a.href = audioURL;
+              a.download = `recording-${new Date().toISOString().slice(0, 19).replace(/[T:]/g, "-")}.webm`;
+              a.click();
+            }} style={{
+              fontSize: 8, padding: "4px 8px", borderRadius: T.radius, cursor: "pointer",
+              fontWeight: 700, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 0.5,
+              background: "transparent", color: T.textMed, border: `1px solid ${T.border}`,
+              whiteSpace: "nowrap",
+            }}>Save</button>
           </div>
         )}
       </div>
 
       {audioURL && !inline && !isRecording && (
         <div style={{ marginTop: 20 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: T.textMuted, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1.5, fontFamily: T.sans }}>Latest Take</div>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: T.textMuted, textTransform: 'uppercase', letterSpacing: 1.5, fontFamily: T.sans }}>Latest Take</div>
+            <button onClick={() => {
+              const a = document.createElement("a");
+              a.href = audioURL;
+              a.download = `recording-${new Date().toISOString().slice(0, 19).replace(/[T:]/g, "-")}.webm`;
+              a.click();
+            }} style={{
+              fontSize: 9, padding: "4px 10px", borderRadius: T.radius, cursor: "pointer",
+              fontWeight: 700, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1,
+              background: "transparent", color: T.textMed, border: `1px solid ${T.border}`,
+            }}>Save to Device</button>
+          </div>
           <MiniAudioPlayer theme={T} src={audioURL} />
         </div>
       )}
@@ -6242,6 +6265,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   const [showGroupPanel, setShowGroupPanel] = useState(false);
   const [notesMuted, setNotesMuted] = useState(false);
   const notesMutedRef = useRef(false);
+  const [showRecorder, setShowRecorder] = useState(false);
   const notePickerRef = useRef(null);
 
   // Click-outside to dismiss note picker
@@ -6853,6 +6877,13 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                 border: `1px solid ${notesMuted ? T.coral : T.note}40`,
               }}>{notesMuted ? "Notes ✕" : "Notes ♪"}</button>
             )}
+            <button onClick={() => setShowRecorder(!showRecorder)} style={{
+              fontSize: 10, padding: "3px 10px", borderRadius: 10, cursor: "pointer",
+              fontWeight: 700, fontFamily: T.sans,
+              background: showRecorder ? T.getTint(T.coral, 0.1) : "transparent",
+              color: showRecorder ? T.coral : T.textMed,
+              border: `1px solid ${showRecorder ? T.coral : T.border}40`,
+            }}>Rec</button>
             <span style={{ fontSize: 12, color: T.textMuted, fontWeight: 700, fontFamily: T.sans }}>
               {chart.bpm || 80} BPM
             </span>
@@ -6889,6 +6920,13 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
             border: `1px solid ${T.gold}30`,
             fontSize: 12, fontWeight: 600, fontFamily: T.sans, color: T.gold,
           }}>Tap the end measure</div>
+        )}
+
+        {/* Recorder in practice mode */}
+        {showRecorder && (
+          <div style={{ marginBottom: 8 }}>
+            <AudioRecorder theme={T} inline />
+          </div>
         )}
 
         {/* Countdown overlay */}
@@ -7302,8 +7340,14 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
               {/* Group */}
               <button onClick={() => setShowGroupPanel(!showGroupPanel)} style={{
                 ...pillStyle((chart.barsPerGroup || 0) > 0 || showGroupPanel),
-                borderRight: "none",
               }}>Group{(chart.barsPerGroup || 0) > 0 ? ` ${chart.barsPerGroup}` : ""}</button>
+
+              {/* Rec */}
+              <button onClick={() => setShowRecorder(!showRecorder)} style={{
+                ...pillStyle(showRecorder),
+                borderRight: "none",
+                color: showRecorder ? T.coral : T.textMuted,
+              }}>Rec</button>
             </div>
             );
           })()}
@@ -7323,6 +7367,13 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                   transition: "all 0.15s",
                 }}>{g === 0 ? "Off" : g}</button>
               ))}
+            </div>
+          )}
+
+          {/* Recorder panel */}
+          {showRecorder && (
+            <div style={{ marginBottom: 8 }}>
+              <AudioRecorder theme={T} inline />
             </div>
           )}
 
