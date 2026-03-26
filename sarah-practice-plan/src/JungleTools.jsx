@@ -6239,6 +6239,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   // Note picker state — tracks which cell's picker is open: { m: measureIdx, c: cellIdx, between: bool } or null
   const [notePicker, setNotePicker] = useState(null);
   const [noteOctave, setNoteOctave] = useState(4);
+  const [showGroupPanel, setShowGroupPanel] = useState(false);
   const notePickerRef = useRef(null);
 
   // Click-outside to dismiss note picker
@@ -6355,7 +6356,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
       envelope: { attack: 0.005, decay: 0.15, sustain: 0.05, release: 0.4 },
     }).toDestination();
     noteSynthRef.current.maxPolyphony = 2;
-    noteSynthRef.current.volume.value = -3;
+    noteSynthRef.current.volume.value = 0;
     return () => { noteSynthRef.current?.dispose(); noteSynthRef.current = null; };
   }, []);
 
@@ -7189,14 +7190,26 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
           />
         </div>
         <div style={isWide ? { flex: "0 0 auto" } : {}}>
-          {/* BPM + Play + Tap + Group — merged toolbar */}
+          {/* BPM + Play + Tap — compact toolbar */}
           <div style={{ display: "flex", gap: 8, marginBottom: 12, alignItems: "center", flexWrap: "wrap" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
               <span style={{ fontSize: 10, color: T.textMuted, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1 }}>BPM</span>
               <input
-                type="number" min={40} max={280}
-                value={chart.bpm || 80}
-                onChange={e => setChart(c => ({ ...c, bpm: parseInt(e.target.value) || 80, updatedAt: Date.now() }))}
+                type="text" inputMode="numeric" pattern="[0-9]*"
+                value={chart.bpm === undefined ? "" : chart.bpm}
+                onChange={e => {
+                  const raw = e.target.value.replace(/[^0-9]/g, "");
+                  if (raw === "") {
+                    setChart(c => ({ ...c, bpm: undefined, updatedAt: Date.now() }));
+                  } else {
+                    const v = Math.min(280, parseInt(raw));
+                    setChart(c => ({ ...c, bpm: v, updatedAt: Date.now() }));
+                  }
+                }}
+                onBlur={() => {
+                  if (!chart.bpm || chart.bpm < 40) setChart(c => ({ ...c, bpm: 80, updatedAt: Date.now() }));
+                  if (metro) metro.changeBpm(chart.bpm || 80);
+                }}
                 style={{
                   width: 48, fontSize: 14, fontWeight: 700, textAlign: "center", color: T.textDark,
                   border: `1px solid ${T.border}`, borderRadius: T.radius, background: T.bgSoft,
@@ -7204,20 +7217,13 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                 }}
               />
               {metro && (
-                <>
-                  <button onClick={() => metro.changeBpm(chart.bpm || 80)} style={{
-                    fontSize: 9, background: T.goldSoft, border: "none", padding: "5px 10px",
-                    borderRadius: T.radius, color: T.goldDark, cursor: "pointer", fontWeight: 800,
-                    textTransform: "uppercase", letterSpacing: 1,
-                  }}>Set</button>
-                  <button onClick={() => { metro.changeBpm(chart.bpm || 80); metro.playing ? metro.stop() : metro.start(); }} style={{
-                    fontSize: 9, padding: "5px 12px", borderRadius: T.radius, cursor: "pointer",
-                    fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans,
-                    background: metro.playing ? "transparent" : T.gold,
-                    color: metro.playing ? T.coral : "#fff",
-                    border: `1px solid ${metro.playing ? T.coral : T.gold}`,
-                  }}>{metro.playing ? "Stop" : "▶ Play"}</button>
-                </>
+                <button onClick={() => { metro.changeBpm(chart.bpm || 80); metro.playing ? metro.stop() : metro.start(); }} style={{
+                  fontSize: 9, padding: "5px 12px", borderRadius: T.radius, cursor: "pointer",
+                  fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans,
+                  background: metro.playing ? "transparent" : T.gold,
+                  color: metro.playing ? T.coral : "#fff",
+                  border: `1px solid ${metro.playing ? T.coral : T.gold}`,
+                }}>{metro.playing ? "Stop" : "▶ Play"}</button>
               )}
             </div>
             <button onClick={handleTapTempo} style={{
@@ -7232,30 +7238,11 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
             {/* Divider */}
             <div style={{ width: 1, height: 18, background: T.borderSoft, flexShrink: 0 }} />
 
-            {/* Group controls — merged into toolbar */}
-            <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-              <span style={{ fontSize: 9, color: T.textMuted, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans }}>Group</span>
-              {[0, 2, 4, 8].map(g => (
-                <button key={g} onClick={() => updateChart(c => { c.barsPerGroup = g; return c; })} style={{
-                  fontSize: 10, padding: "4px 8px", borderRadius: T.radius, cursor: "pointer",
-                  fontWeight: 700, fontFamily: T.sans,
-                  background: (chart.barsPerGroup || 0) === g ? T.gold : T.bgSoft,
-                  color: (chart.barsPerGroup || 0) === g ? "#fff" : T.textMed,
-                  border: `1px solid ${(chart.barsPerGroup || 0) === g ? T.gold : T.border}`,
-                  transition: "all 0.15s",
-                }}>{g === 0 ? "Off" : g}</button>
-              ))}
-            </div>
-
-            {/* Divider */}
-            <div style={{ width: 1, height: 18, background: T.borderSoft, flexShrink: 0 }} />
-
             {/* 16th note toggle */}
             <button onClick={() => {
               updateChart(c => {
                 const allOn = [0, 1, 2, 3, 4, 5, 6].every(s => c.activeSlots.includes(s));
                 if (allOn) {
-                  // Turn off — only remove slots that have no content
                   c.activeSlots = c.activeSlots.filter(s => {
                     return c.measures.some(m => {
                       const b = m.between[s];
@@ -7274,8 +7261,79 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
               color: chart.activeSlots.length === 7 ? T.gold : T.textMed,
               border: `1px solid ${chart.activeSlots.length > 0 ? T.gold : T.border}`,
               transition: "all 0.15s",
-            }}>16th {chart.activeSlots.length > 0 ? "On" : "Off"}</button>
+            }}>16th</button>
+
+            {/* Loop toggle — also in edit mode */}
+            {loopStart !== null && loopEnd !== null ? (
+              <span
+                onClick={() => { setLoopStart(null); setLoopEnd(null); setLoopSelecting(false); }}
+                style={{
+                  fontSize: 9, fontWeight: 700, fontFamily: T.sans,
+                  color: T.gold, background: T.getTint(T.gold, 0.1),
+                  padding: "4px 8px", borderRadius: T.radius, cursor: "pointer",
+                  border: `1px solid ${T.gold}40`, userSelect: "none",
+                }}
+              >
+                Loop {loopStart + 1}–{loopEnd + 1} ×
+              </span>
+            ) : (
+              <button onClick={() => {
+                if (loopSelecting) { setLoopSelecting(false); setLoopStart(null); }
+                else { setLoopSelecting(true); }
+              }} style={{
+                fontSize: 9, padding: "4px 10px", borderRadius: T.radius, cursor: "pointer",
+                fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans,
+                background: loopSelecting ? T.getTint(T.gold, 0.15) : "transparent",
+                color: loopSelecting ? T.gold : T.textMed,
+                border: `1px solid ${loopSelecting ? T.gold : T.border}`,
+              }}>{loopSelecting ? "Cancel" : "Loop"}</button>
+            )}
+
+            {/* Group — expandable */}
+            <button onClick={() => setShowGroupPanel(!showGroupPanel)} style={{
+              fontSize: 9, padding: "4px 10px", borderRadius: T.radius, cursor: "pointer",
+              fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans,
+              background: showGroupPanel ? T.getTint(T.gold, 0.15) : "transparent",
+              color: (chart.barsPerGroup || 0) > 0 ? T.gold : T.textMed,
+              border: `1px solid ${(chart.barsPerGroup || 0) > 0 || showGroupPanel ? T.gold : T.border}`,
+              transition: "all 0.15s",
+            }}>Group{(chart.barsPerGroup || 0) > 0 ? ` ${chart.barsPerGroup}` : ""}</button>
           </div>
+
+          {/* Group panel — expands below toolbar */}
+          {showGroupPanel && (
+            <div style={{ display: "flex", gap: 4, marginBottom: 12, alignItems: "center", animation: "fade-in-up 0.15s ease" }}>
+              <span style={{ fontSize: 9, color: T.textMuted, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1, fontFamily: T.sans }}>Bars per group:</span>
+              {[0, 2, 4, 8].map(g => (
+                <button key={g} onClick={() => { updateChart(c => { c.barsPerGroup = g; return c; }); setShowGroupPanel(false); }} style={{
+                  fontSize: 10, padding: "4px 10px", borderRadius: T.radius, cursor: "pointer",
+                  fontWeight: 700, fontFamily: T.sans,
+                  background: (chart.barsPerGroup || 0) === g ? T.gold : T.bgSoft,
+                  color: (chart.barsPerGroup || 0) === g ? "#fff" : T.textMed,
+                  border: `1px solid ${(chart.barsPerGroup || 0) === g ? T.gold : T.border}`,
+                  transition: "all 0.15s",
+                }}>{g === 0 ? "Off" : g}</button>
+              ))}
+            </div>
+          )}
+
+          {/* Loop selection instruction bar — in edit mode */}
+          {loopSelecting && loopStart === null && (
+            <div style={{
+              textAlign: "center", padding: "8px 12px", marginBottom: 8,
+              background: T.getTint(T.gold, 0.08), borderRadius: T.radiusMd,
+              border: `1px solid ${T.gold}30`,
+              fontSize: 12, fontWeight: 600, fontFamily: T.sans, color: T.gold,
+            }}>Tap the start measure</div>
+          )}
+          {loopSelecting && loopStart !== null && loopEnd === null && (
+            <div style={{
+              textAlign: "center", padding: "8px 12px", marginBottom: 8,
+              background: T.getTint(T.gold, 0.08), borderRadius: T.radiusMd,
+              border: `1px solid ${T.gold}30`,
+              fontSize: 12, fontWeight: 600, fontFamily: T.sans, color: T.gold,
+            }}>Tap the end measure</div>
+          )}
 
           {/* Audio sync — Mark Beat 1 + nudge (only shows when song playing) */}
           {songPlaying && (
@@ -7445,14 +7503,18 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
         // Desktop unified: use inner borders instead of per-card borders
         const isLeftCol = itemIdx % 2 === 0;
         const isLastRow = itemIdx >= group.length - 1 || (twoCol && itemIdx >= group.length - 2 && !isLeftCol);
+        const isInEditLoop = loopStart !== null && loopEnd !== null && mIdx >= loopStart && mIdx <= loopEnd;
+        const isEditLoopStart = loopStart !== null && loopEnd === null && mIdx === loopStart;
         const desktopStyle = twoCol ? {
           borderRight: isLeftCol && itemIdx + 1 < group.length ? `1px solid ${T.borderSoft}` : "none",
           borderBottom: (twoCol && itemIdx + 2 < group.length) ? `1px solid ${T.borderSoft}` : "none",
-          background: isActiveMeasure ? T.getTint(T.gold, 0.04) : "transparent",
+          background: isActiveMeasure ? T.getTint(T.gold, 0.04) : (isInEditLoop || isEditLoopStart) ? T.getTint(T.gold, 0.03) : "transparent",
+          borderLeft: (isInEditLoop || isEditLoopStart) ? `3px solid ${T.gold}` : "3px solid transparent",
           transition: "background 0.2s",
         } : {
-          border: `1px solid ${isActiveMeasure ? T.gold : T.border}`,
+          border: `1px solid ${isActiveMeasure ? T.gold : (isInEditLoop || isEditLoopStart) ? T.gold : T.border}`,
           borderRadius: T.radiusMd,
+          borderLeft: (isInEditLoop || isEditLoopStart) ? `3px solid ${T.gold}` : undefined,
           boxShadow: isActiveMeasure ? `0 0 8px ${T.gold}40` : "none",
           transition: "box-shadow 0.2s, border-color 0.2s",
         };
@@ -7469,7 +7531,28 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
               padding: twoCol ? "6px 8px 0" : "0 4px",
               ...(twoCol ? {} : { position: "absolute", top: -8, left: 8, background: T.bg }),
             }}>
-              <span style={{ fontSize: 9, color: T.textMuted, fontWeight: 700, fontFamily: T.sans }}>{mIdx + 1}</span>
+              <span
+                onClick={() => {
+                  if (!loopSelecting) return;
+                  if (loopStart === null) {
+                    setLoopStart(mIdx);
+                  } else if (loopEnd === null) {
+                    if (mIdx < loopStart) { setLoopEnd(loopStart); setLoopStart(mIdx); }
+                    else if (mIdx === loopStart) { setLoopStart(null); }
+                    else { setLoopEnd(mIdx); }
+                    setLoopSelecting(false);
+                  }
+                }}
+                style={{
+                  fontSize: 9, fontWeight: 700, fontFamily: T.sans,
+                  cursor: loopSelecting ? "pointer" : "default",
+                  color: (isInEditLoop || isEditLoopStart) ? T.gold : T.textMuted,
+                  ...(loopSelecting ? {
+                    background: T.getTint(T.gold, 0.06), padding: "1px 5px", borderRadius: 6,
+                    border: `1px solid ${T.gold}40`,
+                  } : {}),
+                }}
+              >{mIdx + 1}</span>
               <input
                 type="text"
                 value={measure.sectionLabel || ""}
