@@ -254,10 +254,10 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   useEffect(() => {
     noteSynthRef.current = new Tone.PolySynth(Tone.Synth, {
       oscillator: { type: "triangle" },
-      envelope: { attack: 0.005, decay: 0.15, sustain: 0.05, release: 0.4 },
+      envelope: { attack: 0.005, decay: 0.2, sustain: 0.3, release: 0.6 },
     }).toDestination();
     noteSynthRef.current.maxPolyphony = 2;
-    noteSynthRef.current.volume.value = 0;
+    noteSynthRef.current.volume.value = 4;
     return () => { noteSynthRef.current?.dispose(); noteSynthRef.current = null; };
   }, []);
 
@@ -285,13 +285,13 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
       const downCol = beat * 2;
       const downCell = ch.measures[measure].cells[downCol];
       if (downCell?.note && noteSynthRef.current) {
-        try { noteSynthRef.current.triggerAttackRelease(downCell.note, "16n", time); } catch (e) { console.debug("note synth:", e); }
+        try { noteSynthRef.current.triggerAttackRelease(downCell.note, "8n", time); } catch (e) { console.debug("note synth:", e); }
       }
       const andCol = downCol + 1;
       if (andCol < 8) {
         const andCell = ch.measures[measure].cells[andCol];
         if (andCell?.note && noteSynthRef.current) {
-          try { noteSynthRef.current.triggerAttackRelease(andCell.note, "16n", time + eighthDur); } catch (e) { console.debug("note synth:", e); }
+          try { noteSynthRef.current.triggerAttackRelease(andCell.note, "8n", time + eighthDur); } catch (e) { console.debug("note synth:", e); }
         }
       }
     };
