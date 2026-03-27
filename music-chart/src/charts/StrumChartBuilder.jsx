@@ -526,7 +526,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
       const maxOrigin = Math.max(0, ...keptPool.map(chipOrigin));
       newChips.forEach((chip, i) => { chip.originIndex = maxOrigin + 1 + i; });
 
-      c.lyricsPool = [...keptPool, ...newChips];
+      c.lyricsPool = [...keptPool, ...newChips].sort((a, b) => chipOrigin(a) - chipOrigin(b));
       return c;
     });
     setLyricsEditing(false);
@@ -612,14 +612,14 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
           minOrigin = Math.min(minOrigin, chipOrigin(p));
         }
       });
-      // Reconstruct word from all fragments (pool + placed)
-      const allFragTexts = [];
-      c.lyricsPool.forEach(p => { if (chipGroup(p) === groupId) allFragTexts.push(chipText(p)); });
+      // Reconstruct word from all fragments (pool + placed), sorted by originIndex
+      const allFrags = [];
+      c.lyricsPool.forEach(p => { if (chipGroup(p) === groupId) allFrags.push({ text: chipText(p), oi: chipOrigin(p) }); });
       // Pull placed fragments with same groupId back from cells
       c.measures.forEach(m => {
         m.cells.forEach(cell => {
           if (cell.lyricGroupId === groupId) {
-            allFragTexts.push(cell.lyric);
+            allFrags.push({ text: cell.lyric, oi: cell.lyricOriginIndex ?? Infinity });
             if (cell.lyricOriginIndex != null) minOrigin = Math.min(minOrigin, cell.lyricOriginIndex);
             cell.lyric = '';
             cell.lyricGroupId = null;
@@ -627,8 +627,9 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
           }
         });
       });
-      // Reconstruct word by stripping trailing hyphens and joining
-      const originalWord = allFragTexts.map(f => f.replace(/-$/, '')).join('');
+      // Reconstruct word by sorting fragments, stripping trailing hyphens, and joining
+      allFrags.sort((a, b) => a.oi - b.oi);
+      const originalWord = allFrags.map(f => f.text.replace(/-$/, '')).join('');
       // Remove pool fragments and insert original word at first fragment's position
       const insertAt = poolIdxs[0];
       const removedBefore = poolIdxs.filter(idx => idx < insertAt).length;
