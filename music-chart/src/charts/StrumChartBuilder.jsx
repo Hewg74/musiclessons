@@ -261,62 +261,37 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   useEffect(() => {
     noteSynthRef.current = new Tone.Synth({
       oscillator: { type: "triangle" },
-      envelope: { attack: 0.005, decay: 0.2, sustain: 0.3, release: 0.6 },
+      envelope: { attack: 0.005, decay: 0.1, sustain: 0.6, release: 0.4 },
     }).toDestination();
     noteSynthRef.current.volume.value = 4;
     return () => { noteSynthRef.current?.dispose(); noteSynthRef.current = null; };
   }, []);
 
   // Note playback via metroBeatAudio (sample-accurate timing, legato-aware)
+  //
+  // Legato rule:
+  //   - A note with a lyric (word/syllable) → fresh attack (new phrase)
+  //   - A note WITHOUT a lyric → pitch glide via setNote (melisma continuation)
+  //   - Empty cells (no note) → sustain previous note through the gap
+  //   - Phrase ends only when a new word appears or playback stops
   useEffect(() => {
-    // Look ahead to the next cell (handles cross-measure with loop wrapping)
-    const getNextCell = (ch, mIdx, col, nm, ls, le) => {
-      if (col < 7) return ch.measures[mIdx]?.cells[col + 1] || null;
-      let nextM;
-      if (ls !== null && le !== null && ls <= le) {
-        nextM = ((mIdx - ls + 1) % (le - ls + 1)) + ls;
-      } else {
-        nextM = (mIdx + 1) % nm;
-      }
-      return ch.measures[nextM]?.cells[0] || null;
-    };
-    const shouldLegato = (cur, nxt) => {
-      if (!cur?.note || !nxt?.note) return false;
-      if (nxt.lyric && nxt.lyric.trim()) return false; // new syllable = separate
-      return true;
-    };
-    // Process a single cell at the given scheduled time
-    const processCell = (synth, cell, cellTime, eighthDur, ch, mIdx, col, nm, ls, le) => {
+    const processCell = (synth, cell, cellTime) => {
       if (!synth) return;
-      const hasLyric = cell.lyric && cell.lyric.trim();
-      if (cell.note) {
-        try {
-          if (legatoActiveRef.current && !hasLyric) {
-            // Melisma continuation — glide pitch smoothly
-            const freq = Tone.Frequency(cell.note).toFrequency();
-            synth.frequency.cancelScheduledValues(cellTime);
-            synth.frequency.setValueAtTime(synth.frequency.getValueAtTime(cellTime), cellTime);
-            synth.frequency.linearRampToValueAtTime(freq, cellTime + 0.03);
-          } else {
-            // New word/syllable or first note — fresh attack
-            if (legatoActiveRef.current) synth.triggerRelease(cellTime);
-            synth.triggerAttack(cell.note, cellTime);
-          }
-        } catch (e) { console.debug("note synth:", e); }
-        const nextCell = getNextCell(ch, mIdx, col, nm, ls, le);
-        if (shouldLegato(cell, nextCell)) {
+      if (!cell?.note) return; // gap — sustain whatever is playing
+      const hasNewWord = cell.lyric && cell.lyric.trim();
+      try {
+        if (hasNewWord || !legatoActiveRef.current) {
+          // New word/syllable or very first note — fresh attack
+          synth.portamento = 0;
+          if (legatoActiveRef.current) synth.triggerRelease(cellTime);
+          synth.triggerAttack(cell.note, cellTime);
           legatoActiveRef.current = true;
         } else {
-          try { synth.triggerRelease(cellTime + eighthDur); } catch (_) {}
-          legatoActiveRef.current = false;
+          // Melisma / instrumental continuation — glide pitch, no re-attack
+          synth.portamento = 0.03;
+          synth.setNote(cell.note, cellTime);
         }
-      } else {
-        // Gap/rest — end any held phrase
-        if (legatoActiveRef.current) {
-          try { synth.triggerRelease(cellTime); } catch (_) {}
-          legatoActiveRef.current = false;
-        }
-      }
+      } catch (e) { console.debug("note synth:", e); }
     };
     const handleNoteAudio = (e) => {
       const { beat, bar, time } = e.detail;
@@ -339,12 +314,10 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
       const bpm = bpmRef.current;
       const eighthDur = 60 / bpm / 2;
       const downCol = beat * 2;
-      const downCell = ch.measures[measure].cells[downCol];
-      processCell(noteSynthRef.current, downCell, time, eighthDur, ch, measure, downCol, nm, ls, le);
+      processCell(noteSynthRef.current, ch.measures[measure].cells[downCol], time);
       const andCol = downCol + 1;
       if (andCol < 8) {
-        const andCell = ch.measures[measure].cells[andCol];
-        processCell(noteSynthRef.current, andCell, time + eighthDur, eighthDur, ch, measure, andCol, nm, ls, le);
+        processCell(noteSynthRef.current, ch.measures[measure].cells[andCol], time + eighthDur);
       }
     };
     window.addEventListener("metroBeatAudio", handleNoteAudio);
