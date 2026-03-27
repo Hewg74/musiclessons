@@ -430,83 +430,103 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
     setActiveChordCell({ m: mIdx, c: cIdx });
   };
 
-  // Lyrics handler — keeps existing pool/placed intact, adds new words, removes deleted ones
+  // Lyrics handler — textarea is source of truth for what words exist.
+  // Placed lyrics that are still in the textarea stay on the grid.
+  // Placed lyrics removed from textarea get cleared from the grid.
+  // Pool chips for words still in textarea are preserved (including splits).
+  // New words get added as new pool chips.
+  //
   const handleLyricsPaste = (text) => {
     updateChart(c => {
       c.lyricsInput = text;
-      const newWords = normalizeAndTokenize(text);
-      // Build bag of what we already have: pool chip texts + placed cell texts
-      // For pool, track the actual chip objects so we can keep splits intact
-      const poolBag = c.lyricsPool.map(p => chipText(p));
-      const placedBag = [];
-      c.measures.forEach(m => m.cells.forEach(cell => {
-        if (cell.lyric) placedBag.push(cell.lyric);
-      }));
-      // Also account for split fragments: group them back to their original word for matching
-      // A split "mi-" + "les" in pool should match "miles" in the new text
-      const fragGroups = {};
-      c.lyricsPool.forEach(p => {
-        const gid = chipGroup(p);
+      const desired = normalizeAndTokenize(text);
+
+      // --- Step 1: Build inventory of every word across pool + placed ---
+      // Each entry: { word, poolChips[], cells[] }
+      //   poolChips = chips to keep if word stays in textarea
+      //   cells = grid cells to clear if word is removed from textarea
+      const fragsByGroup = {};
+      c.lyricsPool.forEach(chip => {
+        const gid = chipGroup(chip);
         if (gid) {
-          if (!fragGroups[gid]) fragGroups[gid] = [];
-          fragGroups[gid].push(p);
+          if (!fragsByGroup[gid]) fragsByGroup[gid] = { poolChips: [], cellRefs: [] };
+          fragsByGroup[gid].poolChips.push(chip);
         }
       });
-      const splitWords = {}; // groupId → reconstructed word
-      for (const [gid, frags] of Object.entries(fragGroups)) {
-        splitWords[gid] = frags.map(f => chipText(f).replace(/-$/, '')).join('');
+      c.measures.forEach((m, mi) => m.cells.forEach((cell, ci) => {
+        if (cell.lyric && cell.lyricGroupId) {
+          const gid = cell.lyricGroupId;
+          if (!fragsByGroup[gid]) fragsByGroup[gid] = { poolChips: [], cellRefs: [] };
+          fragsByGroup[gid].cellRefs.push({
+            m: mi, c: ci, text: cell.lyric, oi: cell.lyricOriginIndex ?? Infinity,
+          });
+        }
+      }));
+
+      const inventory = [];
+      const poolChipsInGroups = new Set();
+
+      // Fragment groups → reconstruct full word, track both pool chips and grid cells
+      for (const [, { poolChips, cellRefs }] of Object.entries(fragsByGroup)) {
+        poolChips.forEach(ch => poolChipsInGroups.add(ch));
+        const allFrags = [
+          ...poolChips.map(p => ({ text: chipText(p), oi: chipOrigin(p) })),
+          ...cellRefs.map(r => ({ text: r.text, oi: r.oi })),
+        ];
+        allFrags.sort((a, b) => a.oi - b.oi);
+        const fullWord = allFrags.map(f => f.text.replace(/-$/, '')).join('');
+        inventory.push({ word: fullWord, poolChips, cells: cellRefs.map(r => ({ m: r.m, c: r.c })) });
       }
 
-      // Walk the new word list, consuming from existing (placed first, then pool)
-      const consumedPlaced = [...placedBag];
-      const consumedPool = [...poolBag];
-      const consumedSplitGroups = new Set();
-      const genuinelyNew = [];
+      // Whole words in pool
+      c.lyricsPool.forEach(chip => {
+        if (!poolChipsInGroups.has(chip)) {
+          inventory.push({ word: chipText(chip), poolChips: [chip], cells: [] });
+        }
+      });
 
-      for (const word of newWords) {
-        const t = word.text;
-        // Check placed cells first
-        const pi = consumedPlaced.indexOf(t);
-        if (pi !== -1) { consumedPlaced.splice(pi, 1); continue; }
-        // Check pool (whole words)
-        const qi = consumedPool.indexOf(t);
-        if (qi !== -1) { consumedPool.splice(qi, 1); continue; }
-        // Check if it matches a split group (e.g., "miles" matches "mi-" + "les")
-        let matchedSplit = false;
-        for (const [gid, fullWord] of Object.entries(splitWords)) {
-          if (fullWord === t && !consumedSplitGroups.has(gid)) {
-            consumedSplitGroups.add(gid);
-            // Remove those fragments from consumedPool too
-            fragGroups[gid].forEach(f => {
-              const fi = consumedPool.indexOf(chipText(f));
-              if (fi !== -1) consumedPool.splice(fi, 1);
-            });
-            matchedSplit = true;
+      // Whole words placed on grid
+      c.measures.forEach((m, mi) => m.cells.forEach((cell, ci) => {
+        if (cell.lyric && !cell.lyricGroupId) {
+          inventory.push({ word: cell.lyric, poolChips: [], cells: [{ m: mi, c: ci }] });
+        }
+      }));
+
+      // --- Step 2: Match desired words against inventory ---
+      const consumed = new Set();
+      const newChips = [];
+
+      for (const dw of desired) {
+        let matched = false;
+        for (let i = 0; i < inventory.length; i++) {
+          if (!consumed.has(i) && inventory[i].word === dw.text) {
+            consumed.add(i);
+            matched = true;
             break;
           }
         }
-        if (!matchedSplit) genuinelyNew.push(word);
+        if (!matched) newChips.push(dw);
       }
 
-      // Remove pool chips whose words were deleted from textarea
-      // consumedPool has leftover texts that weren't matched = deleted by user
-      const removeBag = [...consumedPool];
+      // --- Step 3: Build final pool + clear orphaned placed lyrics ---
       const keptPool = [];
-      for (const p of c.lyricsPool) {
-        const t = chipText(p);
-        const ri = removeBag.indexOf(t);
-        if (ri !== -1) {
-          removeBag.splice(ri, 1); // remove this chip
+      for (let i = 0; i < inventory.length; i++) {
+        if (consumed.has(i)) {
+          keptPool.push(...inventory[i].poolChips);
         } else {
-          keptPool.push(p);
+          // Word removed from textarea → drop pool chips AND clear grid cells
+          inventory[i].cells.forEach(({ m, c: ci }) => {
+            c.measures[m].cells[ci].lyric = "";
+            c.measures[m].cells[ci].lyricGroupId = null;
+            c.measures[m].cells[ci].lyricOriginIndex = null;
+          });
         }
       }
 
-      // Assign originIndex to new chips after existing max
       const maxOrigin = Math.max(0, ...keptPool.map(chipOrigin));
-      genuinelyNew.forEach((chip, i) => { chip.originIndex = maxOrigin + 1 + i; });
+      newChips.forEach((chip, i) => { chip.originIndex = maxOrigin + 1 + i; });
 
-      c.lyricsPool = [...keptPool, ...genuinelyNew];
+      c.lyricsPool = [...keptPool, ...newChips];
       return c;
     });
     setLyricsEditing(false);
