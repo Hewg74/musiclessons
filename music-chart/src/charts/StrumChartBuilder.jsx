@@ -137,6 +137,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
 
   // Note tone playback refs
   const noteSynthRef = useRef(null);
+  const legatoActiveRef = useRef(false);
   const chartRef = useRef(chart);
 
   // Note picker state
@@ -234,7 +235,8 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
       setEighthCol(-1); setEighthMeasure(-1);
       lastBeatRef.current = -1; lastBarRef.current = -1;
       countdownActiveRef.current = false; setCountdownBeat(-1);
-      noteSynthRef.current?.releaseAll();
+      try { noteSynthRef.current?.triggerRelease(); } catch (_) {}
+      legatoActiveRef.current = false;
     };
     window.addEventListener("metroBeat", handler);
     let stopTimer;
@@ -255,19 +257,67 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   notesMutedRef.current = notesMuted;
   chartRef.current = chart;
 
-  // Note synth setup/cleanup
+  // Note synth setup/cleanup (mono Synth for legato support)
   useEffect(() => {
-    noteSynthRef.current = new Tone.PolySynth(Tone.Synth, {
+    noteSynthRef.current = new Tone.Synth({
       oscillator: { type: "triangle" },
       envelope: { attack: 0.005, decay: 0.2, sustain: 0.3, release: 0.6 },
     }).toDestination();
-    noteSynthRef.current.maxPolyphony = 8;
     noteSynthRef.current.volume.value = 4;
     return () => { noteSynthRef.current?.dispose(); noteSynthRef.current = null; };
   }, []);
 
-  // Note playback via metroBeatAudio (sample-accurate timing)
+  // Note playback via metroBeatAudio (sample-accurate timing, legato-aware)
   useEffect(() => {
+    // Look ahead to the next cell (handles cross-measure with loop wrapping)
+    const getNextCell = (ch, mIdx, col, nm, ls, le) => {
+      if (col < 7) return ch.measures[mIdx]?.cells[col + 1] || null;
+      let nextM;
+      if (ls !== null && le !== null && ls <= le) {
+        nextM = ((mIdx - ls + 1) % (le - ls + 1)) + ls;
+      } else {
+        nextM = (mIdx + 1) % nm;
+      }
+      return ch.measures[nextM]?.cells[0] || null;
+    };
+    const shouldLegato = (cur, nxt) => {
+      if (!cur?.note || !nxt?.note) return false;
+      if (nxt.lyric && nxt.lyric.trim()) return false; // new syllable = separate
+      return true;
+    };
+    // Process a single cell at the given scheduled time
+    const processCell = (synth, cell, cellTime, eighthDur, ch, mIdx, col, nm, ls, le) => {
+      if (!synth) return;
+      const hasLyric = cell.lyric && cell.lyric.trim();
+      if (cell.note) {
+        try {
+          if (legatoActiveRef.current && !hasLyric) {
+            // Melisma continuation — glide pitch smoothly
+            const freq = Tone.Frequency(cell.note).toFrequency();
+            synth.frequency.cancelScheduledValues(cellTime);
+            synth.frequency.setValueAtTime(synth.frequency.getValueAtTime(cellTime), cellTime);
+            synth.frequency.linearRampToValueAtTime(freq, cellTime + 0.03);
+          } else {
+            // New word/syllable or first note — fresh attack
+            if (legatoActiveRef.current) synth.triggerRelease(cellTime);
+            synth.triggerAttack(cell.note, cellTime);
+          }
+        } catch (e) { console.debug("note synth:", e); }
+        const nextCell = getNextCell(ch, mIdx, col, nm, ls, le);
+        if (shouldLegato(cell, nextCell)) {
+          legatoActiveRef.current = true;
+        } else {
+          try { synth.triggerRelease(cellTime + eighthDur); } catch (_) {}
+          legatoActiveRef.current = false;
+        }
+      } else {
+        // Gap/rest — end any held phrase
+        if (legatoActiveRef.current) {
+          try { synth.triggerRelease(cellTime); } catch (_) {}
+          legatoActiveRef.current = false;
+        }
+      }
+    };
     const handleNoteAudio = (e) => {
       const { beat, bar, time } = e.detail;
       if (bar === undefined || time === undefined) return;
@@ -290,15 +340,11 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
       const eighthDur = 60 / bpm / 2;
       const downCol = beat * 2;
       const downCell = ch.measures[measure].cells[downCol];
-      if (downCell?.note && noteSynthRef.current) {
-        try { noteSynthRef.current.triggerAttackRelease(downCell.note, "8n", time); } catch (e) { console.debug("note synth:", e); }
-      }
+      processCell(noteSynthRef.current, downCell, time, eighthDur, ch, measure, downCol, nm, ls, le);
       const andCol = downCol + 1;
       if (andCol < 8) {
         const andCell = ch.measures[measure].cells[andCol];
-        if (andCell?.note && noteSynthRef.current) {
-          try { noteSynthRef.current.triggerAttackRelease(andCell.note, "8n", time + eighthDur); } catch (e) { console.debug("note synth:", e); }
-        }
+        processCell(noteSynthRef.current, andCell, time + eighthDur, eighthDur, ch, measure, andCol, nm, ls, le);
       }
     };
     window.addEventListener("metroBeatAudio", handleNoteAudio);
