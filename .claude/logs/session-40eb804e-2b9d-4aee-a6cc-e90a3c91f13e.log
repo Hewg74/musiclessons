@@ -1,0 +1,28 @@
+[2026-03-26T07:38:17.200Z] he chart mode in practice mode, the most bottom row gets cut off. also i want to do a thing where i can highlight the sections i want to loop in practice mode. I am also thinking sice  we have a audio system, would it be possible to add one more row for the lyric note, and then in practice more or if the metronome is looping i can hear the tone of the lyric/note being played?
+[2026-03-26T08:26:12.645Z] lets make the 16th a toggle, and that way we have 1 less row, and if we toggle they all turn on it should be at the top
+[2026-03-26T08:37:49.166Z] the select to loop mechinisum is not very clear, and the tone for the lyric is muddy and not easy to hear
+[2026-03-26T08:47:11.012Z] lets make the vocal louder. also the loop should be in the chart mode too, also the icons are too ccrowded. lets make group expand when clicked, and lets get rid of the set button, also when people type the BPM it doesnt let it delete to 0 and then tpye making it so theres always 1 number in there which makes it hard toedit
+[2026-03-26T08:56:46.676Z] if i click loop any place in the tab i click should select it, also lets make the loop selected more clean, its kinda cluttered looking
+[2026-03-26T09:03:18.528Z] lets just do something a little more subtile like make hte background a slight tint, also the dotted outline around the lyric notes isnt necessry, can we use /ui-design-system can clean up the UI?
+[2026-03-26T09:18:51.237Z] lets do the vocals a little louder and longer
+[2026-03-26T19:51:45.233Z] why do the differnet notes sound like different sounds in the same octive? C# sounds like a comepltetly different sound then E
+[2026-03-26T19:55:44.857Z] if it cuts wont it sound kinda janky and glitchy if the sound just suddenly tapers off per note?
+[2026-03-26T20:12:10.804Z] i dont think the octave choices are working, also lets have saome type of bar or something to show how high the octave of the sound is. make it tasteful, maybe it could be color concentration or something? i dont know. aalso E should be higer then C# but the E is a lower sound for some reason iun the same chosen octave
+[2026-03-26T20:18:05.563Z] lets play the note when selecting so we can hear what it sounds like. also lets do teh same with selecting guitar chords in the chord selction tool
+[2026-03-26T20:18:30.118Z] lets play the note when selecting so we can hear what it sounds like.
+[2026-03-26T20:24:40.375Z] are you sure its working? i dont hear anytrhign when i select
+[2026-03-26T20:29:52.058Z] beautiful and lets add a mute button for the ntoes as well. also lets organize the tap 16thm loop and group 1 into a better organized UI UX expereince
+[2026-03-26T20:42:29.490Z] lets move the pilsl onto the right side so that way its on the same row as the BPM to save vertical space
+[2026-03-26T20:46:13.912Z] is the mute in practice mode as well?
+[2026-03-26T21:11:20.579Z] this is looking much much better, one thing though when i edit notes, chords or lyrics for some reason, somethimes the strum pattern changes even though i dont click on it
+[2026-03-26T22:09:27.711Z] for the charts tab the practice plan lesson 3/2 tenor and break A3 doesnt really make sense. also there should be a record tool. for the record tool can we have a export to device button as well?
+[2026-03-26T22:22:09.836Z] its not a chart, its the header on the chart page that overcedes everything, including when i go into a chart to edit it. also lets make sure all your fixes work for desktop as well
+[2026-03-27T02:52:19.950Z] lets put the export button to the left instead of the right so its stacked with the rec button and MAKE SURE IT WORKS, when i send it to a friend she cant open it, maybe mp3? IDK whats teh best filetype
+[2026-03-27T02:57:53.383Z] <task-notification>
+<task-id>brfv9mn9y</task-id>
+<tool-use-id>toolu_01Un8tVet3wCMcUQQPi4XGBu</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\40eb804e-2b9d-4aee-a6cc-e90a3c91f13e\tasks\brfv9mn9y.output</output-file>
+<status>completed</status>
+<summary>Background command "Build both apps" completed (exit code 0)</summary>
+</task-notification>
+Read the output file to retrieve the result: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\40eb804e-2b9d-4aee-a6cc-e90a3c91f13e\tasks\brfv9mn9y.output

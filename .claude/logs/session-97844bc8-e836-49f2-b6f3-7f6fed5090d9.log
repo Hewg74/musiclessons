@@ -1,0 +1,2007 @@
+[2026-03-26T06:05:49.776Z] with the baby song study, the bending of eb doesnt make any mechanical sense, can you see all typse of advice like that in our guitar track and meticiously make sure the mechincs all make sense? also make sure its aligned to teh song and which the songs supposed to sound like you can refer to the documentation that gemini wrote somewhere breaking down the song and their sonic qualities
+[2026-03-26T06:08:47.832Z] can you use opus agents not haiku
+[2026-03-26T06:09:55.598Z] <task-notification>
+<task-id>aa02a6858e442c311</task-id>
+<tool-use-id>toolu_017gKFnqpBLAyg1DhQTmVgJ6</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\dddc1272-e534-457e-8017-f924b5fda330\tasks\aa02a6858e442c311.output</output-file>
+<status>completed</status>
+<summary>Agent "Review guitar levels 12-14 mechanics" completed</summary>
+<result>Now I have all the data I need. Let me compile the findings.
+
+---
+
+Here is the complete analysis of mechanical/technical accuracy issues found in guitar curriculum levels 12-14.
+
+## ISSUES FOUND
+
+### 1. gs-12-4 (Level 12) — "The G to Gm Shift"
+
+**Problematic text:** `"G minor (310033, or 355333 as a barre). The note that changes: B drops to Bb."`
+
+The first-position Gm voicing `310033` is questionable. Breaking it down string by string (low E to high E): 3-1-0-0-3-3. That gives:
+- Low E fret 3 = G
+- A string fret 1 = Bb
+- D string open = D
+- G string open = G
+- B string fret 3 = D
+- High E fret 3 = G
+
+This actually spells out a valid Gm chord (G-Bb-D). However, the step text says: *"move your middle finger from fret 3 on the A string down to fret 1"* -- this instruction implies you're transitioning from open G major (320003). In open G, the A string is at fret 2 (B note), not fret 3. The instruction should say "move your finger from fret 2 on the A string down to fret 1." This is a **fret reference error in the transition instruction**.
+
+**What's wrong:** The instruction says "from fret 3 on the A string" but in open G major (320003), the A string is at fret 2, not fret 3.
+
+**Correct advice:** "Move your finger from fret 2 on the A string down to fret 1."
+
+---
+
+### 2. gs-12-5 (Level 12) — "Song Study: Marsha"
+
+**Problematic text (exercise description):** `"Current Swell's 'Marsha' is a 6-chord song (Dm-C-G-F-Bb) at 116 BPM"`
+
+**Issue A — BPM mismatch with Gemini analysis.** The exercise says 116 BPM, but the Gemini analysis of Marsha says **108 BPM** [HEARD]. Interestingly, Sarah's note at the end of the exercise says "The song sits at about 108 BPM" -- contradicting the 116 BPM stated at the top of the exercise.
+
+**What's wrong:** The exercise header says 116 BPM, Gemini says 108, and the sarah note within the same exercise says 108. The 116 is likely wrong.
+
+**Correct value:** 108 BPM (consistent with both Gemini analysis and the sarah note).
+
+---
+
+**Issue B — Chord count.** The description lists "6-chord song (Dm-C-G-F-Bb)" but that's only 5 chords in the parenthetical. The step text then adds D and Dm as separate chords for "the magic moment," making it 6 distinct chords total (Dm, C, G, F, Bb, D). But the initial parenthetical listing `(Dm-C-G-F-Bb)` is misleading because it shows 5 chords while claiming 6.
+
+**What's wrong:** Lists "6-chord song" but only names 5 chords in the parenthetical. D major is missing from the listing.
+
+**Correct text:** Should be "(Dm-C-G-F-Bb-D)" or "(F-G-Bb-C-D-Dm)" to match the 6-chord claim.
+
+---
+
+**Issue C — D to Dm shift framing.** The exercise's `songRef.note` says "Listen for the D→Dm shift at the chorus." The `what` text says the song has a "D→Dm magic moment." However, the Gemini analysis of Marsha shows the key as **F Major / D Minor** and the main progression as **Dm-C-G-F-Bb**. There is no mention of a D major chord at all in the Gemini analysis. The chorus progression is listed as "G-F-Bb-F-C then Bb-C-Dm." 
+
+**What's wrong:** The exercise builds the entire "magic moment" around a D→Dm shift that the Gemini audio analysis does not confirm exists in the song. The song appears to live in D minor / F major throughout. There may be a D major chord somewhere (Gemini's chord analysis used pre-verified UG tabs, and D major was listed in the exercise's chordVoicings), but the framing as a prominent "magic moment" doesn't match what Gemini heard.
+
+**Correct advice:** Verify whether the D major chord actually appears in Marsha via the Ultimate Guitar tabs. If not, remove the D→Dm narrative from this song study and use it purely as a dynamic arc exercise. The D→Dm trick is well-taught in gs-12-3 and gs-12-4 already.
+
+---
+
+### 3. gs-13-2 (Level 13) — "Scale Choice Game"
+
+**Problematic text:** `"Play Em pentatonic. Then try A Phrygian (A-Bb-C-D-E-F-G)"`
+
+**What's wrong:** The instruction says to play over the **surf rock** backing track, then switches from Em pentatonic to A Phrygian. This is a jarring pedagogical leap. Em pentatonic is in the key of E minor/G major. A Phrygian is rooted on A. These are in different tonal centers. Over a surf rock track (which, based on the backing tracks available, is likely in A minor or E minor), A Phrygian would work if the track is in A minor, but Em pentatonic would only fit well if it's in E minor. The exercise doesn't clarify the key of the backing track, making the scale comparison potentially misleading.
+
+This is a **minor pedagogical issue** rather than a hard error -- the surf rock track could work in either key depending on its actual key center.
+
+---
+
+### 4. gs-13-4 (Level 13) — "Ear Transcription Challenge"
+
+**Problematic text:** `"'The roots are A, D' (for Dope & Smoke) or 'D, E, G' (for Real Love Baby)"`
+
+**What's wrong:** Real Love Baby's chords are **D-Em-G-A7** (established multiple times in the curriculum, including in level 1). The roots are D, E, G, **A** -- four roots, not three. The exercise lists only "D, E, G," missing the A root entirely.
+
+**Correct text:** "D, E, G, A" (for Real Love Baby).
+
+---
+
+### 5. gs-13-6 (Level 13) — "The Feel Toggle"
+
+**Problematic text:** `"Texas Sun (Am-G-Em-Bm)"` and `"Play Texas Sun (Am-G-Em-Bm) straight — on the beat, clean tone, minor voicings as written."`
+
+**What's wrong (minor):** The exercise describes Texas Sun's chords as "minor voicings as written," but G and Em include G major -- only Am and Bm are minor. Saying "minor voicings as written" is misleading. The song has two major chords (G, Em... wait, Em IS minor). Let me re-check: Am (minor), G (major), Em (minor), Bm (minor). So three of four chords are minor. Calling them all "minor voicings" is inaccurate -- G is major.
+
+Additionally, step 4 says: `"Replace Am with A major. Replace Em with E major. Play A-G-E-Bm"` -- this is presented as a "major voicing" toggle. But it only replaces 2 of the 3 minor chords. Bm is left minor. This is arguably intentional (partial toggle), but the text doesn't explain why Bm is excluded.
+
+This is a **minor clarity issue**, not a hard error.
+
+---
+
+### 6. gs-13-6 (Level 13) — "The Feel Toggle" (BPM inconsistency)
+
+**Problematic text:** The metronome is set to `100` BPM. The exercise description says "Metronome at 100 BPM."
+
+**What's wrong:** The Texas Sun song study in Level 9 (gs-9-6) says the song is at **111 BPM**, and the Gemini analysis says **~98 BPM**. Setting the metronome at 100 BPM is actually a reasonable middle ground, so this is not really an error -- just noting the discrepancy between the 111 BPM cited in the original song study and the ~98 BPM from Gemini.
+
+---
+
+### 7. gs-14-1 (Level 14) — "Who Do You Sound Like?"
+
+**Problematic text:** `"Am-G-F-E descending minor"`
+
+**What's wrong:** The progression Am-G-F-E is the Andalusian cadence (or descending minor progression), which is correct in name. However, E here would typically be **E major** (not E minor) in this context, as the Andalusian cadence uses the major V chord (E major) for its distinctive sound. The text doesn't specify major vs minor for E. In the context of "surf-psych" and "Allah-Las territory," E major is correct. This is just a minor notation ambiguity -- not clearly wrong but could cause confusion if a student plays Em instead of E.
+
+---
+
+### 8. gs-14-2 (Level 14) — "Choosing Your Set"
+
+**Problematic text:** `"Sol Del Sur (C#m-B-F#-E)"`
+
+**What's wrong:** Throughout the rest of the curriculum, Sol Del Sur's chords are consistently listed as **C#m-B-F#** (3 chords). The Gemini analysis confirms the verse progression as C#m-B-F#. The chorus adds E and F# as separate changes, but listing the song as "(C#m-B-F#-E)" here while everywhere else it's "(C#m-B-F#)" creates inconsistency. In gs-13-4, it's listed as "Sol Del Sur (C#m-B-F#)" with 3 chords. This is a **minor inconsistency** -- the E chord does appear in the chorus per Gemini, so including it isn't wrong, just inconsistent with how the song is referenced elsewhere.
+
+---
+
+## SUMMARY OF CONFIRMED ISSUES
+
+| # | Exercise | Severity | Issue |
+|---|----------|----------|-------|
+| 1 | gs-12-4 | **Medium** | Fret reference error: says "fret 3 on A string" but open G has fret 2 on A string |
+| 2 | gs-12-5 | **Medium** | BPM contradiction: header says 116, Gemini + sarah note say 108 |
+| 3 | gs-12-5 | **Low** | Claims "6-chord song" but parenthetical lists only 5 chords |
+| 4 | gs-12-5 | **Medium** | D→Dm "magic moment" narrative not supported by Gemini analysis of Marsha |
+| 5 | gs-13-4 | **Low** | Real Love Baby roots listed as "D, E, G" -- missing A (the 4th root from A7) |
+
+The remaining items (gs-13-2 scale/key ambiguity, gs-13-6 "minor voicings" wording, gs-14-1 Am-G-F-E not specifying E major, gs-14-2 Sol Del Sur chord listing inconsistency) are minor clarity/consistency issues rather than outright errors.
+
+Notably, **no bend target errors, mechanical impossibilities, or chord voicing fingering errors** were found in levels 12-14. These levels are primarily about dynamics, integration, and performance rather than specific fret-level technique instruction, which explains why the issues are more about factual consistency than mechanical accuracy.</result>
+<usage><total_tokens>88460</total_tokens><tool_uses>21</tool_uses><duration_ms>116563</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\dddc1272-e534-457e-8017-f924b5fda330\tasks\aa02a6858e442c311.output
+[2026-03-26T06:10:24.539Z] <task-notification>
+<task-id>a5e38cb1ffb3e4590</task-id>
+<tool-use-id>toolu_0147ybiTw59mgy3XzifGzffR</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\dddc1272-e534-457e-8017-f924b5fda330\tasks\a5e38cb1ffb3e4590.output</output-file>
+<status>completed</status>
+<summary>Agent "Review guitar levels 1-4 mechanics" completed</summary>
+<result>Now I have all the data I need. Let me compile the full analysis.
+
+---
+
+## Guitar Curriculum Levels 1-4: Technical Accuracy Audit
+
+### CONFIRMED ISSUES
+
+---
+
+#### **ISSUE 1: gs-2-8 "Baby" (Ariel Pink) — Bend target Eb doesn't fit D/Em harmonic context**
+
+**Exercise ID:** gs-2-8
+**Location:** `level-02-rhythm-and-feel.js`, lines 218 and 214
+
+**Problematic text (wrong field, line 218):**
+> `"If the bends sound random, make sure you're targeting a specific pitch (half-step bend to Eb)."`
+
+**Problematic text (step 4, line 214):**
+> `"On the Em chord, try a single-note bend (fret 7, G string, half-step bend)."`
+
+**What's wrong:** The song uses D and Em chords. The key is D major (or E minor). The notes in D major are D-E-F#-G-A-B-C#. Fret 7 on the G string is D. A half-step bend from D goes to Eb (D#). Eb is NOT in the key of D major or E minor. It's a chromatic note that clashes with both chords. While the exercise earlier in Level 2 (gs-2-6, gs-2-7) teaches bending to Eb as the "blue note" in the A blues scale context, applying that same bend target to a song in D/Em makes no harmonic sense.
+
+**What the correct advice should be:** A half-step bend on fret 7, G string would only make sense if you're deliberately evoking a blues-scale tension (which requires explanation in context). More appropriate options:
+- Bend from fret 7 (D) a **whole step** to E (which IS in the key of D major/Em)
+- Bend from fret 9 (E) a **whole step** to F# (also in key)
+- If the intent is a blues embellishment, explicitly say "this is a blue note bend — it creates intentional tension outside the key" rather than presenting it as a standard embellishment that fits the song
+
+---
+
+#### **ISSUE 2: gs-1-9 "Bending & Vibrato" — Bend target Ab is questionable in Am pentatonic context**
+
+**Exercise ID:** gs-1-9
+**Location:** `level-01-first-sounds.js`, lines 220-221
+
+**Problematic text (step 1, line 220):**
+> `"Place your ring finger on the B string, 8th fret (G note). Now push the string upward...Push until it sounds like the note at the 9th fret (Ab)."`
+
+**Problematic text (step 2, line 221):**
+> `"Play the target note first: press the 9th fret normally and hear Ab. Now go back to the 8th fret and bend up to match that pitch."`
+
+**What's wrong:** The exercise is set in the Am pentatonic context (drone on A). The B string 8th fret is indeed G. The 9th fret is G#/Ab. Ab is NOT in the Am pentatonic scale (A-C-D-E-G), nor is it in A natural minor (A-B-C-D-E-F-G), nor in the A blues scale (A-C-D-Eb-E-G). Bending G to Ab is a half-step bend to a note that has no clear harmonic function in any A minor scale. This is a technically valid bend to teach the *mechanics* of half-step bending, but describing it within an Am pentatonic/blues context without acknowledging that the target note is outside the scale is misleading.
+
+**What the correct advice should be:** Either:
+- Acknowledge that this is purely a mechanical exercise for learning bend technique, not a musically contextualized bend
+- Use a more harmonically relevant bend target, such as bending D (B string, 3rd fret) up to Eb (the blue note), or bending from the G string 7th fret (D) up a whole step to E
+- Or teach the bend on the G string instead: fret 7 (D) bent to fret 9 (E), which stays within Am pentatonic
+
+**Severity:** Moderate. The exercise is explicitly about learning the *mechanics* of bending, and a half-step bend on the B string 8th fret is a physically accessible place to teach it. But a student following along with the A drone will hear dissonance they may not expect, and the exercise doesn't explain why.
+
+---
+
+#### **ISSUE 3: gs-2-9 "Mexico" (Husbands) — Chord/progression mismatch between description and levelUp**
+
+**Exercise ID:** gs-2-9
+**Location:** `level-02-rhythm-and-feel.js`, lines 238 and 254
+
+**Problematic text (what field, line 238):**
+> `"Four chords (F-C-G-Am) at high speed."`
+
+**Problematic text (step 1, line 241):**
+> `"Learn the five chords: F (xx3211 — just the four-string version for now), C, E, Dm, Am."`
+
+**Problematic text (step 2, line 242):**
+> `"Play the progression at 100 BPM: F (2 beats) → C (2 beats) → E (2 beats) → Dm (2 beats) → Am (4 beats)."`
+
+**Problematic text (levelUp, line 254):**
+> `"Can play F-C-G-Am at 140+ BPM"`
+
+**What's wrong:** The `what` field says the song has "Four chords (F-C-G-Am)" but step 1 teaches FIVE different chords (F, C, E, Dm, Am) and the actual progression in step 2 is F-C-E-Dm-Am. The levelUp criterion says "F-C-G-Am" which doesn't match the actual progression being taught. G doesn't appear in the step-by-step instructions at all. The description, the steps, and the levelUp all describe different chord sets.
+
+**What the correct advice should be:** The steps (F-C-E-Dm-Am) appear to be the actual intended progression. The `what` field and `levelUp` should be updated to match: F-C-E-Dm-Am (five chords), not F-C-G-Am (four chords).
+
+---
+
+#### **ISSUE 4: gs-1-3 "Open Chords" — Am chord fingering: ring finger placement**
+
+**Exercise ID:** gs-1-3
+**Location:** `level-01-first-sounds.js`, line 73
+
+**Problematic text:**
+> `"Am: index finger on B string fret 1, middle finger on D string fret 2, ring finger on G string fret 2."`
+
+**What's wrong:** The standard Am chord voicing is x02210. The frets used are: A string open, D string fret 2, G string fret 2, B string fret 1, high E open. The exercise correctly places index on B string fret 1 and middle on D string fret 2. However, it then says "ring finger on G string fret 2." In standard Am fingering, the G string is OPEN (fret 0), not fretted at fret 2. Fret 2 on the G string is the note A, which would work harmonically (it's the root), but the standard Am voicing has G string open (which is the note G, the minor 7th if included, but in standard voicing x02210 the G string is fretted at 2 to produce A). 
+
+Wait -- let me re-examine. The voicing x02210 means: low E = x (muted), A = 0 (open), D = 2, G = 2, B = 1, high E = 0. So D string fret 2 = E, G string fret 2 = A, B string fret 1 = C. That gives us A-E-A-C-E, which is correct for Am. So the exercise says "middle finger on D string fret 2, ring finger on G string fret 2" which matches x02210. This is actually correct.
+
+**Verdict:** NOT an issue. The fingering is correct. I was momentarily confused but the voicing checks out.
+
+---
+
+#### **ISSUE 5: gs-1-3 "Open Chords" — C chord anchor finger claim**
+
+**Exercise ID:** gs-1-3
+**Location:** `level-01-first-sounds.js`, line 74
+
+**Problematic text:**
+> `"C: index on B string fret 1, middle on D string fret 2, ring on A string fret 3. Strum strings 5 through 1. Now look at your hand — notice that your ring finger is on the SAME fret and string as it was for Am? That's your anchor finger. When switching Am to C, the ring finger stays planted."`
+
+**What's wrong:** For Am, the exercise says: index on B1, middle on D2, ring on G2. For C, it says: index on B1, middle on D2, ring on A3. The claim is that "your ring finger is on the SAME fret and string as it was for Am." But in Am, the ring finger is on G string fret 2. In C, the ring finger is on A string fret 3. These are DIFFERENT frets AND different strings. The ring finger does NOT stay planted. 
+
+Looking more carefully: the *index* finger stays on B string fret 1 for both Am and C. The *middle* finger stays on D string fret 2 for both Am and C. So there ARE anchor fingers -- but it's the index and middle, not the ring.
+
+**What the correct advice should be:** The anchor fingers between Am and C are the **index** (B string fret 1) and **middle** (D string fret 2), which both stay planted. The ring finger moves from G2 (Am) to A3 (C). The text incorrectly identifies the ring finger as the anchor.
+
+---
+
+#### **ISSUE 6: gs-1-4 "One-Minute Changes" — Am→Em shared finger claim**
+
+**Exercise ID:** gs-1-4
+**Location:** `level-01-first-sounds.js`, line 97
+
+**Problematic text:**
+> `"Now try Am → Em. 60 seconds. Count. Am→Em shares the ring AND middle fingers on the same frets — you only add or remove the index finger."`
+
+**What's wrong:** Using the fingerings from gs-1-3: Am = index on B1, middle on D2, ring on G2. Em = middle on A2, ring on D2. The shared element is that both have a finger on D string fret 2, but in Am it's the middle finger, while in Em it's the ring finger. And G string fret 2 (Am's ring finger) is not used in Em at all. A2 (Em's middle finger) is not used in Am at all. So neither the ring NOR middle finger is on "the same fret" between the two chords. The fingers have to reposition.
+
+The standard teaching fingering for Em is: middle on A2, ring on D2. For Am: middle on D2, ring on G2, index on B1. D2 appears in both but is played by different fingers (middle in Am, ring in Em). This is not a true "anchor" situation.
+
+**What the correct advice should be:** Am to Em does NOT share finger positions cleanly. The transition requires repositioning. The text overstates the shared-finger relationship. A more accurate description would be that both chords use the 2nd fret on adjacent strings, making the general hand position similar, but the specific fingers move.
+
+---
+
+#### **ISSUE 7: gs-1-2 "Am Pentatonic" — Step 2 is incomplete**
+
+**Exercise ID:** gs-1-2
+**Location:** `level-01-first-sounds.js`, line 50
+
+**Problematic text:**
+> `"Continue string by string: A string has D (5th fret) and E (7th fret). D string has G (5th fret) and A (7th fret). G string: B string: high E string. Say every note name as you play it."`
+
+**What's wrong:** The text trails off at "G string: B string: high E string" without actually listing the frets and notes for those three strings. The Am pentatonic in position 1 on those strings is: G string = C (5th fret), D string already covered, B string = D (3rd fret) and E (5th fret), high E string = E (5th fret) and G (8th fret) or A (5th fret) and C (8th fret) depending on exact position. The step is clearly incomplete.
+
+**What the correct advice should be:** Fill in the missing note/fret information: G string has C (5th fret), B string has D (3rd fret) and E (5th fret), high E string has E (5th fret) and G (8th fret). (The exact notes depend on the position being taught but they are simply omitted.)
+
+---
+
+#### **ISSUE 8: gs-1-8 "Blues Scale" — Fret location for blue note on A string**
+
+**Exercise ID:** gs-1-8
+**Location:** `level-01-first-sounds.js`, line 195
+
+**Problematic text (step 1):**
+> `"Between D and E, there's a note hiding at the 6th fret of the A string — that's Eb, the blue note."`
+
+**What's wrong:** The 6th fret of the A string is D#/Eb. The 5th fret of the A string is D, and the 7th fret is E. So the note identification is correct. However, in the Am pentatonic position 1 (frets 5-8), D is typically played on the A string 5th fret, and E on the A string 7th fret, with Eb at fret 6 between them. This is correct.
+
+**Verdict:** NOT an issue. The fret/note reference is accurate.
+
+---
+
+#### **ISSUE 9: gs-2-6 "Blues Scale" — Scale spelling uses parenthetical fret numbers that are inconsistent**
+
+**Exercise ID:** gs-2-6
+**Location:** `level-02-rhythm-and-feel.js`, line 161
+
+**Problematic text:**
+> `"Play the full blues scale: A(5)-C(8)-D(5)-Eb(6)-E(7)-G(5)-A(7)."`
+
+**What's wrong:** The fret numbers in parentheses jump between strings without explanation: A is at fret 5 (low E string), C at fret 8 (low E string), D at fret 5 (A string), Eb at fret 6 (A string), E at fret 7 (A string), G at fret 5 (D string), A at fret 7 (D string). This is only one octave of the blues scale and the fret numbers are actually correct when moving string by string. However, the D at fret 5 (A string) follows C at fret 8 (low E string), which means you jump from fret 8 on the low E string back to fret 5 on the A string -- this is correct for position 1 Am pentatonic.
+
+**Verdict:** NOT an issue. The fret numbers are correct for the standard position 1 Am blues scale pattern ascending across strings.
+
+---
+
+#### **ISSUE 10: gs-1-10 "Dope & Smoke" — BPM inconsistency**
+
+**Exercise ID:** gs-1-10
+**Location:** `level-01-first-sounds.js`, lines 239 and 247-248
+
+**Problematic text (metronome field, line 239):**
+> `metronome: 90`
+
+**Problematic text (what field, lines 247-248):**
+> `"DOPE LEMON's Dope & Smoke alternates between two chord families — Am/Am7 and D/D7 — at 112 BPM"`
+> `"Setup: Guitar. Metronome at 90 BPM (slow it down — original is ~94 BPM)."`
+
+**What's wrong:** The `what` field says the song is "at 112 BPM" but then the setup says "original is ~94 BPM." These are two different claimed tempos for the same song. One says 112, the other says ~94. They can't both be right.
+
+**What the correct advice should be:** Pick one correct tempo for the original song and be consistent. Looking at step 5 which says "Then try 100, then 112 (the real tempo)", the exercise treats 112 as the real tempo. But the setup contradicts this by saying "original is ~94 BPM." The actual Dope & Smoke tempo should be verified, and both references should match.
+
+---
+
+#### **ISSUE 11: gs-1-11 "Real Love Baby" — Missing A7 from chordVoicings**
+
+**Exercise ID:** gs-1-11
+**Location:** `level-01-first-sounds.js`, line 270
+
+**Problematic text:**
+> `chordVoicings: { chords: ["D", "Em", "G"], defaultChord: "D" }`
+
+**What's wrong:** The exercise title says "D-Em-G-A7", the `what` field mentions A7, step 5 mentions "Real Love Baby (D-Em-G-A7)", and the levelUp mentions "D-Em-G-A7". But the `chordVoicings` array only lists D, Em, G -- A7 is missing. This means the chord diagram UI won't show the A7 voicing to the student.
+
+**What the correct advice should be:** Add "A7" to the chordVoicings array: `chords: ["D", "Em", "G", "A7"]`
+
+---
+
+#### **ISSUE 12: gs-1-11 "Real Love Baby" — Step 1 progression mismatch**
+
+**Exercise ID:** gs-1-11
+**Location:** `level-01-first-sounds.js`, line 279
+
+**Problematic text:**
+> `"Play the progression: D (4 beats) → Em (4 beats) → G (4 beats) → G (4 beats)."`
+
+**What's wrong:** The progression listed in step 1 is D-Em-G-G (with G repeated for 8 beats). But the song's progression is D-Em-G-A7 as stated everywhere else in the exercise. Step 1 omits A7 entirely and plays G twice instead. While this might be intentional as a simplification, it's never explained as such, and the student would learn the wrong progression.
+
+**What the correct advice should be:** Either use the actual progression D-Em-G-A7 in step 1, or explicitly say "simplified version without A7" and introduce A7 in a later step.
+
+---
+
+#### **ISSUE 13: gs-1-11 "Real Love Baby" — Hammer-on description is contradictory**
+
+**Exercise ID:** gs-1-11
+**Location:** `level-01-first-sounds.js`, line 281
+
+**Problematic text:**
+> `"Add a hammer-on embellishment to the D chord: strum D, then hammer your middle finger onto the high E string 2nd fret (from the open string)."`
+
+**What's wrong:** The standard D chord (xx0232) already has the middle finger on the high E string 2nd fret. The text says to "hammer your middle finger onto the high E string 2nd fret (from the open string)" -- but if the D chord is already fretted, the middle finger is already there. You can't hammer ON to a note you're already holding.
+
+Looking at the D fingering from gs-1-3: "D: index on G string fret 2, ring on B string fret 3, middle on high E string fret 2." So the middle finger IS already on high E fret 2. The hammer-on doesn't make sense as described.
+
+The intended embellishment is likely: lift the middle finger off the high E string (letting it ring open), then hammer back on to fret 2. This is a pull-off then hammer-on sequence. Or: use the pinky to hammer on to fret 3 of the high E string (which would be Dsus4 embellishment). The `wrong` field actually references "if it mutes the string, make sure your other fingers aren't shifting when you add the pinky" -- confirming a pinky hammer-on was intended.
+
+**What the correct advice should be:** The embellishment should describe lifting the finger off the high E string first (pull-off to open) and then hammering back on, OR describe hammering the pinky onto the high E string 3rd fret (F# to G, a Dsus4 ornament), which is what the `wrong` field implies.
+
+---
+
+### SUMMARY OF ISSUES FOUND
+
+| # | Exercise | Issue | Severity |
+|---|----------|-------|----------|
+| 1 | gs-2-8 "Baby" | Bend target Eb doesn't fit D/Em key | **High** |
+| 2 | gs-1-9 "Bending & Vibrato" | Bend target Ab outside all A minor scales, unexplained | Medium |
+| 3 | gs-2-9 "Mexico" | what/steps/levelUp all list different chord sets (F-C-G-Am vs F-C-E-Dm-Am) | **High** |
+| 4 | gs-1-3 "Open Chords" | Ring finger wrongly identified as anchor between Am and C | **High** |
+| 5 | gs-1-4 "One-Minute Changes" | Am-Em shared ring+middle finger claim is incorrect | Medium |
+| 6 | gs-1-2 "Am Pentatonic" | Step 2 text trails off, missing notes for G/B/high-E strings | **High** |
+| 7 | gs-1-10 "Dope & Smoke" | BPM stated as both 112 and ~94 for the same song | Medium |
+| 8 | gs-1-11 "Real Love Baby" | A7 missing from chordVoicings array | Medium |
+| 9 | gs-1-11 "Real Love Baby" | Step 1 plays D-Em-G-G instead of D-Em-G-A7 | Medium |
+| 10 | gs-1-11 "Real Love Baby" | Hammer-on description contradicts D chord fingering; `wrong` field implies pinky but step says middle finger | Medium |
+
+**Levels 3 and 4** are technically clean. I found no incorrect fret/note references, no wrong bend targets, no chord voicing errors, and no contradictory technique advice in those files. The songs marked "UNVERIFIED" (Summer Heat gs-3-5, It's a Love gs-4-8) are honestly flagged as such.</result>
+<usage><total_tokens>95347</total_tokens><tool_uses>17</tool_uses><duration_ms>160143</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\dddc1272-e534-457e-8017-f924b5fda330\tasks\a5e38cb1ffb3e4590.output
+[2026-03-26T06:10:42.282Z] <task-notification>
+<task-id>aa645e835d5fa0031</task-id>
+<tool-use-id>toolu_01Xv31ebBxgmsB69b7fWSPEu</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\dddc1272-e534-457e-8017-f924b5fda330\tasks\aa645e835d5fa0031.output</output-file>
+<status>completed</status>
+<summary>Agent "Review guitar levels 9-11 mechanics" completed</summary>
+<result>Now let me look at the Gemini analysis key for "I Didn't Know" more carefully. The Gemini analysis says the key is F Major / D Minor, with the progression listed as `Gm-C-F-Bb / Gm-C-A7-Dm`. But the exercise says `Gm-C-A7-Dm` as the progression.
+
+Let me also check the Travis picking exercise for the G chord bass note claim.
+
+Now I have enough information to compile a thorough report. Let me analyze each issue systematically.
+
+---
+
+Here is my complete analysis of mechanical/technical accuracy issues found in guitar curriculum levels 9-11.
+
+## Level 9: Extended Harmony
+
+### Issue 1: Em7 voicing notation error
+- **Exercise**: gs-9-1, "Open 7th Chords -- Am7, Dm7, Em7"
+- **Problematic text**: `"Play Em (022000). Now lift your ring finger off the 4th string — you're playing Em7 (022030)."`
+- **What's wrong**: The standard open Em7 voicing when you lift a finger from Em (022000) is **020000** (lift the middle finger from fret 2 on the A string) or **022030** as notated. However, the notation 022030 is actually correct if you interpret it as: fret 0 on low E, fret 2 on A, fret 2 on D, fret 0 on G, fret 3 on B, fret 0 on high E. But that's **not** what you get by "lifting your ring finger off the 4th string." The standard Em is 022000 with fingers on the A string (fret 2) and D string (fret 2). Lifting a finger off the 4th string (D string) gives you 020000, which is Em7 (E-B-E-G-B-E). The voicing 022030 would require **adding** a finger on the B string 3rd fret, not lifting one. The text describes "lifting" but the tab shows an **added** fret 3 on the B string.
+- **Correct advice**: Em7 by lifting a finger from Em (022000) is **020000** (lift the finger on the D string). Alternatively, the common Em7 voicing is **020000** or **022030**, but the latter requires adding a finger, not removing one. The text should either say "lift your finger off the 5th string" to get 002000 (incorrect -- that breaks the chord) or describe Em7 as 020000 ("lift your ring finger off the D string"), or describe 022030 as "add your ring finger to the 3rd fret of the B string."
+
+### Issue 2: Gm7 voicing description is confusing/incorrect
+- **Exercise**: gs-9-3, "Barre 7th Chords -- Gm7, C7, A7"
+- **Problematic text**: `"Gm7: barre all six strings at fret 3 with your index finger. Add your ring finger at fret 5 on the 5th string. Pinky at fret 5 on the 4th string. Middle finger at fret 4 on the 3rd string. Shape: 353333. This is the Em7 shape moved up 3 frets. Strum from the 4th string down."`
+- **What's wrong**: The written tab "353333" means: 3rd fret low E, 5th fret A, 3rd fret D, 3rd fret G, 3rd fret B, 3rd fret high E. But the finger description says "ring finger at fret 5 on the 5th string, pinky at fret 5 on the 4th string" -- that would give fret 5 on the D string, making the tab 355333, not 353333. There's a conflict between the tab and the finger description. Additionally, the instruction says "Strum from the 4th string down" -- but the voicing includes all 6 strings (starting at fret 3 on the low E). If you strum from the 4th string, you only get 4 strings, which omits the bass notes.
+- **Correct advice**: The standard Gm7 barre chord based on the Em7 shape at fret 3 is **353363** (3-5-3-3-6-3) -- no, let me reconsider. The Em shape at fret 3 would be a Gm. The Em7 shape (020000) moved to fret 3 gives 3x3333 -- that's not standard. The standard Gm7 barre is typically the Am7 shape at fret 10, or the Em shape variant. The tab 353333 (with the text describing fret 5 on strings 5 and 4) has an internal inconsistency. The fingering description produces **355333**, not 353333. The exercise text should be reconciled -- likely the correct tab is **353333** and the finger description should say "ring finger at fret 5 on the 5th string" only (not also putting a finger on the 4th string at fret 5).
+
+### Issue 3: Skinshape "I Didn't Know" -- key and progression mismatch
+- **Exercise**: gs-9-4, "Song Study: I Didn't Know -- Skinshape Soul Cycle"
+- **Problematic text**: `"Skinshape's 'I Didn't Know' uses Gm-C-A7-Dm — a soul/jazz cycle that loops endlessly..."` and the sarah note mentions the Gemini analysis but the exercise describes the progression as in the key of Dm.
+- **What's wrong**: The Gemini analysis says the key is **F Major / D Minor** and lists the progression as `Gm-C-F-Bb / Gm-C-A7-Dm`. The exercise correctly uses the Gm-C-A7-Dm portion, which is in D minor. The exercise describes it as a `"iv-bVII-V-i cycle"` with `"Gm and C function like a ii-V in Bb major"`. This Roman numeral analysis is **incorrect**: in D minor, Gm is iv, C is bVII, A7 is V7, Dm is i. The text says "iv-bVII-V-i" which is actually correct for D minor. But then it says "Gm and C function like a ii-V in Bb major" -- Gm (ii of F major, not Bb major) and C (V of F major). In Bb major, ii would be Cm and V would be F. So the secondary function analysis is wrong.
+- **Correct advice**: Gm and C function like a **ii-V in F major** (the relative major of D minor), not Bb major. The ii of Bb major would be Cm, and the V of Bb major would be F.
+
+### Issue 4: Texas Sun BPM mismatch
+- **Exercise**: gs-9-8, "Song Study: Texas Sun"
+- **Problematic text**: `"At 111 BPM, it's a slow-burning soul groove"` and the metronome is set to 90 BPM with instruction to "build to 111."
+- **What's wrong**: The Gemini analysis says Texas Sun is at **~98 BPM** [HEARD], not 111 BPM. The exercise references 111 BPM as the original tempo.
+- **Correct advice**: The tempo should reference ~98 BPM as the target, not 111 BPM.
+
+### Issue 5: Texas Sun progression description
+- **Exercise**: gs-9-8, "Song Study: Texas Sun"
+- **Problematic text**: `"Am-G for the verses and opens up to Em-Bm for the bridge"`
+- **What's wrong**: This is minor but the Gemini analysis describes the song as being in **A Dorian / G Major**, with the guitar using 3-note triads on the top strings. The Gemini analysis confirms the verse uses sparse melodic fills rather than traditional chord strumming, and the bridge "shifts to the Em-Bm progression." The progression description is not necessarily wrong, but the exercise frames it as strumming Am-G as a chord vamp, while Gemini says Speer doesn't strum -- he plays "sparse, short melodic fills and double-stop stabs." The exercise does eventually mention this but starts with strumming.
+- **Correct advice**: The sarah note at the end correctly describes the guitar as a "responder" not a constant presence. No strict error, but the initial "strum Am-G" instruction somewhat contradicts the actual playing approach.
+
+### Issue 6: Rules BPM mismatch
+- **Exercise**: gs-10-7, "Song Study: Rules"
+- **Problematic text**: `"Metronome at 74 BPM (original tempo)."` But the sarah note says `"69 BPM"` and references `"the full progression is G-Am-F-G-Em-F-Em-Am at 69 BPM"`.
+- **What's wrong**: The Gemini analysis confirms the BPM is **69** [HEARD]. The exercise sets the metronome at 74 BPM and calls it "original tempo," but it's 5 BPM too fast. The sarah note within the same exercise correctly states 69 BPM, creating an internal contradiction.
+- **Correct advice**: The metronome should be set to 69 BPM to match the original, or at least the text should not claim 74 is the "original tempo."
+
+## Level 10: Global Colors
+
+### Issue 7: Rules progression inconsistency (also in Level 10)
+- **Exercise**: gs-10-7, "Song Study: Rules"
+- **Problematic text**: The `what` field says `"The chord progression is just Am-G (confirmed: G-Am-F-G-Em-F-Em-Am, but the core vamp is Am-G)"` and the exercise teaches Am-G, while the chordVoicings only list `["Am", "G"]`.
+- **What's wrong**: The Gemini analysis confirms the full progression is **G-Am-F-G-Em-F-Em-Am**. The exercise acknowledges this in parentheses but then teaches only Am-G. While simplification for a learning exercise is valid pedagogy, the "confirmed" full progression is significantly more complex than a two-chord vamp, involving F, Em, and G chords -- four distinct chords, not two. This simplification may mislead the student about what they're actually hearing.
+- **Correct advice**: This is more of a pedagogical choice than an error. However, the chordVoicings array should probably include all four chords (G, Am, F, Em) so the student can see the full vocabulary.
+
+### Issue 8: C major triad on top 3 strings -- conflicting positions
+- **Exercise**: gs-9-9, "Khruangbin Three-Note Voicings"
+- **Problematic text**: `"C major triad on top 3 strings: 5th fret (G) - 5th fret (B) - 8th fret (high E). Actually, try fret 9 (G) - 8th fret (B) - 8th fret (high E) for another inversion."`
+- **What's wrong**: Fret 5 on G string = C, fret 5 on B string = E, fret 8 on high E string = C. That gives C-E-C, which is a C major triad (root position, doubled root) -- this is correct. Fret 9 on G string = E, fret 8 on B string = G, fret 8 on high E string = C. That gives E-G-C = C major first inversion -- also correct. No error here on closer inspection.
+
+## Level 11: Fingerpicking
+
+### Issue 9: Breakdown BPM mismatch
+- **Exercise**: gs-11-4, "Song Study: Breakdown -- Jack Johnson"
+- **Problematic text**: `"Jack plays at roughly 75 BPM"` with metronome set to 65 BPM and instruction to build up.
+- **What's wrong**: The Gemini analysis says Breakdown is at **112 BPM** [HEARD]. The exercise says 75 BPM, which is off by a very large margin. This is likely a confusion between the perceived "lazy" feel and the actual tempo. At 112 BPM the Travis picking happens at a moderate clip, which is significantly faster than 75 BPM.
+- **Correct advice**: The target tempo should be ~112 BPM, not 75 BPM. Starting at 65 BPM for practice is fine, but the "original tempo" reference should be corrected. This is the most impactful error found -- a student targeting 75 BPM as the goal would be playing the song at roughly 67% of its actual speed and might think they've "arrived" when they're still far from the real tempo.
+
+### Issue 10: Breakdown key description
+- **Exercise**: gs-11-4, "Song Study: Breakdown -- Jack Johnson"
+- **Problematic text**: `"The capo on 5 puts you in the key of C, which is bright and warm"`
+- **What's wrong**: The Gemini analysis confirms the key is **C Major (played as G Major with Capo 5)**. This is actually correct -- capo 5 with G shapes = key of C. No error here.
+
+### Issue 11: Travis picking G chord bass string pair
+- **Exercise**: gs-11-5, "Travis Picking -- The Alternating Thumb"
+- **Problematic text**: `"try it on G: thumb alternates between string 6 (G) and string 5 (B)"`
+- **What's wrong**: String 5 open on a guitar is **A**, not B. The open strings are E-A-D-G-B-E (6 to 1). When fretting a G chord, the note at fret 2 on the A string is **B**. So the text is saying the thumb alternates between string 6 (open G -- actually fret 3, low E string for G chord) and string 5, and labels string 5 as "B." For a standard open G chord (320003), string 6 at fret 3 = G and string 5 at fret 2 = B. The labeling "string 5 (B)" refers to the **fretted note**, not the open string. This is technically correct but potentially confusing since the student might think string 5 is called "B" (it's the A string). The note B on string 5 at fret 2 is correct for the G chord shape.
+- **Correct advice**: This is not strictly wrong but could be clearer: "string 5, fret 2 (B note)" to avoid confusion with string names.
+
+### Issue 12: Coastline -- chord progression and tuning mismatch
+- **Exercise**: gs-11-7, "Song Study: Coastline Feel -- Hollow Coves"
+- **Problematic text**: `"The core progression is G-Bm-A for the verse, adding D for the chorus"` with chordVoicings `["G", "Bm", "A", "D"]`
+- **What's wrong**: The Gemini analysis says the song is in **D Major (Relative to Capo 2) / E Major (Absolute)** with **CGDGGD alternate tuning** and capo on the **2nd fret** (not 7th as stated in the songRef note). The songRef note says `"CGDGGD alternate tuning, capo 7th fret"` -- but Gemini says **capo on the 2nd fret**. One of these is wrong. The key implication: in standard tuning, G-Bm-A-D is in the key of **D major** (IV-vi-V-I), not particularly the key of Coastline. Since the exercise adapts the feel to standard tuning, the chord choices work as a reasonable approximation. However, the **capo position in the songRef note is incorrect** according to Gemini (7th fret vs. 2nd fret).
+- **Correct advice**: The songRef note should say "capo 2nd fret" not "capo 7th fret" (per Gemini analysis). The sarah note also says "capo on the 7th fret" which matches the songRef but contradicts Gemini. This needs verification against the actual song, but the Gemini analysis explicitly states `"the alternate tuning (CGDGGD) and the capo on the 2nd fret"` as HEARD.
+
+### Issue 13: Gimme Love bass note for F chord
+- **Exercise**: gs-11-12, "Gimme Love Revisited -- Fingerpicked Reggae"
+- **Problematic text**: `"For F, that's the low E string."`
+- **What's wrong**: The standard open F chord is typically played as a partial barre (133211) or xx3211. The bass note of F on the low E string would be fret 1 -- this is technically the correct bass note for F (F is at fret 1 on the low E string). However, many players avoid playing the low E string on an F chord because the barre is difficult and the note can buzz. The Gemini analysis says the chords are **Fmaj7, C, G** played in **first position** with open chords. For Fmaj7 (xx3210 or x33210), the bass note would be on the **A string** (fret 3 = C, or open A if using a different voicing), not the low E string. Given the song uses Fmaj7 rather than F, and the Gemini analysis specifies "open chords played in the first position," the bass string for Fmaj7 is typically the A string (not the low E string).
+- **Correct advice**: If using Fmaj7 (as Gemini confirms), the thumb bass note should be on the **A string** (fret 3 = C, the 5th of F) or **D string** (fret 3 = F). The low E string fret 1 = F is possible but uncommon for fingerpicking Fmaj7 and harder to execute cleanly. The exercise should specify the chord as Fmaj7 (matching the actual song) and adjust the bass note accordingly.
+
+---
+
+## Summary of Issues by Severity
+
+**High severity** (will cause the student to practice incorrectly):
+1. **gs-11-4 (Breakdown) BPM**: 75 BPM stated as original tempo; actual is 112 BPM. Student would practice at 2/3 speed thinking they've matched the record.
+2. **gs-9-1 (Em7 voicing)**: Tab says 022030 but instruction says "lift your ring finger" which would produce 020000. Conflicting instructions will confuse the student.
+3. **gs-9-3 (Gm7 voicing)**: Tab says 353333 but finger description produces 355333. Internal contradiction.
+
+**Medium severity** (musically misleading but won't break the student's practice):
+4. **gs-9-4 (I Didn't Know) harmonic analysis**: "ii-V in Bb major" should be "ii-V in F major."
+5. **gs-9-8 (Texas Sun) BPM**: 111 BPM stated; Gemini says ~98 BPM.
+6. **gs-10-7 (Rules) BPM**: 74 BPM stated as original; Gemini says 69 BPM. Internal contradiction with sarah note.
+7. **gs-11-7 (Coastline) capo position**: songRef says capo 7; Gemini says capo 2.
+8. **gs-11-12 (Gimme Love) bass note/chord**: Exercise says F with bass on low E; Gemini confirms the song uses Fmaj7, making A string more appropriate.
+
+**Low severity** (could be clearer but not technically wrong):
+9. **gs-11-5 (Travis picking)**: "string 5 (B)" is a fretted note label that could be confused with string name.
+10. **gs-10-7 (Rules)**: Am-G simplification of a 4-chord progression -- pedagogically defensible but potentially misleading.</result>
+<usage><total_tokens>86929</total_tokens><tool_uses>19</tool_uses><duration_ms>158007</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\dddc1272-e534-457e-8017-f924b5fda330\tasks\aa645e835d5fa0031.output
+[2026-03-26T06:11:18.176Z] <task-notification>
+<task-id>a3ed591075d52d38f</task-id>
+<tool-use-id>toolu_01C6jzr9i83TByfNafLs3MDq</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\dddc1272-e534-457e-8017-f924b5fda330\tasks\a3ed591075d52d38f.output</output-file>
+<status>completed</status>
+<summary>Agent "Review guitar levels 5-8 mechanics" completed</summary>
+<result>Now I have all the data I need. Let me compile my findings.
+
+---
+
+Here is my complete analysis of mechanical/technical accuracy issues in Guitar Curriculum Levels 5-8.
+
+---
+
+## LEVEL 5 — Barre Chord World
+
+### Issue 1: Sol Del Sur BPM inconsistency (gs-5-6)
+
+**Exercise**: gs-5-6 "Song Study: Sol Del Sur"
+**Problematic text**: `songRef.note: "The barre chord anthem — F#m-A-E-B at 120 BPM. All barre shapes, no open chords."`
+**Also**: The exercise body says to target 100 BPM, and the `speedLadder` goes from 50 to 100.
+**What's wrong**: The `songRef.note` says "F#m-A-E-B at 120 BPM" but the exercise body consistently and correctly uses C#m-B-F#. The songRef note has completely wrong chords (F#m-A-E-B) that don't match the exercise at all. Additionally, Gemini analysis confirms the actual song BPM is **138**, not 100 or 120. The exercise targets 100 BPM which is fine as a learning tempo, but the songRef note is doubly wrong (wrong chords AND wrong BPM).
+**Correct**: The songRef note should read something like "The barre chord anthem — C#m-B-F# at 138 BPM."
+
+### Issue 2: Sol Del Sur harmonic analysis — F# as "IV" (gs-5-6)
+
+**Exercise**: gs-5-6 "Song Study: Sol Del Sur"
+**Problematic text**: `"C#m is i (home minor), B is bVII (the flattened seventh — dark and heavy), F# is IV"`
+**What's wrong**: In the key of C# minor, F# is indeed the IV chord. However, the text says "IV in C# minor should be F#m" and then says "Sun Room uses F# major, borrowed from C# major." This is actually correct musically — the natural diatonic iv chord in C# minor is F#m, and using F# major is a borrowed chord from the parallel major. No error here upon closer review.
+
+### Issue 3: Gemini says barre voicing order is reversed (gs-5-6)
+
+**Exercise**: gs-5-6 "Song Study: Sol Del Sur"
+**Problematic text**: Multiple references including gs-5-3 saying `"C#m (E-shape, fret 4) → B (A-shape, fret 2) → F# (A-shape, fret 2)"`
+**What's wrong**: The Gemini analysis says voicing style is `"likely A-shape for C#m and B, E-shape for F#"` which is the **opposite** of what the exercises teach. The exercises say C#m is E-shape (barre on string 6, fret 4) and B/F# are A-shape (barre on string 5). Gemini infers C#m and B are A-shape and F# is E-shape. However, Gemini marked this as [INFERRED], not [HEARD], and both approaches are musically valid. The exercise's approach (C#m as E-shape at fret 4, B as A-shape at fret 2) is a perfectly standard way to play these chords and keeps them in a tight fret zone. **Not a true error**, but worth noting the discrepancy with Gemini's inference.
+
+### Issue 4: F# barre position confusion (gs-5-3)
+
+**Exercise**: gs-5-3 "The A-Shape Barre"
+**Problematic text**: `"Sol Del Sur uses F# at fret 2 (A-shape) because it's closer to the C#m and B positions."` and also `"Practice placing B at fret 2, then F# at fret 2 — different string root, same fret."`
+**What's wrong**: F# as an A-shape barre at fret 2 doesn't work. The A-shape barre root is on the 5th string. Fret 2 on the 5th string is B. To get F# with an A-shape, you'd need fret 9 (since fret 9 on the A string is F#). The exercise earlier correctly states F# at fret 9. The text about "F# at fret 2" using A-shape is wrong — there's no standard A-shape barre chord voicing that produces F# at fret 2. The E-shape barre for F# would be at fret 2 (6th string fret 2 = F#). So the exercise is confusing E-shape and A-shape here.
+**Correct**: F# can be played as an **E-shape** barre at fret 2 (root on string 6), or as an A-shape barre at fret 9 (root on string 5). The text should say "F# (E-shape, fret 2)" not "F# (A-shape, fret 2)."
+
+### Issue 5: Sunset Garage BPM mismatch (gs-5-9)
+
+**Exercise**: gs-5-9 "Song Study: Sunset Garage"
+**Problematic text**: `"at 142 BPM it's the fastest song in this level"` and target of 142 BPM.
+**What's wrong**: Gemini analysis confirms Sunset Garage is actually at **160 BPM**, not 142. The sarah note at the end actually acknowledges this: `"Sunset Garage is faster than you'd think — closer to 160 BPM."` So the exercise body contradicts its own sarah note. The target tempo of 130+ BPM in the levelUp is reasonable as a learning goal, but the stated song tempo of 142 is incorrect.
+**Correct**: The song is ~160 BPM per Gemini analysis.
+
+### Issue 6: Sunset Garage — Gemini says barre chords, not open (gs-5-9)
+
+**Exercise**: gs-5-9 "Song Study: Sunset Garage"
+**Problematic text**: `"G-Em-C-D in the verse and C-D-G-Em in the chorus — all open chords"`
+**What's wrong**: Gemini analysis says the voicing style is `"Full barres (E-shape and A-shape). This is required to execute the rapid left-hand muting; open chords would ring out too much."` and notes `"No ringing open strings; the style relies entirely on tightly controlled, fretted notes."` The exercise presents it as an open-chord speed exercise, but the actual recording uses full barre chords with heavy left-hand muting and staccato chopping — a fundamentally different technique. The sarah note even mentions "heavy left-hand muting creating a 'bop-bop-bop' staccato effect" which contradicts open chords.
+**Correct**: The exercise should acknowledge that the recording actually uses barre chords with heavy muting, though playing it with open chords is a valid beginner adaptation.
+
+---
+
+## LEVEL 6 — Jangle & Shimmer
+
+### Issue 7: Dmaj7 voicing description (gs-6-2)
+
+**Exercise**: gs-6-2 "The Dmaj7 Shape"
+**Problematic text**: `"It's a D major with the high E string left open instead of fretted at the 2nd fret"` — referring to Dmaj7 as xx0222.
+**What's wrong**: Standard D major is xx0232. The high E string in D major is fretted at the **2nd fret** (giving F#). Lifting the ring finger off the 1st string to make it open gives xx0230. But the exercise says Dmaj7 is xx0222 — that means ALL THREE top strings are fretted at fret 2 (G string = A, B string = D, high E = F#). That's actually just D major (xx0232 with the 3rd fret note on B string moved... no). Let me reconsider: xx0222 means: x-x-0-2-2-2. String 3 (G) at fret 2 = A. String 2 (B) at fret 2 = C#. String 1 (E) at fret 2 = F#. That's D-A-C#-F# which is... D major (with A in the bass from the open D string). There is no maj7 (C#) note... wait, C# IS the major 7th of D. D's major 7th is C#. So xx0222 gives D-A-C#-F# — this IS Dmaj7. The fretted C# on the B string (fret 2) is the major 7th. But then the exercise description is wrong when it says "the high E string left open" — in xx0222, the high E is fretted at fret 2 (F#), NOT open. If the high E were open, it would be xx0220.
+
+Actually, let me re-examine. The step text says: `"Play a regular D major chord (xx0232). Strum it, feel its brightness. Now lift your ring finger off the 1st string (the high E at the 2nd fret). The shape is now xx0222."` But lifting the ring finger off the 1st string from xx0232 gives xx023**0** (open high E), not xx0222. The voicing xx0222 would require *adding* a finger to fret 2 on the high E, not lifting one. This is a legitimate confusion in the notation.
+
+Wait — I need to double-check standard D major fingering. xx0232: string 4 open, string 3 fret 2 (index on A note), string 2 fret 3 (ring on D note), string 1 fret 2 (middle on F#). If you lift the ring finger from string 2 fret 3, you get xx0222 (string 2 drops to... no, string 2 would be open = B). Hmm, let me think again more carefully.
+
+Standard D major: xx0232
+- String 4 (D): open = D
+- String 3 (G): fret 2 = A (index finger)
+- String 2 (B): fret 3 = D (ring finger)
+- String 1 (E): fret 2 = F# (middle finger)
+
+The exercise says to lift the ring finger off string 1. But in standard fingering, the ring finger is on string 2 (fret 3), not string 1. The middle finger is on string 1 (fret 2). The description says `"lift your ring finger off the 1st string (the high E at the 2nd fret)"` — this is calling the wrong finger. It should say "lift your **middle** finger" or more accurately "lift whichever finger is on the 1st string."
+
+But more importantly: if you lift the finger from string 1 (high E, fret 2), you get xx023**0** = xx0230. That's Dsus2 (D-A-D-E), not Dmaj7. The open E is the 2nd/9th, not the 7th.
+
+And the exercise claims xx0222 is Dmaj7. xx0222 = D(open)-A(fret2)-C#(fret2)-F#(fret2). Yes, this IS Dmaj7 because C# is the major 7th of D. But this voicing requires *replacing* the ring finger on string 2 from fret 3 to fret 2, not "lifting" anything. The instruction to "lift your ring finger off the 1st string" doesn't produce xx0222.
+
+**This is a genuine error.** The text says "lift your ring finger off the 1st string" to get xx0222, but:
+1. In standard D (xx0232), it's the middle finger on string 1, not the ring finger.
+2. Lifting a finger off string 1 gives xx0230 (Dsus2), not xx0222 (Dmaj7).
+3. To get Dmaj7 (xx0222), you need to *move* the ring finger from string 2 fret 3 down to fret 2, producing the C# (major 7th).
+
+**However**, there's a simpler interpretation: the exercise is describing Dmaj7 as xx0222 which IS correct for Dmaj7. The physical instruction of how to get there from D major is what's wrong. The correct instruction would be: "Move your ring finger from fret 3 on the B string down to fret 2. The shape is now xx0222."
+
+Then in gs-6-5, the exercise correctly defines Dsus2 as xx0230 (with the high E open). So there's no naming collision — but the physical instruction in gs-6-2 is wrong.
+
+**Correct**: To form Dmaj7 (xx0222) from D major (xx0232), move the finger on the B string from fret 3 to fret 2. The text should NOT say "lift your ring finger off the 1st string."
+
+### Issue 8: Open E as maj7 in both Cmaj7 and Dmaj7 — misleading (gs-6-2)
+
+**Exercise**: gs-6-2 "The Dmaj7 Shape"
+**Problematic text**: `"Notice something: both Cmaj7 and Dmaj7 use the open high E string as their maj7."` and `"Over Dmaj7, it IS the 7th."`
+**What's wrong**: In Dmaj7 (xx0222), the high E string is fretted at fret 2, giving F# (the 3rd of D). The major 7th note (C#) is on the B string at fret 2. The open high E is NOT part of this voicing and is NOT the maj7. The exercise's claim that "both chords use the open high E string as their maj7" is **incorrect for Dmaj7**. In Cmaj7 (x32000), the open B string is the maj7 and the open E is the 3rd. In Dmaj7 (xx0222), the C# on the B string is the maj7, and the high E is fretted as F# (the 3rd).
+
+This is a significant conceptual error that runs through the entire level's narrative about "the open high E string doing the jangle work in BOTH chords." It's true for Cmaj7 (where open E = the 3rd, contributing to shimmer alongside the open B = the 7th), but for Dmaj7 as voiced at xx0222, there IS no open E string.
+
+**However**, if the intended voicing for Dmaj7 is actually xx0220 (with an open high E), then the open E would be the 9th/2nd of D, not the 7th. That would make it Dadd9 or Dsus2, not Dmaj7.
+
+**Correct**: The narrative about the open E being the maj7 in "both" chords is wrong. In Dmaj7 (xx0222), the maj7 is C# on the B string at fret 2. The open high E string is not involved in this voicing.
+
+### Issue 9: Gm7 voicing (gs-6-8)
+
+**Exercise**: gs-6-8 "Song Study: Geneva Strangemod"
+**Problematic text**: `"Gm7 (353333)"`
+**What's wrong**: The voicing 353333 means: string 6 fret 3 (G), string 5 fret 5 (D#/Eb?), string 4 fret 3 (F), string 3 fret 3 (Bb), string 2 fret 3 (D), string 1 fret 3 (G). That gives G-D-F-Bb-D-G. That's actually Gm7 (G-Bb-D-F). Wait: string 5 fret 5 = D. So it's G-D-F-Bb-D-G = G minor 7th. That checks out. No error here.
+
+### Issue 10: Gm simplified voicing (gs-6-7)
+
+**Exercise**: gs-6-7 "The Major→Minor Shift"
+**Problematic text**: `"try the simplified Gm: 3x0333 (mute the A string)"`
+**What's wrong**: 3x0333 means: string 6 fret 3 (G), string 5 muted, string 4 open (D), string 3 fret 3 (Bb), string 2 fret 3 (D), string 1 fret 3 (G). That gives G-x-D-Bb-D-G = Gm (G-Bb-D). This is correct as a simplified Gm voicing. No error.
+
+---
+
+## LEVEL 7 — The Groove Machine
+
+### Issue 11: Stormtrooper power chord positions (gs-7-2)
+
+**Exercise**: gs-7-2 "Stormtrooper Power Chord Riff"
+**Problematic text**: `"D#5 (fret 11), A#5 (fret 6), F#5 (fret 2)"` on `"strings 5-4"`
+**What's wrong**: If these are power chords rooted on string 5 (A string): fret 11 on string 5 = F#, not D#. Fret 6 on string 5 = D#/Eb, not A#. Fret 2 on string 5 = B, not F#. The fret positions and note names don't match for string 5.
+
+If rooted on string 6 (E string): fret 11 = D#/Eb (correct for D#5), fret 6 = A#/Bb (correct for A#5), fret 2 = F#/Gb (correct for F#5). So the fret positions are correct for string 6 (low E), but the text says `"strings 5-4"`.
+
+**This is an error in the string reference.** Power chords at those frets would be on **strings 6-5** (low E and A strings), not "strings 5-4" (A and D strings). Playing on strings 5-4 at those frets would give completely different root notes.
+**Correct**: D#5 at fret 11, A#5 at fret 6, F#5 at fret 2 — all on **strings 6-5** (E and A strings), not strings 5-4.
+
+### Issue 12: chordVoicings mismatch in gs-7-2
+
+**Exercise**: gs-7-2 "Stormtrooper Power Chord Riff"
+**Problematic text**: `chordVoicings: { chords: ["E5", "A5", "D5", "B5"] }`
+**What's wrong**: The exercise teaches D#5, A#5, and F#5 (the actual Stormtrooper riff), but the chord voicing display shows E5, A5, D5, B5 — completely different chords. This would show the student wrong reference diagrams.
+**Correct**: Should be `["D#5", "A#5", "F#5"]` or the enharmonic equivalents.
+
+### Issue 13: Warmth of the Sun — no Gemini analysis to verify
+
+**Exercise**: gs-7-5 "Song Study: Warmth of the Sun"
+**Problematic text**: `"progression that floats between major and minor (E–D–A–Bm)"` and `"Metronome at 60 BPM (half of 122)"`
+**What's wrong**: There is no Gemini analysis for this song (it's not in the analysis results file), so the chords and BPM cannot be cross-referenced. The chords are presented without a source attribution (no "Chordify" or "UG" note). The setup says "half of 122" implying the song is 122 BPM, but this is unverified. This is a minor concern — flagging for awareness rather than as a definitive error.
+
+---
+
+## LEVEL 8 — Desert & Drone
+
+### Issue 14: Sus pentatonic fretboard position description (gs-8-1)
+
+**Exercise**: gs-8-1 "Sus Pentatonic — One Note Different"
+**Problematic text**: `"the 2nd finger moves one fret down (from the 8th fret on the B string to the 7th)"`
+**What's wrong**: In Am pentatonic position 1 (frets 5-8), the C note (minor 3rd) is at fret 8 on the **G string** (3rd string), not the B string. On the B string, the pentatonic notes at this position are C at fret 1 and D at fret 3 — neither of which is at fret 8. The B note (the replacement in sus pentatonic) would be at fret 7 on the **high E string** (1st string), not the B string. The exercise seems to be pointing at the wrong string for this shape change.
+
+Actually, let me reconsider the standard Am pentatonic box at fret 5:
+- String 6 (E): frets 5 (A) and 8 (C)
+- String 5 (A): frets 5 (D) and 7 (E)
+- String 4 (D): frets 5 (G) and 7 (A)
+- String 3 (G): frets 5 (C) and 7 (D)
+- String 2 (B): frets 5 (E) and 8 (G)
+- String 1 (E): frets 5 (A) and 8 (C)
+
+The C notes in this position are at: string 6 fret 8, string 3 fret 5, string 1 fret 8. To change C to B (one fret lower), you'd move: string 6 fret 8→7, string 3 fret 5→4, string 1 fret 8→7. The exercise says "from the 8th fret on the B string to the 7th" — but fret 8 on the B string (2nd string) is G#, not C. The C is at fret 1 on the B string (way outside this position).
+
+**This is an error.** The string reference is wrong. The change from C to B would happen on strings 6, 3, or 1 — not the B string (string 2).
+**Correct**: The most prominent change in the box is on the **high E string** (string 1), moving from fret 8 (C) to fret 7 (B), and on the **low E string** (string 6), from fret 8 (C) to fret 7 (B). The G string (string 3) would also change from fret 5 (C) to fret 4 (B), which extends the box.
+
+### Issue 15: Drop D fret positions (gs-8-2)
+
+**Exercise**: gs-8-2 "Drop D Drone Setup"
+**Problematic text**: `"What used to be the 2nd fret (F#) is now E. The 3rd fret (used to be G) is now F. The 5th fret is now G (was A in standard)."`
+**What's wrong**: In standard tuning, the 6th string is E. Fret 2 = F#, fret 3 = G, fret 5 = A. In Drop D tuning, the 6th string is D. Fret 2 = E, fret 3 = F, fret 5 = G. The exercise says:
+- "What used to be the 2nd fret (F#) is now E" — correct (D + 2 semitones = E)
+- "The 3rd fret (used to be G) is now F" — correct (D + 3 semitones = F)
+- "The 5th fret is now G (was A in standard)" — correct (D + 5 semitones = G)
+
+No error here. All the fret math checks out.
+
+### Issue 16: Desert Recovery — bend direction (gs-8-7)
+
+**Exercise**: gs-8-7 "Desert Recovery"
+**Problematic text**: `"bend the C down toward B (a quarter-tone bend recovery)"`
+**What's wrong**: On guitar, you can only bend strings **up** in pitch (pushing/pulling the string to increase tension). Bending "down" toward a lower pitch is not standard technique. If you're at C (fret 8 on high E) and want to get toward B (fret 7), you can't bend the C downward — you'd need to slide down to fret 7 and then bend slightly up (a pre-bend release technique), or simply play B at fret 7 and bend it slightly up toward C. The instruction to "bend the C down toward B" describes a physically backward motion.
+
+However, there IS a technique called a "reverse bend" or "pre-bend release" where you pre-bend a note and release. But the text doesn't describe it that way — it says to bend C *down toward B*, which implies reducing the pitch by bending, which isn't how standard bending works.
+
+**Correct**: The recovery should either be: play B (fret 7) and bend slightly up toward C (a quarter-tone above B), or use a slide from C down to B. The "bend C toward B" language describes an impossible standard technique.
+
+### Issue 17: Fretboard Visualization — D on the G string (gs-8-15)
+
+**Exercise**: gs-8-15 "Fretboard Visualization"
+**Problematic text**: `"Audiate D — a minor 3rd above B. Visualize D on the G string (7th fret)"`
+**What's wrong**: Fret 7 on the G string is D. That's correct. And D is a minor 3rd above B. Also correct. No error here.
+
+### Issue 18: Audiation step — B at 9th fret D string (gs-8-15)
+
+**Exercise**: gs-8-15 "Fretboard Visualization"
+**Problematic text**: `"Audiate the note B — one whole step above A. Hear it in your mind. Visualize where B lives on the fretboard: D string, 9th fret."`
+**What's wrong**: The D string (4th string) at fret 9 is B. That's correct. No error.
+
+---
+
+## SUMMARY OF CONFIRMED ISSUES
+
+Here are the definitive mechanical/technical errors found:
+
+| # | Exercise | Issue | Severity |
+|---|----------|-------|----------|
+| 1 | gs-5-6 | songRef.note has wrong chords (F#m-A-E-B) and wrong BPM (120). Should be C#m-B-F# at 138 BPM. | **High** — students see wrong chords in the song reference |
+| 2 | gs-5-3 | "F# (A-shape, fret 2)" is wrong. A-shape fret 2 = B. F# at fret 2 is an E-shape barre. | **High** — teaches wrong shape-to-fret mapping |
+| 3 | gs-5-9 | Song BPM stated as 142 but Gemini confirms 160. Own sarah note contradicts the exercise body. | **Medium** — target tempo is still fine, stated BPM wrong |
+| 4 | gs-5-9 | Says "all open chords" but Gemini confirms full barre chords with heavy muting, no open strings. | **Medium** — technique approach contradicts actual recording |
+| 5 | gs-6-2 | Physical instruction to "lift your ring finger off the 1st string" to get Dmaj7 (xx0222) is wrong. Lifting a finger off string 1 from xx0232 gives xx0230 (Dsus2). To get xx0222, you move the B-string finger from fret 3 to fret 2. | **High** — wrong physical instruction |
+| 6 | gs-6-2 | Claims "both Cmaj7 and Dmaj7 use the open high E string as their maj7." In Dmaj7 (xx0222), the high E is fretted at fret 2 (F#, the 3rd), not open. The maj7 (C#) is on the B string. | **High** — incorrect theory runs through the whole level |
+| 7 | gs-7-2 | Power chords described as "strings 5-4" but the fret positions (11, 6, 2) only produce D#5, A#5, F#5 on strings 6-5. | **Medium** — wrong string reference |
+| 8 | gs-7-2 | chordVoicings shows E5, A5, D5, B5 but the exercise teaches D#5, A#5, F#5. | **Medium** — chord diagram mismatch |
+| 9 | gs-8-1 | Says the sus pentatonic shape change is "from the 8th fret on the B string to the 7th." Fret 8 on the B string is G#, not C. The C→B change occurs on the high E string (fret 8→7), low E string (fret 8→7), or G string (fret 5→4). | **Medium** — wrong string reference |
+| 10 | gs-8-7 | "bend the C down toward B" — you cannot bend a guitar string down in pitch. Bending always raises pitch. | **Medium** — describes a physically impossible technique |</result>
+<usage><total_tokens>95493</total_tokens><tool_uses>24</tool_uses><duration_ms>207272</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\dddc1272-e534-457e-8017-f924b5fda330\tasks\a3ed591075d52d38f.output
+[2026-03-26T06:12:04.481Z] <task-notification>
+<task-id>ae35d132007a31413</task-id>
+<tool-use-id>toolu_01NWCoCqzpyeRCqEirjJYGqu</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\dddc1272-e534-457e-8017-f924b5fda330\tasks\ae35d132007a31413.output</output-file>
+<status>completed</status>
+<summary>Agent "Review guitar levels 12-14 mechanics" completed</summary>
+<result>Now I have all the data needed. Let me also check on the Marsha chord progression discrepancy more carefully, and the BPM issues.
+
+The Gemini analysis says Marsha is in F Major / D Minor at 108 BPM, with the progression Dm-C-G-F-Bb. The exercise (gs-12-5) says it's a "6-chord song (Dm-C-G-F-Bb)" at 116 BPM. But then says "Learn the chord progression: F (133211) - G (320003) - Bb (x13331) - C (x32010) - D (xx0232) - Dm (xx0231)" and mentions a "D→Dm shift at the chorus." Let me check the Gemini analysis more carefully -- it says the verse is Dm-C-G-F-Bb, and the chorus is G-F-Bb-F-C then Bb-C-Dm. There is no D major in Gemini's analysis.
+
+Now I have all the information needed. Here is my full analysis:
+
+---
+
+## Technical Accuracy Issues Found in Guitar Levels 12-14
+
+### LEVEL 12: Dynamics & Expression
+
+#### Issue 1 — gs-12-4: Incorrect Gm open-position voicing (310033)
+
+**Exercise ID:** gs-12-4 ("The G→Gm Shift")
+**Problematic text:** `"Option 1: first position (310033) — move your middle finger from fret 3 on the A string down to fret 1."`
+**What's wrong:** The voicing 310033 is not a standard Gm chord. Working through string by string (low E to high E): 3-1-0-0-3-3. That gives you the notes G(3rd fret low E), Bb(1st fret A), D(open D), G(open G), Bb(3rd fret B), G(3rd fret high E). While the notes G-Bb-D are correct for Gm, the physical instruction is wrong: "move your middle finger from fret 3 on the A string down to fret 1" doesn't describe the transition from G major (320003) to this shape clearly, and this voicing is extremely awkward to finger in practice. More importantly, the open D string would need to be fretted or muted in most first-position Gm approaches. The standard first-position Gm would be xx0333 (Gm with just top 4 strings) or 3x0333. The described 310033 is playable but unorthodox and the fretting instruction is misleading.
+**Correct advice:** Use 3x0333 (muting the A string) or the barre 355333. If a first-position voicing is desired, 310033 technically works but should be described as a non-standard shape with a note that the stretch from fret 1 on the A string to fret 3 on B/E is awkward.
+
+#### Issue 2 — gs-12-5: Marsha BPM listed as 116, Gemini says 108
+
+**Exercise ID:** gs-12-5 ("Song Study: Marsha — Current Swell")
+**Problematic text:** `"target 116"` (in setup) and `"work up toward 116"` (in step 5)
+**What's wrong:** The Gemini analysis clearly states Marsha is at **108 BPM** [HEARD]. The exercise targets 116 BPM, which is 8 BPM too fast. The Sarah note later in the same exercise correctly says "The song sits at about 108 BPM" -- so there's an internal contradiction within the exercise itself.
+**Correct advice:** Change the target BPM to 108 throughout.
+
+#### Issue 3 — gs-12-5: Marsha described as having a D→Dm shift, but Gemini analysis shows no D major chord
+
+**Exercise ID:** gs-12-5 ("Song Study: Marsha — Current Swell")
+**Problematic text:** `"Listen for the D→Dm shift at the chorus"` (in songRef note) and `"the magic moment: after the verse, play D for 4 bars, then Dm for 4 bars"` (step 3)
+**What's wrong:** The Gemini analysis of Marsha identifies the key as F Major / D Minor and the progressions as verse: Dm-C-G-F-Bb, chorus: G-F-Bb-F-C then Bb-C-Dm. There is **no D major chord** in Gemini's analysis at all. The song appears to live in D minor / F major territory throughout. The exercise incorrectly attributes the D→Dm major-to-minor trick to this song. The exercise also lists D (xx0232) and Dm (xx0231) as chords in the song, but Gemini shows only Dm (not D major). The D→Dm trick may have been projected onto the song to fit the Level 12 narrative, but it doesn't match the actual audio analysis.
+**Correct advice:** Remove the D major chord from the Marsha chord list and the D→Dm narrative. The song's emotional power comes from its dynamic arc (as correctly noted elsewhere) and the Dm-C-G-F-Bb progression itself, not from a major→minor shift. If you want to keep the D→Dm exercise, disconnect it from Marsha and present it as a standalone technique exercise (which gs-12-3 already does).
+
+#### Issue 4 — gs-12-7: Peace Blossom Boogy described as "boogaloo shuffle" but Gemini says it's a syncopated 16th-note pattern
+
+**Exercise ID:** gs-12-7 ("Song Study: Peace Blossom Boogy")
+**Problematic text:** `"Strum with a boogaloo shuffle — not straight eighth notes but swung, like 'da-DUM da-DUM da-DUM.' Think of a 1950s rock 'n' roll rhythm"` (step 2)
+**What's wrong:** The Gemini analysis identifies the strum pattern as `"D-DU-xU-UDU (where x is a muted strum)"` with `"Slightly swung 16ths, laid-back/behind-beat"` feel. This is a syncopated 16th-note funk-lite pattern, not a swung-eighth "boogaloo shuffle." The exercise describes a 1950s rock'n'roll shuffle feel, but the actual song is a 16th-note pattern with muted ghost strums -- much more funk-influenced. Notably, the Sarah note at the end of the same exercise correctly describes it as `"a syncopated 16th-note funk-lite groove: D-DU-xU-UDU where x is a muted 'chk' strum"` -- contradicting the exercise's own step 2 instruction.
+**Correct advice:** Replace the "boogaloo shuffle" description with the actual syncopated 16th-note funk-lite pattern described in the Sarah note. The feel is swung 16ths, not swung 8ths.
+
+---
+
+### LEVEL 13: The Full Palette
+
+#### Issue 5 — gs-13-2: Em pentatonic suggested over surf rock track, then immediately pivots to A Phrygian
+
+**Exercise ID:** gs-13-2 ("Scale Choice Game")
+**Problematic text:** `"Switch to the surf rock track. Play Em pentatonic. Then try A Phrygian (A-Bb-C-D-E-F-G)"`
+**What's wrong:** The exercise tells the student to play Em pentatonic over the surf rock backing track, then compare it with A Phrygian. These are scales in completely different keys/centers. The surf rock track (at 120 BPM) is most likely in a major key (E or A based on other exercises). Playing Em pentatonic would work over an Em-based track, but switching to A Phrygian as a "comparison" doesn't make musical sense as a contrast choice -- they're not different colorings of the same key center, they're different keys entirely. Every other step in this exercise compares scales that share the same root (Am pentatonic vs A Dorian, A sus pentatonic vs Am pentatonic, A Dorian vs Am pentatonic vs A natural minor). This step breaks the pattern by comparing Em pentatonic with A Phrygian.
+**Correct advice:** Either compare Em pentatonic with E Phrygian (both rooted on E), or compare Am pentatonic with A Phrygian (both rooted on A) over the surf track. The intended lesson (hearing Phrygian's dark/Spanish flavor) works best with same-root comparisons.
+
+#### Issue 6 — gs-13-2: A Phrygian Dominant scale spelled incorrectly
+
+**Exercise ID:** gs-13-2 ("Scale Choice Game")
+**Problematic text:** `"A Phrygian dominant (A-Bb-C#-D-E-F-G)"`
+**What's wrong:** A Phrygian dominant scale is A-Bb-**C#**-D-E-F-G. This is actually correct as written. No issue here upon closer inspection -- the raised 3rd (C# instead of C) is the defining feature of Phrygian dominant vs regular Phrygian. This one checks out.
+
+*(Retracted -- not an issue.)*
+
+#### Issue 7 — gs-13-4: Texas Sun chords listed as Am-G-Em-Bm, but Gemini says key is A Dorian / G Major at ~98 BPM
+
+**Exercise ID:** gs-13-4 ("Ear Transcription Challenge")
+**Problematic text:** `"Texas Sun (Am-G-Em-Bm) has more chord changes"` (step 6) and throughout gs-13-6 where Texas Sun is used with `"Am-G-Em-Bm"`
+**What's wrong:** This is not technically wrong -- the curriculum itself established Am-G-Em-Bm for Texas Sun back in Level 9, and the Gemini analysis confirms these chords. However, the exercise says the BPM for "Real Love Baby" should start the transcription challenge and references "D-Em-G" as its roots -- but Real Love Baby's actual roots are D-Em-G-A (the A7), so listing only 3 roots is incomplete. This is a minor transcription exercise text issue.
+**Correct advice:** Change `"'D, E, G' (for Real Love Baby)"` to `"'D, E, G, A' (for Real Love Baby)"` since A7 is the fourth chord.
+
+#### Issue 8 — gs-13-6: Texas Sun BPM inconsistency
+
+**Exercise ID:** gs-13-6 ("The Feel Toggle")
+**Problematic text:** `"Metronome at 100 BPM"` (setup)
+**What's wrong:** The curriculum's own Level 9 study of Texas Sun gives the BPM as 111, and the Gemini analysis says ~98 BPM. Setting the metronome at 100 BPM is a reasonable middle ground and not strictly wrong, but it's worth noting the discrepancy between the curriculum's own 111 BPM (Level 9) and the Gemini-analyzed ~98 BPM.
+**Correct advice:** Minor issue. Could note that the song is closer to 98 BPM per Gemini analysis rather than the 111 stated in Level 9.
+
+#### Issue 9 — gs-13-1: Gimme Love described as reggae with chords F-C-G, but Gemini analysis shows it's fingerpicked, not skanked
+
+**Exercise ID:** gs-13-1 ("Five Feels, One Progression")
+**Problematic text:** `"Reggae skank: same Am-G-C-D... Think Gimme Love."` (step 2)
+**What's wrong:** The Gemini analysis of Gimme Love (The Elovaters) identifies it as a **fingerpicked** song with "Thumb plays the bass note on the downbeat, followed by syncopated finger plucks" and "percussive string slaps on beats 2 and 4." This is NOT a reggae skank pattern at all -- there is no upbeat-only strum with palm muting. The song is in C Major with open chord fingerpicking. Referring to it as an example of "reggae skank" contradicts its actual playing style. The exercise should reference a song that actually uses reggae skank technique.
+**Correct advice:** Replace "Think Gimme Love" with a reference to a song that actually uses reggae skank (e.g., "Think Pepper" or "Think Elovaters' ska tracks"). Or if Gimme Love is kept as a reference, note that the fingerpicked reggae is a different style than the skank being practiced.
+
+---
+
+### LEVEL 14: Your Sound
+
+#### Issue 10 — gs-14-2: Sol Del Sur listed with wrong chord progression
+
+**Exercise ID:** gs-14-2 ("Choosing Your Set")
+**Problematic text:** `"Sol Del Sur (C#m-B-F#-E)"`
+**What's wrong:** The curriculum's own Level 5 song study and the Gemini analysis both establish Sol Del Sur as C#m-B-F# for the verse. The E chord appears only in the chorus (E-F# per Gemini). Listing the progression as "C#m-B-F#-E" as if it's one unified progression conflates verse and chorus chords. This is a minor issue since the student has studied the song, but it could cause confusion when comparing to the ear-transcription exercise (gs-13-4) which correctly lists it as "C#m-B-F#."
+**Correct advice:** Either list as "C#m-B-F# (verse) / E-F# (chorus)" or just "C#m-B-F#" as the primary progression.
+
+#### Issue 11 — gs-14-1: Descending progression listed as Am-G-F-E but called "descending minor"
+
+**Exercise ID:** gs-14-1 ("Who Do You Sound Like?")
+**Problematic text:** `"Am-G-F-E descending minor"`
+**What's wrong:** Am-G-F-E is a descending chromatic bass-note progression (A-G-F-E), commonly called the "Andalusian cadence" or "descending Phrygian cadence." But it's not purely "minor" -- G, F, and E are typically played as major chords in this context (Am-G-F-E, not Am-Gm-Fm-Em). Calling it "descending minor" is imprecise and could mislead the student into thinking all the chords should be minor.
+**Correct advice:** Call it "Am-G-F-E descending progression" or "Am-G-F-E Andalusian cadence." The student already knows these chords from the Phrygian work in Level 12.
+
+#### Issue 12 — gs-14-5: Sun Room reference at 140 BPM
+
+**Exercise ID:** gs-14-5 ("The Peak")
+**Problematic text:** `"a Sun Room surf blast at 140 BPM"`
+**What's wrong:** The Gemini analysis lists Sol Del Sur (Sun Room) at 138 BPM and Sunset Garage (Sun Room) at 160 BPM. Neither is 140 BPM. This is a minor rounding issue and not a significant technical error, but 140 doesn't match either analyzed Sun Room track.
+**Correct advice:** Either say "~138 BPM" (matching Sol Del Sur) or "~160 BPM" (matching Sunset Garage), or just drop the specific BPM since this is a general reference.
+
+---
+
+### Summary of Issues by Severity
+
+**High (factually wrong, would mislead practice):**
+1. **gs-12-5**: Marsha does NOT contain a D major chord or D→Dm shift -- this is fabricated. The entire "magic moment" step is based on a non-existent chord in the song.
+2. **gs-13-1**: Gimme Love is fingerpicked, NOT a reggae skank -- wrong technique reference.
+3. **gs-12-5**: Marsha BPM internally contradictory (116 in steps vs 108 in Sarah note; Gemini confirms 108).
+
+**Medium (technically imprecise, could cause confusion):**
+4. **gs-12-7**: Peace Blossom Boogy described as "boogaloo shuffle" (swung 8ths) but it's actually a syncopated 16th-note funk pattern. Internal contradiction with the Sarah note.
+5. **gs-12-4**: Gm voicing 310033 is unorthodox and the finger movement instruction is unclear.
+6. **gs-13-2**: Em pentatonic vs A Phrygian comparison over surf track breaks the same-root comparison pattern used in all other steps.
+7. **gs-13-4**: Real Love Baby roots listed as "D, E, G" but should be "D, E, G, A" (missing the A7).
+8. **gs-14-1**: "Descending minor" is an imprecise name for the Am-G-F-E Andalusian cadence (G, F, E are major).
+
+**Low (minor inconsistencies):**
+9. **gs-14-2**: Sol Del Sur progression listed as C#m-B-F#-E, conflating verse and chorus.
+10. **gs-14-5**: Sun Room referenced at 140 BPM; actual tracks are 138 or 160.
+11. **gs-13-6**: Texas Sun metronome at 100 BPM vs Level 9's 111 BPM vs Gemini's ~98 BPM.</result>
+<usage><total_tokens>81404</total_tokens><tool_uses>23</tool_uses><duration_ms>151270</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\dddc1272-e534-457e-8017-f924b5fda330\tasks\ae35d132007a31413.output
+[2026-03-26T06:43:05.752Z] what was the fix for baby? did it get pushed? what do you mean bend the G string at the 7th fret?
+[2026-03-26T06:44:25.169Z] yes and please fix all mechinical issues like this, i dont know how we can et teh AI to uderstand the lens
+[2026-03-26T06:46:01.515Z] please use opus agents
+[2026-03-26T06:47:54.316Z] <task-notification>
+<task-id>afe410dd7eb032532</task-id>
+<tool-use-id>toolu_017XfeKXJwshvUd1L2NhD5G3</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\dddc1272-e534-457e-8017-f924b5fda330\tasks\afe410dd7eb032532.output</output-file>
+<status>completed</status>
+<summary>Agent "Positional mechanics review L1-7" completed</summary>
+<result>Now I have enough information to do a thorough review. Let me compile my findings.
+
+---
+
+Here is the full mechanical review of Guitar Curriculum Levels 1-7.
+
+---
+
+## Issue 1: gs-3-4 — Cadd6 Embellishment (Going Gets Tough)
+
+**Exercise ID:** `gs-3-4` (Level 3)  
+**Title:** Song Study: Going Gets Tough  
+**Problematic text:** `"The Cadd6 Embellishment: While holding a C chord, hammer your pinky onto the 2nd fret of the G string."`
+
+**Why it's physically impractical:** In a standard open C chord (x32010), the **middle finger** is already on the D string 2nd fret, and the **ring finger** is on the A string 3rd fret. The G string is already **open** in a C chord. Hammering the pinky onto the G string 2nd fret is physically possible, but calling the result "Cadd6" is misleading — fretting the G string at fret 2 produces an A note, which would make this a C(add6) or Cadd6 (C-E-G-A). However, the bigger issue is that the instruction says "hammer your pinky onto the 2nd fret of the G string" when **holding a C chord shape**. The standard C chord voicing has no finger on the G string (it's open), so the G string is available for the pinky. This is physically **doable** but **awkward** because the pinky has to reach from behind the ring finger (which is on A string fret 3) down to the G string fret 2 — a backwards reach. The pinky would need to curl under the ring finger's position, which is a stretch for beginners at Level 3.
+
+**What would actually work:** "While holding a C chord, hammer your pinky onto the **3rd fret** of the G string (Bb). Then pull off back to the open G." Or alternatively, describe the embellishment more accurately: "Lift your middle finger off the D string briefly to hammer-on from open D to fret 2 (E), creating a melodic wobble within the C chord." This matches common C chord embellishments guitarists actually use. If the Cadd6 (A note on G string) is truly the intended sound, the instruction should note that the pinky reaches to the G string fret 2 from below the ring finger — this is a stretch that should be warned about.
+
+---
+
+## Issue 2: gs-1-9 — Bending on B string fret 8
+
+**Exercise ID:** `gs-1-9` (Level 1)  
+**Title:** Bending & Vibrato — Making the Guitar Sing  
+**Problematic text:** `"Place your ring finger on the B string, 8th fret (G note). Now push the string upward (toward the ceiling)... The pitch should rise. Push until it sounds like the note at the 9th fret (Ab)."`
+
+**Why this is a contextual concern (not a hard impossibility):** This exercise is in Level 1, which is positioned entirely around open chords (frets 0-3) and the Am pentatonic at frets 5-8. The student is asked to bend at fret 8 on the B string. This is physically fine — fret 8 has reasonable tension and the B string bends easily. However, the exercise title and context suggest this is being done within the Am pentatonic shape (position 1, frets 5-8). The text is self-consistent here. **No actual issue** — this one checks out. The student is working in the pentatonic box, not holding open chords simultaneously.
+
+---
+
+## Issue 3: gs-2-7 — Bending at fret 7 on the G string
+
+**Exercise ID:** `gs-2-7` (Level 2)  
+**Title:** Bending — Making the Guitar Sing  
+**Problematic text:** `"Half-step bend prep: play the note at fret 7 on the G string (D). Now play fret 8 (Eb — the blue note). Listen to the distance between them — that's a half step. Now go back to fret 7 and BEND the string upward (toward the ceiling) until it matches the pitch of fret 8."`
+
+Then later: `"Full-step bend: play fret 7 (D), then play fret 9 (E). That's a whole step — twice as far. Now bend from fret 7 to match fret 9."`
+
+**Physical assessment:** Bending the G string at fret 7 is reasonable for a half-step bend. A **whole-step bend on the G string at fret 7** is more demanding — the G string is one of the wound strings (on most acoustic/electric sets it's the thinnest wound or a plain string depending on gauge), and fret 7 is mid-neck where tension is moderate. For a Level 2 student, a whole-step bend on the G string at fret 7 is challenging but not impossible. The exercise correctly emphasizes supporting fingers. **No actual issue** — this is physically demanding but appropriate with the supporting finger technique described.
+
+---
+
+## Issue 4: gs-4-4b — Jah Werx Barre Chords at Level 4
+
+**Exercise ID:** `gs-4-4b` (Level 4)  
+**Title:** Song Study: Jah Werx — Susto (B-F#-E)  
+**Problematic text:** `"B is x24442 (A-shape barre at fret 2). F# is 244322 (E-shape barre at fret 2)."`
+
+**Why this is a positioning concern:** This exercise appears in Level 4 (The Offbeat), but barre chords are not formally taught until Level 5 (Barre Chord World). The exercise acknowledges this indirectly by offering B7 (x21202) as a substitute, but it still teaches full barre shapes. This is a **curriculum sequencing issue** rather than a physical impossibility — the student is asked to do something they haven't been taught yet. The Sarah note even says "this exercise is your bridge between open-chord reggae and barre-heavy reggae-rock of Level 7" — acknowledging it's ahead of its level. **Not a mechanical issue per se, but worth noting.**
+
+---
+
+## Issue 5: gs-6-6 — Friends (levitation room) riff at frets 5-7
+
+**Exercise ID:** `gs-6-6` (Level 6)  
+**Title:** Song Study: Friends (levitation room)  
+**Problematic text:** `"hold the Em shape as a foundation, then use hammer-ons and pull-offs on the G, B, and high E strings around frets 5-7. The riff outlines the Em chord melodically... Then slide your hand down into the Dmaj7 shape at the 5th fret"`
+
+**Why this is a positional conflict:** The student is told to hold an Em chord shape (022000 — open position, frets 0-2) as a "foundation" while performing hammer-ons and pull-offs at frets 5-7. You **cannot** hold an open Em chord (frets 0-2) and simultaneously play hammer-ons at fret 5-7. Your hand has to leave the Em position entirely to reach frets 5-7. The instruction to "hold the chord shape as a foundation" is misleading — in reality, the guitarist would be playing an Em-derived shape or fragment higher up the neck, not the open Em. Then "slide your hand down into the Dmaj7 shape at the 5th fret" — but the open Dmaj7 (xx0220) is at frets 0-2, not fret 5. There's a contradiction between the open chord voicings defined earlier in the level and the fret positions described for the riff.
+
+**What would actually work:** Clarify that the riff uses an Em **barre shape** or partial shape at the 7th fret area (e.g., Em rooted at fret 7 on the A string), not the open Em chord. Or describe it as: "Play single notes and double-stops on the G, B, and high E strings around frets 5-7 that outline the Em tonality — you are NOT holding the open Em shape during this. Your hand is up at the 5th-7th fret area." The Dmaj7 "at the 5th fret" should be clarified as a partial voicing or fragment at that position, not the open Dmaj7 shape.
+
+---
+
+## Issue 6: gs-3-4 — Going Gets Tough bass-strum pattern
+
+**Exercise ID:** `gs-3-4` (Level 3)  
+**Title:** Song Study: Going Gets Tough  
+**Problematic text:** `"Play the LOW root note of each chord on the downbeat (low E string 3rd fret for G, A string 3rd fret for C), then a quick, snappy strum of the upper strings on the upbeat."`
+
+**Physical assessment:** With a capo on fret 1, playing "G shape" means the actual chord is Ab. "Low E string 3rd fret for G" means fret 3 relative to the capo (actual fret 4), which is the root G#/Ab. "A string 3rd fret for C" means fret 3 relative to the capo (actual fret 4), which is C#/Db. The fret numbers refer to the shapes (as if the capo were the nut), which is standard practice. The bass-strum alternation is physically fine — pick the bass note, then strum the treble strings. **No actual issue** — this is standard alternating-bass technique and correctly described.
+
+---
+
+## Issue 7: gs-1-3 — Am chord voicing has ring finger on wrong string
+
+**Exercise ID:** `gs-1-3` (Level 1)  
+**Title:** Open Chords — Am, C, G, D, Em  
+**Problematic text:** `"Am: index finger on B string fret 1, middle finger on D string fret 2, ring finger on G string fret 2."`
+
+**Physical assessment:** Standard Am is x02210: index on B string fret 1, middle on D string fret 2, ring on G string fret 2. This is correct. **No issue.**
+
+---
+
+## Summary of Genuine Mechanical Issues Found
+
+### ISSUE 1 (Medium): gs-3-4 — Cadd6 Embellishment Awkwardness
+**File:** `level-03-power-and-drive.js`, line ~107  
+The pinky hammer-on to G string fret 2 while holding a C chord is an awkward backwards reach for a Level 3 student. The pinky has to reach below/behind the ring finger (which is on A string fret 3). Not impossible for experienced players, but poorly described for this skill level. The text should either describe the finger choreography more carefully or suggest a more accessible embellishment.
+
+### ISSUE 2 (High): gs-6-6 — Friends Riff Position Conflict
+**File:** `level-06-jangle-and-shimmer.js`, line ~154  
+The exercise tells students to "hold the Em shape as a foundation" while playing hammer-ons at frets 5-7. Open Em lives at frets 0-2 — you cannot hold it and play at frets 5-7 simultaneously. Similarly, "Dmaj7 shape at the 5th fret" contradicts the open Dmaj7 (xx0220) taught earlier in the level. The riff description conflates open chord shapes with positional playing higher on the neck. This needs to be rewritten to either describe the actual hand position used (partial shapes/fragments at fret 5-7) or acknowledge the hand leaves the open chord position.
+
+---
+
+### Issues NOT Found (Good News)
+
+The following categories were checked and no problems were found:
+
+- **Wrong hand for technique**: All bending, palm muting, and strumming instructions correctly identify the picking/strumming hand vs. fretting hand.
+- **Bending at impractical frets**: No instructions to bend at fret 1 or to bend the low E string. All bending happens at frets 7-8 on the G and B strings, which is standard.
+- **Techniques that don't match the song**: Song studies generally match the Gemini analysis. Dope & Smoke is correctly described as staccato/choppy strumming. Going Gets Tough correctly uses the boom-chuck pattern. The Stormtrooper riff correctly uses power chords with the skank switch.
+- **Fret references contradicting chord positions**: All pentatonic exercises correctly place the student in the frets 5-8 zone away from open chord work. The exercises that use open chords don't simultaneously ask for high-fret work (except the Friends issue above).
+- **Impossible simultaneous actions**: No instructions ask a finger to be in two places at once (except the edge case of the Friends riff in gs-6-6).
+- **Position jumps while holding chords**: The curriculum properly separates chord strumming exercises from single-note pentatonic work. Students aren't asked to hold an open chord while playing at fret 12.</result>
+<usage><total_tokens>139074</total_tokens><tool_uses>25</tool_uses><duration_ms>131971</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\dddc1272-e534-457e-8017-f924b5fda330\tasks\afe410dd7eb032532.output
+[2026-03-26T06:49:24.231Z] <task-notification>
+<task-id>ae377e4b5bd3f90bc</task-id>
+<tool-use-id>toolu_01DQjYk4mAhXPaNXoPUpFWNb</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\dddc1272-e534-457e-8017-f924b5fda330\tasks\ae377e4b5bd3f90bc.output</output-file>
+<status>completed</status>
+<summary>Agent "Positional mechanics review L8-14" completed</summary>
+<result>Now I have enough data to compile a thorough report. Let me finalize.
+
+---
+
+## MECHANICAL REVIEW REPORT: Guitar Curriculum Levels 8-14
+
+After exhaustive review of all seven level files (~2,400 lines of exercise content) cross-referenced against the Gemini song analysis results, here are the positional and contextual mechanical issues found.
+
+### ISSUE 1: Position jump for tremolo picking (gs-8-12, Bombino's Fire)
+
+**File**: `level-08-desert-and-drone.js`, line ~304
+
+**Problematic text**:
+> "try tremolo picking: rapid alternating picks on a single melody note while the drone sustains. Pick 16th notes on E (12th fret high E string) for 2 bars, then shift to D for 2 bars."
+
+**Why it's physically impractical**: The exercise is in Drop D tuning with the sus pentatonic fretboard set to position 2 (5th fret area). The preceding step says to play the drone-and-melody pattern from gs-8-6, which lives around open strings and the 5th position. Jumping to fret 12 on the high E string for tremolo picking while maintaining an open-string drone is a huge position leap. The student would abandon the 5th-position pattern, travel 7 frets up the neck, and need to find their way back. The "shift to D for 2 bars" is also ambiguous -- D at which fret on which string?
+
+**Practical alternative**: Specify tremolo picking on notes within the working position: "Pick 16th notes on E (5th fret, B string) for 2 bars, then shift to D (open D string or 7th fret, G string) for 2 bars." These are reachable from the 5th-fret position and the open-string drone remains accessible.
+
+---
+
+### ISSUE 2: Wrong finger and wrong string in Am7 description (gs-9-1)
+
+**File**: `level-09-extended-harmony.js`, line ~30
+
+**Problematic text**:
+> "Play Am (x02210). Now lift your pinky off the 1st string -- you're playing Am7 (x02010). [...] The open 1st string (E->G natural) adds the 7th."
+
+**Why it's physically wrong**: In standard Am fingering (x02210), no finger is on the 1st string (high E) -- it's already open (the "0" at the end of x02210). The change from Am (x02210) to Am7 (x02010) is on the 3rd string (G string), going from fret 2 to open. This is typically the ring finger, not the pinky. Additionally, the text says "The open 1st string (E->G natural) adds the 7th" -- but the 1st string is open E in both Am and Am7. The 7th (G) comes from the newly opened 3rd string (G string), not the 1st string.
+
+**What would actually work**: "Play Am (x02210). Now lift your ring finger off the 3rd string (G string) -- you're playing Am7 (x02010). The open G string adds the 7th (G natural)." This correctly identifies both the finger and the string responsible for the change.
+
+---
+
+### ISSUE 3: Technique mismatch between Gemini analysis and exercise -- Skinshape (gs-9-4)
+
+**File**: `level-09-extended-harmony.js`, lines ~98-115
+
+**Problematic text** (step 1):
+> "Learn the basic cycle with triads first: Gm (barre, 355333) -> C (x32010) -> A7 (x02020) -> Dm (xx0231). Each chord gets 4 beats."
+
+**Technique mismatch**: The exercise teaches full open chord shapes and full barre chords. The Gemini analysis of "I Didn't Know" says the actual technique is: "Partial barres (focusing on the top 3 or 4 strings) typical of funk, soul, and reggae" and "chords need to be cut off almost immediately after they are played." The exercise's sarah note does mention "partial barres on just the top 3-4 strings, funk/reggae style, not full open shapes" and "the chords are cut off almost immediately with left-hand muting -- think staccato soul." However, the actual exercise steps teach full open C (x32010) and full open Dm (xx0231), which contradicts this. The student is told to play full open shapes but Sarah tells them Skinshape actually uses partial barres. The steps and the sarah note give conflicting instructions.
+
+**What would actually work**: The steps should teach the partial barre voicings that match the actual technique: e.g., Gm7 as a partial barre on the top 4 strings at fret 3, C7 as a partial barre shape, etc. Or at minimum, step 2 (the "upgrade" step) should explicitly instruct the student to switch to partial barre voicings on the top 3-4 strings rather than continuing to use full open shapes with 7ths added.
+
+---
+
+### ISSUE 4: Em7 voicing description (gs-9-1)
+
+**File**: `level-09-extended-harmony.js`, line ~32
+
+**Problematic text**:
+> "Play Em (022000). Now lift your ring finger off the 4th string -- you're playing Em7 (020000)."
+
+**Why it's questionable**: Standard Em is fingered with the middle finger on fret 2 of the A string (5th string) and the ring finger on fret 2 of the D string (4th string). The text says to lift the ring finger from the 4th string -- this is correct for the standard fingering. The resulting voicing 020000 is: 6th=open E, 5th=fret 2 (B), 4th=open D, 3rd=open G, 2nd=open B, 1st=open E. The open D string provides the 7th. This is technically correct. However, many players finger Em with the index and middle fingers rather than middle and ring, so "ring finger off the 4th string" may not match the student's fingering. This is minor and context-dependent. Not flagging as a true issue.
+
+---
+
+### ISSUE 5: Coastline alternate tuning disconnect (gs-11-7)
+
+**File**: `level-11-fingerpicking.js`, lines ~185-197
+
+**Problematic text** (from sarah note):
+> "Coastline gets its massive, shimmering sound from the CGDGGD alternate tuning with capo on the 7th fret."
+
+But the exercise says:
+> "the original uses an alternate tuning (CGDGGD, capo 2)"
+
+**Inconsistency**: The setup says "CGDGGD, capo 2" but the sarah note says "capo on the 7th fret." These contradict each other. One of these is wrong. This isn't a mechanical issue per se, but if a student tries to replicate the original tuning following the sarah note's capo-7 advice, they'll be in the wrong key, and the string tension at capo 7 in CGDGGD tuning would make some strings extremely slack or taut depending on which direction they were retuned. However, the exercise explicitly says to stay in standard tuning, so this doesn't cause a hands-on problem -- it's informational noise.
+
+---
+
+### ISSUE 6: No significant issues in Levels 12-14
+
+Levels 12-14 are overwhelmingly about dynamics, expression, style switching, scale choice, and performance. They contain very few specific fret/finger/position references that could create mechanical problems. The instructions are almost entirely about feel, volume, and approach rather than specific physical maneuvers. I found no position jumps, impossible simultaneous actions, wrong-hand references, or physical impossibilities in these three levels.
+
+---
+
+### Summary
+
+The curriculum is mechanically sound overall. Levels 8-14 are primarily about musical concepts (scales, feel, dynamics, style) rather than specific fret-level embellishment instructions, which naturally reduces the surface area for mechanical errors. The issues found:
+
+| # | Exercise | Type | Severity |
+|---|----------|------|----------|
+| 1 | gs-8-12 | Position jump (fret 5 to fret 12) | Medium -- student will be confused about position |
+| 2 | gs-9-1 | Wrong finger/string identification for Am7 | Medium -- factually incorrect description |
+| 3 | gs-9-4 | Technique mismatch (full chords vs partial barres) | Low-Medium -- steps and sarah note contradict |
+| 4 | gs-11-7 | Capo position contradiction (capo 2 vs capo 7) | Low -- informational only, exercise uses standard tuning |
+
+Issues 1 and 2 are the most actionable. Issue 1 could cause a student to lose their position and struggle to maintain the drone. Issue 2 teaches incorrect anatomy of a chord voicing that will confuse a student trying to understand what's changing and why.</result>
+<usage><total_tokens>146886</total_tokens><tool_uses>28</tool_uses><duration_ms>211702</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\dddc1272-e534-457e-8017-f924b5fda330\tasks\ae377e4b5bd3f90bc.output
+[2026-03-26T06:52:36.727Z] do another deep pass make sure its all true
+[2026-03-26T06:55:52.757Z] <task-notification>
+<task-id>a2c6c4f7ee6bde559</task-id>
+<tool-use-id>toolu_01QrN1XBcCZNzjcrZW6TNPLg</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\dddc1272-e534-457e-8017-f924b5fda330\tasks\a2c6c4f7ee6bde559.output</output-file>
+<status>completed</status>
+<summary>Agent "Final verification pass L1-7" completed</summary>
+<result>Now I have all the data I need. Let me compile my findings systematically.
+
+---
+
+Here is the complete verification report for guitar curriculum levels 1-7. I read every line and checked every factual claim. Below are the genuine errors found, organized by type.
+
+---
+
+## VERIFIED ERRORS
+
+### 1. Level 1, Exercise gs-1-3 (Open Chords): Am finger instruction error
+
+**Quote (line 73):**
+> "Am: index finger on B string fret 1, middle finger on D string fret 2, ring finger on G string fret 2."
+
+**Issue:** This describes the Am chord as having the **ring finger on the G string fret 2**. Standard Am (x02210) has:
+- Index on B string fret 1
+- Middle on D string fret 2
+- Ring on G string fret 2
+
+This is actually **correct** by the tab notation x02210. However, look at the C chord description immediately after:
+
+**Quote (line 74):**
+> "C: index on B string fret 1, middle on D string fret 2, ring on A string fret 3... your index finger is STILL on B string fret 1, and your middle finger is STILL on D string fret 2? Those are your anchor fingers. When switching Am to C, the index and middle fingers stay planted. Only the ring finger moves (from G string fret 2 to A string fret 3)."
+
+**This is internally consistent and correct.** Am and C share the index (B1) and middle (D2) fingers. The ring finger moves from G2 to A3. No error here.
+
+### 2. Level 1, Exercise gs-1-9 (Bending): Fret/note mismatch
+
+**Quote (line 220):**
+> "Place your ring finger on the B string, 8th fret (G note). Now push the string upward... The pitch should rise. Push until it sounds like the note at the 9th fret (Ab)."
+
+**Issue:** The B string 8th fret is actually **G#/Ab**, not G. The note at the B string 8th fret is G# (the B string is tuned to B; fret 8 = B + 8 semitones = G#). The 9th fret on the B string is **A**, not Ab.
+
+**Correct version:** B string 8th fret = G#. B string 9th fret = A. A half-step bend from fret 8 to fret 9 pitch goes from G# to A.
+
+The text says "8th fret (G note)" -- this should say **G#**. And "9th fret (Ab)" -- this should say **A**.
+
+### 3. Level 1, Exercise gs-1-9 (Bending): Vibrato fret/note reference inherits the same error
+
+**Quote (line 222):**
+> "fret the B string at the 8th fret"
+
+This is fine as a physical instruction, but the earlier context establishes this as "G" which is wrong (it's G#).
+
+### 4. Level 1, Exercise gs-1-11 (Real Love Baby): A7 chord voicing description
+
+**Quote (line 279):**
+> "A7 is a new chord: index on D string fret 2, middle on B string fret 2. Strum strings 5 through 1. It's like a C shape but shifted — only two fingers."
+
+**Issue:** The standard A7 chord voicing in the codebase is x02020. That means:
+- A string open
+- D string fret 2
+- G string open
+- B string fret 2
+- High E string open
+
+The exercise says "index on D string fret 2, middle on B string fret 2" which would fret only those two strings with the rest open. This actually matches x02020 and is correct -- strings 5 (A open), 4 (D fret 2), 3 (G open), 2 (B fret 2), 1 (E open).
+
+However, the text says "It's like a C shape but shifted" -- A7 (x02020) looks nothing like a C shape (x32010). This is a misleading comparison, but not strictly a "factual error" about frets/notes.
+
+### 5. Level 2, Exercise gs-2-6 (Blues Scale): Fret reference error in the scale spelling
+
+**Quote (line 161):**
+> "Add the blue note: Eb is at fret 6 on the A string (between D at fret 5 and E at fret 7). Play the full blues scale: A(5)-C(8)-D(5)-Eb(6)-E(7)-G(5)-A(7)."
+
+**Issue:** The fret numbers here are ambiguous because they jump between strings without labeling which string. Let me verify the intended Am blues scale in position 1:
+- A = low E string fret 5
+- C = low E string fret 8
+- D = A string fret 5
+- Eb = A string fret 6
+- E = A string fret 7
+- G = D string fret 5
+- A = D string fret 7
+
+This is correct for a partial blues scale on the low E and A strings plus D string. The notation is terse but not wrong -- each note is on the next higher string's corresponding fret position in the box.
+
+### 6. Level 2, Exercise gs-2-7 (Bending): Fret/note error on G string
+
+**Quote (line 183):**
+> "Half-step bend prep: play the note at fret 7 on the G string (D). Now play fret 8 (Eb — the blue note)."
+
+**Issue:** G string fret 7 = **D**. G string fret 8 = **D#/Eb**. This is **correct**.
+
+**Quote (line 185):**
+> "Full-step bend: play fret 7 (D), then play fret 9 (E)."
+
+G string fret 9 = **E**. This is **correct**.
+
+### 7. Level 2, Exercise gs-2-7 (Bending): Example lick has a dubious string reference
+
+**Quote (line 187):**
+> "play A (fret 5, low E), slide to D (fret 7, G string), bend up to Eb (half-step bend), release back to D, resolve to E (fret 9)"
+
+**Issue:** The lick jumps from "fret 5, low E" (which is A, correct) to "fret 7, G string" (which is D, correct) without mentioning the string change. Then "resolve to E (fret 9)" -- G string fret 9 = E. This is correct. No error here -- just dense notation.
+
+### 8. Level 3, Exercise gs-3-1 (Power Chords): E5 and B5 description inconsistency
+
+**Quote (line 30):**
+> "Play E5: index on the A string 2nd fret, ring on the D string 4th fret (or use the open low E + A string 2nd fret shape). Then D5: index on the A string 5th fret moved to the D string 5th fret, ring on the G string 7th fret."
+
+**Issue with E5:** "index on the A string 2nd fret, ring on the D string 4th fret" -- this is actually **B5**, not E5. The A string 2nd fret = B, and D string 4th fret = F# (the 5th of B). The codebase confirms B5 = x244xx.
+
+The parenthetical says "or use the open low E + A string 2nd fret shape" -- **that** would be E5 (022xxx), which is correct. But the first fingering described (A string 2nd fret + D string 4th fret) is B5, not E5.
+
+Later in the same step, B5 is described:
+> "Add B5: index on the A string 2nd fret, ring on the D string 4th fret."
+
+This is **identical** to the E5 description above, confirming the E5 description is wrong. **E5 should be: index on the low E string 2nd fret (F#... wait, that's not right either).**
+
+Actually, let me re-verify. E5 as a moveable power chord shape would be: low E string 7th fret (E) + A string 9th fret (E). But in open position, E5 = 022xxx (open low E + A string 2nd fret). The text gives the alternative "open low E + A string 2nd fret" which IS correct E5. But the primary fingering "index on A string 2nd fret, ring on D string 4th fret" is B5, making the primary E5 description **wrong**.
+
+### 9. Level 3, Exercise gs-3-1 (Power Chords): D5 description
+
+**Quote (line 30):**
+> "D5: index on the A string 5th fret moved to the D string 5th fret, ring on the G string 7th fret"
+
+**Issue:** The "A string 5th fret moved to the D string 5th fret" phrasing is confusing but the intent is: D5 with root on the D string. D string 5th fret = G, not D. **D5 should be rooted on D.** If the root is on the A string: A string 5th fret = D, D string 7th fret = A (the 5th). That's D5 = x577xx. If root on D string: D string open + G string 2nd fret = xx023x.
+
+The text says "D string 5th fret, ring on G string 7th fret" which gives G + D = G5, not D5. **This is wrong.** D5 rooted on the D string should be D string open + G string 2nd fret (xx023x), or if moveable, A string 5th fret + D string 7th fret (x57xxx).
+
+### 10. Level 4, Exercise gs-4-8b (Surf Hat): Chord voicing discrepancy
+
+**Quote (line 267):**
+> "Learn the four dominant 7th shapes: E7 (020100), A7 (x02020), B7 (x21202), F#7 (242322)."
+
+**Verification against codebase:**
+- E7: codebase says "020100" -- **matches**
+- A7: codebase says "x02020" -- **matches**
+- B7: codebase says "x21202" -- **matches**
+- F#7: codebase says "242322" -- **matches**
+
+All correct.
+
+### 11. Level 6, Exercise gs-6-2 (Dmaj7): Tab notation discrepancy
+
+**Quote (line 47):**
+> "Learn Dmaj7 (xx0220)."
+
+**Codebase says:** Dmaj7 = "xx0222"
+
+**Issue:** The exercise states Dmaj7 = xx0220, but the codebase's CHORD_VOICINGS defines Dmaj7 as xx0222. Let me analyze both:
+- xx0220: D string open (D), G string fret 2 (A), B string fret 2 (C#), high E open (E). Notes: D-A-C#-E = D major 7th (D, F#, A, C#) -- **missing the F#!** This voicing has D, A, C#, E which is actually Dmaj7 with E as the 9th and missing the 3rd (F#). It's a Dmaj9(no3) or could be heard as Dmaj7sus2.
+- xx0222: D string open (D), G string fret 2 (A), B string fret 2 (C#), high E fret 2 (F#). Notes: D-A-C#-F# = D-F#-A-C# = proper Dmaj7.
+
+**The exercise text says xx0220 but the correct Dmaj7 tab is xx0222.** The exercise then describes the chord construction as including C# (the major 7th) with "the open high E ringing on top," which is consistent with xx0220 but that's not actually a standard Dmaj7. The codebase voicing xx0222 is the standard Dmaj7.
+
+This is a significant inconsistency. The exercise text at line 51 says:
+> "move your ring finger from fret 3 to fret 2 on the B string, and lift your middle finger off the high E string."
+
+Starting from D major (xx0232): ring finger moves from B3 to B2, middle lifts off high E2. That gives xx0220. So the finger instruction matches the tab xx0220, but this doesn't match the codebase's Dmaj7 voicing of xx0222, and it's not technically a proper Dmaj7 voicing (it's missing the 3rd, F#).
+
+However, the exercise deliberately wants the open high E to ring for the "jangle" effect, so xx0220 is the intended voicing for the musical purpose, even though it's not standard Dmaj7. **The discrepancy is between the exercise tab (xx0220) and the codebase CHORD_VOICINGS (xx0222).**
+
+### 12. Level 6, Exercise gs-6-5 (Sus2): Dsus2 description has a factual issue
+
+**Quote (line 126):**
+> "Play D major (xx0232). Feel the ring finger pressing the high E string at fret 3 — that F# defines the chord as major."
+
+**Issue:** In the standard D chord (xx0232), the finger on the high E string fret 2 is usually the **middle** finger, not the ring finger. The conventional fingering is:
+- Index on G string fret 2
+- Ring on B string fret 3  
+- Middle on high E string fret 2
+
+The text says "ring finger pressing the high E string at fret 3" -- but the high E string in D major (xx0232) is at **fret 2**, not fret 3. Fret 3 on the high E is G, not F#. The F# is at fret 2 on the high E string. **The text says fret 3 but it should say fret 2.**
+
+Wait, let me re-read: "Feel the ring finger pressing the high E string at fret 3 — that F# defines the chord as major." High E fret 3 = G, not F#. High E fret 2 = F#. So the text has the wrong fret number. **This is an error.** D major = xx0232, where the "2" on the high E string is fret 2 (F#), not fret 3.
+
+Actually, looking at D = xx0232 more carefully: the digits are low-E, A, D, G, B, high-E = x, x, 0, 2, 3, 2. So B string is fret 3 and high E is fret 2. The "ring finger on B string fret 3" is the correct reading, and "high E string at fret 2" is where the middle finger goes. The text says "ring finger pressing the high E string at fret 3" which conflates two things: the ring finger IS on fret 3, but it's on the **B string**, not the high E string. And the high E string is at fret **2**, not 3.
+
+**Error confirmed:** The text says "ring finger pressing the high E string at fret 3" but the ring finger is on the **B string** at fret 3, and the high E is at fret 2 (pressed by the middle finger). The note F# IS at the high E string fret 2, or the B string fret 7. In D major, the F# that "defines the chord as major" is on the high E string fret 2. So the text has the wrong string AND wrong fret for the ring finger's position.
+
+Then: "Now lift that finger: Dsus2 (xx0230). The string goes slack under your fingertip as you release."
+
+If you lift the ring finger (which is on B string fret 3, not high E fret 3), you get xx0200... no. Wait. Let me trace through D major again with the standard exercise fingering from gs-1-3:
+- D: "index on G string fret 2, ring on B string fret 3, middle on high E string fret 2" = xx0232.
+
+So to go from D to Dsus2 (xx0230), you lift the **middle finger** off the high E string (fret 2), not the ring finger. The text says to lift "that finger" (ring finger pressing high E at fret 3) but (a) the ring finger is on B string not high E, and (b) you'd need to lift the middle finger off the high E to get Dsus2.
+
+**Summary of this error:** The text incorrectly describes the ring finger as being on the high E string at fret 3. The ring finger is actually on the B string at fret 3. The high E string is at fret 2 (middle finger). And to create Dsus2, you lift the middle finger off the high E string, not the ring finger.
+
+---
+
+## SUMMARY OF GENUINE ERRORS FOUND
+
+1. **Level 1, gs-1-9 (line 220):** B string 8th fret is called "G note" -- it is actually **G#**. B string 9th fret is called "Ab" -- it is actually **A**. The half-step bend target is G# to A, not G to Ab.
+
+2. **Level 3, gs-3-1 (line 30):** The primary E5 fingering given ("index on the A string 2nd fret, ring on the D string 4th fret") is actually **B5**, not E5. This exact same fingering is repeated later in the step as B5, confirming the E5 description is wrong.
+
+3. **Level 3, gs-3-1 (line 30):** D5 is described as "D string 5th fret, ring on G string 7th fret" which produces the notes G and D -- that's **G5**, not D5.
+
+4. **Level 6, gs-6-2 (line 47):** Dmaj7 is given as xx0220 in the exercise text, but the codebase CHORD_VOICINGS defines Dmaj7 as **xx0222**. The voicing xx0220 is missing the 3rd (F#) and is not standard Dmaj7. The exercise intentionally wants the open high E for jangle, but the tab notation is inconsistent with the chord dictionary.
+
+5. **Level 6, gs-6-5 (line 126):** The text says "ring finger pressing the high E string at fret 3 -- that F# defines the chord as major." Three errors in one sentence: (a) the ring finger is on the **B string**, not the high E string; (b) the fret on the high E string is **2**, not 3; (c) lifting the ring finger (B string fret 3) would not create Dsus2 -- you'd need to lift the **middle finger** off the high E string fret 2 to get xx0230.
+
+---
+
+All other fret/note references, chord voicings, BPM claims, anchor finger claims, embellishment descriptions, and chord progression claims across the 7 levels checked out as correct or internally consistent.</result>
+<usage><total_tokens>144647</total_tokens><tool_uses>24</tool_uses><duration_ms>163132</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\dddc1272-e534-457e-8017-f924b5fda330\tasks\a2c6c4f7ee6bde559.output
+[2026-03-26T07:00:21.849Z] can you please 100% confirm from first principles
+[2026-03-26T07:02:59.875Z] <task-notification>
+<task-id>a1c62811d93a8b127</task-id>
+<tool-use-id>toolu_01XTMNcfxHxSWGcCtw6XtYVv</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\dddc1272-e534-457e-8017-f924b5fda330\tasks\a1c62811d93a8b127.output</output-file>
+<status>completed</status>
+<summary>Agent "First principles verification L12-14" completed</summary>
+<result>Now I have all the data I need. Let me systematically verify every factual claim.
+
+## Verification Results
+
+Here is my complete analysis of all three files, checking every verifiable factual claim from first principles.
+
+---
+
+### Level 12: Dynamics & Expression
+
+**gs-12-1 (Five Shades of Am):** No specific fret/note claims to verify. Purely technique-focused. No errors.
+
+**gs-12-2 (Volume Swell):** No specific fret/note claims. Purely technique-focused. No errors.
+
+**gs-12-3 (D to Dm):**
+- "D major (xx0232)" -- Correct. Strings: x-x-0(D)-2(A on D string? No: string 4 fret 0 = D, string 3 fret 2 = A, string 2 fret 3 = D... wait, let me re-check. xx0232 means: 6th=mute, 5th=mute, 4th=open(D), 3rd=fret 2(A), 2nd=fret 3(D), 1st=fret 2(F#). Notes: D-A-D-F#. That's D major. Correct.
+- "D minor (xx0231)" -- 4th=open(D), 3rd=fret 2(A), 2nd=fret 3(D), 1st=fret 1(F). Notes: D-A-D-F. That's D minor. Correct.
+- "the high E string drops from fret 2 (F#) to fret 1 (F)" -- 1st string fret 2 = F#, fret 1 = F. Correct.
+
+**gs-12-4 (G to Gm):**
+- "G major (320003)" -- 6th=fret 3(G), 5th=fret 2(B), 4th=open(D), 3rd=open(G), 2nd=open(B), 1st=fret 3(G). Notes: G-B-D-G-B-G. That's G major. Correct.
+- **"G minor (310033)"** -- 6th=fret 3(G), 5th=fret 1(A#/Bb), 4th=open(D), 3rd=open(G), 2nd=fret 3(D), 1st=fret 3(G). Notes: G-Bb-D-G-D-G. That IS a valid Gm voicing. Correct.
+- "355333 as a barre" -- 6th=fret 3(G), 5th=fret 5(D), 4th=fret 5(G), 3rd=fret 3(Bb), 2nd=fret 3(D), 1st=fret 3(G). Notes: G-D-G-Bb-D-G. That's Gm. Correct.
+- "B drops to Bb" -- G major has B (the major 3rd), Gm has Bb (the minor 3rd). Correct.
+- Step 2: "move your finger from fret 2 on the A string down to fret 1 (B drops to Bb)" -- A string fret 2 = B, A string fret 1 = Bb. Correct.
+
+**gs-12-5 (Marsha):**
+- "F (133211)" -- 6th=fret 1(F), 5th=fret 3(C), 4th=fret 3(F), 3rd=fret 2(A), 2nd=fret 1(C), 1st=fret 1(F). Notes: F-C-F-A-C-F. That's F major. Correct.
+- "Bb (x13331)" -- 5th=fret 1(Bb), 4th=fret 3(F), 3rd=fret 3(Bb), 2nd=fret 3(D), 1st=fret 1(F). Notes: Bb-F-Bb-D-F. That's Bb major. Correct.
+- Step 4 says "play the full progression (Dm-C-G-F-Bb)" but step 2 says "The main progression: F-G-Bb-C" -- these are different orderings of the same chords, used in different sections of the song. Not an error per se, just different parts of the song.
+- Step 5 mentions "work up toward 116" but the `what` field says the song is "at 108 BPM." **INCONSISTENCY: Step 5 says "target 116" while the exercise description says the song is at 108 BPM.** The metronome field says 90 (learning tempo), but 116 vs 108 as the target song tempo is contradictory.
+
+**gs-12-6 (Phrygian):**
+- "A Phrygian mode = A-Bb-C-D-E-F-G" -- A Phrygian: A, half step to Bb, whole to C, whole to D, whole to E, half to F, whole to G. That's A-Bb-C-D-E-F-G. Correct.
+- "Am pentatonic (A-C-D-E-G)" -- Correct.
+- "Bb — one fret above A, at fret 6 on the low E string" -- 6th string: A is fret 5, Bb is fret 6. Correct.
+- "E(12th fret)-F(13th fret)-E" -- 1st or 6th string: E at fret 12, F at fret 13. Correct.
+- "Bb... fret 1 on the A string" -- A string fret 1 = Bb. Correct.
+
+**gs-12-7 (Peace Blossom Boogy):**
+- "G7 (320001)" -- 6th=fret 3(G), 5th=fret 2(B), 4th=open(D), 3rd=open(G), 2nd=open(B), 1st=fret 1(F). Notes: G-B-D-G-B-F. That's G7 (G-B-D-F). Correct.
+- "it's a regular G shape but move the pinky from fret 3 down to fret 1 on the high E string — that F note is the flat 7th of G" -- G chord has high E at fret 3 (G note). Moving to fret 1 gives F. F is the b7 of G. Correct.
+- The `wrong` section says "check that the high E string is open (not fretted at fret 3)" -- **ERROR: The G7 chord has the high E string at fret 1 (F), NOT open. Open high E would give an E note, which is the 13th/6th, not the b7.** The text tells the student to check for an open high E, but the chord definition (320001) clearly has fret 1 on the high E string. This is contradictory -- the `wrong` section seems to be describing plain G (320003) vs G7 (320001), but says "open" when it should say "fret 1."
+
+**gs-12-8 through gs-12-11:** No specific fret/note/chord claims. Technique and concept exercises. No errors found.
+
+---
+
+### Level 13: The Full Palette
+
+**gs-13-1 (Five Feels):**
+- "Am-G-C-D" chords -- standard open chords. No specific tab notation to verify.
+- "A5-G5-C5-D5. Drop the 3rds" -- Power chords omit the 3rd. Correct conceptually.
+- Step 5: "consonant notes (D, E) relax... dissonant notes (Bb, F) create tension" over an A drone -- D is a perfect 4th (consonant), E is a perfect 5th (consonant). Bb is a minor 2nd/flat 9 (dissonant), F is a minor 6th (can be mildly dissonant). Reasonable characterization. No error.
+
+**gs-13-2 (Scale Choice Game):**
+- "Am pentatonic (A-C-D-E-G)" -- Correct.
+- "A Dorian (A-B-C-D-E-F#-G)" -- A Dorian: A, whole to B, half to C, whole to D, whole to E, whole to F#, half to G. That's A-B-C-D-E-F#-G. Correct.
+- "Dorian adds that bright 6th (F#)" -- The characteristic note of Dorian is the raised 6th. In A natural minor you'd have F; Dorian raises it to F#. Correct.
+- "A sus pentatonic (A-B-D-E-G — no 3rd)" -- This is the standard "sus" or "Egyptian" pentatonic (scale degrees 1-2-4-5-7). A-B-D-E-G. No 3rd (no C or C#). Correct.
+- "Am pentatonic over the same track. The minor 3rd (C)" -- C is the minor 3rd of A. Correct.
+- "A natural minor (adds tension with the F natural)" -- A natural minor: A-B-C-D-E-F-G. The F natural vs F# in Dorian. Correct.
+- "A Phrygian (A-Bb-C-D-E-F-G) — the flat 2nd (Bb)" -- Verified above. Correct.
+- "A Phrygian dominant (A-Bb-C#-D-E-F-G) — the raised 3rd" -- A Phrygian dominant (5th mode of D harmonic minor): A-Bb-C#-D-E-F-G. The interval from Bb to C# is an augmented 2nd. Correct. The text says "raised 3rd" -- compared to regular Phrygian (which has C), Phrygian dominant raises it to C#. Correct characterization.
+
+**gs-13-3 through gs-13-10:** These are all high-level concept exercises (style switching, transcription, improv, composition, mashups, audiation). No specific fret/note/chord tab claims to verify. No errors found.
+
+---
+
+### Level 14: Your Sound
+
+**gs-14-1 (Who Do You Sound Like?):**
+- "Am-G-F-E descending minor" -- Am to G to F to E is a descending bass line (A-G-F-E). Correct as a description of the Andalusian cadence / descending minor sequence.
+- "F-C-G or B-F#-E" for reggae -- These are just suggested chord progressions. No tab notation to verify.
+
+**gs-14-2 (Choosing Your Set):**
+- "Sol Del Sur (C#m-B-F#-E)" -- This is referencing a previously studied song. No new factual claims.
+- "Dope & Smoke (Am-D-Am7-D7)" -- Referenced from prior study. No new claims.
+- "Gimme Love (F-C-G)" -- Referenced from prior study.
+- "Jah Werx (B-F#-E)" -- Referenced from prior study.
+- "Breakdown (G-Bm-Em-D fingerpicking)" -- Referenced from prior study.
+
+**gs-14-3 through gs-14-10:** All performance/set-building exercises. No specific fret/note/chord tab claims. No errors found.
+
+---
+
+## Summary of Genuine Errors Found
+
+**Error 1 -- Level 12, gs-12-5 (Marsha), BPM inconsistency:**
+In the `what` field, the song is described as being "at 108 BPM." However, step 5 says "work up toward 116." These are contradictory target tempos for the same song. The `what` field says 108, step 5 says 116.
+
+Location: `/sarah-practice-plan/src/data/guitarStudy/level-12-dynamics-and-expression.js`, lines 128 and 135.
+- Line 128: `"6-chord song (Dm-C-G-F-Bb-D) at 108 BPM"`
+- Line 135: `"work up toward 116"`
+
+**Error 2 -- Level 12, gs-12-7 (Peace Blossom Boogy), wrong section gives incorrect correction advice:**
+The `wrong` field says: `"If the G7 sounds the same as plain G, check that the high E string is open (not fretted at fret 3)."`
+
+This is wrong. The G7 chord is defined as 320001 -- the high E string is at **fret 1** (F note), not open. An open high E string would give an E note, which would make a different chord entirely (G with an added 6th/13th, not G7). The text should say "check that the high E string is at fret 1 (not fret 3)."
+
+Location: `/sarah-practice-plan/src/data/guitarStudy/level-12-dynamics-and-expression.js`, line 195.
+
+---
+
+All other chord tabs, fret-to-note mappings, scale spellings, interval claims, and technique directions across all three files are correct.</result>
+<usage><total_tokens>61303</total_tokens><tool_uses>12</tool_uses><duration_ms>110650</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\dddc1272-e534-457e-8017-f924b5fda330\tasks\a1c62811d93a8b127.output
+[2026-03-26T07:03:55.674Z] <task-notification>
+<task-id>aab6b4b8a7f23667f</task-id>
+<tool-use-id>toolu_01P5kmY97DBaGhZYnQpfU5Pg</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\dddc1272-e534-457e-8017-f924b5fda330\tasks\aab6b4b8a7f23667f.output</output-file>
+<status>completed</status>
+<summary>Agent "First principles verification L8-11" completed</summary>
+<result>Now let me verify every specific factual claim systematically across all four files.
+
+**Level 8 (Desert & Drone)**
+
+Checking fret/note claims:
+
+1. **gs-8-1**: "A sus pentatonic: A-B-D-E-G" -- This replaces C (minor 3rd of Am pentatonic A-C-D-E-G) with B (the 2nd). Correct.
+
+2. **gs-8-1**: "fret 8 moves to fret 7" on high E and low E strings -- In Am pentatonic 5th position, C is at fret 8 on both the high E and low E strings. B would be at fret 7 on both. Correct.
+
+3. **gs-8-2**: Drop D tuning claims: "What used to be the 2nd fret (F#) is now E" -- In standard, 6th string fret 2 = F#. In Drop D (tuned to D), fret 2 = E. Correct. "The 3rd fret (used to be G) is now F" -- Standard fret 3 = G. Drop D fret 3 = F. Correct. "The 5th fret is now G (was A in standard)" -- Standard fret 5 = A. Drop D fret 5 = G. Correct.
+
+4. **gs-8-15**: "Play A on the D string (7th fret)" -- D string fret 7 = A. Correct. "B lives on the fretboard: D string, 9th fret" -- D string fret 9 = B. Correct. "D on the G string (7th fret)" -- G string fret 7 = D. Correct. "D on the D string (12th fret)" -- D string fret 12 = D. Correct.
+
+5. **gs-8-8**: "Fret B (7th fret, high E string)" -- High E fret 7 = B. Correct. "bend...to C (8th fret pitch)" -- High E fret 8 = C. Correct.
+
+6. **gs-8-12**: "E (5th fret, B string)" -- B string fret 5 = E. Correct. "D (7th fret, G string)" -- G string fret 7 = D. Correct.
+
+7. **gs-8-7**: "A blues phrase (A-C-D-Eb-E)" -- This is the A blues scale (A-C-D-Eb-E-G), truncated. The notes given are valid blues scale notes. Correct.
+
+8. **gs-8-1**: Am pentatonic: A-C-D-E-G. Correct (minor pentatonic = 1-b3-4-5-b7).
+
+**Level 9 (Extended Harmony)**
+
+Checking chord voicings:
+
+1. **gs-9-1**: "Am (x02210)...lift ring finger off 3rd string → Am7 (x02010)" -- Am = x02210. Lifting finger from G string (3rd string, 2nd fret) gives x02010. The open G = G note, which is the b7 of Am. Am7 = A-C-E-G. Correct.
+
+2. **gs-9-1**: "Dm (xx0231)...Dm7 (xx0211)" -- Dm = xx0231. Dm7 = xx0211 (bar 1st fret on strings 1-2). Dm7 = D-F-A-C. Let me check xx0211: 4th string open = D, 3rd string 2nd fret = A, 2nd string 1st fret = C, 1st string 1st fret = F. That's D-A-C-F = Dm7. Correct.
+
+3. **gs-9-1**: "Em (022000)...lift ring finger off 4th string → Em7 (020000)." Em = 022000. Lifting ring finger from 4th string (2nd fret) gives 020000. Open D string = D = b7 of Em. Em7 = E-G-B-D. Correct.
+
+4. **gs-9-1**: "Am7 (A-C-E-G) and Dm7 (D-F-A-C) share A and C" -- Correct. "Dm7 and Em7 (E-G-B-D) share D" -- Dm7 has D-F-A-C, Em7 has E-G-B-D. Common tone = D. Correct.
+
+5. **gs-9-3**: "A7 (x02020)" -- x02020: 5th string open A, 4th string 2nd fret = E, 3rd string open = G, 2nd string 2nd fret = B, 1st string open = E. A-E-G-B-E. A7 = A-C#-E-G. Wait -- this voicing has no C#! It has G (the b7) and B but no major 3rd (C#). x02020 = A-E-G-B-E. This is actually Am7 (A-C-E-G... no, there's no C either). Let me recheck: string 5 open = A, string 4 fret 2 = E, string 3 open = G, string 2 fret 2 = C#? No, string 2 fret 2 = C#. Wait: 2nd string is B. B + 2 frets = C#. So x02020 = A(5th), E(4th fret 2), G(3rd open), C#(2nd fret 2), E(1st open). That's A-E-G-C#-E = A7 (A-C#-E-G). Correct!
+
+   But wait, the text says "play A major (x02220), then lift your finger from the 3rd string (G string) — you get A7 (x02020). The open G string gives you the flat 7th (G note)." A major = x02220: A-E-A-C#-E. Lifting finger from 3rd string (fret 2, which is A on G string) gives open G on 3rd string = G note. x02020 = A-E-G-C#-E = A7. Correct.
+
+6. **gs-9-3**: "C7 (x32310)" -- x32310: 5th string fret 3 = C, 4th string fret 2 = E, 3rd string fret 3 = A#/Bb, 2nd string fret 1 = C, 1st string open = E. C-E-Bb-C-E. C7 = C-E-G-Bb. There's no G in this voicing! Let me re-read. The text says "play C major (x32010), then add your pinky to the 3rd fret of the 3rd string — C7 (x32310)." C major = x32010: C-E-G-C-E. Adding pinky to 3rd fret of 3rd string changes G string from open (G) to fret 3 = A#/Bb. So x32310 = C-E-Bb-C-E. That's C7 without the 5th -- acceptable voicing, just missing G. The text says "The Bb on the 3rd string is the flat 7th." Correct -- G string fret 3 = Bb (= A#). C7 = C-E-G-Bb. The voicing omits G but is still a valid C7. Correct.
+
+7. **gs-9-3**: "Gm7: barre all six strings at fret 3...ring finger at fret 5 on the 5th string. Shape: 353333." -- 353333: 6th string fret 3 = G, 5th string fret 5 = D, 4th string fret 3 = F, 3rd string fret 3 = Bb, 2nd string fret 3 = D, 1st string fret 3 = G. G-D-F-Bb-D-G. Gm7 = G-Bb-D-F. Correct!
+
+8. **gs-9-5**: "A Dorian: A-B-C-D-E-F#-G" -- A Dorian = A natural minor with raised 6th. A natural minor = A-B-C-D-E-F-G. Raised 6th: F→F#. A-B-C-D-E-F#-G. Correct.
+
+9. **gs-9-5**: "F natural...at the 1st fret of the high E" -- High E fret 1 = F. Correct. "shift one fret higher to F#" -- fret 2 = F#. Correct.
+
+10. **gs-9-5**: "The F# is on the 4th string, 4th fret (or 2nd string, 7th fret in position)" -- D string fret 4 = F#. Correct. B string fret 7 = F#. Correct.
+
+11. **gs-9-5**: "A is the 5th fret" (on 1st string E) -- E string fret 5 = A. Correct. "C is three frets up (fret 8)" -- fret 8 = C. Correct. "E is the open string or the 7th fret" -- Open 1st string = E, fret 7 = B. **ERROR!** Fret 7 on the high E string = B, not E. E at fret 7 would need to be on the A string (A string fret 7 = E). On the high E string, E is at fret 12 (octave) or fret 0 (open). This seems to be referring to a different string context -- "F# is the 4th fret of the D string" suggests we may be in a mixed-string context. Let me re-read: "A is the 5th fret, your home base. C is three frets up (fret 8) — your hand knows that distance. E is the open string or the 7th fret." If we're on the high E string: A at fret 5, C at fret 8 (correct), E at open (correct) or fret 7 (B, incorrect). If we're on the A string: A at open, C at fret 3, E at fret 7 (correct). The context is mixed -- "A is the 5th fret" only works on the high E string (E + 5 = A), and "C is three frets up (fret 8)" confirms we're on the high E string. But then "E is the open string or the 7th fret" -- the open string is E (correct for high E), but fret 7 on the high E is B, not E. **This is an error.** Fret 7 on the high E string is B, not E.
+
+12. **gs-9-5**: "Dm7 adds the C note (the 7th of D minor)" -- The 7th of D minor is C (D-E-F-G-A-Bb-C). Correct.
+
+13. **gs-9-9**: "C major triad on top 3 strings: 5th fret (G) - 5th fret (B) - 8th fret (high E)." -- G string fret 5 = C, B string fret 5 = E, E string fret 8 = C. That's C-E-C. Only two distinct notes, no G. That's a power-octave, not a complete triad. **This is an error** -- it's missing the 5th (G). A C major triad needs C-E-G.
+
+    Then: "try fret 9 (G) - 8th fret (B) - 8th fret (high E) for another inversion." G string fret 9 = E, B string fret 8 = G, E string fret 8 = C. E-G-C = C major first inversion. This one is correct as a C triad.
+
+14. **gs-9-4**: "Gm (barre, 355333)" -- This is a Gm chord. Fret 3 on 6th string = G, fret 5 on 5th string = D, fret 5 on 4th = G, fret 3 on 3rd = Bb, fret 3 on 2nd = D, fret 3 on 1st = G. G-D-G-Bb-D-G = Gm. Correct.
+
+15. **gs-9-4**: "iv-bVII-V-i cycle" describing Gm-C-A7-Dm. In Dm: iv = Gm, bVII = C, V = A(7), i = Dm. Correct.
+
+16. **gs-9-8**: "Am-G for the verses...Em-Bm for the bridge" for Texas Sun. This is stated as a teaching approximation. Musical claims about the song itself are not strictly verifiable from theory alone.
+
+17. **gs-9-5**: "Dm to Dm7...the 7th (C) is a whole step below the root (D)" -- C to D = whole step. Correct.
+
+18. **gs-9-3**: "A7 is a dominant 7th chord — different from the minor 7ths you just learned. Dominant 7ths have a MAJOR triad plus a flat 7th." A7 = A-C#-E-G. A major triad (A-C#-E) + flat 7th (G). Correct.
+
+**Level 10 (Global Colors)**
+
+19. **gs-10-1**: "A on the D string, 2nd fret" -- D string fret 2 = E. **ERROR!** D + 2 semitones = E, not A. A on the D string is at fret 7.
+
+    Wait, let me re-read: "pick just TWO notes (A on the D string, 2nd fret, and C on the G string, open)." D string fret 2 = E, not A. G string open = G, not C. **Both notes are wrong.** This seems like the exercise is assuming an Am chord shape is being held. With Am (x02210), the 4th string at fret 2 gives... E. The 3rd string open = G. These are notes from the Am chord (A-C-E), but the specific note-name-to-fret claims are wrong. The fret positions are correct for the Am chord shape, but the note names don't match.
+
+    Actually, wait. Let me re-read more carefully: "play an Am shape but only strike strings 3-4" from step 2. Then step 3: "pick just TWO notes (A on the D string, 2nd fret, and C on the G string, open)." With Am chord fretting: D string fret 2 = E, G string open = G (but with Am shape, the G string is fretted at fret 2 = A... no, Am is x02210: string 3 is at fret 2 = A on the G string, string 4 is at fret 2 = E on the D string). So with Am shape held: D string fret 2 = E, G string fret 2 = A. But the text says "C on the G string, open" which implies open G string = G, not C.
+
+    **This has two errors**: "A on the D string, 2nd fret" should be "E on the D string, 2nd fret", and "C on the G string, open" should be "G on the G string, open."
+
+20. **gs-10-4**: "On Am: thumb hits the A string (5th string) on beat 1...Then the E on the D string (4th string, 2nd fret) on beat 3" -- D string fret 2 = E. With Am chord held, that's correct. Correct.
+
+21. **gs-10-9**: "Am pentatonic but add a flat 2nd (Bb). This creates a phrygian-pentatonic hybrid that sounds Ethiopian. Play: A-Bb-C-E-G." The flat 2nd of A is Bb. Adding Bb to Am pentatonic (A-C-D-E-G) but dropping D gives A-Bb-C-E-G. This is described as a "phrygian-pentatonic hybrid" which is a reasonable teaching label. Correct.
+
+**Level 11 (Fingerpicking)**
+
+22. **gs-11-5**: Travis picking on G: "thumb alternates between string 6 (G) and string 5 (B)." String 6 open = E in standard tuning, not G. String 5 open = A, not B. With a G chord, string 6 fret 3 = G, and string 5 fret 2 = B. The text says "string 6 (G)" meaning the note G (on string 6 fret 3 with G chord shape), and "string 5 (B)" meaning the note B (on string 5 fret 2 with G chord shape). This is correct -- the parenthetical is the note name, not the string name. Correct.
+
+23. **gs-11-5**: Travis picking on Am: "thumb alternates string 5 (A) and string 4 (E)." String 5 open = A (with Am chord). String 4 fret 2 = E (with Am chord shape x02210, the 4th string is fret 2 = E). Correct.
+
+24. **gs-11-3**: "C has P on string 5 (C)" -- C chord: string 5 fret 3 = C. Correct. "G has P on string 6 (G)" -- G chord: string 6 fret 3 = G. Correct. "Em has P on string 6 (E)" -- Em: string 6 open = E. Correct.
+
+25. **gs-11-4**: "G-Bm-Em-D with a capo on fret 5" for Breakdown. "With the capo, G shape sounds as C." Capo fret 5: G shape = G + 5 semitones = C. Correct. "Bm (x24432 relative to capo)" -- This is a standard Bm barre shape. Correct.
+
+26. **gs-11-4**: "D/F# (2nd fret low E)" -- Low E string fret 2 = F#. D/F# means D chord with F# bass. Correct.
+
+27. **gs-11-12**: "For F, that's the low E string. For C, that's the A string. For G, the low E string." F chord bass on low E = F (fret 1). Correct. C chord bass on A string = C (fret 3). Correct. G chord bass on low E = G (fret 3). Correct.
+
+28. **gs-11-8**: Bass line on Am: "A (string 5 open)... E (string 6 open)... A... G (string 6 fret 3)" -- String 5 open = A. String 6 open = E. String 6 fret 3 = G. Correct.
+
+29. **gs-11-7**: "G (320003)" -- Standard G voicing. 6th fret 3 = G, 5th fret 2 = B, 4th open = D, 3rd open = G, 2nd open = B, 1st fret 3 = G. G-B-D-G-B-G = G major. Correct.
+
+30. **gs-11-7**: "Bm (x24432)" -- 5th fret 2 = B, 4th fret 4 = F#, 3rd fret 4 = B, 2nd fret 3 = D, 1st fret 2 = F#. B-F#-B-D-F# = Bm. Correct.
+
+31. **gs-11-7**: "A (x02220)" -- Standard A major. Correct. "D (xx0232)" -- Standard D major. Correct.
+
+Now let me also check the three-note voicing claims more carefully:
+
+32. **gs-9-9**: "Am triad on top 3 strings: 5th fret (G string) - 5th fret (B string) - 5th fret (high E)." G fret 5 = C, B fret 5 = E, E fret 5 = A. C-E-A = Am first inversion. Correct as Am.
+
+33. **gs-9-9**: "G major triad on top 3 strings: open (G) - open (B) - 3rd fret (high E)." G open = G, B open = B, E fret 3 = G. G-B-G. Only two distinct notes, no D (the 5th). Technically incomplete as a triad -- missing the 3rd note (D). However, G-B forms the root and 3rd, which implies G major. In guitar voicing context this is sometimes accepted, but strictly speaking it's not a complete triad. This is borderline -- I'll flag it as a minor issue.
+
+34. **gs-9-9**: Slide drill: "Am shape (fret 5 barre across top 3 strings), then slide it up to fret 7 (Bm), fret 8 (Cm), fret 10 (Dm)." Fret 5 barre on G-B-E = C-E-A = Am. Fret 7 = D-F#-B = Bm. Correct. Fret 8 = D#-G-C = Cm. Wait: G fret 8 = D#, B fret 8 = G, E fret 8 = C. D#-G-C = Cm (C-D#/Eb-G). Correct. Fret 10 = E-A-D... wait, actually it should be F-A-D... G string fret 10 = F, B string fret 10 = A, E string fret 10 = D. F-A-D = Dm first inversion. Correct.
+
+---
+
+Here is my report of **genuine errors found**:
+
+---
+
+## Verified Errors
+
+### Error 1 -- Level 9, gs-9-5 (A Dorian Mode), Step 3
+**File**: `level-09-extended-harmony.js`, line ~128
+
+**Quote**: `"E is the open string or the 7th fret"`
+
+**Problem**: In the context of this step, all notes are being located on the high E string (1st string). A is at fret 5, C is at fret 8 -- both confirmed on the high E string. But fret 7 on the high E string is **B, not E**. E on the high E string is either the open string (fret 0) or fret 12 (octave). If E at fret 7 is intended to reference the A string (A + 7 semitones = E), the string context is ambiguous and inconsistent with the surrounding note locations which are all on the high E string.
+
+---
+
+### Error 2 -- Level 9, gs-9-9 (Khruangbin Three-Note Voicings), Step 3
+**File**: `level-09-extended-harmony.js`, line ~234
+
+**Quote**: `"C major triad on top 3 strings: 5th fret (G) - 5th fret (B) - 8th fret (high E)"`
+
+**Problem**: G string fret 5 = C, B string fret 5 = E, high E string fret 8 = C. This voicing is C-E-C -- only two distinct pitch classes (C and E), with no G (the 5th). This is not a complete triad; it's a root-plus-third with an octave doubling. The second voicing offered in the same step ("fret 9 - 8 - 8" = E-G-C) is a correct C major triad.
+
+---
+
+### Error 3 -- Level 10, gs-10-1 (Afrobeat Rhythmic Ostinato), Step 3
+**File**: `level-10-global-colors.js`, line ~31
+
+**Quote**: `"pick just TWO notes (A on the D string, 2nd fret, and C on the G string, open)"`
+
+**Problem**: D string (4th string) fret 2 = **E, not A**. G string (3rd string) open = **G, not C**. Both note names are wrong. A on the D string is at fret 7. C on the G string is at fret 5. The fret positions (2nd fret on D string, open G string) are plausible for an Am chord shape exercise (they yield E and G, which are notes in the Am chord), but the note names stated do not match the actual pitches at those positions.
+
+---
+
+### Summary
+
+Three genuine errors were found across the four files:
+
+1. **gs-9-5**: E claimed at fret 7 on high E string (actually B)
+2. **gs-9-9**: C major triad voicing 5-5-8 is incomplete (C-E-C, missing G)
+3. **gs-10-1**: Note names "A" and "C" are wrong for the fret positions given (should be E and G)
+
+All other fret/note claims, chord voicings, interval descriptions, scale constructions, tuning references, and technique directions checked out as correct.</result>
+<usage><total_tokens>83842</total_tokens><tool_uses>12</tool_uses><duration_ms>172633</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\dddc1272-e534-457e-8017-f924b5fda330\tasks\aab6b4b8a7f23667f.output
+[2026-03-26T07:04:55.146Z] <task-notification>
+<task-id>ad99c8b5a5f8bdc51</task-id>
+<tool-use-id>toolu_01JRbBbnuTvoBfdeeRmhPMvc</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\dddc1272-e534-457e-8017-f924b5fda330\tasks\ad99c8b5a5f8bdc51.output</output-file>
+<status>completed</status>
+<summary>Agent "First principles verification L5-7" completed</summary>
+<result>Now let me systematically verify every factual claim. Let me work through each file methodically.
+
+**LEVEL 5: Barre Chord World**
+
+**gs-5-2: E-Shape Barre**
+- Claims open Am = "middle finger on string 4 fret 2, ring finger on string 3 fret 2, index on string 2 fret 1"
+  - Standard Am: x02210. Index on string 2 fret 1 (C note: B string fret 1 = C). Middle on string 4 fret 2 (E note: D string fret 2 = E). Ring on string 3 fret 2 (A note: G string fret 2 = A). These are correct notes for Am (A-E-A-C-E).
+
+- Claims Bm barre at fret 2: "ring finger on string 5 fret 4, pinky on string 4 fret 4, middle finger on string 3 fret 3"
+  - Bm barre at fret 2: x24432. Barre at fret 2, ring on string 5 fret 4 (D note: A string fret 4 = C#... wait). Let me recheck.
+  - String 5 (A) fret 4 = C#. But Bm = B-D-F#. The string 5 note should be B (fret 2, covered by barre). Actually for a standard E-shape minor barre rooted on string 6: the root is on string 6. At fret 2, string 6 = F#. That's not Bm rooted on string 6...
+
+Let me reconsider. The exercise says "Am becomes Bm" - Am shape moved up. The Am barre chord is rooted on string 5 (the A string), not string 6. Wait, no - the text says "E-Shape Barre" in the title but describes the Am shape. Let me re-read.
+
+Actually, the exercise title says "The E-Shape Barre — Am Becomes Anything." This is confusing naming. In guitar pedagogy, the "E-shape" barre typically refers to the shape derived from open E/Em. The Am shape moved up the neck is commonly called the "Am-shape" barre. But let me focus on the actual fret/note claims.
+
+- "At fret 2, Am becomes Bm" - Barre at fret 2, Am shape on top. Root is on string 5. String 5 fret 2 = B. So the chord is B minor. Correct.
+- "At fret 4, it becomes C#m" - String 5 fret 4 = C#. C# minor. Correct.
+- "At fret 5, Dm" - String 5 fret 5 = D. D minor. Correct.
+
+- The fingering for Bm: "ring finger on string 5 fret 4, pinky on string 4 fret 4, middle finger on string 3 fret 3"
+  - This describes a barre at fret 2, then strings 5&4 at fret 4, string 3 at fret 3. That gives: x24432.
+  - String 5 fret 2 = B (barre), string 5 fret 4 = C#... wait, fingers go on TOP of the barre. So ring on string 5 fret 4 means fret 4 on the A string = C#. But Bm needs D on string 5... No wait, the barre covers the nut position. Let me think about this differently.
+
+Actually for Bm as an Am-shape barre at fret 2: the tab is x24432.
+- String 5: fret 2 (B - root, covered by barre)
+- String 4: fret 4 (F# - the 5th). Ring finger at fret 4.
+- String 3: fret 4 (B - the octave root). Pinky at fret 4.  
+- String 2: fret 3 (D - the minor 3rd). Middle finger at fret 3.
+- String 1: fret 2 (F# - the 5th, covered by barre).
+
+But the text says "ring finger on string 5 fret 4, pinky on string 4 fret 4, middle finger on string 3 fret 3." That would be:
+- Ring on string 5 fret 4 = C# (not part of Bm = B-D-F#)
+- Pinky on string 4 fret 4 = F# (correct, 5th of Bm)
+- Middle on string 3 fret 3 = A# (not part of Bm!)
+
+This looks wrong. The standard Bm barre fingering should be:
+- Ring on string 4 fret 4 (F#)
+- Pinky on string 3 fret 4 (B) 
+- Middle on string 2 fret 3 (D)
+
+The exercise has the strings shifted by one. Let me double-check: **ring finger on string 5 fret 4** -- string 5 (A string) fret 4 = C#. That's wrong for Bm. The Am shape moved up has the chord tones on strings 4, 3, 2 (like Am has them on strings 4, 3, 2 at fret 2, fret 2, fret 1).
+
+This is a genuine error in the finger assignments.
+
+Let me continue checking.
+
+**gs-5-3: A-Shape Barre**
+- "Open A has its root on the open A string. When you barre at fret 2, the A string at fret 2 is B — so the chord is B major." String 5 fret 2 = B. Correct.
+- "Slide the B shape up to fret 4 — that's C# major." String 5 fret 4 = C#. Correct.
+- "Up to fret 9 — F# major." String 5 fret 9 = F#. Correct.
+- "F# at fret 2 (E-shape, root on string 6 — fret 2 on the low E = F#)" String 6 fret 2 = F#. Correct.
+
+**gs-5-5: Sliding Barres**
+- "E-shape minor barre at fret 1 (Fm)" String 6 fret 1 = F. So Fm. Correct.
+- "fret 2 (F#m)" String 6 fret 2 = F#. Correct.
+- "Gm (fret 3), G#m (fret 4), Am (fret 5)" All correct by the fret table.
+- "fret 12 (Fm again, one octave higher)" String 6 fret 12 = E. Wait -- that's E, not F! Fret 12 on the 6th string is E (one octave up from open E). Fm at fret 1 would return as Fm at fret 13, not fret 12.
+
+Actually wait. The E-shape minor barre at fret 1 IS Fm (root on fret 1 of string 6 = F). Moving up chromatically: fret 1=F, fret 2=F#, fret 3=G, fret 4=G#, fret 5=A, fret 6=A#, fret 7=B, fret 8=C, fret 9=C#, fret 10=D, fret 11=D#, fret 12=E. So fret 12 is Em, not Fm. Fm again would be fret 13. **This is an error** -- the text says "fret 12 (Fm again, one octave higher)" but fret 12 on string 6 = E, so it would be Em, not Fm.
+
+- "A-shape major barre. Start at fret 1 (Bb major)." String 5 fret 1 = A#/Bb. Correct.
+- "B (fret 2), C (fret 3), C# (fret 4), D (fret 5)" All correct.
+
+- "Am (fret 5 on E-shape = Am, but fret 5 of the A-shape = D major)" String 6 fret 5 = A, so E-shape at fret 5 = Am (if minor shape). String 5 fret 5 = D, so A-shape at fret 5 = D major. Correct.
+
+**gs-5-6: Sol Del Sur**
+- "C#m-B-F# (i-bVII-IV in C# minor)" In C# minor: i = C#m, bVII = B, IV = F#m (natural minor). But the text says "The F# is major — borrowed from the parallel major key." As IV in C# minor, the diatonic chord is F#m. F# major is borrowed from C# major (where IV = F#). The Roman numeral "IV" should indicate major. So "i-bVII-IV" is correct if IV means major IV. Correct analysis.
+
+**gs-5-7: Island Fever**
+- "Fm (E-shape, fret 1)" String 6 fret 1 = F. Correct.
+- "Bb (A-shape, fret 1)" String 5 fret 1 = Bb. Correct.
+- "Ab (E-shape, fret 4)" String 6 fret 4 = G#/Ab. Correct.
+- "Eb (A-shape, fret 6)" String 5 fret 6 = Eb. Correct.
+- "Capo at fret 1, play Em-A-G-D": Em at capo 1 = Fm, A at capo 1 = Bb, G at capo 1 = Ab, D at capo 1 = Eb. Correct -- these match Fm-Bb-Ab-Eb.
+
+**gs-5-8: Just Yesterday**
+- "barre Em at fret 7 (which sounds like Fm)" -- E-shape barre at fret 7, string 6 fret 7 = B. So this would be Bm (if minor shape), not Fm/Em. Wait, the text says "capo at fret 1, but replace the open Em with a barre Em at fret 7." With a capo at fret 1, "fret 7" on the physical guitar would be... hmm, this is about physical vs. relative fret numbers. But the note at physical fret 7 on string 6 = B. That would be Bm in an E-shape, which would sound nothing like Fm. This claim seems wrong, but it may be a confusing instruction about relative fret positions. Regardless, it's misleading at best.
+
+**gs-5-9: Sunset Garage**
+- "G-Em-C-D in the verse and C-D-G-Em in the chorus" -- no fret claims to verify.
+- "Em→C: middle finger stays planted on the D string as an anchor" -- In standard Em (022000), the middle finger is on string 5 (A string) fret 2, and the ring finger is on string 4 (D string) fret 2. In C major (x32010), the middle finger goes to string 4 (D string) fret 2. So the **ring** finger on string 4 fret 2 in Em could anchor to become the **middle** finger on string 4 fret 2 in C. But the text says "middle stays on D string" -- in many Em fingerings people use middle on A string fret 2 and ring on D string fret 2. In that case, the middle finger does NOT stay on the D string. This may or may not be an error depending on which Em fingering is assumed. It's at least potentially misleading.
+
+**LEVEL 6: Jangle & Shimmer**
+
+**gs-6-1: Cmaj7**
+- "Cmaj7 (x32000)" -- C major is x32010. Lifting the index off the B string (fret 1) gives x32000. The open B string (B note) IS the major 7th of C. The open high E is the 3rd. This is correct for Cmaj7.
+
+**gs-6-2: Dmaj7**
+- "Dmaj7 (xx0220)" -- D major is xx0232. "Move your ring finger from fret 3 to fret 2 on the B string, and lift your middle finger off the high E string." 
+  - D major: xx0232 = D string open, G string fret 2 (A), B string fret 3 (D), high E string fret 2 (F#).
+  - Dmaj7 claimed: xx0220 = D string open, G string fret 2 (A), B string fret 2 (C#), high E string open (E).
+  - C# is the major 7th of D. Correct.
+  - The open high E over D: "Over D, it's the 9th." E is the 9th of D. Correct.
+  - "Over C, it's the 3rd." E is the 3rd of C. Correct.
+
+**gs-6-5: Sus2 Voicings**
+- "Dsus2 (xx0230)" -- D string open, G string fret 2 (A), B string fret 3 (D), high E string open (E). Notes: D-A-D-E. The 2nd of D is E. Sus2 = D-E-A. This checks out. Correct.
+- "Asus2 (x02200)" -- A string open, D string fret 2 (E), G string fret 2 (A), B string open (B), high E string open (E). Notes: A-E-A-B-E. Asus2 = A-B-E. Correct.
+
+- "Play D major (xx0232). Feel the middle finger pressing the high E string at fret 2 — that F# (the major 3rd)." High E string fret 2 = F#. F# is the major 3rd of D. Correct.
+- "Now lift that finger: Dsus2 (xx0230)." Correct -- removing the F# from xx0232 gives xx0230.
+
+- "Play Am (x02210). Now play Asus2 (x02200) — lift your index finger off the B string. The C (the minor 3rd) disappears." B string fret 1 = C. C is the minor 3rd of A. Correct.
+
+**gs-6-7: Major to Minor**
+- "D major (xx0232). Now lower the F# on the high E string by one fret to F natural: Dm (xx0231)." High E fret 2 = F#, fret 1 = F. Dm = D-F-A. xx0231: D open, G fret 2 (A), B fret 3 (D), high E fret 1 (F). Notes: D-A-D-F. Correct for Dm.
+- "ONE fret. One semitone." Correct.
+
+- "Gm as a barre chord is 355333" -- String 6 fret 3 = G. E-shape minor barre at fret 3. Let me verify: 355333. String 6 fret 3 = G, String 5 fret 5 = D, String 4 fret 5 = G, String 3 fret 3 = Bb, String 2 fret 3 = D, String 1 fret 3 = G. Notes: G-D-G-Bb-D-G = Gm (G-Bb-D). Correct.
+
+- "simplified Gm: 3x0333" -- String 6 fret 3 = G, String 5 muted, String 4 open = D, String 3 fret 3 = Bb, String 2 fret 3 = D, String 1 fret 3 = G. Notes: G-x-D-Bb-D-G = Gm. Correct.
+
+**gs-6-8: Geneva Strangemod**
+- "Gm7 (353333)" -- String 6 fret 3 = G, string 5 fret 5 = D, string 4 fret 3 = F, string 3 fret 3 = Bb, string 2 fret 3 = D, string 1 fret 3 = G. Notes: G-D-F-Bb-D-G. Gm7 = G-Bb-D-F. All notes present. Correct.
+
+**gs-6-9: Catamaran**
+- "Am-C-D-Dm maps roughly to i-bIII-IV-iv" -- In Am: i=Am, bIII=C, IV=D, iv=Dm. bIII of Am = C (A→B→C, 3 semitones = minor 3rd). Correct. IV of Am = D. Correct. iv (minor iv) = Dm. Correct.
+
+**gs-6-10: Get Away**
+- "E7 (020100)" -- String 6 open = E, String 5 fret 2 = B, String 4 open = D, String 3 fret 1 = G#, String 2 open = B, String 1 open = E. Notes: E-B-D-G#-B-E. E7 = E-G#-B-D. All present. Correct.
+- "Lift your ring finger off the D string (2nd fret) to leave it open. The open D string is the flat 7th (D) of E." D is the b7 of E (E to D = 10 semitones = minor 7th). Correct.
+- "F# (1 bar, barre at fret 2)" -- E-shape barre at fret 2, root on string 6 fret 2 = F#. Correct.
+- "G#m (1 bar, barre at fret 4)" -- E-shape minor barre at fret 4, root on string 6 fret 4 = G#. Correct.
+
+**LEVEL 7: The Groove Machine**
+
+**gs-7-2: Stormtrooper**
+- "D#5 (fret 11)" -- Power chord on strings 6-5. String 6 fret 11 = D#. Correct.
+- "A#5 (fret 6)" -- String 6 fret 6 = A#. Correct.
+- "F#5 (fret 2)" -- String 6 fret 2 = F#. Correct.
+
+**gs-7-5: Warmth of the Sun**
+- "E–D–A–Bm" progression. "Bm (barre at fret 2 or x24432)" -- x24432: String 5 fret 2 = B (root), String 4 fret 4 = F#, String 3 fret 4 = B, String 2 fret 3 = D, String 1 fret 2 = F#. Bm = B-D-F#. All present. Correct.
+- "Bm7 (x20202)" -- String 5 fret 2 = B, String 4 open = D, String 3 fret 2 = A, String 2 open = B, String 1 fret 2 = F#. Notes: B-D-A-B-F#. Bm7 = B-D-F#-A. All present. Correct.
+
+**gs-7-11: Jah Werx**
+- "B-F#-E" progression with continuous 16th notes. No specific fret claims to verify beyond standard chord shapes.
+
+**gs-7-4: Stormtrooper Feel**
+- Chorus power chords E5-A5-B5. E5: standard open power chord. A5: fret 0 or fret 5. B5: fret 2 or fret 7. No specific fret positions claimed.
+- "power chords E5–A5–B5, 4 bars" -- no specific fingering errors to check.
+
+**gs-7-9: Full SoCal Toolkit**
+- "Chorus (4 bars power chords A5-D5-E5)" -- standard power chord shapes, no specific fret claims.
+
+Now let me go back and verify the exercise gs-5-5 fret 12 claim more carefully, and the gs-5-2 fingering claim.
+
+Let me also verify the gs-5-11 C#m pentatonic claim:
+- "C#m pentatonic (C#-E-F#-G#-B)" -- Minor pentatonic = 1-b3-4-5-b7. C# minor pentatonic: C#-E-F#-G#-B. C# to E = 3 semitones (minor 3rd). E to F# = 2. F# to G# = 2. G# to B = 3. B to C# = 2. Total = 12. Pattern 3-2-2-3-2. Correct for minor pentatonic.
+
+Now let me verify the open Am fingering issue in gs-5-2 more carefully:
+
+The text says for Bm barre: "ring finger on string 5 fret 4, pinky on string 4 fret 4, middle finger on string 3 fret 3."
+
+Standard Am-shape barre at fret 2 for Bm:
+- Barre across fret 2
+- The Am open shape has fingers on: string 4 fret 2, string 3 fret 2, string 2 fret 1
+- Moved up 2 frets with barre: string 4 fret 4, string 3 fret 4, string 2 fret 3
+- So: ring on string 4 fret 4, pinky on string 3 fret 4, middle on string 2 fret 3
+
+The exercise says: "ring finger on string 5 fret 4, pinky on string 4 fret 4, middle finger on string 3 fret 3"
+
+Each finger assignment is off by one string (shifted toward the bass). String 5 fret 4 = C# (not in Bm). String 3 fret 3 = A# (not in Bm). **This is a genuine error -- all three finger assignments are on the wrong strings.**
+
+The correct fingering should be: ring on string 4 fret 4, pinky on string 3 fret 4, middle on string 2 fret 3.
+
+---
+
+Here is my complete error report:
+
+---
+
+## Verified Errors
+
+### Level 5 (Barre Chord World)
+
+**ERROR 1 -- gs-5-2: Bm barre chord fingering has all three fingers on wrong strings**
+
+The text states:
+> "add your ring finger on string 5 fret 4, pinky on string 4 fret 4, middle finger on string 3 fret 3"
+
+This is incorrect. String 5 fret 4 = C# and string 3 fret 3 = A#, neither of which belongs in a Bm chord (B-D-F#). The correct fingering for an Am-shape Bm barre at fret 2 is: ring finger on **string 4** fret 4 (F#), pinky on **string 3** fret 4 (B), middle finger on **string 2** fret 3 (D). Every finger listed is shifted one string toward the bass side.
+
+**ERROR 2 -- gs-5-5: Chromatic escalator claims fret 12 = Fm octave**
+
+The text states:
+> "Continue: Gm (fret 3), G#m (fret 4), Am (fret 5), and so on up to fret 12 (Fm again, one octave higher)."
+
+Fret 12 on string 6 = E, not F. An E-shape minor barre at fret 12 produces Em, not Fm. To return to Fm one octave higher, you would need fret **13**. The entire chromatic escalator starting at fret 1 (Fm) has only 11 half steps to fret 12, which lands on Em.
+
+**ERROR 3 -- gs-5-2: Open Am fingering description also shifted by one string**
+
+The text states:
+> "middle finger on string 4 fret 2, ring finger on string 3 fret 2, index on string 2 fret 1"
+
+The standard open Am chord (x02210) has fingers on strings **4, 3, and 2** at frets 2, 2, and 1 respectively. However, the actual standard Am fingering places: index on **string 2** fret 1, middle on **string 4** fret 2, ring on **string 3** fret 2. So reading the description literally, the note names work out: string 4 fret 2 = E, string 3 fret 2 = A, string 2 fret 1 = C. These are correct Am notes. This one is actually correct on closer inspection -- the Am description is fine; the error is only in the Bm adaptation where the strings shift by one.
+
+*(Correcting myself: ERROR 3 is not an error. The Am fingering description is correct. Only the Bm version in gs-5-2 has the string shift problem.)*
+
+### Summary
+
+Two genuine factual errors found across all three files:
+
+1. **gs-5-2** (line 52): The Bm barre chord fingering places all three non-barre fingers on the wrong strings (each shifted one string toward the bass). Ring should be string 4 (not 5), pinky should be string 3 (not 4), middle should be string 2 (not 3).
+
+2. **gs-5-5** (line 114): The text claims fret 12 is "Fm again, one octave higher" but fret 12 on string 6 = E, yielding Em. Fm at the octave would require fret 13.</result>
+<usage><total_tokens>65802</total_tokens><tool_uses>11</tool_uses><duration_ms>194183</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\dddc1272-e534-457e-8017-f924b5fda330\tasks\ad99c8b5a5f8bdc51.output
+[2026-03-26T07:05:00.906Z] <task-notification>
+<task-id>ab15c7200257bb904</task-id>
+<tool-use-id>toolu_01QaoCEKeLW4QjLrWkPkLHRf</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\dddc1272-e534-457e-8017-f924b5fda330\tasks\ab15c7200257bb904.output</output-file>
+<status>completed</status>
+<summary>Agent "First principles verification L1-4" completed</summary>
+<result>Now I have all the data I need. Let me systematically verify every factual claim.
+
+---
+
+## Verification Results
+
+I have verified all four curriculum files from first principles against the fret table, chord voicing definitions, and music theory fundamentals. Here are my findings:
+
+### Level 1 (level-01-first-sounds.js)
+
+**1. Am pentatonic scale notes (gs-1-2, line 46): "A-C-D-E-G"**
+Verified correct. Am pentatonic = root, b3, 4, 5, b7 = A, C, D, E, G.
+
+**2. Am pentatonic fretboard positions (gs-1-2, line 49-50):**
+- "low E string, 5th fret — that's A" -- E string fret 5 = A. Correct.
+- "8th fret — that's C" -- E string fret 8 = C. Correct.
+- "A string has D (5th fret) and E (7th fret)" -- A string fret 5 = D, fret 7 = E. Correct.
+- "D string has G (5th fret) and A (7th fret)" -- D string fret 5 = G, fret 7 = A. Correct.
+- "G string has C (5th fret)" -- G string fret 5 = C. Correct.
+- "B string has D (3rd fret) and E (5th fret)" -- B string fret 3 = D, fret 5 = E. Correct.
+- "High E string has E (5th fret) and G (8th fret)" -- high E fret 5 = A, NOT E.
+
+**ERROR 1:** In gs-1-2, step 2 (line 50): `"High E string has E (5th fret) and G (8th fret)."` The high E string at fret 5 is **A, not E**. E on the high E string is at the **open position (fret 0)** or fret 12. The correct Am pentatonic notes on the high E string in position 1 are **G at fret 3** and **A at fret 5**. The text also claims G is at fret 8 -- high E fret 8 = C, not G. G is at fret 3 on the high E string.
+
+Wait, let me re-check. The Am pentatonic in "open/5th position" -- the exercise says "open/5th position." The standard open-position Am pentatonic includes:
+- High E string: open E (fret 0), G (fret 3)
+But in 5th position, the notes on the high E string would be: A (fret 5) and... hmm. Actually the standard position 1 Am pentatonic box spans frets 5-8 on most strings but on the high strings it wraps. Let me think about this more carefully.
+
+Actually, the "Am pentatonic in open/5th position" can be interpreted differently. Looking at the description "open/5th position" and the fact that step 1 starts at the low E string 5th fret, this is the standard "box 1" Am pentatonic that spans frets 5-8. In that box:
+- High E string: A (fret 5) and C (fret 8)
+
+So the text saying "E (5th fret) and G (8th fret)" on the high E string is **doubly wrong**: fret 5 on high E = A (not E), and fret 8 on high E = C (not G).
+
+**ERROR 1 (confirmed):** gs-1-2, step 2, line 50: `"High E string has E (5th fret) and G (8th fret)"` should be **"High E string has A (5th fret) and C (8th fret)."**
+
+**3. Am chord (gs-1-3, line 73): "index finger on B string fret 1, middle finger on D string fret 2, ring finger on G string fret 2"**
+Am = x02210. A string open, D string fret 2, G string fret 2, B string fret 1, high E open. The finger assignment: index on B1, middle on D2, ring on G2. Verified correct.
+
+**4. C chord (gs-1-3, line 74): "index on B string fret 1, middle on D string fret 2, ring on A string fret 3"**
+C = x32010. A string fret 3, D string fret 2, G string open, B string fret 1, high E open. Verified correct.
+
+**5. Anchor fingers Am→C (gs-1-3, line 74):** "index finger is STILL on B string fret 1, and your middle finger is STILL on D string fret 2... Only the ring finger moves (from G string fret 2 to A string fret 3)."
+Am: index=B1, middle=D2, ring=G2. C: index=B1, middle=D2, ring=A3. The index (B1) and middle (D2) stay planted. Verified correct.
+
+**6. G chord (gs-1-3, line 75): "middle finger on A string fret 2, index on low E string fret 2... ring finger on high E string fret 3"**
+G = 320003. Low E fret 3, A fret 2, D open, G open, B open, high E fret 3.
+
+**ERROR 2:** gs-1-3, step 3, line 75: `"index on low E string fret 2"` -- The G chord has the low E string at fret **3**, not fret 2. The tab notation 320003 puts the low E at fret 3 (G note). Fret 2 on low E would be F#, which is wrong for a G chord. The A string at fret 2 is correct (B note, the 3rd of G). The exercise says "middle finger on A string fret 2, index on low E string fret 2" -- the index should be on low E string fret **3**, or more commonly, the ring finger is on low E fret 3 and middle on A fret 2.
+
+**7. D chord (gs-1-3, line 76): "index on G string fret 2, ring on B string fret 3, middle on high E string fret 2"**
+D = xx0232. D string open, G string fret 2, B string fret 3, high E fret 2. Verified correct.
+
+**8. Em chord (gs-1-3, line 77): "middle finger on A string fret 2, ring finger on D string fret 2"**
+Em = 022000. Low E open, A fret 2, D fret 2, G open, B open, high E open. Verified correct.
+
+**9. A7 chord (gs-1-11, line 279): "index on D string fret 2, middle on B string fret 2. Strum strings 5 through 1."**
+A7 = x02020. A string open, D string fret 2, G string open, B string fret 2, high E open.
+
+**ERROR 3:** gs-1-11, step 1, line 279: `"A7 is a new chord: index on D string fret 2, middle on B string fret 2... It's like a C shape but shifted — only two fingers."` The chord description is technically playable (D2 and B2 gives x02020), but saying "It's like a C shape but shifted" is misleading -- A7 looks nothing like a C shape. However, this is more pedagogical interpretation than factual error. The fret positions themselves (D string fret 2, B string fret 2) do produce A7 = x02020 which matches the voicing in CHORD_VOICINGS. Not a factual error.
+
+**10. Blues scale (gs-1-8, line 192): "Eb (the flat 5th, 'blue note')"**
+In Am, the flat 5 is Eb (A-Bb-C-D-Eb-E). Verified correct.
+
+**11. Blues scale spelling (gs-1-8, line 196): "A(5)-C(8)-D(5)-Eb(6)-E(7)-G(5)-A(7)"**
+
+Wait, this notation is confusing. Let me read it carefully: "A (5th fret low E) → C → D → Eb → E → G → A." Then in gs-2-6 (line 161): "A(5)-C(8)-D(5)-Eb(6)-E(7)-G(5)-A(7)". These are fret numbers on different strings. Let me verify:
+- A(5): low E fret 5 = A. Correct.
+- C(8): low E fret 8 = C. Correct.
+- D(5): A string fret 5 = D. Correct.
+- Eb(6): A string fret 6 = D# = Eb. Correct.
+- E(7): A string fret 7 = E. Correct.
+- G(5): D string fret 5 = G. Correct.
+- A(7): D string fret 7 = A. Correct.
+
+Verified correct.
+
+**12. Bending (gs-1-9, line 220): "B string, 8th fret (G# note)... push until it sounds like the note at the 9th fret (A)"**
+B string fret 8 = G#. B string fret 9 = A. Half-step bend. Verified correct.
+
+**13. Bending (gs-1-9, line 223): "D string 7th fret (E), the G string 5th fret (C), the B string 5th fret (E)"**
+- D string fret 7 = A, NOT E.
+
+**ERROR 4:** gs-1-9, step 4, line 223: `"the D string 7th fret (E)"` -- D string at fret 7 is **A**, not E. E on the D string is at fret **2**. In the Am pentatonic 5th position, the D string notes are G (fret 5) and A (fret 7).
+- G string fret 5 = C. Correct.
+- B string fret 5 = E. Correct.
+
+**14. Am7 (gs-1-10, line 251): "Am7 — lift your index finger off the B string 1st fret so the open B rings"**
+Am = x02210. Lifting the index from B1 gives x02010 = Am7. The CHORD_VOICINGS confirms Am7 = x02010. Verified correct.
+
+**15. D7 (gs-1-10, line 251): "D7 — move your index finger from G string 2nd fret to high E string 1st fret"**
+D = xx0232 with index on G2, ring on B3, middle on high E2. D7 = xx0212. Moving index from G2 to high E1 would give xx0231 which is Dm, not D7. Let me re-check. 
+
+Actually, the standard D chord fingering places index on G string fret 2. D7 (xx0212) has the high E string at fret 1 instead of fret 2. So the instruction should be about moving the finger on the high E string, not the index on the G string. But wait -- D = xx0232. The "2" on high E could be the middle finger. D7 = xx0212. So the change from D to D7 is: high E goes from fret 2 to fret 1. The instruction says "move your index finger from G string 2nd fret to high E string 1st fret." If index was on G2 in the D chord, moving it to high E fret 1 would leave G string open, giving xx0032 + high E fret 1 = xx00_31 which isn't D7.
+
+Actually, looking at the CHORD_VOICINGS: D7 = xx0212. The difference between D (xx0232) and D7 (xx0212) is: G string goes from 2 to 2 (same), B string goes from 3 to 1 (different!), high E goes from 2 to 2 (same). Wait no: xx0232 vs xx0212. Position by position: D(0), G(2), B(3→1), E(2). So it's the B string that changes from fret 3 to fret 1, not anything about moving a finger from G to high E.
+
+**ERROR 5:** gs-1-10, step 2, line 251: `"D7 — move your index finger from G string 2nd fret to high E string 1st fret"` -- This instruction does not produce D7 from D. The actual change from D (xx0232) to D7 (xx0212) requires changing the **B string from fret 3 to fret 1** (moving the ring finger off B3 and placing the index on B1, while keeping the other fingers in place). The text's instruction would leave the G string unfretted and create an incorrect chord.
+
+### Level 2 (level-02-rhythm-and-feel.js)
+
+**16. Blues scale (gs-2-6, line 161): "Eb is at fret 6 on the A string (between D at fret 5 and E at fret 7)"**
+A string: fret 5 = D, fret 6 = D#/Eb, fret 7 = E. Verified correct.
+
+**17. Bending (gs-2-7, line 183): "fret 7 on the G string (D). Now play fret 8 (Eb — the blue note)"**
+G string fret 7 = D. G string fret 8 = D#/Eb. Verified correct. Half-step bend.
+
+**18. Bending (gs-2-7, line 185): "fret 7 (D), then play fret 9 (E). That's a whole step"**
+G string fret 7 = D. G string fret 9 = E. Two semitones = whole step. Verified correct.
+
+**19. Bending lick (gs-2-7, line 187): "play A (fret 5, low E), slide to D (fret 7, G string), bend up to Eb (half-step bend), release back to D, resolve to E (fret 9)"**
+
+Wait -- "slide to D (fret 7, G string)" -- but you can't slide from fret 5 on the low E string to fret 7 on the G string; that's a string change, not a slide. This is a pedagogical simplification (meaning "move to"), not a literal slide. Not a factual note/fret error though.
+- A at fret 5 low E = A. Correct.
+- D at fret 7 G string: G string fret 7 = D. Correct.
+- Eb half-step bend from D on G string: fret 7 bent to fret 8 pitch = Eb. Correct.
+- E at fret 9 G string: G string fret 9 = E. Correct.
+
+All notes verified correct.
+
+**20. Em chord (gs-2-8, line 211): "Em (022000)"**
+Verified matches CHORD_VOICINGS. Correct.
+
+**21. D chord (gs-2-8, line 211): "D (xx0232)"**
+Verified matches CHORD_VOICINGS. Correct.
+
+**22. Hammer-on embellishment on Em (gs-2-8, line 214): "hammer-on from the open A string to fret 2 (A to B, the 5th of Em)"**
+Open A string = A. A string fret 2 = B. B is the 5th of Em (E-G-B). Verified correct.
+
+### Level 3 (level-03-power-and-drive.js)
+
+**23. A5 power chord (gs-3-1, line 29): "index finger on the A string 5th fret (low E muted), ring finger on the D string 7th fret"**
+A string fret 5 = D... wait. A5 should be root A + 5th E. A string fret 5 = D, not A. Let me re-check.
+
+Actually wait -- A on the A string is the open string (fret 0), or fret 12 (octave). A5 in the 5th position: you'd play the 5th fret of the low E string (A) + the 7th fret of the A string (E). Or the A string could be open A + D string fret 2 (E). Let me check what the CHORD_VOICINGS says:
+
+A5 = x022xx (Open) or 577xxx (5th). The "5th" voicing is 577xxx meaning low E fret 5 (A), A string fret 7 (E), D string fret 7 (A).
+
+The exercise says "index finger on the A string 5th fret, ring finger on the D string 7th fret." A string fret 5 = D, D string fret 7 = A. That would give x-5-7-x-x-x = D5, not A5!
+
+**ERROR 6:** gs-3-1, step 1, line 29: `"Play A5: index finger on the A string 5th fret (low E muted), ring finger on the D string 7th fret"` -- A string fret 5 is D, and D string fret 7 is A. This is a D-A interval = D5 power chord, not A5. For A5 in this position, it should be: **index on the low E string fret 5 (A), ring on the A string fret 7 (E)** -- which matches the CHORD_VOICINGS entry "577xxx".
+
+**24. E5 power chord (gs-3-1, line 30): "open low E string + index finger on the A string 2nd fret"**
+Open low E = E. A string fret 2 = B. E-B = root + 5th = E5. Verified correct.
+
+**25. D5 (gs-3-1, line 30): "index on the A string 5th fret, ring on the D string 7th fret. Same shape as A5, just shifted up the neck."**
+This is the same wrong description as A5 above. The CHORD_VOICINGS shows D5 = xx023x (Open) or x577xx (5th). The "5th" voicing x577xx would be A string fret 5 (D), D string fret 7 (A), G string fret 7 (D). The description says "A string 5th fret, D string 7th fret" which gives D-A = D5. This is actually correct for D5! But it means the A5 description was wrong (it used the same shape description), and the claim "Same shape as A5, just shifted up the neck" is wrong because A5 should be on different strings.
+
+Actually wait -- re-reading: "D5: index on the A string 5th fret, ring on the D string 7th fret. Same shape as A5, just shifted up the neck." If both descriptions use A-string and D-string, then "same shape" is only true if A5 was also on those strings. But A5 should be on the low E and A strings. The D5 description itself is correct (A5=D, D7=A gives a D5), but the "same shape as A5" claim is wrong because A5 was incorrectly described.
+
+**26. B5 (gs-3-1, line 33): "index on the A string 2nd fret, ring on the D string 4th fret"**
+A string fret 2 = B. D string fret 4 = F#. B-F# = root + 5th = B5. Verified correct. And CHORD_VOICINGS shows B5 = x244xx, consistent with index on A2, ring on D4 (with G string fret 4 as an octave).
+
+**27. Cadd6 embellishment (gs-3-4, line 107): "While holding a C chord, hammer your pinky onto the 2nd fret of the G string"**
+C chord = x32010. The G string is open (fret 0) in the C chord. Hammering onto the G string fret 2 gives the note A (G string fret 2 = A). C chord notes are C-E-G; adding A gives C-E-G-A = Cadd6. The CHORD_VOICINGS shows Cadd6 = x32210, which is exactly C with G string fret 2 added. Verified correct.
+
+### Level 4 (level-04-the-offbeat.js)
+
+**28. E7 chord (gs-4-8b, line 267): "E7 (020100)"**
+CHORD_VOICINGS: E7 = 020100. Let me verify: low E open (E), A fret 2 (B), D fret 0 (D), G fret 1 (G#), B fret 0 (B), high E fret 0 (E). Notes: E-B-D-G#-B-E. E7 = E-G#-B-D. Verified correct.
+
+**29. A7 chord (gs-4-8b, line 267): "A7 (x02020)"**
+CHORD_VOICINGS: A7 = x02020. Notes: x-A-E-G-C#-E. Hmm, A string open (A), D fret 2 (E), G open (G), B fret 2 (C#), high E open (E). A7 = A-C#-E-G. All present. Verified correct.
+
+**30. B7 chord (gs-4-8b, line 267): "B7 (x21202)"**
+CHORD_VOICINGS: B7 = x21202. Notes: x-B-F#-D#-A-B. Wait: A string fret 2 (B), D string fret 1 (D#/Eb), G string fret 2 (A), B string fret 0 (B), high E fret 2 (F#). B7 = B-D#-F#-A. All present. Verified correct.
+
+**31. F#7 chord (gs-4-8b, line 267): "F#7 (242322)"**
+CHORD_VOICINGS: F#7 = 242322. Notes: low E fret 2 (F#), A fret 4 (C#), D fret 2 (E), G fret 3 (A#/Bb), B fret 2 (C#), high E fret 2 (F#). F#7 = F#-A#-C#-E. G string fret 3 = A# (Bb). All notes present. Verified correct.
+
+**32. B chord (gs-4-4b, line 136): "B is x24442 (A-shape barre at fret 2)"**
+CHORD_VOICINGS: B = x24442. Notes: A fret 2 (B), D fret 4 (F#), G fret 4 (B), B fret 4 (D#), high E fret 2 (F#). B = B-D#-F#. All present. Verified correct.
+
+**33. F# chord (gs-4-4b, line 136): "F# is 244322 (E-shape barre at fret 2)"**
+CHORD_VOICINGS: F# = 244322. Notes: low E fret 2 (F#), A fret 4 (C#), D fret 4 (F#), G fret 3 (A#), B fret 2 (C#), high E fret 2 (F#). F# = F#-A#-C#. All present. Verified correct.
+
+**34. C#m chord (gs-4-8, line 239): "C#m is a barre at fret 4 (x46654)"**
+CHORD_VOICINGS: C#m = x46654. Notes: A fret 4 (C#), D fret 6 (G#), G fret 6 (C#), B fret 5 (E), high E fret 4 (G#). C#m = C#-E-G#. All present. Verified correct.
+
+---
+
+## Summary of Genuine Errors Found
+
+**5 errors total across the 4 files:**
+
+**ERROR 1 — Level 1, gs-1-2, step 2 (line 50):**
+> `"High E string has E (5th fret) and G (8th fret)."`
+
+Both notes are wrong. High E string fret 5 = **A** (not E). High E string fret 8 = **C** (not G). The correct text for the Am pentatonic box 1 should be: **"High E string has A (5th fret) and C (8th fret)."**
+
+**ERROR 2 — Level 1, gs-1-3, step 3 (line 75):**
+> `"index on low E string fret 2"`
+
+The G chord (320003) has the low E string at fret **3** (the note G), not fret 2 (which would be F#). Should read: **"index (or ring) on low E string fret 3."**
+
+**ERROR 3 — Level 1, gs-1-9, step 4 (line 223):**
+> `"the D string 7th fret (E)"`
+
+D string fret 7 = **A**, not E. E on the D string is at fret 2. Should read: **"the D string 7th fret (A)."**
+
+**ERROR 4 — Level 1, gs-1-10, step 2 (line 251):**
+> `"D7 — move your index finger from G string 2nd fret to high E string 1st fret"`
+
+This instruction does not produce D7 from D. D = xx0232, D7 = xx0212. The actual change is on the **B string: fret 3 drops to fret 1** (and high E stays at fret 2). The instruction as written would leave the G string unfretted and produce an incorrect chord.
+
+**ERROR 5 — Level 3, gs-3-1, step 1 (line 29):**
+> `"Play A5: index finger on the A string 5th fret (low E muted), ring finger on the D string 7th fret"`
+
+A string fret 5 = D, D string fret 7 = A. This describes a **D5** power chord, not A5. For A5 in the 5th position (matching CHORD_VOICINGS 577xxx), the correct instruction should be: **"index finger on the low E string 5th fret (A), ring finger on the A string 7th fret (E)."** The subsequent D5 description in step 2 using the same A-string/D-string pattern is correct for D5 itself, but the "same shape as A5" claim becomes misleading since A5 was described on the wrong strings.
+
+---
+
+Everything else I checked -- all other fret/note claims, chord tab notations, interval claims, scale spellings, anchor finger descriptions, and BPM consistency within exercises -- verified as correct. Levels 2 and 4 are clean. Level 1 has 4 errors and Level 3 has 1 error.</result>
+<usage><total_tokens>97846</total_tokens><tool_uses>17</tool_uses><duration_ms>211759</duration_ms></usage>
+</task-notification>
+Full transcript available at: C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\dddc1272-e534-457e-8017-f924b5fda330\tasks\ab15c7200257bb904.output

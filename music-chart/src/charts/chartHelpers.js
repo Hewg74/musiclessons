@@ -1,6 +1,6 @@
 // ─── Chart Helper Functions ──────────────────────────────────────────────────
 
-export function makeEmptyCell() { return { chord: null, strum: null, lyric: "" }; }
+export function makeEmptyCell() { return { chord: null, strum: null, lyric: "", lyricGroupId: null }; }
 export function makeEmptyMeasure() { return { cells: Array.from({ length: 8 }, makeEmptyCell), between: {}, sectionLabel: "" }; }
 
 export function makeTemplateChart() {

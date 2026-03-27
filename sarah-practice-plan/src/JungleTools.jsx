@@ -6,7 +6,7 @@ import {
   Plus, Trash2, Share2, Undo2, ChevronDown, ChevronUp, X, Edit3, Upload
 } from 'lucide-react';
 import { acquireKeepalive, releaseKeepalive, setMediaSession, clearMediaSession } from './audioKeepalive.js';
-import { splitSyllables, chipText, chipGroup } from './syllableUtil.js';
+import { splitSyllables, chipText, chipGroup, chipOrigin, normalizeAndTokenize } from './syllableUtil.js';
 
 // ─── Mic AudioContext helper ──────────────────────────────────────────
 // Mic features use a SEPARATE AudioContext from Tone.js's playback context.
@@ -5847,7 +5847,7 @@ const CHORD_VOICINGS = new Proxy(CHORD_VOICINGS_MULTI, {
   has(target, prop) { return prop in target; },
 });
 
-function makeEmptyCell() { return { chord: null, strum: null, lyric: "" }; }
+function makeEmptyCell() { return { chord: null, strum: null, lyric: "", lyricGroupId: null }; }
 function makeEmptyMeasure() { return { cells: Array.from({ length: 8 }, makeEmptyCell), between: {}, sectionLabel: "" }; }
 
 export function makeTemplateChart() {
@@ -6592,20 +6592,60 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
     setActiveChordCell({ m: mIdx, c: cIdx });
   };
 
-  // Lyrics handlers
+  // Lyrics handlers — smart single-button: auto-detects append vs replace
   const handleLyricsPaste = (text) => {
-    updateChart(c => {
-      c.lyricsInput = text;
-      // Split on spaces and hyphens (keeping hyphens attached)
-      const words = text.split(/\s+/).filter(w => w.length > 0).flatMap(w => {
-        if (w.includes("-")) {
-          return w.split(/(?<=-)/).filter(s => s.length > 0);
+    const hasExisting = chart.lyricsPool.length > 0 ||
+      chart.measures.some(m => m.cells.some(c => c.lyric));
+
+    if (hasExisting) {
+      // APPEND MODE: diff new words against existing, keep placed lyrics
+      updateChart(c => {
+        const combinedText = text;
+        c.lyricsInput = combinedText;
+        const allNewChips = normalizeAndTokenize(combinedText);
+        const existingBag = [
+          ...c.lyricsPool.map(chipText),
+          ...c.measures.flatMap(m => m.cells.filter(cell => cell.lyric).map(cell => cell.lyric)),
+        ];
+        const newChips = [];
+        const consumed = [...existingBag];
+        for (const chip of allNewChips) {
+          const idx = consumed.indexOf(chip.text);
+          if (idx !== -1) {
+            consumed.splice(idx, 1);
+          } else {
+            newChips.push(chip);
+          }
         }
-        return [w];
+        const maxOrigin = Math.max(0, ...c.lyricsPool.map(chipOrigin));
+        newChips.forEach((chip, i) => { chip.originIndex = maxOrigin + 1 + i; });
+        c.lyricsPool = [...c.lyricsPool, ...newChips];
+        return c;
       });
-      c.lyricsPool = words;
-      // Clear all placed lyrics
-      c.measures.forEach(m => m.cells.forEach(cell => { cell.lyric = ""; cell.lyricGroupId = null; }));
+    } else {
+      // REPLACE MODE: first-time set
+      updateChart(c => {
+        c.lyricsInput = text;
+        c.lyricsPool = normalizeAndTokenize(text);
+        c.measures.forEach(m => {
+          m.cells.forEach(cell => { cell.lyric = ""; cell.lyricGroupId = null; });
+          Object.values(m.between || {}).forEach(b => { if (b) { b.lyric = ""; } });
+        });
+        return c;
+      });
+    }
+    setLyricsEditing(false);
+    setSelectedChip(null);
+  };
+
+  const clearAllLyrics = () => {
+    updateChart(c => {
+      c.lyricsInput = "";
+      c.lyricsPool = [];
+      c.measures.forEach(m => {
+        m.cells.forEach(cell => { cell.lyric = ""; cell.lyricGroupId = null; });
+        Object.values(m.between || {}).forEach(b => { if (b) { b.lyric = ""; } });
+      });
       return c;
     });
     setLyricsEditing(false);
@@ -6619,6 +6659,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
     updateChart(c => {
       c.measures[mIdx].cells[cIdx].lyric = chipText(item);
       c.measures[mIdx].cells[cIdx].lyricGroupId = chipGroup(item);
+      c.measures[mIdx].cells[cIdx].lyricOriginIndex = chipOrigin(item);
       c.lyricsPool = c.lyricsPool.filter((_, i) => i !== selectedChip);
       return c;
     });
@@ -6631,25 +6672,13 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
     updateChart(c => {
       const text = c.measures[mIdx].cells[cIdx].lyric;
       const groupId = c.measures[mIdx].cells[cIdx].lyricGroupId;
+      const originIndex = c.measures[mIdx].cells[cIdx].lyricOriginIndex ?? Infinity;
       c.measures[mIdx].cells[cIdx].lyric = "";
       c.measures[mIdx].cells[cIdx].lyricGroupId = null;
-      // Return as tagged fragment or plain string
-      const returned = groupId ? { text, groupId } : text;
-      // Re-insert at original position based on lyricsInput order
-      const allWords = (c.lyricsInput || "").split(/\s+/).filter(w => w.length > 0).flatMap(w =>
-        w.includes("-") ? w.split(/(?<=-)/).filter(s => s.length > 0) : [w]
-      );
+      c.measures[mIdx].cells[cIdx].lyricOriginIndex = null;
+      const returned = { text, groupId: groupId || null, originIndex };
       const pool = [...c.lyricsPool, returned];
-      pool.sort((a, b) => {
-        const findIdx = (w) => {
-          const t = chipText(w);
-          const idx = allWords.indexOf(t);
-          if (idx !== -1) return idx;
-          const clean = t.replace(/-$/, '');
-          return allWords.findIndex(aw => aw.toLowerCase().includes(clean.toLowerCase()));
-        };
-        return (findIdx(a) === -1 ? 999 : findIdx(a)) - (findIdx(b) === -1 ? 999 : findIdx(b));
-      });
+      pool.sort((a, b) => chipOrigin(a) - chipOrigin(b));
       c.lyricsPool = pool;
       return c;
     });
@@ -6660,9 +6689,12 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
     const item = chart.lyricsPool[chipIndex];
     const syllables = splitSyllables(item);
     if (!syllables) return;
-    const groupId = Date.now();
+    const groupId = Date.now() + Math.random();
+    const origin = chipOrigin(item);
     updateChart(c => {
-      c.lyricsPool.splice(chipIndex, 1, ...syllables.map(s => ({ text: s, groupId })));
+      c.lyricsPool.splice(chipIndex, 1, ...syllables.map((s, i) => ({
+        text: s, groupId, originIndex: origin + i * 0.001,
+      })));
       return c;
     });
     setSelectedChip(null);
@@ -6674,36 +6706,34 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
     const groupId = chipGroup(item);
     if (!groupId) return;
     updateChart(c => {
-      // Collect all pool fragments with this groupId
       const poolIdxs = [];
-      c.lyricsPool.forEach((p, i) => { if (chipGroup(p) === groupId) poolIdxs.push(i); });
-      // Reconstruct word from all fragments (pool + placed)
+      let minOrigin = Infinity;
+      c.lyricsPool.forEach((p, i) => {
+        if (chipGroup(p) === groupId) {
+          poolIdxs.push(i);
+          minOrigin = Math.min(minOrigin, chipOrigin(p));
+        }
+      });
       const allFragTexts = [];
       c.lyricsPool.forEach(p => { if (chipGroup(p) === groupId) allFragTexts.push(chipText(p)); });
-      // Pull placed fragments with same groupId back from cells
       c.measures.forEach(m => {
         m.cells.forEach(cell => {
           if (cell.lyricGroupId === groupId) {
             allFragTexts.push(cell.lyric);
+            if (cell.lyricOriginIndex != null) minOrigin = Math.min(minOrigin, cell.lyricOriginIndex);
             cell.lyric = '';
             cell.lyricGroupId = null;
+            cell.lyricOriginIndex = null;
           }
         });
       });
-      // Find original word by matching syllable splits (order-independent)
-      const origWords = (c.lyricsInput || '').split(/\s+/).filter(Boolean);
-      const fragsSorted = [...allFragTexts].map(f => f.toLowerCase()).sort().join('|');
-      const originalWord = origWords.find(w => {
-        const syls = splitSyllables(w);
-        if (!syls || syls.length !== allFragTexts.length) return false;
-        return [...syls].map(s => s.toLowerCase()).sort().join('|') === fragsSorted;
-      }) || allFragTexts.map(f => f.replace(/-$/, '')).join('');
-      // Remove pool fragments and insert original word at first fragment's position
+      const originalWord = allFragTexts.map(f => f.replace(/-$/, '')).join('');
       const insertAt = poolIdxs[0];
-      // Count how many removed items are before insertAt to adjust index
       const removedBefore = poolIdxs.filter(idx => idx < insertAt).length;
       c.lyricsPool = c.lyricsPool.filter((_, i) => !poolIdxs.includes(i));
-      c.lyricsPool.splice(insertAt - removedBefore, 0, originalWord);
+      c.lyricsPool.splice(insertAt - removedBefore, 0, {
+        text: originalWord, groupId: null, originIndex: minOrigin,
+      });
       return c;
     });
     setSelectedChip(null);
@@ -7482,14 +7512,22 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
         marginBottom: 16, padding: "12px 16px", background: T.bgSoft,
         border: `1px solid ${T.border}`, borderRadius: T.radiusMd,
       }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: lyricsEditing ? 8 : 0 }}>
           <span style={{ fontSize: 9, color: T.textMuted, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1 }}>Lyrics</span>
-          {!lyricsEditing && chart.lyricsInput && (
-            <button onClick={() => setLyricsEditing(true)} style={{
-              fontSize: 9, background: "none", border: "none", color: T.gold, cursor: "pointer",
-              fontWeight: 700, textTransform: "uppercase", letterSpacing: 1,
-            }}><Edit3 size={10} style={{ marginRight: 3 }} />Edit</button>
-          )}
+          <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+            {!lyricsEditing && chart.lyricsInput && (
+              <button onClick={clearAllLyrics} style={{
+                fontSize: 9, background: "none", border: "none", color: T.textMuted, cursor: "pointer",
+                fontWeight: 600, textTransform: "uppercase", letterSpacing: 1,
+              }}>Clear</button>
+            )}
+            {!lyricsEditing && chart.lyricsInput && (
+              <button onClick={() => setLyricsEditing(true)} style={{
+                fontSize: 9, background: "none", border: "none", color: T.gold, cursor: "pointer",
+                fontWeight: 700, textTransform: "uppercase", letterSpacing: 1,
+              }}><Edit3 size={10} style={{ marginRight: 3 }} />Edit</button>
+            )}
+          </div>
         </div>
         {lyricsEditing ? (
           <div>
@@ -7516,18 +7554,13 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
               }}
             >Set Lyrics</button>
           </div>
-        ) : chart.lyricsInput ? (
-          <div style={{ fontSize: 12, fontFamily: T.serif, color: T.textLight, fontStyle: "italic" }}>
-            {chart.lyricsInput}
-          </div>
-        ) : (
+        ) : !chart.lyricsInput ? (
           <button onClick={() => setLyricsEditing(true)} style={{
             fontSize: 11, color: T.textMuted, background: "none", border: `1px dashed ${T.border}`,
             borderRadius: T.radius, padding: "8px 12px", cursor: "pointer", width: "100%",
-            fontFamily: T.sans,
+            fontFamily: T.sans, marginTop: 8,
           }}>+ Add Lyrics</button>
-        )}
-
+        ) : null}
       </div>
 
       {/* Playback indicator */}
@@ -8014,13 +8047,15 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
         );
       })()}
 
-      {/* Sticky lyrics chips tray — pinned above BottomNav, full-width on desktop */}
+      {/* Sticky lyrics chips tray — scrollable, auto-shrinks as chips are placed */}
       {chart.lyricsPool.length > 0 && !lyricsEditing && (
         <div style={{
           position: "sticky", bottom: isWide ? 0 : 60, zIndex: 99,
           background: T.bg, padding: "8px 12px",
           borderTop: `1px solid ${T.borderSoft}`,
           boxShadow: "0 -2px 8px rgba(44,40,37,0.04)",
+          maxHeight: isWide ? 80 : 120, overflowY: "auto",
+          WebkitOverflowScrolling: "touch",
           ...(isWide ? {
             width: "100vw",
             marginLeft: "calc(-50vw + 50%)",
