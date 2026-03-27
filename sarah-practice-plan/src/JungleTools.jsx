@@ -6679,7 +6679,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
       const maxOrigin = Math.max(0, ...keptPool.map(chipOrigin));
       newChips.forEach((chip, i) => { chip.originIndex = maxOrigin + 1 + i; });
 
-      c.lyricsPool = [...keptPool, ...newChips];
+      c.lyricsPool = [...keptPool, ...newChips].sort((a, b) => chipOrigin(a) - chipOrigin(b));
       return c;
     });
     setLyricsEditing(false);
@@ -6762,12 +6762,12 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
           minOrigin = Math.min(minOrigin, chipOrigin(p));
         }
       });
-      const allFragTexts = [];
-      c.lyricsPool.forEach(p => { if (chipGroup(p) === groupId) allFragTexts.push(chipText(p)); });
+      const allFrags = [];
+      c.lyricsPool.forEach(p => { if (chipGroup(p) === groupId) allFrags.push({ text: chipText(p), oi: chipOrigin(p) }); });
       c.measures.forEach(m => {
         m.cells.forEach(cell => {
           if (cell.lyricGroupId === groupId) {
-            allFragTexts.push(cell.lyric);
+            allFrags.push({ text: cell.lyric, oi: cell.lyricOriginIndex ?? Infinity });
             if (cell.lyricOriginIndex != null) minOrigin = Math.min(minOrigin, cell.lyricOriginIndex);
             cell.lyric = '';
             cell.lyricGroupId = null;
@@ -6775,7 +6775,8 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
           }
         });
       });
-      const originalWord = allFragTexts.map(f => f.replace(/-$/, '')).join('');
+      allFrags.sort((a, b) => a.oi - b.oi);
+      const originalWord = allFrags.map(f => f.text.replace(/-$/, '')).join('');
       const insertAt = poolIdxs[0];
       const removedBefore = poolIdxs.filter(idx => idx < insertAt).length;
       c.lyricsPool = c.lyricsPool.filter((_, i) => !poolIdxs.includes(i));
