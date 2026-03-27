@@ -430,51 +430,85 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
     setActiveChordCell({ m: mIdx, c: cIdx });
   };
 
-  // Lyrics handlers — smart single-button: auto-detects append vs replace
+  // Lyrics handler — keeps existing pool/placed intact, adds new words, removes deleted ones
   const handleLyricsPaste = (text) => {
-    const hasExisting = chart.lyricsPool.length > 0 ||
-      chart.measures.some(m => m.cells.some(c => c.lyric));
+    updateChart(c => {
+      c.lyricsInput = text;
+      const newWords = normalizeAndTokenize(text);
+      // Build bag of what we already have: pool chip texts + placed cell texts
+      // For pool, track the actual chip objects so we can keep splits intact
+      const poolBag = c.lyricsPool.map(p => chipText(p));
+      const placedBag = [];
+      c.measures.forEach(m => m.cells.forEach(cell => {
+        if (cell.lyric) placedBag.push(cell.lyric);
+      }));
+      // Also account for split fragments: group them back to their original word for matching
+      // A split "mi-" + "les" in pool should match "miles" in the new text
+      const fragGroups = {};
+      c.lyricsPool.forEach(p => {
+        const gid = chipGroup(p);
+        if (gid) {
+          if (!fragGroups[gid]) fragGroups[gid] = [];
+          fragGroups[gid].push(p);
+        }
+      });
+      const splitWords = {}; // groupId → reconstructed word
+      for (const [gid, frags] of Object.entries(fragGroups)) {
+        splitWords[gid] = frags.map(f => chipText(f).replace(/-$/, '')).join('');
+      }
 
-    if (hasExisting) {
-      // APPEND MODE: diff new words against existing, keep placed lyrics
-      updateChart(c => {
-        const combinedText = text; // textarea has full content (old + new edits)
-        c.lyricsInput = combinedText;
-        const allNewChips = normalizeAndTokenize(combinedText);
-        // Build bag of existing chip texts (pool + placed)
-        const existingBag = [
-          ...c.lyricsPool.map(chipText),
-          ...c.measures.flatMap(m => m.cells.filter(cell => cell.lyric).map(cell => cell.lyric)),
-        ];
-        const newChips = [];
-        const consumed = [...existingBag];
-        for (const chip of allNewChips) {
-          const idx = consumed.indexOf(chip.text);
-          if (idx !== -1) {
-            consumed.splice(idx, 1); // consume match
-          } else {
-            newChips.push(chip);
+      // Walk the new word list, consuming from existing (placed first, then pool)
+      const consumedPlaced = [...placedBag];
+      const consumedPool = [...poolBag];
+      const consumedSplitGroups = new Set();
+      const genuinelyNew = [];
+
+      for (const word of newWords) {
+        const t = word.text;
+        // Check placed cells first
+        const pi = consumedPlaced.indexOf(t);
+        if (pi !== -1) { consumedPlaced.splice(pi, 1); continue; }
+        // Check pool (whole words)
+        const qi = consumedPool.indexOf(t);
+        if (qi !== -1) { consumedPool.splice(qi, 1); continue; }
+        // Check if it matches a split group (e.g., "miles" matches "mi-" + "les")
+        let matchedSplit = false;
+        for (const [gid, fullWord] of Object.entries(splitWords)) {
+          if (fullWord === t && !consumedSplitGroups.has(gid)) {
+            consumedSplitGroups.add(gid);
+            // Remove those fragments from consumedPool too
+            fragGroups[gid].forEach(f => {
+              const fi = consumedPool.indexOf(chipText(f));
+              if (fi !== -1) consumedPool.splice(fi, 1);
+            });
+            matchedSplit = true;
+            break;
           }
         }
-        // Re-index: new chips get originIndex after existing max
-        const maxOrigin = Math.max(0, ...c.lyricsPool.map(chipOrigin));
-        newChips.forEach((chip, i) => { chip.originIndex = maxOrigin + 1 + i; });
-        c.lyricsPool = [...c.lyricsPool, ...newChips];
-        return c;
-      });
-    } else {
-      // REPLACE MODE: first-time set
-      updateChart(c => {
-        c.lyricsInput = text;
-        c.lyricsPool = normalizeAndTokenize(text);
-        // Clear all placed lyrics including between slots
-        c.measures.forEach(m => {
-          m.cells.forEach(cell => { cell.lyric = ""; cell.lyricGroupId = null; });
-          Object.values(m.between || {}).forEach(b => { if (b) { b.lyric = ""; } });
-        });
-        return c;
-      });
-    }
+        if (!matchedSplit) genuinelyNew.push(word);
+      }
+
+      // Remove pool chips whose words were deleted from textarea
+      // consumedPool has leftover texts that weren't matched = deleted by user
+      const removeBag = [...consumedPool];
+      const keptPool = [];
+      for (const p of c.lyricsPool) {
+        const t = chipText(p);
+        const ri = removeBag.indexOf(t);
+        if (ri !== -1) {
+          removeBag.splice(ri, 1); // remove this chip
+        } else {
+          keptPool.push(p);
+        }
+      }
+
+      // Assign originIndex to new chips after existing max
+      const maxOrigin = Math.max(0, ...keptPool.map(chipOrigin));
+      genuinelyNew.forEach((chip, i) => { chip.originIndex = maxOrigin + 1 + i; });
+
+      c.lyricsPool = [...keptPool, ...genuinelyNew];
+      return c;
+    });
     setLyricsEditing(false);
     setSelectedChip(null);
   };
