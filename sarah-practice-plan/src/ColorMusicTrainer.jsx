@@ -303,7 +303,7 @@ function ColorWheel({ theme: T, root, scaleNotes = [], voiceNote = null, activeN
               <circle cx={x} cy={y} r={dotSize} fill={color}
                 opacity={inScale ? 1 : (onRootChange ? 0.25 : 0.08)}
                 style={{ transition: 'all 0.3s' }} />
-              {isRoot && <circle cx={x} cy={y} r={dotSize + 2} fill="none" stroke={T.gold} strokeWidth={2} opacity={0.9} />}
+              {isRoot && <circle cx={x} cy={y} r={dotSize + 2} fill="none" stroke={T.textDark} strokeWidth={2} opacity={0.6} />}
               {(isVoice || isActive) && (
                 <circle cx={x} cy={y} r={dotSize + 4} fill="none" stroke={color} strokeWidth={1.5} opacity={0.6}
                   style={{ animation: 'wheelPulse 0.8s ease-in-out infinite' }} />
@@ -461,6 +461,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
   const [guidedEx, setGuidedEx] = useState(null);
   const [guidedStep, setGuidedStep] = useState(0);
   const [guidedActive, setGuidedActive] = useState(false);
+  const [guidedComplete, setGuidedComplete] = useState(false); // show completion message
 
   // Stats + persistence
   const [sessionStart] = useState(Date.now());
@@ -648,7 +649,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     if (guidedEx === null) return;
     const ex = GUIDED_EXERCISES[guidedEx];
     const next = guidedStep + 1;
-    if (next >= ex.steps.length) { setGuidedActive(false); setGuidedEx(null); return; }
+    if (next >= ex.steps.length) { setGuidedActive(false); setGuidedComplete(true); return; }
     setGuidedStep(next);
     const step = ex.steps[next];
     const rootIdx = CHROMATIC.indexOf(normalizeNote(root));
@@ -850,7 +851,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     if (mode !== 'voice' && mode !== 'melodyEcho') { setVoiceNote(null); setMicActive(false); }
     if (mode === 'voice' || mode === 'melodyEcho') setMicActive(true);
     if (mode === 'guided') { setGuidedActive(false); setGuidedEx(null); }
-    if (mode === 'scaleRunner') { stopScaleRunner(); setSrBpm(60); }
+    if (mode === 'scaleRunner') { stopScaleRunner(); }
     if (mode !== 'scaleRunner') stopScaleRunner();
     if (mode !== 'chordTones') stopProgression();
     setVoiceNote(null);
@@ -994,7 +995,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
                   width: 32, height: 32, borderRadius: 4,
                   background: getColorForNote(hfTarget.note),
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 11, fontWeight: 800, color: '#fff', fontFamily: 'monospace',
+                  fontSize: 11, fontWeight: 800, color: '#fff', fontFamily: 'monospace', textShadow: '0 1px 3px rgba(0,0,0,0.5)',
                   boxShadow: `0 0 10px ${getColorForNote(hfTarget.note)}60`,
                 }}>{hfTarget.note}</div>
                 <span style={{ fontSize: 12, color: T.textMed }}>was the note</span>
@@ -1044,7 +1045,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
                   width: 44, height: 44, borderRadius: '50%',
                   background: getColorForNote(voiceNote),
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 14, fontWeight: 800, color: '#fff', fontFamily: 'monospace',
+                  fontSize: 14, fontWeight: 800, color: '#fff', fontFamily: 'monospace', textShadow: '0 1px 3px rgba(0,0,0,0.5)',
                   boxShadow: `0 0 16px ${getColorForNote(voiceNote)}60`,
                   transition: 'all 0.15s',
                 }}>{voiceNote}</div>
@@ -1111,7 +1112,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
                       width: 36, height: 36, borderRadius: 4,
                       background: getColorForNote(note),
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontSize: 10, fontWeight: 700, color: '#fff', fontFamily: 'monospace',
+                      fontSize: 10, fontWeight: 700, color: '#fff', fontFamily: 'monospace', textShadow: '0 1px 3px rgba(0,0,0,0.5)',
                       opacity: crFeedback === 'wrong' ? 1 : (crGuess.length > i ? 0.5 : 1),
                       boxShadow: `0 0 6px ${getColorForNote(note)}40`,
                     }}>{note}</div>
@@ -1132,7 +1133,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
                         background: getColorForNote(note),
                         border: `2px solid ${correct ? T.success : T.coral}`,
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontSize: 10, fontWeight: 700, color: '#fff', fontFamily: 'monospace',
+                        fontSize: 10, fontWeight: 700, color: '#fff', fontFamily: 'monospace', textShadow: '0 1px 3px rgba(0,0,0,0.5)',
                       }}>{note}</div>
                     );
                   })}
@@ -1196,17 +1197,24 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
             {intRevealed && intTarget && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4 }}>
                 <div style={{ width: 32, height: 32, borderRadius: 4, background: getColorForNote(intTarget.note1),
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, color: '#fff', fontFamily: 'monospace',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, color: '#fff', fontFamily: 'monospace', textShadow: '0 1px 3px rgba(0,0,0,0.5)',
                 }}>{intTarget.note1}</div>
                 <span style={{ fontSize: 12, color: T.textMuted, fontFamily: T.serif, fontStyle: 'italic' }}>{intTarget.intervalName}</span>
                 <div style={{ width: 32, height: 32, borderRadius: 4, background: getColorForNote(intTarget.note2),
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, color: '#fff', fontFamily: 'monospace',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, color: '#fff', fontFamily: 'monospace', textShadow: '0 1px 3px rgba(0,0,0,0.5)',
                 }}>{intTarget.note2}</div>
               </div>
             )}
-            <div style={{ fontSize: 11, color: T.textMuted, marginTop: 8, fontStyle: 'italic', fontFamily: T.serif }}>
-              Close colors on the wheel = small interval. Far colors = big leap.
-            </div>
+            {!intTarget && (
+              <div style={{ fontSize: 12, color: T.textMuted, fontStyle: 'italic', fontFamily: T.serif }}>
+                Tap "New Interval" to hear two notes. Identify the distance between them.
+              </div>
+            )}
+            {intTarget && (
+              <div style={{ fontSize: 11, color: T.textMuted, marginTop: 8, fontStyle: 'italic', fontFamily: T.serif }}>
+                Close colors on the wheel = small interval. Far colors = big leap.
+              </div>
+            )}
           </div>
         )}
 
@@ -1224,18 +1232,20 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
               </div>
               <div style={{ display: 'flex', gap: 3 }}>
                 {[
-                  { id: 'up', label: '\u2191' },
-                  { id: 'down', label: '\u2193' },
-                  { id: 'both', label: '\u2195' },
-                  { id: 'licks', label: '\uD83C\uDFB5' },
-                  { id: 'random', label: '\uD83D\uDD00' },
+                  { id: 'up', label: 'Up' },
+                  { id: 'down', label: 'Down' },
+                  { id: 'both', label: 'Both' },
+                  { id: 'licks', label: 'Licks' },
+                  { id: 'random', label: 'Rnd' },
                 ].map(d => (
                   <button key={d.id} onClick={() => setSrDirection(d.id)} style={{
-                    width: 36, height: 36, borderRadius: T.radius,
+                    padding: '4px 8px', height: 32, borderRadius: T.radius,
                     border: `1px solid ${srDirection === d.id ? rootColor : T.borderSoft}`,
                     background: srDirection === d.id ? `${rootColor}12` : 'transparent',
                     color: srDirection === d.id ? rootColor : T.textMuted,
-                    fontSize: 14, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 10, fontWeight: 600, cursor: 'pointer',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontFamily: T.sans,
                   }}>{d.label}</button>
                 ))}
               </div>
@@ -1262,7 +1272,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
                     width: i === srIdx ? 36 : 24, height: i === srIdx ? 36 : 24,
                     borderRadius: 4, background: getColorForNote(note),
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: i === srIdx ? 11 : 8, fontWeight: 700, color: '#fff', fontFamily: 'monospace',
+                    fontSize: i === srIdx ? 11 : 8, fontWeight: 700, color: '#fff', fontFamily: 'monospace', textShadow: '0 1px 3px rgba(0,0,0,0.5)',
                     opacity: i < srIdx ? 0.3 : i === srIdx ? 1 : 0.5,
                     boxShadow: i === srIdx ? `0 0 12px ${getColorForNote(note)}60` : 'none',
                     transition: 'all 0.15s',
@@ -1311,7 +1321,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
                       width: 36, height: 36, borderRadius: '50%',
                       background: getColorForNote(note),
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontSize: 10, fontWeight: 700, color: '#fff', fontFamily: 'monospace',
+                      fontSize: 10, fontWeight: 700, color: '#fff', fontFamily: 'monospace', textShadow: '0 1px 3px rgba(0,0,0,0.5)',
                       boxShadow: `0 0 6px ${getColorForNote(note)}40`,
                     }}>{note}</div>
                   ))}
@@ -1331,7 +1341,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
                         background: getColorForNote(note),
                         border: `2px solid ${correct ? T.success : T.coral}`,
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontSize: 10, fontWeight: 700, color: '#fff', fontFamily: 'monospace',
+                        fontSize: 10, fontWeight: 700, color: '#fff', fontFamily: 'monospace', textShadow: '0 1px 3px rgba(0,0,0,0.5)',
                       }}>{note}</div>
                     );
                   })}
@@ -1380,19 +1390,35 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
 
         {/* GUIDED */}
         {mode === 'guided' && !guidedActive && (
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            {GUIDED_EXERCISES.map((ex, i) => (
-              <button key={ex.id} onClick={() => startGuided(i)} style={{
-                padding: '10px 14px', borderRadius: T.radiusMd,
-                background: T.bgCard, border: `1px solid ${T.border}`,
-                color: T.textMed, fontSize: 12, textAlign: 'left',
-                cursor: 'pointer', flex: '1 1 140px', minHeight: 44,
-                transition: 'all 0.2s',
+          <div>
+            {/* Completion message */}
+            {guidedComplete && guidedEx !== null && (
+              <div style={{
+                padding: '12px 16px', borderRadius: T.radiusMd, marginBottom: 12,
+                background: T.successSoft, border: `1px solid ${T.success}30`,
               }}>
-                <div style={{ fontWeight: 600, marginBottom: 2, fontFamily: T.serif }}>{ex.title}</div>
-                <div style={{ fontSize: 10, color: T.textMuted }}>{ex.desc}</div>
-              </button>
-            ))}
+                <div style={{ fontSize: 14, fontWeight: 600, color: T.success, fontFamily: T.serif, marginBottom: 4 }}>
+                  {GUIDED_EXERCISES[guidedEx].title} complete.
+                </div>
+                <div style={{ fontSize: 11, color: T.textMed }}>
+                  Well done. Try another exercise or switch to a different mode to practice what you just learned.
+                </div>
+              </div>
+            )}
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              {GUIDED_EXERCISES.map((ex, i) => (
+                <button key={ex.id} onClick={() => { setGuidedComplete(false); startGuided(i); }} style={{
+                  padding: '10px 14px', borderRadius: T.radiusMd,
+                  background: T.bgCard, border: `1px solid ${T.border}`,
+                  color: T.textMed, fontSize: 12, textAlign: 'left',
+                  cursor: 'pointer', flex: '1 1 140px', minHeight: 44,
+                  transition: 'all 0.2s',
+                }}>
+                  <div style={{ fontWeight: 600, marginBottom: 2, fontFamily: T.serif }}>{ex.title}</div>
+                  <div style={{ fontSize: 10, color: T.textMuted }}>{ex.desc}</div>
+                </button>
+              ))}
+            </div>
           </div>
         )}
         {mode === 'guided' && guidedActive && guidedEx !== null && (
@@ -1464,7 +1490,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
                     width: 28, height: 28, borderRadius: '50%',
                     background: getColorForNote(note),
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 9, fontWeight: 700, color: '#fff', fontFamily: 'monospace',
+                    fontSize: 9, fontWeight: 700, color: '#fff', fontFamily: 'monospace', textShadow: '0 1px 3px rgba(0,0,0,0.5)',
                     border: i === 0 ? '2px solid #fff' : '1px dashed rgba(255,255,255,0.6)',
                   }}>{note}</div>
                 ))}
@@ -1594,7 +1620,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
             <div style={{
               width: 20, height: 20, borderRadius: 3,
               background: rootColor, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 8, fontWeight: 800, color: '#fff', fontFamily: 'monospace',
+              fontSize: 8, fontWeight: 800, color: '#fff', fontFamily: 'monospace', textShadow: '0 1px 3px rgba(0,0,0,0.5)',
             }}>{root}</div>
             <span style={{ fontSize: 11, color: T.textMuted, fontFamily: T.sans }}>
               {root} {typeInfo.name}

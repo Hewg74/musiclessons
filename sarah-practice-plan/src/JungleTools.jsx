@@ -2856,15 +2856,15 @@ export function FretboardDiagram({
               ) : (
                 <circle cx={cx} cy={cy} r={size} fill={fill} />
               )}
-              {/* Root white ring */}
+              {/* Root ring — dark outline visible on both light and dark backgrounds */}
               {d.isRoot && useColor && (useSquare ? (
-                <rect x={cx - size - 1} y={cy - size - 1} width={size * 2 + 2} height={size * 2 + 2} rx={4} fill="none" stroke="#fff" strokeWidth={2} opacity={0.9} />
+                <rect x={cx - size - 1} y={cy - size - 1} width={size * 2 + 2} height={size * 2 + 2} rx={4} fill="none" stroke={T.textDark} strokeWidth={2} opacity={0.5} />
               ) : (
-                <circle cx={cx} cy={cy} r={size + 1} fill="none" stroke="#fff" strokeWidth={2} opacity={0.9} />
+                <circle cx={cx} cy={cy} r={size + 1} fill="none" stroke={T.textDark} strokeWidth={2} opacity={0.5} />
               ))}
-              {/* Chord tone ring (gold dashed) */}
+              {/* Chord tone ring (dark dashed) */}
               {isChordTone && !d.isRoot && (
-                <circle cx={cx} cy={cy} r={size + 2} fill="none" stroke="#fff" strokeWidth={1.5} strokeDasharray="3 2" opacity={0.7} />
+                <circle cx={cx} cy={cy} r={size + 2} fill="none" stroke={T.textDark} strokeWidth={1.5} strokeDasharray="3 2" opacity={0.4} />
               )}
               {d.displayLabel && (
                 <text
