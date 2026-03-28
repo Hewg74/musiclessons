@@ -38,9 +38,18 @@ const MODES = [
   { id: 'voice',        label: 'Voice' },
   { id: 'hearFind',     label: 'Hear\u2192Find' },
   { id: 'callResponse', label: 'Call\u00A0&\u00A0Resp' },
+  { id: 'intervals',    label: 'Intervals' },
+  { id: 'scaleRunner',  label: 'Scale Run' },
   { id: 'oneNote',      label: 'One Note' },
+  { id: 'melodyEcho',   label: 'Melody Echo' },
   { id: 'guided',       label: 'Guided' },
 ];
+
+// ─── Interval names for each semitone distance ───
+const INTERVAL_NAMES = {
+  0: 'Unison', 1: 'm2', 2: 'M2', 3: 'm3', 4: 'M3', 5: 'P4',
+  6: 'Tritone', 7: 'P5', 8: 'm6', 9: 'M6', 10: 'm7', 11: 'M7',
+};
 
 // ─── Guided exercise definitions ───
 const GUIDED_EXERCISES = [
@@ -267,8 +276,29 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
   const [crScore, setCrScore] = useState({ hit: 0, total: 0 });
   const [crStreak, setCrStreak] = useState(0);
 
+  // Interval Trainer state
+  const [intTarget, setIntTarget] = useState(null); // { note1, note2, semitones, intervalName }
+  const [intRevealed, setIntRevealed] = useState(false);
+  const [intFeedback, setIntFeedback] = useState(null);
+  const [intScore, setIntScore] = useState({ hit: 0, total: 0 });
+
+  // Scale Runner state
+  const [srActive, setSrActive] = useState(false);
+  const [srBpm, setSrBpm] = useState(60);
+  const [srIdx, setSrIdx] = useState(-1); // current note index
+  const [srDirection, setSrDirection] = useState('up'); // 'up' | 'down' | 'both' | 'random'
+  const srTimerRef = useRef(null);
+
+  // Melody Echo state
+  const [mePhrase, setMePhrase] = useState([]);
+  const [meSung, setMeSung] = useState([]);
+  const [meLength, setMeLength] = useState(3);
+  const [meListening, setMeListening] = useState(false);
+  const [meFeedback, setMeFeedback] = useState(null);
+  const meLastNoteRef = useRef(null);
+
   // Guided state
-  const [guidedEx, setGuidedEx] = useState(null); // index into GUIDED_EXERCISES
+  const [guidedEx, setGuidedEx] = useState(null);
   const [guidedStep, setGuidedStep] = useState(0);
   const [guidedActive, setGuidedActive] = useState(false);
 
@@ -393,6 +423,133 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     }
   }, [guidedEx, guidedStep, root, scaleData]);
 
+  // ─── Interval Trainer ───
+  const newInterval = useCallback(() => {
+    const notes = scaleData.notes;
+    const rootIdx = CHROMATIC.indexOf(normalizeNote(root));
+    // Pick two different scale notes
+    const i1 = 0; // always start from root
+    let i2 = Math.floor(Math.random() * (notes.length - 1)) + 1;
+    const n1 = notes[i1], n2 = notes[i2];
+    const idx1 = CHROMATIC.indexOf(normalizeNote(n1));
+    const idx2 = CHROMATIC.indexOf(normalizeNote(n2));
+    const semitones = ((idx2 - idx1) + 12) % 12;
+    setIntTarget({ note1: n1, note2: n2, semitones, intervalName: INTERVAL_NAMES[semitones] || `${semitones}st` });
+    setIntRevealed(false); setIntFeedback(null);
+    // Play both notes
+    playWarmNote(n1 + '3', '4n');
+    setTimeout(() => playWarmNote(n2 + '4', '4n'), 500);
+  }, [scaleData, root]);
+
+  const checkInterval = useCallback((guessedSemitones) => {
+    if (!intTarget) return;
+    if (guessedSemitones === intTarget.semitones) {
+      setIntFeedback('correct'); setIntRevealed(true);
+      setIntScore(p => ({ hit: p.hit + 1, total: p.total + 1 }));
+      setTimeout(newInterval, 1400);
+    } else {
+      setIntFeedback('wrong');
+      setIntScore(p => ({ ...p, total: p.total + 1 }));
+      setTimeout(() => setIntFeedback(null), 1000);
+    }
+  }, [intTarget, newInterval]);
+
+  // Available intervals in current scale (relative to root)
+  const scaleIntervals = useMemo(() => {
+    const rootIdx = CHROMATIC.indexOf(normalizeNote(root));
+    return scaleData.notes.slice(1).map(n => {
+      const idx = CHROMATIC.indexOf(normalizeNote(n));
+      const semi = ((idx - rootIdx) + 12) % 12;
+      return { semitones: semi, name: INTERVAL_NAMES[semi] || `${semi}` };
+    });
+  }, [scaleData, root]);
+
+  // ─── Scale Runner ───
+  const srSequence = useMemo(() => {
+    const notes = scaleData.notes;
+    if (srDirection === 'up') return [...notes];
+    if (srDirection === 'down') return [...notes].reverse();
+    if (srDirection === 'both') return [...notes, ...[...notes].reverse().slice(1)];
+    // random: shuffle scale notes
+    const shuffled = [...notes];
+    for (let i = shuffled.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; }
+    return shuffled;
+  }, [scaleData, srDirection]);
+
+  const startScaleRunner = useCallback(() => {
+    setSrActive(true); setSrIdx(0);
+    playWarmNote(srSequence[0] + '4', '8n');
+  }, [srSequence]);
+
+  const stopScaleRunner = useCallback(() => {
+    setSrActive(false); setSrIdx(-1);
+    if (srTimerRef.current) clearInterval(srTimerRef.current);
+  }, []);
+
+  // Advance scale runner on interval
+  useEffect(() => {
+    if (!srActive) return;
+    const ms = 60000 / srBpm;
+    srTimerRef.current = setInterval(() => {
+      setSrIdx(prev => {
+        const next = prev + 1;
+        if (next >= srSequence.length) {
+          // Completed a run — bump BPM
+          setSrBpm(b => b + 5);
+          setSrActive(false);
+          return -1;
+        }
+        playWarmNote(srSequence[next] + '4', '8n');
+        return next;
+      });
+    }, ms);
+    return () => clearInterval(srTimerRef.current);
+  }, [srActive, srBpm, srSequence]);
+
+  // ─── Melody Echo ───
+  const newMelody = useCallback(() => {
+    const notes = scaleData.notes;
+    const phrase = [];
+    let prev = Math.floor(Math.random() * notes.length);
+    for (let i = 0; i < meLength; i++) {
+      const step = Math.random() < 0.7 ? (Math.random() > 0.5 ? 1 : -1) : Math.floor(Math.random() * 3) - 1;
+      const idx = Math.max(0, Math.min(notes.length - 1, prev + step));
+      phrase.push(notes[idx]);
+      prev = idx;
+    }
+    setMePhrase(phrase); setMeSung([]); setMeListening(false); setMeFeedback(null);
+    meLastNoteRef.current = null;
+    // Play the melody
+    phrase.forEach((n, i) => setTimeout(() => playWarmNote(n + '4', '4n'), i * 500));
+    // Start listening after melody plays
+    setTimeout(() => setMeListening(true), phrase.length * 500 + 300);
+  }, [scaleData, meLength]);
+
+  // Capture sung notes for melody echo
+  const handleMePitch = useCallback(({ note }) => {
+    if (!meListening || !mePhrase.length) return;
+    const normalized = normalizeNote(note);
+    // Only register if it's a new note (different from last)
+    if (normalized === meLastNoteRef.current) return;
+    meLastNoteRef.current = normalized;
+    setMeSung(prev => {
+      const next = [...prev, normalized];
+      if (next.length >= mePhrase.length) {
+        // Check match
+        setMeListening(false);
+        const correct = next.every((n, i) => normalizeNote(n) === normalizeNote(mePhrase[i]));
+        setMeFeedback(correct ? 'correct' : 'wrong');
+      }
+      return next;
+    });
+  }, [meListening, mePhrase]);
+
+  // Combine voice handler for melody echo mode
+  const handlePitchDetectedAll = useCallback((data) => {
+    handlePitchDetected(data);
+    if (mode === 'melodyEcho') handleMePitch(data);
+  }, [handlePitchDetected, mode, handleMePitch]);
+
   // ─── Mode-specific tap handler ───
   const handleNoteTap = useCallback((tapInfo) => {
     if (mode === 'hearFind') checkHfGuess(tapInfo);
@@ -403,10 +560,13 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
   useEffect(() => {
     if (mode === 'hearFind') setTimeout(newChallenge, 300);
     if (mode === 'callResponse') setTimeout(newCrPhrase, 300);
+    if (mode === 'intervals') setTimeout(newInterval, 300);
     if (mode === 'oneNote') setOneNote(null);
-    if (mode !== 'voice') { setVoiceNote(null); setMicActive(false); }
-    if (mode === 'voice') setMicActive(true);
+    if (mode !== 'voice' && mode !== 'melodyEcho') { setVoiceNote(null); setMicActive(false); }
+    if (mode === 'voice' || mode === 'melodyEcho') setMicActive(true);
     if (mode === 'guided') { setGuidedActive(false); setGuidedEx(null); }
+    if (mode === 'scaleRunner') { stopScaleRunner(); setSrBpm(60); }
+    if (mode !== 'scaleRunner') stopScaleRunner();
     setVoiceNote(null);
   }, [mode]);
 
@@ -575,7 +735,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
           scaleData={scaleData}
           colorMode={true}
           richTone={true}
-          voiceNote={voiceNote}
+          voiceNote={voiceNote || (srActive && srIdx >= 0 && srIdx < srSequence.length ? srSequence[srIdx] : null)}
           oneNoteFilter={mode === 'oneNote' ? oneNote : null}
           onNoteTap={handleNoteTap}
         />
@@ -698,7 +858,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
               </div>
             )}
             {/* Inline LivePitchDetector — user clicks its own Start button */}
-            <LivePitchDetector theme={T} inline={true} onPitchDetected={handlePitchDetected} />
+            <LivePitchDetector theme={T} inline={true} onPitchDetected={handlePitchDetectedAll} />
             <div style={{ fontSize: 12, color: T.textMed, fontStyle: 'italic', fontFamily: T.serif, marginTop: 8 }}>
               Sing or hum \u2014 watch the fretboard light up. Your voice paints the guitar.
             </div>
@@ -776,6 +936,199 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
             {!crPhrase.length && (
               <div style={{ fontSize: 12, color: T.textMuted, fontStyle: 'italic', fontFamily: T.serif }}>
                 Tap "New Phrase" to hear a melodic pattern. Echo it back by tapping the fretboard.
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* INTERVALS */}
+        {mode === 'intervals' && (
+          <div>
+            <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap', marginBottom: 10 }}>
+              <button onClick={newInterval} style={btnStyle(true, rootColor)}>New Interval</button>
+              <button onClick={() => intTarget && (() => {
+                playWarmNote(intTarget.note1 + '3', '4n');
+                setTimeout(() => playWarmNote(intTarget.note2 + '4', '4n'), 500);
+              })()} style={btnStyle(false, rootColor)}>Replay</button>
+              <div style={{ marginLeft: 'auto', fontFamily: 'monospace', fontSize: 13 }}>
+                <span style={{ color: rootColor, fontWeight: 700 }}>{intScore.hit}</span>
+                <span style={{ color: T.textMuted }}>/{intScore.total}</span>
+              </div>
+            </div>
+            {/* Interval answer buttons */}
+            <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 8 }}>
+              {scaleIntervals.map(({ semitones, name }) => (
+                <button key={semitones} onClick={() => checkInterval(semitones)} style={{
+                  padding: isMobile ? '10px 14px' : '6px 12px', borderRadius: T.radius,
+                  background: T.bgCard, border: `1px solid ${T.border}`,
+                  color: T.textDark, fontSize: 12, fontWeight: 600, fontFamily: T.sans,
+                  cursor: 'pointer', minHeight: 44, transition: 'all 0.2s',
+                }}>{name}</button>
+              ))}
+            </div>
+            {intFeedback && (
+              <div style={{
+                padding: '8px 12px', borderRadius: T.radius, fontSize: 13, fontWeight: 600,
+                background: intFeedback === 'correct' ? T.successSoft : T.coralSoft,
+                color: intFeedback === 'correct' ? T.success : T.coral,
+                marginBottom: 6,
+              }}>
+                {intFeedback === 'correct'
+                  ? `\u2713 ${intTarget?.intervalName}! ${intTarget?.note1} \u2192 ${intTarget?.note2}`
+                  : `\u2717 Not that one. Listen to the distance.`}
+              </div>
+            )}
+            {intRevealed && intTarget && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4 }}>
+                <div style={{ width: 32, height: 32, borderRadius: 4, background: getColorForNote(intTarget.note1),
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, color: '#fff', fontFamily: 'monospace',
+                }}>{intTarget.note1}</div>
+                <span style={{ fontSize: 12, color: T.textMuted, fontFamily: T.serif, fontStyle: 'italic' }}>{intTarget.intervalName}</span>
+                <div style={{ width: 32, height: 32, borderRadius: 4, background: getColorForNote(intTarget.note2),
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, color: '#fff', fontFamily: 'monospace',
+                }}>{intTarget.note2}</div>
+              </div>
+            )}
+            <div style={{ fontSize: 11, color: T.textMuted, marginTop: 8, fontStyle: 'italic', fontFamily: T.serif }}>
+              Close colors on the wheel = small interval. Far colors = big leap.
+            </div>
+          </div>
+        )}
+
+        {/* SCALE RUNNER */}
+        {mode === 'scaleRunner' && (
+          <div>
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap', marginBottom: 10 }}>
+              {!srActive ? (
+                <button onClick={startScaleRunner} style={btnStyle(true, rootColor)}>Start</button>
+              ) : (
+                <button onClick={stopScaleRunner} style={btnStyle(false, T.coral)}>Stop</button>
+              )}
+              <div style={{ fontFamily: 'monospace', fontSize: 18, fontWeight: 700, color: rootColor, minWidth: 60 }}>
+                {srBpm} <span style={{ fontSize: 10, fontWeight: 400, color: T.textMuted }}>BPM</span>
+              </div>
+              <div style={{ display: 'flex', gap: 3 }}>
+                {[
+                  { id: 'up', label: '\u2191' },
+                  { id: 'down', label: '\u2193' },
+                  { id: 'both', label: '\u2195' },
+                  { id: 'random', label: '\uD83D\uDD00' },
+                ].map(d => (
+                  <button key={d.id} onClick={() => setSrDirection(d.id)} style={{
+                    width: 36, height: 36, borderRadius: T.radius,
+                    border: `1px solid ${srDirection === d.id ? rootColor : T.borderSoft}`,
+                    background: srDirection === d.id ? `${rootColor}12` : 'transparent',
+                    color: srDirection === d.id ? rootColor : T.textMuted,
+                    fontSize: 14, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  }}>{d.label}</button>
+                ))}
+              </div>
+            </div>
+            {/* Current note highlight */}
+            {srActive && srIdx >= 0 && srIdx < srSequence.length && (
+              <div style={{ display: 'flex', gap: 4, alignItems: 'center', marginBottom: 8 }}>
+                {srSequence.map((note, i) => (
+                  <div key={i} style={{
+                    width: i === srIdx ? 36 : 24, height: i === srIdx ? 36 : 24,
+                    borderRadius: 4, background: getColorForNote(note),
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: i === srIdx ? 11 : 8, fontWeight: 700, color: '#fff', fontFamily: 'monospace',
+                    opacity: i < srIdx ? 0.3 : i === srIdx ? 1 : 0.5,
+                    boxShadow: i === srIdx ? `0 0 12px ${getColorForNote(note)}60` : 'none',
+                    transition: 'all 0.15s',
+                  }}>{i === srIdx ? note : ''}</div>
+                ))}
+              </div>
+            )}
+            {!srActive && (
+              <div style={{ fontSize: 11, color: T.textMuted, fontStyle: 'italic', fontFamily: T.serif }}>
+                Notes light up in sequence. Follow along. Each completed run bumps the tempo by 5 BPM.
+                {srBpm > 60 && ` Currently at ${srBpm} BPM.`}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* MELODY ECHO */}
+        {mode === 'melodyEcho' && (
+          <div>
+            <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap', marginBottom: 10 }}>
+              <button onClick={newMelody} style={btnStyle(true, rootColor)}>New Melody</button>
+              <button onClick={() => mePhrase.length && mePhrase.forEach((n, i) => setTimeout(() => playWarmNote(n + '4', '4n'), i * 500))}
+                style={btnStyle(false, rootColor)}>Replay</button>
+              <div style={{ display: 'flex', gap: 3, marginLeft: 8 }}>
+                {[3, 4, 5].map(n => (
+                  <button key={n} onClick={() => setMeLength(n)} style={{
+                    width: 28, height: 28, borderRadius: T.radius,
+                    border: `1px solid ${meLength === n ? rootColor : T.borderSoft}`,
+                    background: meLength === n ? `${rootColor}12` : 'transparent',
+                    color: meLength === n ? rootColor : T.textMuted, fontSize: 11, fontWeight: 600,
+                    cursor: 'pointer', fontFamily: T.sans,
+                  }}>{n}</button>
+                ))}
+              </div>
+            </div>
+            {/* Target melody display */}
+            {mePhrase.length > 0 && (
+              <div style={{ marginBottom: 6 }}>
+                <div style={{ fontSize: 9, color: T.textMuted, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4 }}>Target</div>
+                <div style={{ display: 'flex', gap: 6 }}>
+                  {mePhrase.map((note, i) => (
+                    <div key={i} style={{
+                      width: 36, height: 36, borderRadius: '50%',
+                      background: getColorForNote(note),
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontSize: 10, fontWeight: 700, color: '#fff', fontFamily: 'monospace',
+                      boxShadow: `0 0 6px ${getColorForNote(note)}40`,
+                    }}>{note}</div>
+                  ))}
+                </div>
+              </div>
+            )}
+            {/* Sung notes display */}
+            {meSung.length > 0 && (
+              <div style={{ marginBottom: 6 }}>
+                <div style={{ fontSize: 9, color: T.textMuted, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4 }}>You sang</div>
+                <div style={{ display: 'flex', gap: 6 }}>
+                  {meSung.map((note, i) => {
+                    const correct = i < mePhrase.length && normalizeNote(note) === normalizeNote(mePhrase[i]);
+                    return (
+                      <div key={i} style={{
+                        width: 36, height: 36, borderRadius: '50%',
+                        background: getColorForNote(note),
+                        border: `2px solid ${correct ? T.success : T.coral}`,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: 10, fontWeight: 700, color: '#fff', fontFamily: 'monospace',
+                      }}>{note}</div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+            {meFeedback && (
+              <div style={{
+                padding: '8px 12px', borderRadius: T.radius, fontSize: 13, fontWeight: 600,
+                background: meFeedback === 'correct' ? T.successSoft : T.coralSoft,
+                color: meFeedback === 'correct' ? T.success : T.coral,
+                marginBottom: 6,
+              }}>
+                {meFeedback === 'correct' ? '\u2713 Perfect echo!' : '\u2717 Not quite \u2014 try again.'}
+              </div>
+            )}
+            {meListening && (
+              <div style={{ fontSize: 12, color: rootColor, fontWeight: 600, animation: 'wheelPulse 1s ease-in-out infinite' }}>
+                Listening... sing now
+              </div>
+            )}
+            {/* LivePitchDetector for melody echo */}
+            {(mode === 'melodyEcho') && (
+              <div style={{ marginTop: 8 }}>
+                <LivePitchDetector theme={T} inline={true} onPitchDetected={handlePitchDetectedAll} />
+              </div>
+            )}
+            {!mePhrase.length && (
+              <div style={{ fontSize: 12, color: T.textMuted, fontStyle: 'italic', fontFamily: T.serif }}>
+                Tap "New Melody" to hear a phrase. Then sing it back \u2014 the pitch detector verifies each note.
               </div>
             )}
           </div>
