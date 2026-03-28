@@ -858,96 +858,99 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
   }, [mode]);
 
   // ─── Styles ───
-  const modeTabStyle = (id) => ({
-    padding: isMobile ? '10px 14px' : '6px 14px',
-    borderRadius: T.radius, border: 'none', cursor: 'pointer',
-    background: mode === id ? `${rootColor}12` : 'transparent',
-    color: mode === id ? T.textDark : T.textLight,
-    fontSize: 11, fontWeight: mode === id ? 700 : 400, fontFamily: T.sans,
-    textTransform: 'uppercase', letterSpacing: 1,
-    borderBottom: mode === id ? `2px solid ${rootColor}` : '2px solid transparent',
-    transition: 'all 0.2s', whiteSpace: 'nowrap', minHeight: 44,
-    display: 'flex', alignItems: 'center',
-  });
+  const modeTabStyle = (id) => {
+    const active = mode === id;
+    return {
+      padding: '8px 12px',
+      borderRadius: 20, border: 'none', cursor: 'pointer',
+      background: active ? rootColor : 'transparent',
+      color: active ? '#fff' : T.textMuted,
+      fontSize: 11, fontWeight: active ? 700 : 500, fontFamily: T.sans,
+      letterSpacing: 0.5,
+      transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+      whiteSpace: 'nowrap',
+      textShadow: active ? '0 1px 2px rgba(0,0,0,0.2)' : 'none',
+    };
+  };
 
   const btnStyle = (active, color) => ({
-    padding: isMobile ? '10px 16px' : '6px 14px',
-    borderRadius: T.radius, cursor: 'pointer', fontFamily: T.sans,
-    fontSize: 12, fontWeight: 600, minHeight: 44,
-    background: active ? `${color}12` : T.bgCard,
-    color: active ? color : T.textMed,
-    border: `1px solid ${active ? color + '60' : T.border}`,
-    display: 'flex', alignItems: 'center', gap: 4,
+    padding: isMobile ? '10px 16px' : '8px 14px',
+    borderRadius: 20, cursor: 'pointer', fontFamily: T.sans,
+    fontSize: 12, fontWeight: 600, minHeight: 40,
+    background: active ? color : T.bgCard,
+    color: active ? '#fff' : T.textMed,
+    border: active ? 'none' : `1px solid ${T.border}`,
+    display: 'flex', alignItems: 'center', gap: 5,
     transition: 'all 0.2s',
+    textShadow: active ? '0 1px 2px rgba(0,0,0,0.15)' : 'none',
+    boxShadow: active ? `0 2px 8px ${color}30` : 'none',
   });
-
-  // Show color wheel: always on desktop, toggle on mobile
-  const showWheel = !isMobile || wheelVisible;
 
   return (
     <div style={{
       fontFamily: T.sans, color: T.textDark,
-      padding: embedded ? '12px 0' : '16px 12px',
-      paddingBottom: embedded ? 12 : 140, // Room for floating metronome (64px nav + 50px metro + padding)
+      padding: embedded ? '12px 0' : '0 16px',
+      paddingBottom: embedded ? 12 : 140,
       maxWidth: 960, margin: '0 auto',
-      display: 'flex', flexDirection: 'column',
-      minHeight: embedded ? 'auto' : 'calc(100vh - 80px)',
     }}>
       <style>{`
         @keyframes wheelPulse { 0%,100%{opacity:0.4} 50%{opacity:0.8} }
         @keyframes droneGlow { 0%,100%{box-shadow:0 0 4px ${rootColor}40} 50%{box-shadow:0 0 12px ${rootColor}80} }
+        .cm-tabs::-webkit-scrollbar { display: none; }
+        .cm-tabs { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
 
-      {/* ── HEADER: Back + Summary + Drone ── */}
+      {/* ── HEADER ── */}
       {!embedded && (
         <div style={{
           display: 'flex', alignItems: 'center', gap: 8,
-          marginBottom: 8, minHeight: 44,
+          padding: '12px 0', borderBottom: `1px solid ${T.borderSoft}`, marginBottom: 12,
         }}>
           {onBack && (
             <button onClick={onBack} style={{
-              background: 'none', border: 'none', cursor: 'pointer', padding: 8,
-              color: T.textMed, display: 'flex', alignItems: 'center', minWidth: 44, minHeight: 44,
+              background: 'none', border: 'none', cursor: 'pointer', padding: 6,
+              color: T.textMed, display: 'flex', alignItems: 'center',
             }}><ArrowLeft size={20} /></button>
           )}
-          <h1 style={{ fontSize: 16, fontWeight: 700, fontFamily: T.serif, margin: 0, color: T.textDark, flex: 1 }}>
-            Color Music
-          </h1>
-
-          {/* Drone toggle */}
+          <div style={{ flex: 1 }}>
+            <h1 style={{ fontSize: 18, fontWeight: 700, fontFamily: T.serif, margin: 0, color: T.textDark }}>
+              Color Music
+            </h1>
+            <div style={{ fontSize: 10, color: T.textMuted, marginTop: 1, fontFamily: T.sans }}>
+              {root} {typeInfo.name} \u00B7 {scaleNotes.length} notes
+            </div>
+          </div>
           <button onClick={() => drone.playing ? drone.stop() : drone.start(root)} style={{
             ...btnStyle(drone.playing, rootColor),
             animation: drone.playing ? 'droneGlow 3s ease-in-out infinite' : 'none',
           }}>
             <Volume2 size={14} />
-            {!isMobile && (drone.playing ? 'Drone On' : 'Drone')}
+            {drone.playing ? 'On' : 'Drone'}
           </button>
-
-          {/* Wheel toggle removed — wheel is always visible now as root selector */}
         </div>
       )}
 
-      {/* ── MODE TABS (top — primary navigation, scrollable) ── */}
+      {/* ── MODE TABS (pill bar, scrollable) ── */}
       {!embedded && (
-        <div style={{
-          display: 'flex', gap: 2, marginBottom: 8,
-          overflowX: 'auto', paddingBottom: 2,
+        <div className="cm-tabs" style={{
+          display: 'flex', gap: 6, marginBottom: 16,
+          overflowX: 'auto', paddingBottom: 4,
           WebkitOverflowScrolling: 'touch',
         }}>
           {MODES.map(m => (
-            <button key={m.id} onClick={() => setMode(m.id)}
-              style={{ ...modeTabStyle(m.id), flex: 'none', whiteSpace: 'nowrap' }}>
+            <button key={m.id} onClick={() => setMode(m.id)} style={modeTabStyle(m.id)}>
               {m.label}
             </button>
           ))}
         </div>
       )}
 
-      {/* ── MODE PANEL (instructions/controls for current minigame) ── */}
+      {/* ── MODE PANEL ── */}
       <div style={{
-        padding: isMobile ? '12px' : '14px 16px',
-        borderRadius: T.radiusMd, marginBottom: 8,
-        background: T.bgSoft, border: `1px solid ${T.border}`,
+        padding: '14px 16px',
+        borderRadius: T.radiusMd, marginBottom: 16,
+        background: T.bgCard, border: `1px solid ${T.border}`,
+        boxShadow: T.sm,
       }}>
 
         {/* EXPLORE */}
@@ -1577,79 +1580,82 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
         )}
       </div>
 
-      {/* ── COLOR WHEEL (always visible — tap a note to set it as root) ── */}
+      {/* ── WHEEL + FRETBOARD ── */}
       <div style={{
-        display: 'flex', justifyContent: 'center', marginBottom: 8,
-        ...(isMobile ? {} : { float: 'left', marginRight: 16 }),
+        display: 'flex', gap: 16, alignItems: 'flex-start', marginBottom: 16,
+        flexDirection: isMobile ? 'column' : 'row',
       }}>
-        <ColorWheel
-          theme={T} root={root} scaleNotes={scaleNotes}
-          voiceNote={voiceNote}
-          activeNote={hfRevealed ? hfTarget?.note : null}
-          size={isMobile ? 150 : 170}
-          onRootChange={setRoot}
-        />
+        {/* Color Wheel */}
+        <div style={{
+          display: 'flex', justifyContent: 'center', flexShrink: 0,
+          alignSelf: isMobile ? 'center' : 'flex-start',
+        }}>
+          <ColorWheel
+            theme={T} root={root} scaleNotes={scaleNotes}
+            voiceNote={voiceNote}
+            activeNote={hfRevealed ? hfTarget?.note : null}
+            size={isMobile ? 140 : 160}
+            onRootChange={setRoot}
+          />
+        </div>
+
+        {/* Fretboard */}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <FretboardDiagram
+            theme={T}
+            scaleData={scaleData}
+            colorMode={true}
+            richTone={true}
+            voiceNote={voiceNote || (srActive && srIdx >= 0 && srIdx < srSequence.length ? srSequence[srIdx] : null) || (mode === 'hearFind' && hfRevealed && hfTarget ? hfTarget.note : null)}
+            oneNoteFilter={mode === 'oneNote' ? oneNote : null}
+            chordToneNotes={mode === 'chordTones' && ctChordTones.length ? ctChordTones : null}
+            onNoteTap={handleNoteTap}
+          />
+        </div>
       </div>
 
-      {/* ── FRETBOARD ── */}
-      <div style={{ display: 'flex', flexDirection: 'column', marginBottom: 8 }}>
-        <FretboardDiagram
-          theme={T}
-          scaleData={scaleData}
-          colorMode={true}
-          richTone={true}
-          voiceNote={voiceNote || (srActive && srIdx >= 0 && srIdx < srSequence.length ? srSequence[srIdx] : null) || (mode === 'hearFind' && hfRevealed && hfTarget ? hfTarget.note : null)}
-          oneNoteFilter={mode === 'oneNote' ? oneNote : null}
-          chordToneNotes={mode === 'chordTones' && ctChordTones.length ? ctChordTones : null}
-          onNoteTap={handleNoteTap}
-        />
-        {mode === 'explore' && (
-          <div style={{ padding: '4px 8px', fontSize: 9, color: T.textMuted, fontFamily: 'monospace', textAlign: 'center' }}>
-            {scaleNotes.join(' \u00B7 ')} — {typeInfo.desc}
-          </div>
-        )}
-      </div>
-
-      {/* ── SCALE / MODE SELECTOR (bottom — "set once" config) ── */}
+      {/* ── SCALE SELECTOR (compact bottom bar) ── */}
       {!embedded && (
-        <div style={{ marginBottom: 8 }}>
-          <button onClick={() => setSettingsOpen(!settingsOpen)} style={{
-            background: 'none', border: 'none', cursor: 'pointer', padding: '6px 0',
-            display: 'flex', alignItems: 'center', gap: 6, width: '100%',
-          }}>
+        <div style={{
+          padding: '10px 14px', borderRadius: T.radiusMd, marginBottom: 12,
+          background: T.bgCard, border: `1px solid ${T.border}`,
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: settingsOpen ? 10 : 0 }}>
             <div style={{
-              width: 20, height: 20, borderRadius: 3,
+              width: 22, height: 22, borderRadius: 4,
               background: rootColor, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 8, fontWeight: 800, color: '#fff', fontFamily: 'monospace', textShadow: '0 1px 3px rgba(0,0,0,0.5)',
+              fontSize: 9, fontWeight: 800, color: '#fff', fontFamily: 'monospace', textShadow: '0 1px 3px rgba(0,0,0,0.5)',
+              flexShrink: 0,
             }}>{root}</div>
-            <span style={{ fontSize: 11, color: T.textMuted, fontFamily: T.sans }}>
+            <span style={{ fontSize: 12, color: T.textDark, fontWeight: 600, fontFamily: T.sans, flex: 1 }}>
               {root} {typeInfo.name}
             </span>
-            <span style={{ fontSize: 9, color: T.textLight }}>
-              {settingsOpen ? '\u25B2' : '\u25BC'} {!settingsOpen && 'change scale'}
-            </span>
-          </button>
-          {settingsOpen && (
-            <div style={{
-              padding: '10px 12px', borderRadius: T.radiusMd,
-              background: T.bgSoft, border: `1px solid ${T.border}`, marginTop: 4,
+            <button onClick={() => setSettingsOpen(!settingsOpen)} style={{
+              background: 'none', border: `1px solid ${T.borderSoft}`, borderRadius: 16,
+              padding: '4px 12px', cursor: 'pointer',
+              fontSize: 10, color: T.textMuted, fontFamily: T.sans,
             }}>
-              <div style={{ fontSize: 10, color: T.textMuted, marginBottom: 6, fontFamily: T.sans }}>
-                Tap any note on the color wheel to change key.
+              {settingsOpen ? 'Done' : 'Change'}
+            </button>
+          </div>
+          {settingsOpen && (
+            <div>
+              <div style={{ fontSize: 10, color: T.textMuted, marginBottom: 8, fontFamily: T.sans }}>
+                Tap the color wheel to change key. Choose a scale below.
               </div>
-              <div style={{ fontSize: 9, fontWeight: 700, color: T.textMuted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 4, fontFamily: T.sans }}>Scale / Mode</div>
-              <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+              <div className="cm-tabs" style={{ display: 'flex', gap: 6, overflowX: 'auto', paddingBottom: 2 }}>
                 {Object.entries(SCALE_TYPES).map(([key, info]) => {
                   const sel = key === scaleType;
                   return (
                     <button key={key} onClick={() => setScaleType(key)} style={{
-                      padding: isMobile ? '8px 12px' : '4px 10px', borderRadius: T.radius,
-                      background: sel ? `${rootColor}08` : 'transparent',
-                      border: `1px solid ${sel ? rootColor + '60' : T.borderSoft}`,
-                      color: sel ? T.textDark : T.textMuted,
-                      fontSize: isMobile ? 12 : 10, fontFamily: T.sans, cursor: 'pointer',
-                      minHeight: isMobile ? 44 : 'auto',
+                      padding: '6px 12px', borderRadius: 16,
+                      background: sel ? rootColor : 'transparent',
+                      border: sel ? 'none' : `1px solid ${T.borderSoft}`,
+                      color: sel ? '#fff' : T.textMuted,
+                      fontSize: 11, fontFamily: T.sans, cursor: 'pointer',
+                      whiteSpace: 'nowrap', fontWeight: sel ? 600 : 400,
                       transition: 'all 0.2s',
+                      textShadow: sel ? '0 1px 2px rgba(0,0,0,0.15)' : 'none',
                     }}>{info.name}</button>
                   );
                 })}
@@ -1659,17 +1665,29 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
         </div>
       )}
 
-      {/* ── Stats ── */}
-      {!embedded && (hfScore.total > 0 || crScore.total > 0) && (
+      {/* ── Session Stats ── */}
+      {!embedded && (hfScore.total > 0 || crScore.total > 0 || intScore.total > 0) && (
         <div style={{
-          marginTop: 8, padding: '6px 12px',
-          fontSize: 10, color: T.textMuted, fontFamily: T.sans,
-          textTransform: 'uppercase', letterSpacing: 1.5,
-          display: 'flex', gap: 16,
+          padding: '8px 14px', borderRadius: T.radiusMd,
+          background: T.bgCard, border: `1px solid ${T.borderSoft}`,
+          display: 'flex', gap: 20, alignItems: 'center',
+          fontSize: 11, color: T.textMuted, fontFamily: T.sans,
         }}>
-          <span>{Math.round(hfScore.hit / hfScore.total * 100)}%</span>
-          <span>Streak {hfStreak}</span>
-          <span>{Math.floor((Date.now() - sessionStart) / 60000)}m</span>
+          {hfScore.total > 0 && (
+            <div>
+              <span style={{ fontWeight: 700, color: rootColor }}>{Math.round(hfScore.hit / hfScore.total * 100)}%</span>
+              <span style={{ fontSize: 9, marginLeft: 4 }}>accuracy</span>
+            </div>
+          )}
+          {hfStreak > 0 && (
+            <div>
+              <span style={{ fontWeight: 700, color: T.textDark }}>{hfStreak}</span>
+              <span style={{ fontSize: 9, marginLeft: 4 }}>streak</span>
+            </div>
+          )}
+          <div style={{ marginLeft: 'auto', fontSize: 10, color: T.textLight }}>
+            {Math.floor((Date.now() - sessionStart) / 60000)}m session
+          </div>
         </div>
       )}
     </div>
