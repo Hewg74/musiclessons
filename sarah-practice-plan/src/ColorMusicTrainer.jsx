@@ -705,6 +705,21 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
   }, [srActive, srBpm, srSequence]);
 
   // ─── Melody Echo ───
+  const playMelodyPhrase = useCallback((phrase) => {
+    // Play with musical timing: varied note durations and occasional rests
+    const durations = ['8n', '4n', '4n', '2n']; // short, normal, normal, long
+    let time = 0;
+    phrase.forEach((n, i) => {
+      const dur = durations[Math.floor(Math.random() * durations.length)];
+      const gap = 200 + Math.floor(Math.random() * 300); // 200-500ms between notes
+      // Occasional rest (20% chance, not on first note)
+      if (i > 0 && Math.random() < 0.2) time += 200 + Math.floor(Math.random() * 200);
+      setTimeout(() => playWarmNote(n + '4', dur), time);
+      time += gap;
+    });
+    return time; // total duration
+  }, []);
+
   const newMelody = useCallback(() => {
     const notes = scaleData.notes;
     const phrase = [];
@@ -717,11 +732,17 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     }
     setMePhrase(phrase); setMeSung([]); setMeListening(false); setMeFeedback(null);
     meLastNoteRef.current = null;
-    // Play the melody
-    phrase.forEach((n, i) => setTimeout(() => playWarmNote(n + '4', '4n'), i * 500));
-    // Start listening after melody plays
-    setTimeout(() => setMeListening(true), phrase.length * 500 + 300);
-  }, [scaleData, meLength]);
+    const totalTime = playMelodyPhrase(phrase);
+    setTimeout(() => setMeListening(true), totalTime + 400);
+  }, [scaleData, meLength, playMelodyPhrase]);
+
+  const retryMelody = useCallback(() => {
+    if (!mePhrase.length) return;
+    setMeSung([]); setMeListening(false); setMeFeedback(null);
+    meLastNoteRef.current = null;
+    const totalTime = playMelodyPhrase(mePhrase);
+    setTimeout(() => setMeListening(true), totalTime + 400);
+  }, [mePhrase, playMelodyPhrase]);
 
   // Capture sung notes for melody echo
   const handleMePitch = useCallback(({ note }) => {
@@ -1236,8 +1257,10 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
           <div>
             <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap', marginBottom: 10 }}>
               <button onClick={newMelody} style={btnStyle(true, rootColor)}>New Melody</button>
-              <button onClick={() => mePhrase.length && mePhrase.forEach((n, i) => setTimeout(() => playWarmNote(n + '4', '4n'), i * 500))}
+              <button onClick={() => mePhrase.length && playMelodyPhrase(mePhrase)}
                 style={btnStyle(false, rootColor)}>Replay</button>
+              <button onClick={retryMelody}
+                style={btnStyle(false, T.textMed)}>Retry</button>
               <div style={{ display: 'flex', gap: 3, marginLeft: 8 }}>
                 {[3, 4, 5].map(n => (
                   <button key={n} onClick={() => setMeLength(n)} style={{
