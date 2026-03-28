@@ -1238,6 +1238,14 @@ function JournalCapture({ exerciseId, exerciseTitle, exerciseType, flowSession, 
   const [selected, setSelected] = useState(null);
   const [note, setNote] = useState("");
   const [showNote, setShowNote] = useState(false);
+  const captureRef = useRef(null);
+
+  // Scroll into view when the capture panel appears
+  useEffect(() => {
+    if (captureRef.current) {
+      setTimeout(() => captureRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 100);
+    }
+  }, []);
 
   const handleSave = () => {
     if (!selected) { onSkip(); return; }
@@ -1252,9 +1260,9 @@ function JournalCapture({ exerciseId, exerciseTitle, exerciseType, flowSession, 
   };
 
   return (
-    <div style={{
+    <div ref={captureRef} style={{
       background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: T.radiusMd,
-      padding: "16px 16px 12px", marginTop: 12,
+      padding: "16px 16px 12px", marginTop: 12, marginBottom: flowSession ? 0 : 120,
       boxShadow: T.md, animation: "fade-in-up 0.3s ease-out"
     }}>
       <div style={{ fontSize: 13, fontWeight: 600, color: T.textDark, fontFamily: T.sans, marginBottom: 12 }}>
@@ -1731,7 +1739,7 @@ function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor
         WebkitBackdropFilter: "blur(24px) saturate(140%)",
         borderTop: `1px solid ${T.border}`,
         boxShadow: `0 -4px 32px ${T.bg === "#ffffff" ? "rgba(44,40,37,0.04)" : "rgba(0,0,0,0.3)"}`,
-        zIndex: 101, display: "flex", flexDirection: "column", alignItems: "center"
+        zIndex: journalCaptureExId ? 999 : 101, display: "flex", flexDirection: "column", alignItems: "center"
       }}>
         {journalCaptureExId ? (
           <div style={{ width: "100%", maxWidth: 560 }}>
