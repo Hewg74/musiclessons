@@ -4763,6 +4763,23 @@ export default function App() {
               <div style={{ fontSize: 32, fontWeight: 400, fontFamily: T.serif, color: T.textDark }}>Tools</div>
             </div>
 
+            <SectionHeader label="Ear Training" />
+
+            <ToolCard icon="🎨" title="Color Music Trainer" subtitle="Visual ear training with color-coded fretboard">
+              <div style={{ padding: 12, textAlign: 'center' }}>
+                <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, marginBottom: 12, lineHeight: 1.6 }}>
+                  Color-coded fretboard, ear training games, and guided exercises.
+                  Each pitch has a color — learn to see the music.
+                </div>
+                <button onClick={() => setColorMusicOpen(true)} style={{
+                  padding: '10px 24px', borderRadius: T.radius,
+                  background: T.gold, color: '#fff', border: 'none',
+                  fontSize: 13, fontWeight: 600, fontFamily: T.sans, cursor: 'pointer',
+                  transition: 'all 0.2s',
+                }}>Open Color Music Trainer</button>
+              </div>
+            </ToolCard>
+
             <SectionHeader label="Session" />
 
             <ToolCard icon="✅" title="Jungle Flight Check" subtitle="Pre-practice checklist" defaultOpen={true}>
@@ -4806,23 +4823,6 @@ export default function App() {
 
             <ToolCard icon="🎵" title="Pitch Pipe" subtitle="Play reference pitches">
               <PitchPipe theme={T} />
-            </ToolCard>
-
-            <SectionHeader label="Ear Training" />
-
-            <ToolCard icon="🎨" title="Color Music Trainer" subtitle="Visual ear training with color-coded fretboard">
-              <div style={{ padding: 12, textAlign: 'center' }}>
-                <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, marginBottom: 12, lineHeight: 1.6 }}>
-                  Color-coded fretboard, ear training games, and guided exercises.
-                  Each pitch has a color — learn to see the music.
-                </div>
-                <button onClick={() => setColorMusicOpen(true)} style={{
-                  padding: '10px 24px', borderRadius: T.radius,
-                  background: T.gold, color: '#fff', border: 'none',
-                  fontSize: 13, fontWeight: 600, fontFamily: T.sans, cursor: 'pointer',
-                  transition: 'all 0.2s',
-                }}>Open Color Music Trainer</button>
-              </div>
             </ToolCard>
 
             <SectionHeader label="Record & Listen" />
