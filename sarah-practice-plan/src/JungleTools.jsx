@@ -1618,7 +1618,7 @@ function getCentsOffset(freq, midi) {
   return Math.round(cents / 5) * 5;
 }
 
-export function LivePitchDetector({ theme: T, referencePitches = [], inline = false, pitchContour = false }) {
+export function LivePitchDetector({ theme: T, referencePitches = [], inline = false, pitchContour = false, onPitchDetected = null }) {
   const [isActive, setIsActive] = useState(false);
   const [audioPaused, setAudioPaused] = useState(false);
   const [pitchState, setPitchState] = useState({
@@ -1648,6 +1648,9 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
   const freqBufRef = useRef([]);
   const silenceStartRef = useRef(null); // Tracks silence duration for EMA hold
   const wasSilentRef = useRef(false); // For contour gap detection (push one null sentinel)
+  const lastPitchCbRef = useRef(0); // Throttle for onPitchDetected callback
+  const onPitchDetectedRef = useRef(onPitchDetected);
+  useEffect(() => { onPitchDetectedRef.current = onPitchDetected; });
 
   // Auto-pause when any <audio> element plays
   useEffect(() => {
@@ -1913,13 +1916,23 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
         }
 
         const displayMidi = stableMidiRef.current || midi;
+        const noteStr = midiToNoteString(displayMidi);
         setPitchState({
-          note: midiToNoteString(displayMidi),
+          note: noteStr,
           cents: cents,
           active: true,
           closestRef,
           refFeedback
         });
+
+        // Throttled callback for external consumers (e.g. ColorMusicTrainer)
+        if (onPitchDetectedRef.current) {
+          const cbNow = performance.now();
+          if (cbNow - lastPitchCbRef.current > 100) {
+            lastPitchCbRef.current = cbNow;
+            onPitchDetectedRef.current({ note: noteStr, cents, freq: smoothedFreq });
+          }
+        }
 
         // Pitch contour: record data point
         if (pitchContour) {
@@ -2270,6 +2283,50 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
 // --- 7. Fretboard Diagram ---
 const CHROMATIC = ['C', 'C#', 'D', 'E♭', 'E', 'F', 'F#', 'G', 'A♭', 'A', 'B♭', 'B'];
 
+// ─── ColorMusic: Enharmonic normalization ───
+// Maps all enharmonic spellings to CHROMATIC's convention (unicode flats)
+const ENHARMONIC_MAP = { 'G#': 'A♭', 'D#': 'E♭', 'A#': 'B♭', 'Db': 'C#', 'Gb': 'F#', 'Ab': 'A♭', 'Eb': 'E♭', 'Bb': 'B♭' };
+export const normalizeNote = (n) => ENHARMONIC_MAP[n] || n;
+
+// ─── ColorMusic: Rainbow palette (circle of fifths = color wheel) ───
+export const COLOR_MUSIC = {
+  'C': '#E83A30', 'C#': '#1A8C7A', 'D': '#F59A1E', 'E♭': '#5B3FA0',
+  'E': '#E8D830', 'F': '#C42D6B', 'F#': '#2E9E5A', 'G': '#F06520',
+  'A♭': '#2570B0', 'A': '#F5C518', 'B♭': '#8B2D8B', 'B': '#8FBF35',
+};
+export const getColorForNote = (n) => COLOR_MUSIC[normalizeNote(n)] || '#888';
+
+// ─── ColorMusic: Pooled warm guitar synth ───
+// Persistent chain (triangle + sine harmonic + delay reverb), retriggered per note.
+// Avoids creating/disposing nodes per tap — handles rapid tapping in Scale Runner.
+let warmChain = null;
+function getWarmChain() {
+  if (warmChain?.s1 && !warmChain.s1.disposed) return warmChain;
+  const s1 = new Tone.Synth({
+    oscillator: { type: 'triangle' },
+    envelope: { attack: 0.005, decay: 0.15, sustain: 0.12, release: 1.2 }
+  });
+  const s2 = new Tone.Synth({
+    oscillator: { type: 'sine' },
+    envelope: { attack: 0.003, decay: 0.1, sustain: 0.03, release: 0.8 }
+  });
+  const lp = new Tone.Filter(2000, 'lowpass');
+  const delay = new Tone.FeedbackDelay({ delayTime: 0.041, feedback: 0.3, wet: 0.25 });
+  const gain = new Tone.Gain(0.7);
+  s1.connect(lp); s2.connect(lp);
+  lp.connect(delay); delay.connect(gain); lp.connect(gain); gain.toDestination();
+  s1.volume.value = -8; s2.volume.value = -22;
+  warmChain = { s1, s2 };
+  return warmChain;
+}
+export const playWarmNote = async (noteStr, duration = '2n') => {
+  if (Tone.context.state !== 'running') await Tone.context.resume();
+  const n = noteStr.replace('♭', 'b');
+  const { s1, s2 } = getWarmChain();
+  s1.triggerAttackRelease(n, duration);
+  s2.triggerAttackRelease(Tone.Frequency(n).transpose(12).toNote(), duration);
+};
+
 const SCALES = {
   "am-pentatonic": {
     name: "Am Pentatonic",
@@ -2358,7 +2415,7 @@ const SCALES = {
   "c#m-pentatonic": {
     name: "C#m Pentatonic",
     root: "C#",
-    notes: ["C#", "E", "F#", "G#", "B"],
+    notes: ["C#", "E", "F#", "A♭", "B"],
     positions: { 1: [9, 12], 2: [11, 14], 3: [2, 5], 4: [4, 7], 5: [6, 9] }
   },
   "gm-pentatonic": {
@@ -2377,6 +2434,24 @@ const SCALES = {
     name: "Em Pentatonic",
     root: "E",
     notes: ["E", "G", "A", "B", "D"],
+    positions: { 1: [0, 3], 2: [2, 5], 3: [5, 8], 4: [7, 10], 5: [9, 12] }
+  },
+  "a-mixolydian": {
+    name: "A Mixolydian",
+    root: "A",
+    notes: ["A", "B", "C#", "D", "E", "F#", "G"],
+    positions: { 1: [5, 8], 2: [7, 10], 3: [9, 12], 4: [12, 15], 5: [0, 3] }
+  },
+  "a-major-pentatonic": {
+    name: "A Major Pentatonic",
+    root: "A",
+    notes: ["A", "B", "C#", "E", "F#"],
+    positions: { 1: [5, 8], 2: [7, 10], 3: [9, 12], 4: [12, 15], 5: [2, 5] }
+  },
+  "e-phrygian": {
+    name: "E Phrygian",
+    root: "E",
+    notes: ["E", "F", "G", "A", "B", "C", "D"],
     positions: { 1: [0, 3], 2: [2, 5], 3: [5, 8], 4: [7, 10], 5: [9, 12] }
   }
 };
@@ -2426,11 +2501,15 @@ function getInterval(noteName, rootName) {
   return intervals[diff] || noteName;
 }
 
-export function FretboardDiagram({ theme: T, scale, position, highlight = [] }) {
+export function FretboardDiagram({
+  theme: T, scale, position, highlight = [],
+  colorMode = false, voiceNote = null, onNoteTap = null,
+  oneNoteFilter = null, scaleData: externalScaleData = null, richTone = false,
+}) {
   const [selectedPos, setSelectedPos] = useState(position || 1);
-  const [viewMode, setViewMode] = useState("notes"); // 'notes' or 'intervals'
+  const [viewMode, setViewMode] = useState(colorMode ? "colors" : "notes"); // 'notes', 'intervals', or 'colors'
   const [fullNeck, setFullNeck] = useState(false);
-  const scaleData = SCALES[scale] || SCALES["am-pentatonic"];
+  const scaleData = externalScaleData || SCALES[scale] || SCALES["am-pentatonic"];
   const positionsConfig = scaleData.positions || { 1: [5, 8], 2: [7, 10], 3: [9, 12], 4: [12, 15], 5: [0, 3] };
   const [lo, hi] = fullNeck ? [0, 15] : (positionsConfig[selectedPos] || positionsConfig[1]);
 
@@ -2455,7 +2534,7 @@ export function FretboardDiagram({ theme: T, scale, position, highlight = [] }) 
   // String thicknesses: thickest for low E (string 6, index 5), thinnest for high E (string 1, index 0)
   const stringWidths = [1, 1.2, 1.6, 2, 2.5, 3];
 
-  const playNote = async (noteStr) => {
+  const playNoteBasic = async (noteStr) => {
     if (Tone.context.state !== 'running') await Tone.context.resume();
     const synth = new Tone.Synth({
       oscillator: { type: 'triangle' },
@@ -2465,6 +2544,7 @@ export function FretboardDiagram({ theme: T, scale, position, highlight = [] }) 
     synth.triggerAttackRelease(noteStr.replace('♭', 'b'), "2n");
     setTimeout(() => { try { synth.dispose(); } catch {} }, 2000);
   };
+  const playNote = richTone ? playWarmNote : playNoteBasic;
 
   // Build dots: for each string, for each fret in renderLo..renderHi, check if it's a scale note
   const dots = [];
@@ -2480,8 +2560,8 @@ export function FretboardDiagram({ theme: T, scale, position, highlight = [] }) 
           return hNorm === full;
         });
         const intervalName = getInterval(noteName, scaleData.root);
-        const displayLabel = viewMode === "intervals" ? intervalName : noteName;
-        dots.push({ stringIdx, fret, displayLabel, noteName, full, midi, isRoot, isHighlighted });
+        const displayLabel = viewMode === "colors" ? "" : viewMode === "intervals" ? intervalName : noteName;
+        dots.push({ stringIdx, fret, displayLabel, noteName, full, midi, isRoot, isHighlighted, intervalName });
       }
     }
   });
@@ -2533,6 +2613,15 @@ export function FretboardDiagram({ theme: T, scale, position, highlight = [] }) 
                 textTransform: 'uppercase', letterSpacing: 1, transition: "background 0.2s",
                 borderLeft: `1px solid ${T.borderSoft}`
               }}>Intervals</button>
+            <button
+              onClick={() => setViewMode("colors")}
+              style={{
+                background: viewMode === "colors" ? T.goldSoft : "transparent",
+                color: viewMode === "colors" ? T.goldDark : T.textMed, border: "none",
+                padding: "0 10px", fontSize: 11, fontWeight: 700, fontFamily: T.sans, cursor: "pointer",
+                textTransform: 'uppercase', letterSpacing: 1, transition: "background 0.2s",
+                borderLeft: `1px solid ${T.borderSoft}`
+              }}>Colors</button>
           </div>
 
           {[1, 2, 3, 4, 5].map(p => (
@@ -2576,6 +2665,7 @@ export function FretboardDiagram({ theme: T, scale, position, highlight = [] }) 
         </div>
       </div>
 
+      <style>{`@keyframes colorPulse { 0%,100%{opacity:0.9} 50%{opacity:1} }`}</style>
       <svg
         viewBox={`0 0 ${svgWidth} ${svgHeight}`}
         style={{ width: '100%', minHeight: 160, maxWidth: '100%', display: 'block' }}
@@ -2704,30 +2794,74 @@ export function FretboardDiagram({ theme: T, scale, position, highlight = [] }) 
         {dots.map((d, i) => {
           const cx = fretX(d.fret);
           const cy = stringY(d.stringIdx);
+          const useColor = colorMode || viewMode === "colors";
+          const noteColor = getColorForNote(d.noteName);
+          const isVoiceMatch = voiceNote && normalizeNote(voiceNote) === normalizeNote(d.noteName);
+          const isDimmed = oneNoteFilter && normalizeNote(d.noteName) !== normalizeNote(oneNoteFilter);
+
+          // Determine fill color
           let fill = T.textMed;
           let filter = "drop-shadow(0 2px 4px rgba(44,40,37,0.2))";
-          if (d.isHighlighted) { fill = T.coral; filter = `drop-shadow(0 0 8px ${T.coral})`; }
-          else if (d.isRoot) { fill = T.gold; filter = `drop-shadow(0 0 8px ${T.gold})`; }
+          if (useColor) {
+            fill = noteColor;
+            filter = d.isRoot
+              ? `drop-shadow(0 0 8px ${noteColor})`
+              : `drop-shadow(0 0 4px ${noteColor}50)`;
+          } else if (d.isHighlighted) {
+            fill = T.coral; filter = `drop-shadow(0 0 8px ${T.coral})`;
+          } else if (d.isRoot) {
+            fill = T.gold; filter = `drop-shadow(0 0 8px ${T.gold})`;
+          }
+
+          // Voice match gets a pulsing glow
+          if (isVoiceMatch) {
+            filter = `drop-shadow(0 0 12px ${noteColor}) drop-shadow(0 0 4px ${noteColor})`;
+          }
+
+          const dotOpacity = isDimmed ? 0.08 : 0.9;
+          // Shape: squares (rounded rect) for notes mode, circles for intervals/colors
+          const useSquare = viewMode === "notes";
+          const size = d.isRoot ? 11 : 9;
+          const handleClick = () => {
+            playNote(d.full);
+            if (onNoteTap) onNoteTap({ noteName: d.noteName, full: d.full, midi: d.midi, stringIdx: d.stringIdx, fret: d.fret });
+          };
 
           return (
             <g
               key={`dot-${i}`}
-              style={{ cursor: 'pointer', filter, transition: "filter 0.3s ease" }}
-              onClick={() => playNote(d.full)}
+              style={{
+                cursor: 'pointer', filter, transition: "filter 0.3s ease, opacity 0.3s",
+                animation: isVoiceMatch ? "colorPulse 0.8s ease-in-out infinite" : "none",
+              }}
+              onClick={handleClick}
+              opacity={dotOpacity}
             >
-              <circle cx={cx} cy={cy} r={9} fill={fill} opacity={0.9} />
-              <text
-                x={cx}
-                y={cy + 0.5}
-                textAnchor="middle"
-                dominantBaseline="central"
-                fontSize={8}
-                fontWeight={700}
-                fontFamily={T.sans}
-                fill="#fff"
-              >
-                {d.displayLabel}
-              </text>
+              {useSquare ? (
+                <rect x={cx - size} y={cy - size} width={size * 2} height={size * 2} rx={3} fill={fill} />
+              ) : (
+                <circle cx={cx} cy={cy} r={size} fill={fill} />
+              )}
+              {/* Root white ring */}
+              {d.isRoot && useColor && (useSquare ? (
+                <rect x={cx - size - 1} y={cy - size - 1} width={size * 2 + 2} height={size * 2 + 2} rx={4} fill="none" stroke="#fff" strokeWidth={2} opacity={0.9} />
+              ) : (
+                <circle cx={cx} cy={cy} r={size + 1} fill="none" stroke="#fff" strokeWidth={2} opacity={0.9} />
+              ))}
+              {d.displayLabel && (
+                <text
+                  x={cx}
+                  y={cy + 0.5}
+                  textAnchor="middle"
+                  dominantBaseline="central"
+                  fontSize={d.isRoot ? 9 : 8}
+                  fontWeight={700}
+                  fontFamily={T.sans}
+                  fill="#fff"
+                >
+                  {d.displayLabel}
+                </text>
+              )}
             </g>
           );
         })}

@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import * as Tone from "tone";
 import confetti from "canvas-confetti";
-import { 
-  Drum, Guitar, Mic2, Ear, Music, Circle, Sparkles, Piano, Repeat, 
+import {
+  Drum, Guitar, Mic2, Ear, Music, Circle, Sparkles, Piano, Repeat,
   ChevronDown, Play, Pause, RotateCcw, CheckCircle2, Clock, MapPin, Wrench,
-  Mic, Headphones, Info, AlertCircle, Quote, ArrowRight, Check, 
-  Volume2, Sun, Moon
+  Mic, Headphones, Info, AlertCircle, Quote, ArrowRight, Check,
+  Volume2, Sun, Moon, Zap, TrendingUp
 } from 'lucide-react';
 import { MiniAudioPlayer, AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, ChordVoicingViewer, extractChordsFromExercise, VolumeMeter, ChordTransitionTimer, GenreMetronome, SilenceScore, DroneGenerator, TAB_CONTENT, InlineKeyboard, RhythmCellCards, PhraseFormGuide, StrumChartBuilder, ChartListView, makeTemplateChart } from './JungleTools.jsx';
+import { ColorMusicTrainer } from './ColorMusicTrainer.jsx';
 import { acquireKeepalive, releaseKeepalive, setMediaSession, clearMediaSession } from './audioKeepalive.js';
 import { DAYS, KEYBOARD_LEVELS, LOOPER_LEVELS, LESSON_POOL, ALL_NOTES, getPitchRange } from './data/appData.js';
 import { WEEKLY_PLANS, CURRENT_WEEK } from './data/weeklyPlans/index.js';
@@ -1063,6 +1064,16 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
             </div>
           )}
 
+          {/* Color Music Trainer (embedded) */}
+          {ex.colorMusic && (
+            <div style={{ marginBottom: 24 }}>
+              <ColorMusicTrainer theme={T} embedded={true}
+                defaultRoot={ex.colorMusic.root}
+                defaultScale={ex.colorMusic.scale}
+                defaultMode={ex.colorMusic.mode} />
+            </div>
+          )}
+
           {/* Piano Keys */}
           {(ex.pianoKeys || droneActiveNotes.notes.length > 0) && (
             <div style={{ marginBottom: 24 }}>
@@ -1187,7 +1198,220 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
     </div>
   );
 }
-function FlowSummary({ exercises, completed, sessionDuration, onExit }) {
+// ─── PRACTICE JOURNAL ───────────────────────────────────────────────
+
+const JOURNAL_CATEGORIES = [
+  { key: "nailed", label: "Nailed It", Icon: Sparkles, color: () => T.success },
+  { key: "breakthrough", label: "Breakthrough", Icon: Zap, color: () => T.gold },
+  { key: "getting-there", label: "Getting There", Icon: TrendingUp, color: () => T.warm },
+  { key: "grind", label: "Grind", Icon: Repeat, color: () => T.coral },
+  { key: "revisit", label: "Revisit", Icon: MapPin, color: () => T.plum },
+];
+const JOURNAL_CAT_MAP = Object.fromEntries(JOURNAL_CATEGORIES.map(c => [c.key, c]));
+
+function CategoryChip({ category, size = "sm", selected, onClick }) {
+  const cat = JOURNAL_CAT_MAP[category];
+  if (!cat) return null;
+  const { Icon, label, color } = cat;
+  const c = color();
+  const isSm = size === "sm";
+  return (
+    <span onClick={onClick} style={{
+      display: "inline-flex", alignItems: "center", gap: isSm ? 4 : 6,
+      padding: isSm ? "2px 8px" : "6px 14px",
+      borderRadius: 20, fontSize: isSm ? 10 : 12, fontWeight: 600,
+      fontFamily: T.sans, letterSpacing: isSm ? 1 : 0.5,
+      background: selected ? c : "transparent",
+      color: selected ? "#fff" : c,
+      border: `1.5px solid ${selected ? c : c + "60"}`,
+      cursor: onClick ? "pointer" : "default",
+      transition: "all 0.2s ease",
+      whiteSpace: "nowrap", textTransform: isSm ? "uppercase" : "none",
+    }}>
+      <Icon size={isSm ? 10 : 14} />
+      {label}
+    </span>
+  );
+}
+
+function JournalCapture({ exerciseId, exerciseTitle, exerciseType, flowSession, onSave, onSkip }) {
+  const [selected, setSelected] = useState(null);
+  const [note, setNote] = useState("");
+  const [showNote, setShowNote] = useState(false);
+
+  const handleSave = () => {
+    if (!selected) { onSkip(); return; }
+    onSave({
+      id: Date.now() + "-" + Math.random().toString(36).slice(2, 6),
+      exerciseId,
+      category: selected,
+      note: note.trim(),
+      timestamp: new Date().toISOString(),
+      context: { exerciseTitle, exerciseType, flowSession: !!flowSession }
+    });
+  };
+
+  return (
+    <div style={{
+      background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: T.radiusMd,
+      padding: "16px 16px 12px", marginTop: 12,
+      boxShadow: T.md, animation: "fade-in-up 0.3s ease-out"
+    }}>
+      <div style={{ fontSize: 13, fontWeight: 600, color: T.textDark, fontFamily: T.sans, marginBottom: 12 }}>
+        How did that go?
+      </div>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 12 }}>
+        {JOURNAL_CATEGORIES.map(cat => (
+          <CategoryChip key={cat.key} category={cat.key} size="md"
+            selected={selected === cat.key}
+            onClick={() => setSelected(prev => prev === cat.key ? null : cat.key)} />
+        ))}
+      </div>
+      {!showNote && selected && (
+        <button onClick={() => setShowNote(true)} style={{
+          background: "none", border: "none", color: T.textLight, fontSize: 12,
+          fontFamily: T.sans, cursor: "pointer", padding: "4px 0", marginBottom: 8
+        }}>
+          + Add a note...
+        </button>
+      )}
+      {showNote && (
+        <input value={note} onChange={e => setNote(e.target.value)}
+          placeholder="What happened? What clicked?"
+          autoFocus
+          style={{
+            width: "100%", padding: "10px 12px", fontSize: 13, fontFamily: T.sans,
+            border: `1px solid ${T.border}`, borderRadius: T.radius,
+            background: T.bgSoft, color: T.textDark, marginBottom: 8,
+            outline: "none", boxSizing: "border-box"
+          }}
+          onKeyDown={e => { if (e.key === "Enter") handleSave(); }}
+        />
+      )}
+      <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+        <button onClick={onSkip} style={{
+          background: "none", border: `1px solid ${T.border}`, color: T.textLight,
+          padding: "8px 16px", fontSize: 11, fontWeight: 600, cursor: "pointer",
+          fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase", borderRadius: T.radius
+        }}>Skip</button>
+        <button onClick={handleSave} style={{
+          background: selected ? T.gold : T.border, border: "none", color: selected ? "#fff" : T.textLight,
+          padding: "8px 16px", fontSize: 11, fontWeight: 600, cursor: "pointer",
+          fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase", borderRadius: T.radius
+        }}>Save</button>
+      </div>
+    </div>
+  );
+}
+
+function PracticeJournal({ journal, onJumpToExercise }) {
+  const [expanded, setExpanded] = useState(false);
+
+  // Get latest entry per exercise for revisit panel
+  const latestByExercise = {};
+  journal.forEach(entry => {
+    if (!latestByExercise[entry.exerciseId]) latestByExercise[entry.exerciseId] = entry;
+  });
+  const revisitExercises = Object.values(latestByExercise).filter(
+    e => e.category === "revisit" || e.category === "grind"
+  );
+
+  // Group entries by date
+  const grouped = {};
+  journal.forEach(entry => {
+    const dateKey = new Date(entry.timestamp).toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" });
+    if (!grouped[dateKey]) grouped[dateKey] = [];
+    grouped[dateKey].push(entry);
+  });
+  const dateGroups = Object.entries(grouped);
+  const today = new Date().toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" });
+
+  if (journal.length === 0) return null;
+
+  const visibleGroups = expanded ? dateGroups : dateGroups.slice(0, 2);
+
+  return (
+    <div style={{ marginTop: 32, borderTop: `1px solid ${T.border}`, paddingTop: 24 }}>
+      <div style={{ textAlign: "center", marginBottom: 16 }}>
+        <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 4, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 4 }}>
+          Practice Journal
+        </div>
+        <div style={{ fontSize: 12, color: T.textLight, fontFamily: T.sans }}>
+          {journal.length} entr{journal.length === 1 ? "y" : "ies"}
+        </div>
+      </div>
+
+      {/* Revisit panel */}
+      {revisitExercises.length > 0 && (
+        <div style={{
+          background: T.plumSoft, border: `1px solid ${T.plum}20`, borderRadius: T.radiusMd,
+          padding: "12px 14px", marginBottom: 16
+        }}>
+          <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", color: T.plum, fontFamily: T.sans, marginBottom: 8 }}>
+            Revisit These
+          </div>
+          {revisitExercises.map(entry => (
+            <div key={entry.exerciseId} style={{
+              display: "flex", alignItems: "center", gap: 8, padding: "6px 0",
+              borderBottom: `1px solid ${T.plum}10`
+            }}>
+              <CategoryChip category={entry.category} size="sm" />
+              <span style={{ flex: 1, fontSize: 13, fontFamily: T.sans, color: T.textDark }}>
+                {entry.context?.exerciseTitle || entry.exerciseId}
+              </span>
+              {onJumpToExercise && (
+                <button onClick={() => onJumpToExercise(entry.exerciseId)} style={{
+                  background: "none", border: `1px solid ${T.plum}40`, color: T.plum,
+                  padding: "4px 10px", fontSize: 10, fontWeight: 600, cursor: "pointer",
+                  fontFamily: T.sans, borderRadius: T.radius, letterSpacing: 1, textTransform: "uppercase"
+                }}>Go</button>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Timeline */}
+      {visibleGroups.map(([dateKey, entries]) => (
+        <div key={dateKey} style={{ marginBottom: 16 }}>
+          <div style={{
+            fontSize: 11, fontWeight: 600, color: dateKey === today ? T.gold : T.textMuted,
+            fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase", marginBottom: 8,
+            borderBottom: `1px solid ${T.border}`, paddingBottom: 6
+          }}>
+            {dateKey === today ? "Today" : dateKey}
+          </div>
+          {entries.map(entry => (
+            <div key={entry.id} style={{ display: "flex", alignItems: "flex-start", gap: 8, padding: "6px 0" }}>
+              <CategoryChip category={entry.category} size="sm" />
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 13, fontFamily: T.sans, color: T.textDark }}>
+                  {entry.context?.exerciseTitle || entry.exerciseId}
+                </div>
+                {entry.note && (
+                  <div style={{ fontSize: 12, fontFamily: T.sans, color: T.textLight, fontStyle: "italic", marginTop: 2 }}>
+                    "{entry.note}"
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      ))}
+
+      {dateGroups.length > 2 && !expanded && (
+        <button onClick={() => setExpanded(true)} style={{
+          background: "none", border: `1px solid ${T.border}`, color: T.textLight,
+          padding: "8px 16px", fontSize: 11, fontWeight: 600, cursor: "pointer",
+          fontFamily: T.sans, letterSpacing: 1, textTransform: "uppercase", borderRadius: T.radius,
+          width: "100%", marginTop: 8
+        }}>Show all entries</button>
+      )}
+    </div>
+  );
+}
+
+function FlowSummary({ exercises, completed, sessionDuration, onExit, journal }) {
   const done = exercises.filter(e => completed.has(e.id)).length;
   const mins = Math.floor(sessionDuration / 60);
   const secs = sessionDuration % 60;
@@ -1210,6 +1434,7 @@ function FlowSummary({ exercises, completed, sessionDuration, onExit }) {
       <div style={{ maxWidth: 360, margin: "0 auto", textAlign: "left" }}>
         {exercises.map(ex => {
           const isDone = completed.has(ex.id);
+          const entry = journal?.find(j => j.exerciseId === ex.id);
           return (
             <div key={ex.id} style={{
               display: "flex", alignItems: "center", gap: 10, padding: "8px 0",
@@ -1224,10 +1449,13 @@ function FlowSummary({ exercises, completed, sessionDuration, onExit }) {
               }}>
                 {isDone && "✓"}
               </div>
-              <div style={{ fontSize: 14, fontFamily: T.sans, color: isDone ? T.textDark : T.textMuted }}>
-                {ex.title}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 14, fontFamily: T.sans, color: isDone ? T.textDark : T.textMuted }}>
+                  {ex.title}
+                </div>
+                {entry && <CategoryChip category={entry.category} size="sm" />}
               </div>
-              <div style={{ marginLeft: "auto", fontSize: 11, color: T.textMuted, fontFamily: T.sans }}>
+              <div style={{ fontSize: 11, color: T.textMuted, fontFamily: T.sans, flexShrink: 0 }}>
                 {ex.time || 5}m
               </div>
             </div>
@@ -1265,10 +1493,12 @@ class FlowErrorBoundary extends React.Component {
   }
 }
 
-function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor, startIndex = 0, onOpenTapMatch }) {
+function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor, startIndex = 0, onOpenTapMatch, journal, onJournalEntry }) {
   const [currentIndex, setCurrentIndex] = useState(startIndex);
   const [showSummary, setShowSummary] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
+  const [journalCaptureExId, setJournalCaptureExId] = useState(null);
+  const pendingAdvanceRef = useRef(null);
   const sessionStartRef = useRef(Math.floor(Date.now() / 1000));
   const flowContainerRef = useRef(null);
   const wakeLock = useWakeLock();
@@ -1311,12 +1541,25 @@ function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor
     }
   };
 
+  const advanceAfterCapture = () => {
+    const pending = pendingAdvanceRef.current;
+    pendingAdvanceRef.current = null;
+    setJournalCaptureExId(null);
+    if (pending === "summary") {
+      setShowSummary(true);
+    } else if (typeof pending === "number") {
+      setCurrentIndex(pending);
+      flowContainerRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   const handleCompleteAndNext = () => {
-    if (!completed.has(currentEx.id)) {
+    const wasNew = !completed.has(currentEx.id);
+    if (wasNew) {
       onComplete(currentEx.id);
     }
+    stopAllAudio();
     if (isLastExercise) {
-      stopAllAudio();
       // Log session
       try {
         const sessions = JSON.parse(localStorage.getItem("flow-sessions") || "[]");
@@ -1328,11 +1571,20 @@ function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor
         if (sessions.length > 100) sessions.splice(0, sessions.length - 100);
         localStorage.setItem("flow-sessions", JSON.stringify(sessions));
       } catch { }
-      setShowSummary(true);
+      if (wasNew) {
+        pendingAdvanceRef.current = "summary";
+        setJournalCaptureExId(currentEx.id);
+      } else {
+        setShowSummary(true);
+      }
     } else {
-      stopAllAudio();
-      setCurrentIndex(currentIndex + 1);
-      flowContainerRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+      if (wasNew) {
+        pendingAdvanceRef.current = currentIndex + 1;
+        setJournalCaptureExId(currentEx.id);
+      } else {
+        setCurrentIndex(currentIndex + 1);
+        flowContainerRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+      }
     }
   };
 
@@ -1362,6 +1614,7 @@ function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor
           completed={completed}
           sessionDuration={Math.floor(Date.now() / 1000) - sessionStartRef.current}
           onExit={handleExit}
+          journal={journal}
         />
       </div>
     );
@@ -1478,19 +1731,32 @@ function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor
         WebkitBackdropFilter: "blur(24px) saturate(140%)",
         borderTop: `1px solid ${T.border}`,
         boxShadow: `0 -4px 32px ${T.bg === "#ffffff" ? "rgba(44,40,37,0.04)" : "rgba(0,0,0,0.3)"}`,
-        zIndex: 101, display: "flex", justifyContent: "center"
+        zIndex: 101, display: "flex", flexDirection: "column", alignItems: "center"
       }}>
-        <button onClick={handleCompleteAndNext} className="interactive-btn" style={{
-          background: accentColor || T.gold, border: "none", color: "#fff",
-          padding: "14px 32px", fontSize: 12, fontWeight: 600, cursor: "pointer",
-          borderRadius: T.radius, fontFamily: T.sans, letterSpacing: 2, textTransform: "uppercase",
-          maxWidth: 560, width: "100%"
-        }}>
-          {completed.has(currentEx.id)
-            ? (isLastExercise ? "Finish Flow" : "Next")
-            : (isLastExercise ? "Complete & Finish" : "Complete & Next")
-          }
-        </button>
+        {journalCaptureExId ? (
+          <div style={{ width: "100%", maxWidth: 560 }}>
+            <JournalCapture
+              exerciseId={journalCaptureExId}
+              exerciseTitle={exercises.find(e => e.id === journalCaptureExId)?.title || ""}
+              exerciseType={exercises.find(e => e.id === journalCaptureExId)?.type || ""}
+              flowSession
+              onSave={(entry) => { onJournalEntry(entry); advanceAfterCapture(); }}
+              onSkip={advanceAfterCapture}
+            />
+          </div>
+        ) : (
+          <button onClick={handleCompleteAndNext} className="interactive-btn" style={{
+            background: accentColor || T.gold, border: "none", color: "#fff",
+            padding: "14px 32px", fontSize: 12, fontWeight: 600, cursor: "pointer",
+            borderRadius: T.radius, fontFamily: T.sans, letterSpacing: 2, textTransform: "uppercase",
+            maxWidth: 560, width: "100%"
+          }}>
+            {completed.has(currentEx.id)
+              ? (isLastExercise ? "Finish Flow" : "Next")
+              : (isLastExercise ? "Complete & Finish" : "Complete & Next")
+            }
+          </button>
+        )}
       </div>
     </div>
   );
@@ -1516,7 +1782,7 @@ function StartFlowButton({ onClick, accentColor }) {
 
 // ─── EXERCISE CARD ──────────────────────────────────────────────────
 
-function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMatch, onStartFlow, levelExercises }) {
+function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMatch, onStartFlow, levelExercises, journalEntry, showJournalCapture, onJournalSave, onJournalSkip }) {
   const [open, setOpen] = useState(false);
   const [showTimer, setShowTimer] = useState(false);
   const [showTabs, setShowTabs] = useState(false);
@@ -1585,9 +1851,10 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
           <TypeBadge type={ex.type} />
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontWeight: 600, fontSize: 19, color: T.textDark, fontFamily: T.serif, marginBottom: 6, lineHeight: 1.2, display: "flex", alignItems: "center", gap: 8 }}>
+          <div style={{ fontWeight: 600, fontSize: 19, color: T.textDark, fontFamily: T.serif, marginBottom: 6, lineHeight: 1.2, display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
             {ex.title}
             {completed && <CheckCircle2 size={16} color={T.success} strokeWidth={3} />}
+            {journalEntry && !open && <CategoryChip category={journalEntry.category} size="sm" />}
           </div>
           <div style={{ fontSize: 9, color: T.textMuted, fontFamily: T.sans, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.15em", display: "flex", alignItems: "center", gap: 8 }}>
             <span style={{ display: "flex", alignItems: "center", gap: 4 }}><Clock size={10} /> {ex.time} MIN</span>
@@ -1949,13 +2216,25 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
           }}>
             {completed ? "Mark Incomplete" : "Complete Exercise"}
           </button>
+
+          {/* Journal capture — appears after completion */}
+          {showJournalCapture && (
+            <JournalCapture
+              exerciseId={ex.id}
+              exerciseTitle={ex.title}
+              exerciseType={ex.type}
+              flowSession={false}
+              onSave={(entry) => { onJournalSave(entry); }}
+              onSkip={onJournalSkip}
+            />
+          )}
         </div>
       )}
     </div>
   );
 }
 
-function DayView({ day, completed, onComplete, metro, onOpenTapMatch, onStartFlow }) {
+function DayView({ day, completed, onComplete, metro, onOpenTapMatch, onStartFlow, getLatestJournalEntry, pendingJournalExId, onJournalSave, onJournalSkip }) {
   const c = DAY_COLORS[(day.num - 1) % DAY_COLORS.length];
   const total = day.exercises.length;
   const done = day.exercises.filter(e => completed.has(e.id)).length;
@@ -1996,7 +2275,8 @@ function DayView({ day, completed, onComplete, metro, onOpenTapMatch, onStartFlo
 
       {day.exercises.map(ex => (
         <ExerciseCard key={ex.id} ex={ex} metro={metro}
-          completed={completed.has(ex.id)} onComplete={onComplete} dayColor={c} onOpenTapMatch={onOpenTapMatch} onStartFlow={onStartFlow} levelExercises={day.exercises} />
+          completed={completed.has(ex.id)} onComplete={onComplete} dayColor={c} onOpenTapMatch={onOpenTapMatch} onStartFlow={onStartFlow} levelExercises={day.exercises}
+          journalEntry={getLatestJournalEntry?.(ex.id)} showJournalCapture={pendingJournalExId === ex.id} onJournalSave={onJournalSave} onJournalSkip={onJournalSkip} />
       ))}
     </div>
   );
@@ -3179,12 +3459,34 @@ function PracticeTimerTool({ theme: T }) {
   );
 }
 
-function ToolCard({ title, icon, defaultOpen = false, children }) {
+function SectionHeader({ label }) {
+  return (
+    <div style={{
+      display: "flex", alignItems: "center", gap: 10,
+      margin: "28px 0 12px",
+      padding: "0 4px"
+    }}>
+      <div style={{
+        fontSize: 10, fontWeight: 700, letterSpacing: 3,
+        textTransform: "uppercase", color: T.gold,
+        fontFamily: T.sans, whiteSpace: "nowrap"
+      }}>
+        {label}
+      </div>
+      <div style={{
+        flex: 1, height: 1,
+        background: `linear-gradient(to right, ${T.gold}40, transparent)`
+      }} />
+    </div>
+  );
+}
+
+function ToolCard({ title, icon, subtitle, defaultOpen = false, children }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
     <div style={{
       background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: T.radius,
-      marginBottom: 12, overflow: "hidden", transition: "all 0.2s"
+      marginBottom: 10, overflow: "hidden", transition: "all 0.2s"
     }}>
       <button onClick={() => setOpen(!open)} aria-expanded={open} style={{
         display: "flex", alignItems: "center", gap: 14, padding: "16px", cursor: "pointer",
@@ -3193,6 +3495,14 @@ function ToolCard({ title, icon, defaultOpen = false, children }) {
         <div style={{ fontSize: 24, flexShrink: 0, width: 32, textAlign: "center" }} aria-hidden="true">{icon}</div>
         <div style={{ flex: 1 }}>
           <div style={{ fontWeight: 600, fontSize: 18, color: T.textDark, fontFamily: T.serif }}>{title}</div>
+          {subtitle && !open && (
+            <div style={{
+              fontSize: 12, color: T.textMuted, fontFamily: T.sans,
+              marginTop: 2, fontStyle: "italic"
+            }}>
+              {subtitle}
+            </div>
+          )}
         </div>
         <div style={{ color: T.textMuted, display: "flex", transition: "transform 0.2s", transform: open ? "rotate(180deg)" : "" }} aria-hidden="true">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7 10l5 5 5-5z" /></svg>
@@ -4036,10 +4346,32 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem("practice-completed", JSON.stringify([...completed]));
   }, [completed]);
+  // Practice journal
+  const [journal, setJournal] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("practice-journal") || "[]");
+    } catch { return []; }
+  });
+  useEffect(() => {
+    localStorage.setItem("practice-journal", JSON.stringify(journal));
+  }, [journal]);
+  const addJournalEntry = useCallback((entry) => {
+    setJournal(prev => {
+      const next = [entry, ...prev];
+      if (next.length > 500) next.length = 500;
+      return next;
+    });
+  }, []);
+  const getLatestJournalEntry = useCallback((exerciseId) => {
+    return journal.find(e => e.exerciseId === exerciseId);
+  }, [journal]);
+  const [pendingJournalExId, setPendingJournalExId] = useState(null);
+
   const [tapMatchBpm, setTapMatchBpm] = useState(null);
   const [flowActive, setFlowActive] = useState(false);
   const [flowExercises, setFlowExercises] = useState([]);
   const [flowAccentColor, setFlowAccentColor] = useState(null);
+  const [colorMusicOpen, setColorMusicOpen] = useState(false);
   const metro = useMetronome();
 
   const [flowStartIndex, setFlowStartIndex] = useState(0);
@@ -4060,6 +4392,7 @@ export default function App() {
       const next = new Set(prev);
       if (next.has(id)) {
         next.delete(id);
+        setPendingJournalExId(null);
       } else {
         next.add(id);
 
@@ -4091,6 +4424,11 @@ export default function App() {
           ticks: 300,
           startVelocity: 35
         });
+
+        // Show journal capture (only outside Flow Mode — Flow handles its own)
+        if (!flowActive) {
+          setPendingJournalExId(id);
+        }
       }
       return next;
     });
@@ -4151,6 +4489,17 @@ export default function App() {
     }
   }, []);
 
+  // Color Music Trainer overlay — full-page experience
+  if (colorMusicOpen) {
+    return (
+      <div style={{ background: T.bg, minHeight: "100vh", color: T.textDark, fontFamily: T.sans }}>
+        <ColorMusicTrainer theme={T} onBack={() => setColorMusicOpen(false)} />
+        <FloatingMetronome metro={metro} setTab={() => {}} isDark={isDark} theme={T} />
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;600;700&display=swap" rel="stylesheet" />
+      </div>
+    );
+  }
+
   // Flow Mode overlay — renders above everything
   if (flowActive && flowExercises.length > 0) {
     return (
@@ -4164,6 +4513,8 @@ export default function App() {
           accentColor={flowAccentColor}
           startIndex={flowStartIndex}
           onOpenTapMatch={setTapMatchBpm}
+          journal={journal}
+          onJournalEntry={addJournalEntry}
         />
         <FloatingMetronome metro={metro} setTab={() => {}} isDark={isDark} theme={T} />
         {tapMatchBpm && (
@@ -4305,8 +4656,14 @@ export default function App() {
 
             {/* Selected day exercises */}
             <div style={{ marginTop: 28 }}>
-              <DayView day={selectedDay} completed={completed} onComplete={toggleComplete} metro={metro} onOpenTapMatch={setTapMatchBpm} onStartFlow={startFlow} />
+              <DayView day={selectedDay} completed={completed} onComplete={toggleComplete} metro={metro} onOpenTapMatch={setTapMatchBpm} onStartFlow={startFlow}
+                getLatestJournalEntry={getLatestJournalEntry} pendingJournalExId={pendingJournalExId}
+                onJournalSave={(entry) => { addJournalEntry(entry); setPendingJournalExId(null); }}
+                onJournalSkip={() => setPendingJournalExId(null)} />
             </div>
+
+            {/* Practice Journal */}
+            <PracticeJournal journal={journal} />
 
             {/* Past Weeks — history of completed weekly plans */}
             {WEEKLY_PLANS.length > 1 && (
@@ -4396,7 +4753,7 @@ export default function App() {
           </div>
         )}
 
-        {/* TOOLS TAB — Metronome + all tools combined */}
+        {/* TOOLS TAB — grouped by function */}
         {tab === "tools" && (
           <div>
             <div style={{ textAlign: "center", marginBottom: 24 }}>
@@ -4406,71 +4763,23 @@ export default function App() {
               <div style={{ fontSize: 32, fontWeight: 400, fontFamily: T.serif, color: T.textDark }}>Tools</div>
             </div>
 
-            <ToolCard icon="⏱️" title="Practice Timer" defaultOpen={true}>
-              <PracticeTimerTool theme={T} />
-            </ToolCard>
+            <SectionHeader label="Session" />
 
-            <ToolCard icon="🎛️" title="Metronome" defaultOpen={true}>
-              <MetronomePanel metro={metro} onOpenTapMatch={setTapMatchBpm} />
-            </ToolCard>
-
-            <ToolCard icon="🌫️" title="Drone Generator" defaultOpen={false}>
-              <DroneGenerator theme={T} />
-            </ToolCard>
-
-            <ToolCard icon="📚" title="Quick Reference" defaultOpen={false}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-                <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans }}>
-                  Quick Reference
-                </div>
-                <button onClick={() => setTapMatchBpm(metro.bpm)} style={{
-                  background: "transparent", border: "none", color: T.gold, fontSize: 11, fontWeight: 600, cursor: "pointer",
-                  fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1, padding: 0
-                }}>
-                  Tap Minigame
-                </button>
-              </div>
-              {[
-                { bpm: "78", use: "16th note subdivision (Drill #3)" },
-                { bpm: "120", use: "Surf Rock — fingerpick + count + ooh climbing" },
-                { bpm: "122", use: "Lyric placement + Sol Del Sur tap-along" },
-                { bpm: "165", use: "Island strum (Surf Rock Drum)" },
-                { bpm: "200-244", use: "Main metronome work (Drills #1 & #2)" },
-              ].map((r, i) => (
-                <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: i < 4 ? `1px solid ${T.border}` : "none", fontSize: 13 }}>
-                  <span style={{ color: T.gold, fontWeight: 700, fontFamily: T.sans }}>{r.bpm}</span>
-                  <span style={{ color: T.textLight, fontFamily: T.sans }}>{r.use}</span>
-                </div>
-              ))}
-            </ToolCard>
-
-            <ToolCard icon="🖇️" title="Backing Track Links" defaultOpen={false}>
-              {[
-                { label: "Surf Rock 120 BPM", url: "youtube.com/watch?v=AEf8LF4Xu18" },
-                { label: "Groove Beat 90 BPM", url: "youtube.com/watch?v=n0nEhFAiorg" },
-                { label: "Reggae One Drop 85 BPM", url: "youtube.com/watch?v=1aGp-CnwebE" },
-                { label: "Dub Reggae 85 BPM", url: "youtube.com/watch?v=vmH-xBYBQIg" },
-                { label: "Desert Blues 75 BPM", url: "youtube.com/watch?v=Yfyymjm24Ro" },
-                { label: "Khruangbin Style 80 BPM", url: "youtube.com/watch?v=JlMy52s7qrI" },
-                { label: "Cinematic Western 80 BPM", url: "youtube.com/watch?v=EKPjIt9GzX0" },
-                { label: "Psych Rock 120 BPM", url: "youtube.com/watch?v=eqI_3Mw8go4" },
-                { label: "Deep Soul Groove 80 BPM", url: "youtube.com/watch?v=55MTcCE6ZIk" },
-                { label: "Soul Funk Groove 90 BPM", url: "youtube.com/watch?v=HhPq1J93uMI" },
-                { label: "Surf Rock 165 BPM", url: "youtube.com/watch?v=gBNY43Xlp1Y" },
-                { label: "Groove Beat 80 BPM", url: "youtube.com/watch?v=0vgOdlxSTW0" },
-              ].map((l, i, arr) => (
-                <div key={i} style={{ padding: "8px 0", fontSize: 13, borderBottom: i < arr.length - 1 ? `1px solid ${T.border}` : "none" }}>
-                  <span style={{ color: T.gold, fontFamily: T.sans, fontWeight: 600 }}>{l.label}</span>
-                  <span style={{ color: T.textMuted, marginLeft: 10, fontSize: 11, fontFamily: T.sans }}>{l.url}</span>
-                </div>
-              ))}
-            </ToolCard>
-
-            <ToolCard icon="✅" title="Jungle Flight Check" defaultOpen={true}>
+            <ToolCard icon="✅" title="Jungle Flight Check" subtitle="Pre-practice checklist" defaultOpen={true}>
               <FlightCheck theme={T} />
             </ToolCard>
 
-            <ToolCard icon="✋" title="Tap Practice Minigame">
+            <ToolCard icon="⏱️" title="Practice Timer" subtitle="Countdown for focused sessions">
+              <PracticeTimerTool theme={T} />
+            </ToolCard>
+
+            <SectionHeader label="Rhythm" />
+
+            <ToolCard icon="🎛️" title="Metronome" subtitle="Tempo, beat patterns, tap tempo">
+              <MetronomePanel metro={metro} onOpenTapMatch={setTapMatchBpm} />
+            </ToolCard>
+
+            <ToolCard icon="✋" title="Tap Practice" subtitle="Test your rhythm accuracy">
               <div style={{ textAlign: "center", padding: "10px 0" }}>
                 <p style={{ fontSize: 14, color: T.textMed, marginBottom: 20 }}>
                   Practice tapping steadily at any BPM. Helps internalize the groove.
@@ -4485,23 +4794,48 @@ export default function App() {
               </div>
             </ToolCard>
 
-            <ToolCard icon="🎤" title="Live Pitch Detector">
+            <SectionHeader label="Pitch" />
+
+            <ToolCard icon="🌫️" title="Drone Generator" subtitle="Sustained tones for pitch training">
+              <DroneGenerator theme={T} />
+            </ToolCard>
+
+            <ToolCard icon="🎤" title="Live Pitch Detector" subtitle="Real-time mic analysis">
               <LivePitchDetector theme={T} />
             </ToolCard>
 
-            <ToolCard icon="🎵" title="Pitch Pipe">
+            <ToolCard icon="🎵" title="Pitch Pipe" subtitle="Play reference pitches">
               <PitchPipe theme={T} />
             </ToolCard>
 
-            <ToolCard icon="🎙️" title="Quick Recorder">
+            <SectionHeader label="Ear Training" />
+
+            <ToolCard icon="🎨" title="Color Music Trainer" subtitle="Visual ear training with color-coded fretboard">
+              <div style={{ padding: 12, textAlign: 'center' }}>
+                <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, marginBottom: 12, lineHeight: 1.6 }}>
+                  Color-coded fretboard, ear training games, and guided exercises.
+                  Each pitch has a color — learn to see the music.
+                </div>
+                <button onClick={() => setColorMusicOpen(true)} style={{
+                  padding: '10px 24px', borderRadius: T.radius,
+                  background: T.gold, color: '#fff', border: 'none',
+                  fontSize: 13, fontWeight: 600, fontFamily: T.sans, cursor: 'pointer',
+                  transition: 'all 0.2s',
+                }}>Open Color Music Trainer</button>
+              </div>
+            </ToolCard>
+
+            <SectionHeader label="Record & Listen" />
+
+            <ToolCard icon="🎙️" title="Quick Recorder" subtitle="Record and playback">
               <AudioRecorder theme={T} />
             </ToolCard>
 
-            <ToolCard icon="📻" title="Backing Tracks">
+            <ToolCard icon="📻" title="Track Player" subtitle="Play along with backing tracks">
               <AudioPlayer theme={T} />
             </ToolCard>
 
-            <ToolCard icon="🎸" title="Tabs & Lyrics">
+            <ToolCard icon="🎸" title="Tabs & Lyrics" subtitle="Chord charts and lyrics">
               <OfflineTabs theme={T} />
             </ToolCard>
 
