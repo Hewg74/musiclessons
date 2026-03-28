@@ -1238,14 +1238,6 @@ function JournalCapture({ exerciseId, exerciseTitle, exerciseType, flowSession, 
   const [selected, setSelected] = useState(null);
   const [note, setNote] = useState("");
   const [showNote, setShowNote] = useState(false);
-  const captureRef = useRef(null);
-
-  // Scroll into view when the capture panel appears
-  useEffect(() => {
-    if (captureRef.current) {
-      setTimeout(() => captureRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 100);
-    }
-  }, []);
 
   const handleSave = () => {
     if (!selected) { onSkip(); return; }
@@ -1260,9 +1252,9 @@ function JournalCapture({ exerciseId, exerciseTitle, exerciseType, flowSession, 
   };
 
   return (
-    <div ref={captureRef} style={{
+    <div style={{
       background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: T.radiusMd,
-      padding: "16px 16px 12px", marginTop: 12, marginBottom: flowSession ? 0 : 120,
+      padding: "16px 16px 12px", marginTop: 12,
       boxShadow: T.md, animation: "fade-in-up 0.3s ease-out"
     }}>
       <div style={{ fontSize: 13, fontWeight: 600, color: T.textDark, fontFamily: T.sans, marginBottom: 12 }}>
@@ -1790,7 +1782,7 @@ function StartFlowButton({ onClick, accentColor }) {
 
 // ─── EXERCISE CARD ──────────────────────────────────────────────────
 
-function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMatch, onStartFlow, levelExercises, journalEntry, showJournalCapture, onJournalSave, onJournalSkip }) {
+function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMatch, onStartFlow, levelExercises, journalEntry }) {
   const [open, setOpen] = useState(false);
   const [showTimer, setShowTimer] = useState(false);
   const [showTabs, setShowTabs] = useState(false);
@@ -2225,24 +2217,14 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
             {completed ? "Mark Incomplete" : "Complete Exercise"}
           </button>
 
-          {/* Journal capture — appears after completion */}
-          {showJournalCapture && (
-            <JournalCapture
-              exerciseId={ex.id}
-              exerciseTitle={ex.title}
-              exerciseType={ex.type}
-              flowSession={false}
-              onSave={(entry) => { onJournalSave(entry); }}
-              onSkip={onJournalSkip}
-            />
-          )}
+          {/* Journal capture rendered at App level as fixed overlay */}
         </div>
       )}
     </div>
   );
 }
 
-function DayView({ day, completed, onComplete, metro, onOpenTapMatch, onStartFlow, getLatestJournalEntry, pendingJournalExId, onJournalSave, onJournalSkip }) {
+function DayView({ day, completed, onComplete, metro, onOpenTapMatch, onStartFlow, getLatestJournalEntry }) {
   const c = DAY_COLORS[(day.num - 1) % DAY_COLORS.length];
   const total = day.exercises.length;
   const done = day.exercises.filter(e => completed.has(e.id)).length;
@@ -2284,7 +2266,7 @@ function DayView({ day, completed, onComplete, metro, onOpenTapMatch, onStartFlo
       {day.exercises.map(ex => (
         <ExerciseCard key={ex.id} ex={ex} metro={metro}
           completed={completed.has(ex.id)} onComplete={onComplete} dayColor={c} onOpenTapMatch={onOpenTapMatch} onStartFlow={onStartFlow} levelExercises={day.exercises}
-          journalEntry={getLatestJournalEntry?.(ex.id)} showJournalCapture={pendingJournalExId === ex.id} onJournalSave={onJournalSave} onJournalSkip={onJournalSkip} />
+          journalEntry={getLatestJournalEntry?.(ex.id)} />
       ))}
     </div>
   );
@@ -4665,9 +4647,7 @@ export default function App() {
             {/* Selected day exercises */}
             <div style={{ marginTop: 28 }}>
               <DayView day={selectedDay} completed={completed} onComplete={toggleComplete} metro={metro} onOpenTapMatch={setTapMatchBpm} onStartFlow={startFlow}
-                getLatestJournalEntry={getLatestJournalEntry} pendingJournalExId={pendingJournalExId}
-                onJournalSave={(entry) => { addJournalEntry(entry); setPendingJournalExId(null); }}
-                onJournalSkip={() => setPendingJournalExId(null)} />
+                getLatestJournalEntry={getLatestJournalEntry} />
             </div>
 
             {/* Practice Journal */}
@@ -4878,6 +4858,30 @@ export default function App() {
           )
         )}
       </div>
+
+      {/* Journal capture overlay — fixed above metronome */}
+      {pendingJournalExId && !flowActive && (() => {
+        const allExercises = DAYS.flatMap(d => d.exercises);
+        const ex = allExercises.find(e => e.id === pendingJournalExId);
+        return (
+          <div style={{
+            position: "fixed", bottom: metro.playing ? 128 : 64, left: 0, right: 0,
+            zIndex: 999, padding: "0 12px",
+            paddingBottom: "env(safe-area-inset-bottom, 0px)"
+          }}>
+            <div style={{ maxWidth: 560, margin: "0 auto" }}>
+              <JournalCapture
+                exerciseId={pendingJournalExId}
+                exerciseTitle={ex?.title || ""}
+                exerciseType={ex?.type || ""}
+                flowSession={false}
+                onSave={(entry) => { addJournalEntry(entry); setPendingJournalExId(null); }}
+                onSkip={() => setPendingJournalExId(null)}
+              />
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Floating metronome */}
       {metro.playing && tab !== "tools" && !tapMatchBpm && (
