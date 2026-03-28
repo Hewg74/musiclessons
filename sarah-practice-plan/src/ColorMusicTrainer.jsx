@@ -487,6 +487,8 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
 
   const checkHfGuess = useCallback((tapInfo) => {
     if (!hfTarget) return;
+    // Block tapping during audiation listen/hold phases
+    if (hfAudiateMode && hfAudiatePhase && hfAudiatePhase !== 'find') return;
     if (normalizeNote(tapInfo.noteName) === normalizeNote(hfTarget.note)) {
       setHfFeedback('yes'); setHfScore(p => ({ hit: p.hit + 1, total: p.total + 1 })); setHfStreak(p => p + 1); setHfRevealed(true);
       setTimeout(() => newChallenge(), 1400);
@@ -546,7 +548,8 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
         setTimeout(newCrPhrase, 1400);
       } else {
         setCrScore(p => ({ ...p, total: p.total + 1 })); setCrStreak(0);
-        setTimeout(() => setCrFeedback(null), 1200);
+        // Reset guess after showing wrong feedback so user can retry same phrase
+        setTimeout(() => { setCrFeedback(null); setCrGuess([]); }, 1200);
       }
     }
   }, [crPhrase, crGuess, crFeedback, crLength, newCrPhrase]);
@@ -560,7 +563,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
   }, [ctProgression, drone, root]);
 
   const stopProgression = useCallback(() => {
-    setCtProgActive(false);
+    setCtProgActive(false); setCtProgStep(0);
     if (ctProgTimerRef.current) clearInterval(ctProgTimerRef.current);
   }, []);
 
@@ -589,9 +592,16 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
   // ─── Guided ───
   const startGuided = useCallback((idx) => {
     setGuidedEx(idx); setGuidedStep(0); setGuidedActive(true);
-    // If drone-related exercise, auto-start drone
     if (!drone.playing) drone.start(root);
-  }, [drone, root]);
+    // Trigger first step's action
+    const step = GUIDED_EXERCISES[idx].steps[0];
+    const rootIdx = CHROMATIC.indexOf(normalizeNote(root));
+    if (step.action === 'play_root') setTimeout(() => playWarmNote(root + '3', '2n'), 300);
+    if (step.action === 'play_fifth') setTimeout(() => playWarmNote(CHROMATIC[(rootIdx + 7) % 12] + '3', '2n'), 300);
+    if (step.action === 'play_scale') {
+      scaleData.notes.forEach((n, i) => setTimeout(() => playWarmNote(n + '4', '4n'), 300 + i * 500));
+    }
+  }, [drone, root, scaleData]);
 
   const advanceGuided = useCallback(() => {
     if (guidedEx === null) return;
@@ -692,7 +702,8 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
       setSrIdx(prev => {
         const next = prev + 1;
         if (next >= srSequence.length) {
-          // Completed a run — bump BPM
+          // Completed a run — clear immediately and bump BPM
+          clearInterval(srTimerRef.current);
           setSrBpm(b => b + 5);
           setSrActive(false);
           return -1;
@@ -701,7 +712,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
         return next;
       });
     }, ms);
-    return () => clearInterval(srTimerRef.current);
+    return () => { if (srTimerRef.current) clearInterval(srTimerRef.current); };
   }, [srActive, srBpm, srSequence]);
 
   // ─── Melody Echo ───
@@ -793,6 +804,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     if (mode === 'guided') { setGuidedActive(false); setGuidedEx(null); }
     if (mode === 'scaleRunner') { stopScaleRunner(); setSrBpm(60); }
     if (mode !== 'scaleRunner') stopScaleRunner();
+    if (mode !== 'chordTones') stopProgression();
     setVoiceNote(null);
   }, [mode]);
 
@@ -1059,6 +1071,8 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
             <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap', marginBottom: 10 }}>
               <button onClick={newCrPhrase} style={btnStyle(true, rootColor)}>New Phrase</button>
               <button onClick={() => crPhrase.length && playCrPhrase(crPhrase)} style={btnStyle(false, rootColor)}>Replay</button>
+              <button onClick={() => { setCrGuess([]); setCrFeedback(null); crPhrase.length && playCrPhrase(crPhrase); }}
+                style={btnStyle(false, T.textMed)}>Retry</button>
               <div style={{ display: 'flex', gap: 3, marginLeft: 8 }}>
                 {[2, 3, 4].map(n => (
                   <button key={n} onClick={() => { setCrLength(n); }} style={{
@@ -1244,9 +1258,10 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
               </div>
             )}
             {!srActive && (
-              <div style={{ fontSize: 11, color: T.textMuted, fontStyle: 'italic', fontFamily: T.serif }}>
-                Notes light up in sequence. Follow along. Each completed run bumps the tempo by 5 BPM.
-                {srBpm > 60 && ` Currently at ${srBpm} BPM.`}
+              <div style={{ fontSize: 11, color: srBpm > 60 ? T.success : T.textMuted, fontStyle: 'italic', fontFamily: T.serif }}>
+                {srBpm > 60
+                  ? `Run complete! Now at ${srBpm} BPM. Hit Start to go again.`
+                  : 'Notes light up in sequence. Follow along. Each completed run bumps the tempo by 5 BPM.'}
               </div>
             )}
           </div>
