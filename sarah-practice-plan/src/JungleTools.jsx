@@ -6267,6 +6267,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   const [isPlaying, setIsPlaying] = useState(false);
   const [lyricsEditing, setLyricsEditing] = useState(!initialChart);
   const longPressRef = useRef(null);
+  const touchStartRef = useRef(null);
   const savedTimerRef = useRef(null);
 
   // rAF-based 8th-note beat tracking
@@ -6587,6 +6588,8 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   const cycleStrum = (mIdx, cIdx) => {
     if (isPlaying) return;
     if (longPressRef.current === "fired") return; // skip if long-press just cleared it
+    if (touchStartRef.current === "scrolled") { touchStartRef.current = null; return; }
+    touchStartRef.current = null;
     const cur = chart.measures[mIdx].cells[cIdx].strum;
     let next;
     if (!cur) next = "D";
@@ -6626,8 +6629,16 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   // Chord handlers
   const selectChord = (chord) => {
     if (!activeChordCell) return;
-    const { m, c } = activeChordCell;
-    updateChart(ch => { ch.measures[m].cells[c].chord = chord; return ch; });
+    const { m, c, between } = activeChordCell;
+    updateChart(ch => {
+      if (between) {
+        if (!ch.measures[m].between[c]) ch.measures[m].between[c] = makeEmptyCell();
+        ch.measures[m].between[c].chord = chord;
+      } else {
+        ch.measures[m].cells[c].chord = chord;
+      }
+      return ch;
+    });
     setRecentChords(prev => {
       const next = [chord, ...prev.filter(x => x !== chord)].slice(0, 4);
       return next;
@@ -6635,15 +6646,24 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   };
   const clearChord = () => {
     if (!activeChordCell) return;
-    const { m, c } = activeChordCell;
-    updateChart(ch => { ch.measures[m].cells[c].chord = null; return ch; });
+    const { m, c, between } = activeChordCell;
+    updateChart(ch => {
+      if (between) {
+        if (ch.measures[m].between[c]) ch.measures[m].between[c].chord = null;
+      } else {
+        ch.measures[m].cells[c].chord = null;
+      }
+      return ch;
+    });
   };
 
   // Chord tap handler — short tap opens picker, long press opens voicing
-  const handleChordCellTap = (mIdx, cIdx) => {
+  const handleChordCellTap = (mIdx, cIdx, between) => {
     if (isPlaying) return;
     if (longPressRef.current === "fired") return; // was a long press
-    setActiveChordCell({ m: mIdx, c: cIdx });
+    if (touchStartRef.current === "scrolled") { touchStartRef.current = null; return; }
+    touchStartRef.current = null;
+    setActiveChordCell({ m: mIdx, c: cIdx, between: !!between });
   };
 
   // Lyrics handler — textarea is source of truth for what words exist.
@@ -6754,14 +6774,17 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
     setSelectedChip(null);
   };
 
-  const placeLyric = (mIdx, cIdx) => {
+  const placeLyric = (mIdx, cIdx, between) => {
     if (selectedChip === null) return;
     const item = chart.lyricsPool[selectedChip];
     if (!item) return;
     updateChart(c => {
-      c.measures[mIdx].cells[cIdx].lyric = chipText(item);
-      c.measures[mIdx].cells[cIdx].lyricGroupId = chipGroup(item);
-      c.measures[mIdx].cells[cIdx].lyricOriginIndex = chipOrigin(item);
+      const target = between
+        ? (c.measures[mIdx].between[cIdx] || (c.measures[mIdx].between[cIdx] = makeEmptyCell()))
+        : c.measures[mIdx].cells[cIdx];
+      target.lyric = chipText(item);
+      target.lyricGroupId = chipGroup(item);
+      target.lyricOriginIndex = chipOrigin(item);
       c.lyricsPool = c.lyricsPool.filter((_, i) => i !== selectedChip);
       return c;
     });
@@ -7866,7 +7889,8 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                         boxShadow: isActiveChordTarget ? `0 0 6px ${T.gold}40` : "none",
                       }}
                       onClick={(e) => { e.stopPropagation(); handleChordCellTap(mIdx, cIdx); }}
-                      onTouchStart={(e) => { e.stopPropagation(); startLongPress(mIdx, cIdx, "chord"); }}
+                      onTouchStart={(e) => { e.stopPropagation(); touchStartRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY }; startLongPress(mIdx, cIdx, "chord"); }}
+                      onTouchMove={(e) => { if (touchStartRef.current && touchStartRef.current !== "scrolled") { const dx = e.touches[0].clientX - touchStartRef.current.x, dy = e.touches[0].clientY - touchStartRef.current.y; if (Math.abs(dx) > 8 || Math.abs(dy) > 8) touchStartRef.current = "scrolled"; } }}
                       onTouchEnd={(e) => { e.stopPropagation(); endLongPress(); }}
                       onMouseDown={(e) => { e.stopPropagation(); startLongPress(mIdx, cIdx, "chord"); }}
                       onMouseUp={(e) => { e.stopPropagation(); endLongPress(); }}
@@ -7879,7 +7903,9 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                         minHeight: 28, display: "flex", alignItems: "center", justifyContent: "center",
                         opacity: 0.7, cursor: "pointer",
                       }}
-                        onClick={() => { setActiveChordCell({ m: mIdx, c: cIdx, between: true }); }}
+                        onClick={() => { handleChordCellTap(mIdx, cIdx, true); }}
+                        onTouchStart={(e) => { touchStartRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY }; }}
+                        onTouchMove={(e) => { if (touchStartRef.current && touchStartRef.current !== "scrolled") { const dx = e.touches[0].clientX - touchStartRef.current.x, dy = e.touches[0].clientY - touchStartRef.current.y; if (Math.abs(dx) > 8 || Math.abs(dy) > 8) touchStartRef.current = "scrolled"; } }}
                       >{measure.between[cIdx]?.chord || "·"}</div>
                     )}
                   </React.Fragment>
@@ -7911,7 +7937,8 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                         userSelect: "none",
                       }}
                       onClick={(e) => { e.stopPropagation(); cycleStrum(mIdx, cIdx); }}
-                      onTouchStart={(e) => { e.stopPropagation(); startLongPress(mIdx, cIdx, "strum"); }}
+                      onTouchStart={(e) => { e.stopPropagation(); touchStartRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY }; startLongPress(mIdx, cIdx, "strum"); }}
+                      onTouchMove={(e) => { if (touchStartRef.current && touchStartRef.current !== "scrolled") { const dx = e.touches[0].clientX - touchStartRef.current.x, dy = e.touches[0].clientY - touchStartRef.current.y; if (Math.abs(dx) > 8 || Math.abs(dy) > 8) touchStartRef.current = "scrolled"; } }}
                       onTouchEnd={(e) => { e.stopPropagation(); endLongPress(); }}
                       onMouseDown={(e) => { e.stopPropagation(); startLongPress(mIdx, cIdx, "strum"); }}
                       onMouseUp={(e) => { e.stopPropagation(); endLongPress(); }}
@@ -7926,6 +7953,8 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                         color: strumDisplay(measure.between[cIdx]?.strum)?.color || "transparent",
                       }}
                         onClick={() => {
+                          if (touchStartRef.current === "scrolled") { touchStartRef.current = null; return; }
+                          touchStartRef.current = null;
                           // Cycle between strum for interstitial
                           updateChart(c => {
                             if (!c.measures[mIdx].between[cIdx]) c.measures[mIdx].between[cIdx] = makeEmptyCell();
@@ -7934,6 +7963,8 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                             return c;
                           });
                         }}
+                        onTouchStart={(e) => { touchStartRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY }; }}
+                        onTouchMove={(e) => { if (touchStartRef.current && touchStartRef.current !== "scrolled") { const dx = e.touches[0].clientX - touchStartRef.current.x, dy = e.touches[0].clientY - touchStartRef.current.y; if (Math.abs(dx) > 8 || Math.abs(dy) > 8) touchStartRef.current = "scrolled"; } }}
                       >
                         {strumDisplay(measure.between[cIdx]?.strum)?.glyph || "·"}
                       </div>
@@ -8009,7 +8040,12 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                                 <button key={n} onClick={async (e) => {
                                   e.stopPropagation();
                                   updateChart(c => {
-                                    c.measures[mIdx].cells[cIdx].note = noteStr;
+                                    if (notePicker?.between) {
+                                      if (!c.measures[mIdx].between[cIdx]) c.measures[mIdx].between[cIdx] = makeEmptyCell();
+                                      c.measures[mIdx].between[cIdx].note = noteStr;
+                                    } else {
+                                      c.measures[mIdx].cells[cIdx].note = noteStr;
+                                    }
                                     return c;
                                   });
                                   try {
