@@ -85,6 +85,60 @@ const INTERVAL_NAMES = {
   6: 'Tritone', 7: 'P5', 8: 'm6', 9: 'M6', 10: 'm7', 11: 'M7',
 };
 
+// ─── Musical principle data ───
+
+// Scale degree context: what each degree DOES in music (for Hear→Find "why" feedback)
+const DEGREE_CONTEXT = {
+  0: { name: 'Root', feel: 'Home. Total resolution. Everything pulls toward here.' },
+  1: { name: 'b2', feel: 'Exotic tension. Wants to fall back to root.' },
+  2: { name: '2nd', feel: 'Gentle lift. Passing tone — wants to keep moving.' },
+  3: { name: 'b3', feel: 'The minor color. Ache, longing. Defines the mood.' },
+  4: { name: '3rd', feel: 'Brightness. Major optimism. Defines major/minor.' },
+  5: { name: '4th', feel: 'Suspension. Floating. Wants to resolve to 3rd or 5th.' },
+  6: { name: 'b5', feel: 'The blue note. Maximum tension. Grit and soul.' },
+  7: { name: '5th', feel: 'Open, stable, powerful. The second pillar after root.' },
+  8: { name: 'b6', feel: 'Dark color. Phrygian/harmonic minor flavor.' },
+  9: { name: '6th', feel: 'Sweet brightness. Dorian character.' },
+  10: { name: 'b7', feel: 'Dominant pull. Bluesy, wants to resolve down to 5th or up to root.' },
+  11: { name: '7th', feel: 'Leading tone. Strong pull UP to root. One semitone away from home.' },
+};
+
+// Interval resolution tendencies (for Interval Trainer)
+const INTERVAL_RESOLUTION = {
+  0: 'Unison — no tension, pure stability.',
+  1: 'Half step — extreme tension. Resolves outward.',
+  2: 'Whole step — gentle tension. Resolves either direction.',
+  3: 'Minor 3rd — the sad interval. Stable within minor keys.',
+  4: 'Major 3rd — the happy interval. Stable within major keys.',
+  5: 'Perfect 4th — suspended, floating. Wants to fall to the 3rd.',
+  6: 'Tritone — maximum dissonance. The devil\'s interval. Must resolve.',
+  7: 'Perfect 5th — open, powerful, completely stable. The rock interval.',
+  8: 'Minor 6th — rich and dark. Cinematic.',
+  9: 'Major 6th — sweet and warm. The "my bonnie" interval.',
+  10: 'Minor 7th — bluesy dominant pull. Wants to resolve down.',
+  11: 'Major 7th — dreamy tension. Jazz. One step from home.',
+};
+
+// Musical lick patterns for Scale Runner (indices into scale notes array)
+const LICK_PATTERNS = [
+  { name: 'Ascending', pattern: (n) => [...Array(n)].map((_, i) => i) },
+  { name: 'Descending', pattern: (n) => [...Array(n)].map((_, i) => n - 1 - i) },
+  { name: '1-b3-4-5', pattern: (n) => n >= 4 ? [0, 1, 2, 3] : [0, 1, 2] },
+  { name: '5-4-b3-1', pattern: (n) => n >= 4 ? [3, 2, 1, 0] : [2, 1, 0] },
+  { name: 'Root-5th-Oct', pattern: (n) => n >= 5 ? [0, 3, 4, 3, 0] : [0, 2, 0] },
+  { name: 'Zigzag', pattern: (n) => { const p = []; for (let i = 0; i < n; i++) p.push(i % 2 === 0 ? Math.floor(i/2) : n - 1 - Math.floor(i/2)); return p; } },
+  { name: 'Thirds', pattern: (n) => { const p = []; for (let i = 0; i < n - 1; i++) p.push(i, i + 1 < n ? i + 1 : i); return [...new Set(p)]; } },
+  { name: 'Random', pattern: (n) => { const p = [...Array(n)].map((_, i) => i); for (let i = p.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [p[i], p[j]] = [p[j], p[i]]; } return p; } },
+];
+
+// Common chord progressions for Chord Tones progression mode
+const CHORD_PROGRESSIONS = {
+  'i-iv-v':      { name: 'i - iv - v',      label: 'Basic Minor' },
+  'i-VI-III-VII': { name: 'i - VI - III - VII', label: 'Andalusian' },
+  'i-III-VI-v':  { name: 'i - III - VI - v', label: 'Pop Minor' },
+  'I-IV-V':      { name: 'I - IV - V',       label: 'Basic Major' },
+};
+
 // ─── Guided exercise definitions ───
 const GUIDED_EXERCISES = [
   {
@@ -292,6 +346,8 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
   const [hfScore, setHfScore] = useState({ hit: 0, total: 0 });
   const [hfStreak, setHfStreak] = useState(0);
   const [hfRevealed, setHfRevealed] = useState(false);
+  const [hfAudiateMode, setHfAudiateMode] = useState(false); // Forces audiation before tapping
+  const [hfAudiatePhase, setHfAudiatePhase] = useState(null); // 'listen' | 'audiate' | 'find' | null
 
   // One Note state
   const [oneNote, setOneNote] = useState(null);
@@ -329,12 +385,32 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
   const [meLength, setMeLength] = useState(3);
   const [meListening, setMeListening] = useState(false);
   const [meFeedback, setMeFeedback] = useState(null);
+  const [meCorrectStreak, setMeCorrectStreak] = useState(0);
+  const [meFreeVariation, setMeFreeVariation] = useState(false); // prompt to change one note
   const meLastNoteRef = useRef(null);
 
   // Chord Tone state
   const [ctChord, setCtChord] = useState(null); // { root, type, label }
+  const [ctProgActive, setCtProgActive] = useState(false); // progression playing?
+  const [ctProgStep, setCtProgStep] = useState(0);
+  const [ctProgKey, setCtProgKey] = useState('i-iv-v');
+  const ctProgTimerRef = useRef(null);
   const ctChordTones = useMemo(() => ctChord ? getChordTones(ctChord.root, ctChord.type) : [], [ctChord]);
   const diatonicChords = useMemo(() => getDiatonicChords(root), [root]);
+
+  // Build chord progression from diatonic chords
+  const ctProgression = useMemo(() => {
+    const dc = diatonicChords;
+    if (!dc.length) return [];
+    const map = {}; dc.forEach(c => map[c.label] = c);
+    const progDef = {
+      'i-iv-v': ['i', 'iv', 'v', 'i'],
+      'i-VI-III-VII': ['i', 'VI', 'III', 'VII'],
+      'i-III-VI-v': ['i', 'III', 'VI', 'v'],
+      'I-IV-V': ['i', 'III', 'VI', 'i'], // approximation for minor key
+    };
+    return (progDef[ctProgKey] || progDef['i-iv-v']).map(l => map[l]).filter(Boolean);
+  }, [diatonicChords, ctProgKey]);
 
   // Guided state
   const [guidedEx, setGuidedEx] = useState(null);
@@ -388,8 +464,18 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     const oct = Math.random() > 0.5 ? '4' : '3';
     setHfTarget({ note, full: note + oct });
     setHfFeedback(null); setHfRevealed(false);
-    playWarmNote(note + oct, '2n');
-  }, [scaleData]);
+    if (hfAudiateMode) {
+      // Audiation mode: hear → internal hold → then find
+      setHfAudiatePhase('listen');
+      playWarmNote(note + oct, '2n');
+      setTimeout(() => {
+        setHfAudiatePhase('audiate'); // Silence — hold internally
+        setTimeout(() => setHfAudiatePhase('find'), 3000); // 3s internal hold, then find
+      }, 1500);
+    } else {
+      playWarmNote(note + oct, '2n');
+    }
+  }, [scaleData, hfAudiateMode]);
 
   const checkHfGuess = useCallback((tapInfo) => {
     if (!hfTarget) return;
@@ -456,6 +542,41 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
       }
     }
   }, [crPhrase, crGuess, crFeedback, crLength, newCrPhrase]);
+
+  // ─── Chord Progression Player ───
+  const startProgression = useCallback(() => {
+    if (!ctProgression.length) return;
+    setCtProgActive(true); setCtProgStep(0);
+    setCtChord(ctProgression[0]);
+    if (!drone.playing) drone.start(root);
+  }, [ctProgression, drone, root]);
+
+  const stopProgression = useCallback(() => {
+    setCtProgActive(false);
+    if (ctProgTimerRef.current) clearInterval(ctProgTimerRef.current);
+  }, []);
+
+  useEffect(() => {
+    if (!ctProgActive || !ctProgression.length) return;
+    const ms = 2000; // 2 seconds per chord
+    ctProgTimerRef.current = setInterval(() => {
+      setCtProgStep(prev => {
+        const next = (prev + 1) % ctProgression.length;
+        setCtChord(ctProgression[next]);
+        return next;
+      });
+    }, ms);
+    return () => clearInterval(ctProgTimerRef.current);
+  }, [ctProgActive, ctProgression]);
+
+  // ─── Hear→Find: degree context for "why" feedback ───
+  const getDegreeFeedback = useCallback((noteName) => {
+    const ri = CHROMATIC.indexOf(normalizeNote(root));
+    const ni = CHROMATIC.indexOf(normalizeNote(noteName));
+    if (ri < 0 || ni < 0) return null;
+    const semitones = ((ni - ri) + 12) % 12;
+    return DEGREE_CONTEXT[semitones] || null;
+  }, [root]);
 
   // ─── Guided ───
   const startGuided = useCallback((idx) => {
@@ -527,16 +648,23 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
   }, [scaleData, root]);
 
   // ─── Scale Runner ───
+  const [srPattern, setSrPattern] = useState(0); // index into LICK_PATTERNS
   const srSequence = useMemo(() => {
     const notes = scaleData.notes;
     if (srDirection === 'up') return [...notes];
     if (srDirection === 'down') return [...notes].reverse();
     if (srDirection === 'both') return [...notes, ...[...notes].reverse().slice(1)];
-    // random: shuffle scale notes
+    if (srDirection === 'licks') {
+      // Use musical lick patterns
+      const pat = LICK_PATTERNS[srPattern];
+      const indices = pat.pattern(notes.length);
+      return indices.map(i => notes[Math.min(i, notes.length - 1)]);
+    }
+    // random
     const shuffled = [...notes];
     for (let i = shuffled.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; }
     return shuffled;
-  }, [scaleData, srDirection]);
+  }, [scaleData, srDirection, srPattern]);
 
   const startScaleRunner = useCallback(() => {
     setSrActive(true); setSrIdx(0);
@@ -601,6 +729,13 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
         setMeListening(false);
         const correct = next.every((n, i) => normalizeNote(n) === normalizeNote(mePhrase[i]));
         setMeFeedback(correct ? 'correct' : 'wrong');
+        if (correct) {
+          setMeCorrectStreak(p => {
+            const s = p + 1;
+            if (s >= 3 && !meFreeVariation) setMeFreeVariation(true);
+            return s;
+          });
+        } else { setMeCorrectStreak(0); }
       }
       return next;
     });
@@ -865,8 +1000,11 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
                 marginBottom: 6,
               }}>
                 {hfFeedback === 'yes'
-                  ? `\u2713 ${hfTarget?.note}. ${hfStreak >= 3 ? 'Locked in.' : 'Nice.'}`
-                  : '\u2717 Listen again. Feel where it lives.'}
+                  ? (() => {
+                      const deg = hfTarget ? getDegreeFeedback(hfTarget.note) : null;
+                      return `\u2713 ${hfTarget?.note}${deg ? ` \u2014 the ${deg.name}. ${deg.feel}` : '. Nice.'}`;
+                    })()
+                  : '\u2717 Listen again. Feel where it lives in the scale.'}
               </div>
             )}
             {hfRevealed && hfTarget && (
@@ -879,6 +1017,37 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
                   boxShadow: `0 0 10px ${getColorForNote(hfTarget.note)}60`,
                 }}>{hfTarget.note}</div>
                 <span style={{ fontSize: 12, color: T.textMed }}>was the note</span>
+              </div>
+            )}
+            {/* Audiation mode toggle + phase indicator */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 8 }}>
+              <button onClick={() => setHfAudiateMode(!hfAudiateMode)} style={{
+                padding: '6px 12px', borderRadius: T.radius,
+                background: hfAudiateMode ? `${rootColor}12` : T.bgCard,
+                border: `1px solid ${hfAudiateMode ? rootColor : T.borderSoft}`,
+                color: hfAudiateMode ? rootColor : T.textMuted,
+                fontSize: 10, fontWeight: 600, fontFamily: T.sans, cursor: 'pointer',
+                minHeight: 36,
+              }}>
+                {hfAudiateMode ? '\u25C9 Audiate Mode ON' : '\u25CB Audiate Mode'}
+              </button>
+              {hfAudiateMode && hfAudiatePhase && (
+                <span style={{
+                  fontSize: 11, fontWeight: 600, fontFamily: T.sans,
+                  color: hfAudiatePhase === 'listen' ? rootColor
+                    : hfAudiatePhase === 'audiate' ? T.plum
+                    : T.success,
+                  animation: hfAudiatePhase === 'audiate' ? 'wheelPulse 1s ease-in-out infinite' : 'none',
+                }}>
+                  {hfAudiatePhase === 'listen' && 'Listening...'}
+                  {hfAudiatePhase === 'audiate' && 'Hold it internally \u2014 3 seconds of silence...'}
+                  {hfAudiatePhase === 'find' && 'Now find it.'}
+                </span>
+              )}
+            </div>
+            {hfAudiateMode && !hfAudiatePhase && (
+              <div style={{ fontSize: 10, color: T.textMuted, marginTop: 4, fontStyle: 'italic', fontFamily: T.serif }}>
+                Hear the note \u2192 hold it internally for 3 seconds \u2192 then find it. Forces audiation before action.
               </div>
             )}
           </div>
@@ -1037,8 +1206,8 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
                 marginBottom: 6,
               }}>
                 {intFeedback === 'correct'
-                  ? `\u2713 ${intTarget?.intervalName}! ${intTarget?.note1} \u2192 ${intTarget?.note2}`
-                  : `\u2717 Not that one. Listen to the distance.`}
+                  ? `\u2713 ${intTarget?.intervalName}! ${intTarget?.note1} \u2192 ${intTarget?.note2}. ${INTERVAL_RESOLUTION[intTarget?.semitones] || ''}`
+                  : `\u2717 Not that one. Listen to the distance between the colors.`}
               </div>
             )}
             {intRevealed && intTarget && (
@@ -1075,6 +1244,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
                   { id: 'up', label: '\u2191' },
                   { id: 'down', label: '\u2193' },
                   { id: 'both', label: '\u2195' },
+                  { id: 'licks', label: '\uD83C\uDFB5' },
                   { id: 'random', label: '\uD83D\uDD00' },
                 ].map(d => (
                   <button key={d.id} onClick={() => setSrDirection(d.id)} style={{
@@ -1087,6 +1257,20 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
                 ))}
               </div>
             </div>
+            {/* Lick pattern selector */}
+            {srDirection === 'licks' && !srActive && (
+              <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 8 }}>
+                {LICK_PATTERNS.map((lp, i) => (
+                  <button key={i} onClick={() => setSrPattern(i)} style={{
+                    padding: '6px 10px', borderRadius: T.radius,
+                    background: srPattern === i ? `${rootColor}12` : T.bgCard,
+                    border: `1px solid ${srPattern === i ? rootColor : T.borderSoft}`,
+                    color: srPattern === i ? rootColor : T.textMuted,
+                    fontSize: 10, fontFamily: T.sans, cursor: 'pointer', minHeight: 32,
+                  }}>{lp.name}</button>
+                ))}
+              </div>
+            )}
             {/* Current note highlight */}
             {srActive && srIdx >= 0 && srIdx < srSequence.length && (
               <div style={{ display: 'flex', gap: 4, alignItems: 'center', marginBottom: 8 }}>
@@ -1183,6 +1367,17 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
                 Listening... sing now
               </div>
             )}
+            {/* Free Variation prompt */}
+            {meFreeVariation && meFeedback === 'correct' && (
+              <div style={{
+                padding: '8px 12px', borderRadius: T.radius, marginTop: 6,
+                background: `${rootColor}08`, border: `1px solid ${rootColor}30`,
+                fontSize: 12, color: rootColor, fontWeight: 600, fontFamily: T.serif,
+              }}>
+                Free Variation: echo the next phrase but change ONE note. Keep the shape, alter the color.
+                This is the first step from imitation to creation.
+              </div>
+            )}
             {/* LivePitchDetector for melody echo */}
             {(mode === 'melodyEcho') && (
               <div style={{ marginTop: 8 }}>
@@ -1276,7 +1471,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
             </div>
             {/* Chord tone display */}
             {ctChord && ctChordTones.length > 0 && (
-              <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+              <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginBottom: 10 }}>
                 <span style={{ fontSize: 10, color: T.textMuted, textTransform: 'uppercase', letterSpacing: 1 }}>Tones:</span>
                 {ctChordTones.map((note, i) => (
                   <div key={i} style={{
@@ -1288,10 +1483,57 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
                   }}>{note}</div>
                 ))}
                 <span style={{ fontSize: 10, color: T.textMuted, marginLeft: 4 }}>
-                  = strong landing notes over {ctChord.root}{ctChord.type === 'min' ? 'm' : ''}
+                  = strong beats over {ctChord.root}{ctChord.type === 'min' ? 'm' : ''}
                 </span>
               </div>
             )}
+            {/* Progression player */}
+            <div style={{ borderTop: `1px solid ${T.borderSoft}`, paddingTop: 10, marginTop: 6 }}>
+              <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap', marginBottom: 6 }}>
+                {!ctProgActive ? (
+                  <button onClick={startProgression} style={btnStyle(true, rootColor)}>Play Progression</button>
+                ) : (
+                  <button onClick={stopProgression} style={btnStyle(false, T.coral)}>Stop</button>
+                )}
+                <div style={{ display: 'flex', gap: 3 }}>
+                  {Object.entries(CHORD_PROGRESSIONS).map(([key, prog]) => (
+                    <button key={key} onClick={() => { setCtProgKey(key); if (ctProgActive) stopProgression(); }} style={{
+                      padding: '4px 8px', borderRadius: T.radius,
+                      background: ctProgKey === key ? `${rootColor}12` : 'transparent',
+                      border: `1px solid ${ctProgKey === key ? rootColor + '60' : T.borderSoft}`,
+                      color: ctProgKey === key ? T.textDark : T.textMuted,
+                      fontSize: 9, fontFamily: T.sans, cursor: 'pointer',
+                    }}>{prog.label}</button>
+                  ))}
+                </div>
+              </div>
+              {ctProgActive && (
+                <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+                  {ctProgression.map((ch, i) => {
+                    const active = i === ctProgStep;
+                    const color = getColorForNote(ch.root);
+                    return (
+                      <div key={i} style={{
+                        padding: '6px 10px', borderRadius: T.radius,
+                        background: active ? `${color}20` : 'transparent',
+                        border: active ? `2px solid ${color}` : `1px solid ${T.borderSoft}`,
+                        color: active ? color : T.textMuted,
+                        fontSize: 12, fontWeight: active ? 700 : 400, fontFamily: T.sans,
+                        transition: 'all 0.2s',
+                      }}>{ch.root}{ch.type === 'min' ? 'm' : ''}</div>
+                    );
+                  })}
+                  <span style={{ fontSize: 10, color: T.textMuted, marginLeft: 6, fontStyle: 'italic' }}>
+                    Chord tones update as chords change — adapt your playing!
+                  </span>
+                </div>
+              )}
+              {!ctProgActive && (
+                <div style={{ fontSize: 10, color: T.textMuted, fontStyle: 'italic', fontFamily: T.serif }}>
+                  Play a chord progression and watch the strong notes shift. This is how you improvise over changes — not just over a static scale.
+                </div>
+              )}
+            </div>
           </div>
         )}
 
