@@ -279,7 +279,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
     // Scan ahead past empty cells to find the next cell that has a note
     const findNextNoteCell = (ch, mIdx, col, nm, ls, le) => {
       let curM = mIdx, curC = col;
-      for (let i = 0; i < 16; i++) { // max 2 measures ahead
+      for (let i = 0; i < nm * 8; i++) { // scan entire chart
         if (curC < 7) { curC++; } else {
           if (ls !== null && le !== null && ls <= le) {
             curM = ls + ((curM - ls + 1) % (le - ls + 1));
