@@ -235,7 +235,7 @@ function generateScale(root, scaleType) {
 }
 
 // ─── ColorWheel ───
-function ColorWheel({ theme: T, root, scaleNotes = [], voiceNote = null, activeNote = null, size = 160 }) {
+function ColorWheel({ theme: T, root, scaleNotes = [], voiceNote = null, activeNote = null, size = 160, onRootChange = null }) {
   const r = size / 2 - 16;
   const center = size / 2;
   const rootIdx = CIRCLE_OF_FIFTHS.indexOf(normalizeNote(root));
@@ -255,18 +255,23 @@ function ColorWheel({ theme: T, root, scaleNotes = [], voiceNote = null, activeN
           const isActive = activeNote && normalizeNote(activeNote) === normalizeNote(note);
           const dotSize = isRoot ? 13 : 10;
           return (
-            <g key={note} style={{ cursor: inScale ? 'pointer' : 'default', transition: 'all 0.4s ease' }}
-              onClick={() => inScale && playWarmNote(note + '4')}>
+            <g key={note} style={{ cursor: onRootChange || inScale ? 'pointer' : 'default', transition: 'all 0.4s ease' }}
+              onClick={() => {
+                if (onRootChange) { onRootChange(note); playWarmNote(note + '4'); }
+                else if (inScale) playWarmNote(note + '4');
+              }}>
               <circle cx={x} cy={y} r={dotSize} fill={color}
-                opacity={inScale ? 1 : 0.08} style={{ transition: 'all 0.3s' }} />
+                opacity={inScale ? 1 : (onRootChange ? 0.25 : 0.08)}
+                style={{ transition: 'all 0.3s' }} />
               {isRoot && <circle cx={x} cy={y} r={dotSize + 2} fill="none" stroke={T.gold} strokeWidth={2} opacity={0.9} />}
               {(isVoice || isActive) && (
                 <circle cx={x} cy={y} r={dotSize + 4} fill="none" stroke={color} strokeWidth={1.5} opacity={0.6}
                   style={{ animation: 'wheelPulse 0.8s ease-in-out infinite' }} />
               )}
-              {inScale && (
+              {(inScale || onRootChange) && (
                 <text x={x} y={y + 0.5} textAnchor="middle" dominantBaseline="central"
                   fontSize={7} fontWeight={isRoot ? 800 : 600} fill="#fff"
+                  opacity={inScale ? 1 : 0.6}
                   fontFamily={T.sans} style={{ pointerEvents: 'none' }}>{note}</text>
               )}
             </g>
@@ -837,7 +842,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
                 Color Music
               </div>
               <div style={{ fontSize: 10, color: settingsOpen ? T.textMuted : rootColor, fontFamily: T.sans }}>
-                {root} {typeInfo.name} {!settingsOpen && '\u2014 tap to change key & scale'}
+                {root} {typeInfo.name} {!settingsOpen && '\u2014 tap to change scale'}
               </div>
             </div>
             {settingsOpen ? <ChevronUp size={14} color={T.textMuted} /> : <ChevronDown size={14} color={T.textMuted} />}
@@ -852,18 +857,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
             {!isMobile && (drone.playing ? 'Drone On' : 'Drone')}
           </button>
 
-          {/* Color wheel toggle (mobile only) */}
-          {isMobile && (
-            <button onClick={() => setWheelVisible(!wheelVisible)} style={{
-              ...btnStyle(wheelVisible, rootColor),
-              padding: '10px 12px',
-            }}>
-              <div style={{
-                width: 16, height: 16, borderRadius: '50%',
-                background: `conic-gradient(#E83A30, #F59A1E, #E8D830, #2E9E5A, #2570B0, #8B2D8B, #E83A30)`,
-              }} />
-            </button>
-          )}
+          {/* Wheel toggle removed — wheel is always visible now as root selector */}
         </div>
       )}
 
@@ -873,23 +867,9 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
           padding: '12px', marginBottom: 8, borderRadius: T.radiusMd,
           background: T.bgSoft, border: `1px solid ${T.border}`,
         }}>
-          {/* Root selector — bigger on mobile */}
-          <div style={{ fontSize: 9, fontWeight: 700, color: T.textMuted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 4, fontFamily: T.sans }}>Key</div>
-          <div style={{ display: 'flex', gap: isMobile ? 4 : 3, marginBottom: 10, flexWrap: 'wrap' }}>
-            {CHROMATIC.map(n => {
-              const c = getColorForNote(n);
-              const sel = normalizeNote(n) === normalizeNote(root);
-              return (
-                <button key={n} onClick={() => setRoot(n)} style={{
-                  width: isMobile ? 44 : 30, height: isMobile ? 40 : 26, borderRadius: 4,
-                  background: sel ? `${c}25` : T.bgCard,
-                  border: sel ? `2px solid ${c}` : `1px solid ${T.borderSoft}`,
-                  color: sel ? c : T.textMuted,
-                  fontSize: isMobile ? 11 : 9, fontWeight: sel ? 800 : 400, fontFamily: 'monospace',
-                  cursor: 'pointer', transition: 'all 0.2s',
-                }}>{n}</button>
-              );
-            })}
+          {/* Key note: wheel is the root selector */}
+          <div style={{ fontSize: 10, color: T.textMuted, marginBottom: 8, fontFamily: T.sans }}>
+            Tap any note on the color wheel to change key.
           </div>
           {/* Scale / Mode selector */}
           <div style={{ fontSize: 9, fontWeight: 700, color: T.textMuted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 4, fontFamily: T.sans }}>Scale / Mode</div>
@@ -912,20 +892,19 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
         </div>
       )}
 
-      {/* ── COLOR WHEEL (collapsible on mobile, inline on desktop) ── */}
-      {showWheel && (
-        <div style={{
-          display: 'flex', justifyContent: 'center', marginBottom: 12,
-          ...(isMobile ? {} : { float: 'left', marginRight: 16 }),
-        }}>
-          <ColorWheel
-            theme={T} root={root} scaleNotes={scaleNotes}
-            voiceNote={voiceNote}
-            activeNote={hfRevealed ? hfTarget?.note : null}
-            size={isMobile ? 140 : 160}
-          />
-        </div>
-      )}
+      {/* ── COLOR WHEEL (always visible — tap a note to set it as root) ── */}
+      <div style={{
+        display: 'flex', justifyContent: 'center', marginBottom: 8,
+        ...(isMobile ? {} : { float: 'left', marginRight: 16 }),
+      }}>
+        <ColorWheel
+          theme={T} root={root} scaleNotes={scaleNotes}
+          voiceNote={voiceNote}
+          activeNote={hfRevealed ? hfTarget?.note : null}
+          size={isMobile ? 150 : 170}
+          onRootChange={setRoot}
+        />
+      </div>
 
       {/* ── FRETBOARD (the primary interaction — centered on screen) ── */}
       <div style={{ flex: isMobile ? 1 : 'none', display: 'flex', flexDirection: 'column', justifyContent: 'center', marginBottom: 8 }}>

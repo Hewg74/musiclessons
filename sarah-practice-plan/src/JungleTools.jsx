@@ -2533,14 +2533,14 @@ export function FretboardDiagram({
   const svgWidth = leftPad + totalFrets * fretSpacing + rightPad;
   const svgHeight = topPad + (numStrings - 1) * stringSpacing + bottomPad;
 
-  // Cropped viewBox: in position mode, zoom into just the active frets (bigger dots on mobile)
-  const cropLo = fullNeck ? 0 : Math.max(0, lo - 1);
-  const cropHi = fullNeck ? totalFrets - 1 : Math.min(totalFrets - 1, hi + 1);
-  const cropX = leftPad + cropLo * fretSpacing - 8;
-  const cropW = (cropHi - cropLo + 1) * fretSpacing + leftPad + rightPad - (cropLo > 0 ? cropLo * fretSpacing - 8 : 0);
-  const viewBoxStr = fullNeck
-    ? `0 0 ${svgWidth} ${svgHeight}`
-    : `${Math.max(0, cropX)} 0 ${Math.min(svgWidth, cropW)} ${svgHeight}`;
+  // Cropped viewBox: in position mode, show the position frets + 1 fret padding on each side
+  // This makes dots bigger on narrow screens without being too zoomed in
+  const padFrets = 1; // extra frets visible on each side of the position
+  const viewLo = fullNeck ? 0 : Math.max(0, lo - padFrets);
+  const viewHi = fullNeck ? totalFrets - 1 : Math.min(totalFrets - 1, hi + padFrets + 1);
+  const viewX = fullNeck ? 0 : Math.max(0, leftPad + viewLo * fretSpacing - 12);
+  const viewW = fullNeck ? svgWidth : (viewHi - viewLo + 1) * fretSpacing + 24 + (viewLo === 0 ? leftPad : 0);
+  const viewBoxStr = `${viewX} 0 ${viewW} ${svgHeight}`;
 
   // String thicknesses: thickest for low E (string 6, index 5), thinnest for high E (string 1, index 0)
   const stringWidths = [1, 1.2, 1.6, 2, 2.5, 3];
