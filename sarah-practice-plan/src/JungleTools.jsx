@@ -6425,27 +6425,50 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
 
   // Note playback via metroBeatAudio (sample-accurate timing, legato-aware)
   //
-  // Legato rule:
-  //   - A note with a lyric (word/syllable) → fresh attack (new phrase)
-  //   - A note WITHOUT a lyric → pitch glide via setNote (melisma continuation)
-  //   - Empty cells (no note) → sustain previous note through the gap
-  //   - Phrase ends only when a new word appears or playback stops
+  // Legato rules:
+  //   - Word → bare note(s) → word:  sustain from first word through bare notes (melisma)
+  //   - Word → word (no bare notes): each word is a short note
+  //   - Word → gap → word:           each word is a short note
+  //   - Bare notes with no words:    blend together (instrumental default)
+  //   - Gaps during melisma:         sustain through gaps
   useEffect(() => {
-    const processCell = (synth, cell, cellTime) => {
+    // Look ahead to the next cell (handles cross-measure with loop wrapping)
+    const getNextCell = (ch, mIdx, col, nm, ls, le) => {
+      if (col < 7) return ch.measures[mIdx]?.cells[col + 1] || null;
+      let nextM;
+      if (ls !== null && le !== null && ls <= le) {
+        nextM = ((mIdx - ls + 1) % (le - ls + 1)) + ls;
+      } else {
+        nextM = (mIdx + 1) % nm;
+      }
+      return ch.measures[nextM]?.cells[0] || null;
+    };
+    const isBareNote = (c) => c?.note && !(c.lyric && c.lyric.trim());
+    const processCell = (synth, cell, cellTime, eighthDur, ch, mIdx, col, nm, ls, le) => {
       if (!synth) return;
-      if (!cell?.note) return; // gap — sustain whatever is playing
+      if (!cell?.note) return; // gap — sustain if in melisma, silence otherwise
       const hasNewWord = cell.lyric && cell.lyric.trim();
+      const nextCell = getNextCell(ch, mIdx, col, nm, ls, le);
+      const nextIsBare = isBareNote(nextCell);
       try {
-        if (hasNewWord || !legatoActiveRef.current) {
-          // New word/syllable or very first note — fresh attack
-          synth.portamento = 0;
-          if (legatoActiveRef.current) synth.triggerRelease(cellTime);
-          synth.triggerAttack(cell.note, cellTime);
-          legatoActiveRef.current = true;
-        } else {
+        if (legatoActiveRef.current && !hasNewWord) {
           // Melisma / instrumental continuation — glide pitch, no re-attack
           synth.portamento = 0.03;
           synth.setNote(cell.note, cellTime);
+          // Stay in legato — sustain through gaps and bare notes until a word ends it
+        } else {
+          // New word/syllable, or first note — fresh attack
+          synth.portamento = 0;
+          if (legatoActiveRef.current) synth.triggerRelease(cellTime);
+          synth.triggerAttack(cell.note, cellTime);
+          if (nextIsBare) {
+            // Bare note follows → melisma starts, sustain into it
+            legatoActiveRef.current = true;
+          } else {
+            // No bare note next → short note, release after one 8th
+            try { synth.triggerRelease(cellTime + eighthDur); } catch (_) {}
+            legatoActiveRef.current = false;
+          }
         }
       } catch (e) { console.debug("note synth:", e); }
     };
@@ -6471,10 +6494,10 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
       const bpm = bpmRef.current;
       const eighthDur = 60 / bpm / 2;
       const downCol = beat * 2;
-      processCell(noteSynthRef.current, ch.measures[measure].cells[downCol], time);
+      processCell(noteSynthRef.current, ch.measures[measure].cells[downCol], time, eighthDur, ch, measure, downCol, nm, ls, le);
       const andCol = downCol + 1;
       if (andCol < 8) {
-        processCell(noteSynthRef.current, ch.measures[measure].cells[andCol], time + eighthDur);
+        processCell(noteSynthRef.current, ch.measures[measure].cells[andCol], time + eighthDur, eighthDur, ch, measure, andCol, nm, ls, le);
       }
     };
     window.addEventListener("metroBeatAudio", handleNoteAudio);
