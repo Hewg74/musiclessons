@@ -664,8 +664,8 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     setTimeout(() => playCrPhrase(phrase), 200);
     // Auto-advance timeout: if user doesn't answer in time, move on
     if (autoFlow) {
-      // Generous timeout: 5s per note in phrase × speed multiplier — enough time to find notes on a real guitar
-      crTimeoutRef.current = setTimeout(() => newCrPhrase(), crLength * 5000 * autoDelay);
+      // Timeout: 3s per note × speed — enough to find notes on guitar without dragging
+      crTimeoutRef.current = setTimeout(() => newCrPhrase(), crLength * 3000 * autoDelay);
     }
   }, [crLength, generatePhrase, playCrPhrase, autoFlow]);
 
@@ -995,15 +995,23 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
   }, [mode, checkHfGuess, handleCrTap, oneNote]);
 
   useEffect(() => {
-    if (mode === 'hearFind') setTimeout(newChallenge, 300);
-    if (mode === 'callResponse') setTimeout(newCrPhrase, 300);
-    if (mode === 'intervals') setTimeout(newInterval, 300);
-    if (mode === 'melodyEcho') setTimeout(newMelody, 300);
+    // FIRST: kill ALL pending auto-advance timers from previous mode
+    if (hfTimeoutRef.current) { clearTimeout(hfTimeoutRef.current); hfTimeoutRef.current = null; }
+    if (crTimeoutRef.current) { clearTimeout(crTimeoutRef.current); crTimeoutRef.current = null; }
+
+    // Reset feedback states from previous mode
+    setHfFeedback(null); setCrFeedback(null); setIntFeedback(null); setMeFeedback(null);
+    setCrRespondPhase(false);
+
+    // Start new mode
+    if (mode === 'hearFind') setTimeout(newChallenge, 500);
+    if (mode === 'callResponse') setTimeout(newCrPhrase, 500);
+    if (mode === 'intervals') setTimeout(newInterval, 500);
+    if (mode === 'melodyEcho') setTimeout(newMelody, 500);
     if (mode === 'oneNote') setOneNote(null);
     if (mode !== 'voice' && mode !== 'melodyEcho') { setVoiceNote(null); setMicActive(false); }
     if (mode === 'voice' || mode === 'melodyEcho') setMicActive(true);
     if (mode === 'guided') { setGuidedActive(false); setGuidedEx(null); }
-    if (mode === 'scaleRunner') { stopScaleRunner(); }
     if (mode !== 'scaleRunner') stopScaleRunner();
     if (mode !== 'chordTones') stopProgression();
     setVoiceNote(null);
