@@ -36,8 +36,8 @@ const SCALE_TYPES = {
 const MODES = [
   { id: 'explore',      label: 'Explore' },
   { id: 'voice',        label: 'Voice' },
-  { id: 'hearFind',     label: 'Hear\u2192Find' },
-  { id: 'callResponse', label: 'Call\u00A0&\u00A0Resp' },
+  { id: 'hearFind',     label: 'Hear→Find' },
+  { id: 'callResponse', label: 'Call&Resp' },
   { id: 'intervals',    label: 'Intervals' },
   { id: 'scaleRunner',  label: 'Scale Run' },
   { id: 'chordTones',   label: 'Chord Tones' },
@@ -174,8 +174,8 @@ const GUIDED_EXERCISES = [
   {
     id: 'bodymap', title: 'Body Map', desc: 'Each note has a home in your body.',
     steps: [
-      { text: 'Drone on. Sing the root. Feel it in your chest \u2014 grounding, stable.', dur: 6000, action: 'play_root' },
-      { text: 'Now sing the minor third. It moves up to your upper chest \u2014 an ache, a longing.', dur: 6000, action: 'play_third' },
+      { text: 'Drone on. Sing the root. Feel it in your chest — grounding, stable.', dur: 6000, action: 'play_root' },
+      { text: 'Now sing the minor third. It moves up to your upper chest — an ache, a longing.', dur: 6000, action: 'play_third' },
       { text: 'The fourth. Throat area. A bridge between worlds.', dur: 6000, action: 'play_fourth' },
       { text: 'The fifth. Clarity, openness. Feel it in the mask of your face.', dur: 6000, action: 'play_fifth' },
       { text: 'Back to root. Home. Feel the journey you just took through your body.', dur: 5000, action: 'play_root' },
@@ -189,17 +189,17 @@ const GUIDED_EXERCISES = [
       { text: 'Sing the root along with the drone. Match it perfectly.', dur: 5000, action: 'sing' },
       { text: 'Now the drone stops. Hold the note internally for 5 seconds. Don\'t sing yet.', dur: 6000 },
       { text: 'Sing it now. Did you stay on pitch?', dur: 5000, action: 'sing' },
-      { text: 'Again \u2014 hold for 10 seconds this time. Feel it inside before you produce it.', dur: 12000 },
+      { text: 'Again — hold for 10 seconds this time. Feel it inside before you produce it.', dur: 12000 },
       { text: 'Improvisation is just audiation at speed. This is the muscle.', dur: 3000 },
     ]
   },
   {
     id: 'neighborhoods', title: 'Color Neighborhoods', desc: 'See the harmony.',
     steps: [
-      { text: 'Look at the color wheel. Your scale notes cluster on one side. That\u2019s your key\u2019s neighborhood.', dur: 5000 },
+      { text: 'Look at the color wheel. Your scale notes cluster on one side. That's your key's neighborhood.', dur: 5000 },
       { text: 'Tap each scale note on the wheel. Hear how close they sound.', dur: 6000 },
-      { text: 'Now imagine tapping a note from the opposite side of the wheel \u2014 that\u2019s the tritone. Maximum tension.', dur: 5000 },
-      { text: 'Adjacent colors = harmonic family. This is why some notes \u201Cwant\u201D to go to others.', dur: 5000 },
+      { text: 'Now imagine tapping a note from the opposite side of the wheel — that's the tritone. Maximum tension.', dur: 5000 },
+      { text: 'Adjacent colors = harmonic family. This is why some notes "want" to go to others.', dur: 5000 },
       { text: 'Play root, then an adjacent color, then back. Feel the pull.', dur: 6000, action: 'play_root' },
     ]
   },
@@ -209,9 +209,9 @@ const GUIDED_EXERCISES = [
       { text: 'Drone on. Play any scale note. Let the color guide you.', dur: 6000, action: 'play_root' },
       { text: 'Play adjacent colors for smooth, stepwise motion.', dur: 8000 },
       { text: 'Now jump to a far color. Feel the tension. Then resolve back toward the root.', dur: 8000 },
-      { text: 'There are no wrong notes \u2014 only different levels of tension. You choose when to resolve.', dur: 5000 },
+      { text: 'There are no wrong notes — only different levels of tension. You choose when to resolve.', dur: 5000 },
       { text: 'Keep going. Let the colors guide your ear. When it sounds right, it IS right.', dur: 10000 },
-      { text: 'You\u2019re improvising now.', dur: 3000 },
+      { text: 'You're improvising now.', dur: 3000 },
     ]
   },
 ];
@@ -970,7 +970,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
               Color Music
             </h1>
             <div style={{ fontSize: 10, color: T.textMuted, marginTop: 1, fontFamily: T.sans }}>
-              {root} {typeInfo.name} \u00B7 {scaleNotes.length} notes
+              {root} {typeInfo.name} · {scaleNotes.length} notes
             </div>
           </div>
           <button onClick={() => drone.playing ? drone.stop() : drone.start(root)} style={{
@@ -998,13 +998,13 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
         </div>
       )}
 
-      {/* ── MODE PANEL (fixed min-height to prevent layout shift from feedback popups) ── */}
+      {/* ── MODE PANEL ── */}
       <div style={{
         padding: '14px 16px',
         borderRadius: T.radiusMd, marginBottom: 16,
         background: T.bgCard, border: `1px solid ${T.border}`,
         boxShadow: T.sm,
-        minHeight: 80,
+        position: 'relative', overflow: 'hidden',
       }}>
 
         {/* EXPLORE */}
@@ -1013,7 +1013,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
             Tap notes. Listen. Adjacent colors = harmonic neighbors.
             {!drone.playing && ' Turn on the drone to hear each note against the root.'}
             <div style={{ fontSize: 9, color: T.textLight, marginTop: 6, fontStyle: 'normal', fontFamily: T.sans }}>
-              \u25A0 = name &nbsp; \u25CF = function &nbsp; toggle above fretboard
+              ■ = name &nbsp; ● = function &nbsp; toggle above fretboard
             </div>
           </div>
         )}
@@ -1031,21 +1031,6 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
                 {hfStreak >= 3 && <span style={{ color: '#E8D830', marginLeft: 6 }}>{hfStreak}</span>}
               </div>
             </div>
-            {hfFeedback && (
-              <div style={{
-                padding: '8px 12px', borderRadius: T.radius, fontSize: 13, fontWeight: 600,
-                background: hfFeedback === 'yes' ? T.successSoft : T.coralSoft,
-                color: hfFeedback === 'yes' ? T.success : T.coral,
-                marginBottom: 6,
-              }}>
-                {hfFeedback === 'yes'
-                  ? (() => {
-                      const deg = hfTarget ? getDegreeFeedback(hfTarget.note) : null;
-                      return `\u2713 ${hfTarget?.note}${deg ? ` \u2014 the ${deg.name}. ${deg.feel}` : '. Nice.'}`;
-                    })()
-                  : '\u2717 Listen again. Feel where it lives in the scale.'}
-              </div>
-            )}
             {hfRevealed && hfTarget && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4 }}>
                 <div style={{
@@ -1068,7 +1053,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
                 fontSize: 10, fontWeight: 600, fontFamily: T.sans, cursor: 'pointer',
                 minHeight: 36,
               }}>
-                {hfAudiateMode ? '\u25C9 Audiate Mode ON' : '\u25CB Audiate Mode'}
+                {hfAudiateMode ? '◉ Audiate Mode ON' : '○ Audiate Mode'}
               </button>
               {hfAudiateMode && hfAudiatePhase && (
                 <span style={{
@@ -1079,14 +1064,14 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
                   animation: hfAudiatePhase === 'audiate' ? 'wheelPulse 1s ease-in-out infinite' : 'none',
                 }}>
                   {hfAudiatePhase === 'listen' && 'Listening...'}
-                  {hfAudiatePhase === 'audiate' && 'Hold it internally \u2014 3 seconds of silence...'}
+                  {hfAudiatePhase === 'audiate' && 'Hold it internally — 3 seconds of silence...'}
                   {hfAudiatePhase === 'find' && 'Now find it.'}
                 </span>
               )}
             </div>
             {hfAudiateMode && !hfAudiatePhase && (
               <div style={{ fontSize: 10, color: T.textMuted, marginTop: 4, fontStyle: 'italic', fontFamily: T.serif }}>
-                Hear the note \u2192 hold it internally for 3 seconds \u2192 then find it. Forces audiation before action.
+                Hear the note → hold it internally for 3 seconds → then find it. Forces audiation before action.
               </div>
             )}
           </div>
@@ -1119,19 +1104,19 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
                       }} />
                     </div>
                     <span style={{ fontSize: 9, color: T.textMuted, fontFamily: 'monospace' }}>
-                      {voiceCents > 0 ? '+' : ''}{voiceCents}\u00A2
+                      {voiceCents > 0 ? '+' : ''}{voiceCents}¢
                     </span>
                   </div>
                 </div>
                 {scaleNotes.includes(normalizeNote(voiceNote)) && (
-                  <span style={{ fontSize: 11, color: T.success, fontWeight: 600 }}>\u2713 in scale</span>
+                  <span style={{ fontSize: 11, color: T.success, fontWeight: 600 }}>✓ in scale</span>
                 )}
               </div>
             )}
             {/* Inline LivePitchDetector — user clicks its own Start button */}
             <LivePitchDetector theme={T} inline={true} onPitchDetected={handlePitchDetectedAll} />
             <div style={{ fontSize: 12, color: T.textMed, fontStyle: 'italic', fontFamily: T.serif, marginTop: 8 }}>
-              Sing or hum \u2014 watch the fretboard light up. Your voice paints the guitar.
+              Sing or hum — watch the fretboard light up. Your voice paints the guitar.
             </div>
           </div>
         )}
@@ -1197,15 +1182,6 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
                 </div>
               </div>
             )}
-            {crFeedback && (
-              <div style={{
-                padding: '6px 12px', borderRadius: T.radius, fontSize: 12, fontWeight: 600,
-                background: crFeedback === 'correct' ? T.successSoft : T.coralSoft,
-                color: crFeedback === 'correct' ? T.success : T.coral,
-              }}>
-                {crFeedback === 'correct' ? '\u2713 Got it!' : '\u2717 Not quite \u2014 listen again.'}
-              </div>
-            )}
             {/* Respond phase — improvise your own answer */}
             {crRespondPhase && (
               <div style={{
@@ -1213,7 +1189,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
                 background: `${rootColor}08`, border: `1px solid ${rootColor}30`,
               }}>
                 <div style={{ fontSize: 13, fontWeight: 600, color: rootColor, fontFamily: T.serif }}>
-                  Your turn \u2014 play a response!
+                  Your turn — play a response!
                 </div>
                 <div style={{ fontSize: 10, color: T.textMuted, marginTop: 2 }}>
                   Tap any notes on the fretboard. Answer the phrase with your own musical idea.
@@ -1253,18 +1229,6 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
                 }}>{name}</button>
               ))}
             </div>
-            {intFeedback && (
-              <div style={{
-                padding: '8px 12px', borderRadius: T.radius, fontSize: 13, fontWeight: 600,
-                background: intFeedback === 'correct' ? T.successSoft : T.coralSoft,
-                color: intFeedback === 'correct' ? T.success : T.coral,
-                marginBottom: 6,
-              }}>
-                {intFeedback === 'correct'
-                  ? `\u2713 ${intTarget?.intervalName}! ${intTarget?.note1} \u2192 ${intTarget?.note2}. ${INTERVAL_RESOLUTION[intTarget?.semitones] || ''}`
-                  : `\u2717 Not that one. Listen to the distance between the colors.`}
-              </div>
-            )}
             {intRevealed && intTarget && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4 }}>
                 <div style={{ width: 32, height: 32, borderRadius: 4, background: getColorForNote(intTarget.note1),
@@ -1419,16 +1383,6 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
                 </div>
               </div>
             )}
-            {meFeedback && (
-              <div style={{
-                padding: '8px 12px', borderRadius: T.radius, fontSize: 13, fontWeight: 600,
-                background: meFeedback === 'correct' ? T.successSoft : T.coralSoft,
-                color: meFeedback === 'correct' ? T.success : T.coral,
-                marginBottom: 6,
-              }}>
-                {meFeedback === 'correct' ? '\u2713 Perfect echo!' : '\u2717 Not quite \u2014 try again.'}
-              </div>
-            )}
             {meListening && (
               <div style={{ fontSize: 12, color: rootColor, fontWeight: 600, animation: 'wheelPulse 1s ease-in-out infinite' }}>
                 Listening... sing now
@@ -1453,7 +1407,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
             )}
             {!mePhrase.length && (
               <div style={{ fontSize: 12, color: T.textMuted, fontStyle: 'italic', fontFamily: T.serif }}>
-                Tap "New Melody" to hear a phrase. Then sing it back \u2014 the pitch detector verifies each note.
+                Tap "New Melody" to hear a phrase. Then sing it back — the pitch detector verifies each note.
               </div>
             )}
           </div>
@@ -1496,7 +1450,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
               <span style={{ fontSize: 10, color: T.textMuted, fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: 1 }}>
-                {GUIDED_EXERCISES[guidedEx].title} \u2014 {guidedStep + 1}/{GUIDED_EXERCISES[guidedEx].steps.length}
+                {GUIDED_EXERCISES[guidedEx].title} — {guidedStep + 1}/{GUIDED_EXERCISES[guidedEx].steps.length}
               </span>
               <button onClick={() => { setGuidedActive(false); setGuidedEx(null); }}
                 style={{ ...btnStyle(false, T.textMuted), fontSize: 9, padding: '4px 8px', minHeight: 32 }}>Exit</button>
@@ -1518,7 +1472,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
               ))}
             </div>
             <button onClick={advanceGuided} style={btnStyle(true, rootColor)}>
-              {guidedStep >= GUIDED_EXERCISES[guidedEx].steps.length - 1 ? 'Finish' : 'Next \u2192'}
+              {guidedStep >= GUIDED_EXERCISES[guidedEx].steps.length - 1 ? 'Finish' : 'Next →'}
             </button>
           </div>
         )}
@@ -1528,7 +1482,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
           <div>
             <div style={{ fontSize: 12, color: T.textMed, marginBottom: 10, fontStyle: 'italic', fontFamily: T.serif }}>
               {ctChord
-                ? `${ctChord.root} ${CHORD_FORMULAS[ctChord.type].name} \u2014 land on these notes on strong beats.`
+                ? `${ctChord.root} ${CHORD_FORMULAS[ctChord.type].name} — land on these notes on strong beats.`
                 : 'Select a chord. Its tones will be highlighted on the fretboard with dashed rings.'}
             </div>
             {/* Diatonic chord buttons */}
@@ -1647,6 +1601,34 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
           </div>
         )}
       </div>
+
+      {/* ── FEEDBACK TOAST (fixed height slot — never causes layout shift) ── */}
+      {(() => {
+        const fb = hfFeedback || crFeedback || intFeedback || meFeedback;
+        if (!fb) return <div style={{ height: 4 }} />; // spacer when no feedback
+        const isGood = fb === 'yes' || fb === 'correct';
+        return (
+          <div style={{
+            padding: '8px 14px', borderRadius: 20, marginBottom: 8,
+            background: isGood ? T.success : T.coral,
+            color: '#fff', fontSize: 12, fontWeight: 600, fontFamily: T.sans,
+            textAlign: 'center', textShadow: '0 1px 2px rgba(0,0,0,0.2)',
+            transition: 'all 0.2s',
+          }}>
+            {hfFeedback === 'yes' && (() => {
+              const deg = hfTarget ? getDegreeFeedback(hfTarget.note) : null;
+              return `✓ ${hfTarget?.note}${deg ? ` — the ${deg.name}` : ''}`;
+            })()}
+            {hfFeedback === 'no' && '✗ Listen again'}
+            {crFeedback === 'correct' && '✓ Got it!'}
+            {crFeedback === 'wrong' && '✗ Not quite — listen again'}
+            {intFeedback === 'correct' && `✓ ${intTarget?.intervalName}`}
+            {intFeedback === 'wrong' && '✗ Listen to the distance'}
+            {meFeedback === 'correct' && '✓ Perfect echo!'}
+            {meFeedback === 'wrong' && '✗ Not quite — try again'}
+          </div>
+        );
+      })()}
 
       {/* ── WHEEL + FRETBOARD ── */}
       <div style={{
