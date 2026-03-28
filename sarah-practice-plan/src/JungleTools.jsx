@@ -6444,6 +6444,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
 
   // Note tone playback refs
   const noteSynthRef = useRef(null);
+  const legatoActiveRef = useRef(false);
   const chartRef = useRef(chart);
 
   // Note picker state — tracks which cell's picker is open: { m: measureIdx, c: cellIdx, between: bool } or null
@@ -6542,7 +6543,8 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
       setEighthCol(-1); setEighthMeasure(-1);
       lastBeatRef.current = -1; lastBarRef.current = -1;
       countdownActiveRef.current = false; setCountdownBeat(-1);
-      noteSynthRef.current?.releaseAll();
+      try { noteSynthRef.current?.triggerRelease(); } catch (_) {}
+      legatoActiveRef.current = false;
     };
     window.addEventListener("metroBeat", handler);
     let stopTimer;
@@ -6563,19 +6565,79 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   notesMutedRef.current = notesMuted;
   chartRef.current = chart;
 
-  // Note synth setup/cleanup
+  // Note synth setup/cleanup (mono Synth for legato support)
   useEffect(() => {
-    noteSynthRef.current = new Tone.PolySynth(Tone.Synth, {
+    noteSynthRef.current = new Tone.Synth({
       oscillator: { type: "triangle" },
-      envelope: { attack: 0.005, decay: 0.2, sustain: 0.3, release: 0.6 },
+      envelope: { attack: 0.005, decay: 0.1, sustain: 0.6, release: 0.4 },
     }).toDestination();
-    noteSynthRef.current.maxPolyphony = 8;
     noteSynthRef.current.volume.value = 4;
     return () => { noteSynthRef.current?.dispose(); noteSynthRef.current = null; };
   }, []);
 
-  // Note playback via metroBeatAudio (sample-accurate timing)
+  // Note playback via metroBeatAudio (sample-accurate timing, legato-aware)
+  //
+  // Legato rules:
+  //   - Word → bare note(s) → word:  sustain from word through bare notes (melisma)
+  //   - Word → gaps → bare note:     sustain through gaps into the bare note
+  //   - Word → word (no bare notes): each word is a short note
+  //   - Last bare note → no more bare notes: release after this note
+  //   - Bare notes with no words:    blend together (instrumental default)
+  //   - Scan limited to current group (barsPerGroup) or single bar
   useEffect(() => {
+    // Scan ahead within the group to find the next cell that has a note
+    const findNextNoteCell = (ch, mIdx, col, nm, ls, le) => {
+      const groupSize = Math.max(ch.barsPerGroup || 1, 1);
+      const maxCells = groupSize * 8;
+      let curM = mIdx, curC = col;
+      for (let i = 0; i < maxCells; i++) {
+        if (curC < 7) { curC++; } else {
+          if (ls !== null && le !== null && ls <= le) {
+            curM = ls + ((curM - ls + 1) % (le - ls + 1));
+          } else {
+            curM = (curM + 1) % nm;
+          }
+          curC = 0;
+          if (curM === mIdx && curC <= col) return null;
+        }
+        const c = ch.measures[curM]?.cells[curC];
+        if (c?.note) return c;
+      }
+      return null;
+    };
+    const isBareNote = (c) => c?.note && !(c.lyric && c.lyric.trim());
+    const processCell = (synth, cell, cellTime, eighthDur, ch, mIdx, col, nm, ls, le) => {
+      if (!synth) return;
+      if (!cell?.note) return; // gap — sustain if in melisma, silence otherwise
+      const hasNewWord = cell.lyric && cell.lyric.trim();
+      const nextNote = findNextNoteCell(ch, mIdx, col, nm, ls, le);
+      const nextNoteIsBare = nextNote ? isBareNote(nextNote) : false;
+      try {
+        if (legatoActiveRef.current && !hasNewWord) {
+          // Melisma / instrumental continuation — glide pitch, no re-attack
+          synth.portamento = 0.03;
+          synth.setNote(cell.note, cellTime);
+          if (!nextNoteIsBare) {
+            // No more bare notes ahead — last note in melisma, release
+            try { synth.triggerRelease(cellTime + eighthDur); } catch (_) {}
+            legatoActiveRef.current = false;
+          }
+        } else {
+          // New word/syllable, or first note — fresh attack
+          synth.portamento = 0;
+          if (legatoActiveRef.current) synth.triggerRelease(cellTime);
+          synth.triggerAttack(cell.note, cellTime);
+          if (nextNoteIsBare) {
+            // Bare note ahead (within group) → melisma starts, sustain
+            legatoActiveRef.current = true;
+          } else {
+            // Next note is a word or no more notes → short note
+            try { synth.triggerRelease(cellTime + eighthDur); } catch (_) {}
+            legatoActiveRef.current = false;
+          }
+        }
+      } catch (e) { console.debug("note synth:", e); }
+    };
     const handleNoteAudio = (e) => {
       const { beat, bar, time } = e.detail;
       if (bar === undefined || time === undefined) return;
@@ -6597,19 +6659,11 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
       if (!ch?.measures?.[measure]) return;
       const bpm = bpmRef.current;
       const eighthDur = 60 / bpm / 2;
-      // Downbeat: column = beat * 2
       const downCol = beat * 2;
-      const downCell = ch.measures[measure].cells[downCol];
-      if (downCell?.note && noteSynthRef.current) {
-        try { noteSynthRef.current.triggerAttackRelease(downCell.note, "8n", time); } catch (e) { console.debug("note synth:", e); }
-      }
-      // "And" beat: column = beat * 2 + 1
+      processCell(noteSynthRef.current, ch.measures[measure].cells[downCol], time, eighthDur, ch, measure, downCol, nm, ls, le);
       const andCol = downCol + 1;
       if (andCol < 8) {
-        const andCell = ch.measures[measure].cells[andCol];
-        if (andCell?.note && noteSynthRef.current) {
-          try { noteSynthRef.current.triggerAttackRelease(andCell.note, "8n", time + eighthDur); } catch (e) { console.debug("note synth:", e); }
-        }
+        processCell(noteSynthRef.current, ch.measures[measure].cells[andCol], time + eighthDur, eighthDur, ch, measure, andCol, nm, ls, le);
       }
     };
     window.addEventListener("metroBeatAudio", handleNoteAudio);
@@ -6831,7 +6885,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
       const maxOrigin = Math.max(0, ...keptPool.map(chipOrigin));
       newChips.forEach((chip, i) => { chip.originIndex = maxOrigin + 1 + i; });
 
-      c.lyricsPool = [...keptPool, ...newChips];
+      c.lyricsPool = [...keptPool, ...newChips].sort((a, b) => chipOrigin(a) - chipOrigin(b));
       return c;
     });
     setLyricsEditing(false);
@@ -6914,12 +6968,12 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
           minOrigin = Math.min(minOrigin, chipOrigin(p));
         }
       });
-      const allFragTexts = [];
-      c.lyricsPool.forEach(p => { if (chipGroup(p) === groupId) allFragTexts.push(chipText(p)); });
+      const allFrags = [];
+      c.lyricsPool.forEach(p => { if (chipGroup(p) === groupId) allFrags.push({ text: chipText(p), oi: chipOrigin(p) }); });
       c.measures.forEach(m => {
         m.cells.forEach(cell => {
           if (cell.lyricGroupId === groupId) {
-            allFragTexts.push(cell.lyric);
+            allFrags.push({ text: cell.lyric, oi: cell.lyricOriginIndex ?? Infinity });
             if (cell.lyricOriginIndex != null) minOrigin = Math.min(minOrigin, cell.lyricOriginIndex);
             cell.lyric = '';
             cell.lyricGroupId = null;
@@ -6927,7 +6981,8 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
           }
         });
       });
-      const originalWord = allFragTexts.map(f => f.replace(/-$/, '')).join('');
+      allFrags.sort((a, b) => a.oi - b.oi);
+      const originalWord = allFrags.map(f => f.text.replace(/-$/, '')).join('');
       const insertAt = poolIdxs[0];
       const removedBefore = poolIdxs.filter(idx => idx < insertAt).length;
       c.lyricsPool = c.lyricsPool.filter((_, i) => !poolIdxs.includes(i));
