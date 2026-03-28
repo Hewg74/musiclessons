@@ -2534,12 +2534,14 @@ export function FretboardDiagram({
   const svgHeight = topPad + (numStrings - 1) * stringSpacing + bottomPad;
 
   // Cropped viewBox: in position mode, show the position frets + 1 fret padding on each side
-  // This makes dots bigger on narrow screens without being too zoomed in
-  const padFrets = 1; // extra frets visible on each side of the position
-  const viewLo = fullNeck ? 0 : Math.max(0, lo - padFrets);
-  const viewHi = fullNeck ? totalFrets - 1 : Math.min(totalFrets - 1, hi + padFrets + 1);
+  // Clamp all values to valid fret range [0, totalFrets-1] to prevent negative viewBox
+  const padFrets = 1;
+  const clampedLo = Math.max(0, Math.min(totalFrets - 1, lo));
+  const clampedHi = Math.max(clampedLo, Math.min(totalFrets - 1, hi));
+  const viewLo = fullNeck ? 0 : Math.max(0, clampedLo - padFrets);
+  const viewHi = fullNeck ? totalFrets - 1 : Math.min(totalFrets - 1, clampedHi + padFrets + 1);
   const viewX = fullNeck ? 0 : Math.max(0, leftPad + viewLo * fretSpacing - 12);
-  const viewW = fullNeck ? svgWidth : (viewHi - viewLo + 1) * fretSpacing + 24 + (viewLo === 0 ? leftPad : 0);
+  const viewW = fullNeck ? svgWidth : Math.max(200, (viewHi - viewLo + 1) * fretSpacing + 24 + (viewLo === 0 ? leftPad : 0));
   const viewBoxStr = `${viewX} 0 ${viewW} ${svgHeight}`;
 
   // String thicknesses: thickest for low E (string 6, index 5), thinnest for high E (string 1, index 0)

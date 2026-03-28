@@ -224,12 +224,13 @@ function generateScale(root, scaleType) {
   const notes = type.intervals.map(i => CHROMATIC[(rootIdx + i) % 12]);
   const lowEFrets = { 'E': 0, 'F': 1, 'F#': 2, 'G': 3, 'A♭': 4, 'A': 5, 'B♭': 6, 'B': 7, 'C': 8, 'C#': 9, 'D': 10, 'E♭': 11 };
   const rootFret = lowEFrets[normalizeNote(root)] || 5;
+  const clamp = (v) => Math.max(0, Math.min(15, v));
   const positions = {
-    1: [rootFret, rootFret + 3],
-    2: [rootFret + 2, rootFret + 5],
-    3: [rootFret + 4, rootFret + 7],
-    4: [rootFret + 7, rootFret + 10],
-    5: [Math.max(0, rootFret - 3), rootFret],
+    1: [clamp(rootFret), clamp(rootFret + 3)],
+    2: [clamp(rootFret + 2), clamp(rootFret + 5)],
+    3: [clamp(rootFret + 4), clamp(rootFret + 7)],
+    4: [clamp(rootFret + 7), clamp(rootFret + 10)],
+    5: [clamp(Math.max(0, rootFret - 3)), clamp(rootFret)],
   };
   return { name: `${root} ${type.name}`, root: normalizeNote(root), notes, positions };
 }
@@ -427,26 +428,28 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
   const [bestStats, setBestStats] = useState(() => {
     try { return JSON.parse(localStorage.getItem('colormusic-stats') || '{}'); } catch { return {}; }
   });
-  // Save best scores on change
+  // Save best scores on unmount or when scores change meaningfully
+  const saveStatsRef = useRef(null);
   useEffect(() => {
-    const stats = { ...bestStats };
-    if (hfScore.total > 0) {
-      const pct = Math.round(hfScore.hit / hfScore.total * 100);
-      if (!stats.hearFind || pct > stats.hearFind.bestPct) stats.hearFind = { bestPct: pct, bestStreak: Math.max(hfStreak, stats.hearFind?.bestStreak || 0) };
-    }
-    if (crScore.total > 0) {
-      const pct = Math.round(crScore.hit / crScore.total * 100);
-      if (!stats.callResponse || pct > stats.callResponse.bestPct) stats.callResponse = { bestPct: pct };
-    }
-    if (intScore.total > 0) {
-      const pct = Math.round(intScore.hit / intScore.total * 100);
-      if (!stats.intervals || pct > stats.intervals.bestPct) stats.intervals = { bestPct: pct };
-    }
-    stats.lastSession = new Date().toISOString();
-    stats.totalSessions = (stats.totalSessions || 0) + (hfScore.total + crScore.total + intScore.total > 0 ? 1 : 0);
-    try { localStorage.setItem('colormusic-stats', JSON.stringify(stats)); } catch {}
-    setBestStats(stats);
-  }, [hfScore, crScore, intScore]);
+    // Debounce: only save 1s after last score change
+    if (saveStatsRef.current) clearTimeout(saveStatsRef.current);
+    saveStatsRef.current = setTimeout(() => {
+      const totalPlayed = hfScore.total + crScore.total + intScore.total;
+      if (totalPlayed === 0) return;
+      try {
+        const stats = JSON.parse(localStorage.getItem('colormusic-stats') || '{}');
+        const hfPct = hfScore.total > 0 ? Math.round(hfScore.hit / hfScore.total * 100) : 0;
+        const crPct = crScore.total > 0 ? Math.round(crScore.hit / crScore.total * 100) : 0;
+        const intPct = intScore.total > 0 ? Math.round(intScore.hit / intScore.total * 100) : 0;
+        if (hfPct > (stats.hearFind?.bestPct || 0)) stats.hearFind = { bestPct: hfPct, bestStreak: Math.max(hfStreak, stats.hearFind?.bestStreak || 0) };
+        if (crPct > (stats.callResponse?.bestPct || 0)) stats.callResponse = { bestPct: crPct };
+        if (intPct > (stats.intervals?.bestPct || 0)) stats.intervals = { bestPct: intPct };
+        stats.lastSession = new Date().toISOString();
+        localStorage.setItem('colormusic-stats', JSON.stringify(stats));
+      } catch {}
+    }, 1000);
+    return () => { if (saveStatsRef.current) clearTimeout(saveStatsRef.current); };
+  }, [hfScore, crScore, intScore, hfStreak]);
 
   const scaleData = useMemo(() => generateScale(root, scaleType), [root, scaleType]);
   const scaleNotes = scaleData.notes;
@@ -913,7 +916,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
           scaleData={scaleData}
           colorMode={true}
           richTone={true}
-          voiceNote={voiceNote || (srActive && srIdx >= 0 && srIdx < srSequence.length ? srSequence[srIdx] : null)}
+          voiceNote={voiceNote || (srActive && srIdx >= 0 && srIdx < srSequence.length ? srSequence[srIdx] : null) || (mode === 'hearFind' && hfRevealed && hfTarget ? hfTarget.note : null)}
           oneNoteFilter={mode === 'oneNote' ? oneNote : null}
           chordToneNotes={mode === 'chordTones' && ctChordTones.length ? ctChordTones : null}
           onNoteTap={handleNoteTap}
