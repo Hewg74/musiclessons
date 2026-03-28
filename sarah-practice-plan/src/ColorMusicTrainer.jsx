@@ -196,9 +196,9 @@ const GUIDED_EXERCISES = [
   {
     id: 'neighborhoods', title: 'Color Neighborhoods', desc: 'See the harmony.',
     steps: [
-      { text: 'Look at the color wheel. Your scale notes cluster on one side. That's your key's neighborhood.', dur: 5000 },
+      { text: "Look at the color wheel. Your scale notes cluster on one side. That's your key's neighborhood.", dur: 5000 },
       { text: 'Tap each scale note on the wheel. Hear how close they sound.', dur: 6000 },
-      { text: 'Now imagine tapping a note from the opposite side of the wheel — that's the tritone. Maximum tension.', dur: 5000 },
+      { text: "Now imagine tapping a note from the opposite side of the wheel — that's the tritone. Maximum tension.", dur: 5000 },
       { text: 'Adjacent colors = harmonic family. This is why some notes "want" to go to others.', dur: 5000 },
       { text: 'Play root, then an adjacent color, then back. Feel the pull.', dur: 6000, action: 'play_root' },
     ]
@@ -211,7 +211,7 @@ const GUIDED_EXERCISES = [
       { text: 'Now jump to a far color. Feel the tension. Then resolve back toward the root.', dur: 8000 },
       { text: 'There are no wrong notes — only different levels of tension. You choose when to resolve.', dur: 5000 },
       { text: 'Keep going. Let the colors guide your ear. When it sounds right, it IS right.', dur: 10000 },
-      { text: 'You're improvising now.', dur: 3000 },
+      { text: "You're improvising now.", dur: 3000 },
     ]
   },
 ];
