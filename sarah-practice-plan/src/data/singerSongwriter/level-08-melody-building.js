@@ -464,6 +464,41 @@ export const level8 = {
       feel: "This exercise should feel HARDER than any single constraint exercise — and that's exactly right. Contextual interference feels inefficient and messy in the moment. You'll make more mistakes, feel more confused, and produce less polished phrases than when practicing any single skill. But the research is unambiguous: this messiness produces 20-40% better long-term retention. The discomfort is the signal that deep learning is happening. By the freestyle at the end, you should feel like a chef reaching for different spices — not always graceful, but always intentional.",
       wrong: "If you keep defaulting to the same constraint (usually stepwise motion or target landings), you're avoiding the interference. Force yourself to use your LEAST comfortable tool next. If the combinations feel impossible (leaps-only + valley contour = ???), simplify: use only 3 notes instead of 5, or extend to 8 bars instead of 4. The combination should be challenging, not paralyzing. If you can't remember what tools are available, review: leaps (ss-4-26), contours (ss-4-27), seeds (ss-4-28), forbidden notes (ss-4-29), targets (ss-4-30), Q&A (ss-4-31), tension-release (ss-8-18), hooks (ss-8-19). VOCAL TIP: Rapid constraint switching can make your throat tighten from cognitive load. If you notice jaw clenching or throat tension, sigh (haaa) between rounds. The constraints are in your MIND, not your body.",
       sarah: "Gene, this is the exercise that turns individual skills into integrated musicianship. Every constraint you learned in L4 and L8 is a tool in your belt. This exercise forces you to reach for all of them, rapidly, under pressure. It's messy and hard and that's exactly why it works. Khruangbin's live improvisations sound effortless because they've done this integration work — switching between melodic strategies in real time without conscious thought. You're building the same neural pathways. The chaos today becomes fluency tomorrow."
+    },
+
+    // ─── COLOR MUSIC: INTERVALS + CALL & RESPONSE ───
+
+    {
+      id: "ss-8-21",
+      time: 5,
+      title: "Interval Singing: Feel the Distance",
+      type: "vocal",
+      what: "Two notes play. Identify the interval, then SING the second note starting from the first. Watch the colors on the wheel \u2014 close colors = small interval, far colors = big leap.",
+      colorMusic: { root: "A", scale: "minor-pentatonic", mode: "intervals" },
+      drone: { root: "Am", octave: 2, texture: "pure" },
+      steps: [
+        { text: "Open Color Music, Intervals mode. Two notes will play. Tap the interval you hear.", why: "Interval recognition is the muscle behind improvisation. When you hear a melody, you're hearing intervals \u2014 not note names." },
+        { text: "After identifying correctly, try SINGING the second note before the reveal.", why: "Hearing an interval and producing it are two different skills. This bridges the gap." },
+        { text: "Watch the color wheel \u2014 close colors = small interval (m3, P4). Far colors = big leap (P5, m7).", why: "The color distance IS the interval distance. This makes the abstract concept of intervals visible and intuitive." }
+      ],
+      feel: "When you can hear an interval and SING it without thinking, you can improvise melodies. This is the missing link between hearing music and creating it.",
+      sarah: "Gene, Mark Speer doesn't think in note names when he improvises. He hears intervals \u2014 'up a third, down a step, hold.' This exercise builds that same internal language."
+    },
+    {
+      id: "ss-8-22",
+      time: 5,
+      title: "Call & Response: Melodic Conversation",
+      type: "vocal",
+      what: "The trainer plays 3-4 note phrases. Echo them back on guitar or voice, then improvise a response. This is how musicians learn \u2014 through conversation.",
+      colorMusic: { root: "A", scale: "minor-pentatonic", mode: "callResponse" },
+      drone: { root: "Am", octave: 2, texture: "pure" },
+      steps: [
+        { text: "Open Color Music, Call & Response mode. Listen to the phrase. Tap it back on the fretboard.", why: "Phrase echo builds the melodic vocabulary that improvisation draws from." },
+        { text: "At 4 notes, the 'Free Response' prompt appears. Echo the phrase, then improvise your own answer.", why: "Answering a phrase is the first act of musical creation. You're not just copying \u2014 you're contributing to a conversation." },
+        { text: "Try answering with voice instead of guitar. Sing your response, then find it on the fretboard.", why: "The voice-first approach ensures your ear leads. If you can sing it, you can find it." }
+      ],
+      feel: "Echo the phrase, then answer with your own. This is how jazz musicians learn \u2014 through musical conversation. The phrases you learn here become your melodic vocabulary.",
+      sarah: "Gene, this is the exercise that connects your ear training to your songwriting. Every melodic phrase you echo and answer is a potential lyric melody, a potential guitar lick, a potential hook. The library you build here feeds everything you create."
     }
   ]
 };

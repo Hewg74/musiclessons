@@ -359,6 +359,42 @@ export const level8 = {
       sarah: "Gene, Vieux Farka Touré is on your 12-month top 50 artists list. His music is the bridge between the Saharan tradition you've been learning and the Khruangbin-style global groove you already love. Mark Speer has said Vieux is a direct influence — the behind-the-beat desert guitar filtered through funk. When you add those ghost notes and syncopation to the sus pentatonic, you're connecting the Sahara to Bangkok to Houston. Same DNA, different groove.",
       metronome: 75,
       levelUp: "Play a 5-minute piece that transitions from traditional Ali Farka Touré-style patient desert blues to Vieux Farka Touré-style syncopated groove — incorporating offbeat melody placement and ghost notes — while maintaining the sus pentatonic scale and Drop D drone throughout. Recording shows a clear shift from meditative to funky without changing the harmonic foundation."
+    },
+
+    // ─── COLOR MUSIC: SCALE RUNNER + FREE FLOW ───
+
+    {
+      id: "gs-8-15",
+      time: 5,
+      title: "Scale Runner: Speed Builds Fluency",
+      type: "guitar",
+      what: "Follow the color-coded notes as they light up in sequence. Start at 60 BPM. Each completed run bumps the tempo. When the scale is in your fingers at tempo, it stops being an exercise and becomes a language.",
+      colorMusic: { root: "A", scale: "minor-pentatonic", mode: "scaleRunner" },
+      drone: { root: "A", octave: 2, texture: "analog" },
+      steps: [
+        { text: "Open Color Music, Scale Runner mode. Hit Start. Follow the colored dots as they light up.", why: "Visual-motor training — your eyes track the color, your fingers follow. This builds the pattern into muscle memory." },
+        { text: "Complete a full ascending run. The BPM bumps to 65. Go again.", why: "Progressive overload. Each run gets slightly faster, pushing your automaticity threshold." },
+        { text: "Try descending and 'both' directions. Then try random mode — notes light up in random scale order.", why: "Random mode is the ultimate fluency test. No patterns to rely on, pure ear→hand connection." }
+      ],
+      feel: "Fluency means you don't have to think about WHERE — only about WHAT you want to say.",
+      sarah: "Gene, when the scale is in your fingers at 90+ BPM, you've graduated from playing scales to speaking a language. The colors are your guide — you start recognizing patterns by color before your fingers even move."
+    },
+    {
+      id: "gs-8-16",
+      time: 8,
+      title: "Free Flow: Your First Improv",
+      type: "guitar",
+      what: "Drone on. Pentatonic scale. Follow the colors. Adjacent colors for smooth motion, far colors for tension, resolve back to root. No right answers. No wrong answers.",
+      colorMusic: { root: "A", scale: "minor-pentatonic", mode: "guided" },
+      drone: { root: "A", octave: 2, texture: "analog" },
+      steps: [
+        { text: "Open Color Music, Guided mode. Select 'Free Flow'. Let the steps walk you through your first improvisation.", why: "The guided exercise provides just enough structure to get you started without constraining your expression." },
+        { text: "When the guide says 'keep going' — keep going. Play for the full 8 minutes. Let the colors guide your ear.", why: "Extended improvisation builds the sustained attention that separates noodling from music-making." },
+        { text: "Record the last 3 minutes. Listen back. Notice the moments where you surprised yourself.", why: "The moments of surprise are where your musical instinct spoke louder than your conscious mind. That's improvisation." }
+      ],
+      feel: "This is improvisation. You, the drone, and the colors guiding your ear. When it sounds right, it IS right.",
+      sarah: "Gene, this is the graduation exercise. Everything before this was training. This is the real thing.",
+      recorder: true
     }
   ]
 };

@@ -40,10 +40,44 @@ const MODES = [
   { id: 'callResponse', label: 'Call\u00A0&\u00A0Resp' },
   { id: 'intervals',    label: 'Intervals' },
   { id: 'scaleRunner',  label: 'Scale Run' },
+  { id: 'chordTones',   label: 'Chord Tones' },
   { id: 'oneNote',      label: 'One Note' },
   { id: 'melodyEcho',   label: 'Melody Echo' },
   { id: 'guided',       label: 'Guided' },
 ];
+
+// ─── Chord definitions (intervals from root) ───
+const CHORD_FORMULAS = {
+  'maj':   { name: 'Major',     intervals: [0, 4, 7] },
+  'min':   { name: 'Minor',     intervals: [0, 3, 7] },
+  '7':     { name: 'Dom 7',     intervals: [0, 4, 7, 10] },
+  'min7':  { name: 'Min 7',     intervals: [0, 3, 7, 10] },
+  'maj7':  { name: 'Maj 7',     intervals: [0, 4, 7, 11] },
+  'sus4':  { name: 'Sus 4',     intervals: [0, 5, 7] },
+  'dim':   { name: 'Dim',       intervals: [0, 3, 6] },
+};
+
+// Common diatonic chords for a key (minor key context since Gene plays mostly minor)
+function getDiatonicChords(root) {
+  const ri = CHROMATIC.indexOf(normalizeNote(root));
+  if (ri < 0) return [];
+  // i, III, iv, v, VI, VII for natural minor
+  return [
+    { root: CHROMATIC[ri], type: 'min', label: 'i' },
+    { root: CHROMATIC[(ri + 3) % 12], type: 'maj', label: 'III' },
+    { root: CHROMATIC[(ri + 5) % 12], type: 'min', label: 'iv' },
+    { root: CHROMATIC[(ri + 7) % 12], type: 'min', label: 'v' },
+    { root: CHROMATIC[(ri + 8) % 12], type: 'maj', label: 'VI' },
+    { root: CHROMATIC[(ri + 10) % 12], type: 'maj', label: 'VII' },
+  ];
+}
+
+function getChordTones(chordRoot, chordType) {
+  const formula = CHORD_FORMULAS[chordType] || CHORD_FORMULAS['min'];
+  const ri = CHROMATIC.indexOf(normalizeNote(chordRoot));
+  if (ri < 0) return [];
+  return formula.intervals.map(i => CHROMATIC[(ri + i) % 12]);
+}
 
 // ─── Interval names for each semitone distance ───
 const INTERVAL_NAMES = {
@@ -297,13 +331,41 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
   const [meFeedback, setMeFeedback] = useState(null);
   const meLastNoteRef = useRef(null);
 
+  // Chord Tone state
+  const [ctChord, setCtChord] = useState(null); // { root, type, label }
+  const ctChordTones = useMemo(() => ctChord ? getChordTones(ctChord.root, ctChord.type) : [], [ctChord]);
+  const diatonicChords = useMemo(() => getDiatonicChords(root), [root]);
+
   // Guided state
   const [guidedEx, setGuidedEx] = useState(null);
   const [guidedStep, setGuidedStep] = useState(0);
   const [guidedActive, setGuidedActive] = useState(false);
 
-  // Stats
+  // Stats + persistence
   const [sessionStart] = useState(Date.now());
+  const [bestStats, setBestStats] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('colormusic-stats') || '{}'); } catch { return {}; }
+  });
+  // Save best scores on change
+  useEffect(() => {
+    const stats = { ...bestStats };
+    if (hfScore.total > 0) {
+      const pct = Math.round(hfScore.hit / hfScore.total * 100);
+      if (!stats.hearFind || pct > stats.hearFind.bestPct) stats.hearFind = { bestPct: pct, bestStreak: Math.max(hfStreak, stats.hearFind?.bestStreak || 0) };
+    }
+    if (crScore.total > 0) {
+      const pct = Math.round(crScore.hit / crScore.total * 100);
+      if (!stats.callResponse || pct > stats.callResponse.bestPct) stats.callResponse = { bestPct: pct };
+    }
+    if (intScore.total > 0) {
+      const pct = Math.round(intScore.hit / intScore.total * 100);
+      if (!stats.intervals || pct > stats.intervals.bestPct) stats.intervals = { bestPct: pct };
+    }
+    stats.lastSession = new Date().toISOString();
+    stats.totalSessions = (stats.totalSessions || 0) + (hfScore.total + crScore.total + intScore.total > 0 ? 1 : 0);
+    try { localStorage.setItem('colormusic-stats', JSON.stringify(stats)); } catch {}
+    setBestStats(stats);
+  }, [hfScore, crScore, intScore]);
 
   const scaleData = useMemo(() => generateScale(root, scaleType), [root, scaleType]);
   const scaleNotes = scaleData.notes;
@@ -737,6 +799,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
           richTone={true}
           voiceNote={voiceNote || (srActive && srIdx >= 0 && srIdx < srSequence.length ? srSequence[srIdx] : null)}
           oneNoteFilter={mode === 'oneNote' ? oneNote : null}
+          chordToneNotes={mode === 'chordTones' && ctChordTones.length ? ctChordTones : null}
           onNoteTap={handleNoteTap}
         />
         {/* Scale info (compact, below fretboard) */}
@@ -1179,6 +1242,56 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
             <button onClick={advanceGuided} style={btnStyle(true, rootColor)}>
               {guidedStep >= GUIDED_EXERCISES[guidedEx].steps.length - 1 ? 'Finish' : 'Next \u2192'}
             </button>
+          </div>
+        )}
+
+        {/* CHORD TONES */}
+        {mode === 'chordTones' && (
+          <div>
+            <div style={{ fontSize: 12, color: T.textMed, marginBottom: 10, fontStyle: 'italic', fontFamily: T.serif }}>
+              {ctChord
+                ? `${ctChord.root} ${CHORD_FORMULAS[ctChord.type].name} \u2014 land on these notes on strong beats.`
+                : 'Select a chord. Its tones will be highlighted on the fretboard with dashed rings.'}
+            </div>
+            {/* Diatonic chord buttons */}
+            <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 8 }}>
+              {diatonicChords.map((ch, i) => {
+                const sel = ctChord && ctChord.root === ch.root && ctChord.type === ch.type;
+                const color = getColorForNote(ch.root);
+                return (
+                  <button key={i} onClick={() => setCtChord(sel ? null : ch)} style={{
+                    padding: isMobile ? '10px 12px' : '6px 10px', borderRadius: T.radius,
+                    background: sel ? `${color}15` : T.bgCard,
+                    border: `1px solid ${sel ? color : T.borderSoft}`,
+                    color: sel ? color : T.textMed, fontSize: 12, fontWeight: 600,
+                    cursor: 'pointer', fontFamily: T.sans, minHeight: 44,
+                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
+                    transition: 'all 0.2s',
+                  }}>
+                    <span>{ch.root}{ch.type === 'min' ? 'm' : ''}</span>
+                    <span style={{ fontSize: 9, color: T.textMuted }}>{ch.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+            {/* Chord tone display */}
+            {ctChord && ctChordTones.length > 0 && (
+              <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                <span style={{ fontSize: 10, color: T.textMuted, textTransform: 'uppercase', letterSpacing: 1 }}>Tones:</span>
+                {ctChordTones.map((note, i) => (
+                  <div key={i} style={{
+                    width: 28, height: 28, borderRadius: '50%',
+                    background: getColorForNote(note),
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 9, fontWeight: 700, color: '#fff', fontFamily: 'monospace',
+                    border: i === 0 ? '2px solid #fff' : '1px dashed rgba(255,255,255,0.6)',
+                  }}>{note}</div>
+                ))}
+                <span style={{ fontSize: 10, color: T.textMuted, marginLeft: 4 }}>
+                  = strong landing notes over {ctChord.root}{ctChord.type === 'min' ? 'm' : ''}
+                </span>
+              </div>
+            )}
           </div>
         )}
 

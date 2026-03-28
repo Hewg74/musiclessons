@@ -105,7 +105,8 @@ export const level3 = {
       feel: "This should feel physical and fun — like dancing while playing guitar. No singing means zero vocal pressure. Just groove. If your head starts bobbing, you're doing it right.",
       wrong: "If you catch yourself singing or humming, stop. The constraint is body-only rhythm. Your voice gets its turn in every other exercise — right now the body leads. If the clapping disrupts your strum, simplify the clap pattern.",
       sarah: "Gene, think of this like a drummer's warm-up — all groove, no melody. The reggae and soul grooves you love are body-first music. Ali Farka Touré's band grooves so hard because every player FEELS the rhythm physically before playing a note.",
-      metronome: 80
+      metronome: 80,
+      recorder: true
     },
     {
       id: "ss-3-4",
@@ -119,7 +120,8 @@ export const level3 = {
         { text: "Make the guitar calls more complex: try syncopated patterns, dotted rhythms, bursts of fast notes. The voice must answer each call with a contrasting rhythm — if guitar was busy, voice is sparse; if guitar was sparse, voice fills in.", why: "Rhythmic contrast between call and response is what makes the conversation musical. An exact echo is boring. A contrasting response creates dialogue — one of the oldest musical forms." },
         { text: "Reverse: sing A in a rhythmic pattern first, then answer yourself on guitar (pluck the open A string in a different rhythm). Voice leads, guitar follows.", why: "Reversing who leads trains your voice to initiate musical ideas, not just respond. In songwriting, your voice will often lead — the guitar supports." },
         { text: "Alternate freely: sometimes guitar leads, sometimes voice leads. Let the conversation develop over 2 minutes. Record it — listen for moments where the rhythmic dialogue feels natural.", why: "Free alternation builds the fluid back-and-forth instinct between your voice and your guitar. Even with ONE note, a rhythmic conversation can be deeply musical." },
-        { text: "Try this variation: guitar plays a rhythm, voice answers with the SAME rhythm but shifted by one beat (displaced). The echo is rhythmically offset. Feel how displacement creates groove.", why: "Rhythmic displacement — playing the same pattern but starting it on a different beat — is a core groove technique in reggae and funk. It creates a call-and-response that interlocks rather than alternates." }
+        { text: "Try this variation: guitar plays a rhythm, voice answers with the SAME rhythm but shifted by one beat (displaced). The echo is rhythmically offset. Feel how displacement creates groove.", why: "Rhythmic displacement — playing the same pattern but starting it on a different beat — is a core groove technique in reggae and funk. It creates a call-and-response that interlocks rather than alternates." },
+        { text: "For every response from now on, practice the full intention cycle: in the silence between guitar call and voice response, HEAR your rhythmic response internally first. FEEL A's body address — chest resonance for A3, the warmth gathering. SENSE the emotional intention — is your response a question? An echo? A defiant answer? Only when you can hear it, feel it, and sense its intention — THEN sing. The silence between call and response isn't dead time. It's where the music forms.", why: "The hear-feel-sense-play cycle turns reactive improvisation into intentional creation. Most beginners respond immediately after the call — a reflexive echo. Adding an intentional silence between hearing and responding builds the audiation muscle that powers all future improvisation. The emotional intention layer means you're not just matching pitch and rhythm — you're choosing what to SAY." }
       ],
       feel: "This should feel like a conversation between two musicians — except both are you, and both speak in rhythm only. Playful, responsive, listening. When a response 'answers' the call perfectly, you'll feel it click.",
       wrong: "If every response is an exact copy of the call, you're echoing, not conversing. Push for contrast — if the call was busy, answer with space. If the call was slow, answer with energy. Also, if you drift to other pitches, come back to A.",
@@ -178,6 +180,7 @@ export const level3 = {
       metronome: 80,
       referencePitches: getPitchRange("A2", "E4"),
       volumeMeter: true,
+      volumeContour: true,
       recorder: true
     },
     {
@@ -262,6 +265,7 @@ export const level3 = {
       what: "Kodály rhythm cells applied to the triad. 'Ta' (quarter note) on A, 'ti-ti' (two eighths) on C-E, 'ta-ah' (half note) on A. Named rhythm patterns meet pitched notes. The triad becomes rhythmically alive — each cell is a building block for melodic phrases.",
       setup: "Guitar. Metronome at 80 BPM. Voice check: jaw loose, shoulders dropped. Tension creeps in without you noticing — do a quick body scan.",
       steps: [
+        { text: "Before touching the guitar: close your eyes and hear A-C-E internally — the triad you've been building. Feel their body addresses: A in the chest (warm, grounding), C in the throat (aching, blue), E at the mask (bright, open). Now hear a simple rhythm on those notes — 'da-da... da' or 'da... da-da.' Pure internal sound, no movement, no humming. This is what every cell should sound like BEFORE you play it.", why: "Pre-hearing the triad in silence before playing sets the intention for the entire exercise. When each rhythm cell is first heard internally and then produced externally, the playing becomes confirmation of what you already know — not exploration of what you might find. This is the hear-feel-play framework applied to rhythm cells." },
         { text: "Review the four rhythm cells by speaking them: 'ta' (quarter note), 'ti-ti' (two eighth notes), 'ta-ah' (half note), 'ti-ka-ti-ka' (four sixteenth notes). Speak each one 4 times while strumming Am. Get the rhythms in your mouth.", why: "Kodály rhythm syllables give names to rhythmic patterns. Named patterns are easier to recall, combine, and manipulate than abstract rhythms. You learned these in Phase 1 — now they meet pitched notes." },
         { text: "Assign the triad to cells: 'ta' = A (quarter note on the root — feel it in the chest). 'Ti-ti' = C-E (two eighths, stepping up through the triad — feel the vibration climb from throat to mask). 'Ta-ah' = A held for 2 beats (root sustain — settle back into the sternum). Before each cell, hear the notes internally and feel their body addresses. Sing each pattern 4 times.", why: "Mapping rhythm cells to specific chord tones creates melodic building blocks. Each cell becomes a tiny melodic fragment — a musical word you can string into phrases. Adding body-address awareness to rhythm cells means the cells are somatic events, not just rhythmic patterns." },
         { text: "Combine cells into 4-beat patterns: 'ta ti-ti ta-ah' = A, C-E, A-held. Or 'ti-ti ta ti-ti' = C-E, A, C-E. Create and sing 4 different 4-beat combinations.", why: "Combining cells is rhythmic composition with melodic content. You're not just stringing rhythms together — you're creating melodic phrases with intentional pitch and rhythm choices." },
@@ -339,7 +343,7 @@ export const level3 = {
       what: "Same three notes (A-C-E), same Am strum — but three completely different emotional deliveries. Lazy sunset: slow, breathy, lots of space. Driving energy: shorter notes, more rhythmic. Mystery: quiet, long silences, notes decay into nothing. The notes don't change; YOU change.",
       setup: "Guitar. Metronome at 80 BPM. Voice check: 'loud' comes from the barrel expanding more, not from your throat squeezing harder. Throat = bad effort. Barrel = good effort.",
       steps: [
-        { text: "Before you begin: what ONE thing will you listen for that would tell you this is working? Maybe: 'I want to feel the emotional shift when I change colors.' Or: 'I want to notice where the vibration moves between moods.' Set that listening target now. Then strum Am on autopilot. Sing A-C-E with 'lazy sunset' energy: slow, breathy, lots of space between notes. Think DOPE LEMON on the porch at golden hour. Let notes hang in the air and dissolve. Vowels are soft ('ooh,' 'oh'). 2 minutes.", why: "Setting a specific listening target before practicing (metacognitive planning) improves outcomes by 23% over practice-only approaches. Emotional intention transforms identical notes into completely different music. 'Lazy sunset' engages specific vocal muscles — relaxed jaw, gentle breath support, minimal effort. The body creates the emotion." },
+        { text: "Before each mood, decide the emotion FIRST — not the notes, not the rhythm, the FEELING. Hear what that emotion sounds like on A-C-E in your mind. Feel where the emotion lives in your body. The singing should feel like releasing something you've already fully formed inside. Now: what ONE thing will you listen for that would tell you this is working? Maybe: 'I want to feel the emotional shift when I change colors.' Or: 'I want to notice where the vibration moves between moods.' Set that listening target now. Then strum Am on autopilot. Sing A-C-E with 'lazy sunset' energy: slow, breathy, lots of space between notes. Think DOPE LEMON on the porch at golden hour. Let notes hang in the air and dissolve. Vowels are soft ('ooh,' 'oh'). 2 minutes.", why: "Setting a specific listening target before practicing (metacognitive planning) improves outcomes by 23% over practice-only approaches. Emotional intention transforms identical notes into completely different music. 'Lazy sunset' engages specific vocal muscles — relaxed jaw, gentle breath support, minimal effort. The body creates the emotion." },
         { text: "Same notes, new color: 'driving energy.' Shorter notes, more rhythmic, slightly louder, more forward in the beat. Think Skinshape locked into a groove. Notice the body shift: the resonance moves forward — A pushes from deep chest to mid-chest, C buzzes more in the front of the jaw, E sharpens in the nose bridge. The notes punch rather than float. Hear each one forming with that forward energy before it leaves your mouth. 2 minutes.", why: "Energy and urgency come from rhythm and attack, not from higher notes or louder volume. Your porch register can drive just as hard as a belt — it's about rhythmic commitment and forward placement. Tracking the body-location shift between colors makes each emotional mode a fully embodied choice." },
         { text: "Same notes, third color: 'mystery.' Sing quietly, leave long silences between notes, let each note decay into nothing before the next one arrives. Think Tinariwen in the desert at night. 2 minutes.", why: "Mystery comes from space and restraint. Fewer notes, more silence, letting the listener's imagination fill the gaps. This is the hardest color because your instinct is to fill silence." },
         { text: "Free round: improvise with A-C-E while shifting between all three colors. Sunset drifts into energy, energy dissolves into mystery, mystery warms into sunset. 2 minutes, no plan. Let the shifts happen when they want to.", why: "Emotional fluidity is the highest form of vocal expression. When you can shift feeling in real time with just three notes, your future songs will have dynamic range that keeps listeners engaged." },
@@ -351,6 +355,7 @@ export const level3 = {
       metronome: 80,
       referencePitches: getPitchRange("A2", "E4"),
       volumeMeter: true,
+      volumeContour: true,
       recorder: true,
       levelUp: "Can sing the root with stability and rhythmic variety, navigate between root and 5th with confidence, feel the minor 3rd as emotional color, hold musical conversations at every note stage from one to three notes, internalize rhythm through body percussion and Kodály cells, and audiate individual notes and triadic phrases silently before singing — hearing the pitch, the interval, and even the emotional color internally before it becomes sound. All while the guitar strum stays on autopilot."
     },
@@ -380,7 +385,8 @@ export const level3 = {
       referencePitches: getPitchRange("A2", "E4"),
       pitchContour: true,
       pianoKeys: { notes: ["A3", "C4", "E4"], label: "Am Triad", range: ["A3", "E4"] },
-      metronome: 70
+      metronome: 70,
+      recorder: true
     },
     {
       id: "ss-3-16",
@@ -400,7 +406,72 @@ export const level3 = {
       sarah: "Gene, this is a checkpoint, not a gate. If you can find even ONE of the three notes from pure silence, your audiation is developing. Most people who've been through this level can find A (it's the most practiced) and struggle with C (it's the most emotionally defined). Wherever you are is exactly where you should be.",
       referencePitches: getPitchRange("A2", "E4"),
       pitchContour: true,
-      pianoKeys: { notes: ["A3", "C4", "E4"], label: "Am Triad", range: ["A3", "E4"] }
+      pianoKeys: { notes: ["A3", "C4", "E4"], label: "Am Triad", range: ["A3", "E4"] },
+      recorder: true
+    },
+
+    // ─── ONE-NOTE GROOVE (VOCAL) ───
+
+    {
+      id: "ss-3-17",
+      time: 8,
+      title: "One-Note Groove — Vocal",
+      type: "vocal",
+      what: "One note. One pitch. All the music comes from WHEN and HOW you sing it — rhythm, dynamics, timing, articulation, silence. This is the vocal mirror of the guitar's one-note groove (gs-1-7). Constraint breeds creativity: with melody off the table, your rhythmic and expressive vocabulary becomes the entire instrument.",
+      setup: "Drone on A. Backing track. Recorder on. Voice check: porch register — warm, easy, no strain. This exercise is about groove, not power.",
+      drone: { root: "Am", octave: 2, texture: "pure" },
+      referencePitches: [{ note: "A3", freq: 220 }],
+      tracks: [{ name: "Groove Beat 90", src: "/groove-beat-90.mp3" }],
+      metronome: 80,
+      volumeMeter: true,
+      volumeContour: true,
+      recorder: true,
+      steps: [
+        { text: "Start the backing track and drone. Listen for 30 full seconds — absorb the groove without singing. Feel the kick drum in your chest, the hi-hat in your head-nod, the bass line in your body sway. Let the groove enter your body before your voice enters the music.", why: "Absorbing the groove physically before singing ensures your voice rides ON the groove rather than fighting against it. Mirror neuron research shows that active listening IS motor rehearsal — your vocal muscles are already preparing to match what you hear." },
+        { text: "Now HEAR a rhythmic phrase on A in your mind — not out loud, internally. Maybe 'da... da-da' or 'da-da... da... da.' Tap the rhythm on your leg. When you can hear it clearly and tap it consistently, sing it on A3. One phrase. Then STOP.", why: "Hearing the phrase internally before singing is the core audiation practice. The tap bridges internal hearing to external rhythm. By the time your voice enters, the phrase already exists — you're confirming it, not inventing it in real time." },
+        { text: "Sing only on A3. Vary everything else: loud to soft, staccato (short clipped notes) to legato (long sustained tones), landing ahead of the beat to behind the beat, breathy to full. Each phrase should feel different from the last — same note, different personality.", why: "With pitch removed as a variable, all musical expression comes from rhythm, dynamics, timing, and articulation. This is the foundation of vocal feel. Khruangbin's Laura Lee does this on bass — one note, infinite groove variations. Your voice is doing the same." },
+        { text: "After each phrase, STOP for at least 2 beats. In the silence, hear your next phrase forming internally. Where does it land in the beat? Is it loud or soft? Short or sustained? Let the phrase fully form before you release it. The silence between phrases is where audiation lives.", why: "The intentional silence between phrases prevents noodling — the vocal equivalent of playing every note you know as fast as possible. Each silence is a creative moment: you're choosing what to say next, not just filling space. More silence = more intention = more musical." },
+        { text: "Record 3 minutes of one-note groove. Listen back. Count how many distinct phrase shapes you created. Were any two phrases identical? Did the silences feel intentional or anxious? The volume meter will show your dynamic range — if it's flat, push the extremes wider.", why: "Self-assessment reveals patterns you can't hear while performing. Most beginners discover they default to 2-3 rhythmic patterns and repeat them. Awareness of the pattern is the first step to breaking it. The goal isn't perfection — it's variety and intention." }
+      ],
+      feel: "Like a drummer who only has one drum — all the music comes from WHEN and HOW you hit it, not what note you play. The groove should feel locked in with the backing track — your voice is part of the band, not floating above it. When a phrase clicks with the groove and your head nods involuntarily, that's it.",
+      wrong: "Rushing to fill every gap with sound. Singing the same rhythm every time. Drifting to other notes (come back to A). Not stopping between phrases — if you're singing continuously, you're not audiating. Also: if the volume meter shows a flat line, you're not varying dynamics enough. Make the whisper phrases barely audible and the loud phrases fill the room.",
+      sarah: "Gene, toasting in reggae and dub is literally this — one pitch, all groove, pure rhythmic conversation over a riddim. Lee 'Scratch' Perry would ride one note for an entire verse and make it the most compelling thing in the mix. Your porch register is perfect for this — warm, low-effort A3 with all the personality coming from rhythm and dynamics. This is one of those exercises that sounds stupidly simple but reveals how much musicality lives in rhythm alone."
+    },
+
+    // ─── COLOR MUSIC: VOICE + AUDIATION ───
+
+    {
+      id: "ss-3-18",
+      time: 5,
+      title: "Sing & See Your Root",
+      type: "vocal",
+      what: "Drone on A. Sing A and watch every amber dot on the color fretboard glow simultaneously. Your voice is painting the guitar.",
+      colorMusic: { root: "A", scale: "minor-pentatonic", mode: "voice" },
+      drone: { root: "Am", octave: 2, texture: "pure" },
+      steps: [
+        { text: "Open Color Music, Voice mode. Enable the microphone. Turn on the drone.", why: "The drone provides the anchor. The color fretboard shows where your pitch lives on the guitar." },
+        { text: "Sing A. Watch every amber dot light up across all 6 strings. That's your voice painting the fretboard.", why: "This is the voice-to-instrument bridge. When you can SEE your pitch on the guitar, you understand they're the same instrument." },
+        { text: "Vary your vowel — ah, oh, ee. The color stays because the pitch stays. The fretboard doesn't care about vowels, only frequency.", why: "Separating pitch from timbre is a core audiation skill. The color confirms: your pitch is stable even when your sound changes." },
+        { text: "Now try singing C (the minor third). Watch the color change. Then back to A. Feel the pull.", why: "The color wheel shows the harmonic distance. Moving from amber to red and back — that's the sound of tension and resolution." }
+      ],
+      feel: "Like discovering that your voice and your guitar speak the same language. The colors prove it.",
+      sarah: "Gene, this is one of those 'aha' moments. When you see your voice lighting up the fretboard, the wall between singer and guitarist dissolves."
+    },
+    {
+      id: "ss-3-19",
+      time: 5,
+      title: "Silent Hold: The Audiation Test",
+      type: "vocal",
+      what: "Drone plays, you sing the root, drone cuts, you hold the note internally for 10 seconds, then sing it back. The pitch detector tells the truth.",
+      colorMusic: { root: "A", scale: "minor-pentatonic", mode: "guided" },
+      drone: { root: "Am", octave: 2, texture: "pure" },
+      steps: [
+        { text: "Open Color Music, Guided mode. Select 'Silent Hold'.", why: "This guided exercise walks you through progressive gap-lengthening — the core audiation strength test." },
+        { text: "Follow the steps: drone on, sing, drone off, hold internally, sing back, check.", why: "Each gap gets longer. 5 seconds is easy. 10 seconds is where most people drift. 15 seconds is mastery." },
+        { text: "After the guided exercise, try it on your own. Can you hold A for 20 seconds of silence?", why: "Audiation is the muscle behind improvisation. When you can hold a note internally for 20 seconds, you can hear melodies before you sing them." }
+      ],
+      feel: "Audiation is invisible and internal. This exercise makes it measurable. The pitch detector doesn't lie.",
+      sarah: "Gene, improvisation is just audiation at speed. This exercise measures how strong that muscle is. Every second you can hold internally is a second closer to hearing melodies before they happen."
     }
   ]
 };

@@ -335,6 +335,40 @@ export const level3 = {
       metronome: 60,
       recorder: true,
       levelUp: "Can audiate any note in the Am pentatonic, sing it within a semitone, and find it on the fretboard within 3 seconds — with 7/10 success rate across all three stages."
+    },
+
+    // ─── COLOR MUSIC: EAR TRAINING ───
+
+    {
+      id: "gs-3-13",
+      time: 5,
+      title: "Hear\u2192Find: Let Your Ear Lead",
+      type: "guitar",
+      what: "A note plays. Find it on the color fretboard. Don't look first — listen first. Improvisation starts when your ear leads your hands.",
+      colorMusic: { root: "A", scale: "minor-pentatonic", mode: "hearFind" },
+      drone: { root: "A", octave: 2, texture: "analog" },
+      steps: [
+        { text: "Open Color Music, Hear\u2192Find mode. A random pentatonic note will play. Listen carefully before tapping.", why: "The ear-first habit is what separates improvisers from pattern-players." },
+        { text: "Find the note on the fretboard. The color confirms or corrects. Aim for 5 in a row.", why: "Streaks build confidence. Each correct guess strengthens the audiation→fretboard neural pathway." },
+        { text: "When you hit 5-streak, the game opens to full neck — same note, multiple positions. This is fretboard geography.", why: "Every note exists in multiple places. Knowing them all = freedom to improvise anywhere on the neck." }
+      ],
+      feel: "Like a conversation between your ear and your fingers. When you can hit 5 in a row without thinking, your ear is taking the wheel.",
+      sarah: "Gene, when you can hear a note and your hand goes to it automatically — that's the moment you become a musician, not just a guitar player."
+    },
+    {
+      id: "gs-3-14",
+      time: 5,
+      title: "Call & Response: 2-Note Phrases",
+      type: "guitar",
+      what: "The trainer plays 2-note phrases. Echo them back by tapping the fretboard. Every melody you've ever loved is built from small phrases like these.",
+      colorMusic: { root: "A", scale: "minor-pentatonic", mode: "callResponse" },
+      steps: [
+        { text: "Open Color Music, Call & Response mode. Listen to the 2-note phrase, then tap the same notes on the fretboard.", why: "Phrase memory is the building block of improvisation. Learn the links, and the chain follows." },
+        { text: "After 3 correct, the phrases grow to 3 notes. This is your melodic vocabulary expanding.", why: "Improvisation draws from a library of small patterns. Each correct echo adds a phrase to your library." },
+        { text: "At 4 notes, try improvising a RESPONSE after echoing. Echo the phrase, then answer with your own.", why: "This is the bridge from repetition to improvisation. When you start answering back — you're improvising." }
+      ],
+      feel: "Like a musical conversation. The trainer speaks, you echo, then you start speaking back.",
+      sarah: "Gene, this is how jazz musicians learn — through musical conversation. The phrases you learn here become your melodic vocabulary."
     }
   ]
 };

@@ -2505,6 +2505,7 @@ export function FretboardDiagram({
   theme: T, scale, position, highlight = [],
   colorMode = false, voiceNote = null, onNoteTap = null,
   oneNoteFilter = null, scaleData: externalScaleData = null, richTone = false,
+  chordToneNotes = null, // array of pitch classes to highlight with ring (e.g. ['A','C','E'])
 }) {
   const [selectedPos, setSelectedPos] = useState(position || 1);
   const [viewMode, setViewMode] = useState(colorMode ? "colors" : "notes"); // 'notes', 'intervals', or 'colors'
@@ -2798,6 +2799,7 @@ export function FretboardDiagram({
           const noteColor = getColorForNote(d.noteName);
           const isVoiceMatch = voiceNote && normalizeNote(voiceNote) === normalizeNote(d.noteName);
           const isDimmed = oneNoteFilter && normalizeNote(d.noteName) !== normalizeNote(oneNoteFilter);
+          const isChordTone = chordToneNotes && chordToneNotes.some(ct => normalizeNote(ct) === normalizeNote(d.noteName));
 
           // Determine fill color
           let fill = T.textMed;
@@ -2848,6 +2850,10 @@ export function FretboardDiagram({
               ) : (
                 <circle cx={cx} cy={cy} r={size + 1} fill="none" stroke="#fff" strokeWidth={2} opacity={0.9} />
               ))}
+              {/* Chord tone ring (gold dashed) */}
+              {isChordTone && !d.isRoot && (
+                <circle cx={cx} cy={cy} r={size + 2} fill="none" stroke="#fff" strokeWidth={1.5} strokeDasharray="3 2" opacity={0.7} />
+              )}
               {d.displayLabel && (
                 <text
                   x={cx}

@@ -286,6 +286,24 @@ export const level5 = {
       metronome: 90,
       recorder: true,
       levelUp: "Recorded a 5+ minute Sol Del Sur jam with dynamic contrast (at least one quiet section and one loud section), clean barre transitions throughout, and at least one rhythmic variation. Sounds like a performance, not a practice loop."
+    },
+
+    // ─── COLOR MUSIC: ONE NOTE ───
+
+    {
+      id: "gs-5-12",
+      time: 5,
+      title: "One Note Odyssey",
+      type: "guitar",
+      what: "Choose A. Find every A across all 6 strings. Same color, different octave, different timbre. One note teaches you the geography of your instrument.",
+      colorMusic: { root: "A", scale: "minor-pentatonic", mode: "oneNote" },
+      steps: [
+        { text: "Open Color Music, One Note mode. Tap A on the fretboard. Only amber dots will respond.", why: "Constraint forces you to explore what one pitch class sounds like everywhere on the neck." },
+        { text: "Find every A across all 6 strings. Play each one — same pitch class, different octave, different timbre.", why: "The high A on string 1 and the low A on string 6 are the same note in different worlds. Knowing where they all live is fretboard fluency." },
+        { text: "Now try C, then E. Each one has its own geography. Notice which strings feel easy and which feel unfamiliar.", why: "When you can find any note anywhere without thinking, improvisation becomes effortless." }
+      ],
+      feel: "One note teaches you that music lives in timing and feel, not just pitch. If you can make one note compelling, imagine what you can do with five.",
+      sarah: "Gene, this is the minimalist's approach. Tinariwen guitarists can make one note sound like an entire landscape. Find that in yourself."
     }
   ]
 };

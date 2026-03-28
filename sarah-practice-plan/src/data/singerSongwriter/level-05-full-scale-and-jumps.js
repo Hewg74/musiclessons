@@ -574,6 +574,43 @@ export const level5 = {
       feel: "This should feel like learning to trust yourself. At first, your predictions will be wrong — that's normal and valuable. Each wrong prediction recalibrates your internal monitor. Over time, your predictions get sharper until you barely need the external check.",
       wrong: "If your predictions are randomly wrong (not consistently sharp or flat), your internal monitoring may be underdeveloped. Spend more time with the drone-based exercises where you can FEEL the match between voice and reference. The body address (chest warmth for A, throat for C, etc.) is your most reliable internal cue for pitch accuracy.",
       sarah: "Gene, this is where you start trusting your own ears over the machine. The pitch detector was your training wheels — essential early on, but eventually you need to ride without them. Every prediction you make, right or wrong, strengthens your internal judge. By Level 6, you should need the detector less. By Level 8, it's a spot-check, not a crutch."
+    },
+
+    // ─── COLOR MUSIC: VOICE + MELODY ECHO ───
+
+    {
+      id: "ss-5-25",
+      time: 5,
+      title: "Voice Color Painting",
+      type: "vocal",
+      what: "Sing up the Am pentatonic slowly. Watch the rainbow sequence unfold on the color fretboard: amber(A) \u2192 red(C) \u2192 orange(D) \u2192 yellow(E) \u2192 red-orange(G).",
+      colorMusic: { root: "A", scale: "minor-pentatonic", mode: "voice" },
+      drone: { root: "Am", octave: 2, texture: "pure" },
+      steps: [
+        { text: "Open Color Music, Voice mode. Enable mic. Drone on. Sing A, then slowly slide up to C.", why: "Your voice paints the fretboard in real time. The color change from amber to red IS the sound of a minor third." },
+        { text: "Continue up: D (orange), E (yellow), G (red-orange). Watch the color wheel light up in sequence.", why: "You're seeing the pentatonic scale as a color sequence. This visual pattern reinforces the auditory pattern." },
+        { text: "Now descend. Then skip notes \u2014 sing A, then jump to E. Watch the colors jump on the wheel.", why: "Skips create larger color jumps on the wheel. You're seeing interval distance as color distance." },
+        { text: "Try singing a short melody. Watch the colors trace your melodic contour on the fretboard.", why: "When you can SEE your melody on the guitar, the bridge between voice and instrument is complete." }
+      ],
+      feel: "Your voice paints the color wheel. Now try it descending. Skip notes. Follow adjacent colors for smooth motion. YOU are choosing where the melody goes.",
+      sarah: "Gene, this is where voice and guitar become one instrument. The colors prove that your voice already knows where the notes live \u2014 you just need to see it."
+    },
+    {
+      id: "ss-5-26",
+      time: 5,
+      title: "Melody Echo: Hear \u2192 Hold \u2192 Sing",
+      type: "vocal",
+      what: "The Color Music trainer plays 3-note melodic phrases. Sing them back. The pitch detector verifies each note. This is the core audiation loop.",
+      colorMusic: { root: "A", scale: "minor-pentatonic", mode: "melodyEcho" },
+      drone: { root: "Am", octave: 2, texture: "pure" },
+      steps: [
+        { text: "Open Color Music, Melody Echo mode. Enable mic. Tap 'New Melody'.", why: "The trainer generates musical phrases (stepwise motion, pentatonic patterns) \u2014 not random notes." },
+        { text: "Listen to the 3-note phrase. Don't sing yet \u2014 hold it internally first.", why: "The pause between hearing and singing IS the audiation. Rushing to echo skips the internal hearing step." },
+        { text: "Now sing it back. The pitch detector captures each note. Green borders = match, coral = miss.", why: "Visual feedback on each note lets you identify exactly WHERE your audiation broke down." },
+        { text: "Aim for 3 perfect echoes in a row. Then try 4-note phrases.", why: "Every echo adds a phrase to your internal melody library. Improvisation draws from this library." }
+      ],
+      feel: "Hear it. Hold it. Reproduce it. Every time you echo a melody, you're building the internal library that improvisation draws from.",
+      sarah: "Gene, this is the core audiation loop \u2014 the same process that happens in a fraction of a second when you improvise. We're just slowing it down so you can practice each step."
     }
   ]
 };
