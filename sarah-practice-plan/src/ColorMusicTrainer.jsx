@@ -402,8 +402,9 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
   const [root, setRoot] = useState(defaultRoot || 'A');
   const [scaleType, setScaleType] = useState(defaultScale || 'minor-pentatonic');
   const [mode, setMode] = useState(defaultMode || 'explore');
-  const [settingsOpen, setSettingsOpen] = useState(true); // root/scale selector open by default
-  const [wheelVisible, setWheelVisible] = useState(false); // color wheel toggle on mobile
+  const [settingsOpen, setSettingsOpen] = useState(true);
+  const [wheelVisible, setWheelVisible] = useState(false);
+  const [autoFlow, setAutoFlow] = useState(true); // auto-advance exercises
   const drone = useQuickDrone();
 
   // Hear→Find state
@@ -556,16 +557,19 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     if (hfAudiateMode && hfAudiatePhase && hfAudiatePhase !== 'find') return;
     if (normalizeNote(tapInfo.noteName) === normalizeNote(hfTarget.note)) {
       setHfFeedback('yes'); setHfScore(p => ({ hit: p.hit + 1, total: p.total + 1 })); setHfStreak(p => p + 1); setHfRevealed(true);
-      setTimeout(() => newChallenge(), 800);
+      if (autoFlow) setTimeout(() => newChallenge(), 800);
     } else {
       setHfFeedback('no'); setHfScore(p => ({ ...p, total: p.total + 1 })); setHfStreak(0);
-      setTimeout(() => setHfFeedback(null), 1000);
+      if (autoFlow) setTimeout(() => { setHfFeedback(null); newChallenge(); }, 1200);
+      else setTimeout(() => setHfFeedback(null), 1000);
     }
-  }, [hfTarget, newChallenge, hfAudiateMode, hfAudiatePhase]);
+  }, [hfTarget, newChallenge, hfAudiateMode, hfAudiatePhase, autoFlow]);
 
   // ─── Voice ───
   const handlePitchDetected = useCallback(({ note, cents, freq }) => {
-    setVoiceNote(note); setVoiceCents(cents); setVoiceFreq(Math.round(freq));
+    // Strip octave number — voiceNote should be pitch class only (e.g. "A" not "A4")
+    const pitchClass = note.replace(/[0-9]/g, '');
+    setVoiceNote(pitchClass); setVoiceCents(cents); setVoiceFreq(Math.round(freq));
   }, []);
 
   // ─── Call & Response ───
@@ -608,20 +612,21 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
         const nextStreak = crStreak + 1;
         setCrStreak(nextStreak);
         if (crLength < 4 && nextStreak >= 3 && nextStreak % 3 === 0) setCrLength(l => Math.min(4, l + 1));
-        // Every 4th correct: "respond" phase — improvise your own answer
-        if (nextStreak > 0 && nextStreak % 4 === 0) {
-          setTimeout(() => { setCrFeedback(null); setCrRespondPhase(true); }, 600);
-          setTimeout(() => { setCrRespondPhase(false); newCrPhrase(); }, 5000); // 5s to improvise
-        } else {
-          setTimeout(newCrPhrase, 1000);
+        if (autoFlow) {
+          // Every 4th correct: "respond" phase
+          if (nextStreak > 0 && nextStreak % 4 === 0) {
+            setTimeout(() => { setCrFeedback(null); setCrRespondPhase(true); }, 600);
+            setTimeout(() => { setCrRespondPhase(false); newCrPhrase(); }, 5000);
+          } else {
+            setTimeout(newCrPhrase, 1000);
+          }
         }
       } else {
         setCrScore(p => ({ ...p, total: p.total + 1 })); setCrStreak(0);
-        // Reset guess after showing wrong feedback so user can retry same phrase
-        setTimeout(() => { setCrFeedback(null); setCrGuess([]); playCrPhrase(crPhrase); }, 1000);
+        if (autoFlow) setTimeout(() => { setCrFeedback(null); setCrGuess([]); playCrPhrase(crPhrase); }, 1000);
       }
     }
-  }, [crPhrase, crGuess, crFeedback, crLength, newCrPhrase]);
+  }, [crPhrase, crGuess, crFeedback, crLength, newCrPhrase, autoFlow, crStreak, playCrPhrase]);
 
   // ─── Chord Progression Player ───
   const startProgression = useCallback(() => {
@@ -721,12 +726,11 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     if (guessedSemitones === intTarget.semitones) {
       setIntFeedback('correct'); setIntRevealed(true);
       setIntScore(p => ({ hit: p.hit + 1, total: p.total + 1 }));
-      setTimeout(newInterval, 900);
+      if (autoFlow) setTimeout(newInterval, 900);
     } else {
       setIntFeedback('wrong');
       setIntScore(p => ({ ...p, total: p.total + 1 }));
-      // Auto-replay the same interval after brief feedback
-      setTimeout(() => {
+      if (autoFlow) setTimeout(() => {
         setIntFeedback(null);
         if (intTarget) {
           playWarmNote(intTarget.note1 + (intTarget.oct1 || 3), '4n');
@@ -734,7 +738,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
         }
       }, 1200);
     }
-  }, [intTarget, newInterval]);
+  }, [intTarget, newInterval, autoFlow]);
 
   // Available intervals in current scale (relative to root)
   const scaleIntervals = useMemo(() => {
@@ -835,7 +839,8 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     setMePhrase(phrase); setMeSung([]); setMeListening(false); setMeFeedback(null);
     meLastNoteRef.current = null;
     const totalTime = playMelodyPhrase(phrase);
-    setTimeout(() => setMeListening(true), totalTime + 400);
+    // Wait for synth reverb tail to die (1.5s after last note) before listening
+    setTimeout(() => setMeListening(true), totalTime + 1500);
   }, [scaleData, meLength, playMelodyPhrase]);
 
   const retryMelody = useCallback(() => {
@@ -843,11 +848,13 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     setMeSung([]); setMeListening(false); setMeFeedback(null);
     meLastNoteRef.current = null;
     const totalTime = playMelodyPhrase(mePhrase);
-    setTimeout(() => setMeListening(true), totalTime + 400);
+    setTimeout(() => setMeListening(true), totalTime + 1500);
   }, [mePhrase, playMelodyPhrase]);
 
   // Capture sung notes for melody echo
-  const handleMePitch = useCallback(({ note }) => {
+  // Volume gate: ignore quiet detections (speaker bleed through mic)
+  const mePlayingRef = useRef(false); // true while phrase is sounding
+  const handleMePitch = useCallback(({ note, freq }) => {
     if (!meListening || !mePhrase.length) return;
     const normalized = normalizeNote(note);
     // Only register if it's a new note (different from last)
@@ -874,14 +881,14 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
 
   // Auto-advance melody echo after feedback
   useEffect(() => {
-    if (!meFeedback) return;
-    const delay = meFeedback === 'correct' ? 1200 : 1500;
+    if (!meFeedback || !autoFlow) return;
+    const delay = meFeedback === 'correct' ? 1500 : 2000;
     const timer = setTimeout(() => {
       if (meFeedback === 'correct') newMelody();
-      else retryMelody(); // Wrong → auto-retry same phrase
+      else retryMelody();
     }, delay);
     return () => clearTimeout(timer);
-  }, [meFeedback]);
+  }, [meFeedback, autoFlow, newMelody, retryMelody]);
 
   // Combine voice handler for melody echo mode
   const handlePitchDetectedAll = useCallback((data) => {
@@ -979,6 +986,11 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
           }}>
             <Volume2 size={14} />
             {drone.playing ? 'On' : 'Drone'}
+          </button>
+          <button onClick={() => setAutoFlow(!autoFlow)} style={{
+            ...btnStyle(autoFlow, T.success),
+          }}>
+            {autoFlow ? 'Auto' : 'Manual'}
           </button>
         </div>
       )}
