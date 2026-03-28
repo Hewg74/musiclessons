@@ -235,43 +235,59 @@ function generateScale(root, scaleType) {
   return { name: `${root} ${type.name}`, root: normalizeNote(root), notes, positions };
 }
 
-// ─── Guitar-realistic octave assignment ───
-// Guitar range: E2 to ~E5. Assigns octaves to scale notes so they stay within
-// a comfortable range and avoid large jumps between consecutive notes.
-// Returns an array of "note+octave" strings for a given scale.
+// ─── Guitar-realistic note generation ───
+// Standard guitar (15 frets): E2 to G5 — MIDI 40 to 79
+// That's ~40 unique pitches across ~3.3 octaves
+const GUITAR_LO = 40; // E2
+const GUITAR_HI = 79; // G5
+const noteToMidi = (note, oct) => CHROMATIC.indexOf(normalizeNote(note)) + (oct + 1) * 12;
+const midiToOctave = (note, midi) => Math.floor((midi - CHROMATIC.indexOf(normalizeNote(note))) / 12) - 1;
+
+// Assign ascending octaves to a scale, spanning the guitar range naturally
 function assignGuitarOctaves(notes, rootNote) {
-  // Root octave based on pitch: low notes (E-G) start at 2, mid (Ab-B) at 2, high (C-Eb) at 3
-  const lowNotes = ['E', 'F', 'F#', 'G'];
   const ri = CHROMATIC.indexOf(normalizeNote(rootNote));
-  const rootOct = lowNotes.includes(normalizeNote(rootNote)) ? 2 : ri >= 8 ? 3 : 2;
+  // Find lowest valid octave for root on guitar
+  let rootOct = 2;
+  while (noteToMidi(rootNote, rootOct) < GUITAR_LO) rootOct++;
 
   const result = [];
-  let lastMidi = null;
-  for (let i = 0; i < notes.length; i++) {
-    const noteIdx = CHROMATIC.indexOf(normalizeNote(notes[i]));
-    // Start from root octave, ascending through the scale
+  let lastMidi = noteToMidi(rootNote, rootOct) - 1;
+  for (const n of notes) {
+    const ni = CHROMATIC.indexOf(normalizeNote(n));
     let oct = rootOct;
-    const midi = noteIdx + oct * 12;
-    // If this note would be below the previous, bump octave
-    if (lastMidi !== null && midi <= lastMidi) oct++;
-    const finalMidi = noteIdx + oct * 12;
-    // Clamp to guitar range (E2=40 to E5=76)
-    if (finalMidi < 40) oct++;
-    if (finalMidi > 76) oct--;
-    result.push(notes[i] + oct);
-    lastMidi = noteIdx + oct * 12;
+    while (noteToMidi(n, oct) <= lastMidi) oct++;
+    let midi = noteToMidi(n, oct);
+    // Clamp to guitar range
+    if (midi > GUITAR_HI) { oct--; midi = noteToMidi(n, oct); }
+    if (midi < GUITAR_LO) { oct++; midi = noteToMidi(n, oct); }
+    result.push(n + Math.max(2, Math.min(5, oct)));
+    lastMidi = midi;
   }
   return result;
 }
 
-// Pick a random note+octave from guitar range for a given pitch class
-// Stays close to prevOctave to avoid big jumps (within 1 octave)
-function randomGuitarOctave(note, prevOctave) {
-  const base = prevOctave || 3;
-  // Small variation: stay at same octave or ±1, weighted toward same
-  const r = Math.random();
-  const oct = r < 0.6 ? base : r < 0.8 ? base + 1 : base - 1;
-  return Math.max(2, Math.min(5, oct));
+// Pick a random note+octave for a pitch class, staying within ±1 octave of prev
+// and within guitar range. Truly random — each call picks from valid octaves.
+function randomGuitarNote(note, prevMidi) {
+  const ni = CHROMATIC.indexOf(normalizeNote(note));
+  // All valid octaves for this note on guitar
+  const validOcts = [];
+  for (let o = 2; o <= 5; o++) {
+    const m = ni + (o + 1) * 12;
+    if (m >= GUITAR_LO && m <= GUITAR_HI) validOcts.push(o);
+  }
+  if (!validOcts.length) return note + '3';
+
+  if (prevMidi) {
+    // Filter to octaves within ~14 semitones (just over 1 octave) of previous note
+    const close = validOcts.filter(o => Math.abs(ni + (o + 1) * 12 - prevMidi) <= 14);
+    if (close.length) {
+      const oct = close[Math.floor(Math.random() * close.length)];
+      return note + oct;
+    }
+  }
+  // No prev or no close options — pick any valid
+  return note + validOcts[Math.floor(Math.random() * validOcts.length)];
 }
 
 // ─── ColorWheel ───
@@ -506,11 +522,14 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
   }, [root]);
 
   // ─── Hear→Find ───
+  const hfPrevMidiRef = useRef(null);
   const newChallenge = useCallback(() => {
     const notes = scaleData.notes;
     const note = notes[Math.floor(Math.random() * notes.length)];
-    const oct = randomGuitarOctave(note, 3);
-    setHfTarget({ note, full: note + oct });
+    const full = randomGuitarNote(note, hfPrevMidiRef.current);
+    const oct = parseInt(full.slice(-1));
+    hfPrevMidiRef.current = CHROMATIC.indexOf(normalizeNote(note)) + (oct + 1) * 12;
+    setHfTarget({ note, full });
     setHfFeedback(null); setHfRevealed(false);
     if (hfAudiateMode) {
       // Audiation mode: hear → internal hold → then find
@@ -590,7 +609,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
       } else {
         setCrScore(p => ({ ...p, total: p.total + 1 })); setCrStreak(0);
         // Reset guess after showing wrong feedback so user can retry same phrase
-        setTimeout(() => { setCrFeedback(null); setCrGuess([]); }, 1200);
+        setTimeout(() => { setCrFeedback(null); setCrGuess([]); playCrPhrase(crPhrase); }, 1500);
       }
     }
   }, [crPhrase, crGuess, crFeedback, crLength, newCrPhrase]);
@@ -697,7 +716,14 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     } else {
       setIntFeedback('wrong');
       setIntScore(p => ({ ...p, total: p.total + 1 }));
-      setTimeout(() => setIntFeedback(null), 1000);
+      // Auto-replay the same interval after brief feedback
+      setTimeout(() => {
+        setIntFeedback(null);
+        if (intTarget) {
+          playWarmNote(intTarget.note1 + (intTarget.oct1 || 3), '4n');
+          setTimeout(() => playWarmNote(intTarget.note2 + (intTarget.oct2 || 4), '4n'), 500);
+        }
+      }, 1200);
     }
   }, [intTarget, newInterval]);
 
@@ -743,18 +769,25 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     if (srTimerRef.current) clearInterval(srTimerRef.current);
   }, []);
 
-  // Advance scale runner on interval
+  // Advance scale runner on interval — also plays first note on start
   useEffect(() => {
     if (!srActive) return;
+    // Play first note when starting/restarting
+    if (srIdx === 0 && srWithOctaves.length) playWarmNote(srWithOctaves[0], '8n');
     const ms = 60000 / srBpm;
     srTimerRef.current = setInterval(() => {
       setSrIdx(prev => {
         const next = prev + 1;
         if (next >= srSequence.length) {
-          // Completed a run — clear immediately and bump BPM
+          // Completed a run — bump BPM, auto-restart after brief pause
           clearInterval(srTimerRef.current);
           setSrBpm(b => b + 5);
           setSrActive(false);
+          // Auto-start next run after 1.5s pause
+          setTimeout(() => {
+            setSrActive(true); setSrIdx(0);
+            // Play first note of new sequence (srWithOctaves may have changed due to BPM bump)
+          }, 1500);
           return -1;
         }
         playWarmNote(srWithOctaves[next] || srSequence[next] + '4', '8n');
@@ -829,6 +862,17 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
       return next;
     });
   }, [meListening, mePhrase]);
+
+  // Auto-advance melody echo after feedback
+  useEffect(() => {
+    if (!meFeedback) return;
+    const delay = meFeedback === 'correct' ? 2000 : 2500;
+    const timer = setTimeout(() => {
+      if (meFeedback === 'correct') newMelody();
+      else retryMelody(); // Wrong → auto-retry same phrase
+    }, delay);
+    return () => clearTimeout(timer);
+  }, [meFeedback]);
 
   // Combine voice handler for melody echo mode
   const handlePitchDetectedAll = useCallback((data) => {
