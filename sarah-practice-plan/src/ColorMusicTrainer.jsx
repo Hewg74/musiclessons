@@ -428,7 +428,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
   const [wheelVisible, setWheelVisible] = useState(false);
   const [autoFlow, setAutoFlow] = useState(true);
   const [autoSpeed, setAutoSpeed] = useState('normal'); // 'fast' | 'normal' | 'slow'
-  const autoDelay = autoSpeed === 'fast' ? 0.5 : autoSpeed === 'slow' ? 2.5 : 1; // multiplier
+  const autoDelay = autoSpeed === 'fast' ? 1 : autoSpeed === 'slow' ? 3 : 2; // multiplier (seconds feel)
   const drone = useQuickDrone();
 
   // Hear→Find state
@@ -585,10 +585,10 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     if (hfTimeoutRef.current) clearTimeout(hfTimeoutRef.current);
     if (normalizeNote(tapInfo.noteName) === normalizeNote(hfTarget.note)) {
       setHfFeedback('yes'); setHfScore(p => ({ hit: p.hit + 1, total: p.total + 1 })); setHfStreak(p => p + 1); setHfRevealed(true);
-      if (autoFlow) setTimeout(() => newChallenge(), 800 * autoDelay);
+      if (autoFlow) setTimeout(() => newChallenge(), 1000 * autoDelay);
     } else {
       setHfFeedback('no'); setHfScore(p => ({ ...p, total: p.total + 1 })); setHfStreak(0);
-      if (autoFlow) setTimeout(() => { setHfFeedback(null); newChallenge(); }, 1200 * autoDelay);
+      if (autoFlow) setTimeout(() => { setHfFeedback(null); newChallenge(); }, 1500 * autoDelay);
       else setTimeout(() => setHfFeedback(null), 1000);
     }
   }, [hfTarget, newChallenge, hfAudiateMode, hfAudiatePhase, autoFlow]);
@@ -686,14 +686,14 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
             setTimeout(() => { setCrFeedback(null); setCrRespondPhase(true); }, 600);
             setTimeout(() => { setCrRespondPhase(false); newCrPhrase(); }, 5000);
           } else {
-            setTimeout(newCrPhrase, 1000 * autoDelay);
+            setTimeout(newCrPhrase, 1200 * autoDelay);
           }
         } else {
           setTimeout(() => setCrFeedback(null), 1500);
         }
       } else {
         setCrScore(p => ({ ...p, total: p.total + 1 })); setCrStreak(0);
-        if (autoFlow) setTimeout(newCrPhrase, 1500 * autoDelay);
+        if (autoFlow) setTimeout(newCrPhrase, 1200 * autoDelay);
         else setTimeout(() => { setCrFeedback(null); setCrGuess([]); }, 1500);
       }
     }
@@ -797,7 +797,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     if (guessedSemitones === intTarget.semitones) {
       setIntFeedback('correct'); setIntRevealed(true);
       setIntScore(p => ({ hit: p.hit + 1, total: p.total + 1 }));
-      if (autoFlow) setTimeout(newInterval, 900 * autoDelay);
+      if (autoFlow) setTimeout(newInterval, 1200 * autoDelay);
       else setTimeout(() => setIntFeedback(null), 1500);
     } else {
       setIntFeedback('wrong');
@@ -809,7 +809,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
             playWarmNote(intTarget.note1 + (intTarget.oct1 || 3), '4n');
             setTimeout(() => playWarmNote(intTarget.note2 + (intTarget.oct2 || 4), '4n'), 500);
           }
-        }, 1200 * autoDelay);
+        }, 1500 * autoDelay);
       } else {
         setTimeout(() => setIntFeedback(null), 1500);
       }
@@ -972,7 +972,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
   // Auto-advance melody echo after feedback
   useEffect(() => {
     if (!meFeedback || !autoFlow) return;
-    const delay = (meFeedback === 'correct' ? 1500 : 2000) * autoDelay;
+    const delay = (meFeedback === 'correct' ? 1200 : 1500) * autoDelay;
     const timer = setTimeout(() => {
       if (meFeedback === 'correct') newMelody();
       else retryMelody();
@@ -1095,9 +1095,9 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
               background: T.bgCard, color: T.textMed, fontSize: 11, fontFamily: T.sans,
               cursor: 'pointer', appearance: 'none', textAlign: 'center', width: 52,
             }}>
-              <option value="fast">Fast</option>
-              <option value="normal">Med</option>
-              <option value="slow">Slow</option>
+              <option value="fast">1s</option>
+              <option value="normal">2s</option>
+              <option value="slow">3s</option>
             </select>
           )}
         </div>
