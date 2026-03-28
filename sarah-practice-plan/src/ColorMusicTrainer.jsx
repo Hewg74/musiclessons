@@ -248,29 +248,31 @@ const GUITAR_HI = 79; // G5
 const noteToMidi = (note, oct) => CHROMATIC.indexOf(normalizeNote(note)) + (oct + 1) * 12;
 const midiToOctave = (note, midi) => Math.floor((midi - CHROMATIC.indexOf(normalizeNote(note))) / 12) - 1;
 
-// Assign octaves to a scale starting from root, ascending within one octave.
-// Real guitar playing stays in one position = one octave range.
+// Assign ascending octaves to a scale — natural guitar range, spanning ~1.5 octaves.
 function assignGuitarOctaves(notes, rootNote) {
-  let rootOct = 3; // default mid-range
+  let rootOct = 3;
   while (noteToMidi(rootNote, rootOct) < GUITAR_LO) rootOct++;
-  while (noteToMidi(rootNote, rootOct) > GUITAR_HI - 12) rootOct--; // leave room for scale to ascend
+  while (noteToMidi(rootNote, rootOct) > GUITAR_HI - 12) rootOct--;
 
   const rootMidi = noteToMidi(rootNote, rootOct);
-  return notes.map(n => {
-    const ni = CHROMATIC.indexOf(normalizeNote(n));
-    // Place this note in the same octave as root, or one above if it would be below root
+  const result = [];
+  let lastMidi = rootMidi - 1;
+  for (const n of notes) {
     let oct = rootOct;
     let midi = noteToMidi(n, oct);
-    if (midi < rootMidi) { oct++; midi = noteToMidi(n, oct); }
-    // Clamp
-    if (midi > GUITAR_HI) oct--;
-    if (midi < GUITAR_LO) oct++;
-    return n + Math.max(2, Math.min(5, oct));
-  });
+    // Ascending: if below previous, bump up
+    if (midi <= lastMidi) { oct++; midi = noteToMidi(n, oct); }
+    if (midi > GUITAR_HI) { oct--; midi = noteToMidi(n, oct); }
+    if (midi < GUITAR_LO) { oct++; midi = noteToMidi(n, oct); }
+    result.push(n + Math.max(2, Math.min(5, oct)));
+    lastMidi = midi;
+  }
+  return result;
 }
 
-// Pick a note+octave staying CLOSE to the previous note (within a 5th = 7 semitones).
-// Melodies don't jump around — they move stepwise with occasional small leaps.
+// Pick a note+octave that sounds musical relative to the previous note.
+// Like real melodies: mostly stepwise (within ~5-7 semitones), occasionally
+// a bigger leap (up to 12), rarely more. Weighted toward close intervals.
 function randomGuitarNote(note, prevMidi) {
   const ni = CHROMATIC.indexOf(normalizeNote(note));
   const validOcts = [];
@@ -281,14 +283,16 @@ function randomGuitarNote(note, prevMidi) {
   if (!validOcts.length) return note + '3';
 
   if (prevMidi) {
-    // Stay within 7 semitones (a 5th) — tight melodic range
-    const close = validOcts.filter(o => Math.abs(ni + (o + 1) * 12 - prevMidi) <= 7);
-    if (close.length) return note + close[Math.floor(Math.random() * close.length)];
-    // Fallback: within 10 semitones (minor 7th)
-    const med = validOcts.filter(o => Math.abs(ni + (o + 1) * 12 - prevMidi) <= 10);
-    if (med.length) return note + med[Math.floor(Math.random() * med.length)];
+    // Weight by distance: closer = much more likely
+    const weighted = [];
+    for (const o of validOcts) {
+      const dist = Math.abs(ni + (o + 1) * 12 - prevMidi);
+      // Within a 5th (7): weight 8. Within octave (12): weight 3. Beyond: weight 1.
+      const w = dist <= 7 ? 8 : dist <= 12 ? 3 : 1;
+      for (let i = 0; i < w; i++) weighted.push(o);
+    }
+    return note + weighted[Math.floor(Math.random() * weighted.length)];
   }
-  // No prev — pick octave 3 if valid, else closest
   return note + (validOcts.includes(3) ? 3 : validOcts[0]);
 }
 
