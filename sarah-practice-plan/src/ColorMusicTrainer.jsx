@@ -359,7 +359,7 @@ function useQuickDrone() {
     const lp = new Tone.Filter(350, 'lowpass');
     const gain = new Tone.Gain(0);
     synth.connect(lp); lp.connect(gain); gain.toDestination();
-    synth.start(); gain.gain.rampTo(0.07, 0.5);
+    synth.start(); gain.gain.rampTo(0.18, 0.5);
     synthRef.current = synth; gainRef.current = gain; filterRef.current = lp;
     setPlaying(true);
   }, []);
@@ -380,7 +380,7 @@ function useQuickDrone() {
   useEffect(() => {
     const handleMicReleased = async () => {
       if (!synthRef.current || !gainRef.current) return;
-      try { await Tone.context.rawContext.suspend(); await Tone.context.rawContext.resume(); gainRef.current.gain.rampTo(0.07, 0.3); } catch {}
+      try { await Tone.context.rawContext.suspend(); await Tone.context.rawContext.resume(); gainRef.current.gain.rampTo(0.18, 0.3); } catch {}
     };
     window.addEventListener('micReleased', handleMicReleased);
     return () => window.removeEventListener('micReleased', handleMicReleased);
@@ -426,6 +426,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
   const [crFeedback, setCrFeedback] = useState(null); // 'correct' | 'wrong' | null
   const [crScore, setCrScore] = useState({ hit: 0, total: 0 });
   const [crStreak, setCrStreak] = useState(0);
+  const [crRespondPhase, setCrRespondPhase] = useState(false); // "now improvise your answer"
 
   // Interval Trainer state
   const [intTarget, setIntTarget] = useState(null); // { note1, note2, semitones, intervalName }
@@ -550,7 +551,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     if (hfAudiateMode && hfAudiatePhase && hfAudiatePhase !== 'find') return;
     if (normalizeNote(tapInfo.noteName) === normalizeNote(hfTarget.note)) {
       setHfFeedback('yes'); setHfScore(p => ({ hit: p.hit + 1, total: p.total + 1 })); setHfStreak(p => p + 1); setHfRevealed(true);
-      setTimeout(() => newChallenge(), 1400);
+      setTimeout(() => newChallenge(), 800);
     } else {
       setHfFeedback('no'); setHfScore(p => ({ ...p, total: p.total + 1 })); setHfStreak(0);
       setTimeout(() => setHfFeedback(null), 1000);
@@ -599,17 +600,20 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
       setCrFeedback(correct ? 'correct' : 'wrong');
       if (correct) {
         setCrScore(p => ({ hit: p.hit + 1, total: p.total + 1 }));
-        setCrStreak(p => {
-          const next = p + 1;
-          // Auto-increase difficulty
-          if (next >= 3 && crLength < 4) setTimeout(() => setCrLength(l => Math.min(4, l + 1)), 800);
-          return next;
-        });
-        setTimeout(newCrPhrase, 1400);
+        const nextStreak = crStreak + 1;
+        setCrStreak(nextStreak);
+        if (crLength < 4 && nextStreak >= 3 && nextStreak % 3 === 0) setCrLength(l => Math.min(4, l + 1));
+        // Every 4th correct: "respond" phase — improvise your own answer
+        if (nextStreak > 0 && nextStreak % 4 === 0) {
+          setTimeout(() => { setCrFeedback(null); setCrRespondPhase(true); }, 600);
+          setTimeout(() => { setCrRespondPhase(false); newCrPhrase(); }, 5000); // 5s to improvise
+        } else {
+          setTimeout(newCrPhrase, 1000);
+        }
       } else {
         setCrScore(p => ({ ...p, total: p.total + 1 })); setCrStreak(0);
         // Reset guess after showing wrong feedback so user can retry same phrase
-        setTimeout(() => { setCrFeedback(null); setCrGuess([]); playCrPhrase(crPhrase); }, 1500);
+        setTimeout(() => { setCrFeedback(null); setCrGuess([]); playCrPhrase(crPhrase); }, 1000);
       }
     }
   }, [crPhrase, crGuess, crFeedback, crLength, newCrPhrase]);
@@ -712,7 +716,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     if (guessedSemitones === intTarget.semitones) {
       setIntFeedback('correct'); setIntRevealed(true);
       setIntScore(p => ({ hit: p.hit + 1, total: p.total + 1 }));
-      setTimeout(newInterval, 1400);
+      setTimeout(newInterval, 900);
     } else {
       setIntFeedback('wrong');
       setIntScore(p => ({ ...p, total: p.total + 1 }));
@@ -866,7 +870,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
   // Auto-advance melody echo after feedback
   useEffect(() => {
     if (!meFeedback) return;
-    const delay = meFeedback === 'correct' ? 2000 : 2500;
+    const delay = meFeedback === 'correct' ? 1200 : 1500;
     const timer = setTimeout(() => {
       if (meFeedback === 'correct') newMelody();
       else retryMelody(); // Wrong → auto-retry same phrase
@@ -989,12 +993,13 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
         </div>
       )}
 
-      {/* ── MODE PANEL ── */}
+      {/* ── MODE PANEL (fixed min-height to prevent layout shift from feedback popups) ── */}
       <div style={{
         padding: '14px 16px',
         borderRadius: T.radiusMd, marginBottom: 16,
         background: T.bgCard, border: `1px solid ${T.border}`,
         boxShadow: T.sm,
+        minHeight: 80,
       }}>
 
         {/* EXPLORE */}
@@ -1193,12 +1198,26 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
                 background: crFeedback === 'correct' ? T.successSoft : T.coralSoft,
                 color: crFeedback === 'correct' ? T.success : T.coral,
               }}>
-                {crFeedback === 'correct' ? '\u2713 Perfect echo!' : '\u2717 Not quite \u2014 listen again.'}
+                {crFeedback === 'correct' ? '\u2713 Got it!' : '\u2717 Not quite \u2014 listen again.'}
               </div>
             )}
-            {!crPhrase.length && (
+            {/* Respond phase — improvise your own answer */}
+            {crRespondPhase && (
+              <div style={{
+                padding: '10px 14px', borderRadius: T.radiusMd, marginTop: 6,
+                background: `${rootColor}08`, border: `1px solid ${rootColor}30`,
+              }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: rootColor, fontFamily: T.serif }}>
+                  Your turn \u2014 play a response!
+                </div>
+                <div style={{ fontSize: 10, color: T.textMuted, marginTop: 2 }}>
+                  Tap any notes on the fretboard. Answer the phrase with your own musical idea.
+                </div>
+              </div>
+            )}
+            {!crPhrase.length && !crRespondPhase && (
               <div style={{ fontSize: 12, color: T.textMuted, fontStyle: 'italic', fontFamily: T.serif }}>
-                Tap "New Phrase" to hear a melodic pattern. Echo it back by tapping the fretboard.
+                Hear a phrase, tap it back. Every 4th round: improvise your own response.
               </div>
             )}
           </div>
