@@ -367,6 +367,7 @@ function useQuickDrone() {
     synth.connect(lp); lp.connect(gain); gain.toDestination();
     synth.start(); gain.gain.rampTo(0.07, 0.5);
     synthRef.current = synth; gainRef.current = gain; filterRef.current = lp;
+    rootRef.current = root;
     setPlaying(true);
   }, []);
 
@@ -383,14 +384,34 @@ function useQuickDrone() {
     setPlaying(false);
   }, []);
 
+  const rootRef = useRef(null); // track current root for recovery
+
   useEffect(() => {
     const handleMicReleased = async () => {
       if (!synthRef.current || !gainRef.current) return;
       try { await Tone.context.rawContext.suspend(); await Tone.context.rawContext.resume(); gainRef.current.gain.rampTo(0.07, 0.3); } catch {}
     };
+    // Recover drone when tab becomes visible again (browser suspends AudioContext on hide)
+    const handleVisibility = async () => {
+      if (document.hidden || !synthRef.current) return;
+      try {
+        if (Tone.context.state !== 'running') await Tone.context.resume();
+        // Check if oscillator is still alive
+        if (synthRef.current.state === 'stopped' && rootRef.current) {
+          // Oscillator died — restart it
+          start(rootRef.current);
+        } else if (gainRef.current) {
+          gainRef.current.gain.rampTo(0.07, 0.3);
+        }
+      } catch {}
+    };
     window.addEventListener('micReleased', handleMicReleased);
-    return () => window.removeEventListener('micReleased', handleMicReleased);
-  }, []);
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => {
+      window.removeEventListener('micReleased', handleMicReleased);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
+  }, [start]);
 
   useEffect(() => () => { if (playing) stop(); }, []);
 
@@ -405,7 +426,9 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
   const [mode, setMode] = useState(defaultMode || 'explore');
   const [settingsOpen, setSettingsOpen] = useState(true);
   const [wheelVisible, setWheelVisible] = useState(false);
-  const [autoFlow, setAutoFlow] = useState(true); // auto-advance exercises
+  const [autoFlow, setAutoFlow] = useState(true);
+  const [autoSpeed, setAutoSpeed] = useState('normal'); // 'fast' | 'normal' | 'slow'
+  const autoDelay = autoSpeed === 'fast' ? 0.5 : autoSpeed === 'slow' ? 2.5 : 1; // multiplier
   const drone = useQuickDrone();
 
   // Hear→Find state
@@ -542,7 +565,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     setHfFeedback(null); setHfRevealed(false); setHfAudiatePhase(null);
     if (hfTimeoutRef.current) clearTimeout(hfTimeoutRef.current);
     // Auto-advance: if no answer in 8s, play a new note
-    if (autoFlow) hfTimeoutRef.current = setTimeout(() => newChallenge(), 8000);
+    if (autoFlow) hfTimeoutRef.current = setTimeout(() => newChallenge(), 8000 * autoDelay);
     if (hfAudiateMode) {
       // Audiation mode: hear → internal hold → then find
       setHfAudiatePhase('listen');
@@ -562,10 +585,10 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     if (hfTimeoutRef.current) clearTimeout(hfTimeoutRef.current);
     if (normalizeNote(tapInfo.noteName) === normalizeNote(hfTarget.note)) {
       setHfFeedback('yes'); setHfScore(p => ({ hit: p.hit + 1, total: p.total + 1 })); setHfStreak(p => p + 1); setHfRevealed(true);
-      if (autoFlow) setTimeout(() => newChallenge(), 800);
+      if (autoFlow) setTimeout(() => newChallenge(), 800 * autoDelay);
     } else {
       setHfFeedback('no'); setHfScore(p => ({ ...p, total: p.total + 1 })); setHfStreak(0);
-      if (autoFlow) setTimeout(() => { setHfFeedback(null); newChallenge(); }, 1200);
+      if (autoFlow) setTimeout(() => { setHfFeedback(null); newChallenge(); }, 1200 * autoDelay);
       else setTimeout(() => setHfFeedback(null), 1000);
     }
   }, [hfTarget, newChallenge, hfAudiateMode, hfAudiatePhase, autoFlow]);
@@ -583,8 +606,11 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     const phrase = [];
     let prev = Math.floor(Math.random() * notes.length);
     for (let i = 0; i < len; i++) {
-      // Favor stepwise motion (adjacent scale degrees)
-      const step = Math.random() < 0.7 ? (Math.random() > 0.5 ? 1 : -1) : Math.floor(Math.random() * 3) - 1;
+      // 15% chance: repeat same note (rhythmic variation like real music)
+      // 60% chance: stepwise (±1 scale degree)
+      // 25% chance: small leap (±2 degrees)
+      const r = Math.random();
+      const step = r < 0.15 ? 0 : r < 0.75 ? (Math.random() > 0.5 ? 1 : -1) : (Math.random() > 0.5 ? 2 : -2);
       const idx = Math.max(0, Math.min(notes.length - 1, prev + step));
       phrase.push(notes[idx]);
       prev = idx;
@@ -594,8 +620,15 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
 
   const playCrPhrase = useCallback((phrase) => {
     const withOctaves = assignGuitarOctaves(phrase, phrase[0]);
+    const durations = ['8n', '8n', '4n', '4n', '4n', '2n']; // weighted toward quarter notes
+    let time = 0;
     phrase.forEach((note, i) => {
-      setTimeout(() => playWarmNote(withOctaves[i], '4n'), i * 400);
+      const dur = durations[Math.floor(Math.random() * durations.length)];
+      const gap = 150 + Math.floor(Math.random() * 350); // 150-500ms
+      // 15% chance of a brief rest (not on first note)
+      if (i > 0 && Math.random() < 0.15) time += 150 + Math.floor(Math.random() * 200);
+      setTimeout(() => playWarmNote(withOctaves[i], dur), time);
+      time += gap;
     });
   }, []);
 
@@ -623,7 +656,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
         setCrScore(p => ({ hit: p.hit + 1, total: p.total + 1 }));
         const nextStreak = crStreak + 1;
         setCrStreak(nextStreak);
-        if (crLength < 4 && nextStreak >= 3 && nextStreak % 3 === 0) setCrLength(l => Math.min(4, l + 1));
+        if (crLength < 5 && nextStreak >= 3 && nextStreak % 3 === 0) setCrLength(l => Math.min(5, l + 1));
         if (autoFlow) {
           if (nextStreak > 0 && nextStreak % 4 === 0) {
             setTimeout(() => { setCrFeedback(null); setCrRespondPhase(true); }, 600);
@@ -635,7 +668,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
       } else {
         setCrScore(p => ({ ...p, total: p.total + 1 })); setCrStreak(0);
         // Wrong → move to new phrase (not replay same one)
-        if (autoFlow) setTimeout(newCrPhrase, 1500);
+        if (autoFlow) setTimeout(newCrPhrase, 1500 * autoDelay);
       }
     }
   }, [crPhrase, crGuess, crFeedback, crLength, newCrPhrase, autoFlow, crStreak]);
@@ -738,7 +771,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     if (guessedSemitones === intTarget.semitones) {
       setIntFeedback('correct'); setIntRevealed(true);
       setIntScore(p => ({ hit: p.hit + 1, total: p.total + 1 }));
-      if (autoFlow) setTimeout(newInterval, 900);
+      if (autoFlow) setTimeout(newInterval, 900 * autoDelay);
     } else {
       setIntFeedback('wrong');
       setIntScore(p => ({ ...p, total: p.total + 1 }));
@@ -748,7 +781,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
           playWarmNote(intTarget.note1 + (intTarget.oct1 || 3), '4n');
           setTimeout(() => playWarmNote(intTarget.note2 + (intTarget.oct2 || 4), '4n'), 500);
         }
-      }, 1200);
+      }, 1200 * autoDelay);
     }
   }, [intTarget, newInterval, autoFlow]);
 
@@ -894,7 +927,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
   // Auto-advance melody echo after feedback
   useEffect(() => {
     if (!meFeedback || !autoFlow) return;
-    const delay = meFeedback === 'correct' ? 1500 : 2000;
+    const delay = (meFeedback === 'correct' ? 1500 : 2000) * autoDelay;
     const timer = setTimeout(() => {
       if (meFeedback === 'correct') newMelody();
       else retryMelody();
@@ -1000,11 +1033,28 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
             <Volume2 size={14} />
             {drone.playing ? 'On' : 'Drone'}
           </button>
-          <button onClick={() => setAutoFlow(!autoFlow)} style={{
+          <button onClick={() => {
+            if (autoFlow) {
+              if (hfTimeoutRef.current) clearTimeout(hfTimeoutRef.current);
+              if (crTimeoutRef.current) clearTimeout(crTimeoutRef.current);
+            }
+            setAutoFlow(!autoFlow);
+          }} style={{
             ...btnStyle(autoFlow, T.success),
           }}>
             {autoFlow ? 'Auto' : 'Manual'}
           </button>
+          {autoFlow && (
+            <select value={autoSpeed} onChange={e => setAutoSpeed(e.target.value)} style={{
+              padding: '6px 8px', borderRadius: 16, border: `1px solid ${T.border}`,
+              background: T.bgCard, color: T.textMed, fontSize: 11, fontFamily: T.sans,
+              cursor: 'pointer', appearance: 'none', textAlign: 'center', width: 52,
+            }}>
+              <option value="fast">Fast</option>
+              <option value="normal">Med</option>
+              <option value="slow">Slow</option>
+            </select>
+          )}
         </div>
       )}
 
@@ -1158,7 +1208,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
               <button onClick={() => { setCrGuess([]); setCrFeedback(null); crPhrase.length && playCrPhrase(crPhrase); }}
                 style={btnStyle(false, T.textMed)}>Retry</button>
               <div style={{ display: 'flex', gap: 3, marginLeft: 8 }}>
-                {[2, 3, 4].map(n => (
+                {[2, 3, 4, 5].map(n => (
                   <button key={n} onClick={() => { setCrLength(n); }} style={{
                     width: 28, height: 28, borderRadius: T.radius, border: `1px solid ${crLength === n ? rootColor : T.borderSoft}`,
                     background: crLength === n ? `${rootColor}12` : 'transparent',
