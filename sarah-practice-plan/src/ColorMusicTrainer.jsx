@@ -806,6 +806,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     <div style={{
       fontFamily: T.sans, color: T.textDark,
       padding: embedded ? '12px 0' : '16px 12px',
+      paddingBottom: embedded ? 12 : 140, // Room for floating metronome (64px nav + 50px metro + padding)
       maxWidth: 960, margin: '0 auto',
       display: 'flex', flexDirection: 'column',
       minHeight: embedded ? 'auto' : 'calc(100vh - 80px)',
@@ -895,60 +896,10 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
         </div>
       )}
 
-      {/* ── COLOR WHEEL (always visible — tap a note to set it as root) ── */}
-      <div style={{
-        display: 'flex', justifyContent: 'center', marginBottom: 8,
-        ...(isMobile ? {} : { float: 'left', marginRight: 16 }),
-      }}>
-        <ColorWheel
-          theme={T} root={root} scaleNotes={scaleNotes}
-          voiceNote={voiceNote}
-          activeNote={hfRevealed ? hfTarget?.note : null}
-          size={isMobile ? 150 : 170}
-          onRootChange={setRoot}
-        />
-      </div>
-
-      {/* ── FRETBOARD (the primary interaction — centered on screen) ── */}
-      <div style={{ flex: isMobile ? 1 : 'none', display: 'flex', flexDirection: 'column', justifyContent: 'center', marginBottom: 8 }}>
-        <FretboardDiagram
-          theme={T}
-          scaleData={scaleData}
-          colorMode={true}
-          richTone={true}
-          voiceNote={voiceNote || (srActive && srIdx >= 0 && srIdx < srSequence.length ? srSequence[srIdx] : null) || (mode === 'hearFind' && hfRevealed && hfTarget ? hfTarget.note : null)}
-          oneNoteFilter={mode === 'oneNote' ? oneNote : null}
-          chordToneNotes={mode === 'chordTones' && ctChordTones.length ? ctChordTones : null}
-          onNoteTap={handleNoteTap}
-        />
-        {/* Scale info (compact, below fretboard) */}
-        {mode === 'explore' && (
-          <div style={{ padding: '4px 8px', fontSize: 9, color: T.textMuted, fontFamily: 'monospace', textAlign: 'center' }}>
-            {scaleNotes.join(' \u00B7 ')} — {typeInfo.desc}
-          </div>
-        )}
-      </div>
-
-      {/* ── MODE TABS (bottom section on mobile) ── */}
-      {!embedded && (
-        <div style={{
-          display: 'flex', gap: 2, marginBottom: 8,
-          overflowX: 'auto', paddingBottom: 2,
-          justifyContent: isMobile ? 'stretch' : 'flex-start',
-        }}>
-          {MODES.map(m => (
-            <button key={m.id} onClick={() => setMode(m.id)}
-              style={{ ...modeTabStyle(m.id), flex: isMobile ? 1 : 'none', justifyContent: 'center' }}>
-              {m.label}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {/* ── MODE PANEL (at bottom = thumb zone on mobile) ── */}
+      {/* ── MODE PANEL (top section — instructions/controls near menu) ── */}
       <div style={{
         padding: isMobile ? '12px' : '14px 16px',
-        borderRadius: T.radiusMd,
+        borderRadius: T.radiusMd, marginBottom: 8,
         background: T.bgSoft, border: `1px solid ${T.border}`,
       }}>
 
@@ -1548,6 +1499,55 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
           </div>
         )}
       </div>
+
+      {/* ── COLOR WHEEL (always visible — tap a note to set it as root) ── */}
+      <div style={{
+        display: 'flex', justifyContent: 'center', marginBottom: 8,
+        ...(isMobile ? {} : { float: 'left', marginRight: 16 }),
+      }}>
+        <ColorWheel
+          theme={T} root={root} scaleNotes={scaleNotes}
+          voiceNote={voiceNote}
+          activeNote={hfRevealed ? hfTarget?.note : null}
+          size={isMobile ? 150 : 170}
+          onRootChange={setRoot}
+        />
+      </div>
+
+      {/* ── FRETBOARD ── */}
+      <div style={{ display: 'flex', flexDirection: 'column', marginBottom: 8 }}>
+        <FretboardDiagram
+          theme={T}
+          scaleData={scaleData}
+          colorMode={true}
+          richTone={true}
+          voiceNote={voiceNote || (srActive && srIdx >= 0 && srIdx < srSequence.length ? srSequence[srIdx] : null) || (mode === 'hearFind' && hfRevealed && hfTarget ? hfTarget.note : null)}
+          oneNoteFilter={mode === 'oneNote' ? oneNote : null}
+          chordToneNotes={mode === 'chordTones' && ctChordTones.length ? ctChordTones : null}
+          onNoteTap={handleNoteTap}
+        />
+        {mode === 'explore' && (
+          <div style={{ padding: '4px 8px', fontSize: 9, color: T.textMuted, fontFamily: 'monospace', textAlign: 'center' }}>
+            {scaleNotes.join(' \u00B7 ')} — {typeInfo.desc}
+          </div>
+        )}
+      </div>
+
+      {/* ── MODE TABS (bottom — like sub-navigation) ── */}
+      {!embedded && (
+        <div style={{
+          display: 'flex', gap: 2, marginBottom: 8,
+          overflowX: 'auto', paddingBottom: 2,
+          justifyContent: isMobile ? 'stretch' : 'flex-start',
+        }}>
+          {MODES.map(m => (
+            <button key={m.id} onClick={() => setMode(m.id)}
+              style={{ ...modeTabStyle(m.id), flex: isMobile ? 1 : 'none', justifyContent: 'center' }}>
+              {m.label}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* ── Stats ── */}
       {!embedded && (hfScore.total > 0 || crScore.total > 0) && (
