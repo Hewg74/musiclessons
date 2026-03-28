@@ -336,7 +336,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
   const [root, setRoot] = useState(defaultRoot || 'A');
   const [scaleType, setScaleType] = useState(defaultScale || 'minor-pentatonic');
   const [mode, setMode] = useState(defaultMode || 'explore');
-  const [settingsOpen, setSettingsOpen] = useState(false); // collapsed root/scale on mobile
+  const [settingsOpen, setSettingsOpen] = useState(true); // root/scale selector open by default
   const [wheelVisible, setWheelVisible] = useState(false); // color wheel toggle on mobile
   const drone = useQuickDrone();
 
@@ -836,8 +836,8 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
               <div style={{ fontSize: 15, fontWeight: 700, fontFamily: T.serif, color: T.textDark }}>
                 Color Music
               </div>
-              <div style={{ fontSize: 10, color: T.textMuted, fontFamily: T.sans }}>
-                {root} {typeInfo.name}
+              <div style={{ fontSize: 10, color: settingsOpen ? T.textMuted : rootColor, fontFamily: T.sans }}>
+                {root} {typeInfo.name} {!settingsOpen && '\u2014 tap to change key & scale'}
               </div>
             </div>
             {settingsOpen ? <ChevronUp size={14} color={T.textMuted} /> : <ChevronDown size={14} color={T.textMuted} />}
@@ -874,6 +874,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
           background: T.bgSoft, border: `1px solid ${T.border}`,
         }}>
           {/* Root selector — bigger on mobile */}
+          <div style={{ fontSize: 9, fontWeight: 700, color: T.textMuted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 4, fontFamily: T.sans }}>Key</div>
           <div style={{ display: 'flex', gap: isMobile ? 4 : 3, marginBottom: 10, flexWrap: 'wrap' }}>
             {CHROMATIC.map(n => {
               const c = getColorForNote(n);
@@ -890,7 +891,8 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
               );
             })}
           </div>
-          {/* Scale selector */}
+          {/* Scale / Mode selector */}
+          <div style={{ fontSize: 9, fontWeight: 700, color: T.textMuted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 4, fontFamily: T.sans }}>Scale / Mode</div>
           <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
             {Object.entries(SCALE_TYPES).map(([key, info]) => {
               const sel = key === scaleType;

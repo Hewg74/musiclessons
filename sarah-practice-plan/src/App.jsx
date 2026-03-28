@@ -4492,7 +4492,7 @@ export default function App() {
   // Color Music Trainer overlay — full-page experience
   if (colorMusicOpen) {
     return (
-      <div style={{ background: T.bg, minHeight: "100vh", color: T.textDark, fontFamily: T.sans }}>
+      <div style={{ background: T.bg, minHeight: "100vh", color: T.textDark, fontFamily: T.sans, paddingBottom: 80 }}>
         <ColorMusicTrainer theme={T} onBack={() => setColorMusicOpen(false)} />
         <FloatingMetronome metro={metro} setTab={() => {}} isDark={isDark} theme={T} />
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;600;700&display=swap" rel="stylesheet" />

@@ -2529,8 +2529,18 @@ export function FretboardDiagram({
   const fretSpacing = 52;
   const stringSpacing = 22;
 
+  // Full SVG dimensions (always render the full neck in SVG space)
   const svgWidth = leftPad + totalFrets * fretSpacing + rightPad;
   const svgHeight = topPad + (numStrings - 1) * stringSpacing + bottomPad;
+
+  // Cropped viewBox: in position mode, zoom into just the active frets (bigger dots on mobile)
+  const cropLo = fullNeck ? 0 : Math.max(0, lo - 1);
+  const cropHi = fullNeck ? totalFrets - 1 : Math.min(totalFrets - 1, hi + 1);
+  const cropX = leftPad + cropLo * fretSpacing - 8;
+  const cropW = (cropHi - cropLo + 1) * fretSpacing + leftPad + rightPad - (cropLo > 0 ? cropLo * fretSpacing - 8 : 0);
+  const viewBoxStr = fullNeck
+    ? `0 0 ${svgWidth} ${svgHeight}`
+    : `${Math.max(0, cropX)} 0 ${Math.min(svgWidth, cropW)} ${svgHeight}`;
 
   // String thicknesses: thickest for low E (string 6, index 5), thinnest for high E (string 1, index 0)
   const stringWidths = [1, 1.2, 1.6, 2, 2.5, 3];
@@ -2668,7 +2678,7 @@ export function FretboardDiagram({
 
       <style>{`@keyframes colorPulse { 0%,100%{opacity:0.9} 50%{opacity:1} }`}</style>
       <svg
-        viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+        viewBox={viewBoxStr}
         style={{ width: '100%', minHeight: 160, maxWidth: '100%', display: 'block' }}
       >
         <defs>
