@@ -299,7 +299,12 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
           // Melisma / instrumental continuation — glide pitch, no re-attack
           synth.portamento = 0.03;
           synth.setNote(cell.note, cellTime);
-          // Stay in legato — sustain through gaps and bare notes until a word ends it
+          if (!nextCell?.note) {
+            // Gap follows — end melisma, release after this note
+            try { synth.triggerRelease(cellTime + eighthDur); } catch (_) {}
+            legatoActiveRef.current = false;
+          }
+          // Otherwise next is bare note or word+note — stay in legato
         } else {
           // New word/syllable, or first note — fresh attack
           synth.portamento = 0;
