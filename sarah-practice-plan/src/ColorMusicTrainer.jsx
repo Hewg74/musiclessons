@@ -364,7 +364,7 @@ function useQuickDrone() {
     const lp = new Tone.Filter(350, 'lowpass');
     const gain = new Tone.Gain(0);
     synth.connect(lp); lp.connect(gain); gain.toDestination();
-    synth.start(); gain.gain.rampTo(0.18, 0.5);
+    synth.start(); gain.gain.rampTo(0.07, 0.5);
     synthRef.current = synth; gainRef.current = gain; filterRef.current = lp;
     setPlaying(true);
   }, []);
@@ -385,7 +385,7 @@ function useQuickDrone() {
   useEffect(() => {
     const handleMicReleased = async () => {
       if (!synthRef.current || !gainRef.current) return;
-      try { await Tone.context.rawContext.suspend(); await Tone.context.rawContext.resume(); gainRef.current.gain.rampTo(0.18, 0.3); } catch {}
+      try { await Tone.context.rawContext.suspend(); await Tone.context.rawContext.resume(); gainRef.current.gain.rampTo(0.07, 0.3); } catch {}
     };
     window.addEventListener('micReleased', handleMicReleased);
     return () => window.removeEventListener('micReleased', handleMicReleased);
