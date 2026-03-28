@@ -861,29 +861,9 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
               color: T.textMed, display: 'flex', alignItems: 'center', minWidth: 44, minHeight: 44,
             }}><ArrowLeft size={20} /></button>
           )}
-
-          {/* Collapsible summary: "A Min Pent ▾" */}
-          <button onClick={() => setSettingsOpen(!settingsOpen)} style={{
-            flex: 1, background: 'none', border: 'none', cursor: 'pointer',
-            display: 'flex', alignItems: 'center', gap: 8, padding: '4px 0',
-            textAlign: 'left',
-          }}>
-            <div style={{
-              width: 28, height: 28, borderRadius: 4,
-              background: rootColor, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 11, fontWeight: 800, color: '#fff', fontFamily: 'monospace',
-              flexShrink: 0,
-            }}>{root}</div>
-            <div>
-              <div style={{ fontSize: 15, fontWeight: 700, fontFamily: T.serif, color: T.textDark }}>
-                Color Music
-              </div>
-              <div style={{ fontSize: 10, color: settingsOpen ? T.textMuted : rootColor, fontFamily: T.sans }}>
-                {root} {typeInfo.name} {!settingsOpen && '\u2014 tap to change scale'}
-              </div>
-            </div>
-            {settingsOpen ? <ChevronUp size={14} color={T.textMuted} /> : <ChevronDown size={14} color={T.textMuted} />}
-          </button>
+          <h1 style={{ fontSize: 16, fontWeight: 700, fontFamily: T.serif, margin: 0, color: T.textDark, flex: 1 }}>
+            Color Music
+          </h1>
 
           {/* Drone toggle */}
           <button onClick={() => drone.playing ? drone.stop() : drone.start(root)} style={{
@@ -898,38 +878,23 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
         </div>
       )}
 
-      {/* ── COLLAPSIBLE ROOT/SCALE SELECTORS ── */}
-      {!embedded && settingsOpen && (
+      {/* ── MODE TABS (top — primary navigation, scrollable) ── */}
+      {!embedded && (
         <div style={{
-          padding: '12px', marginBottom: 8, borderRadius: T.radiusMd,
-          background: T.bgSoft, border: `1px solid ${T.border}`,
+          display: 'flex', gap: 2, marginBottom: 8,
+          overflowX: 'auto', paddingBottom: 2,
+          WebkitOverflowScrolling: 'touch',
         }}>
-          {/* Key note: wheel is the root selector */}
-          <div style={{ fontSize: 10, color: T.textMuted, marginBottom: 8, fontFamily: T.sans }}>
-            Tap any note on the color wheel to change key.
-          </div>
-          {/* Scale / Mode selector */}
-          <div style={{ fontSize: 9, fontWeight: 700, color: T.textMuted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 4, fontFamily: T.sans }}>Scale / Mode</div>
-          <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
-            {Object.entries(SCALE_TYPES).map(([key, info]) => {
-              const sel = key === scaleType;
-              return (
-                <button key={key} onClick={() => setScaleType(key)} style={{
-                  padding: isMobile ? '8px 12px' : '4px 10px', borderRadius: T.radius,
-                  background: sel ? `${rootColor}08` : 'transparent',
-                  border: `1px solid ${sel ? rootColor + '60' : T.borderSoft}`,
-                  color: sel ? T.textDark : T.textMuted,
-                  fontSize: isMobile ? 12 : 10, fontFamily: T.sans, cursor: 'pointer',
-                  minHeight: isMobile ? 44 : 'auto',
-                  transition: 'all 0.2s',
-                }}>{info.name}</button>
-              );
-            })}
-          </div>
+          {MODES.map(m => (
+            <button key={m.id} onClick={() => setMode(m.id)}
+              style={{ ...modeTabStyle(m.id), flex: 'none', whiteSpace: 'nowrap' }}>
+              {m.label}
+            </button>
+          ))}
         </div>
       )}
 
-      {/* ── MODE PANEL (top section — instructions/controls near menu) ── */}
+      {/* ── MODE PANEL (instructions/controls for current minigame) ── */}
       <div style={{
         padding: isMobile ? '12px' : '14px 16px',
         borderRadius: T.radiusMd, marginBottom: 8,
@@ -1571,19 +1536,52 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
         )}
       </div>
 
-      {/* ── MODE TABS (bottom — like sub-navigation) ── */}
+      {/* ── SCALE / MODE SELECTOR (bottom — "set once" config) ── */}
       {!embedded && (
-        <div style={{
-          display: 'flex', gap: 2, marginBottom: 8,
-          overflowX: 'auto', paddingBottom: 2,
-          justifyContent: isMobile ? 'stretch' : 'flex-start',
-        }}>
-          {MODES.map(m => (
-            <button key={m.id} onClick={() => setMode(m.id)}
-              style={{ ...modeTabStyle(m.id), flex: isMobile ? 1 : 'none', justifyContent: 'center' }}>
-              {m.label}
-            </button>
-          ))}
+        <div style={{ marginBottom: 8 }}>
+          <button onClick={() => setSettingsOpen(!settingsOpen)} style={{
+            background: 'none', border: 'none', cursor: 'pointer', padding: '6px 0',
+            display: 'flex', alignItems: 'center', gap: 6, width: '100%',
+          }}>
+            <div style={{
+              width: 20, height: 20, borderRadius: 3,
+              background: rootColor, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 8, fontWeight: 800, color: '#fff', fontFamily: 'monospace',
+            }}>{root}</div>
+            <span style={{ fontSize: 11, color: T.textMuted, fontFamily: T.sans }}>
+              {root} {typeInfo.name}
+            </span>
+            <span style={{ fontSize: 9, color: T.textLight }}>
+              {settingsOpen ? '\u25B2' : '\u25BC'} {!settingsOpen && 'change scale'}
+            </span>
+          </button>
+          {settingsOpen && (
+            <div style={{
+              padding: '10px 12px', borderRadius: T.radiusMd,
+              background: T.bgSoft, border: `1px solid ${T.border}`, marginTop: 4,
+            }}>
+              <div style={{ fontSize: 10, color: T.textMuted, marginBottom: 6, fontFamily: T.sans }}>
+                Tap any note on the color wheel to change key.
+              </div>
+              <div style={{ fontSize: 9, fontWeight: 700, color: T.textMuted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 4, fontFamily: T.sans }}>Scale / Mode</div>
+              <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+                {Object.entries(SCALE_TYPES).map(([key, info]) => {
+                  const sel = key === scaleType;
+                  return (
+                    <button key={key} onClick={() => setScaleType(key)} style={{
+                      padding: isMobile ? '8px 12px' : '4px 10px', borderRadius: T.radius,
+                      background: sel ? `${rootColor}08` : 'transparent',
+                      border: `1px solid ${sel ? rootColor + '60' : T.borderSoft}`,
+                      color: sel ? T.textDark : T.textMuted,
+                      fontSize: isMobile ? 12 : 10, fontFamily: T.sans, cursor: 'pointer',
+                      minHeight: isMobile ? 44 : 'auto',
+                      transition: 'all 0.2s',
+                    }}>{info.name}</button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
