@@ -907,6 +907,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     if (mode === 'hearFind') setTimeout(newChallenge, 300);
     if (mode === 'callResponse') setTimeout(newCrPhrase, 300);
     if (mode === 'intervals') setTimeout(newInterval, 300);
+    if (mode === 'melodyEcho') setTimeout(newMelody, 300);
     if (mode === 'oneNote') setOneNote(null);
     if (mode !== 'voice' && mode !== 'melodyEcho') { setVoiceNote(null); setMicActive(false); }
     if (mode === 'voice' || mode === 'melodyEcho') setMicActive(true);
@@ -1614,30 +1615,33 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
         )}
       </div>
 
-      {/* ── FEEDBACK TOAST (fixed height slot — never causes layout shift) ── */}
+      {/* ── FEEDBACK TOAST (fixed 36px slot — NEVER causes layout shift) ── */}
       {(() => {
         const fb = hfFeedback || crFeedback || intFeedback || meFeedback;
-        if (!fb) return <div style={{ height: 4 }} />; // spacer when no feedback
         const isGood = fb === 'yes' || fb === 'correct';
         return (
-          <div style={{
-            padding: '8px 14px', borderRadius: 20, marginBottom: 8,
-            background: isGood ? T.success : T.coral,
-            color: '#fff', fontSize: 12, fontWeight: 600, fontFamily: T.sans,
-            textAlign: 'center', textShadow: '0 1px 2px rgba(0,0,0,0.2)',
-            transition: 'all 0.2s',
-          }}>
-            {hfFeedback === 'yes' && (() => {
-              const deg = hfTarget ? getDegreeFeedback(hfTarget.note) : null;
-              return `✓ ${hfTarget?.note}${deg ? ` — the ${deg.name}` : ''}`;
-            })()}
-            {hfFeedback === 'no' && '✗ Listen again'}
-            {crFeedback === 'correct' && '✓ Got it!'}
-            {crFeedback === 'wrong' && '✗ Not quite — listen again'}
-            {intFeedback === 'correct' && `✓ ${intTarget?.intervalName}`}
-            {intFeedback === 'wrong' && '✗ Listen to the distance'}
-            {meFeedback === 'correct' && '✓ Perfect echo!'}
-            {meFeedback === 'wrong' && '✗ Not quite — try again'}
+          <div style={{ height: 36, marginBottom: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {fb && (
+              <div style={{
+                padding: '6px 20px', borderRadius: 20,
+                background: isGood ? T.success : T.coral,
+                color: '#fff', fontSize: 12, fontWeight: 600, fontFamily: T.sans,
+                textAlign: 'center', textShadow: '0 1px 2px rgba(0,0,0,0.2)',
+                opacity: 1, transition: 'opacity 0.2s',
+              }}>
+                {hfFeedback === 'yes' && (() => {
+                  const deg = hfTarget ? getDegreeFeedback(hfTarget.note) : null;
+                  return `✓ ${hfTarget?.note}${deg ? ` — the ${deg.name}` : ''}`;
+                })()}
+                {hfFeedback === 'no' && '✗ Listen again'}
+                {crFeedback === 'correct' && '✓ Got it!'}
+                {crFeedback === 'wrong' && '✗ Not quite'}
+                {intFeedback === 'correct' && `✓ ${intTarget?.intervalName}`}
+                {intFeedback === 'wrong' && '✗ Not that one'}
+                {meFeedback === 'correct' && '✓ Perfect!'}
+                {meFeedback === 'wrong' && '✗ Try again'}
+              </div>
+            )}
           </div>
         );
       })()}
