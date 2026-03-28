@@ -664,7 +664,8 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     setTimeout(() => playCrPhrase(phrase), 200);
     // Auto-advance timeout: if user doesn't answer in time, move on
     if (autoFlow) {
-      crTimeoutRef.current = setTimeout(() => newCrPhrase(), crLength * 400 + 6000);
+      // Generous timeout: 5s per note in phrase × speed multiplier — enough time to find notes on a real guitar
+      crTimeoutRef.current = setTimeout(() => newCrPhrase(), crLength * 5000 * autoDelay);
     }
   }, [crLength, generatePhrase, playCrPhrase, autoFlow]);
 
@@ -686,14 +687,14 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
             setTimeout(() => { setCrFeedback(null); setCrRespondPhase(true); }, 600);
             setTimeout(() => { setCrRespondPhase(false); newCrPhrase(); }, 5000);
           } else {
-            setTimeout(newCrPhrase, 1200 * autoDelay);
+            setTimeout(newCrPhrase, 2000 * autoDelay);
           }
         } else {
           setTimeout(() => setCrFeedback(null), 1500);
         }
       } else {
         setCrScore(p => ({ ...p, total: p.total + 1 })); setCrStreak(0);
-        if (autoFlow) setTimeout(newCrPhrase, 1200 * autoDelay);
+        if (autoFlow) setTimeout(newCrPhrase, 2000 * autoDelay);
         else setTimeout(() => { setCrFeedback(null); setCrGuess([]); }, 1500);
       }
     }
