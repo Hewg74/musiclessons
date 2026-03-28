@@ -601,34 +601,58 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
   }, []);
 
   // ─── Call & Response ───
+  // Generate a phrase WITH baked-in rhythm (durations + gaps per note).
+  // Rhythm is fixed per phrase so replays sound identical.
+  const crRhythmRef = useRef([]); // rhythm pattern for current phrase
+
   const generatePhrase = useCallback((len) => {
     const notes = scaleData.notes;
     const phrase = [];
+    const rhythm = [];
     let prev = Math.floor(Math.random() * notes.length);
+
+    // Common rhythmic patterns (durations + gaps in ms) — like real licks
+    const rhythmPatterns = [
+      // Swung feel: long-short
+      () => ({ dur: Math.random() > 0.5 ? '4n' : '2n', gap: 250 + Math.floor(Math.random() * 150) }),
+      // Quick pair (eighth notes)
+      () => ({ dur: '8n', gap: 150 + Math.floor(Math.random() * 80) }),
+      // Held note with breath
+      () => ({ dur: '2n', gap: 400 + Math.floor(Math.random() * 200) }),
+      // Punchy quarter
+      () => ({ dur: '4n', gap: 280 + Math.floor(Math.random() * 120) }),
+    ];
+
     for (let i = 0; i < len; i++) {
-      // 15% chance: repeat same note (rhythmic variation like real music)
-      // 60% chance: stepwise (±1 scale degree)
-      // 25% chance: small leap (±2 degrees)
+      // Note selection: 15% repeat, 55% stepwise, 20% small leap, 10% bigger leap
       const r = Math.random();
-      const step = r < 0.15 ? 0 : r < 0.75 ? (Math.random() > 0.5 ? 1 : -1) : (Math.random() > 0.5 ? 2 : -2);
+      const step = r < 0.15 ? 0 : r < 0.70 ? (Math.random() > 0.5 ? 1 : -1)
+        : r < 0.90 ? (Math.random() > 0.5 ? 2 : -2) : (Math.random() > 0.5 ? 3 : -3);
       const idx = Math.max(0, Math.min(notes.length - 1, prev + step));
       phrase.push(notes[idx]);
+
+      // Rhythm: pick a pattern, with occasional rest before note
+      const pat = rhythmPatterns[Math.floor(Math.random() * rhythmPatterns.length)]();
+      const rest = (i > 0 && Math.random() < 0.12) ? 180 + Math.floor(Math.random() * 150) : 0;
+      rhythm.push({ dur: pat.dur, gap: pat.gap, rest });
       prev = idx;
     }
+    // Last note should be longer (resolving)
+    if (rhythm.length) rhythm[rhythm.length - 1].dur = '2n';
+
+    crRhythmRef.current = rhythm;
     return phrase;
   }, [scaleData]);
 
   const playCrPhrase = useCallback((phrase) => {
     const withOctaves = assignGuitarOctaves(phrase, phrase[0]);
-    const durations = ['8n', '8n', '4n', '4n', '4n', '2n']; // weighted toward quarter notes
+    const rhythm = crRhythmRef.current;
     let time = 0;
     phrase.forEach((note, i) => {
-      const dur = durations[Math.floor(Math.random() * durations.length)];
-      const gap = 150 + Math.floor(Math.random() * 350); // 150-500ms
-      // 15% chance of a brief rest (not on first note)
-      if (i > 0 && Math.random() < 0.15) time += 150 + Math.floor(Math.random() * 200);
-      setTimeout(() => playWarmNote(withOctaves[i], dur), time);
-      time += gap;
+      const r = rhythm[i] || { dur: '4n', gap: 300, rest: 0 };
+      time += r.rest;
+      setTimeout(() => playWarmNote(withOctaves[i], r.dur), time);
+      time += r.gap;
     });
   }, []);
 
@@ -662,13 +686,15 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
             setTimeout(() => { setCrFeedback(null); setCrRespondPhase(true); }, 600);
             setTimeout(() => { setCrRespondPhase(false); newCrPhrase(); }, 5000);
           } else {
-            setTimeout(newCrPhrase, 1000);
+            setTimeout(newCrPhrase, 1000 * autoDelay);
           }
+        } else {
+          setTimeout(() => setCrFeedback(null), 1500);
         }
       } else {
         setCrScore(p => ({ ...p, total: p.total + 1 })); setCrStreak(0);
-        // Wrong → move to new phrase (not replay same one)
         if (autoFlow) setTimeout(newCrPhrase, 1500 * autoDelay);
+        else setTimeout(() => { setCrFeedback(null); setCrGuess([]); }, 1500);
       }
     }
   }, [crPhrase, crGuess, crFeedback, crLength, newCrPhrase, autoFlow, crStreak]);
@@ -772,18 +798,23 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
       setIntFeedback('correct'); setIntRevealed(true);
       setIntScore(p => ({ hit: p.hit + 1, total: p.total + 1 }));
       if (autoFlow) setTimeout(newInterval, 900 * autoDelay);
+      else setTimeout(() => setIntFeedback(null), 1500);
     } else {
       setIntFeedback('wrong');
       setIntScore(p => ({ ...p, total: p.total + 1 }));
-      if (autoFlow) setTimeout(() => {
-        setIntFeedback(null);
-        if (intTarget) {
-          playWarmNote(intTarget.note1 + (intTarget.oct1 || 3), '4n');
-          setTimeout(() => playWarmNote(intTarget.note2 + (intTarget.oct2 || 4), '4n'), 500);
-        }
-      }, 1200 * autoDelay);
+      if (autoFlow) {
+        setTimeout(() => {
+          setIntFeedback(null);
+          if (intTarget) {
+            playWarmNote(intTarget.note1 + (intTarget.oct1 || 3), '4n');
+            setTimeout(() => playWarmNote(intTarget.note2 + (intTarget.oct2 || 4), '4n'), 500);
+          }
+        }, 1200 * autoDelay);
+      } else {
+        setTimeout(() => setIntFeedback(null), 1500);
+      }
     }
-  }, [intTarget, newInterval, autoFlow]);
+  }, [intTarget, newInterval, autoFlow, autoDelay]);
 
   // Available intervals in current scale (relative to root)
   const scaleIntervals = useMemo(() => {
@@ -856,17 +887,17 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
   }, [srActive, srBpm, srSequence]);
 
   // ─── Melody Echo ───
+  const meRhythmRef = useRef([]); // baked-in rhythm for consistent replays
+
   const playMelodyPhrase = useCallback((phrase) => {
-    // Assign guitar-realistic octaves to the phrase
     const withOctaves = assignGuitarOctaves(phrase, phrase[0]);
-    const durations = ['8n', '4n', '4n', '2n'];
+    const rhythm = meRhythmRef.current;
     let time = 0;
     phrase.forEach((n, i) => {
-      const dur = durations[Math.floor(Math.random() * durations.length)];
-      const gap = 200 + Math.floor(Math.random() * 300);
-      if (i > 0 && Math.random() < 0.2) time += 200 + Math.floor(Math.random() * 200);
-      setTimeout(() => playWarmNote(withOctaves[i], dur), time);
-      time += gap;
+      const r = rhythm[i] || { dur: '4n', gap: 300, rest: 0 };
+      time += r.rest;
+      setTimeout(() => playWarmNote(withOctaves[i], r.dur), time);
+      time += r.gap;
     });
     return time;
   }, []);
@@ -874,13 +905,27 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
   const newMelody = useCallback(() => {
     const notes = scaleData.notes;
     const phrase = [];
+    const rhythm = [];
     let prev = Math.floor(Math.random() * notes.length);
     for (let i = 0; i < meLength; i++) {
-      const step = Math.random() < 0.7 ? (Math.random() > 0.5 ? 1 : -1) : Math.floor(Math.random() * 3) - 1;
+      const r = Math.random();
+      const step = r < 0.15 ? 0 : r < 0.70 ? (Math.random() > 0.5 ? 1 : -1)
+        : r < 0.90 ? (Math.random() > 0.5 ? 2 : -2) : (Math.random() > 0.5 ? 3 : -3);
       const idx = Math.max(0, Math.min(notes.length - 1, prev + step));
       phrase.push(notes[idx]);
+
+      // Musical rhythm: varied durations + occasional rests
+      const durOpts = ['8n', '4n', '4n', '2n'];
+      const dur = durOpts[Math.floor(Math.random() * durOpts.length)];
+      const gap = 200 + Math.floor(Math.random() * 300);
+      const rest = (i > 0 && Math.random() < 0.15) ? 150 + Math.floor(Math.random() * 200) : 0;
+      rhythm.push({ dur, gap, rest });
       prev = idx;
     }
+    // Last note held longer
+    if (rhythm.length) rhythm[rhythm.length - 1].dur = '2n';
+    meRhythmRef.current = rhythm;
+
     setMePhrase(phrase); setMeSung([]); setMeListening(false); setMeFeedback(null);
     meLastNoteRef.current = null;
     const totalTime = playMelodyPhrase(phrase);
