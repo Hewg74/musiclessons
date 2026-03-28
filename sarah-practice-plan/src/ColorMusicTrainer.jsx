@@ -496,7 +496,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
       setHfFeedback('no'); setHfScore(p => ({ ...p, total: p.total + 1 })); setHfStreak(0);
       setTimeout(() => setHfFeedback(null), 1000);
     }
-  }, [hfTarget, newChallenge]);
+  }, [hfTarget, newChallenge, hfAudiateMode, hfAudiatePhase]);
 
   // ─── Voice ───
   const handlePitchDetected = useCallback(({ note, cents, freq }) => {
