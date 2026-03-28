@@ -1,0 +1,27 @@
+[2026-03-28T09:09:56.039Z] anything useful we can extract from this for the app, namely the singer soungwriter and guitar track?
+
+CORE PRINCIPLE — INTENTION BEFORE SOUND:
+Every exercise in the app should follow this sequence: HEAR → FEEL → PLAY → CONFIRM. The user imagines the sound internally (audiation), notices where it lives somatically, executes on the instrument, then evaluates whether reality matched intention. This is not one exercise type — it's the framework ALL exercises should be built on.
+SPECIFIC EXERCISE TYPES TO ADD:
+
+Single Note Meditation — App plays a drone/root note. User plays one note, sustains it, listens to it decay. Before playing it again, they must internally hear it. Then play and check. Gradually add a second note. Alternate. This is the foundational exercise — it sounds stupidly simple but it builds the audiation muscle.
+Pentatonic Crawl with Audiation — Slow walk through a scale position. Before each note, the app pauses and prompts: "Hear the next note before you play it." If pitch detection shows the user nailed it without hunting, that's a success metric. Speed is irrelevant — internal accuracy is everything.
+Phrase with Space — Two-chord backing track. User plays a phrase of 3-5 notes, then STOPS. Full bar or two of silence. During silence, they hear their next phrase internally. Then play it. The app should track the ratio of silence to playing and reward MORE silence, not less. This inverts the typical gamification where more notes = higher score.
+One-Note Soloing — The most important exercise. User picks ONE note from the scale. Solos over a backing track using ONLY that note. All expression comes from rhythm, dynamics, timing (ahead/behind beat), bending, muting. This teaches that feel > vocabulary. The app should have this as an early-stage exercise, not an advanced one.
+Somatic Grounding Warmup — Before any playing, a 60-90 second guided warmup: hum the root note, feel it resonate in the chest, notice the physical sensation, then find it on the guitar. This bridges body awareness to instrument.
+
+HARMONIC VOCABULARY — KEEP IT NARROW:
+The primary scales for this app should be: Minor Pentatonic, Natural Minor, Mixolydian, Blues, Major Pentatonic. These cover 90%+ of surf rock, indie pop, dream pop, folk, and classic rock. Do NOT default to jazz harmony (7th chords, ii-V-I, extended chords) unless the user explicitly selects a jazz module.
+COLOR MUSIC INTEGRATION:
+Consider adopting the ColorMusic color encoding (circle of fifths mapped to color wheel: C=Red, G=Red-Orange, D=Orange, A=Amber, E=Yellow, B=Yellow-Green, F#=Green, C#=Teal, G#=Blue, D#=Blue-Violet, A#=Violet, F=Rose). This makes harmonic relationships visible — notes close on the circle of fifths have similar colors, so a consonant scale appears as a warm color cluster while dissonant intervals show as contrasting colors. This could be used on fretboard visualizations, scale diagrams, and chord relationship displays throughout the app.
+GENRE CONTEXT:
+The primary vibe is indie surf-pop / dream pop / beach goth — think Allah-Las, Sunroom, Goth Babe, The Lagoons, Jack Johnson. This means: reverb-heavy, melody-focused, triads and simple chord progressions, pentatonic and natural minor melodies, Mixolydian brightness. The app's tone, backing tracks, and exercise selection should reflect this aesthetic. Simple chords played with intention and feel, not complex harmony.
+KEY METRICS TO TRACK:
+
+Audiation accuracy: did the played note match what was intended (requires pitch detection comparison to expected note)
+Silence ratio: time spent NOT playing vs. playing (higher = better in phrase exercises)
+Rhythmic intention: are notes landing on intended beat positions or are they scattered
+Single-note expressiveness: variation in dynamics/timing when using only one note
+Session consistency: showing up regularly matters more than any single metric
+[2026-03-28T10:08:25.353Z] what else should we bake in with this new knowledge? what else could be useful
+[2026-03-28T10:20:27.169Z] lets just do 3

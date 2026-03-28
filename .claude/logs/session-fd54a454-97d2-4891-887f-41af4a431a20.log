@@ -1,0 +1,811 @@
+[2026-03-28T09:41:53.069Z] import { useState, useCallback, useRef, useEffect, useMemo } from "react";
+
+// ─── CONSTANTS ───
+const NOTE_NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+
+const COLOR_MUSIC = {
+  "C":  { color: "#E83A30", label: "Red" },
+  "G":  { color: "#F06520", label: "Red-Org" },
+  "D":  { color: "#F59A1E", label: "Orange" },
+  "A":  { color: "#F5C518", label: "Amber" },
+  "E":  { color: "#E8D830", label: "Yellow" },
+  "B":  { color: "#8FBF35", label: "Ylw-Grn" },
+  "F#": { color: "#2E9E5A", label: "Green" },
+  "C#": { color: "#1A8C7A", label: "Teal" },
+  "G#": { color: "#2570B0", label: "Blue" },
+  "D#": { color: "#5B3FA0", label: "Blu-Vio" },
+  "A#": { color: "#8B2D8B", label: "Violet" },
+  "F":  { color: "#C42D6B", label: "Rose" },
+};
+
+const ENHARMONIC = { "Db":"C#","Eb":"D#","Gb":"F#","Ab":"G#","Bb":"A#" };
+const gc = (n) => COLOR_MUSIC[ENHARMONIC[n]||n] || COLOR_MUSIC["C"];
+
+const SCALES = {
+  "Minor Pentatonic": [0,3,5,7,10],
+  "Natural Minor":    [0,2,3,5,7,8,10],
+  "Mixolydian":       [0,2,4,5,7,9,10],
+  "Major Pentatonic": [0,2,4,7,9],
+  "Blues":            [0,3,5,6,7,10],
+};
+
+const SCALE_DESC = {
+  "Minor Pentatonic": "5 notes, zero tension. The backbone.",
+  "Natural Minor": "Pentatonic + 2. Melancholy depth.",
+  "Mixolydian": "Major with ♭7. Laid-back brightness.",
+  "Major Pentatonic": "Happy pentatonic. Uplifting.",
+  "Blues": "Pentatonic + blue note. Raw.",
+};
+
+const STR_TUNE = [4,9,2,7,11,4];
+const STR_LBL = ["E","A","D","G","B","e"];
+const NFRETS = 15;
+const getNote = (s,f) => NOTE_NAMES[(STR_TUNE[s]+f)%12];
+const getFreq = (s,f) => [82.41,110,146.83,196,246.94,329.63][s]*Math.pow(2,f/12);
+const inScale = (n,r,si) => si.includes((NOTE_NAMES.indexOf(ENHARMONIC[n]||n)-NOTE_NAMES.indexOf(r)+12)%12);
+const getDeg = (n,r,si) => { const i=si.indexOf((NOTE_NAMES.indexOf(ENHARMONIC[n]||n)-NOTE_NAMES.indexOf(r)+12)%12); return i>=0?i+1:null; };
+const isRt = (n,r) => (ENHARMONIC[n]||n)===(ENHARMONIC[r]||r);
+
+// Freq to note name
+const freqToNote = (freq) => {
+  if (!freq || freq < 60 || freq > 1200) return null;
+  const noteNum = 12 * Math.log2(freq / 440) + 69;
+  const rounded = Math.round(noteNum);
+  const cents = Math.round((noteNum - rounded) * 100);
+  const name = NOTE_NAMES[((rounded % 12) + 12) % 12];
+  const octave = Math.floor(rounded / 12) - 1;
+  return { name, octave, cents, noteNum: rounded, freq };
+};
+
+// ─── PITCH DETECTION (autocorrelation) ───
+const autoCorrelate = (buf, sampleRate) => {
+  let size = buf.length;
+  let rms = 0;
+  for (let i = 0; i < size; i++) rms += buf[i] * buf[i];
+  rms = Math.sqrt(rms / size);
+  if (rms < 0.008) return -1; // too quiet
+
+  // Trim silence
+  let r1 = 0, r2 = size - 1;
+  const threshold = 0.2;
+  for (let i = 0; i < size / 2; i++) { if (Math.abs(buf[i]) < threshold) { r1 = i; break; } }
+  for (let i = 1; i < size / 2; i++) { if (Math.abs(buf[size - i]) < threshold) { r2 = size - i; break; } }
+  buf = buf.slice(r1, r2);
+  size = buf.length;
+
+  const c = new Array(size).fill(0);
+  for (let i = 0; i < size; i++)
+    for (let j = 0; j < size - i; j++)
+      c[i] += buf[j] * buf[j + i];
+
+  let d = 0;
+  while (c[d] > c[d + 1]) d++;
+
+  let maxVal = -1, maxPos = -1;
+  for (let i = d; i < size; i++) {
+    if (c[i] > maxVal) { maxVal = c[i]; maxPos = i; }
+  }
+
+  let t0 = maxPos;
+  // Parabolic interpolation
+  const x1 = c[t0 - 1] || 0, x2 = c[t0], x3 = c[t0 + 1] || 0;
+  const a = (x1 + x3 - 2 * x2) / 2;
+  const b = (x3 - x1) / 2;
+  if (a) t0 = t0 - b / (2 * a);
+
+  return sampleRate / t0;
+};
+
+// ─── AUDIO ENGINE ───
+const useAudio = () => {
+  const ctxRef = useRef(null);
+  const getCtx = () => {
+    if (!ctxRef.current || ctxRef.current.state==="closed")
+      ctxRef.current = new (window.AudioContext||window.webkitAudioContext)();
+    if (ctxRef.current.state==="suspended") ctxRef.current.resume();
+    return ctxRef.current;
+  };
+
+  const playNote = useCallback((freq, dur=2) => {
+    const ctx=getCtx(), t=ctx.currentTime;
+    const o1=ctx.createOscillator(), o2=ctx.createOscillator();
+    o1.type="triangle"; o2.type="sine";
+    o1.frequency.setValueAtTime(freq,t);
+    o2.frequency.setValueAtTime(freq*2,t);
+    const g1=ctx.createGain(), g2=ctx.createGain(), gm=ctx.createGain();
+    g1.gain.setValueAtTime(0,t); g1.gain.linearRampToValueAtTime(0.3,t+0.005);
+    g1.gain.exponentialRampToValueAtTime(0.12,t+0.15);
+    g1.gain.exponentialRampToValueAtTime(0.001,t+dur);
+    g2.gain.setValueAtTime(0,t); g2.gain.linearRampToValueAtTime(0.06,t+0.003);
+    g2.gain.exponentialRampToValueAtTime(0.001,t+dur*0.5);
+    gm.gain.setValueAtTime(0.7,t);
+    const d1=ctx.createDelay(), d2=ctx.createDelay();
+    const fb1=ctx.createGain(), fb2=ctx.createGain(), rg=ctx.createGain();
+    d1.delayTime.setValueAtTime(0.041,t); d2.delayTime.setValueAtTime(0.067,t);
+    fb1.gain.setValueAtTime(0.4,t); fb2.gain.setValueAtTime(0.3,t);
+    rg.gain.setValueAtTime(0.35,t);
+    const lp=ctx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.setValueAtTime(2000,t);
+    o1.connect(g1); o2.connect(g2); g1.connect(lp); g2.connect(lp);
+    lp.connect(gm); lp.connect(d1); d1.connect(fb1); fb1.connect(d1);
+    d1.connect(d2); d2.connect(fb2); fb2.connect(d2);
+    d1.connect(rg); d2.connect(rg); rg.connect(gm); gm.connect(ctx.destination);
+    o1.start(t); o2.start(t); o1.stop(t+dur+0.5); o2.stop(t+dur+0.5);
+  }, []);
+
+  const playDrone = useCallback((freq) => {
+    const ctx=getCtx(), t=ctx.currentTime;
+    const o=ctx.createOscillator(); o.type="sine"; o.frequency.setValueAtTime(freq,t);
+    const g=ctx.createGain(); g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.07,t+0.5);
+    const lp=ctx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.setValueAtTime(350,t);
+    o.connect(lp); lp.connect(g); g.connect(ctx.destination); o.start(t);
+    return { stop:()=>{ const n=ctx.currentTime; g.gain.linearRampToValueAtTime(0,n+0.3); setTimeout(()=>{try{o.stop();o.disconnect();}catch(e){}},400); }};
+  }, []);
+
+  return { playNote, playDrone, getCtx };
+};
+
+// ─── PITCH DETECTION HOOK ───
+const usePitchDetection = (getCtx) => {
+  const [listening, setListening] = useState(false);
+  const [detectedNote, setDetectedNote] = useState(null);
+  const [detectedFreq, setDetectedFreq] = useState(null);
+  const [cents, setCents] = useState(0);
+  const [volume, setVolume] = useState(0);
+  const analyserRef = useRef(null);
+  const streamRef = useRef(null);
+  const rafRef = useRef(null);
+  const bufRef = useRef(null);
+
+  const start = useCallback(async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+      streamRef.current = stream;
+      const ctx = getCtx();
+      const src = ctx.createMediaStreamSource(stream);
+      const analyser = ctx.createAnalyser();
+      analyser.fftSize = 4096;
+      analyser.smoothingTimeConstant = 0.8;
+      src.connect(analyser);
+      analyserRef.current = analyser;
+      bufRef.current = new Float32Array(analyser.fftSize);
+      setListening(true);
+
+      const detect = () => {
+        if (!analyserRef.current) return;
+        analyserRef.current.getFloatTimeDomainData(bufRef.current);
+
+        // Volume
+        let rms = 0;
+        for (let i = 0; i < bufRef.current.length; i++) rms += bufRef.current[i] ** 2;
+        rms = Math.sqrt(rms / bufRef.current.length);
+        setVolume(Math.min(1, rms * 8));
+
+        const freq = autoCorrelate(bufRef.current, ctx.sampleRate);
+        if (freq > 0) {
+          const noteInfo = freqToNote(freq);
+          if (noteInfo) {
+            setDetectedNote(noteInfo.name);
+            setDetectedFreq(Math.round(freq));
+            setCents(noteInfo.cents);
+          }
+        } else {
+          setDetectedNote(null);
+          setDetectedFreq(null);
+          setCents(0);
+        }
+        rafRef.current = requestAnimationFrame(detect);
+      };
+      detect();
+    } catch (e) {
+      console.error("Mic access denied:", e);
+    }
+  }, [getCtx]);
+
+  const stop = useCallback(() => {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    if (streamRef.current) streamRef.current.getTracks().forEach(t => t.stop());
+    analyserRef.current = null;
+    setListening(false);
+    setDetectedNote(null);
+    setDetectedFreq(null);
+    setCents(0);
+    setVolume(0);
+  }, []);
+
+  useEffect(() => () => stop(), [stop]);
+
+  return { listening, detectedNote, detectedFreq, cents, volume, start, stop };
+};
+
+// ─── GUIDED EXERCISE STEPS ───
+const EXERCISES = {
+  breathe_and_root: {
+    title: "Ground",
+    steps: [
+      { text: "Close your eyes. Take a slow breath in.", dur: 4000, action: "breathe" },
+      { text: "Exhale and hum any comfortable pitch.", dur: 5000, action: "hum" },
+      { text: "Now listen to the root note.", dur: 3000, action: "play_root" },
+      { text: "Match it with your voice. Feel where it sits in your chest.", dur: 8000, action: "sing_match" },
+      { text: "Good. The root is home. Remember that feeling.", dur: 3000, action: null },
+    ]
+  },
+  sing_the_fifth: {
+    title: "Find the Fifth",
+    steps: [
+      { text: "Listen to the root.", dur: 3000, action: "play_root" },
+      { text: "Now listen to the fifth above it.", dur: 3000, action: "play_fifth" },
+      { text: "Hear how it opens up? Like your ribcage expanding.", dur: 4000, action: null },
+      { text: "Sing the root. Then slide up to the fifth.", dur: 8000, action: "sing_match" },
+      { text: "Now find both notes on your guitar.", dur: 5000, action: null },
+    ]
+  },
+  pentatonic_feel: {
+    title: "Feel the Pentatonic",
+    steps: [
+      { text: "Listen to each note of the pentatonic scale.", dur: 6000, action: "play_scale" },
+      { text: "Again, slower. Notice how each note feels different.", dur: 8000, action: "play_scale_slow" },
+      { text: "Sing back just the first 3 notes.", dur: 6000, action: "sing_match" },
+      { text: "Now all 5. Take your time.", dur: 10000, action: "sing_match" },
+      { text: "Your body knows these notes now. Trust it.", dur: 3000, action: null },
+    ]
+  },
+};
+
+// ─── MAIN COMPONENT ───
+export default function ColorMusicTrainer() {
+  const [root, setRoot] = useState("A");
+  const [scale, setScale] = useState("Minor Pentatonic");
+  const [tab, setTab] = useState("explore"); // explore | voice | hearfind | guided | onenote
+  const [showDeg, setShowDeg] = useState(false);
+  const [hovered, setHovered] = useState(null);
+  const [droneOn, setDroneOn] = useState(false);
+  const droneRef = useRef(null);
+
+  // Hear→Find state
+  const [challenge, setChallenge] = useState(null);
+  const [hfFeedback, setHfFeedback] = useState(null);
+  const [hfScore, setHfScore] = useState({ hit: 0, total: 0 });
+  const [streak, setStreak] = useState(0);
+  const [revealed, setRevealed] = useState(false);
+
+  // One Note state
+  const [oneNote, setOneNote] = useState(null);
+
+  // Guided exercise state
+  const [exKey, setExKey] = useState(null);
+  const [exStep, setExStep] = useState(0);
+  const [exActive, setExActive] = useState(false);
+  const exTimerRef = useRef(null);
+
+  const { playNote, playDrone, getCtx } = useAudio();
+  const pitch = usePitchDetection(getCtx);
+  const si = SCALES[scale];
+  const rc = gc(root).color;
+
+  // Scale notes
+  const scaleNotes = useMemo(() => si.map(i => NOTE_NAMES[(NOTE_NAMES.indexOf(root)+i)%12]), [root, si]);
+
+  // Drone management
+  const toggleDrone = useCallback(() => {
+    if (droneOn && droneRef.current) { droneRef.current.stop(); droneRef.current=null; setDroneOn(false); }
+    else { const ri=NOTE_NAMES.indexOf(root); const f=440*Math.pow(2,(ri-9)/12)/2; droneRef.current=playDrone(f); setDroneOn(true); }
+  }, [droneOn, root, playDrone]);
+
+  useEffect(() => () => { if(droneRef.current) droneRef.current.stop(); }, []);
+  useEffect(() => { if(droneRef.current&&droneOn){ droneRef.current.stop(); const ri=NOTE_NAMES.indexOf(root); const f=440*Math.pow(2,(ri-9)/12)/2; droneRef.current=playDrone(f); }}, [root]);
+
+  // Hear→Find
+  const newChallenge = useCallback(() => {
+    const pos = [];
+    for(let s=0;s<6;s++) for(let f=0;f<=12;f++) { const n=getNote(s,f); if(inScale(n,root,si)) pos.push({s,f,n}); }
+    const p = pos[Math.floor(Math.random()*pos.length)];
+    setChallenge(p); setHfFeedback(null); setRevealed(false);
+    playNote(getFreq(p.s,p.f), 2.5);
+  }, [root, si, playNote]);
+
+  const checkGuess = useCallback((s, f) => {
+    if(!challenge) return;
+    const n = getNote(s,f);
+    if(!inScale(n,root,si)) return;
+    const match = (ENHARMONIC[n]||n)===(ENHARMONIC[challenge.n]||challenge.n);
+    if(match) {
+      setHfFeedback("yes"); setHfScore(p=>({hit:p.hit+1,total:p.total+1})); setStreak(p=>p+1); setRevealed(true);
+      playNote(getFreq(s,f),1.5);
+      setTimeout(()=>newChallenge(), 1600);
+    } else {
+      setHfFeedback("no"); setHfScore(p=>({...p,total:p.total+1})); setStreak(0);
+      playNote(getFreq(s,f),0.8);
+      setTimeout(()=>setHfFeedback(null), 1000);
+    }
+  }, [challenge, root, si, playNote, newChallenge]);
+
+  // Guided exercises
+  const startExercise = useCallback((key) => {
+    setExKey(key); setExStep(0); setExActive(true);
+    const ex = EXERCISES[key];
+    // Play root on "play_root" actions
+    const step = ex.steps[0];
+    if(step.action==="play_root") {
+      const ri=NOTE_NAMES.indexOf(root); playNote(440*Math.pow(2,(ri-9)/12), 2);
+    }
+  }, [root, playNote]);
+
+  const advanceStep = useCallback(() => {
+    if(!exKey) return;
+    const ex = EXERCISES[exKey];
+    const next = exStep + 1;
+    if(next >= ex.steps.length) { setExActive(false); setExKey(null); setExStep(0); return; }
+    setExStep(next);
+    const step = ex.steps[next];
+    const ri = NOTE_NAMES.indexOf(root);
+    const rootFreq = 440*Math.pow(2,(ri-9)/12);
+    if(step.action==="play_root") playNote(rootFreq, 2);
+    if(step.action==="play_fifth") playNote(rootFreq*1.5, 2);
+    if(step.action==="play_scale") {
+      si.forEach((interval,idx) => {
+        setTimeout(()=> playNote(rootFreq*Math.pow(2,interval/12), 1.2), idx*500);
+      });
+    }
+    if(step.action==="play_scale_slow") {
+      si.forEach((interval,idx) => {
+        setTimeout(()=> playNote(rootFreq*Math.pow(2,interval/12), 2), idx*900);
+      });
+    }
+  }, [exKey, exStep, root, si, playNote]);
+
+  // Click handler
+  const handleClick = (s, f) => {
+    const n = getNote(s,f);
+    if(!inScale(n,root,si)) return;
+    if(tab==="explore"||tab==="voice") playNote(getFreq(s,f), 2);
+    else if(tab==="hearfind") checkGuess(s,f);
+    else if(tab==="onenote") {
+      if(!oneNote) setOneNote(n);
+      if(oneNote && (ENHARMONIC[n]||n)===(ENHARMONIC[oneNote]||oneNote)) playNote(getFreq(s,f), 1.5);
+    }
+  };
+
+  // Detected note highlight
+  const detectedNoteName = pitch.detectedNote;
+  const isDetectedInScale = detectedNoteName && inScale(detectedNoteName, root, si);
+
+  // ─── RENDER ───
+  const Pill = ({active, onClick, children, glow}) => (
+    <button onClick={onClick} style={{
+      padding:"7px 14px", borderRadius:20,
+      background: active ? `${rc}18` : "rgba(255,255,255,0.025)",
+      border: active ? `1.5px solid ${rc}90` : "1px solid rgba(255,255,255,0.07)",
+      color: active ? "#fff" : "rgba(255,255,255,0.4)",
+      fontSize:12, fontWeight: active?600:400, cursor:"pointer",
+      transition:"all 0.25s", outline:"none",
+      boxShadow: glow ? `0 0 12px ${rc}30` : "none",
+    }}>{children}</button>
+  );
+
+  return (
+    <div style={{
+      minHeight:"100vh",
+      background:"linear-gradient(155deg, #07070c 0%, #0e0e1a 45%, #0a0f13 100%)",
+      color:"#ddd", fontFamily:"-apple-system, 'Segoe UI', sans-serif",
+      padding:"20px 12px",
+    }}>
+      <style>{`
+        @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.25)} }
+        @keyframes glow { 0%,100%{opacity:0.6} 50%{opacity:1} }
+        @keyframes ripple { 0%{box-shadow:0 0 0 0 rgba(255,255,255,0.3)} 100%{box-shadow:0 0 0 20px rgba(255,255,255,0)} }
+        button{outline:none;border:none;cursor:pointer}
+        *{box-sizing:border-box}
+        ::-webkit-scrollbar{height:4px} ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px}
+      `}</style>
+
+      <div style={{maxWidth:900, margin:"0 auto"}}>
+
+        {/* ── HEADER ── */}
+        <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14}}>
+          <h1 style={{fontSize:18, fontWeight:700, margin:0, letterSpacing:"-0.02em"}}>
+            {"ColorMusic".split("").map((c,i) => {
+              const cols = ["#E83A30","#F59A1E","#E8D830","#2E9E5A","#2570B0","#8B2D8B","#C42D6B","#E83A30","#F59A1E","#E8D830"];
+              return <span key={i} style={{color:cols[i]}}>{c}</span>;
+            })}
+            <span style={{color:"rgba(255,255,255,0.25)"}}> Trainer</span>
+          </h1>
+          <div style={{display:"flex",gap:6}}>
+            <button onClick={toggleDrone} style={{
+              padding:"5px 10px", borderRadius:14,
+              background:droneOn?`${rc}20`:"rgba(255,255,255,0.03)",
+              border:droneOn?`1px solid ${rc}`:"1px solid rgba(255,255,255,0.08)",
+              color:droneOn?rc:"rgba(255,255,255,0.3)", fontSize:10,
+              animation:droneOn?"glow 3s ease-in-out infinite":"none",
+            }}>{droneOn?"◉ Drone":"○ Drone"}</button>
+            <button onClick={()=>setShowDeg(!showDeg)} style={{
+              padding:"5px 10px", borderRadius:14,
+              background:showDeg?"rgba(255,255,255,0.05)":"rgba(255,255,255,0.03)",
+              border:"1px solid rgba(255,255,255,0.08)",
+              color:showDeg?"rgba(255,255,255,0.6)":"rgba(255,255,255,0.3)", fontSize:10,
+            }}>{showDeg?"1 2 3":"A B C"}</button>
+          </div>
+        </div>
+
+        {/* ── TABS ── */}
+        <div style={{display:"flex", gap:5, marginBottom:14, overflowX:"auto", paddingBottom:4}}>
+          <Pill active={tab==="explore"} onClick={()=>{setTab("explore");setOneNote(null)}}>🎸 Explore</Pill>
+          <Pill active={tab==="voice"} glow={tab==="voice"&&pitch.listening} onClick={()=>{
+            setTab("voice"); if(!pitch.listening) pitch.start();
+          }}>🎤 Voice</Pill>
+          <Pill active={tab==="hearfind"} onClick={()=>{setTab("hearfind");setTimeout(newChallenge,200)}}>👂 Hear→Find</Pill>
+          <Pill active={tab==="guided"} onClick={()=>setTab("guided")}>🧘 Guided</Pill>
+          <Pill active={tab==="onenote"} onClick={()=>{setTab("onenote");setOneNote(null)}}>◉ One Note</Pill>
+        </div>
+
+        {/* ── ROOT + SCALE (compact) ── */}
+        <div style={{display:"flex", gap:8, marginBottom:10, flexWrap:"wrap", alignItems:"center"}}>
+          <div style={{display:"flex",gap:2,flexWrap:"wrap"}}>
+            {NOTE_NAMES.map(n => {
+              const c=gc(n), sel=n===root;
+              return <button key={n} onClick={()=>setRoot(n)} style={{
+                width:30,height:26,borderRadius:4,
+                background:sel?`${c.color}25`:"rgba(255,255,255,0.02)",
+                border:sel?`2px solid ${c.color}`:"1px solid rgba(255,255,255,0.06)",
+                color:sel?c.color:"rgba(255,255,255,0.3)",
+                fontSize:9,fontWeight:sel?700:400,fontFamily:"monospace",
+              }}>{n}</button>;
+            })}
+          </div>
+          <div style={{height:20,width:1,background:"rgba(255,255,255,0.08)"}}/>
+          <div style={{display:"flex",gap:3,flexWrap:"wrap"}}>
+            {Object.keys(SCALES).map(n => {
+              const sel=n===scale;
+              return <button key={n} onClick={()=>setScale(n)} style={{
+                padding:"4px 8px",borderRadius:4,
+                background:sel?`${rc}12`:"transparent",
+                border:sel?`1px solid ${rc}60`:"1px solid rgba(255,255,255,0.05)",
+                color:sel?"#fff":"rgba(255,255,255,0.3)",
+                fontSize:10,fontFamily:"monospace",
+              }}>{n}</button>;
+            })}
+          </div>
+        </div>
+
+        {/* ── MODE PANEL ── */}
+        <div style={{
+          padding:"10px 12px", marginBottom:10, borderRadius:8,
+          background:"rgba(255,255,255,0.015)", border:"1px solid rgba(255,255,255,0.04)",
+          minHeight:50,
+        }}>
+
+          {/* VOICE MODE */}
+          {tab==="voice" && (
+            <div>
+              <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:8}}>
+                {!pitch.listening ? (
+                  <button onClick={pitch.start} style={{
+                    padding:"8px 16px",borderRadius:6,
+                    background:`${rc}25`,color:rc,fontSize:12,fontWeight:600,
+                    border:`1px solid ${rc}`,
+                  }}>Enable Microphone</button>
+                ) : (
+                  <button onClick={pitch.stop} style={{
+                    padding:"6px 12px",borderRadius:6,
+                    background:"rgba(255,255,255,0.05)",color:"rgba(255,255,255,0.4)",
+                    fontSize:11,border:"1px solid rgba(255,255,255,0.1)",
+                  }}>Stop Mic</button>
+                )}
+
+                {pitch.listening && (
+                  <>
+                    {/* Volume meter */}
+                    <div style={{width:60,height:6,borderRadius:3,background:"rgba(255,255,255,0.06)",overflow:"hidden"}}>
+                      <div style={{width:`${pitch.volume*100}%`,height:"100%",background:rc,borderRadius:3,transition:"width 0.1s"}}/>
+                    </div>
+
+                    {/* Detected note */}
+                    {detectedNoteName ? (
+                      <div style={{display:"flex",alignItems:"center",gap:8}}>
+                        <div style={{
+                          width:36,height:36,borderRadius:"50%",
+                          background:gc(detectedNoteName).color,
+                          display:"flex",alignItems:"center",justifyContent:"center",
+                          fontSize:13,fontWeight:800,color:"#fff",fontFamily:"monospace",
+                          boxShadow:`0 0 16px ${gc(detectedNoteName).color}60`,
+                          transition:"all 0.15s",
+                        }}>{detectedNoteName}</div>
+                        <div>
+                          <div style={{fontSize:11,color:"rgba(255,255,255,0.6)",fontFamily:"monospace"}}>
+                            {pitch.detectedFreq}Hz
+                          </div>
+                          <div style={{display:"flex",alignItems:"center",gap:4,marginTop:2}}>
+                            {/* Cents meter */}
+                            <div style={{width:60,height:4,borderRadius:2,background:"rgba(255,255,255,0.06)",position:"relative"}}>
+                              <div style={{
+                                position:"absolute",left:"50%",top:-1,
+                                width:2,height:6,background:"rgba(255,255,255,0.2)",
+                              }}/>
+                              <div style={{
+                                position:"absolute",
+                                left:`${50 + pitch.cents/2}%`,top:-2,
+                                width:6,height:8,borderRadius:3,
+                                background: Math.abs(pitch.cents)<10 ? "#2E9E5A" : Math.abs(pitch.cents)<25 ? "#F5C518" : "#E83A30",
+                                transition:"left 0.1s",
+                              }}/>
+                            </div>
+                            <span style={{fontSize:9,color:"rgba(255,255,255,0.3)",fontFamily:"monospace"}}>
+                              {pitch.cents>0?"+":""}{pitch.cents}¢
+                            </span>
+                          </div>
+                        </div>
+                        {isDetectedInScale && (
+                          <span style={{fontSize:10,color:"#2E9E5A",fontWeight:600}}>✓ in scale</span>
+                        )}
+                      </div>
+                    ) : (
+                      <span style={{fontSize:11,color:"rgba(255,255,255,0.25)"}}>Sing or hum a note...</span>
+                    )}
+                  </>
+                )}
+              </div>
+              <div style={{fontSize:11,color:"rgba(255,255,255,0.3)",lineHeight:1.5}}>
+                Sing or hum — see your pitch on the fretboard in real time.
+                The colored dot that lights up is the note you're producing.
+                Match it to notes on the fretboard to train your ear-to-instrument connection.
+              </div>
+            </div>
+          )}
+
+          {/* EXPLORE MODE */}
+          {tab==="explore" && (
+            <div style={{fontSize:11,color:"rgba(255,255,255,0.35)",lineHeight:1.5}}>
+              Tap any note to hear it. Adjacent colors on the wheel = harmonically close.
+              Turn on the drone to hear each note against the root. <strong style={{color:"rgba(255,255,255,0.55)"}}>Hear it in your head before you tap the next one.</strong>
+            </div>
+          )}
+
+          {/* HEAR→FIND */}
+          {tab==="hearfind" && (
+            <div>
+              <div style={{display:"flex",gap:6,alignItems:"center",flexWrap:"wrap",marginBottom:6}}>
+                <button onClick={newChallenge} style={{padding:"5px 12px",borderRadius:5,background:`${rc}25`,color:rc,fontSize:11,fontWeight:600,border:`1px solid ${rc}60`}}>New Note</button>
+                <button onClick={()=>challenge&&playNote(getFreq(challenge.s,challenge.f),2.5)} style={{padding:"5px 10px",borderRadius:5,background:"rgba(255,255,255,0.04)",color:"rgba(255,255,255,0.4)",fontSize:11,border:"1px solid rgba(255,255,255,0.08)"}}>🔊 Replay</button>
+                <button onClick={()=>setRevealed(true)} style={{padding:"5px 10px",borderRadius:5,background:"rgba(255,255,255,0.04)",color:"rgba(255,255,255,0.3)",fontSize:10,border:"1px solid rgba(255,255,255,0.06)"}}>Reveal</button>
+                <div style={{marginLeft:"auto",fontFamily:"monospace",fontSize:11}}>
+                  <span style={{color:rc}}>{hfScore.hit}</span><span style={{color:"rgba(255,255,255,0.2)"}}>/{hfScore.total}</span>
+                  {streak>=3&&<span style={{color:"#E8D830",marginLeft:6}}>🔥{streak}</span>}
+                </div>
+              </div>
+              {hfFeedback && (
+                <div style={{padding:"5px 10px",borderRadius:5,fontSize:11,fontWeight:600,
+                  background:hfFeedback==="yes"?"rgba(46,158,90,0.12)":"rgba(232,58,48,0.1)",
+                  color:hfFeedback==="yes"?"#2E9E5A":"#E83A30",
+                }}>{hfFeedback==="yes"?`✓ ${challenge?.n}. ${streak>=3?"Locked in.":"Nice."}`:"✗ Listen again. Feel where it lives."}</div>
+              )}
+            </div>
+          )}
+
+          {/* GUIDED */}
+          {tab==="guided" && !exActive && (
+            <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+              {Object.entries(EXERCISES).map(([key,ex]) => (
+                <button key={key} onClick={()=>{startExercise(key);if(!pitch.listening)pitch.start()}} style={{
+                  padding:"10px 14px",borderRadius:8,
+                  background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.07)",
+                  color:"rgba(255,255,255,0.6)",fontSize:12,textAlign:"left",
+                  flex:"1 1 140px",
+                }}>
+                  <div style={{fontWeight:600,marginBottom:2}}>{ex.title}</div>
+                  <div style={{fontSize:10,color:"rgba(255,255,255,0.3)"}}>{ex.steps.length} steps</div>
+                </button>
+              ))}
+            </div>
+          )}
+          {tab==="guided" && exActive && exKey && (
+            <div>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
+                <span style={{fontSize:10,color:"rgba(255,255,255,0.3)",fontFamily:"monospace"}}>
+                  {EXERCISES[exKey].title} — step {exStep+1}/{EXERCISES[exKey].steps.length}
+                </span>
+                <button onClick={()=>{setExActive(false);setExKey(null)}} style={{
+                  padding:"3px 8px",borderRadius:4,background:"rgba(255,255,255,0.04)",
+                  color:"rgba(255,255,255,0.3)",fontSize:9,border:"1px solid rgba(255,255,255,0.06)",
+                }}>Exit</button>
+              </div>
+              <div style={{
+                fontSize:15,color:"rgba(255,255,255,0.8)",lineHeight:1.6,
+                padding:"12px 0",minHeight:50,
+              }}>
+                {EXERCISES[exKey].steps[exStep].text}
+              </div>
+              {/* Show detected pitch during sing_match steps */}
+              {EXERCISES[exKey].steps[exStep].action==="sing_match" && pitch.listening && detectedNoteName && (
+                <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}>
+                  <div style={{
+                    width:32,height:32,borderRadius:"50%",background:gc(detectedNoteName).color,
+                    display:"flex",alignItems:"center",justifyContent:"center",
+                    fontSize:12,fontWeight:700,color:"#fff",fontFamily:"monospace",
+                    boxShadow:`0 0 12px ${gc(detectedNoteName).color}50`,
+                  }}>{detectedNoteName}</div>
+                  <span style={{fontSize:11,color:"rgba(255,255,255,0.4)"}}>
+                    You're singing: {detectedNoteName} ({pitch.detectedFreq}Hz)
+                    {isDetectedInScale && <span style={{color:"#2E9E5A",marginLeft:6}}>✓ in scale</span>}
+                  </span>
+                </div>
+              )}
+              {/* Progress bar */}
+              <div style={{display:"flex",gap:3,marginBottom:8}}>
+                {EXERCISES[exKey].steps.map((_,i) => (
+                  <div key={i} style={{
+                    flex:1,height:3,borderRadius:2,
+                    background: i<=exStep ? rc : "rgba(255,255,255,0.06)",
+                    transition:"background 0.3s",
+                  }}/>
+                ))}
+              </div>
+              <button onClick={advanceStep} style={{
+                padding:"8px 20px",borderRadius:6,
+                background:`${rc}20`,color:rc,fontSize:12,fontWeight:600,
+                border:`1px solid ${rc}80`,
+              }}>
+                {exStep>=EXERCISES[exKey].steps.length-1?"Finish":"Next →"}
+              </button>
+            </div>
+          )}
+
+          {/* ONE NOTE */}
+          {tab==="onenote" && (
+            <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
+              {oneNote ? (
+                <>
+                  <div style={{
+                    width:30,height:30,borderRadius:"50%",background:gc(oneNote).color,
+                    display:"flex",alignItems:"center",justifyContent:"center",
+                    fontSize:11,fontWeight:700,color:"#fff",fontFamily:"monospace",
+                    boxShadow:`0 0 10px ${gc(oneNote).color}50`,
+                  }}>{oneNote}</div>
+                  <span style={{fontSize:11,color:"rgba(255,255,255,0.35)"}}>
+                    Only this note responds. Express everything with timing and feel.
+                  </span>
+                  <button onClick={()=>setOneNote(null)} style={{
+                    marginLeft:"auto",padding:"4px 10px",borderRadius:4,
+                    background:"rgba(255,255,255,0.04)",color:"rgba(255,255,255,0.3)",
+                    fontSize:10,border:"1px solid rgba(255,255,255,0.06)",
+                  }}>Reset</button>
+                </>
+              ) : <span style={{fontSize:11,color:"rgba(255,255,255,0.3)"}}>Tap any scale note to choose your one note.</span>}
+            </div>
+          )}
+        </div>
+
+        {/* ── FRETBOARD ── */}
+        <div style={{overflowX:"auto",padding:"2px 0"}}>
+          <div style={{minWidth:700}}>
+            <div style={{display:"flex",paddingLeft:26}}>
+              {Array.from({length:NFRETS+1},(_,f)=>(
+                <div key={f} style={{flex:f===0?"0 0 28px":"1 1 0",textAlign:"center",fontSize:8,color:"rgba(255,255,255,0.18)",fontFamily:"monospace"}}>{f||""}</div>
+              ))}
+            </div>
+            {STR_TUNE.map((_,sIdx) => (
+              <div key={sIdx} style={{display:"flex",alignItems:"center",height:32}}>
+                <div style={{width:26,textAlign:"center",fontSize:9,fontWeight:600,color:"rgba(255,255,255,0.22)",fontFamily:"monospace"}}>{STR_LBL[sIdx]}</div>
+                {Array.from({length:NFRETS+1},(_,f) => {
+                  const n=getNote(sIdx,f), ins=inScale(n,root,si), ir=isRt(n,root), c=gc(n), deg=getDeg(n,root,si);
+                  const hideLabel = tab==="hearfind" && !revealed;
+                  const dimOne = tab==="onenote" && oneNote && (ENHARMONIC[n]||n)!==(ENHARMONIC[oneNote]||oneNote);
+                  const correctPos = revealed && challenge && challenge.s===sIdx && challenge.f===f;
+                  // Voice mode: highlight the note being sung
+                  const isSinging = tab==="voice" && pitch.listening && detectedNoteName && (ENHARMONIC[n]||n)===(ENHARMONIC[detectedNoteName]||detectedNoteName) && ins;
+
+                  return (
+                    <div key={f} onClick={()=>handleClick(sIdx,f)} style={{
+                      flex:f===0?"0 0 28px":"1 1 0",height:"100%",
+                      display:"flex",alignItems:"center",justifyContent:"center",
+                      position:"relative",
+                      borderRight:f===0?"2.5px solid rgba(255,255,255,0.3)":"1px solid rgba(255,255,255,0.05)",
+                      background:f===0?"transparent":`rgba(255,255,255,${f%2===0?0.006:0.014})`,
+                      cursor:ins?"pointer":"default",
+                    }}>
+                      <div style={{position:"absolute",left:0,right:0,top:"50%",height:Math.max(1,2.2-sIdx*0.2),background:`rgba(170,170,170,${0.08+sIdx*0.01})`,transform:"translateY(-50%)"}}/>
+                      {ins && (
+                        <div onMouseEnter={()=>setHovered(n)} onMouseLeave={()=>setHovered(null)} style={{
+                          position:"relative",zIndex:2,
+                          width: correctPos?30 : isSinging?30 : ir?27:23,
+                          height: correctPos?30 : isSinging?30 : ir?27:23,
+                          borderRadius: ir?4:"50%",
+                          background: c.color,
+                          border: ir?"2px solid rgba(255,255,255,0.8)" : correctPos?"2px solid #fff" : isSinging?`2px solid ${c.color}` : "none",
+                          display:"flex",alignItems:"center",justifyContent:"center",
+                          fontSize:8,fontWeight:ir?800:600,color:"#fff",fontFamily:"monospace",
+                          opacity: dimOne?0.12:1,
+                          boxShadow: correctPos?`0 0 18px ${c.color},0 0 6px white`
+                            : isSinging?`0 0 20px ${c.color}90, 0 0 40px ${c.color}40`
+                            : ir?`0 0 8px ${c.color}70`:`0 0 4px ${c.color}25`,
+                          transition:"all 0.2s",
+                          textShadow:"0 1px 2px rgba(0,0,0,0.5)",
+                          animation: isSinging?"pulse 0.8s ease-in-out infinite" : correctPos?"pulse 0.5s ease-in-out 3":"none",
+                          transform: hovered===n&&!dimOne?"scale(1.15)":"scale(1)",
+                        }}>
+                          {hideLabel?"" : showDeg&&deg?deg:n}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+            <div style={{display:"flex",paddingLeft:26,height:18}}>
+              {Array.from({length:NFRETS+1},(_,f)=>(
+                <div key={f} style={{flex:f===0?"0 0 28px":"1 1 0",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                  {[3,5,7,9,15].includes(f)&&<div style={{width:4,height:4,borderRadius:"50%",background:"rgba(255,255,255,0.08)"}}/>}
+                  {f===12&&<div style={{display:"flex",gap:3}}><div style={{width:4,height:4,borderRadius:"50%",background:"rgba(255,255,255,0.1)"}}/><div style={{width:4,height:4,borderRadius:"50%",background:"rgba(255,255,255,0.1)"}}/></div>}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* ── COLOR WHEEL (small) ── */}
+        <div style={{display:"flex",gap:16,marginTop:12,alignItems:"flex-start",flexWrap:"wrap"}}>
+          <div style={{position:"relative",width:130,height:130,flexShrink:0}}>
+            {["C","G","D","A","E","B","F#","C#","G#","D#","A#","F"].map((n,i) => {
+              const a=(i*30-90)*Math.PI/180, r=50, x=65+r*Math.cos(a), y=65+r*Math.sin(a);
+              const ins=scaleNotes.includes(n), ir2=n===root, c=gc(n);
+              const singing = tab==="voice"&&pitch.listening&&detectedNoteName&&(ENHARMONIC[detectedNoteName]||detectedNoteName)===n;
+              return <div key={n} style={{
+                position:"absolute",left:x-11,top:y-11,width:22,height:22,borderRadius:"50%",
+                background:ins?c.color:"rgba(255,255,255,0.03)",
+                border:ir2?"2px solid white":singing?"2px solid white":"none",
+                display:"flex",alignItems:"center",justifyContent:"center",
+                fontSize:7,fontWeight:ir2?800:500,color:ins?"#fff":"rgba(255,255,255,0.12)",
+                boxShadow:singing?`0 0 14px ${c.color}`:ir2?`0 0 8px ${c.color}`:"none",
+                textShadow:ins?"0 1px 2px rgba(0,0,0,0.5)":"none",
+                transition:"all 0.2s",fontFamily:"monospace",
+                animation:singing?"pulse 0.8s ease-in-out infinite":"none",
+              }}>{n}</div>;
+            })}
+          </div>
+
+          {/* Scale info */}
+          <div style={{flex:1,fontSize:11,color:"rgba(255,255,255,0.3)",lineHeight:1.6}}>
+            <strong style={{color:rc}}>{root} {scale}</strong> — {SCALE_DESC[scale]}
+            <br/><span style={{fontFamily:"monospace",fontSize:10}}>{scaleNotes.join(" · ")}</span>
+            <div style={{marginTop:8,fontSize:10,color:"rgba(255,255,255,0.22)",lineHeight:1.5}}>
+              {tab==="voice" && pitch.listening && "🎤 Your voice is live — sing and watch the fretboard light up."}
+              {tab==="explore" && "Tap notes. Listen. Feel. Adjacent colors = harmonic neighbors."}
+              {tab==="hearfind" && "Listen to the mystery note. Don't rush. Find it when you're sure."}
+              {tab==="guided" && !exActive && "Choose an exercise to begin a guided audiation session."}
+              {tab==="onenote" && "Constraint breeds expression. One note, infinite possibilities."}
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
+look at thsi app, i like the drone here, as well as the guitar sound and a bunch of the guitar excercises. how can we bake this into our app? we need to do a facelift though and make it look like our app... Also whata lessons to our guitar adn signer songwriter can we implement to fully utilize the power of this tool?
+[2026-03-28T19:23:55.221Z] yes add it  also think about it from first principles what else could be useful in this particuar tool        
+  especially with how the rest of our learning is structred
+[2026-03-28T19:35:27.187Z] make sure that the 10 training modes are as dialed as possible, what can we /innovate and make sure that it teaches the most important musical pricniples to the user from first principles
+[2026-03-28T19:47:05.475Z] make sure that the metronome doesnt clip the bottom. also i dotn think we zoomed in on the neck, it looks like we are seeign the full neck in mobile. also how do i switch scales/keys and different modes (of music)
+[2026-03-28T19:50:59.867Z] wait wtf, now its too zoomed in. also i think we should have a better UI/UX for choosing a scale/ mode, why not just have the color wheel be open and then the note we clcik becomes the root?
+[2026-03-28T19:51:29.783Z] not fullneck!! just the relevant notes for the fretborad position 1 2 3 etc
+[2026-03-28T19:55:40.819Z] lets move the color muic tool to the top of the tool tab
+[2026-03-28T19:56:44.904Z] lets make sure all the buttons work, for example, the reveal button doesnt work for find pitch. look through all excercises and make sure it all checks out
+[2026-03-28T19:58:41.459Z] it crashes the app
+[2026-03-28T20:12:16.623Z] make sure the metronome on the bottom doesnt clip into the app
+[2026-03-28T20:12:58.195Z] and to be more inline with the rest of the app, menu sohul be on top, and the mode selection should be on the bottom
+[2026-03-28T20:17:18.589Z] ok lets do the same level of inspection with all the other minigames to make sure the app is dialed
+[2026-03-28T20:23:22.100Z] yes please
+[2026-03-28T20:28:30.937Z] yeah but why not have the menu with all the minigames at the top like a real scrollable menu and have the scale/mdes at the bottom? thats better UI/UX
+[2026-03-28T20:30:50.954Z] also for all the exercises, lets have multiple octaves like a real guitar would but try not to do too many multi octave jumps
+[2026-03-28T20:34:11.151Z] ok and a lot of these execersises need to be more thought out, also the UI/ux is a janky, so look at the flow and how it all works, espicially thte transition and end states. also having white outlines on beige background cant really be seen easily
+[2026-03-28T20:37:54.548Z] <task-notification>
+<task-id>bi8fuu28o</task-id>
+<tool-use-id>toolu_01JMY7Dn9W86u51FCZt9Ri1w</tool-use-id>
+<output-file>C:\Users\hewg7\AppData\Local\Temp\claude\C--Users-hewg7-Documents-GitHub-musiclessons\7afb1952-983f-458d-8d80-fdc8abeec8f5\tasks\bi8fuu28o.output</output-file>
+<status>completed</status>
+<summary>Background command "Start dev server" completed (exit code 0)</summary>
+</task-notification>
+[2026-03-28T20:38:44.772Z] ok make sure the design and the UI/UX is cleaner and more intuitive and looks well spaced etc
+[2026-03-28T20:49:40.474Z] also for a lot of these, it should just auto go, so i can click a  button and get lost in the excercises, make sure you make it so the randomization is actually random as well with differetn notes and octaves that dont jump more then 2 octaves
+[2026-03-28T20:49:49.164Z] same amount of notes as on a guitar
+[2026-03-28T21:00:07.762Z] the right and wrong popup moves the  fretboard down. also things like call and resp, and hear find etc should have automatic continuation. also the call and resp and the melody echo seem to be the same excercise?
+[2026-03-28T21:04:08.216Z] also with the fretboard, for example C starts at fret 8 or position 1 and gets deeper and deeper, it should loop back to fret 1 or 0 when crossing the 12
