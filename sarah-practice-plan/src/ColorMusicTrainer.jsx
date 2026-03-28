@@ -531,6 +531,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
 
   // ─── Hear→Find ───
   const hfPrevMidiRef = useRef(null);
+  const hfTimeoutRef = useRef(null);
   const newChallenge = useCallback(() => {
     const notes = scaleData.notes;
     const note = notes[Math.floor(Math.random() * notes.length)];
@@ -538,7 +539,10 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     const oct = parseInt(full.slice(-1));
     hfPrevMidiRef.current = CHROMATIC.indexOf(normalizeNote(note)) + (oct + 1) * 12;
     setHfTarget({ note, full });
-    setHfFeedback(null); setHfRevealed(false);
+    setHfFeedback(null); setHfRevealed(false); setHfAudiatePhase(null);
+    if (hfTimeoutRef.current) clearTimeout(hfTimeoutRef.current);
+    // Auto-advance: if no answer in 8s, play a new note
+    if (autoFlow) hfTimeoutRef.current = setTimeout(() => newChallenge(), 8000);
     if (hfAudiateMode) {
       // Audiation mode: hear → internal hold → then find
       setHfAudiatePhase('listen');
@@ -554,8 +558,8 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
 
   const checkHfGuess = useCallback((tapInfo) => {
     if (!hfTarget) return;
-    // Block tapping during audiation listen/hold phases
     if (hfAudiateMode && hfAudiatePhase && hfAudiatePhase !== 'find') return;
+    if (hfTimeoutRef.current) clearTimeout(hfTimeoutRef.current);
     if (normalizeNote(tapInfo.noteName) === normalizeNote(hfTarget.note)) {
       setHfFeedback('yes'); setHfScore(p => ({ hit: p.hit + 1, total: p.total + 1 })); setHfStreak(p => p + 1); setHfRevealed(true);
       if (autoFlow) setTimeout(() => newChallenge(), 800);
@@ -595,17 +599,24 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     });
   }, []);
 
+  const crTimeoutRef = useRef(null);
   const newCrPhrase = useCallback(() => {
     const phrase = generatePhrase(crLength);
-    setCrPhrase(phrase); setCrGuess([]); setCrFeedback(null);
+    setCrPhrase(phrase); setCrGuess([]); setCrFeedback(null); setCrRespondPhase(false);
+    if (crTimeoutRef.current) clearTimeout(crTimeoutRef.current);
     setTimeout(() => playCrPhrase(phrase), 200);
-  }, [crLength, generatePhrase, playCrPhrase]);
+    // Auto-advance timeout: if user doesn't answer in time, move on
+    if (autoFlow) {
+      crTimeoutRef.current = setTimeout(() => newCrPhrase(), crLength * 400 + 6000);
+    }
+  }, [crLength, generatePhrase, playCrPhrase, autoFlow]);
 
   const handleCrTap = useCallback((tapInfo) => {
     if (!crPhrase.length || crFeedback) return;
     const newGuess = [...crGuess, tapInfo.noteName];
     setCrGuess(newGuess);
     if (newGuess.length === crPhrase.length) {
+      if (crTimeoutRef.current) clearTimeout(crTimeoutRef.current);
       const correct = newGuess.every((n, i) => normalizeNote(n) === normalizeNote(crPhrase[i]));
       setCrFeedback(correct ? 'correct' : 'wrong');
       if (correct) {
@@ -614,7 +625,6 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
         setCrStreak(nextStreak);
         if (crLength < 4 && nextStreak >= 3 && nextStreak % 3 === 0) setCrLength(l => Math.min(4, l + 1));
         if (autoFlow) {
-          // Every 4th correct: "respond" phase
           if (nextStreak > 0 && nextStreak % 4 === 0) {
             setTimeout(() => { setCrFeedback(null); setCrRespondPhase(true); }, 600);
             setTimeout(() => { setCrRespondPhase(false); newCrPhrase(); }, 5000);
@@ -624,10 +634,11 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
         }
       } else {
         setCrScore(p => ({ ...p, total: p.total + 1 })); setCrStreak(0);
-        if (autoFlow) setTimeout(() => { setCrFeedback(null); setCrGuess([]); playCrPhrase(crPhrase); }, 1000);
+        // Wrong → move to new phrase (not replay same one)
+        if (autoFlow) setTimeout(newCrPhrase, 1500);
       }
     }
-  }, [crPhrase, crGuess, crFeedback, crLength, newCrPhrase, autoFlow, crStreak, playCrPhrase]);
+  }, [crPhrase, crGuess, crFeedback, crLength, newCrPhrase, autoFlow, crStreak]);
 
   // ─── Chord Progression Player ───
   const startProgression = useCallback(() => {
@@ -1045,18 +1056,21 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
                 {hfStreak >= 3 && <span style={{ color: '#E8D830', marginLeft: 6 }}>{hfStreak}</span>}
               </div>
             </div>
-            {hfRevealed && hfTarget && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4 }}>
-                <div style={{
-                  width: 32, height: 32, borderRadius: 4,
-                  background: getColorForNote(hfTarget.note),
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 11, fontWeight: 800, color: '#fff', fontFamily: 'monospace', textShadow: '0 1px 3px rgba(0,0,0,0.5)',
-                  boxShadow: `0 0 10px ${getColorForNote(hfTarget.note)}60`,
-                }}>{hfTarget.note}</div>
-                <span style={{ fontSize: 12, color: T.textMed }}>was the note</span>
-              </div>
-            )}
+            {/* Fixed height slot for revealed answer */}
+            <div style={{ height: 36, marginTop: 4, display: 'flex', alignItems: 'center' }}>
+              {hfRevealed && hfTarget && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <div style={{
+                    width: 32, height: 32, borderRadius: 4,
+                    background: getColorForNote(hfTarget.note),
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 11, fontWeight: 800, color: '#fff', fontFamily: 'monospace', textShadow: '0 1px 3px rgba(0,0,0,0.5)',
+                    boxShadow: `0 0 10px ${getColorForNote(hfTarget.note)}60`,
+                  }}>{hfTarget.note}</div>
+                  <span style={{ fontSize: 12, color: T.textMed }}>was the note</span>
+                </div>
+              )}
+            </div>
             {/* Audiation mode toggle + phase indicator */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 8 }}>
               <button onClick={() => setHfAudiateMode(!hfAudiateMode)} style={{
@@ -1243,17 +1257,20 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
                 }}>{name}</button>
               ))}
             </div>
-            {intRevealed && intTarget && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4 }}>
-                <div style={{ width: 32, height: 32, borderRadius: 4, background: getColorForNote(intTarget.note1),
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, color: '#fff', fontFamily: 'monospace', textShadow: '0 1px 3px rgba(0,0,0,0.5)',
-                }}>{intTarget.note1}</div>
-                <span style={{ fontSize: 12, color: T.textMuted, fontFamily: T.serif, fontStyle: 'italic' }}>{intTarget.intervalName}</span>
-                <div style={{ width: 32, height: 32, borderRadius: 4, background: getColorForNote(intTarget.note2),
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, color: '#fff', fontFamily: 'monospace', textShadow: '0 1px 3px rgba(0,0,0,0.5)',
-                }}>{intTarget.note2}</div>
-              </div>
-            )}
+            {/* Fixed height slot for revealed answer — no layout shift */}
+            <div style={{ height: 36, marginTop: 4, display: 'flex', alignItems: 'center' }}>
+              {intRevealed && intTarget && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <div style={{ width: 32, height: 32, borderRadius: 4, background: getColorForNote(intTarget.note1),
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, color: '#fff', fontFamily: 'monospace', textShadow: '0 1px 3px rgba(0,0,0,0.5)',
+                  }}>{intTarget.note1}</div>
+                  <span style={{ fontSize: 12, color: T.textMuted, fontFamily: T.serif, fontStyle: 'italic' }}>{intTarget.intervalName}</span>
+                  <div style={{ width: 32, height: 32, borderRadius: 4, background: getColorForNote(intTarget.note2),
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, color: '#fff', fontFamily: 'monospace', textShadow: '0 1px 3px rgba(0,0,0,0.5)',
+                  }}>{intTarget.note2}</div>
+                </div>
+              )}
+            </div>
             {!intTarget && (
               <div style={{ fontSize: 12, color: T.textMuted, fontStyle: 'italic', fontFamily: T.serif }}>
                 Tap "New Interval" to hear two notes. Identify the distance between them.
