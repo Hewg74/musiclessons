@@ -6428,49 +6428,56 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   // Legato rules:
   //   - Word → bare note(s) → word:  sustain from first word through bare notes (melisma)
   //   - Word → word (no bare notes): each word is a short note
-  //   - Word → gap → word:           each word is a short note
+  //   - Word → gaps → bare note:     sustain through gaps into the bare note (melisma)
   //   - Bare notes with no words:    blend together (instrumental default)
-  //   - Gaps during melisma:         sustain through gaps
+  //   - Last bare note → gap:        release (gap is silence)
   useEffect(() => {
-    // Look ahead to the next cell (handles cross-measure with loop wrapping)
-    const getNextCell = (ch, mIdx, col, nm, ls, le) => {
-      if (col < 7) return ch.measures[mIdx]?.cells[col + 1] || null;
-      let nextM;
-      if (ls !== null && le !== null && ls <= le) {
-        nextM = ((mIdx - ls + 1) % (le - ls + 1)) + ls;
-      } else {
-        nextM = (mIdx + 1) % nm;
+    // Scan ahead past empty cells to find the next cell that has a note
+    const findNextNoteCell = (ch, mIdx, col, nm, ls, le) => {
+      let curM = mIdx, curC = col;
+      for (let i = 0; i < 16; i++) { // max 2 measures ahead
+        if (curC < 7) { curC++; } else {
+          if (ls !== null && le !== null && ls <= le) {
+            curM = ls + ((curM - ls + 1) % (le - ls + 1));
+          } else {
+            curM = (curM + 1) % nm;
+          }
+          curC = 0;
+          if (curM === mIdx && curC <= col) return null; // wrapped around
+        }
+        const c = ch.measures[curM]?.cells[curC];
+        if (c?.note) return c;
       }
-      return ch.measures[nextM]?.cells[0] || null;
+      return null;
     };
     const isBareNote = (c) => c?.note && !(c.lyric && c.lyric.trim());
     const processCell = (synth, cell, cellTime, eighthDur, ch, mIdx, col, nm, ls, le) => {
       if (!synth) return;
       if (!cell?.note) return; // gap — sustain if in melisma, silence otherwise
       const hasNewWord = cell.lyric && cell.lyric.trim();
-      const nextCell = getNextCell(ch, mIdx, col, nm, ls, le);
-      const nextIsBare = isBareNote(nextCell);
+      const nextNote = findNextNoteCell(ch, mIdx, col, nm, ls, le);
+      const nextNoteIsBare = nextNote ? isBareNote(nextNote) : false;
       try {
         if (legatoActiveRef.current && !hasNewWord) {
           // Melisma / instrumental continuation — glide pitch, no re-attack
           synth.portamento = 0.03;
           synth.setNote(cell.note, cellTime);
-          if (!nextCell?.note) {
-            // Gap follows — end melisma, release after this note
+          if (!nextNoteIsBare) {
+            // No more bare notes ahead — last note in melisma, release
             try { synth.triggerRelease(cellTime + eighthDur); } catch (_) {}
             legatoActiveRef.current = false;
           }
-          // Otherwise next is bare note or word+note — stay in legato
+          // More bare notes ahead — stay in legato, sustain through gaps
         } else {
           // New word/syllable, or first note — fresh attack
           synth.portamento = 0;
           if (legatoActiveRef.current) synth.triggerRelease(cellTime);
           synth.triggerAttack(cell.note, cellTime);
-          if (nextIsBare) {
-            // Bare note follows → melisma starts, sustain into it
+          if (nextNoteIsBare) {
+            // Bare note ahead (even past gaps) → melisma starts, sustain
             legatoActiveRef.current = true;
           } else {
-            // No bare note next → short note, release after one 8th
+            // Next note is a word or no more notes → short note
             try { synth.triggerRelease(cellTime + eighthDur); } catch (_) {}
             legatoActiveRef.current = false;
           }
