@@ -7854,7 +7854,6 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
               borderRadius: T.radiusMd,
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
-              overflow: "hidden",
               marginBottom: bpg > 0 ? (gIdx < groups.length - 1 ? 28 : 8) : 12,
             } : {}),
           }}>
