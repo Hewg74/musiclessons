@@ -1710,23 +1710,23 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                   cursor: "pointer", flex: 1, textAlign: "left", minWidth: 40,
                 }}
               >{measure.sectionLabel || "section"}</button>
-              {measure.sectionLabel && (mIdx === 0 || chart.measures[mIdx - 1]?.sectionLabel !== measure.sectionLabel) && (
+              {measure.sectionLabel && (
                 <>
                   <button onClick={(e) => { e.stopPropagation(); copySection(mIdx); }} style={{
                     background: "none", border: "none", cursor: "pointer", color: T.textMuted,
-                    padding: "0 1px", display: "flex", alignItems: "center", opacity: 0.6,
-                  }} title="Copy section"><Copy size={8} /></button>
+                    padding: "0 2px", display: "flex", alignItems: "center",
+                  }} title="Copy section"><Copy size={10} /></button>
                   <button onClick={(e) => { e.stopPropagation(); duplicateSection(mIdx); }} style={{
                     background: "none", border: "none", cursor: "pointer", color: T.textMuted,
-                    padding: "0 1px", display: "flex", alignItems: "center", opacity: 0.6,
-                  }} title="Duplicate section to end"><CopyPlus size={8} /></button>
+                    padding: "0 2px", display: "flex", alignItems: "center",
+                  }} title="Duplicate section to end"><CopyPlus size={10} /></button>
                 </>
               )}
-              {clipboard && (mIdx === 0 || chart.measures[mIdx - 1]?.sectionLabel !== measure.sectionLabel || !measure.sectionLabel) && (
+              {clipboard && (
                 <button onClick={(e) => { e.stopPropagation(); pasteAfter(mIdx); }} style={{
                   background: "none", border: "none", cursor: "pointer", color: T.gold,
-                  padding: "0 1px", display: "flex", alignItems: "center", opacity: 0.7,
-                }} title="Paste after"><ClipboardPaste size={8} /></button>
+                  padding: "0 2px", display: "flex", alignItems: "center",
+                }} title="Paste after"><ClipboardPaste size={10} /></button>
               )}
               {chart.measures.length > 1 && (
                 <button onClick={(e) => { e.stopPropagation(); removeMeasure(mIdx); }} style={{
@@ -1870,8 +1870,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                             borderRadius: T.radiusMd, padding: 6, boxShadow: "0 4px 16px rgba(0,0,0,0.15)",
                             minWidth: 160,
                           }} onClick={e => e.stopPropagation()}>
-                            <div style={{ display: "grid", gridTemplateColumns: "auto repeat(3, 1fr)", gap: 3, alignItems: "center" }}>
-                              <div />
+                            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 3, alignItems: "center" }}>
                               {["Light", "Normal", "Heavy"].map(l => (
                                 <div key={l} style={{ textAlign: "center", fontSize: 7, color: T.textMuted, textTransform: "uppercase", letterSpacing: 0.5, fontFamily: T.sans }}>{l}</div>
                               ))}
@@ -1881,7 +1880,6 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                                 { type: "X", glyph: "×" },
                               ].map(row => (
                                 <React.Fragment key={row.type}>
-                                  <div style={{ fontSize: 8, color: T.textMuted, fontWeight: 600, fontFamily: T.sans }}>{row.glyph}</div>
                                   {["light", "normal", "heavy"].map(w => {
                                     const val = makeStrum(row.type, w);
                                     const sdd = strumDisplay(val);
@@ -2397,78 +2395,96 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
       </BottomSheet>
 
       {/* Print overlay */}
-      {showPrint && (
+      {showPrint && (() => {
+        const pRows = [];
+        for (let i = 0; i < chart.measures.length; i += printBarsPerRow) pRows.push(chart.measures.slice(i, i + printBarsPerRow));
+        const anyNotes = chart.measures.some(m => m.cells.some(c => c.note));
+        const anyLyrics = chart.measures.some(m => m.cells.some(c => c.lyric));
+        return (
         <div tabIndex={-1} ref={el => el?.focus()} onKeyDown={e => { if (e.key === "Escape") setShowPrint(false); }}
-          style={{ position: "fixed", inset: 0, zIndex: 9999, background: "#fff", overflow: "auto", color: "#000", outline: "none" }}>
-          {/* Print controls — hidden when printing */}
+          style={{ position: "fixed", inset: 0, zIndex: 9999, background: "#fdfbf9", overflow: "auto", color: "#2c2825", outline: "none" }}>
+          {/* Toolbar — hidden when printing */}
           <div className="no-print" style={{
-            position: "sticky", top: 0, zIndex: 1, background: "#fff",
-            padding: "12px 16px", borderBottom: "1px solid #eee",
-            display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap",
+            position: "sticky", top: 0, zIndex: 1, background: "#fdfbf9",
+            padding: "10px 20px", borderBottom: "1px solid #eae1d9",
+            display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap",
           }}>
             <button onClick={() => setShowPrint(false)} style={{
-              background: "none", border: "1px solid #ccc", borderRadius: 4, padding: "6px 12px",
-              cursor: "pointer", fontSize: 12, fontFamily: T.sans,
+              background: "none", border: "1px solid #eae1d9", borderRadius: 2, padding: "5px 14px",
+              cursor: "pointer", fontSize: 11, fontFamily: T.sans, fontWeight: 600, color: "#59534e",
             }}>Close</button>
-            <span style={{ fontSize: 11, color: "#666", fontFamily: T.sans }}>Bars per row:</span>
+            <div style={{ flex: 1 }} />
+            <span style={{ fontSize: 10, color: "#8c867f", fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1 }}>Bars/row</span>
             {[1, 2, 4, 8].map(n => (
               <button key={n} onClick={() => setPrintBarsPerRow(n)} style={{
                 padding: "4px 10px", fontSize: 11, fontFamily: T.sans, fontWeight: 700,
-                background: printBarsPerRow === n ? "#333" : "#f5f5f5",
-                color: printBarsPerRow === n ? "#fff" : "#333",
-                border: "1px solid #ccc", borderRadius: 4, cursor: "pointer",
+                background: printBarsPerRow === n ? "#d4a373" : "#f5f0ec",
+                color: printBarsPerRow === n ? "#fff" : "#59534e",
+                border: printBarsPerRow === n ? "1px solid #b58454" : "1px solid #eae1d9",
+                borderRadius: 2, cursor: "pointer",
               }}>{n}</button>
             ))}
             <button onClick={() => window.print()} style={{
-              padding: "6px 16px", fontSize: 12, fontWeight: 700, fontFamily: T.sans,
-              background: "#333", color: "#fff", border: "none", borderRadius: 4, cursor: "pointer",
+              padding: "5px 20px", fontSize: 11, fontWeight: 700, fontFamily: T.sans,
+              background: "#2c2825", color: "#fff", border: "none", borderRadius: 2, cursor: "pointer",
+              textTransform: "uppercase", letterSpacing: 1,
             }}>Print</button>
           </div>
-          {/* Print content */}
-          <div style={{ maxWidth: 900, margin: "0 auto", padding: "24px 16px" }}>
-            <h1 style={{ fontFamily: "'Playfair Display',serif", fontSize: 24, textAlign: "center", margin: "0 0 4px" }}>
-              {chart.title || "Strum Chart"}
-            </h1>
-            <p style={{ textAlign: "center", fontSize: 12, color: "#888", fontFamily: T.sans, margin: "0 0 20px" }}>
-              {chart.bpm} BPM
-            </p>
-            {(() => {
-              const rows = [];
-              for (let i = 0; i < chart.measures.length; i += printBarsPerRow) {
-                rows.push(chart.measures.slice(i, i + printBarsPerRow));
-              }
-              return rows.map((row, rIdx) => (
-                <div key={rIdx} style={{ marginBottom: 16 }}>
-                  {/* Section label if first measure of row has one */}
-                  {row[0].sectionLabel && (rIdx === 0 || chart.measures[rIdx * printBarsPerRow - 1]?.sectionLabel !== row[0].sectionLabel) ? (
-                    <div style={{ fontSize: 11, fontWeight: 700, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1, marginBottom: 4, color: "#555" }}>
-                      {row[0].sectionLabel}
-                    </div>
-                  ) : null}
-                  <div style={{ display: "grid", gridTemplateColumns: `repeat(${row.length}, 1fr)`, gap: 0, border: "1px solid #ccc" }}>
+
+          {/* Chart content */}
+          <div style={{ maxWidth: 880, margin: "0 auto", padding: "32px 24px 48px" }}>
+            {/* Header */}
+            <div style={{ textAlign: "center", marginBottom: 28, borderBottom: "1px solid #eae1d9", paddingBottom: 16 }}>
+              <h1 style={{ fontFamily: T.serif, fontSize: 28, fontWeight: 700, margin: "0 0 6px", color: "#2c2825", letterSpacing: 0.5 }}>
+                {chart.title || "Strum Chart"}
+              </h1>
+              <div style={{ display: "flex", justifyContent: "center", gap: 20, fontSize: 11, color: "#8c867f", fontFamily: T.sans }}>
+                <span>{chart.bpm} BPM</span>
+                <span>{chart.measures.length} bar{chart.measures.length > 1 ? "s" : ""}</span>
+              </div>
+            </div>
+
+            {/* Measures */}
+            {pRows.map((row, rIdx) => {
+              const globalStart = rIdx * printBarsPerRow;
+              const sectionLabel = row[0].sectionLabel;
+              const isNewSection = sectionLabel && (globalStart === 0 || chart.measures[globalStart - 1]?.sectionLabel !== sectionLabel);
+              return (
+                <div key={rIdx} style={{ marginBottom: 20 }}>
+                  {isNewSection && (
+                    <div style={{
+                      fontSize: 10, fontWeight: 700, fontFamily: T.sans, textTransform: "uppercase",
+                      letterSpacing: 1.5, color: "#b58454", marginBottom: 6,
+                      paddingBottom: 3, borderBottom: "1px solid #eae1d9", display: "inline-block",
+                    }}>{sectionLabel}</div>
+                  )}
+                  <div style={{ display: "grid", gridTemplateColumns: `repeat(${row.length}, 1fr)`, border: "1.5px solid #d4a373", borderRadius: 3, overflow: "hidden" }}>
                     {row.map((measure, mLocalIdx) => {
-                      const mIdx = rIdx * printBarsPerRow + mLocalIdx;
-                      const hasNotes = measure.cells.some(c => c.note);
-                      const hasLyrics = measure.cells.some(c => c.lyric);
-                      // Show section label inline if it differs from previous measure
-                      const showLabel = measure.sectionLabel && (mIdx === 0 || chart.measures[mIdx - 1]?.sectionLabel !== measure.sectionLabel);
+                      const mIdx = globalStart + mLocalIdx;
+                      const showInlineLabel = measure.sectionLabel && mLocalIdx > 0 && (mIdx === 0 || chart.measures[mIdx - 1]?.sectionLabel !== measure.sectionLabel);
                       return (
-                        <div key={mLocalIdx} style={{ borderRight: mLocalIdx < row.length - 1 ? "1px solid #ccc" : "none", padding: "4px 2px" }}>
-                          {showLabel && mLocalIdx > 0 && (
-                            <div style={{ fontSize: 8, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, color: "#888", marginBottom: 2 }}>{measure.sectionLabel}</div>
+                        <div key={mLocalIdx} style={{
+                          borderRight: mLocalIdx < row.length - 1 ? "1px solid #eae1d9" : "none",
+                          padding: "6px 4px 8px", background: mLocalIdx % 2 === 0 ? "#fff" : "#fdfbf9",
+                        }}>
+                          {showInlineLabel && (
+                            <div style={{ fontSize: 7, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, color: "#b58454", marginBottom: 3 }}>{measure.sectionLabel}</div>
                           )}
                           <div style={{ display: "grid", gridTemplateColumns: "repeat(8, 1fr)", gap: 0 }}>
                             {/* Beat labels */}
                             {measure.cells.map((_, ci) => (
-                              <div key={`b${ci}`} style={{ textAlign: "center", fontSize: 7, color: "#aaa", fontFamily: T.sans }}>
-                                {["1", "&", "2", "&", "3", "&", "4", "&"][ci]}
-                              </div>
+                              <div key={`b${ci}`} style={{
+                                textAlign: "center", fontSize: 7, fontFamily: T.sans,
+                                color: ci % 2 === 0 ? "#8c867f" : "#b8b2ab",
+                                fontWeight: ci % 2 === 0 ? 700 : 400, paddingBottom: 2,
+                              }}>{["1", "&", "2", "&", "3", "&", "4", "&"][ci]}</div>
                             ))}
                             {/* Chords */}
                             {measure.cells.map((cell, ci) => (
                               <div key={`c${ci}`} style={{
-                                textAlign: "center", fontSize: 11, fontFamily: "'Playfair Display',serif",
-                                fontWeight: 700, color: cell.chord ? "#333" : "transparent", minHeight: 16,
+                                textAlign: "center", fontSize: 13, fontFamily: T.serif,
+                                fontWeight: 700, color: cell.chord ? "#2c2825" : "transparent",
+                                minHeight: 18, lineHeight: "18px",
                               }}>{cell.chord || "·"}</div>
                             ))}
                             {/* Strums */}
@@ -2478,26 +2494,27 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                               const glyph = type === "D" ? "↓" : type === "U" ? "↑" : type === "X" ? "×" : "";
                               return (
                                 <div key={`s${ci}`} style={{
-                                  textAlign: "center", fontSize: w === "heavy" ? 14 : 12,
+                                  textAlign: "center", fontSize: w === "heavy" ? 15 : 13,
                                   fontWeight: w === "heavy" ? 900 : w === "light" ? 400 : 700,
-                                  opacity: w === "light" ? 0.4 : 1,
-                                  color: type === "X" ? "#999" : "#333", minHeight: 16,
-                                  borderBottom: w === "light" ? "1px dotted #ccc" : w === "heavy" ? "2px solid #333" : "none",
+                                  opacity: w === "light" ? 0.45 : 1,
+                                  color: type === "X" ? "#b8b2ab" : w === "heavy" ? "#b58454" : "#2c2825",
+                                  minHeight: 18, lineHeight: "18px",
+                                  borderBottom: w === "light" ? "1px dotted #d4a37360" : w === "heavy" ? "2px solid #b58454" : "none",
                                 }}>{glyph}</div>
                               );
                             })}
-                            {/* Notes (if any in chart) */}
-                            {hasNotes && measure.cells.map((cell, ci) => (
+                            {/* Notes */}
+                            {anyNotes && measure.cells.map((cell, ci) => (
                               <div key={`n${ci}`} style={{
                                 textAlign: "center", fontSize: 9, color: cell.note ? "#5b9e8f" : "transparent",
-                                fontFamily: T.sans, fontWeight: 600, minHeight: 14,
+                                fontFamily: T.sans, fontWeight: 600, minHeight: 14, lineHeight: "14px",
                               }}>{cell.note || "·"}</div>
                             ))}
-                            {/* Lyrics (if any in chart) */}
-                            {hasLyrics && measure.cells.map((cell, ci) => (
+                            {/* Lyrics */}
+                            {anyLyrics && measure.cells.map((cell, ci) => (
                               <div key={`l${ci}`} style={{
-                                textAlign: "center", fontSize: 9, color: cell.lyric ? "#555" : "transparent",
-                                fontFamily: T.sans, minHeight: 14,
+                                textAlign: "center", fontSize: 9, color: cell.lyric ? "#59534e" : "transparent",
+                                fontFamily: T.serif, fontStyle: "italic", minHeight: 14, lineHeight: "14px",
                               }}>{cell.lyric || ""}</div>
                             ))}
                           </div>
@@ -2506,11 +2523,12 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                     })}
                   </div>
                 </div>
-              ));
-            })()}
+              );
+            })}
           </div>
         </div>
-      )}
+        );
+      })()}
     </div>
   );
 }
