@@ -262,3 +262,9 @@ button {
 .flow-bottom-bar {
   transition: background 0.3s ease, box-shadow 0.3s ease;
 }
+
+/* Print styles */
+@media print {
+  .no-print { display: none !important; }
+  body { background: #fff !important; }
+}

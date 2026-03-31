@@ -3,7 +3,7 @@ import * as Tone from 'tone';
 import {
   Play, Pause, RotateCcw, SkipBack, Scissors, Check,
   Volume2, Mic, Headphones, Music, Piano, Guitar, Drum,
-  Plus, Trash2, Share2, Undo2, ChevronDown, ChevronUp, X, Edit3, Upload
+  Plus, Trash2, Share2, Undo2, ChevronDown, ChevronUp, X, Edit3, Upload, Copy, CopyPlus, ClipboardPaste, Printer
 } from 'lucide-react';
 import { acquireKeepalive, releaseKeepalive, setMediaSession, clearMediaSession } from './audioKeepalive.js';
 import { splitSyllables, chipText, chipGroup, chipOrigin, normalizeAndTokenize } from './syllableUtil.js';
@@ -6002,6 +6002,28 @@ const CHORD_VOICINGS = new Proxy(CHORD_VOICINGS_MULTI, {
 function makeEmptyCell() { return { chord: null, strum: null, lyric: "", lyricGroupId: null }; }
 function makeEmptyMeasure() { return { cells: Array.from({ length: 8 }, makeEmptyCell), between: {}, sectionLabel: "" }; }
 
+// Strum weight helpers — compound strings: "D"=normal down, "Dl"=light down, "Dh"=heavy down
+function strumType(val) { if (!val) return null; return val[0]; }
+function strumWeight(val) { if (!val || val.length < 2) return "normal"; if (val[1] === "l") return "light"; if (val[1] === "h") return "heavy"; return "normal"; }
+function makeStrum(type, weight) { if (!type) return null; if (weight === "light") return type + "l"; if (weight === "heavy") return type + "h"; return type; }
+
+// Section helpers
+const SECTION_LABELS = [
+  { group: "Structure", options: ["Intro", "Outro", "Bridge"] },
+  { group: "Verse", options: ["Verse 1", "Verse 2", "Verse 3", "Verse 4", "Verse 5"] },
+  { group: "Pre-chorus", options: ["Pre-chorus 1", "Pre-chorus 2", "Pre-chorus 3", "Pre-chorus 4"] },
+  { group: "Chorus", options: ["Chorus 1", "Chorus 2", "Chorus 3", "Chorus 4"] },
+  { group: "Post-chorus", options: ["Post-chorus 1", "Post-chorus 2", "Post-chorus 3", "Post-chorus 4"] },
+];
+function getSectionRange(measures, startIdx) {
+  const label = measures[startIdx].sectionLabel;
+  if (!label) return { start: startIdx, end: startIdx };
+  let start = startIdx, end = startIdx;
+  while (start > 0 && measures[start - 1].sectionLabel === label) start--;
+  while (end + 1 < measures.length && measures[end + 1].sectionLabel === label) end++;
+  return { start, end };
+}
+
 export function makeTemplateChart() {
   const m = makeEmptyMeasure();
   // Reggae offbeat template: ↓ _ ↓ _ ↑ ↓ _ ↑
@@ -6412,8 +6434,14 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   const [customChord, setCustomChord] = useState("");
   const [chordQuality, setChordQuality] = useState(""); // "", "m", "7", "m7", "maj7", "sus2", "sus4", "dim", "aug"
   const [savedShow, setSavedShow] = useState(false);
+  const [shareMsg, setShareMsg] = useState("");
   const [deleteToast, setDeleteToast] = useState(null);
   const [chordVoicing, setChordVoicing] = useState(null); // { m, c }
+  const [strumPicker, setStrumPicker] = useState(null); // { mIdx, cIdx, isBetween }
+  const [sectionPicker, setSectionPicker] = useState(null); // mIdx or null
+  const [clipboard, setClipboard] = useState(null); // { label, measures }
+  const [showPrint, setShowPrint] = useState(false);
+  const [printBarsPerRow, setPrintBarsPerRow] = useState(4);
   const [currentBeat, setCurrentBeat] = useState(-1);
   const [currentBar, setCurrentBar] = useState(-1);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -6735,17 +6763,27 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
     return () => window.removeEventListener("songTimeUpdate", handler);
   }, [chart.beatOffset, chart.bpm, chart.measures.length]);
 
-  // Strum cell handlers — cycle: D → U → X → null (rest/blank) → D
-  const cycleStrum = (mIdx, cIdx) => {
+  // Tap on strum cell opens the weight picker modal
+  const openStrumPicker = (mIdx, cIdx, isBetween = false) => {
     if (isPlaying) return;
-    if (longPressRef.current === "fired") return; // skip if long-press just cleared it
-    const cur = chart.measures[mIdx].cells[cIdx].strum;
-    let next;
-    if (!cur) next = "D";
-    else if (cur === "D") next = "U";
-    else if (cur === "U") next = "X";
-    else next = null; // X → rest (blank)
-    updateChart(c => { c.measures[mIdx].cells[cIdx].strum = next; return c; });
+    if (longPressRef.current === "fired") return;
+    setStrumPicker({ mIdx, cIdx, isBetween });
+  };
+
+  // Set strum value from picker
+  const setStrumFromPicker = (val) => {
+    if (!strumPicker) return;
+    const { mIdx, cIdx, isBetween } = strumPicker;
+    updateChart(c => {
+      if (isBetween) {
+        if (!c.measures[mIdx].between[cIdx]) c.measures[mIdx].between[cIdx] = makeEmptyCell();
+        c.measures[mIdx].between[cIdx].strum = val;
+      } else {
+        c.measures[mIdx].cells[cIdx].strum = val;
+      }
+      return c;
+    });
+    setStrumPicker(null);
   };
 
   const clearStrumCell = (mIdx, cIdx) => {
@@ -7024,6 +7062,46 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
     setDeleteToast(null);
   };
 
+  // Section operations — copy, paste, duplicate
+  const copySection = (mIdx) => {
+    const { start, end } = getSectionRange(chart.measures, mIdx);
+    const label = chart.measures[mIdx].sectionLabel || `Bar ${mIdx + 1}`;
+    const cloned = JSON.parse(JSON.stringify(chart.measures.slice(start, end + 1)));
+    setClipboard({ label, measures: cloned });
+    setShareMsg(`Copied ${label} (${cloned.length} bar${cloned.length > 1 ? "s" : ""})`);
+    setTimeout(() => setShareMsg(""), 2000);
+  };
+
+  const pasteAfter = (mIdx) => {
+    if (!clipboard) return;
+    const { end } = getSectionRange(chart.measures, mIdx);
+    if (chart.measures.length + clipboard.measures.length > 200) {
+      setShareMsg("Chart limit reached (200 bars max)");
+      setTimeout(() => setShareMsg(""), 2000);
+      return;
+    }
+    updateChart(c => {
+      const cloned = JSON.parse(JSON.stringify(clipboard.measures));
+      c.measures.splice(end + 1, 0, ...cloned);
+      return c;
+    });
+  };
+
+  const duplicateSection = (mIdx) => {
+    const { start, end } = getSectionRange(chart.measures, mIdx);
+    const count = end - start + 1;
+    if (chart.measures.length + count > 200) {
+      setShareMsg("Chart limit reached (200 bars max)");
+      setTimeout(() => setShareMsg(""), 2000);
+      return;
+    }
+    updateChart(c => {
+      const cloned = JSON.parse(JSON.stringify(c.measures.slice(start, end + 1)));
+      c.measures.push(...cloned); // append at end
+      return c;
+    });
+  };
+
   // Interstitial 16th note slots
   const toggleSlot = (slotIdx) => {
     updateChart(c => {
@@ -7094,13 +7172,19 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
     }
   };
 
-  // Get strum display — D=down, U=up, X=chuck/mute, null=rest (blank)
+  // Get strum display — supports compound weight strings: D/Dl/Dh, U/Ul/Uh, X/Xl/Xh
   const strumDisplay = (val) => {
-    if (!val) return null;
-    if (val === "D") return { glyph: "↓", color: T.textDark, weight: 700 };
-    if (val === "U") return { glyph: "↑", color: T.textMed, weight: 400 };
-    if (val === "X") return { glyph: "×", color: T.coral, weight: 700 };
-    return null;
+    const type = strumType(val);
+    if (!type) return null;
+    const w = strumWeight(val);
+    const base = type === "D" ? { glyph: "↓", color: T.textDark, weight: 700 }
+               : type === "U" ? { glyph: "↑", color: T.textMed, weight: 400 }
+               : type === "X" ? { glyph: "×", color: T.coral, weight: 700 }
+               : null;
+    if (!base) return null;
+    if (w === "light") return { ...base, weight: 400, opacity: 0.4, border: `1px dotted ${base.color}40` };
+    if (w === "heavy") return { ...base, weight: 900, color: T.gold, fontSizeBoost: 2, border: `2px solid ${T.gold}40` };
+    return base;
   };
 
   // Check if lyric overflows — measure how many empty cells to the right
@@ -7133,10 +7217,11 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   // ─── Practice Mode View ──────────────────────────────────────────────────
   if (practiceMode) {
     const strumGlyph = (val) => {
-      if (!val) return null;
-      if (val === "D") return "↓";
-      if (val === "U") return "↑";
-      if (val === "X") return "×";
+      const type = strumType(val);
+      if (!type) return null;
+      if (type === "D") return "↓";
+      if (type === "U") return "↑";
+      if (type === "X") return "×";
       return null;
     };
 
@@ -7388,8 +7473,8 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                       <React.Fragment key={`ps-${cIdx}`}>
                         <div style={{
                           textAlign: "center", fontSize: isWide ? 22 : 18,
-                          fontWeight: cell.strum === "D" || cell.strum === "X" ? 700 : 400,
-                          color: cell.strum === "X" ? T.coral : (glyph ? T.textDark : "transparent"),
+                          fontWeight: strumType(cell.strum) === "D" || strumType(cell.strum) === "X" ? 700 : 400,
+                          color: strumType(cell.strum) === "X" ? T.coral : (glyph ? T.textDark : "transparent"),
                           minHeight: isWide ? 36 : 32,
                           display: "flex", alignItems: "center", justifyContent: "center",
                           background: isBeatActive ? T.getTint(T.gold, 0.15) : "transparent",
@@ -7529,10 +7614,20 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
               animation: "fade-in-up 0.3s ease",
             }}>Saved</span>
           )}
+          {shareMsg && (
+            <span style={{
+              fontSize: 9, color: T.gold, fontWeight: 700, letterSpacing: 1,
+              textTransform: "uppercase", fontFamily: T.sans,
+              animation: "fade-in-up 0.25s ease",
+            }}>{shareMsg}</span>
+          )}
           <button onClick={undo} disabled={undoStack.length === 0} style={{
             background: "none", border: "none", cursor: undoStack.length ? "pointer" : "default",
             color: undoStack.length ? T.textMed : T.borderSoft, padding: 4,
           }}><Undo2 size={16} /></button>
+          <button onClick={() => setShowPrint(true)} style={{
+            background: "none", border: "none", cursor: "pointer", color: T.textMed, padding: 4,
+          }} title="Print chart"><Printer size={16} /></button>
           <button onClick={shareChart} style={{
             background: "none", border: "none", cursor: "pointer", color: T.textMed, padding: 4,
           }}><Share2 size={16} /></button>
@@ -7927,19 +8022,33 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                 fontSize: 9, fontWeight: 700, fontFamily: T.sans,
                 color: (isInEditLoop || isEditLoopStart) ? T.gold : T.textMuted,
               }}>{mIdx + 1}</span>
-              <input
-                type="text"
-                value={measure.sectionLabel || ""}
-                onChange={e => updateChart(c => { c.measures[mIdx].sectionLabel = e.target.value; return c; })}
-                placeholder="section"
+              <button
+                onClick={(e) => { e.stopPropagation(); setSectionPicker(mIdx); }}
                 style={{
-                  fontSize: 9, fontWeight: 600, color: T.gold, fontFamily: T.sans,
-                  textTransform: "uppercase", letterSpacing: 1,
-                  border: "none", background: "transparent", padding: 0, outline: "none",
-                  width: measure.sectionLabel ? Math.max(40, measure.sectionLabel.length * 7) : 40,
-                  flex: 1,
+                  fontSize: 9, fontWeight: 600, color: measure.sectionLabel ? T.gold : T.textMuted,
+                  fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1,
+                  border: "none", background: "transparent", padding: "0 4px", outline: "none",
+                  cursor: "pointer", flex: 1, textAlign: "left", minWidth: 40,
                 }}
-              />
+              >{measure.sectionLabel || "section"}</button>
+              {measure.sectionLabel && (mIdx === 0 || chart.measures[mIdx - 1]?.sectionLabel !== measure.sectionLabel) && (
+                <>
+                  <button onClick={(e) => { e.stopPropagation(); copySection(mIdx); }} style={{
+                    background: "none", border: "none", cursor: "pointer", color: T.textMuted,
+                    padding: "0 1px", display: "flex", alignItems: "center", opacity: 0.6,
+                  }} title="Copy section"><Copy size={8} /></button>
+                  <button onClick={(e) => { e.stopPropagation(); duplicateSection(mIdx); }} style={{
+                    background: "none", border: "none", cursor: "pointer", color: T.textMuted,
+                    padding: "0 1px", display: "flex", alignItems: "center", opacity: 0.6,
+                  }} title="Duplicate section to end"><CopyPlus size={8} /></button>
+                </>
+              )}
+              {clipboard && (mIdx === 0 || chart.measures[mIdx - 1]?.sectionLabel !== measure.sectionLabel || !measure.sectionLabel) && (
+                <button onClick={(e) => { e.stopPropagation(); pasteAfter(mIdx); }} style={{
+                  background: "none", border: "none", cursor: "pointer", color: T.gold,
+                  padding: "0 1px", display: "flex", alignItems: "center", opacity: 0.7,
+                }} title="Paste after"><ClipboardPaste size={8} /></button>
+              )}
               {chart.measures.length > 1 && (
                 <button onClick={(e) => { e.stopPropagation(); removeMeasure(mIdx); }} style={{
                   background: "none", border: "none",
@@ -8047,48 +8156,152 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
               {measure.cells.map((cell, cIdx) => {
                 const sd = strumDisplay(cell.strum);
                 const isActive = isActiveMeasure && activeCol === cIdx;
+                const spOpen = strumPicker && strumPicker.mIdx === mIdx && strumPicker.cIdx === cIdx && !strumPicker.isBetween;
+                const spBetweenOpen = strumPicker && strumPicker.mIdx === mIdx && strumPicker.cIdx === cIdx && strumPicker.isBetween;
                 return (
                   <React.Fragment key={`s-${cIdx}`}>
-                    <div
-                      style={{
-                        textAlign: "center", fontSize: 16, minHeight: 32,
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                        cursor: "pointer", borderRadius: T.radius,
-                        color: sd ? sd.color : "transparent",
-                        fontWeight: sd ? sd.weight : 400,
-                        border: cell.strum ? "none" : `1px dashed ${T.borderSoft}`,
-                        background: isActive ? T.getTint(T.gold, 0.15) : "transparent",
-                        transition: "background 0.15s",
-                        userSelect: "none",
-                      }}
-                      onClick={(e) => { e.stopPropagation(); cycleStrum(mIdx, cIdx); }}
-                      onTouchStart={(e) => { e.stopPropagation(); startLongPress(mIdx, cIdx, "strum"); }}
-                      onTouchEnd={(e) => { e.stopPropagation(); endLongPress(); }}
-                      onMouseDown={(e) => { e.stopPropagation(); startLongPress(mIdx, cIdx, "strum"); }}
-                      onMouseUp={(e) => { e.stopPropagation(); endLongPress(); }}
-                    >
-                      {sd ? sd.glyph : "·"}
-                    </div>
-                    {chart.activeSlots.includes(cIdx) && cIdx < 7 && (
-                      <div style={{
-                        textAlign: "center", fontSize: 13, minHeight: 32,
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                        cursor: "pointer", borderRadius: T.radius, opacity: 0.7,
-                        color: strumDisplay(measure.between[cIdx]?.strum)?.color || "transparent",
-                      }}
-                        onClick={() => {
-                          // Cycle between strum for interstitial
-                          updateChart(c => {
-                            if (!c.measures[mIdx].between[cIdx]) c.measures[mIdx].between[cIdx] = makeEmptyCell();
-                            const cur = c.measures[mIdx].between[cIdx].strum;
-                            c.measures[mIdx].between[cIdx].strum = !cur ? "D" : cur === "D" ? "U" : cur === "U" ? "X" : null;
-                            return c;
-                          });
+                    <div style={{ position: "relative" }}>
+                      <div
+                        style={{
+                          textAlign: "center", fontSize: sd?.fontSizeBoost ? 16 + sd.fontSizeBoost : 16, minHeight: 32,
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                          cursor: "pointer", borderRadius: T.radius,
+                          color: sd ? sd.color : "transparent",
+                          fontWeight: sd ? sd.weight : 400,
+                          opacity: sd?.opacity || 1,
+                          border: cell.strum ? (sd?.border || "none") : `1px dashed ${T.borderSoft}`,
+                          background: spOpen ? T.getTint(T.gold, 0.12) : isActive ? T.getTint(T.gold, 0.15) : "transparent",
+                          transition: "background 0.15s",
+                          userSelect: "none",
                         }}
+                        onClick={(e) => { e.stopPropagation(); openStrumPicker(mIdx, cIdx); }}
+                        onTouchStart={(e) => { e.stopPropagation(); startLongPress(mIdx, cIdx, "strum"); }}
+                        onTouchEnd={(e) => { e.stopPropagation(); endLongPress(); }}
+                        onMouseDown={(e) => { e.stopPropagation(); startLongPress(mIdx, cIdx, "strum"); }}
+                        onMouseUp={(e) => { e.stopPropagation(); endLongPress(); }}
                       >
-                        {strumDisplay(measure.between[cIdx]?.strum)?.glyph || "·"}
+                        {sd ? sd.glyph : "·"}
                       </div>
-                    )}
+                      {spOpen && (() => {
+                        const xShift = cIdx >= 6 ? "translateX(-80%)" : cIdx <= 1 ? "translateX(-10%)" : "translateX(-50%)";
+                        return (
+                          <div style={{
+                            position: "absolute", top: "100%", left: "50%", transform: xShift,
+                            zIndex: 200, background: T.bgCard || T.bg, border: `1px solid ${T.border}`,
+                            borderRadius: T.radiusMd, padding: 6, boxShadow: "0 4px 16px rgba(0,0,0,0.15)",
+                            minWidth: 160,
+                          }} onClick={e => e.stopPropagation()}>
+                            <div style={{ display: "grid", gridTemplateColumns: "auto repeat(3, 1fr)", gap: 3, alignItems: "center" }}>
+                              <div />
+                              {["Light", "Normal", "Heavy"].map(l => (
+                                <div key={l} style={{ textAlign: "center", fontSize: 7, color: T.textMuted, textTransform: "uppercase", letterSpacing: 0.5, fontFamily: T.sans }}>{l}</div>
+                              ))}
+                              {[
+                                { type: "D", glyph: "↓" },
+                                { type: "U", glyph: "↑" },
+                                { type: "X", glyph: "×" },
+                              ].map(row => (
+                                <React.Fragment key={row.type}>
+                                  <div style={{ fontSize: 8, color: T.textMuted, fontWeight: 600, fontFamily: T.sans }}>{row.glyph}</div>
+                                  {["light", "normal", "heavy"].map(w => {
+                                    const val = makeStrum(row.type, w);
+                                    const sdd = strumDisplay(val);
+                                    const isSelected = cell.strum === val;
+                                    return (
+                                      <button key={w} onClick={() => setStrumFromPicker(val)} style={{
+                                        minHeight: 32, fontSize: w === "heavy" ? 15 : 13, fontFamily: T.sans,
+                                        fontWeight: sdd?.weight || 400, color: sdd?.color || T.textDark,
+                                        opacity: sdd?.opacity || 1,
+                                        background: isSelected ? T.getTint(T.gold, 0.15) : T.bgSoft,
+                                        border: isSelected ? `2px solid ${T.gold}` : `1px solid ${T.borderSoft}`,
+                                        borderRadius: 4, cursor: "pointer",
+                                        display: "flex", alignItems: "center", justifyContent: "center",
+                                      }}>{row.glyph}</button>
+                                    );
+                                  })}
+                                </React.Fragment>
+                              ))}
+                            </div>
+                            {cell.strum && (
+                              <button onClick={() => setStrumFromPicker(null)} style={{
+                                width: "100%", marginTop: 4, fontSize: 9, fontWeight: 600, fontFamily: T.sans,
+                                padding: "3px 0", borderRadius: 4, cursor: "pointer",
+                                border: `1px solid ${T.coral}`, background: "transparent", color: T.coral,
+                              }}>× Clear</button>
+                            )}
+                          </div>
+                        );
+                      })()}
+                    </div>
+                    {chart.activeSlots.includes(cIdx) && cIdx < 7 && (() => {
+                      const bsd = strumDisplay(measure.between[cIdx]?.strum);
+                      return (
+                      <div style={{ position: "relative" }}>
+                        <div style={{
+                          textAlign: "center", fontSize: 13, minHeight: 32,
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                          cursor: "pointer", borderRadius: T.radius, opacity: bsd?.opacity || 0.7,
+                          color: bsd?.color || "transparent",
+                          background: spBetweenOpen ? T.getTint(T.gold, 0.12) : "transparent",
+                        }}
+                          onClick={(e) => { e.stopPropagation(); openStrumPicker(mIdx, cIdx, true); }}
+                        >
+                          {bsd?.glyph || "·"}
+                        </div>
+                        {spBetweenOpen && (() => {
+                          const xShift = cIdx >= 5 ? "translateX(-80%)" : "translateX(-50%)";
+                          return (
+                            <div style={{
+                              position: "absolute", top: "100%", left: "50%", transform: xShift,
+                              zIndex: 200, background: T.bgCard || T.bg, border: `1px solid ${T.border}`,
+                              borderRadius: T.radiusMd, padding: 6, boxShadow: "0 4px 16px rgba(0,0,0,0.15)",
+                              minWidth: 160,
+                            }} onClick={e => e.stopPropagation()}>
+                              <div style={{ display: "grid", gridTemplateColumns: "auto repeat(3, 1fr)", gap: 3, alignItems: "center" }}>
+                                <div />
+                                {["Light", "Normal", "Heavy"].map(l => (
+                                  <div key={l} style={{ textAlign: "center", fontSize: 7, color: T.textMuted, textTransform: "uppercase", letterSpacing: 0.5, fontFamily: T.sans }}>{l}</div>
+                                ))}
+                                {[
+                                  { type: "D", glyph: "↓" },
+                                  { type: "U", glyph: "↑" },
+                                  { type: "X", glyph: "×" },
+                                ].map(row => (
+                                  <React.Fragment key={row.type}>
+                                    <div style={{ fontSize: 8, color: T.textMuted, fontWeight: 600, fontFamily: T.sans }}>{row.glyph}</div>
+                                    {["light", "normal", "heavy"].map(w => {
+                                      const val = makeStrum(row.type, w);
+                                      const sdd = strumDisplay(val);
+                                      const bStrum = measure.between[cIdx]?.strum;
+                                      const isSelected = bStrum === val;
+                                      return (
+                                        <button key={w} onClick={() => setStrumFromPicker(val)} style={{
+                                          minHeight: 32, fontSize: w === "heavy" ? 15 : 13, fontFamily: T.sans,
+                                          fontWeight: sdd?.weight || 400, color: sdd?.color || T.textDark,
+                                          opacity: sdd?.opacity || 1,
+                                          background: isSelected ? T.getTint(T.gold, 0.15) : T.bgSoft,
+                                          border: isSelected ? `2px solid ${T.gold}` : `1px solid ${T.borderSoft}`,
+                                          borderRadius: 4, cursor: "pointer",
+                                          display: "flex", alignItems: "center", justifyContent: "center",
+                                        }}>{row.glyph}</button>
+                                      );
+                                    })}
+                                  </React.Fragment>
+                                ))}
+                              </div>
+                              {measure.between[cIdx]?.strum && (
+                                <button onClick={() => setStrumFromPicker(null)} style={{
+                                  width: "100%", marginTop: 4, fontSize: 9, fontWeight: 600, fontFamily: T.sans,
+                                  padding: "3px 0", borderRadius: 4, cursor: "pointer",
+                                  border: `1px solid ${T.coral}`, background: "transparent", color: T.coral,
+                                }}>× Clear</button>
+                              )}
+                            </div>
+                          );
+                        })()}
+                      </div>
+                      );
+                    })()}
                   </React.Fragment>
                 );
               })}
@@ -8269,6 +8482,13 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
         display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
       }}><Plus size={14} /> Add Measure</button>
 
+      {/* Strum picker backdrop — click outside to close */}
+      {strumPicker && (
+        <div onClick={() => setStrumPicker(null)} style={{
+          position: "fixed", inset: 0, zIndex: 199,
+        }} />
+      )}
+
       {/* Delete toast */}
       {deleteToast && (
         <div style={{
@@ -8442,6 +8662,171 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
           }}>Clear</button>
         </div>
       </BottomSheet>
+
+      {/* Section label picker */}
+      <BottomSheet theme={T} open={sectionPicker !== null} onClose={() => setSectionPicker(null)}>
+        <div style={{ fontSize: 8, color: T.textMuted, marginBottom: 8, textTransform: "uppercase", letterSpacing: 1 }}>Section Label</div>
+        {SECTION_LABELS.map(group => (
+          <div key={group.group} style={{ marginBottom: 10 }}>
+            <div style={{ fontSize: 8, color: T.textMuted, marginBottom: 4, textTransform: "uppercase", letterSpacing: 1 }}>{group.group}</div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+              {group.options.map(opt => {
+                const isSelected = sectionPicker !== null && chart.measures[sectionPicker]?.sectionLabel === opt;
+                return (
+                  <button key={opt} onClick={() => {
+                    if (sectionPicker !== null) {
+                      updateChart(c => { c.measures[sectionPicker].sectionLabel = opt; return c; });
+                      setSectionPicker(null);
+                    }
+                  }} style={{
+                    padding: "6px 12px", borderRadius: T.radius, cursor: "pointer",
+                    fontSize: 11, fontWeight: 600, fontFamily: T.sans,
+                    background: isSelected ? T.getTint(T.gold, 0.15) : T.bgSoft,
+                    color: isSelected ? T.gold : T.textDark,
+                    border: isSelected ? `2px solid ${T.gold}` : `1px solid ${T.border}`,
+                    transition: "all 0.15s",
+                  }}>{opt}</button>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+        <div style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 4 }}>
+          <input
+            type="text"
+            value={sectionPicker !== null ? (chart.measures[sectionPicker]?.sectionLabel || "") : ""}
+            onChange={e => {
+              if (sectionPicker !== null) {
+                updateChart(c => { c.measures[sectionPicker].sectionLabel = e.target.value; return c; });
+              }
+            }}
+            placeholder="Custom label"
+            onKeyDown={e => { if (e.key === "Enter") setSectionPicker(null); }}
+            style={{
+              flex: 1, fontSize: 12, fontFamily: T.sans, color: T.textDark,
+              border: `1px solid ${T.border}`, borderRadius: T.radius, background: T.bgCard,
+              padding: "8px 12px", outline: "none",
+            }}
+          />
+          <button onClick={() => {
+            if (sectionPicker !== null) {
+              updateChart(c => { c.measures[sectionPicker].sectionLabel = ""; return c; });
+              setSectionPicker(null);
+            }
+          }} style={{
+            minHeight: 36, padding: "0 12px", fontSize: 10, fontWeight: 700, fontFamily: T.sans,
+            background: "transparent", color: T.coral, border: `1px solid ${T.coral}40`,
+            borderRadius: T.radius, cursor: "pointer", textTransform: "uppercase", letterSpacing: 1,
+          }}>Clear</button>
+        </div>
+      </BottomSheet>
+
+      {/* Print overlay */}
+      {showPrint && (
+        <div tabIndex={-1} ref={el => el?.focus()} onKeyDown={e => { if (e.key === "Escape") setShowPrint(false); }}
+          style={{ position: "fixed", inset: 0, zIndex: 9999, background: "#fff", overflow: "auto", color: "#000", outline: "none" }}>
+          <div className="no-print" style={{
+            position: "sticky", top: 0, zIndex: 1, background: "#fff",
+            padding: "12px 16px", borderBottom: "1px solid #eee",
+            display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap",
+          }}>
+            <button onClick={() => setShowPrint(false)} style={{
+              background: "none", border: "1px solid #ccc", borderRadius: 4, padding: "6px 12px",
+              cursor: "pointer", fontSize: 12, fontFamily: T.sans,
+            }}>Close</button>
+            <span style={{ fontSize: 11, color: "#666", fontFamily: T.sans }}>Bars per row:</span>
+            {[1, 2, 4, 8].map(n => (
+              <button key={n} onClick={() => setPrintBarsPerRow(n)} style={{
+                padding: "4px 10px", fontSize: 11, fontFamily: T.sans, fontWeight: 700,
+                background: printBarsPerRow === n ? "#333" : "#f5f5f5",
+                color: printBarsPerRow === n ? "#fff" : "#333",
+                border: "1px solid #ccc", borderRadius: 4, cursor: "pointer",
+              }}>{n}</button>
+            ))}
+            <button onClick={() => window.print()} style={{
+              padding: "6px 16px", fontSize: 12, fontWeight: 700, fontFamily: T.sans,
+              background: "#333", color: "#fff", border: "none", borderRadius: 4, cursor: "pointer",
+            }}>Print</button>
+          </div>
+          <div style={{ maxWidth: 900, margin: "0 auto", padding: "24px 16px" }}>
+            <h1 style={{ fontFamily: "'Playfair Display',serif", fontSize: 24, textAlign: "center", margin: "0 0 4px" }}>
+              {chart.title || "Strum Chart"}
+            </h1>
+            <p style={{ textAlign: "center", fontSize: 12, color: "#888", fontFamily: T.sans, margin: "0 0 20px" }}>
+              {chart.bpm} BPM
+            </p>
+            {(() => {
+              const rows = [];
+              for (let i = 0; i < chart.measures.length; i += printBarsPerRow) {
+                rows.push(chart.measures.slice(i, i + printBarsPerRow));
+              }
+              return rows.map((row, rIdx) => (
+                <div key={rIdx} style={{ marginBottom: 16 }}>
+                  {row[0].sectionLabel && (rIdx === 0 || chart.measures[rIdx * printBarsPerRow - 1]?.sectionLabel !== row[0].sectionLabel) ? (
+                    <div style={{ fontSize: 11, fontWeight: 700, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1, marginBottom: 4, color: "#555" }}>
+                      {row[0].sectionLabel}
+                    </div>
+                  ) : null}
+                  <div style={{ display: "grid", gridTemplateColumns: `repeat(${row.length}, 1fr)`, gap: 0, border: "1px solid #ccc" }}>
+                    {row.map((measure, mLocalIdx) => {
+                      const mIdx = rIdx * printBarsPerRow + mLocalIdx;
+                      const hasNotes = measure.cells.some(c => c.note);
+                      const hasLyrics = measure.cells.some(c => c.lyric);
+                      const showLabel = measure.sectionLabel && (mIdx === 0 || chart.measures[mIdx - 1]?.sectionLabel !== measure.sectionLabel);
+                      return (
+                        <div key={mLocalIdx} style={{ borderRight: mLocalIdx < row.length - 1 ? "1px solid #ccc" : "none", padding: "4px 2px" }}>
+                          {showLabel && mLocalIdx > 0 && (
+                            <div style={{ fontSize: 8, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, color: "#888", marginBottom: 2 }}>{measure.sectionLabel}</div>
+                          )}
+                          <div style={{ display: "grid", gridTemplateColumns: "repeat(8, 1fr)", gap: 0 }}>
+                            {measure.cells.map((_, ci) => (
+                              <div key={`b${ci}`} style={{ textAlign: "center", fontSize: 7, color: "#aaa", fontFamily: T.sans }}>
+                                {["1", "&", "2", "&", "3", "&", "4", "&"][ci]}
+                              </div>
+                            ))}
+                            {measure.cells.map((cell, ci) => (
+                              <div key={`c${ci}`} style={{
+                                textAlign: "center", fontSize: 11, fontFamily: "'Playfair Display',serif",
+                                fontWeight: 700, color: cell.chord ? "#333" : "transparent", minHeight: 16,
+                              }}>{cell.chord || "·"}</div>
+                            ))}
+                            {measure.cells.map((cell, ci) => {
+                              const type = strumType(cell.strum);
+                              const w = strumWeight(cell.strum);
+                              const glyph = type === "D" ? "↓" : type === "U" ? "↑" : type === "X" ? "×" : "";
+                              return (
+                                <div key={`s${ci}`} style={{
+                                  textAlign: "center", fontSize: w === "heavy" ? 14 : 12,
+                                  fontWeight: w === "heavy" ? 900 : w === "light" ? 400 : 700,
+                                  opacity: w === "light" ? 0.4 : 1,
+                                  color: type === "X" ? "#999" : "#333", minHeight: 16,
+                                  borderBottom: w === "light" ? "1px dotted #ccc" : w === "heavy" ? "2px solid #333" : "none",
+                                }}>{glyph}</div>
+                              );
+                            })}
+                            {hasNotes && measure.cells.map((cell, ci) => (
+                              <div key={`n${ci}`} style={{
+                                textAlign: "center", fontSize: 9, color: cell.note ? "#5b9e8f" : "transparent",
+                                fontFamily: T.sans, fontWeight: 600, minHeight: 14,
+                              }}>{cell.note || "·"}</div>
+                            ))}
+                            {hasLyrics && measure.cells.map((cell, ci) => (
+                              <div key={`l${ci}`} style={{
+                                textAlign: "center", fontSize: 9, color: cell.lyric ? "#555" : "transparent",
+                                fontFamily: T.sans, minHeight: 14,
+                              }}>{cell.lyric || ""}</div>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ));
+            })()}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
