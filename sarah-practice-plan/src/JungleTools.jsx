@@ -6442,6 +6442,11 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   const [clipboard, setClipboard] = useState(null); // { label, measures }
   const [showPrint, setShowPrint] = useState(false);
   const [printBarsPerRow, setPrintBarsPerRow] = useState(4);
+  useEffect(() => {
+    if (showPrint) document.body.classList.add("print-active");
+    else document.body.classList.remove("print-active");
+    return () => document.body.classList.remove("print-active");
+  }, [showPrint]);
   const [currentBeat, setCurrentBeat] = useState(-1);
   const [currentBar, setCurrentBar] = useState(-1);
   const [isPlaying, setIsPlaying] = useState(false);

@@ -263,13 +263,12 @@ button {
   transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Print styles */
+/* Print styles — .print-active is added to <body> when print overlay is open */
 @media print {
   .no-print { display: none !important; }
-  body { background: #fff !important; overflow: visible !important; }
-  .print-overlay {
-    position: static !important;
-    overflow: visible !important;
-    height: auto !important;
-  }
+  body.print-active { background: #fff !important; overflow: visible !important; }
+  body.print-active * { visibility: hidden !important; position: static !important; overflow: visible !important; }
+  body.print-active .print-overlay,
+  body.print-active .print-overlay * { visibility: visible !important; }
+  body.print-active .print-overlay { height: auto !important; background: #fff !important; }
 }
