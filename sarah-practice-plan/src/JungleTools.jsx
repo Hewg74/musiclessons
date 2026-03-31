@@ -7085,6 +7085,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
       c.measures.splice(end + 1, 0, ...cloned);
       return c;
     });
+    setClipboard(null);
   };
 
   const duplicateSection = (mIdx) => {
