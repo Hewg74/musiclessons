@@ -266,5 +266,10 @@ button {
 /* Print styles */
 @media print {
   .no-print { display: none !important; }
-  body { background: #fff !important; }
+  body { background: #fff !important; overflow: visible !important; }
+  .print-overlay {
+    position: static !important;
+    overflow: visible !important;
+    height: auto !important;
+  }
 }

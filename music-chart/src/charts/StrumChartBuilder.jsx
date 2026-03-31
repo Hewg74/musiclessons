@@ -2407,7 +2407,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
         const anyNotes = chart.measures.some(m => m.cells.some(c => c.note));
         const anyLyrics = chart.measures.some(m => m.cells.some(c => c.lyric));
         return (
-        <div tabIndex={-1} ref={el => el?.focus()} onKeyDown={e => { if (e.key === "Escape") setShowPrint(false); }}
+        <div className="print-overlay" tabIndex={-1} ref={el => el?.focus()} onKeyDown={e => { if (e.key === "Escape") setShowPrint(false); }}
           style={{ position: "fixed", inset: 0, zIndex: 9999, background: "#fdfbf9", overflow: "auto", color: "#2c2825", outline: "none" }}>
           {/* Toolbar — hidden when printing */}
           <div className="no-print" style={{
