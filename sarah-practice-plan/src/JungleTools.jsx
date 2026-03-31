@@ -6506,24 +6506,29 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
   const tapsRef = useRef([]);
   const [tapBpm, setTapBpm] = useState(null);
 
-  // Update chart with undo — defensive: if updater forgets to return, fall back to clone
+  // Deep clone helper — prevents shared references between chart, undo stack, and clipboard
+  const deepClone = (obj) => JSON.parse(JSON.stringify(obj));
+
+  // Update chart with undo — no nested setState calls to avoid React 18 strict mode issues
   const updateChart = useCallback((updater) => {
     setChart(prev => {
-      const clone = JSON.parse(JSON.stringify(prev));
-      setUndoStack(s => [...s.slice(-9), clone]);
-      const next = typeof updater === "function" ? updater(JSON.parse(JSON.stringify(prev))) : updater;
-      const result = next || clone;
+      const snapshot = deepClone(prev);
+      const working = deepClone(prev);
+      const next = typeof updater === "function" ? updater(working) : updater;
+      const result = next ? deepClone(next) : deepClone(snapshot);
       result.updatedAt = Date.now();
+      // Schedule undo push outside this updater to avoid side effects
+      queueMicrotask(() => setUndoStack(s => [...s.slice(-9), snapshot]));
       return result;
     });
   }, []);
 
-  // Undo
+  // Undo — deep clone the restored state to prevent shared references
   const undo = useCallback(() => {
     setUndoStack(stack => {
       if (stack.length === 0) return stack;
-      const prev = stack[stack.length - 1];
-      setChart(prev);
+      const restored = deepClone(stack[stack.length - 1]);
+      queueMicrotask(() => setChart(restored));
       return stack.slice(0, -1);
     });
   }, []);
