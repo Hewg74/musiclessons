@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import * as Tone from 'tone';
 import {
   Play, Pause, RotateCcw, SkipBack, Scissors, Check,
@@ -8730,8 +8731,8 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
         </div>
       </BottomSheet>
 
-      {/* Print overlay */}
-      {showPrint && (() => {
+      {/* Print overlay — portal to body so @media print can hide #root */}
+      {showPrint && createPortal((() => {
         const pRows = [];
         for (let i = 0; i < chart.measures.length; i += printBarsPerRow) pRows.push(chart.measures.slice(i, i + printBarsPerRow));
         const anyNotes = chart.measures.some(m => m.cells.some(c => c.note));
@@ -8853,7 +8854,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
           </div>
         </div>
         );
-      })()}
+      })(), document.body)}
     </div>
   );
 }
