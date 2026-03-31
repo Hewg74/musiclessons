@@ -2477,11 +2477,19 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                       return (
                         <div key={mLocalIdx} style={{
                           borderRight: mLocalIdx < row.length - 1 ? "1px solid #eae1d9" : "none",
-                          padding: "6px 4px 8px", background: mLocalIdx % 2 === 0 ? "#fff" : "#fdfbf9",
+                          padding: "6px 6px 10px", background: mLocalIdx % 2 === 0 ? "#fff" : "#fdfbf9",
                         }}>
-                          {showInlineLabel && (
-                            <div style={{ fontSize: 7, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, color: "#b58454", marginBottom: 3 }}>{measure.sectionLabel}</div>
-                          )}
+                          {/* Measure number + section label */}
+                          <div style={{ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 3, minHeight: 12 }}>
+                            <span style={{ fontSize: 8, fontWeight: 700, fontFamily: T.sans, color: "#b8b2ab", minWidth: 12 }}>{mIdx + 1}</span>
+                            {measure.sectionLabel && (
+                              <span style={{
+                                fontSize: 7, fontWeight: showInlineLabel ? 700 : 600, fontFamily: T.sans,
+                                color: showInlineLabel ? "#b58454" : "#d4a373",
+                                textTransform: "uppercase", letterSpacing: 0.5,
+                              }}>{measure.sectionLabel}</span>
+                            )}
+                          </div>
                           <div style={{ display: "grid", gridTemplateColumns: "repeat(8, 1fr)", gap: 0 }}>
                             {/* Beat labels */}
                             {measure.cells.map((_, ci) => (
