@@ -1,25 +1,25 @@
 import { getPitchRange } from "../appData.js";
 
-export const level7 = {
-  level: 7,
+export const level8 = {
+  level: 8,
   title: "The Groove Machine",
   subtitle: "Clean skank to crunchy power chords. The SoCal reggae-rock switch.",
   description:
     "SoCal reggae-rock is built on one move: clean reggae skank for the verse, distorted power chords for the chorus, back to clean skank. Pepper, Slightly Stoopid, Iration, The Hip Abduction — they all do this. This level teaches you the switch, adds overdrive to your skank, puts a rock solo over a reggae groove, and builds toward a full SoCal-structured jam. If Level 4 was roots reggae, this is reggae that grew up going to punk shows.",
   artists: "Pepper, levitation room, Slightly Stoopid, Iration",
-  unlocks: "Desert & Drone (Level 8)",
+  unlocks: "Desert & Drone (Level 9)",
   review: {
-    label: "Level 6 Check-In",
+    label: "Level 7 Check-In",
     time: 5,
-    exercises: ["gs-6-3", "gs-6-11"],
-    prompt: "Play the Cmaj7→Dmaj7 float with open strings ringing (gs-6-3). Then play your own jangle chord progression (gs-6-11). Shimmer is in your fingers? Time for some grit."
+    exercises: ["gs-7-3", "gs-7-11"],
+    prompt: "Play the Cmaj7→Dmaj7 float with open strings ringing (gs-7-3). Then play your own jangle chord progression (gs-7-11). Shimmer is in your fingers? Time for some grit."
   },
   exercises: [
 
     // ─── THE SOCAL SWITCH ───
 
     {
-      id: "gs-7-1",
+      id: "gs-8-1",
       time: 8,
       title: "The SoCal Switch — Clean to Crunch",
       type: "guitar",
@@ -41,7 +41,7 @@ export const level7 = {
       levelUp: "Can play the SoCal switch — 4 bars clean skank to 4 bars distorted power chords — at 90 BPM with an instant, clean tone transition on beat 1. No hesitation, no fumbled pedal stomps."
     },
     {
-      id: "gs-7-2",
+      id: "gs-8-2",
       time: 8,
       title: "Stormtrooper Power Chord Riff",
       type: "guitar",
@@ -64,7 +64,7 @@ export const level7 = {
       levelUp: "Can play the Stormtrooper power chord riff (D#5→A#5→F#5) cleanly at 140+ BPM and transition into a clean skank on E without hesitation."
     },
     {
-      id: "gs-7-3",
+      id: "gs-8-3",
       time: 7,
       title: "The Distorted Skank",
       type: "guitar",
@@ -88,7 +88,7 @@ export const level7 = {
     // ─── SONG STUDIES ───
 
     {
-      id: "gs-7-4",
+      id: "gs-8-4",
       time: 10,
       title: "Song Study: Stormtrooper Feel",
       type: "guitar",
@@ -97,7 +97,7 @@ export const level7 = {
         src: "/stormtrooper.mp3",
         note: "Power chord riff intro, skank verse, power chord chorus. SoCal reggae-rock structure."
       },
-      what: "Put the pieces together into a full Stormtrooper-style arrangement. Power chord intro (gs-7-2), drop into clean reggae skank for the verse, distorted power chords for the chorus, clean skank outro. This is a full song structure built from the techniques you've been drilling.",
+      what: "Put the pieces together into a full Stormtrooper-style arrangement. Power chord intro (gs-8-2), drop into clean reggae skank for the verse, distorted power chords for the chorus, clean skank outro. This is a full song structure built from the techniques you've been drilling.",
       setup: "Guitar. Clean + distortion ready to switch. Metronome at 100 BPM (building toward 150).",
       steps: [
         { text: "Structure the song: Intro (power chord riff D#5–A#5–F#5 x2) → Verse (clean skank on E, 8 bars) → Chorus (power chords E5–A5–B5, 4 bars) → Verse 2 (clean skank, 8 bars) → Chorus 2 (power chords, 4 bars) → Outro (clean skank, 4 bars fading). Write it down on paper before you play.", why: "Mapping the full structure before playing prevents getting lost mid-song. SoCal reggae-rock songs are simple structures — the magic is in the transitions, not the complexity. Writing it down makes the form conscious." },
@@ -117,7 +117,7 @@ export const level7 = {
       levelUp: "Can play the full Stormtrooper-style structure (intro → verse → chorus → verse → chorus → outro) at 130+ BPM with clean transitions and strong dynamic contrast between skank and power chord sections."
     },
     {
-      id: "gs-7-5",
+      id: "gs-8-5",
       time: 8,
       title: "Song Study: Warmth of the Sun — Shoegaze Reverb",
       type: "guitar",
@@ -148,7 +148,7 @@ export const level7 = {
     // ─── LEAD PLAYING & SOLOING ───
 
     {
-      id: "gs-7-6",
+      id: "gs-8-6",
       time: 8,
       title: "Rock Lead Over Reggae Groove",
       type: "guitar",
@@ -174,7 +174,7 @@ export const level7 = {
     // ─── DYNAMICS & FEEL ───
 
     {
-      id: "gs-7-7",
+      id: "gs-8-7",
       time: 7,
       title: "Dynamic Contrast: Whisper Verse → Shout Chorus",
       type: "guitar",
@@ -197,7 +197,7 @@ export const level7 = {
       levelUp: "Can play an 8-bar whisper verse and 4-bar shout chorus where the volume difference between sections is at least 3x — confirmed by the volume meter showing a dramatic spike at the chorus entry."
     },
     {
-      id: "gs-7-8",
+      id: "gs-8-8",
       time: 7,
       title: "Four-on-the-Floor vs One-Drop",
       type: "guitar",
@@ -225,7 +225,7 @@ export const level7 = {
     // ─── PUTTING IT ALL TOGETHER ───
 
     {
-      id: "gs-7-9",
+      id: "gs-8-9",
       time: 8,
       title: "The Full SoCal Toolkit — Skank + Power + Solo",
       type: "guitar",
@@ -249,7 +249,7 @@ export const level7 = {
       levelUp: "Can play a full 40-bar SoCal piece (skank verse → power chord chorus → pentatonic solo break → final chorus → skank outro) at 100 BPM with clean transitions between all three roles — recorded in one take."
     },
     {
-      id: "gs-7-11",
+      id: "gs-8-11",
       time: 8,
       title: "Jah Werx Revisited — Driving Acoustic 16ths",
       type: "guitar",
@@ -276,18 +276,18 @@ export const level7 = {
       chordVoicings: { chords: ["B", "F#", "E"] }
     },
     {
-      id: "gs-7-10",
+      id: "gs-8-10",
       time: 10,
       title: "Extended SoCal Jam — Full Song, Recorded",
       type: "guitar",
-      what: "Your Level 7 capstone. Build a 3-4 minute SoCal reggae-rock piece from scratch using everything you've learned: clean skank, distorted skank, power chord riff, pentatonic solo, dynamic contrast, and the SoCal switch. Record the whole thing as one take. This is YOUR reggae-rock song.",
+      what: "Your Level 8 capstone. Build a 3-4 minute SoCal reggae-rock piece from scratch using everything you've learned: clean skank, distorted skank, power chord riff, pentatonic solo, dynamic contrast, and the SoCal switch. Record the whole thing as one take. This is YOUR reggae-rock song.",
       setup: "Guitar. Full rig (clean + distortion). Backing track or metronome at your chosen tempo (90-110 BPM recommended). Recording ready.",
       steps: [
         { text: "Design your song structure. Pick from these ingredients: clean skank, distorted skank, power chord riff, power chord chorus, pentatonic solo, breakdown (drums only), build (crescendo into chorus). Arrange them into a structure that has at least 3 sections and one surprise moment. Write it on paper.", why: "You're not just executing a preset structure — you're COMPOSING. Choosing which ingredients to use and how to arrange them is songwriting. The 'surprise moment' could be an unexpected solo break, a sudden silence, or a key change." },
         { text: "Choose your key. Am is comfortable, but E lets you use open power chords (E5 is the lowest, heaviest power chord on guitar). D is warm. Pick one key and build all your sections in it.", why: "Key choice affects the feel of power chords. Lower keys (D, E) feel heavier and more aggressive. Higher keys (A, B) feel brighter. For SoCal reggae-rock, E or A are the sweet spots — heavy enough for power chords, bright enough for skanks." },
         { text: "Rehearse: play through your structure 3 times. Each pass should be smoother than the last. Feel the transformation in your body when you switch from clean skank to distorted power chords — your whole physical engagement changes. The skank lives in your wrist; the power chords live in your forearm and chest. Focus on transitions — the moments between sections are where songs succeed or fail. By pass 3, you should be able to play the whole thing without stopping.", why: "Three rehearsal passes with increasing fluency is the minimum for a solid recording take. The physical shift between reggae and rock — different muscles, different posture, different breath — is the embodied version of the SoCal switch. When your body knows the transitions, your hands follow." },
         { text: "Add one expressive touch you haven't planned: maybe a bend in the solo (feel the string resist under your fingertip), a volume swell at the start (feel the guitar body wake up from silence to full resonance), a sudden stop before the last chorus (feel the silence hit your body like a held breath). Something that makes this YOUR version, not a template. Practice it 3 times.", why: "Planned spontaneity sounds contradictory, but it's how great performances work. Anchoring each expressive moment in a physical sensation — the bend's resistance, the swell's growing vibration, the stop's sudden stillness — makes it reliable and genuine." },
-        { text: "Record the full piece in one take. If you make a mistake, keep playing — a recovered mistake sounds more live and human than a stopped recording. Listen back when you're done. This is your Level 7 graduation piece.", why: "One-take recording builds performance confidence. In a live setting, you can't stop and restart. Learning to recover from mistakes and keep the groove going is a critical skill — and often the mistakes become the most interesting moments." }
+        { text: "Record the full piece in one take. If you make a mistake, keep playing — a recovered mistake sounds more live and human than a stopped recording. Listen back when you're done. This is your Level 8 graduation piece.", why: "One-take recording builds performance confidence. In a live setting, you can't stop and restart. Learning to recover from mistakes and keep the groove going is a critical skill — and often the mistakes become the most interesting moments." }
       ],
       feel: "This should feel like performing at a beach show — the kind of set that makes people look up from their drinks. Confident, dynamic, expressive. Your song should have a journey: a beginning that draws people in, a middle that builds energy, and an ending that leaves them wanting more.",
       wrong: "If the piece feels mechanical or like a checklist of techniques, you're over-thinking. Close your eyes, feel the groove, and let the sections flow into each other naturally. If a section isn't working, cut it — a simple 2-section song played with conviction beats a complex 5-section song played nervously. End on something you're proud of — even if the take wasn't perfect, find a clean ending. Your final note should feel like a period, not an ellipsis.",

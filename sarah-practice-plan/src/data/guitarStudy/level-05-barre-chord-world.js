@@ -5,7 +5,7 @@ export const level5 = {
   description:
     "Open chords got you through the first four levels — but they chain you to the first three frets. The barre chord breaks that chain. Your index finger becomes a moveable nut, and suddenly one shape played at different frets gives you every chord in every key. We start at fret 5 where the tension is forgiving, isolate the barre finger before adding the chord shape, and build toward Sun Room's Sol Del Sur — the barre chord anthem.",
   artists: "Sun Room, Billy Changer, levitation room",
-  unlocks: "Jangle & Shimmer (Level 6)",
+  unlocks: "Triads Across the Neck (Level 6)",
   review: {
     label: "Level 4 Check-In",
     time: 5,

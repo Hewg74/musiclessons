@@ -1,25 +1,25 @@
 import { getPitchRange } from "../appData.js";
 
-export const level6 = {
-  level: 6,
+export const level7 = {
+  level: 7,
   title: "Jangle & Shimmer",
   subtitle: "Open strings ring through barre shapes. The dreamy psych-surf sound unlocked.",
   description:
     "Everything you've learned so far used closed voicings — every string fretted, every note controlled. Now you open up. Maj7 chords, sus2 chords, and open-string resonance create the shimmering, jangly sound that defines Allah-Las, levitation room, and the entire LA psych-surf scene. The secret is simple: let the open high E string ring through chord changes. That one ringing string IS the jangle.",
   artists: "levitation room, Allah-Las, modGlyders, Babitha",
-  unlocks: "The Groove Machine (Level 7)",
+  unlocks: "The Groove Machine (Level 8)",
   review: {
-    label: "Level 5 Check-In",
+    label: "Level 6 Check-In",
     time: 5,
-    exercises: ["gs-5-6", "gs-5-11"],
-    prompt: "Play Sol Del Sur (C#m-B-F#) with the syncopated strum (gs-5-6). Then play a barre chord progression you created yourself (gs-5-11). Clean barres with no buzzing? Time for jangle."
+    exercises: ["gs-6-5", "gs-6-14"],
+    prompt: "Play the Am triad highway up the neck (gs-6-5). Then play your Triads in the Wild song study (gs-6-14). Triads solid across all string sets? Time for jangle."
   },
   exercises: [
 
     // ─── PHASE 1: THE MAJ7 SHAPES ───
 
     {
-      id: "gs-6-1",
+      id: "gs-7-1",
       time: 7,
       title: "The Cmaj7 Shape — Let It Ring",
       type: "guitar",
@@ -40,7 +40,7 @@ export const level6 = {
       levelUp: "Strum Cmaj7 (x32000) 8 times at 70 BPM with all open strings ringing clearly — no buzzing, no accidental muting — and describe the emotional difference between Cmaj7 and regular C major. Retrieval check: set the guitar down for 60 seconds, then form the Cmaj7 shape from memory without looking."
     },
     {
-      id: "gs-6-2",
+      id: "gs-7-2",
       time: 7,
       title: "The Dmaj7 Shape — Same Trick, New Root",
       type: "guitar",
@@ -64,7 +64,7 @@ export const level6 = {
     // ─── PHASE 2: THE ALLAH-LAS FLOAT ───
 
     {
-      id: "gs-6-3",
+      id: "gs-7-3",
       time: 8,
       title: "The Allah-Las Float — Cmaj7 to Dmaj7",
       type: "guitar",
@@ -86,7 +86,7 @@ export const level6 = {
       levelUp: "Play Cmaj7→Dmaj7 continuously at 70 BPM for 2 minutes with the open high E string sustaining through every chord change — no gaps in the shimmer, no buzzing, and the jangle strum pattern (down, soft up, down) consistent."
     },
     {
-      id: "gs-6-4",
+      id: "gs-7-4",
       time: 8,
       title: "Song Study: Worship the Sun",
       type: "guitar",
@@ -99,7 +99,7 @@ export const level6 = {
       setup: "Guitar. Listen to the song first. Metronome at ~95 BPM.",
       chordVoicings: { chords: ["Cmaj7", "Dmaj7", "A", "G", "E"] },
       steps: [
-        { text: "Verse: play Cmaj7→Dmaj7 in a loop, 2 bars each, with the jangle strum you learned in gs-6-3. This IS the verse of Worship the Sun. The entire verse is this two-chord float. Play it 4 times through (16 bars).", why: "Learning that a professionally recorded, critically acclaimed song uses the exact same two-chord pattern you just practiced proves that simplicity works. Allah-Las didn't need more chords — they needed the RIGHT two chords." },
+        { text: "Verse: play Cmaj7→Dmaj7 in a loop, 2 bars each, with the jangle strum you learned in gs-7-3. This IS the verse of Worship the Sun. The entire verse is this two-chord float. Play it 4 times through (16 bars).", why: "Learning that a professionally recorded, critically acclaimed song uses the exact same two-chord pattern you just practiced proves that simplicity works. Allah-Las didn't need more chords — they needed the RIGHT two chords." },
         { text: "Chorus: shift to A-G-A-E. Play A for 1 bar, G for 1 bar, A for 1 bar, E for 1 bar. Use open chord shapes. Notice how the chorus feels different — it MOVES, it has direction, it resolves. After the floating verse, the chorus lands.", why: "The contrast between floating verse (no resolution) and directional chorus (clear harmonic motion) is a classic songwriting technique. The verse builds dreamlike tension; the chorus releases it. This push-pull keeps the listener engaged." },
         { text: "Full structure: 4 cycles of verse (Cmaj7-Dmaj7), then chorus (A-G-A-E), then back to verse. Feel the emotional arc — float, land, float again. The landing makes the floating sweeter; the floating makes the landing feel earned.", why: "Understanding song form as an emotional journey (not just a sequence of chords) is what separates players from songwriters. Each section exists because of how it relates to the other sections." },
         { text: "Add the Allah-Las reverb feel: strum lighter than you think you should. Let the chord shapes do the work. If you have a reverb pedal, turn it on. If not, play in a room with hard walls and let the natural room reverb do its thing. The lighter your touch, the more the jangle comes through.", why: "Allah-Las' tone comes from light touch + heavy reverb. The guitar is never overdriven or aggressive. Spring reverb on the Twin Reverb Blackface adds sustain and shimmer that makes even a gentle strum fill the room." },
@@ -115,7 +115,7 @@ export const level6 = {
     // ─── PHASE 3: SUS2 AND AMBIGUITY ───
 
     {
-      id: "gs-6-5",
+      id: "gs-7-5",
       time: 7,
       title: "Sus2 Voicings — The Ambiguous Chords",
       type: "guitar",
@@ -136,7 +136,7 @@ export const level6 = {
       levelUp: "Play Dsus2 (xx0230) and Asus2 (x02200) cleanly with all open strings ringing, and improvise a 1-minute passage using Dsus2, Asus2, Cmaj7, and Dmaj7 in any order."
     },
     {
-      id: "gs-6-6",
+      id: "gs-7-6",
       time: 8,
       title: "Song Study: Friends (levitation room)",
       type: "guitar",
@@ -166,7 +166,7 @@ export const level6 = {
     // ─── PHASE 4: MAJOR→MINOR SHIFTS ───
 
     {
-      id: "gs-6-7",
+      id: "gs-7-7",
       time: 7,
       title: "The Major→Minor Shift — One Finger Changes Everything",
       type: "guitar",
@@ -187,7 +187,7 @@ export const level6 = {
       levelUp: "Play D→Dm→G→Gm at 75 BPM with clean chord changes, and describe what happens emotionally at each major→minor transition."
     },
     {
-      id: "gs-6-8",
+      id: "gs-7-8",
       time: 8,
       title: "Song Study: Geneva Strangemod (Glyders)",
       type: "guitar",
@@ -217,7 +217,7 @@ export const level6 = {
     // ─── PHASE 5: BARRE + OPEN VOICINGS ───
 
     {
-      id: "gs-6-9",
+      id: "gs-7-9",
       time: 8,
       title: "Song Study: Catamaran (Allah-Las)",
       type: "guitar",
@@ -231,7 +231,7 @@ export const level6 = {
       chordVoicings: { chords: ["Am", "C", "D", "Dm"] },
       steps: [
         { text: "Play Am-C-D-Dm, 1 bar each, at 80 BPM. Feel the emotional arc: Am is grounded and minor. C lifts slightly. D opens up — major, bright. Then Dm falls — the brightness collapses into shadow. The D→Dm is the heart of the progression.", why: "This progression tells a story in 4 chords: starting in minor territory (Am), passing through neutral (C), arriving at a bright moment (D), then watching it darken (Dm). The D→Dm shift is the narrative twist — the happy moment that doesn't last." },
-        { text: "Focus on the D→Dm transition. Play just these two chords: D for 2 bars, Dm for 2 bars, 8 times. This is the same major→minor shift you learned in gs-6-7, now deployed in a specific song context. Feel how it lands differently within the Am-C framework.", why: "Context changes meaning. D→Dm in isolation is a generic major→minor shift. D→Dm after Am-C is a narrative event — a brief moment of brightness that fades. The surrounding chords give the shift a story." },
+        { text: "Focus on the D→Dm transition. Play just these two chords: D for 2 bars, Dm for 2 bars, 8 times. This is the same major→minor shift you learned in gs-7-7, now deployed in a specific song context. Feel how it lands differently within the Am-C framework.", why: "Context changes meaning. D→Dm in isolation is a generic major→minor shift. D→Dm after Am-C is a narrative event — a brief moment of brightness that fades. The surrounding chords give the shift a story." },
         { text: "Bring the tempo to 90 BPM. Play Am-C-D-Dm with the jangle strum (down, soft up, down). Let the open strings ring — especially on Am and C, which have open strings built into their standard shapes. The Dm should feel slightly more closed and intimate.", why: "At tempo, the progression becomes a groove. The jangle strum you learned on Cmaj7-Dmaj7 works here too — the open strings in Am (open E) and C (open E, open B) create continuity. When you hit Dm, the loss of the F# (replaced by F) darkens the shimmer." },
         { text: "This is the Allah-Las descending minor tradition in action. Am-C-D-Dm maps roughly to i-bIII-IV-iv — a progression that orbits the minor key without ever fully resolving. Compare it to the classic Am-G-F-E (i-bVII-bVI-V) that defines psych-surf. Both are descending, both are minor, both create restless beauty.", why: "Understanding the harmonic tradition your favorite songs come from lets you write in that tradition. The Allah-Las aren't inventing from scratch — they're working within a lineage of LA psych-surf harmony. Now you know the lineage too." },
         { text: "Play Catamaran 4 times through. On the 3rd and 4th times, experiment with dynamics: build the Am-C section slightly louder, then pull back for D-Dm. The D-Dm moment should feel intimate, like a confession.", why: "Dynamic shaping over a chord loop creates arrangement even when the chords are simple. Building and releasing volume over a 4-bar cycle gives the progression a breathing quality that flat dynamics can't achieve." }
@@ -244,7 +244,7 @@ export const level6 = {
       levelUp: "Play Am-C-D-Dm (Catamaran) at 90 BPM 4 times through with clean transitions, dynamic shaping, and the D→Dm shift clearly articulated."
     },
     {
-      id: "gs-6-10",
+      id: "gs-7-10",
       time: 8,
       title: "Song Study: Get Away (Babitha)",
       type: "guitar",
@@ -273,7 +273,7 @@ export const level6 = {
     // ─── PHASE 6: JANGLE IMPROV & CREATION ───
 
     {
-      id: "gs-6-11",
+      id: "gs-7-11",
       time: 8,
       title: "Jangle Improv — Build Your Own Shimmer",
       type: "guitar",
@@ -281,7 +281,7 @@ export const level6 = {
       setup: "Guitar. Metronome at 75-90 BPM (your choice). Optional backing track.",
       chordVoicings: { chords: ["Cmaj7", "Dmaj7", "Dsus2", "Asus2", "Em", "Am", "E7"] },
       steps: [
-        { text: "Pick 3-4 chords from your Level 6 palette. Try different combinations: Cmaj7-Am-Dsus2? Em-Cmaj7-Dmaj7-E7? Asus2-Dm-G-Cmaj7? Strum each combination for 4 bars and listen. Not all combinations will sound good — that's the point. Find one you love.", why: "Chord selection is the first songwriting decision. By trying multiple combinations, you're developing harmonic taste — learning which chord sequences resonate with you personally. There are no wrong answers, only preferences." },
+        { text: "Pick 3-4 chords from your Level 7 palette. Try different combinations: Cmaj7-Am-Dsus2? Em-Cmaj7-Dmaj7-E7? Asus2-Dm-G-Cmaj7? Strum each combination for 4 bars and listen. Not all combinations will sound good — that's the point. Find one you love.", why: "Chord selection is the first songwriting decision. By trying multiple combinations, you're developing harmonic taste — learning which chord sequences resonate with you personally. There are no wrong answers, only preferences." },
         { text: "Once you've chosen your 3-4 chords, decide the rhythm: one chord per bar? Two chords per bar for some, one for others? The rhythm of chord changes affects the pacing — faster changes feel energetic, slower changes feel dreamy.", why: "Harmonic rhythm (how fast the chords change) is as important as which chords you choose. The Allah-Las float works because it changes slowly. Sun Room's energy comes from faster changes. Your choice of rhythm defines the feel." },
         { text: "Play your progression for 2 minutes straight. Don't change it — commit. Let the repetition reveal the progression's character. By the second minute, you'll hear things you didn't notice in the first 30 seconds.", why: "Commitment to a loop reveals depth. Most beginners abandon progressions too quickly, thinking they're 'boring.' But boredom is often the doorway to deeper listening — the subtle interactions between chords emerge only through repetition." },
         { text: "Now add one variation: substitute one chord with its major or minor alternate, or with a sus2 version. But first — before you play the substitution, HEAR it. Close your eyes, imagine the progression with the new chord in place. Can you hear the difference? If yes, you're audiating harmonic change. Play the original 4 times, then the variation 4 times. Does the variation add something? Keep whichever version feels better.", why: "Audiating harmonic substitutions before playing them trains your inner ear to hear chord quality (major/minor/sus) independently from the guitar. This is how arrangers think — they hear the change in their mind before committing to it. Small variations on a committed progression are how songs develop. You're not rewriting — you're evolving." },
@@ -296,11 +296,11 @@ export const level6 = {
       levelUp: "Create and record an original 3-4 chord jangle progression using at least one open-string voicing (maj7, sus2, or E7), played for 8+ bars with the jangle strum and dynamic variation."
     },
     {
-      id: "gs-6-12",
+      id: "gs-7-12",
       time: 10,
       title: "Extended Jangle Jam — 5 Minutes of Shimmer",
       type: "guitar",
-      what: "Record a 5-minute jangle jam using everything from this level. You can use your own progression from gs-6-11, combine it with song progressions you learned, or shift between different progressions mid-jam. The only rule: open strings ring. Let the shimmer build. This is your Level 6 graduation piece.",
+      what: "Record a 5-minute jangle jam using everything from this level. You can use your own progression from gs-7-11, combine it with song progressions you learned, or shift between different progressions mid-jam. The only rule: open strings ring. Let the shimmer build. This is your Level 7 graduation piece.",
       setup: "Guitar. Metronome at 80-100 BPM (your choice). Backing track optional. Recording ON.",
       chordVoicings: { chords: ["Cmaj7", "Dmaj7", "Dsus2", "Asus2", "Em", "Am", "D", "Dm", "E7"] },
       steps: [
@@ -316,7 +316,7 @@ export const level6 = {
       metronome: 85,
       tracks: [{ name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }, { name: "Psych Rock 120", src: "/psych-rock-120.mp3" }, { name: "Groove Beat 90", src: "/groove-beat-90.mp3" }],
       recorder: true,
-      levelUp: "Record a 5-minute jangle jam using at least 3 different chord voicings from Level 6, with at least one major→minor shift, dynamic variation, and a deliberate ending — then identify your best 30-second stretch."
+      levelUp: "Record a 5-minute jangle jam using at least 3 different chord voicings from Level 7, with at least one major→minor shift, dynamic variation, and a deliberate ending — then identify your best 30-second stretch."
     }
   ]
 };

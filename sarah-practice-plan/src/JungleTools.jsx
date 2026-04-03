@@ -5988,6 +5988,22 @@ const CHORD_VOICINGS_MULTI = {
   "G5":  [{ frets: "355xxx", name: "G5", pos: "3rd" }, { frets: "3x0xxx", name: "G5", pos: "Open" }],
   "C5":  [{ frets: "x355xx", name: "C5", pos: "3rd" }, { frets: "8aaxxx", name: "C5", pos: "8th" }],
   "F5":  [{ frets: "133xxx", name: "F5", pos: "1st" }, { frets: "x8aaxx", name: "F5", pos: "8th" }],
+  // ─── Triad voicings (3-string shapes, 3 inversions each) ───
+  // Strings 1-2-3 (E-B-G) — the Khruangbin/reggae/funk set
+  "Am triad (1-2-3)":  [{ frets: "xxx210", name: "Am Root", pos: "Open" }, { frets: "xxx555", name: "Am 1st inv", pos: "5th" }, { frets: "xxx9a8", name: "Am 2nd inv", pos: "9th" }],
+  "C triad (1-2-3)":   [{ frets: "xxx010", name: "C 2nd inv", pos: "Open" }, { frets: "xxx553", name: "C Root", pos: "5th" }, { frets: "xxx988", name: "C 1st inv", pos: "9th" }],
+  "G triad (1-2-3)":   [{ frets: "xxx433", name: "G 1st inv", pos: "3rd" }, { frets: "xxx787", name: "G 2nd inv", pos: "7th" }, { frets: "xxxcca", name: "G Root", pos: "12th" }],
+  "Dm triad (1-2-3)":  [{ frets: "xxx765", name: "Dm Root", pos: "5th" }, { frets: "xxxaaa", name: "Dm 1st inv", pos: "10th" }, { frets: "xxx231", name: "Dm 2nd inv", pos: "1st" }],
+  "Em triad (1-2-3)":  [{ frets: "xxx000", name: "Em 1st inv", pos: "Open" }, { frets: "xxx453", name: "Em 2nd inv", pos: "4th" }, { frets: "xxx987", name: "Em Root", pos: "9th" }],
+  "A triad (1-2-3)":   [{ frets: "xxx220", name: "A Root", pos: "Open" }, { frets: "xxx655", name: "A 1st inv", pos: "5th" }, { frets: "xxx9a9", name: "A 2nd inv", pos: "9th" }],
+  "D triad (1-2-3)":   [{ frets: "xxx775", name: "D Root", pos: "5th" }, { frets: "xxxbaa", name: "D 1st inv", pos: "10th" }, { frets: "xxx232", name: "D 2nd inv", pos: "2nd" }],
+  "E triad (1-2-3)":   [{ frets: "xxx100", name: "E 1st inv", pos: "Open" }, { frets: "xxx454", name: "E 2nd inv", pos: "4th" }, { frets: "xxx997", name: "E Root", pos: "9th" }],
+  // Strings 2-3-4 (B-G-D) — warm mid-register, unique shapes (B-string offset)
+  "Am triad (2-3-4)":  [{ frets: "xx221x", name: "Am 2nd inv", pos: "2nd" }, { frets: "xx755x", name: "Am Root", pos: "7th" }, { frets: "xxa9ax", name: "Am 1st inv", pos: "10th" }],
+  "C triad (2-3-4)":   [{ frets: "xx555x", name: "C 2nd inv", pos: "5th" }, { frets: "xxa98x", name: "C Root", pos: "10th" }, { frets: "xx201x", name: "C 1st inv", pos: "Open" }],
+  // Strings 3-4-5 (G-D-A) — same shape system as 4-5-6 (all perfect 4ths)
+  "Am triad (3-4-5)":  [{ frets: "x322xx", name: "Am 1st inv", pos: "3rd" }, { frets: "x775xx", name: "Am 2nd inv", pos: "7th" }, { frets: "xca9xx", name: "Am Root", pos: "12th" }],
+  "C triad (3-4-5)":   [{ frets: "x320xx", name: "C Root", pos: "Open" }, { frets: "x755xx", name: "C 1st inv", pos: "5th" }, { frets: "xaa9xx", name: "C 2nd inv", pos: "10th" }],
 };
 
 // Backward-compatible accessor: returns first voicing as { frets, name } for StrumChartBuilder

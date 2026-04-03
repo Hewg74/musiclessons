@@ -1,25 +1,25 @@
 import { getPitchRange } from "../appData.js";
 
-export const level11 = {
-  level: 11,
+export const level12 = {
+  level: 12,
   title: "Fingerpicking",
   subtitle: "Thumb and fingers. Two voices from one guitar. The intimate sound.",
   description:
     "The pick goes away (or gets tucked). Your thumb becomes an independent bass player, your fingers become a melody instrument, and suddenly one guitar sounds like two. You'll learn PIMA technique, the six-note roll, Travis picking, Hermanos Gutiérrez's percussive gallop, and Jack Johnson's Breakdown — all building toward the moment your thumb and fingers become independent voices.",
   artists: "Jack Johnson, Hollow Coves, Hermanos Gutiérrez, Tommy Guerrero",
-  unlocks: "Dynamics & Expression (Level 12)",
+  unlocks: "Dynamics & Expression (Level 13)",
   review: {
-    label: "Level 10 Check-In",
+    label: "Level 11 Check-In",
     time: 5,
-    exercises: ["gs-10-3", "gs-10-9"],
-    prompt: "Play an Afrobeat-style interlocking guitar pattern (gs-10-3). Then play a Tommy Guerrero-style finger-picked melody (gs-10-9). Global colors are flowing? Time to formalize fingerpicking."
+    exercises: ["gs-11-3", "gs-11-9"],
+    prompt: "Play an Afrobeat-style interlocking guitar pattern (gs-11-3). Then play a Tommy Guerrero-style finger-picked melody (gs-11-9). Global colors are flowing? Time to formalize fingerpicking."
   },
   exercises: [
 
     // ─── PHASE 1: PIMA BASICS ───
 
     {
-      id: "gs-11-1",
+      id: "gs-12-1",
       time: 8,
       title: "PIMA — Assigning Your Fingers",
       type: "guitar",
@@ -29,7 +29,7 @@ export const level11 = {
         { text: "Hold your right hand over the soundhole with your wrist relaxed and slightly arched — not collapsed flat against the body. Rest your thumb (P) on string 5 (A string). Rest I on string 3 (G), M on string 2 (B), A on string 1 (high E). All four contact points at once. This is your 'home position.' Hold it for 10 seconds and feel the strings under your fingertips — each finger has its own relationship to the string, a different thickness, a different tension. Your thumb feels the heavy bass; your ring finger feels the thin, bright treble.", why: "The home position is the foundation of all fingerpicking. Every pattern starts and returns here. Feeling all four strings simultaneously builds spatial awareness — your fingers learn not just where their strings live, but what they FEEL like. The physical difference between bass and treble strings is your tactile map of the guitar's voice." },
         { text: "Pluck each finger one at a time, slowly: P (string 5), then I (string 3), then M (string 2), then A (string 1). One pluck per metronome click at 60 BPM. After each pluck, return the finger to its string. Say the letter out loud as you pluck: 'P... I... M... A.' 8 repetitions.", why: "Saying the finger name while plucking creates an auditory-motor link — your brain maps the name to the motion to the sound. This naming convention (from classical guitar) is universal. Every fingerpicking tutorial, method book, and teacher uses PIMA." },
         { text: "Reverse: A-M-I-P. One pluck per click, 60 BPM, 8 repetitions. Say each letter. Notice how different this direction feels — descending from the thin strings to the thick bass. Both directions need to feel natural.", why: "Ascending and descending patterns are the two halves of fingerpicking fluency. Most beginners only practice ascending (P-I-M-A) and struggle when patterns require the reverse direction." },
-        { text: "Now fret an Am chord with your left hand. Play the same P-I-M-A pattern. The chord gives the pattern harmonic context — suddenly it sounds like music, not just a finger exercise. 8 repetitions at 60 BPM.", why: "Adding a chord transforms the exercise from mechanical to musical. The Am chord lets you hear how PIMA creates an arpeggio — the same notes the chord contains, but heard one at a time. This is the seed of every fingerpicking pattern." },
+        { text: "Now fret an Am chord with your left hand. Play the same P-I-M-A pattern. The chord gives the pattern harmonic context — suddenly it sounds like music, not just a finger exercise. 8 repetitions at 60 BPM. Notice: your fingerpicking pattern outlines the Am triad tones (A-C-E) from Level 6 — each finger lands on a chord tone.", why: "Adding a chord transforms the exercise from mechanical to musical. The Am chord lets you hear how PIMA creates an arpeggio — the same notes the chord contains, but heard one at a time. Your Level 6 triad knowledge tells you WHY these notes sound right together: they're root, 3rd, and 5th. Every fingerpicking pattern is built on this triad skeleton." },
         { text: "Variation: P on string 6 (low E) instead of string 5. Play P-I-M-A on Am again. The bass note is now E instead of A — hear how the chord has a different bottom? This is your first taste of bass voice independence. P can choose which bass note to play.", why: "The thumb's ability to move between bass strings is what separates simple arpeggios from real fingerpicking. In Travis picking (coming in exercise 5), the thumb alternates between two bass strings constantly. This step plants the seed." }
       ],
       feel: "Your right hand should feel relaxed and naturally curved, like you're holding a tennis ball lightly. Each finger plucks with a gentle pull toward the palm — not a violent yank. The sound should be warm and round, not scratchy or harsh. When all four fingers find their strings without looking, you've arrived.",
@@ -42,7 +42,7 @@ export const level11 = {
     // ─── THE SIX-NOTE ROLL ───
 
     {
-      id: "gs-11-2",
+      id: "gs-12-2",
       time: 8,
       title: "The Six-Note Roll — P-i-m-a-m-i",
       type: "guitar",
@@ -65,7 +65,7 @@ export const level11 = {
     // ─── ROLLING THROUGH CHORD CHANGES ───
 
     {
-      id: "gs-11-3",
+      id: "gs-12-3",
       time: 10,
       title: "Rolling Through Changes — Am→C→G→Em",
       type: "guitar",
@@ -89,7 +89,7 @@ export const level11 = {
     // ─── SONG STUDY: BREAKDOWN ───
 
     {
-      id: "gs-11-4",
+      id: "gs-12-4",
       time: 12,
       title: "Song Study: Breakdown — Jack Johnson",
       type: "guitar",
@@ -120,7 +120,7 @@ export const level11 = {
     // ─── TRAVIS PICKING ───
 
     {
-      id: "gs-11-5",
+      id: "gs-12-5",
       time: 12,
       title: "Travis Picking — The Alternating Thumb",
       type: "guitar",
@@ -145,7 +145,7 @@ export const level11 = {
     // ─── PERCUSSIVE SLAP ───
 
     {
-      id: "gs-11-6",
+      id: "gs-12-6",
       time: 8,
       title: "Percussive Slap — The Hermanos Gutiérrez Gallop",
       type: "guitar",
@@ -170,7 +170,7 @@ export const level11 = {
     // ─── SONG STUDY: COASTLINE FEEL ───
 
     {
-      id: "gs-11-7",
+      id: "gs-12-7",
       time: 10,
       title: "Song Study: Coastline Feel — Hollow Coves",
       type: "guitar",
@@ -201,7 +201,7 @@ export const level11 = {
     // ─── FINGERPICKED REGGAE ───
 
     {
-      id: "gs-11-12",
+      id: "gs-12-12",
       time: 8,
       title: "Gimme Love Revisited — Fingerpicked Reggae",
       type: "guitar",
@@ -225,7 +225,7 @@ export const level11 = {
     // ─── DUO THINKING ───
 
     {
-      id: "gs-11-8",
+      id: "gs-12-8",
       time: 10,
       title: "Duo Thinking — Bass Voice + Melody Voice",
       type: "guitar",
@@ -251,7 +251,7 @@ export const level11 = {
     // ─── PICK TUCK ───
 
     {
-      id: "gs-11-9",
+      id: "gs-12-9",
       time: 6,
       title: "Pick Tuck — Switching Mid-Song",
       type: "guitar",
@@ -274,7 +274,7 @@ export const level11 = {
     // ─── FINGERPICKED IMPROV ───
 
     {
-      id: "gs-11-10",
+      id: "gs-12-10",
       time: 10,
       title: "Fingerpicked Improv — Melody Over Changes",
       type: "guitar",
@@ -300,21 +300,21 @@ export const level11 = {
     // ─── EXTENDED PERFORMANCE ───
 
     {
-      id: "gs-11-11",
+      id: "gs-12-11",
       time: 12,
       title: "Extended Fingerpicking Piece — Full Song",
       type: "guitar",
       chordVoicings: { chords: ["G", "Bm", "Em", "D", "Am", "C"] },
       tracks: [{ name: "A Major Folk 80", src: "/a-major-folk-80.mp3" }, { name: "Cinematic Western 80", src: "/cinematic-western-80.mp3" }],
       recorder: true,
-      what: "Your Level 11 graduation piece. Combine everything: six-note roll, Travis picking, percussive slap, duo thinking, pick tuck, dynamic shaping. Play a 4-minute fingerpicked piece that has a clear structure — intro, verse, chorus, bridge, outro. Use chord changes from Breakdown (G-Bm-Em-D) or create your own. This is not an exercise. This is a performance.",
+      what: "Your Level 12 graduation piece. Combine everything: six-note roll, Travis picking, percussive slap, duo thinking, pick tuck, dynamic shaping. Play a 4-minute fingerpicked piece that has a clear structure — intro, verse, chorus, bridge, outro. Use chord changes from Breakdown (G-Bm-Em-D) or create your own. This is not an exercise. This is a performance.",
       setup: "Guitar. Choose your own tempo (60-80 BPM). Choose a backing track or play solo. Record the entire thing.",
       steps: [
         { text: "Plan your structure before you play. Write it down: Intro (8 bars, Am, spacious picking) → Verse 1 (16 bars, G-Bm-Em-D, six-note roll) → Chorus (8 bars, C-G-Am-Em, Travis picking) → Bridge (8 bars, Am, percussive gallop) → Verse 2 → Chorus → Outro (8 bars, Am, spacious fade). Adjust to taste.", why: "Planning the structure before playing ensures your performance has a narrative arc. Random jamming is for practice. Performance has intention, contrast, and shape." },
         { text: "Practice each section separately. Get the intro clean. Get the verse flowing. Get the chorus grooving. Get the bridge galloping. Each section uses a different fingerpicking technique — the contrast between sections is what makes the piece interesting.", why: "Section-by-section practice ensures each part is solid before you combine them. Transitions between sections are where performances break down — knowing each section independently makes the transitions smoother." },
         { text: "Practice the transitions between sections. The hardest moments: roll → Travis pattern (intro to verse), Travis → spacious picking (verse to chorus — or use the pick tuck here for a strummed chorus), picking → slap (chorus to bridge). Each transition should be smooth and musical.", why: "Transitions are the seams of a performance. Rough transitions break the listener's immersion. Smooth transitions are invisible — the piece flows like one continuous statement." },
         { text: "Run the full piece start to finish. Don't stop for mistakes — play through them. A performance is not practice. If a chord buzzes, let it go. If a transition stutters, recover and keep going. The overall flow matters more than individual note accuracy.", why: "Performance resilience — the ability to continue through mistakes — is a skill that only develops through practice performances. Every professional musician has played through wrong notes. The audience never notices if you don't react." },
-        { text: "Record the full piece. Listen back with fresh ears — tomorrow, not today. When you listen tomorrow, you'll hear it as a listener, not as the player. Note what works and what needs polish. This recording is your Level 11 completion artifact.", why: "Delayed self-listening removes the emotional charge of performance and lets you hear objectively. Tomorrow's ears will catch things tonight's can't — both good surprises and areas for growth." }
+        { text: "Record the full piece. Listen back with fresh ears — tomorrow, not today. When you listen tomorrow, you'll hear it as a listener, not as the player. Note what works and what needs polish. This recording is your Level 12 completion artifact.", why: "Delayed self-listening removes the emotional charge of performance and lets you hear objectively. Tomorrow's ears will catch things tonight's can't — both good surprises and areas for growth." }
       ],
       feel: "This should feel like a complete musical statement — a fingerpicked journey with a beginning, middle, and end. Not an exercise, not a jam, but a PIECE. Something you could play for someone and say 'I wrote this.' Even if every chord and technique is borrowed, the arrangement is yours.",
       wrong: "If the piece feels flat (same energy throughout), increase the contrast between sections. Make the intro whisper-quiet. Make the chorus confident. Make the bridge dramatic. Dynamic contrast creates narrative. If you can't get through the full piece without stopping, shorten it — a clean 2-minute piece beats a fumbled 4-minute one. Final 2 minutes: weave in a technique from earlier levels — a behind-the-beat strum section, a palm-muted passage. Mixing old skills with fingerpicking strengthens both. Close on a phrase that made you smile — even just a clean Am chord ringing out.",

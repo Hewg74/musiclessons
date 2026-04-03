@@ -1,24 +1,24 @@
 import { getPitchRange } from "../appData.js";
 
-export const level14 = {
-  level: 14,
+export const level15 = {
+  level: 15,
   title: "Your Sound",
   subtitle: "Build your set. Find your voice. The Golden Hour Set.",
   description:
-    "This is it — the final level. No new techniques, no new scales, no new theory. Everything you need is already in your hands. Level 14 is about identity: what do YOU sound like? You'll curate a 30-minute performance set — the Golden Hour Set — that weaves together the genres, techniques, and feelings that define your sound. Surf, reggae, desert, soul, originals — all stitched into a single arc. The last exercise is a full recorded performance. Then you'll listen to your Level 1 baseline and hear how far you've come.",
+    "This is it — the final level. No new techniques, no new scales, no new theory. Everything you need is already in your hands. Level 15 is about identity: what do YOU sound like? You'll curate a 30-minute performance set — the Golden Hour Set — that weaves together the genres, techniques, and feelings that define your sound. Surf, reggae, desert, soul, originals — all stitched into a single arc. The last exercise is a full recorded performance. Then you'll listen to your Level 1 baseline and hear how far you've come.",
   artists: "Gene's own sound — all influences synthesized",
   review: {
-    label: "Level 13 Check-In",
+    label: "Level 14 Check-In",
     time: 5,
-    exercises: ["gs-13-5", "gs-13-9"],
-    prompt: "Play your 10-minute multi-genre improv (gs-13-5). Then play your extended palette jam (gs-13-9). The full palette is yours? Time to define YOUR sound."
+    exercises: ["gs-14-5", "gs-14-9"],
+    prompt: "Play your 10-minute multi-genre improv (gs-14-5). Then play your extended palette jam (gs-14-9). The full palette is yours? Time to define YOUR sound."
   },
   exercises: [
 
     // ─── IDENTITY ───
 
     {
-      id: "gs-14-1",
+      id: "gs-15-1",
       time: 10,
       title: "Who Do You Sound Like?",
       type: "guitar",
@@ -39,14 +39,14 @@ export const level14 = {
       levelUp: "Can identify your 2-3 strongest style affinities and articulate what makes them feel like home."
     },
     {
-      id: "gs-14-2",
+      id: "gs-15-2",
       time: 10,
       title: "Choosing Your Set — The Golden Hour Playlist",
       type: "guitar",
       what: "Pick 5-6 pieces for your Golden Hour Set. These should represent your sound: at least one from each major style you gravitate toward, plus at least one original idea (a riff, a progression, an improv framework). This is curation — the art of choosing what belongs together.",
       setup: "Guitar. Paper or phone for notes. No metronome.",
       steps: [
-        { text: "Review your journey. You've learned songs and styles across 13 levels: Sol Del Sur (C#m-B-F#-E), Dope & Smoke (Am-D-Am7-D7), Gimme Love (F-C-G), Jah Werx (B-F#-E), Breakdown (G-Bm-Em-D fingerpicking), Tinariwen-style desert drone, Skinshape 7th-chord grooves, Khruangbin minimal melodies, Pepper's reggae-rock switch, Hermanos Gutiérrez cinematic fingerpicking. Which 5-6 of these (or your own creations) represent YOU?", why: "A set isn't a sampler of everything you know — it's a curated statement of who you are as a player. Choosing what to include is as important as choosing what to leave out." },
+        { text: "Review your journey. You've learned songs and styles across 15 levels: Sol Del Sur (C#m-B-F#-E), Dope & Smoke (Am-D-Am7-D7), Gimme Love (F-C-G), Jah Werx (B-F#-E), Breakdown (G-Bm-Em-D fingerpicking), Tinariwen-style desert drone, Skinshape 7th-chord grooves, Khruangbin minimal melodies, Pepper's reggae-rock switch, Hermanos Gutiérrez cinematic fingerpicking. Which 5-6 of these (or your own creations) represent YOU?", why: "A set isn't a sampler of everything you know — it's a curated statement of who you are as a player. Choosing what to include is as important as choosing what to leave out." },
         { text: "Draft your set list on paper. Write 5-6 songs/pieces in the order you'd play them. Include: title, key, BPM, style, and why it belongs. If you have an original idea (even just a chord loop or riff), include it — originals are the heart of a set.", why: "Writing it down forces commitment. A set list isn't 'everything I can play' — it's 'what I choose to play when someone asks who I am musically.' The why column ensures each piece earns its place." },
         { text: "Check for variety: does your set have at least one uptempo piece, one slow/intimate piece, one groove-based piece, and one that showcases your best technique? If it's all one tempo or one mood, swap something.", why: "A great set has dynamic range — energy peaks and valleys that take the listener on a journey. Five reggae songs at 85 BPM is a playlist, not a performance." },
         { text: "Check for flow: read the set list top to bottom and imagine the transitions. Does the key change make sense? Does the tempo shift feel natural? Would you need to retune or use a capo between songs? Rearrange if needed.", why: "Transitions are where amateur sets break down. The gap between songs is either a moment of anticipation or an awkward silence. Planning transitions now prevents fumbling later." },
@@ -62,7 +62,7 @@ export const level14 = {
     // ─── SET BUILDING ───
 
     {
-      id: "gs-14-3",
+      id: "gs-15-3",
       time: 8,
       title: "The Opener — Setting the Tone",
       type: "guitar",
@@ -84,7 +84,7 @@ export const level14 = {
       levelUp: "Can play your opener from the first note with confidence, feel, and zero hesitation — 3 consecutive clean takes."
     },
     {
-      id: "gs-14-4",
+      id: "gs-15-4",
       time: 8,
       title: "Transitions — The Invisible Art",
       type: "guitar",
@@ -104,7 +104,7 @@ export const level14 = {
       levelUp: "Can play through all set transitions smoothly — no dead stops, no fumbled key changes, every transition intentional."
     },
     {
-      id: "gs-14-5",
+      id: "gs-15-5",
       time: 8,
       title: "The Peak — Your High-Energy Moment",
       type: "guitar",
@@ -125,7 +125,7 @@ export const level14 = {
       levelUp: "Can deliver your peak section with full intensity, clear build, identifiable peak moment, and controlled comedown — recorded and reviewed."
     },
     {
-      id: "gs-14-6",
+      id: "gs-15-6",
       time: 8,
       title: "The Quiet Moment — Intimacy and Space",
       type: "guitar",
@@ -145,7 +145,7 @@ export const level14 = {
       levelUp: "Can play your quiet piece at the edge of silence with full control, intentional space, and emotional presence — one clean recorded take."
     },
     {
-      id: "gs-14-7",
+      id: "gs-15-7",
       time: 8,
       title: "The Closer — Ending with Intention",
       type: "guitar",
@@ -167,7 +167,7 @@ export const level14 = {
     // ─── FULL PERFORMANCE ───
 
     {
-      id: "gs-14-8",
+      id: "gs-15-8",
       time: 30,
       title: "Full Set Run-Through — No Stops",
       type: "guitar",
@@ -182,12 +182,12 @@ export const level14 = {
       ],
       feel: "This should feel like surfing a long wave — you're riding energy, making micro-adjustments, staying balanced, and the entire ride is one continuous flow. There will be wobbles. The wave doesn't care. You stay on the board.",
       wrong: "If you stop after a mistake, you're still in practice mode. The ONLY rule of performance is: don't stop. A wrong note played confidently is a jazz note. A right note played hesitantly sounds wrong. Commit to every note, especially the mistakes.",
-      sarah: "Gene, this is the moment. Thirty minutes. Your sound. Every style, every technique, every feeling you've built across 14 levels, flowing together into one set. It won't be perfect — no live performance ever is. But it will be YOURS. That's what matters. When Khruangbin plays live, there are bum notes, missed cues, moments where the jam wanders. Nobody cares. Because the FEELING is right. Your feeling is right. Play.",
+      sarah: "Gene, this is the moment. Thirty minutes. Your sound. Every style, every technique, every feeling you've built across 15 levels, flowing together into one set. It won't be perfect — no live performance ever is. But it will be YOURS. That's what matters. When Khruangbin plays live, there are bum notes, missed cues, moments where the jam wanders. Nobody cares. Because the FEELING is right. Your feeling is right. Play.",
       recorder: true,
       levelUp: "Complete a full 30-minute set recording with no stops — mistakes are fine, stops are not."
     },
     {
-      id: "gs-14-9",
+      id: "gs-15-9",
       time: 10,
       title: "The Mirror — Baseline to Golden Hour",
       type: "guitar",
@@ -195,7 +195,7 @@ export const level14 = {
       setup: "Phone or computer for playback. Guitar nearby but this is mostly a listening exercise.",
       steps: [
         { text: "Find your gs-1-1 recording — the first time you played Am pentatonic, probably hesitant, probably with some buzzing strings and uncertain timing. Press play. Listen to the whole thing without judgment. That was you. That was the beginning.", why: "Hearing your starting point with fresh ears — after months of growth — creates a visceral understanding of progress that no verbal encouragement can match. The recording doesn't lie." },
-        { text: "Now listen to your Golden Hour Set recording from gs-14-8. The whole thing, or at least 10 minutes of it. Listen for: the confidence in your strum, the variety in your dynamics, the smoothness of your transitions, the feel in your groove.", why: "Comparing beginning to end makes growth audible. You'll hear things in your current playing that you couldn't have imagined at Level 1 — a reggae skank that sits perfectly in the pocket, a desert drone that breathes, a fingerpicked passage with real delicacy." },
+        { text: "Now listen to your Golden Hour Set recording from gs-15-8. The whole thing, or at least 10 minutes of it. Listen for: the confidence in your strum, the variety in your dynamics, the smoothness of your transitions, the feel in your groove.", why: "Comparing beginning to end makes growth audible. You'll hear things in your current playing that you couldn't have imagined at Level 1 — a reggae skank that sits perfectly in the pocket, a desert drone that breathes, a fingerpicked passage with real delicacy." },
         { text: "Notice the specific differences: tone, timing, confidence, variety, expressiveness, groove. The Level 1 recording probably has one tempo, one dynamic level, one style. The Golden Hour Set has multiple tempos, dynamics from whisper to roar, styles from surf to reggae to desert to soul. That's growth.", why: "Specific identification of growth areas reinforces learning and motivates continued practice. Vague feelings of improvement are nice; hearing EXACTLY how you've improved is powerful." },
         { text: "Pick up the guitar. Play the same Am pentatonic phrase from gs-1-1 — but play it the way you play NOW. Same notes, same scale, but with everything you've learned about feel, dynamics, timing, and space. Record it. This is your new baseline.", why: "Playing the same material with evolved skill demonstrates that growth isn't about knowing more notes — it's about playing the same notes with more intention, more feel, more YOU. The pentatonic hasn't changed. You have." },
         { text: "Say or write one sentence: 'My sound is ___.' Fill in the blank. Not a genre, not a technique — a feeling. 'My sound is golden hour on a warm coast.' 'My sound is desert patience with surf energy.' 'My sound is reggae groove with psych colors.' Whatever it is, that's your artistic statement.", why: "Articulating your sound in one sentence crystallizes months of exploration into an identity. This sentence is your North Star — every future musical decision can be measured against it." }
@@ -208,11 +208,11 @@ export const level14 = {
       levelUp: "Have listened to both the baseline and the Golden Hour Set, identified specific areas of growth, recorded a new Am pentatonic baseline, and articulated your sound in one sentence."
     },
     {
-      id: "gs-14-10",
+      id: "gs-15-10",
       time: 35,
       title: "THE GOLDEN HOUR SET — Final Recorded Performance",
       type: "guitar",
-      what: "This is it. The final exercise of the entire curriculum. Record your Golden Hour Set one more time — but this time, it's not a rehearsal. It's the performance. Everything you've built across 14 levels flows through your hands for 30 minutes. You've refined your opener, drilled your transitions, found your peak, created your quiet moment, designed your closer. Now play it like it matters — because it does. This recording is the document of who you are as a guitarist, right now, in this moment.",
+      what: "This is it. The final exercise of the entire curriculum. Record your Golden Hour Set one more time — but this time, it's not a rehearsal. It's the performance. Everything you've built across 15 levels flows through your hands for 30 minutes. You've refined your opener, drilled your transitions, found your peak, created your quiet moment, designed your closer. Now play it like it matters — because it does. This recording is the document of who you are as a guitarist, right now, in this moment.",
       setup: "Guitar. Quiet room. Phone or recording device in a good position. Set list nearby if you need it, but try to play from memory. Take 60 seconds before you start — breathe, stretch your hands, find your center.",
       steps: [
         { text: "Before you play a single note: sit with the guitar in your lap, eyes closed, for 60 seconds. Breathe. Feel the weight of the instrument against your body — the wood warm against your chest, the neck resting in your hand. Your physical relationship with the guitar IS your sound. The way you hold it, the way you attack the strings, the way you feel its resonance — that's your identity as a player. Think about the first note of your opener — hear it in your head before your fingers play it. When you're ready, and only when you're ready, open your eyes and press record.", why: "Pre-performance ritual calms the nervous system and focuses attention. The body awareness — feeling the guitar's weight, its warmth, its readiness — is the final embodiment: after 14 levels, the instrument is an extension of your body, and your sound is a physical relationship as much as a musical one." },

@@ -1060,7 +1060,7 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
           {/* Fretboard */}
           {ex.fretboard && (
             <div style={{ marginBottom: 24 }}>
-              <FretboardDiagram theme={T} scale={ex.fretboard.scale} position={ex.fretboard.position} highlight={ex.fretboard.highlight || []} />
+              <FretboardDiagram theme={T} scale={ex.fretboard.scale} position={ex.fretboard.position} highlight={ex.fretboard.highlight || []} chordToneNotes={ex.fretboard.chordToneNotes || null} />
             </div>
           )}
 
@@ -2046,7 +2046,7 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
               {/* Fretboard & Piano Keys */}
               {ex.fretboard && (
                 <div style={{ marginBottom: 16 }}>
-                  <FretboardDiagram theme={T} scale={ex.fretboard.scale} position={ex.fretboard.position} highlight={ex.fretboard.highlight || []} />
+                  <FretboardDiagram theme={T} scale={ex.fretboard.scale} position={ex.fretboard.position} highlight={ex.fretboard.highlight || []} chordToneNotes={ex.fretboard.chordToneNotes || null} />
                 </div>
               )}
               {(ex.pianoKeys || droneActiveNotes.notes.length > 0) && (
@@ -4323,6 +4323,35 @@ export default function App() {
     }
     localStorage.removeItem("guitar-study-level");
     localStorage.setItem("guitar-v2-migrated", "true");
+  }
+
+  // Migration: Guitar curriculum v3 — triad level insertion at Level 6
+  // Shifts gs-6+ exercise IDs by +1, clears guitar unlock state
+  if (!localStorage.getItem("guitar-v3-triads-migrated")) {
+    const saved = localStorage.getItem("practice-completed");
+    if (saved) {
+      try {
+        const ids = JSON.parse(saved);
+        const migrated = ids.map(id => {
+          const match = id.match(/^gs-(\d+)-(.+)$/);
+          if (match && parseInt(match[1]) >= 6) {
+            return `gs-${parseInt(match[1]) + 1}-${match[2]}`;
+          }
+          return id;
+        });
+        localStorage.setItem("practice-completed", JSON.stringify(migrated));
+      } catch {
+        // Corrupted — clear guitar progress entirely
+        try {
+          const all = JSON.parse(localStorage.getItem("practice-completed") || "[]");
+          localStorage.setItem("practice-completed", JSON.stringify(all.filter(id => !id.startsWith("gs-"))));
+        } catch {
+          localStorage.removeItem("practice-completed");
+        }
+      }
+    }
+    localStorage.removeItem("guitar-study-unlocked");
+    localStorage.setItem("guitar-v3-triads-migrated", "true");
   }
 
   const [tab, setTab] = useState("practice");

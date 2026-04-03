@@ -1,25 +1,25 @@
 import { getPitchRange } from "../appData.js";
 
-export const level10 = {
-  level: 10,
+export const level11 = {
+  level: 11,
   title: "Global Colors",
   subtitle: "Afrobeat, bossa, Persian scales. The world in your fingers.",
   description:
     "Your guitar has been living in psych-surf and reggae — now it travels the world. This level introduces Afrobeat interlocking patterns (Kokoroko), bossa nova rhythm (Rosinha De Valença), the Persian/Iranian scale that gives Khruangbin their global flavor, parked wah as a tone-shaping tool, BALTHVS cumbia stabs, and Tommy Guerrero's finger-picked melody-as-vocalist approach. By the end, you can sit in with any groove on the planet.",
   artists: "Kokoroko, Khruangbin, BALTHVS, Tommy Guerrero",
-  unlocks: "Fingerpicking (Level 11)",
+  unlocks: "Fingerpicking (Level 12)",
   review: {
-    label: "Level 9 Check-In",
+    label: "Level 10 Check-In",
     time: 5,
-    exercises: ["gs-9-4", "gs-9-9"],
-    prompt: "Play the Skinshape soul cycle Gm-C-A7-Dm with 7th chord voicings (gs-9-4). Then play Khruangbin three-note voicings on the top 3 strings (gs-9-9). Extended harmony is solid? Time to go global."
+    exercises: ["gs-10-4", "gs-10-9"],
+    prompt: "Play the Skinshape soul cycle Gm-C-A7-Dm with 7th chord voicings (gs-10-4). Then play Khruangbin three-note voicings on the top 3 strings (gs-10-9). Extended harmony is solid? Time to go global."
   },
   exercises: [
 
     // ─── AFROBEAT: INTERLOCKING GUITAR ───
 
     {
-      id: "gs-10-1",
+      id: "gs-11-1",
       time: 8,
       title: "Afrobeat Rhythmic Ostinato — Part A",
       type: "guitar",
@@ -40,7 +40,7 @@ export const level10 = {
       levelUp: "Play a 2-note Afrobeat ostinato for 3 minutes without any variation, drift, or embellishment. Every repetition should be indistinguishable from the last, confirmed by recording playback."
     },
     {
-      id: "gs-10-2",
+      id: "gs-11-2",
       time: 8,
       title: "Interlocking Parts — A Meets B",
       type: "guitar",
@@ -62,7 +62,7 @@ export const level10 = {
       levelUp: "Record Part A, then play Part B over the recording with no rhythmic overlap — the two parts create a continuous, interlocking 16th-note melody."
     },
     {
-      id: "gs-10-3",
+      id: "gs-11-3",
       time: 10,
       title: "Song Study: Abusey Junction Feel",
       type: "guitar",
@@ -75,7 +75,7 @@ export const level10 = {
       setup: "Guitar. Clean tone, roll tone knob to 5-6 for warmth. Metronome at 100 BPM.",
       steps: [
         { text: "Listen to Abusey Junction once through (5 minutes). Don't play along yet — just absorb the feel. Notice how the guitar sits in the mix: gentle, arpeggiated, warm. It's not strumming — it's picking individual notes from chord shapes. The rhythm is relaxed, slightly behind the beat.", why: "Listening before playing trains your ear to capture the FEEL, not just the notes. Abusey Junction's magic is in the swing, the warmth, the smile in the groove — you need to hear that before your fingers try to reproduce it." },
-        { text: "Set up a simple two-chord vamp in Am: play Am for 2 bars, then Dm for 2 bars. Pick individual notes from each chord shape — arpeggiate slowly across strings 4-3-2-1. Let each note ring. This is the basic highlife guitar approach.", why: "Highlife guitar — the predecessor to Afrobeat guitar — uses arpeggiated chord tones rather than strumming. Each note is individually voiced, creating a cascading, harp-like sound. This is the foundation of the Abusey Junction guitar tone." },
+        { text: "Set up a simple two-chord vamp in Am: play Am for 2 bars, then Dm for 2 bars. Pick individual notes from each chord shape — arpeggiate slowly across strings 4-3-2-1. Let each note ring. You're arpeggiating the triads you learned in Level 6 (A-C-E for Am, D-F-A for Dm) — the same chord tones, but now picked individually in African guitar style.", why: "Highlife guitar — the predecessor to Afrobeat guitar — uses arpeggiated chord tones rather than strumming. Each note is individually voiced, creating a cascading, harp-like sound. Your Level 6 triad knowledge tells you exactly which notes to emphasize — root, 3rd, 5th are always the strongest landing points." },
         { text: "Add the Afrobeat twist: within the arpeggio, accent certain notes by striking them slightly harder. The accent pattern should align with the clave feel — beats 1, the 'and' of 2, and beat 4. The accented notes create a melody within the arpeggio.", why: "Accenting within an arpeggio creates the illusion of two parts: a steady cascade of notes plus a melody that floats on top. This is how a single Afrobeat guitarist can sound like two — the accent pattern IS the melody." },
         { text: "Warm your tone: roll the tone knob to 5 or lower. The Abusey Junction guitar sound is warm and round, never bright or cutting. Play your arpeggiated figure with this warmer tone. Feel the difference — the notes bloom instead of snap.", why: "Tone knob control is essential for Afrobeat guitar. Bright, cutting tone belongs to funk; warm, round tone belongs to highlife and Afrobeat. Rolling tone down lets the notes melt into the groove rather than stabbing through it." },
         { text: "Play your Abusey Junction-style figure over the Afrobeat backing track for 3 minutes. Slightly behind the beat — don't rush. Let the drums pull you forward while you lean back. Record it.", why: "Behind-the-beat playing is the Afrobeat guitar trademark. The drums are metronomic; the guitar floats behind them, creating a laid-back swing. This is the same behind-the-beat feel you practiced in Khruangbin exercises, applied to a different groove." }
@@ -92,14 +92,14 @@ export const level10 = {
     // ─── BOSSA NOVA ───
 
     {
-      id: "gs-10-4",
+      id: "gs-11-4",
       time: 8,
       title: "Bossa Nova Rhythm — The Distinctive Pattern",
       type: "guitar",
       what: "Bossa nova has ONE rhythm pattern that defines the entire genre. It's not regular strumming — it's a specific syncopated pattern where the thumb plays bass notes on beats 1 and 3, and the fingers strum chord tones in a syncopated pattern around them. Learn this pattern and you can play every bossa nova ever written.",
       setup: "Guitar. Nylon-string ideal, but steel-string works. No pick — thumb and fingers only. Metronome at 75 BPM.",
       steps: [
-        { text: "Start with the bass: thumb (P) plays the root note on beat 1, then the 5th on beat 3. On Am: thumb hits the A string (5th string) on beat 1 — feel the thick string give under your thumb pad, the low A resonating deep through the guitar body into your chest. Then the E on the D string (4th string, 2nd fret) on beat 3 — a thinner string, lighter resistance, higher vibration. Your thumb alternates between weight (root) and lightness (5th), and your body registers each as a different physical sensation. Quarter notes, steady, metronomic. 1 minute until the thumb is on complete autopilot.", why: "The bossa thumb is the heartbeat. The physical contrast between thick bass string and thinner 5th string gives your thumb proprioceptive feedback — you know which string you're on by feel alone. João Gilberto built everything on this alternating bass. Like the Travis picking thumb you'll learn in Level 11, the bass must be automatic before the fingers add the syncopated strum on top." },
+        { text: "Start with the bass: thumb (P) plays the root note on beat 1, then the 5th on beat 3. On Am: thumb hits the A string (5th string) on beat 1 — feel the thick string give under your thumb pad, the low A resonating deep through the guitar body into your chest. Then the E on the D string (4th string, 2nd fret) on beat 3 — a thinner string, lighter resistance, higher vibration. Your thumb alternates between weight (root) and lightness (5th), and your body registers each as a different physical sensation. Quarter notes, steady, metronomic. 1 minute until the thumb is on complete autopilot.", why: "The bossa thumb is the heartbeat. The physical contrast between thick bass string and thinner 5th string gives your thumb proprioceptive feedback — you know which string you're on by feel alone. João Gilberto built everything on this alternating bass. Like the Travis picking thumb you'll learn in Level 12, the bass must be automatic before the fingers add the syncopated strum on top." },
         { text: "Add the fingers: while the thumb keeps its bass pattern, your index and middle fingers brush strings 3-2-1 (G-B-E) on the 'and' of beat 2 and on beat 4. Count: '1... and-2-AND... 3... 4.' The capitalized AND is where your fingers strum. Slow this to 60 BPM if needed.", why: "The bossa strum is syncopated — the finger strum lands between beats, creating the distinctive lilting feel. This pattern was João Gilberto's revolution: he took samba's busy percussion and distilled it into one guitar pattern. The syncopation IS the samba, compressed into two hands." },
         { text: "Apply to a simple Am-Dm progression: Am for 2 bars (thumb on A and E bass notes), Dm for 2 bars (thumb on D and A bass notes). Keep the finger strum pattern identical. The chord changes; the rhythm doesn't.", why: "Consistent rhythm across chord changes is the hallmark of bossa guitar. The pattern stays locked while the harmony moves underneath — this creates the floating, effortless quality that defines bossa nova." },
         { text: "Add a third chord: Am-Dm-E7-Am. The E7 chord introduces a new bass note (open low E). Practice the full progression at 65 BPM, focusing on smooth transitions without breaking the bossa rhythm pattern.", why: "Am-Dm-E7 is the most common bossa progression (i-iv-V7). The V7 chord creates tension that resolves back to Am — this is the harmonic engine of bossa nova. Mastering the pattern over this progression means you can play 'Girl from Ipanema,' 'Corcovado,' and dozens of other bossa standards." },
@@ -118,7 +118,7 @@ export const level10 = {
     // ─── TONE KNOB & PARKED WAH ───
 
     {
-      id: "gs-10-5",
+      id: "gs-11-5",
       time: 7,
       title: "Tone Knob as Expression — Same Phrase, Four Colors",
       type: "guitar",
@@ -139,7 +139,7 @@ export const level10 = {
       levelUp: "Play the same phrase at four tone settings (10, 7, 3, 0) and articulate the character of each. Then perform an 8-bar improv with tone changes mid-performance."
     },
     {
-      id: "gs-10-6",
+      id: "gs-11-6",
       time: 7,
       title: "Parked Wah — Fixed Position Tone Shaping",
       type: "guitar",
@@ -164,7 +164,7 @@ export const level10 = {
     // ─── KHRUANGBIN: PERSIAN SCALE & SPACE ───
 
     {
-      id: "gs-10-7",
+      id: "gs-11-7",
       time: 10,
       title: "Song Study: Rules — Am-G, Behind the Beat, 60%+ Silence",
       type: "guitar",
@@ -196,7 +196,7 @@ export const level10 = {
     // ─── BALTHVS CUMBIA ───
 
     {
-      id: "gs-10-8",
+      id: "gs-11-8",
       time: 8,
       title: "BALTHVS Cumbia Stabs — Syncopated 16th-Note Hits",
       type: "guitar",
@@ -221,7 +221,7 @@ export const level10 = {
     // ─── TOMMY GUERRERO ───
 
     {
-      id: "gs-10-9",
+      id: "gs-11-9",
       time: 8,
       title: "Tommy Guerrero Style — Finger-Picked Melody as Vocalist",
       type: "guitar",
@@ -246,7 +246,7 @@ export const level10 = {
     // ─── GLOBAL FUSION IMPROV & EXTENDED JAM ───
 
     {
-      id: "gs-10-10",
+      id: "gs-11-10",
       time: 10,
       title: "Global Fusion Improv — Afrobeat + Soul + Desert",
       type: "guitar",
@@ -268,18 +268,18 @@ export const level10 = {
       levelUp: "Perform a 5-minute improvisation that moves through at least 4 different global styles with organic transitions. Each style should be recognizable and distinct."
     },
     {
-      id: "gs-10-11",
+      id: "gs-11-11",
       time: 12,
       title: "Extended World Jam — Your 5-Minute Global Piece",
       type: "guitar",
-      what: "Create a 5-minute recorded piece that draws from everything in this level. Pick a style to START with, let the music evolve, and build a piece with an arc: a beginning (establish the groove), a middle (develop and explore), and an end (resolve and fade). This is your Level 10 graduation piece — proof that the world is in your fingers.",
+      what: "Create a 5-minute recorded piece that draws from everything in this level. Pick a style to START with, let the music evolve, and build a piece with an arc: a beginning (establish the groove), a middle (develop and explore), and an end (resolve and fade). This is your Level 11 graduation piece — proof that the world is in your fingers.",
       setup: "Guitar. All tonal tools. Pick your favorite backing track — or play unaccompanied. Recorder ready.",
       steps: [
         { text: "Before playing, decide your starting point. Which global color calls to you right now? Afrobeat warmth? Bossa intimacy? Cumbia energy? Khruangbin space? Guerrero storytelling? Pick one and commit to starting there.", why: "Choosing a starting point gives your piece an identity. The best improvisations have a clear beginning — it doesn't mean you stay there, but it means the listener knows where they are when the journey starts." },
         { text: "Play for 2 minutes in your chosen style. Establish the groove deeply — repetition, consistency, patience. This is the 'beginning' of your piece. Don't rush to the next section. Let the groove breathe and settle.", why: "Two minutes of establishing groove before developing is the minimum for listener engagement. If you switch too early, the piece feels scattered. Fela Kuti spent 5-10 minutes establishing a groove before ANY development." },
         { text: "In minutes 2-4, develop: add a new element. Maybe switch styles gradually. Maybe add a melody over your groove. Maybe change the tone knob. Maybe introduce silence. ONE change at a time — let each change settle before adding another.", why: "Development through single-element changes creates coherent evolution. Changing everything at once creates chaos. The listener can follow one change at a time and feel the journey. Multiple simultaneous changes feel like a different song, not a development." },
         { text: "In the final minute, resolve: bring the piece to a satisfying close. Options: fade to silence (Khruangbin style), return to the opening groove (circular form), strip down to a single sustained note (Tinariwen ending), or end with a firm final chord. Choose what serves the piece.", why: "A deliberate ending shows compositional thinking. The worst thing is just stopping because you ran out of ideas. Plan your ending 30 seconds before you get there — that's enough time to set up a satisfying close." },
-        { text: "Listen back to the full 5-minute recording. Ask yourself: does it have a beginning, middle, and end? Could a listener follow the journey? Is there at least one moment of genuine musical beauty? If yes to all three, you've graduated Level 10.", why: "Self-assessment against clear criteria builds musical judgment. 'Beginning, middle, end' is the simplest compositional framework. 'Followable journey' ensures coherence. 'One moment of beauty' ensures artistry. These three criteria separate noodling from music." }
+        { text: "Listen back to the full 5-minute recording. Ask yourself: does it have a beginning, middle, and end? Could a listener follow the journey? Is there at least one moment of genuine musical beauty? If yes to all three, you've graduated Level 11.", why: "Self-assessment against clear criteria builds musical judgment. 'Beginning, middle, end' is the simplest compositional framework. 'Followable journey' ensures coherence. 'One moment of beauty' ensures artistry. These three criteria separate noodling from music." }
       ],
       feel: "This should feel like composing in real time — not practicing, not running exercises, but creating a piece of music that exists as a complete work. Treat the recording as a performance, not a practice session. The red light is on. This matters. Before you start: what's the emotional arc you want? After: what surprised you about what emerged?",
       wrong: "If the 5 minutes feel like aimless noodling, you didn't commit to structure. Go back and plan: 'minutes 0-2 = bossa groove, minutes 2-4 = add Guerrero melody, minute 4-5 = fade to silence.' A simple plan prevents drift. If you're switching styles every 30 seconds, you're not giving any style enough time to establish itself — minimum 1 minute per style.",
