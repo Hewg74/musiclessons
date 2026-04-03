@@ -94,6 +94,30 @@ export const level6 = {
     },
     {
       id: "gs-6-4",
+      time: 9,
+      title: "The Dm & G Triads — Completing the Key",
+      type: "guitar",
+      what: "Learn Dm (D-F-A) and G major (G-B-D) in three inversions on strings 1-2-3. With Am, C, Dm, and G, you have the four most common chords in popular music — all mapped across the top strings. Dm and G have their own personality: Dm is dark and tense, G is bright and assertive.",
+      setup: "Guitar. Drone on D first, then G. Take time with each chord — these shapes are new.",
+      fretboard: { scale: "a-natural-minor", position: 1, chordToneNotes: ["D", "F", "A"] },
+      drone: { root: "D", octave: 2, texture: "warm" },
+      pianoKeys: { notes: ["D3", "F3", "A3"], label: "D Minor Triad: D-F-A" },
+      tracks: [{ name: "Drums — Soul/Funk 90", src: "/drums-soul-funk-90.mp3" }],
+      steps: [
+        { text: "Dm root position on strings 1-2-3: G string fret 7 (D), B string fret 6 (F), E string fret 5 (A) = xxx765. A descending staircase shape — 7, 6, 5. Strum it against the D drone. Dark, tense, forward-leaning.", why: "Dm root position has the most satisfying shape of any triad — three consecutive frets descending across three strings. It falls naturally under the fingers. The sound is dark and assertive — Dm is the chord of tension in the key of Am, always pulling toward resolution." },
+        { text: "Dm 1st inversion: G fret 10 (F), B fret 10 (A), E fret 10 (D) = xxxaaa. A straight bar at fret 10 — same shape as Am 1st inv (xxx555) but 5 frets higher. Strum it. The 3rd (F) on the bottom gives it a smoky, jazz quality.", why: "Notice the pattern: Am 1st inv = bar at fret 5, Dm 1st inv = bar at fret 10. Both are minor triads, both use the same straight-bar shape. The difference is just position on the neck. You're learning one shape that works for EVERY minor chord." },
+        { text: "Dm 2nd inversion: G fret 2 (A), B fret 3 (D), E fret 1 (F) = xxx231. This low-position voicing sits right next to your Am root position (xxx210) — only the E string moves by one fret. Switch between Am (xxx210) and Dm 2nd inv (xxx231). Feel how close they are.", why: "Am and Dm share the note A. When you voice-lead between Am root (xxx210) and Dm 2nd inv (xxx231), the A on the G string STAYS (fret 2), while the other two notes shift by just 1-2 frets. This is the voice-leading connection between i and iv — the most common chord change in minor-key music." },
+        { text: "Now switch the drone to G. G major (G-B-D) on strings 1-2-3. 1st inversion: G fret 4 (B), B fret 3 (D), E fret 3 (G) = xxx433. This is your most practical G voicing — compact, in the low-fret zone, right next to Am and C shapes.", why: "G major root position (xxxcca) lives way up at fret 12 — useful but far from the action. The 1st inversion at fret 3-4 is where you'll actually USE G triads most of the time. It sits between Am (fret 0-2) and C (fret 0-5), making voice leading between all three chords efficient." },
+        { text: "G 2nd inversion: G fret 7 (D), B fret 8 (G), E fret 7 (B) = xxx787. This mid-neck voicing sits right next to Dm root (xxx765) — only 1-2 frets apart. Play Dm (xxx765) → G (xxx787). Feel how the D stays on the G string (fret 7 in both!) while the other notes shift. That shared D is the bridge between Dm and G.", why: "Dm and G share the note D. Voice-leading from Dm root to G 2nd inv keeps D stationary while F→G (+2 frets on B) and A→B (+2 frets on E). Two voices move, one stays — smooth, connected, musical. This Dm→G transition is the iv→VII in Am, one of the most satisfying chord changes in soul and reggae." }
+      ],
+      feel: "Dm should feel brooding and tense — it wants to GO somewhere. G should feel bright and assertive — it answers the tension. When you play Dm → G, it should feel like asking a question and getting a confident answer. When you play Am → Dm, it should feel like stepping from stillness into motion.",
+      wrong: "If Dm root (xxx765) buzzes, check that each finger is behind the fret wire — the descending staircase requires precise finger placement. If G 1st inv (xxx433) sounds weak, make sure the bar across frets 3-3 on B and E is firm. If Dm and G sound similar, play them with their respective drones — Dm over D, G over G — and the character difference will be obvious.",
+      sarah: "Gene, Dm and G are the two chords that give Am progressions their MOVEMENT. Am is home. C is the bright neighbor. But Dm creates tension — it's the chord that makes you lean forward — and G resolves it with authority. Skinshape's 'I Didn't Know' cycle (Gm-C-A7-Dm) IS these relationships in action. Reggae runs on Am-Dm-G-C. Khruangbin's minor-key vamps use Am-Dm constantly. With these four triads mapped across the top strings, you have the complete vocabulary for your genres.",
+      metronome: null,
+      levelUp: "Play Dm in all 3 inversions ascending on strings 1-2-3. Then G in all 3 inversions. Then voice-lead Am (xxx210) → Dm (xxx231) → G (xxx433) → C (xxx010) using the closest voicings. Name each chord as you play it."
+    },
+    {
+      id: "gs-6-5",
       time: 8,
       title: "Slide the Shape — One Triad, Every Key",
       type: "guitar",
@@ -116,7 +140,7 @@ export const level6 = {
       levelUp: "Starting from Am root position, slide up chromatically naming each chord, reach Dm (fret 7-6-5), then jump back to Am. Then do the same with C major root position up to F major. All transitions smooth with no gaps in sound."
     },
     {
-      id: "gs-6-5",
+      id: "gs-6-6",
       time: 12,
       title: "All Three Inversions — The Triad Highway",
       type: "guitar",
@@ -140,7 +164,7 @@ export const level6 = {
       levelUp: "Play Am, Dm, G, and C highways ascending on strings 1-2-3 at 60 BPM without pausing between inversions. Name each inversion as you play it. Then freestyle between all five chords for 1 minute."
     },
     {
-      id: "gs-6-6",
+      id: "gs-6-7",
       time: 7,
       title: "Major vs. Minor — The One-Fret Difference",
       type: "guitar",
@@ -172,7 +196,7 @@ export const level6 = {
     // ═══════════════════════════════════════════════════════════
 
     {
-      id: "gs-6-7",
+      id: "gs-6-8",
       time: 12,
       title: "Strings 3-4-5 & 4-5-6 — Same Shapes, Deeper Voice",
       type: "guitar",
@@ -196,7 +220,7 @@ export const level6 = {
       levelUp: "Play Am-Dm-C on strings 3-4-5 as a smooth cycle (4 beats each). Then play Am on all three string sets (4-5-6, 3-4-5, 1-2-3) ascending. Explain why strings 3-4-5 and 4-5-6 use the same shapes at different frets."
     },
     {
-      id: "gs-6-8",
+      id: "gs-6-9",
       time: 8,
       title: "Strings 2-3-4 (D-G-B) — The B-String Shift",
       type: "guitar",
@@ -220,7 +244,7 @@ export const level6 = {
       levelUp: "Play Am root position on strings 2-3-4, then compare it to the same inversion on strings 3-4-5 — describe the timbral difference. Then play Am triads on all 4 string sets ascending. Explain why strings 2-3-4 have unique shapes."
     },
     {
-      id: "gs-6-9",
+      id: "gs-6-10",
       time: 12,
       title: "The Full Map — One Chord, Four String Sets",
       type: "guitar",
@@ -243,6 +267,29 @@ export const level6 = {
       metronome: null,
       levelUp: "Play Am-Dm-Em-G-Am on strings 1-2-3 using voice-led inversions (max 2 frets per voice per change). Then play Am-Dm on strings 3-4-5 voice-led. Name the inversion of each chord as you play it."
     },
+    {
+      id: "gs-6-11",
+      time: 8,
+      title: "Mid-Register Groove — Triads Below the Melody",
+      type: "guitar",
+      what: "Play chord progressions using triads on strings 2-3-4 and 3-4-5 over a backing track. When someone else plays melody on the top strings (or you're singing), these warm mid-register voicings provide harmony without competing for frequency space. This is the professional session guitarist's secret: triads in the warm zone.",
+      setup: "Guitar. Backing track on. Drone optional. This exercise is about GROOVE, not shapes — keep it rhythmic.",
+      fretboard: { scale: "a-natural-minor", position: 1, chordToneNotes: ["A", "C", "E"] },
+      drone: { root: "A", octave: 2, texture: "warm" },
+      tracks: [{ name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }, { name: "Drums — Reggae 85", src: "/drums-reggae-85.mp3" }],
+      metronome: 80,
+      steps: [
+        { text: "Am-Dm on strings 2-3-4 with the soul groove: Am root (xx755x) for 4 bars, Dm — find the closest voicing near fret 7. Dm root on 2-3-4: D fret 12 (A)... too far. Try Dm 2nd inv: D fret 2 (E), G fret 3 (Bb)... that's wrong. Instead, just slide: Am root at fret 7 (xx755x), Dm would need to be near fret 10-12. Use Dm on strings 1-2-3 (xxx765) as an alternative — switch string sets when the chord changes. Am warm (2-3-4) → Dm bright (1-2-3). The register shift IS the arrangement.", why: "In real musical situations, you don't always stay on one string set. Switching between mid-register (2-3-4) and treble (1-2-3) creates a natural registral movement — the chord change brings a timbral shift. This is how professional guitarists create arrangement variety with one guitar." },
+        { text: "Am-C on strings 3-4-5: Am 1st inv (x322xx) → C root (x320xx). These two voicings are almost identical — the C on the A string stays at fret 3, the E on the D string stays at fret 2, only the G string changes from fret 2 (A) to fret 0 (open G). One finger lifts. Strum gently, 4 bars each, on the backbeat.", why: "This is the lower-string equivalent of the Am→C voice leading you learned on top strings. Same principle (shared notes stay, one voice moves), different register. The open G string in the C voicing adds a warm, ringing quality that wound strings produce beautifully." },
+        { text: "Am-Dm-C on strings 3-4-5: Am 1st inv (x322xx) → Dm root (x532xx) → C root (x320xx). A mini-progression that stays in the fret 0-5 zone. Play it with the reggae drums — stab on beats 2 and 4, mute between. These warm stabs underneath a melody or vocal are exactly how session guitarists comp.", why: "A three-chord cycle on lower strings with rhythmic stabs is a complete accompaniment. If Gene is singing, his voice occupies the upper frequencies. These mid-register triads fill the harmonic middle without clashing. Bass guitar covers the low end. Three-piece band sound from one guitar." },
+        { text: "Contrast exercise: play Am-Dm-G-C on strings 1-2-3 (bright, cutting) for 8 bars. Then play Am-Dm-C on strings 3-4-5 (warm, round) for 8 bars. Then alternate: 2 bars bright, 2 bars warm. You're creating arrangement dynamics with register choice alone.", why: "This is the practical payoff of knowing triads on multiple string sets. Verse = warm register (3-4-5), chorus = bright register (1-2-3). Or vice versa. The chord progression doesn't change — the REGISTER changes, and that creates the sense of movement and dynamics that keeps the listener engaged." },
+        { text: "Free comping: put on the soul groove and play Am-Dm-G-C using ANY string set that feels right. Switch registers when the mood calls for it. Bright for intensity, warm for intimacy. You're making arrangement decisions in real time — this is what Mark Speer does live.", why: "When you can choose your register instinctively based on what the music needs, you've moved from 'knowing triad shapes' to 'playing triads musically.' The shapes serve the song, not the other way around. This freestyle combines everything from Blocks 1 and 2 into musical application." }
+      ],
+      feel: "This should feel like conducting an orchestra with one guitar — choosing where to place each chord in the frequency spectrum. The warm register (strings 3-4-5) should feel like wrapping the music in a blanket. The bright register (strings 1-2-3) should feel like spotlighting a moment. When you switch between them, the music should breathe.",
+      wrong: "If the lower-string triads sound muddy, lighten your strumming — wound strings need less force. If you're defaulting to top strings every time, force yourself to play an entire pass on strings 3-4-5 only. If the register switching feels random, assign it to the song structure: verse low, chorus high, bridge mid.",
+      sarah: "Gene, this is where triads become a professional tool. When you hear a guitarist in a studio recording and the guitar sounds 'warm' on the verse and 'bright' on the chorus, they're doing exactly this — choosing string sets. It's not effects pedals or different guitars (usually). It's register choice through voicings. Skinshape does this constantly — warm comping under the verse vocal, bright triads when the instrumental hook kicks in. You now have that same arrangement palette.",
+      levelUp: "Play Am-Dm-C on strings 3-4-5 with the soul groove for 8 bars, then switch to Am-Dm-G-C on strings 1-2-3 for 8 bars. Smooth transitions between registers, rhythmic stabs on the backbeat."
+    },
 
     // ═══════════════════════════════════════════════════════════
     // BLOCK 3: APPLY — Musical Contexts
@@ -251,7 +298,7 @@ export const level6 = {
     // ═══════════════════════════════════════════════════════════
 
     {
-      id: "gs-6-10",
+      id: "gs-6-12",
       time: 10,
       title: "Khruangbin Comping — Top-String Triads with Groove",
       type: "guitar",
@@ -274,7 +321,7 @@ export const level6 = {
       levelUp: "Play Am-Dm-G-C using voice-led triads on strings 1-2-3 at 85 BPM for 2 minutes with the backing track. Backbeat strumming, space between chords, smooth transitions with no more than 2 frets of movement per chord change."
     },
     {
-      id: "gs-6-11",
+      id: "gs-6-13",
       time: 8,
       title: "Voice Leading — The Smallest Moves Win",
       type: "guitar",
@@ -289,7 +336,7 @@ export const level6 = {
         { text: "From C (xxx010), voice-lead to G major. C is C-E-G. G is G-B-D. Shared note: G. So G stays, C moves to B (down 1 fret on B string), E moves to D (down 1 fret on E string?). Actually: C 2nd inv (xxx010) to G... G on G string stays open, B on B string = fret 0, D on E string... let's find it: G root pos on top strings around open = xxx003 (G open, B open, D fret 3? No...). Try xxx430 — G fret 4 (B), B fret 3 (D), E open (G... no that's not right). Let me simplify: just find the G voicing closest to where you are and move to it.", why: "Sometimes voice leading requires trying a few voicings to find the smoothest path. The PRINCIPLE is always: minimize total finger movement. In practice, you'll develop an instinct for which inversion of the next chord is closest." },
         { text: "Now try a ii-V-I in C major: Dm → G → C. Start with Dm 2nd inv (xxx231), voice-lead to G 1st inv (xxx433) — G goes 2→4 (+2), B stays at 3, E goes 1→3 (+2). Then G 1st inv (xxx433) to C root (xxx553) — G goes 4→5 (+1), B goes 3→5 (+2), E stays at 3. Each voice moves 0-2 frets per step — smooth connections.", why: "The ii-V-I is the most common progression in jazz and soul. Multiple expert sources agree: 'Voice-leading triads through a ii-V-I is the single exercise that produces the fastest improvement in both comping and soloing.' You're training the same skill." },
         { text: "ii-V-I in Am: Bm (or Bdim) → E → Am. Try: start around fret 5-7 area and find each chord's closest voicing. If you get stuck, any voicing that's close to your current position is the right one.", why: "There's no 'wrong' voice leading — only smoother and less smooth. Every attempt builds your ear's ability to hear chord connections. The goal is developing an instinct for proximity, not memorizing specific sequences." },
-        { text: "Play Am-Dm-G-C again (from gs-6-10) but this time focus ENTIRELY on minimal movement. Map out the smoothest path before playing. How few frets can you move in total across the whole progression?", why: "This exercise transforms mechanical chord changes into musical voice leading. When you minimize movement, the individual notes in each chord connect into melodic lines — the top voice creates one melody, the middle voice another. This is how Bach wrote, how jazz compers think, and how Mark Speer plays." }
+        { text: "Play Am-Dm-G-C again (from gs-6-12) but this time focus ENTIRELY on minimal movement. Map out the smoothest path before playing. How few frets can you move in total across the whole progression?", why: "This exercise transforms mechanical chord changes into musical voice leading. When you minimize movement, the individual notes in each chord connect into melodic lines — the top voice creates one melody, the middle voice another. This is how Bach wrote, how jazz compers think, and how Mark Speer plays." }
       ],
       feel: "Voice leading should feel lazy in the best way — like you're too comfortable to move far. Each chord change should feel like a small adjustment, not a big jump. When you play a well-voice-led progression, it should sound like one continuous flow rather than a series of separate chords.",
       wrong: "If you're jumping across the neck between chords, you're not voice leading — you're chord hopping. Stay in a 3-4 fret zone and find inversions that fit within it. If you can't find the closest voicing, play ALL inversions of the target chord and pick the one nearest your current position. Voice leading gets easier with each repetition.",
@@ -297,7 +344,7 @@ export const level6 = {
       levelUp: "Play Am-C-G-Dm on strings 1-2-3 using voice-led triads with no more than 2 frets of total movement between any two chords. Then play a ii-V-I in C major (Dm-G-C) with the same constraint."
     },
     {
-      id: "gs-6-12",
+      id: "gs-6-14",
       time: 8,
       title: "Triad Stabs — Funk, Reggae, Ska Rhythm",
       type: "guitar",
@@ -319,7 +366,7 @@ export const level6 = {
       levelUp: "Play a 16-bar form: 4 bars reggae skank (Am), 4 bars funk 16ths (Dm), 4 bars ska upstroke (Em), 4 bars reggae (Am) at 90 BPM. Clean stabs with total silence between hits."
     },
     {
-      id: "gs-6-13",
+      id: "gs-6-15",
       time: 10,
       title: "Chord-Tone Soloing — Triads as Melody",
       type: "guitar",
@@ -343,7 +390,7 @@ export const level6 = {
       levelUp: "Record a 16-bar melody over Am-Dm-Em-Am, landing on chord tones on beats 1 and 3 of each bar. Listen back — the chord changes should be audible through the melody alone."
     },
     {
-      id: "gs-6-14",
+      id: "gs-6-16",
       time: 10,
       title: "Song Study — Triads in the Wild",
       type: "guitar",
@@ -360,7 +407,7 @@ export const level6 = {
         { text: "Am-C-G-D on strings 1-2-3, voice-led: start with Am (xxx555), voice-lead to C, then G, then D major (D-F#-A). Keep all chords in the fret 3-7 zone using the closest available inversion. 4 bars each. Loop it.", why: "This is the same Am-C-G-D you learned in Level 1 with open chords. Playing it with voice-led triads reveals a completely different sound — smoother, more intimate, more professional. Same harmony, transformed texture." },
         { text: "Same progression, different zone: play Am-C-G-D on strings 1-2-3 around frets 7-10. Find different inversions. The progression is the same, but the voicings are higher — brighter, more delicate.", why: "The same progression in a different neck position creates a different register and character. Now you have TWO arrangements of the same song — one mid-neck, one high — and you can choose based on musical context. Verse low, chorus high. Or vice versa." },
         { text: "Skinshape cycle: Gm-C7-A7-Dm on strings 1-2-3. Start with Gm (G-Bb-D) around fret 3: xxx333 (Gm 1st inv at fret 3). Voice-lead to C... for C7, use just the C triad (C-E-G) for now. Find the closest voicing. Then A7 (use A major triad A-C#-E), then Dm.", why: "The Skinshape soul cycle is i-IV7-V7-ii in Gm. Even approximating the 7th chords with just triads gives you the essential harmony — the 7th is a color, the triad is the foundation. In Level 10 you'll add the 7ths back, but the triad skeleton is where it starts." },
-        { text: "Play the Skinshape cycle with the soul groove backing track. Strum gently on beats 2 and 4. Leave space between chords. Try adding the occasional chord-tone melody (from gs-6-13) between chord stabs.", why: "Combining triad comping with chord-tone melodies is the essence of Mark Speer's approach: he's comping AND soloing simultaneously, because triads are both harmony and melody. A strummed triad is a chord; an arpeggiated triad is a melody." },
+        { text: "Play the Skinshape cycle with the soul groove backing track. Strum gently on beats 2 and 4. Leave space between chords. Try adding the occasional chord-tone melody (from gs-6-15) between chord stabs.", why: "Combining triad comping with chord-tone melodies is the essence of Mark Speer's approach: he's comping AND soloing simultaneously, because triads are both harmony and melody. A strummed triad is a chord; an arpeggiated triad is a melody." },
         { text: "Final challenge: play Am-C-G-D with triads on strings 2-3-4 (warmer register), then switch to the Skinshape cycle on strings 1-2-3 (brighter register). Use different string sets for different sections of a song — verse warm, chorus bright.", why: "Registral contrast is a professional arrangement technique. Full barre chords sound the same in every register because they cover all 6 strings. Triads give you registral choice — the same chord can be bass-heavy OR treble-bright depending on which string set you choose. That's orchestration on a single instrument." }
       ],
       feel: "This should feel like graduating from 'knowing chords' to 'knowing the fretboard.' The same progressions you've played since Level 1 are now available everywhere on the neck, in every register, with smooth voice leading between them. The guitar should feel like it got bigger — more terrain, more options, more voices.",

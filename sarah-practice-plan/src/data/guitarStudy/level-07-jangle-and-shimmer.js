@@ -11,8 +11,8 @@ export const level7 = {
   review: {
     label: "Level 6 Check-In",
     time: 5,
-    exercises: ["gs-6-5", "gs-6-14"],
-    prompt: "Play the Am triad highway up the neck (gs-6-5). Then play your Triads in the Wild song study (gs-6-14). Triads solid across all string sets? Time for jangle."
+    exercises: ["gs-6-6", "gs-6-16"],
+    prompt: "Play the Am triad highway up the neck (gs-6-6). Then play your Triads in the Wild song study (gs-6-16). Triads solid across all string sets? Time for jangle."
   },
   exercises: [
 
