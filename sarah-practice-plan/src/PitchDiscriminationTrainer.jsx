@@ -655,133 +655,120 @@ export function PitchDiscriminationTrainer({ theme: T, onBack }) {
   }, [rounds, finishSession]);
 
   // ─── Render ───
-  const containerStyle = {
-    maxWidth: 560, margin: '0 auto', padding: isMobile ? '16px 12px' : '24px 20px',
+  const S = { // shared styles
+    container: { maxWidth: 560, margin: '0 auto', padding: isMobile ? '20px 16px' : '32px 24px', minHeight: '100vh', display: 'flex', flexDirection: 'column' },
+    card: { background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: T.radiusMd, boxShadow: `0 10px 30px -5px ${T.gold}08, 0 4px 10px -2px ${T.gold}04` },
+    sectionLabel: { fontSize: 10, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: T.textMuted, fontFamily: T.sans, marginBottom: 10 },
+    goldCta: { width: '100%', padding: '16px 0', borderRadius: T.radius, background: T.gold, color: '#fff', border: 'none', fontSize: 14, fontWeight: 700, fontFamily: T.sans, cursor: 'pointer', letterSpacing: 2, textTransform: 'uppercase', boxShadow: `0 4px 0 0 ${T.goldDark || T.gold}60`, transition: 'transform 0.1s, box-shadow 0.1s' },
   };
+
+  // Inject CSS animations (only once)
+  const animStyles = useMemo(() => (
+    <style>{`
+      @keyframes pd-ripple { 0% { transform: scale(0.8); opacity: 0.8; border-width: 3px; } 100% { transform: scale(1.8); opacity: 0; border-width: 0px; } }
+      @keyframes pd-breathe { 0%, 100% { transform: scale(1); box-shadow: 0 0 15px ${T.gold}33; } 50% { transform: scale(1.04); box-shadow: 0 0 35px ${T.gold}66; } }
+      @keyframes pd-shake { 10%, 90% { transform: translate3d(-2px,0,0); } 20%, 80% { transform: translate3d(3px,0,0); } 30%, 50%, 70% { transform: translate3d(-5px,0,0); } 40%, 60% { transform: translate3d(5px,0,0); } }
+      @keyframes pd-success-ring { 0% { transform: scale(1); opacity: 0.6; } 100% { transform: scale(2); opacity: 0; } }
+      .pd-tactile { transition: transform 0.1s, box-shadow 0.1s; }
+      .pd-tactile:active { transform: translateY(4px) !important; box-shadow: none !important; }
+    `}</style>
+  ), [T.gold]);
 
   // ─── SETUP SCREEN ───
   if (screen === 'setup') {
     return (
-      <div style={containerStyle}>
-        {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
-          <button onClick={onBack} style={{
-            background: 'none', border: 'none', cursor: 'pointer', color: T.textMuted,
-            display: 'flex', alignItems: 'center', padding: 4,
-          }}>
-            <ArrowLeft size={20} />
-          </button>
-          <div>
-            <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 3, textTransform: 'uppercase', color: T.gold, fontFamily: T.sans }}>
-              Ear Training
-            </div>
-            <div style={{ fontSize: 24, fontWeight: 400, fontFamily: T.serif, color: T.textDark }}>
-              Pitch Discrimination
-            </div>
+      <div style={S.container}>
+        {animStyles}
+        <header style={{ marginBottom: 32 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: T.textMuted, marginBottom: 12 }}>
+            <button onClick={onBack} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', display: 'flex', padding: 4 }}>
+              <ArrowLeft size={18} />
+            </button>
+            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 4, textTransform: 'uppercase', fontFamily: T.sans }}>Ear Training</span>
           </div>
-        </div>
+          <h1 style={{ fontSize: 32, fontWeight: 600, fontFamily: T.serif, color: T.textDark, letterSpacing: -0.5 }}>Pitch Discrimination</h1>
+        </header>
 
         {/* Quick stats preview */}
         {aggStats.totalSessions > 0 && (
-          <div style={{
-            background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radiusMd,
-            padding: '12px 16px', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 16,
-          }}>
-            {aggStats.bestThreshold != null && (
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: 22, fontWeight: 600, color: T.gold, fontFamily: T.serif }}>
-                  {aggStats.bestThreshold}¢
+          <div style={{ ...S.card, padding: '14px 20px', marginBottom: 28, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', gap: 24 }}>
+              {aggStats.bestThreshold != null && (
+                <div>
+                  <div style={{ ...S.sectionLabel, marginBottom: 2 }}>Best</div>
+                  <div style={{ fontSize: 18, fontFamily: T.serif, color: T.gold }}>{aggStats.bestThreshold}¢</div>
                 </div>
-                <div style={{ fontSize: 10, color: T.textMuted, fontFamily: T.sans }}>best threshold</div>
+              )}
+              <div>
+                <div style={{ ...S.sectionLabel, marginBottom: 2 }}>Accuracy</div>
+                <div style={{ fontSize: 18, fontFamily: T.serif, color: T.textDark }}>{aggStats.totalRounds > 0 ? Math.round(aggStats.totalCorrect / aggStats.totalRounds * 100) : 0}%</div>
               </div>
-            )}
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: 22, fontWeight: 600, color: T.textDark, fontFamily: T.serif }}>
-                {aggStats.totalRounds > 0 ? Math.round(aggStats.totalCorrect / aggStats.totalRounds * 100) : 0}%
+              <div>
+                <div style={{ ...S.sectionLabel, marginBottom: 2 }}>Sessions</div>
+                <div style={{ fontSize: 18, fontFamily: T.serif, color: T.textDark }}>{aggStats.totalSessions}</div>
               </div>
-              <div style={{ fontSize: 10, color: T.textMuted, fontFamily: T.sans }}>overall accuracy</div>
             </div>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: 22, fontWeight: 600, color: T.textDark, fontFamily: T.serif }}>
-                {aggStats.totalSessions}
-              </div>
-              <div style={{ fontSize: 10, color: T.textMuted, fontFamily: T.sans }}>sessions</div>
-            </div>
-            <button onClick={() => setScreen('history')} style={{
-              marginLeft: 'auto', background: 'none', border: `1px solid ${T.border}`,
-              borderRadius: T.radius, padding: '6px 10px', cursor: 'pointer', color: T.textMed,
-              fontSize: 11, fontFamily: T.sans,
-            }}>
-              History
+            <button onClick={() => setScreen('history')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: T.textMuted, display: 'flex', padding: 4 }}>
+              <Clock size={18} />
             </button>
           </div>
         )}
 
-        {/* Mode */}
-        <SectionLabel label="Mode" theme={T} />
-        <div style={{ display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap' }}>
-          {Object.entries(MODES).map(([key, m]) => (
-            <PillButton key={key} active={mode === key} onClick={() => setMode(key)} theme={T}>
-              {m.label}
-            </PillButton>
-          ))}
-        </div>
-        <div style={{ fontSize: 12, color: T.textLight, fontFamily: T.sans, marginBottom: 20, marginTop: -12 }}>
-          {MODES[mode].desc}
-        </div>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
+          {/* Mode */}
+          <div>
+            <div style={S.sectionLabel}>Mode</div>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              {Object.entries(MODES).map(([key, m]) => (
+                <PillButton key={key} active={mode === key} onClick={() => setMode(key)} theme={T}>{m.label}</PillButton>
+              ))}
+            </div>
+            <div style={{ fontSize: 12, color: T.textLight, fontFamily: T.sans, marginTop: 8, fontStyle: 'italic' }}>{MODES[mode].desc}</div>
+          </div>
 
-        {/* Difficulty */}
-        <SectionLabel label="Difficulty" theme={T} />
-        <div style={{ display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap' }}>
-          {Object.entries(DIFFICULTIES).map(([key, d]) => (
-            <PillButton key={key} active={difficulty === key} onClick={() => setDifficulty(key)} theme={T}>
-              {d.label}
-            </PillButton>
-          ))}
-        </div>
-        <div style={{ fontSize: 12, color: T.textLight, fontFamily: T.sans, marginBottom: 20, marginTop: -12 }}>
-          {DIFFICULTIES[difficulty].desc}
-        </div>
+          {/* Difficulty */}
+          <div>
+            <div style={S.sectionLabel}>Difficulty</div>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              {Object.entries(DIFFICULTIES).map(([key, d]) => (
+                <PillButton key={key} active={difficulty === key} onClick={() => setDifficulty(key)} theme={T}>{d.label}</PillButton>
+              ))}
+            </div>
+            <div style={{ fontSize: 12, color: T.textLight, fontFamily: T.sans, marginTop: 8, fontStyle: 'italic' }}>{DIFFICULTIES[difficulty].desc}</div>
+          </div>
 
-        {/* Timbre */}
-        <SectionLabel label="Timbre" theme={T} />
-        <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
-          {Object.entries(TIMBRES).map(([key, t]) => (
-            <PillButton key={key} active={timbre === key} onClick={() => setTimbre(key)} theme={T} wide>
-              <span style={{ fontSize: 16, marginRight: 4 }}>{t.icon}</span> {t.label}
-            </PillButton>
-          ))}
-        </div>
-        <div style={{ fontSize: 12, color: T.textLight, fontFamily: T.sans, marginBottom: 20, marginTop: -12 }}>
-          {TIMBRES[timbre].desc}
-          {timbre === 'natural' && (difficulty === 'expert' || difficulty === 'adaptive') && (
-            <span style={{ color: T.warm }}> — auto-switches to Pure at small offsets</span>
-          )}
-        </div>
-
-        {/* Rounds */}
-        {mode !== 'thresholdFinder' && (
-          <>
-            <SectionLabel label="Rounds" theme={T} />
-            <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
-              {ROUND_OPTIONS.map(n => (
-                <PillButton key={n} active={roundLimit === n} onClick={() => setRoundLimit(n)} theme={T}>
-                  {ROUND_LABELS[n]}
+          {/* Timbre */}
+          <div>
+            <div style={S.sectionLabel}>Timbre</div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              {Object.entries(TIMBRES).map(([key, t]) => (
+                <PillButton key={key} active={timbre === key} onClick={() => setTimbre(key)} theme={T} wide>
+                  <span style={{ fontSize: 16, marginRight: 6 }}>{t.icon}</span> {t.label}
                 </PillButton>
               ))}
             </div>
-          </>
-        )}
+            <div style={{ fontSize: 12, color: T.textLight, fontFamily: T.sans, marginTop: 8, fontStyle: 'italic' }}>
+              {TIMBRES[timbre].desc}
+              {timbre === 'natural' && (difficulty === 'expert' || difficulty === 'adaptive') && (
+                <span style={{ color: T.warm }}> — auto-switches to Pure at small offsets</span>
+              )}
+            </div>
+          </div>
 
-        {/* Start button */}
-        <button onClick={startSession} style={{
-          width: '100%', padding: '14px 0', borderRadius: T.radiusMd,
-          background: T.gold, color: '#fff', border: 'none',
-          fontSize: 15, fontWeight: 600, fontFamily: T.sans, cursor: 'pointer',
-          letterSpacing: 1, transition: 'all 0.2s',
-        }}>
-          Begin Session
-        </button>
+          {/* Rounds */}
+          {mode !== 'thresholdFinder' && (
+            <div>
+              <div style={S.sectionLabel}>Rounds</div>
+              <div style={{ display: 'flex', gap: 8 }}>
+                {ROUND_OPTIONS.map(n => (
+                  <PillButton key={n} active={roundLimit === n} onClick={() => setRoundLimit(n)} theme={T}>{ROUND_LABELS[n]}</PillButton>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <button className="pd-tactile" onClick={startSession} style={{ ...S.goldCta, marginTop: 32 }}>Begin Session</button>
       </div>
     );
   }
@@ -789,156 +776,96 @@ export function PitchDiscriminationTrainer({ theme: T, onBack }) {
   // ─── PLAY SCREEN ───
   if (screen === 'play') {
     const sessionCorrect = rounds.filter(r => r.correct).length;
-    const streak = (() => {
-      let s = 0;
-      for (let i = rounds.length - 1; i >= 0; i--) {
-        if (rounds[i].correct) s++; else break;
-      }
-      return s;
-    })();
+    const streak = (() => { let s = 0; for (let i = rounds.length - 1; i >= 0; i--) { if (rounds[i].correct) s++; else break; } return s; })();
+    const showHeadphones = difficulty === 'advanced' || difficulty === 'expert' || (difficulty === 'adaptive' && staircase.cents <= 10);
+    const isPlaying = phase === 'playingA' || phase === 'playingB';
+    const isCorrect = phase === 'feedback' && feedback?.correct;
+    const isWrong = phase === 'feedback' && !feedback?.correct;
 
-    const showHeadphones = difficulty === 'advanced' || difficulty === 'expert' ||
-      (difficulty === 'adaptive' && staircase.cents <= 10);
-
-    const phaseText = {
-      idle: 'Get ready...',
-      playingA: 'Listen to tone A...',
-      pause: '...',
-      playingB: 'Listen to tone B...',
-      awaiting: 'Which was higher?',
-      feedback: feedback?.correct ? 'Correct!' : 'Not quite',
-    };
-
-    const phaseColor = phase === 'feedback'
-      ? (feedback?.correct ? T.success : T.coral)
-      : phase === 'awaiting' ? T.gold : T.textMed;
+    const phaseText = { idle: 'Get ready...', playingA: 'Listen to tone A...', pause: '...', playingB: 'Listen to tone B...', awaiting: 'Which was higher?', feedback: feedback?.correct ? 'Correct!' : 'Not quite' };
+    const phaseColor = isCorrect ? T.success : isWrong ? T.coral : phase === 'awaiting' ? T.gold : T.textMed;
+    const circleSize = isMobile ? 200 : 260;
+    const innerSize = isMobile ? 100 : 128;
 
     return (
-      <div style={containerStyle}>
+      <div style={{ ...S.container, justifyContent: 'space-between' }}>
+        {animStyles}
         {/* Top bar */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
-          <button onClick={endSession} style={{
-            background: 'none', border: `1px solid ${T.border}`, borderRadius: T.radius,
-            padding: '6px 12px', cursor: 'pointer', color: T.textMuted, fontSize: 12, fontFamily: T.sans,
-          }}>
-            End Session
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+          <button onClick={endSession} style={{ background: 'none', border: 'none', cursor: 'pointer', color: T.textMuted, display: 'flex', padding: 4 }}>
+            <X size={18} />
           </button>
-          <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans }}>
-            Round {roundNum + 1}{roundLimit > 0 ? ` / ${roundLimit}` : ''}
+          <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 4, textTransform: 'uppercase', color: T.textMed, fontFamily: T.sans }}>
+            Round {roundNum + 1}{roundLimit > 0 ? <span style={{ opacity: 0.5 }}> / {roundLimit}</span> : ''}
           </div>
-          {showHeadphones && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: T.textLight }} title="Headphones recommended">
-              <Headphones size={14} />
-            </div>
-          )}
-          {difficulty === 'adaptive' && (
-            <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans }}>
-              ~{staircase.cents}¢
-            </div>
-          )}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            {showHeadphones && <Headphones size={14} color={T.textLight} />}
+            {difficulty === 'adaptive' && <span style={{ fontSize: 12, fontWeight: 700, color: T.gold, fontFamily: T.sans }}>~{staircase.cents}¢</span>}
+          </div>
         </div>
 
-        {/* Center area */}
-        <div style={{
-          display: 'flex', flexDirection: 'column', alignItems: 'center',
-          justifyContent: 'center', minHeight: 200, marginBottom: 32,
-        }}>
-          {/* Phase indicator ring */}
-          <div style={{
-            width: 120, height: 120, borderRadius: '50%',
-            border: `3px solid ${phaseColor}`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            marginBottom: 20, transition: 'border-color 0.3s',
-            background: phase === 'feedback'
-              ? (feedback?.correct ? `${T.success}15` : `${T.coral}15`)
-              : 'transparent',
-          }}>
-            {phase === 'feedback' ? (
-              feedback?.correct
-                ? <Check size={40} color={T.success} />
-                : <X size={40} color={T.coral} />
-            ) : phase === 'playingA' || phase === 'playingB' ? (
-              <div style={{
-                width: 16, height: 16, borderRadius: '50%', background: T.gold,
-                animation: 'pulse-ring 0.8s ease-in-out infinite',
+        {/* Center — Signature visualization */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px 0' }}>
+          <div style={{ position: 'relative', width: circleSize, height: circleSize, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 28 }}>
+            {/* Ripple rings (only during playback) */}
+            {isPlaying && [0, 1.33, 2.66].map((delay, i) => (
+              <div key={i} style={{
+                position: 'absolute', inset: 0, borderRadius: '50%', border: `2px solid ${T.gold}`,
+                opacity: 0, animation: `pd-ripple 4s cubic-bezier(0.4,0,0.2,1) infinite`, animationDelay: `${delay}s`,
               }} />
-            ) : phase === 'awaiting' ? (
-              <Ear size={32} color={T.gold} />
-            ) : (
-              <div style={{ width: 8, height: 8, borderRadius: '50%', background: T.textMuted }} />
+            ))}
+            {/* Success ring burst */}
+            {isCorrect && (
+              <div style={{
+                position: 'absolute', inset: 0, borderRadius: '50%', border: `3px solid ${T.success}`,
+                animation: 'pd-success-ring 0.8s ease-out forwards',
+              }} />
             )}
+            {/* Inner circle */}
+            <div style={{
+              position: 'relative', zIndex: 1, width: innerSize, height: innerSize, borderRadius: '50%',
+              background: isCorrect ? `${T.success}20` : isWrong ? `${T.coral}15` : T.goldSoft || `${T.gold}12`,
+              border: `1px solid ${isCorrect ? `${T.success}40` : isWrong ? `${T.coral}30` : `${T.gold}30`}`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: `0 0 20px ${isCorrect ? T.success : T.gold}25`,
+              animation: isPlaying ? `pd-breathe 3s ease-in-out infinite` : isWrong ? 'pd-shake 0.5s ease-in-out' : 'none',
+              transition: 'background 0.3s, border-color 0.3s, box-shadow 0.3s',
+            }}>
+              {isCorrect ? <Check size={40} color={T.success} strokeWidth={3} />
+                : isWrong ? <X size={40} color={T.coral} strokeWidth={3} />
+                : phase === 'awaiting' ? <Ear size={36} color={T.gold} />
+                : isPlaying ? <div style={{ width: 12, height: 12, borderRadius: '50%', background: T.gold, animation: 'pulse-ring 0.8s ease-in-out infinite' }} />
+                : <div style={{ width: 8, height: 8, borderRadius: '50%', background: T.textMuted }} />}
+            </div>
           </div>
 
           {/* Phase text */}
-          <div style={{
-            fontSize: 20, fontWeight: 400, fontFamily: T.serif, color: phaseColor,
-            textAlign: 'center', transition: 'color 0.3s', minHeight: 30,
-          }}>
+          <div key={phase} style={{ fontSize: 24, fontWeight: 400, fontFamily: T.serif, color: phaseColor, textAlign: 'center', fontStyle: 'italic', minHeight: 36, transition: 'color 0.3s' }}>
             {phaseText[phase]}
           </div>
 
           {/* Feedback detail */}
           {phase === 'feedback' && feedback && (
-            <div style={{
-              fontSize: 13, color: T.textMed, fontFamily: T.sans, marginTop: 8,
-              textAlign: 'center',
-            }}>
-              {feedback.direction === 'same' ? 'Both notes were the same pitch' :
-                `${feedback.offsetCents}¢ ${feedback.direction}`}
-            </div>
-          )}
-
-          {/* Note name (subtle) */}
-          {phase !== 'idle' && (
-            <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans, marginTop: 12 }}>
-              {currentNote}
+            <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, marginTop: 6, textAlign: 'center' }}>
+              {feedback.direction === 'same' ? 'Both notes were the same pitch' : `${feedback.offsetCents}¢ ${feedback.direction}`}
             </div>
           )}
         </div>
 
-        {/* Answer buttons */}
-        <div style={{ display: 'flex', gap: 12, marginBottom: 24 }}>
-          <AnswerButton
-            label="Lower"
-            icon={<ArrowDown size={24} />}
-            color={T.slate || '#6b8e9f'}
-            disabled={answersDisabled}
-            onClick={() => handleAnswer('lower')}
-            theme={T}
-          />
-          {mode === 'withUnison' && (
-            <AnswerButton
-              label="Same"
-              icon={<Minus size={24} />}
-              color={T.gold}
-              disabled={answersDisabled}
-              onClick={() => handleAnswer('same')}
-              theme={T}
-              narrow
-            />
-          )}
-          <AnswerButton
-            label="Higher"
-            icon={<ArrowUp size={24} />}
-            color={T.coral || '#d68383'}
-            disabled={answersDisabled}
-            onClick={() => handleAnswer('higher')}
-            theme={T}
-          />
+        {/* Answer buttons — tactile, taller for mobile */}
+        <div style={{ display: 'grid', gridTemplateColumns: mode === 'withUnison' ? '1fr 0.7fr 1fr' : '1fr 1fr', gap: 12, marginBottom: 16 }}>
+          <AnswerButton label="Lower" icon={<ArrowDown size={24} strokeWidth={3} />} color={T.slate || '#6b8e9f'} disabled={answersDisabled} onClick={() => handleAnswer('lower')} theme={T} />
+          {mode === 'withUnison' && <AnswerButton label="Same" icon={<Minus size={24} strokeWidth={3} />} color={T.gold} disabled={answersDisabled} onClick={() => handleAnswer('same')} theme={T} />}
+          <AnswerButton label="Higher" icon={<ArrowUp size={24} strokeWidth={3} />} color={T.coral || '#d68383'} disabled={answersDisabled} onClick={() => handleAnswer('higher')} theme={T} />
         </div>
 
-        {/* Running stats */}
+        {/* Running stats footer */}
         {rounds.length > 0 && (
-          <div style={{
-            display: 'flex', justifyContent: 'center', gap: 20,
-            fontSize: 12, color: T.textLight, fontFamily: T.sans,
-            borderTop: `1px solid ${T.borderSoft}`, paddingTop: 12,
-          }}>
-            <span>{sessionCorrect}/{rounds.length} correct</span>
-            {streak > 1 && <span>streak: {streak}</span>}
-            {difficulty === 'adaptive' && staircase.reversals.length >= 6 && (
-              <span>threshold: ~{staircaseThreshold(staircase)}¢</span>
-            )}
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 12, fontSize: 11, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: T.textMuted, fontFamily: T.sans, paddingTop: 12, borderTop: `1px solid ${T.borderSoft}` }}>
+            <span>{sessionCorrect}/{rounds.length} Correct</span>
+            <span style={{ width: 3, height: 3, borderRadius: '50%', background: T.border, display: 'inline-block' }} />
+            {streak > 1 && <><span>Streak: {streak}</span><span style={{ width: 3, height: 3, borderRadius: '50%', background: T.border, display: 'inline-block' }} /></>}
+            {difficulty === 'adaptive' && staircase.reversals.length >= 6 && <span style={{ color: T.gold }}>Thresh: ~{staircaseThreshold(staircase)}¢</span>}
           </div>
         )}
       </div>
@@ -948,130 +875,110 @@ export function PitchDiscriminationTrainer({ theme: T, onBack }) {
   // ─── SUMMARY SCREEN ───
   if (screen === 'summary') {
     const lastSession = aggStats.sessions[aggStats.sessions.length - 1];
-    if (!lastSession) return <div style={containerStyle}><button onClick={() => setScreen('setup')}>Back</button></div>;
-
+    if (!lastSession) return <div style={S.container}><button onClick={() => setScreen('setup')}>Back</button></div>;
     const pct = Math.round(lastSession.accuracy * 100);
     const pctColor = pct >= 80 ? T.success : pct >= 60 ? T.gold : T.coral;
-
     const prevSession = aggStats.sessions.length > 1 ? aggStats.sessions[aggStats.sessions.length - 2] : null;
-    const thresholdDelta = prevSession?.threshold && lastSession.threshold
-      ? prevSession.threshold - lastSession.threshold : null;
+    const thresholdDelta = prevSession?.threshold && lastSession.threshold ? prevSession.threshold - lastSession.threshold : null;
+    const pctDelta = prevSession ? Math.round(lastSession.accuracy * 100) - Math.round(prevSession.accuracy * 100) : null;
 
     return (
-      <div style={containerStyle}>
-        <div style={{ textAlign: 'center', marginBottom: 28 }}>
-          <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 3, textTransform: 'uppercase', color: T.gold, fontFamily: T.sans, marginBottom: 8 }}>
-            Session Complete
+      <div style={S.container}>
+        {animStyles}
+        <div style={{ textAlign: 'center', marginBottom: 16, paddingTop: 20 }}>
+          <div style={{ color: T.gold, marginBottom: 8, display: 'flex', justifyContent: 'center' }}><Check size={28} /></div>
+          <h2 style={{ fontSize: 28, fontWeight: 600, fontFamily: T.serif, color: T.textDark }}>Session Complete</h2>
+        </div>
+
+        {/* Hero accuracy card */}
+        <div style={{ ...S.card, padding: '32px 20px', marginBottom: 12, textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: T.gold }} />
+          <div style={{ ...S.sectionLabel, marginBottom: 4 }}>Overall Accuracy</div>
+          <div style={{ fontSize: 72, fontWeight: 600, fontFamily: T.serif, color: T.textDark, lineHeight: 1 }}>
+            {pct}<span style={{ fontSize: 36, color: T.textMuted }}>%</span>
           </div>
-          <div style={{ fontSize: 56, fontWeight: 600, fontFamily: T.serif, color: pctColor }}>
-            {pct}%
-          </div>
-          <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans }}>
+          {pctDelta != null && pctDelta !== 0 && (
+            <div style={{ fontSize: 13, fontWeight: 700, color: pctDelta > 0 ? T.success : T.coral, fontFamily: T.sans, marginTop: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
+              <TrendingUp size={14} /> {pctDelta > 0 ? '+' : ''}{pctDelta}% from last session
+            </div>
+          )}
+          <div style={{ fontSize: 12, color: T.textMuted, fontFamily: T.sans, marginTop: 4 }}>
             {lastSession.rounds} rounds in {Math.floor((Date.now() - sessionStartRef.current) / 60000)}m
           </div>
         </div>
 
-        {/* Threshold badge */}
-        {lastSession.threshold != null && (
-          <div style={{
-            textAlign: 'center', marginBottom: 20, padding: '12px 16px',
-            background: T.bgSoft, borderRadius: T.radiusMd, border: `1px solid ${T.border}`,
-          }}>
-            <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans, marginBottom: 4 }}>
-              Your threshold this session
+        {/* Threshold + Response time row */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
+          {lastSession.threshold != null && (
+            <div style={{ background: T.goldSoft || `${T.gold}12`, border: `1px solid ${T.gold}30`, borderRadius: T.radiusMd, padding: '16px 12px', textAlign: 'center' }}>
+              <div style={{ ...S.sectionLabel, color: `${T.gold}cc`, marginBottom: 2 }}>Threshold</div>
+              <div style={{ fontSize: 28, fontWeight: 600, color: T.gold, fontFamily: T.serif }}>{lastSession.threshold}¢</div>
+              {thresholdDelta != null && thresholdDelta !== 0 && (
+                <div style={{ fontSize: 11, color: thresholdDelta > 0 ? T.success : T.coral, fontFamily: T.sans, marginTop: 4 }}>
+                  {thresholdDelta > 0 ? `${thresholdDelta}¢ better` : `${Math.abs(thresholdDelta)}¢ wider`}
+                </div>
+              )}
             </div>
-            <div style={{ fontSize: 28, fontWeight: 600, color: T.gold, fontFamily: T.serif }}>
-              {lastSession.threshold}¢
-            </div>
-            {thresholdDelta != null && thresholdDelta !== 0 && (
-              <div style={{
-                fontSize: 12, color: thresholdDelta > 0 ? T.success : T.coral, fontFamily: T.sans, marginTop: 4,
-              }}>
-                {thresholdDelta > 0 ? `${thresholdDelta}¢ better` : `${Math.abs(thresholdDelta)}¢ wider`} than last session
+          )}
+          {lastSession.avgResponseMs != null && (
+            <div style={{ ...S.card, padding: '16px 12px', textAlign: 'center' }}>
+              <div style={{ ...S.sectionLabel, marginBottom: 2 }}>Avg Response</div>
+              <div style={{ fontSize: 24, fontFamily: T.serif, color: T.textDark, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
+                {(lastSession.avgResponseMs / 1000).toFixed(1)}s {lastSession.avgResponseMs < 1500 && <Zap size={16} color={T.gold} />}
               </div>
-            )}
+            </div>
+          )}
+        </div>
+
+        {/* Direction bias insight */}
+        {lastSession.sharpAccuracy != null && lastSession.flatAccuracy != null && Math.abs(lastSession.sharpAccuracy - lastSession.flatAccuracy) > 0.15 && (
+          <div style={{ background: T.warmSoft || `${T.warm}12`, border: `1px solid ${T.warm}25`, borderRadius: T.radiusMd, padding: '14px 16px', marginBottom: 12, display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+            <Ear size={18} style={{ color: T.coral, flexShrink: 0, marginTop: 2 }} />
+            <div>
+              <div style={{ fontSize: 14, fontWeight: 600, fontFamily: T.serif, color: T.textDark, marginBottom: 4 }}>Direction Bias Detected</div>
+              <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, lineHeight: 1.5 }}>
+                {lastSession.sharpAccuracy < lastSession.flatAccuracy
+                  ? 'You tend to miss sharp notes. Try focusing on the brightness or tension in the second tone.'
+                  : 'You tend to miss flat notes. Try focusing on the dullness or loss of tension when listening.'}
+              </div>
+            </div>
           </div>
         )}
 
-        {/* Direction bias */}
+        {/* Direction bias bars */}
         {lastSession.sharpAccuracy != null && lastSession.flatAccuracy != null && (
-          <div style={{ marginBottom: 20 }}>
-            <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', color: T.textLight, fontFamily: T.sans, marginBottom: 10 }}>
-              Direction Bias
-            </div>
-            <BiasBar label="Sharp" pct={lastSession.sharpAccuracy} color={T.coral || '#d68383'} theme={T} />
-            <BiasBar label="Flat" pct={lastSession.flatAccuracy} color={T.slate || '#6b8e9f'} theme={T} />
-            {Math.abs((lastSession.sharpAccuracy || 0) - (lastSession.flatAccuracy || 0)) > 0.15 && (
-              <div style={{
-                fontSize: 12, color: T.warm, fontFamily: T.sans, marginTop: 8,
-                padding: '8px 12px', background: `${T.warm}10`, borderRadius: T.radius,
-              }}>
-                {(lastSession.sharpAccuracy || 0) < (lastSession.flatAccuracy || 0)
-                  ? 'You tend to miss sharp notes — practice listening for brightness'
-                  : 'You tend to miss flat notes — practice listening for dullness'}
-              </div>
-            )}
+          <div style={{ ...S.card, padding: '16px 20px', marginBottom: 12 }}>
+            <div style={{ ...S.sectionLabel, marginBottom: 12 }}>Accuracy by Direction</div>
+            <BiasBar label="Sharp" sublabel="(Higher)" pct={lastSession.sharpAccuracy} color={T.slate || '#6b8e9f'} theme={T} />
+            <BiasBar label="Flat" sublabel="(Lower)" pct={lastSession.flatAccuracy} color={T.coral || '#d68383'} theme={T} />
           </div>
         )}
 
         {/* Accuracy by band */}
-        <div style={{ marginBottom: 20 }}>
-          <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', color: T.textLight, fontFamily: T.sans, marginBottom: 10 }}>
-            Accuracy by Range
-          </div>
+        <div style={{ ...S.card, padding: '16px 20px', marginBottom: 16 }}>
+          <div style={{ ...S.sectionLabel, marginBottom: 12 }}>Accuracy by Range</div>
           {BANDS.map(b => {
-            const data = lastSession.byBand?.[b.key];
-            if (!data || data[1] === 0) return null;
+            const data = lastSession.byBand?.[b.key]; if (!data || data[1] === 0) return null;
             const bandPct = Math.round(data[0] / data[1] * 100);
             return (
-              <div key={b.key} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-                <div style={{ width: 50, fontSize: 11, color: T.textMed, fontFamily: T.sans, textAlign: 'right' }}>
-                  {b.label}
+              <div key={b.key} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                <div style={{ width: 48, fontSize: 12, color: T.textMed, fontFamily: T.sans, textAlign: 'right', fontWeight: 700 }}>{b.label}</div>
+                <div style={{ flex: 1, height: 6, background: T.borderSoft, borderRadius: 3, overflow: 'hidden' }}>
+                  <div style={{ width: `${bandPct}%`, height: '100%', borderRadius: 3, background: bandPct >= 80 ? T.success : bandPct >= 60 ? T.gold : T.coral, transition: 'width 0.6s ease-out' }} />
                 </div>
-                <div style={{ flex: 1, height: 8, background: T.borderSoft, borderRadius: 4, overflow: 'hidden' }}>
-                  <div style={{
-                    width: `${bandPct}%`, height: '100%', borderRadius: 4,
-                    background: bandPct >= 80 ? T.success : bandPct >= 60 ? T.gold : T.coral,
-                    transition: 'width 0.5s',
-                  }} />
-                </div>
-                <div style={{ width: 40, fontSize: 11, color: T.textMed, fontFamily: T.sans }}>
-                  {bandPct}%
-                </div>
+                <div style={{ width: 36, fontSize: 12, fontWeight: 700, color: T.textMed, fontFamily: T.sans, textAlign: 'right' }}>{bandPct}%</div>
               </div>
             );
           })}
         </div>
 
-        {/* Response time */}
-        {lastSession.avgResponseMs != null && (
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20,
-            fontSize: 12, color: T.textLight, fontFamily: T.sans,
-          }}>
-            <Clock size={14} />
-            Avg response: {(lastSession.avgResponseMs / 1000).toFixed(1)}s
-            {lastSession.avgResponseMs < 1500 && <Zap size={12} color={T.gold} />}
-          </div>
-        )}
-
         {/* Action buttons */}
-        <div style={{ display: 'flex', gap: 10, marginTop: 24 }}>
-          <button onClick={() => { setScreen('setup'); }} style={{
-            flex: 1, padding: '12px 0', borderRadius: T.radiusMd,
-            background: 'none', border: `1px solid ${T.border}`, color: T.textMed,
-            fontSize: 13, fontWeight: 600, fontFamily: T.sans, cursor: 'pointer',
-          }}>
+        <div style={{ display: 'grid', gridTemplateColumns: aggStats.sessions.length > 1 ? '1fr 1fr' : '1fr', gap: 12 }}>
+          <button onClick={() => setScreen('setup')} style={{ padding: '14px 0', borderRadius: T.radius, background: 'none', border: `1px solid ${T.border}`, color: T.textMed, fontSize: 13, fontWeight: 700, fontFamily: T.sans, cursor: 'pointer', letterSpacing: 1, textTransform: 'uppercase' }}>
             New Session
           </button>
           {aggStats.sessions.length > 1 && (
-            <button onClick={() => setScreen('history')} style={{
-              flex: 1, padding: '12px 0', borderRadius: T.radiusMd,
-              background: T.gold, color: '#fff', border: 'none',
-              fontSize: 13, fontWeight: 600, fontFamily: T.sans, cursor: 'pointer',
-            }}>
-              View History
-            </button>
+            <button className="pd-tactile" onClick={() => setScreen('history')} style={{ ...S.goldCta, fontSize: 13, padding: '14px 0' }}>View History</button>
           )}
         </div>
       </div>
@@ -1082,144 +989,93 @@ export function PitchDiscriminationTrainer({ theme: T, onBack }) {
   if (screen === 'history') {
     const sessions = aggStats.sessions;
     const thresholdSessions = sessions.filter(s => s.threshold != null);
-
-    // Cumulative bias
     const cumulativeSharpPct = aggStats.sharpTotal > 0 ? Math.round(aggStats.sharpCorrect / aggStats.sharpTotal * 100) : null;
     const cumulativeFlatPct = aggStats.flatTotal > 0 ? Math.round(aggStats.flatCorrect / aggStats.flatTotal * 100) : null;
-
-    // Improvement
     const recent3 = thresholdSessions.slice(-3);
     const older3 = thresholdSessions.slice(-6, -3);
     const recentAvg = recent3.length > 0 ? Math.round(recent3.reduce((s, x) => s + x.threshold, 0) / recent3.length) : null;
     const olderAvg = older3.length > 0 ? Math.round(older3.reduce((s, x) => s + x.threshold, 0) / older3.length) : null;
 
     return (
-      <div style={containerStyle}>
-        {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
-          <button onClick={() => setScreen('setup')} style={{
-            background: 'none', border: 'none', cursor: 'pointer', color: T.textMuted,
-            display: 'flex', alignItems: 'center', padding: 4,
-          }}>
-            <ArrowLeft size={20} />
-          </button>
-          <div style={{ fontSize: 22, fontWeight: 400, fontFamily: T.serif, color: T.textDark }}>
-            Training History
+      <div style={S.container}>
+        {animStyles}
+        <header style={{ marginBottom: 28 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
+            <button onClick={() => setScreen('setup')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: T.textMuted, display: 'flex', padding: 4 }}>
+              <ArrowLeft size={18} />
+            </button>
+            <h2 style={{ fontSize: 26, fontWeight: 600, fontFamily: T.serif, color: T.textDark }}>Training History</h2>
           </div>
-        </div>
+          <div style={{ fontSize: 13, color: T.textMuted, fontFamily: T.sans, marginLeft: 32 }}>Your journey to absolute precision.</div>
+        </header>
 
-        {/* Best threshold */}
+        {/* Chart + Best threshold card */}
         {aggStats.bestThreshold != null && (
-          <div style={{
-            textAlign: 'center', marginBottom: 20, padding: '16px',
-            background: `${T.gold}10`, borderRadius: T.radiusMd, border: `1px solid ${T.gold}30`,
-          }}>
-            <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans, marginBottom: 4 }}>
-              Best Threshold Ever
-            </div>
-            <div style={{ fontSize: 36, fontWeight: 600, color: T.gold, fontFamily: T.serif }}>
-              {aggStats.bestThreshold}¢
-            </div>
-            {recentAvg != null && olderAvg != null && recentAvg < olderAvg && (
-              <div style={{ fontSize: 12, color: T.success, fontFamily: T.sans, marginTop: 4 }}>
-                <TrendingUp size={12} style={{ verticalAlign: 'middle', marginRight: 4 }} />
-                Improved {olderAvg - recentAvg}¢ over last sessions
+          <div style={{ ...S.card, padding: '20px', marginBottom: 16 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: thresholdSessions.length > 1 ? 16 : 0 }}>
+              <div>
+                <div style={{ ...S.sectionLabel, marginBottom: 2 }}>Best Threshold</div>
+                <div style={{ fontSize: 36, fontWeight: 600, color: T.gold, fontFamily: T.serif, display: 'flex', alignItems: 'baseline', gap: 8 }}>
+                  {aggStats.bestThreshold}¢
+                  {recentAvg != null && olderAvg != null && recentAvg < olderAvg && (
+                    <span style={{ fontSize: 13, fontFamily: T.sans, color: T.success, display: 'flex', alignItems: 'center', gap: 2 }}>
+                      <TrendingUp size={14} /> {olderAvg - recentAvg}¢
+                    </span>
+                  )}
+                </div>
               </div>
-            )}
-          </div>
-        )}
-
-        {/* Threshold chart (inline SVG) */}
-        {thresholdSessions.length > 1 && (
-          <div style={{ marginBottom: 24 }}>
-            <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', color: T.textLight, fontFamily: T.sans, marginBottom: 10 }}>
-              Threshold Over Time
             </div>
-            <ThresholdChart sessions={thresholdSessions} theme={T} />
+            {thresholdSessions.length > 1 && <ThresholdChart sessions={thresholdSessions} theme={T} />}
           </div>
         )}
 
         {/* Cumulative direction bias */}
         {cumulativeSharpPct != null && cumulativeFlatPct != null && (
-          <div style={{ marginBottom: 24 }}>
-            <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', color: T.textLight, fontFamily: T.sans, marginBottom: 10 }}>
-              Cumulative Direction Bias
-            </div>
-            <BiasBar label="Sharp" pct={cumulativeSharpPct / 100} color={T.coral || '#d68383'} theme={T} />
-            <BiasBar label="Flat" pct={cumulativeFlatPct / 100} color={T.slate || '#6b8e9f'} theme={T} />
+          <div style={{ ...S.card, padding: '16px 20px', marginBottom: 16 }}>
+            <div style={{ ...S.sectionLabel, marginBottom: 12 }}>Cumulative Direction Bias</div>
+            <BiasBar label="Sharp" sublabel="(Higher)" pct={cumulativeSharpPct / 100} color={T.slate || '#6b8e9f'} theme={T} />
+            <BiasBar label="Flat" sublabel="(Lower)" pct={cumulativeFlatPct / 100} color={T.coral || '#d68383'} theme={T} />
           </div>
         )}
 
-        {/* Total stats */}
-        <div style={{
-          display: 'flex', gap: 16, marginBottom: 24, justifyContent: 'center',
-        }}>
+        {/* Stats row */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10, marginBottom: 20 }}>
           <StatBadge value={aggStats.totalSessions} label="sessions" theme={T} />
-          <StatBadge value={aggStats.totalRounds} label="rounds" theme={T} />
-          <StatBadge
-            value={aggStats.totalRounds > 0 ? `${Math.round(aggStats.totalCorrect / aggStats.totalRounds * 100)}%` : '—'}
-            label="accuracy"
-            theme={T}
-          />
+          <StatBadge value={aggStats.totalRounds.toLocaleString()} label="rounds" theme={T} />
+          <StatBadge value={aggStats.totalRounds > 0 ? `${Math.round(aggStats.totalCorrect / aggStats.totalRounds * 100)}%` : '—'} label="accuracy" theme={T} />
         </div>
 
-        {/* Session list */}
-        <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', color: T.textLight, fontFamily: T.sans, marginBottom: 10 }}>
-          Recent Sessions
-        </div>
-        <div style={{ maxHeight: 300, overflowY: 'auto' }}>
-          {[...sessions].reverse().slice(0, 20).map((s, i) => (
-            <div key={i} style={{
-              display: 'flex', alignItems: 'center', gap: 12, padding: '8px 0',
-              borderBottom: `1px solid ${T.borderSoft}`, fontSize: 12, fontFamily: T.sans,
-            }}>
-              <div style={{ color: T.textLight, width: 65 }}>
-                {new Date(s.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-              </div>
-              <div style={{
-                color: Math.round(s.accuracy * 100) >= 80 ? T.success : Math.round(s.accuracy * 100) >= 60 ? T.gold : T.coral,
-                fontWeight: 600, width: 40,
-              }}>
-                {Math.round(s.accuracy * 100)}%
-              </div>
-              {s.threshold != null && (
-                <div style={{ color: T.textMed }}>
-                  {s.threshold}¢
+        {/* Recent sessions */}
+        <div style={{ ...S.sectionLabel, marginBottom: 10 }}>Recent Sessions</div>
+        <div style={{ ...S.card, overflow: 'hidden', marginBottom: 20 }}>
+          {[...sessions].reverse().slice(0, 15).map((s, i) => {
+            const sPct = Math.round(s.accuracy * 100);
+            return (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: i < Math.min(sessions.length, 15) - 1 ? `1px solid ${T.borderSoft}` : 'none' }}>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: T.textDark, fontFamily: T.sans, marginBottom: 2 }}>
+                    {new Date(s.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                  </div>
+                  <div style={{ fontSize: 11, color: T.textMuted, fontFamily: T.sans }}>
+                    {s.rounds} rounds · {s.difficulty || 'adaptive'}
+                  </div>
                 </div>
-              )}
-              <div style={{ color: T.textLight, marginLeft: 'auto' }}>
-                {s.rounds}r · {s.difficulty || ''}
+                <div style={{ textAlign: 'right' }}>
+                  {s.threshold != null && <div style={{ fontSize: 14, fontWeight: 700, fontFamily: T.serif, color: T.gold }}>{s.threshold}¢</div>}
+                  <div style={{ fontSize: 12, color: sPct >= 80 ? T.success : sPct >= 60 ? T.gold : T.coral, fontWeight: 600 }}>{sPct}%</div>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
-        {/* Reset */}
-        <div style={{ textAlign: 'center', marginTop: 24 }}>
-          <button onClick={() => {
-            if (confirm('Reset all training history? This cannot be undone.')) {
-              const fresh = defaultStats();
-              setAggStats(fresh);
-              saveStats(fresh);
-            }
-          }} style={{
-            background: 'none', border: 'none', color: T.textLight, fontSize: 11,
-            fontFamily: T.sans, cursor: 'pointer', textDecoration: 'underline',
-          }}>
+        {/* Reset + CTA */}
+        <div style={{ textAlign: 'center', marginBottom: 12 }}>
+          <button onClick={() => { if (confirm('Reset all training history? This cannot be undone.')) { const fresh = defaultStats(); setAggStats(fresh); saveStats(fresh); } }} style={{ background: 'none', border: 'none', color: T.textMuted, fontSize: 11, fontFamily: T.sans, cursor: 'pointer', textDecoration: 'underline' }}>
             Reset History
           </button>
         </div>
-
-        {/* Back */}
-        <div style={{ textAlign: 'center', marginTop: 16 }}>
-          <button onClick={() => setScreen('setup')} style={{
-            padding: '10px 24px', borderRadius: T.radiusMd,
-            background: T.gold, color: '#fff', border: 'none',
-            fontSize: 13, fontWeight: 600, fontFamily: T.sans, cursor: 'pointer',
-          }}>
-            New Session
-          </button>
-        </div>
+        <button className="pd-tactile" onClick={() => setScreen('setup')} style={S.goldCta}>Start New Session</button>
       </div>
     );
   }
@@ -1229,26 +1085,14 @@ export function PitchDiscriminationTrainer({ theme: T, onBack }) {
 
 // ─── Sub-Components ───
 
-function SectionLabel({ label, theme: T }) {
-  return (
-    <div style={{
-      fontSize: 10, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase',
-      color: T.gold, fontFamily: T.sans, marginBottom: 8,
-    }}>
-      {label}
-    </div>
-  );
-}
-
-function PillButton({ active, onClick, theme: T, children, wide, narrow }) {
+function PillButton({ active, onClick, theme: T, children, wide }) {
   return (
     <button onClick={onClick} style={{
-      padding: narrow ? '8px 10px' : '8px 14px',
-      borderRadius: T.radius,
-      background: active ? T.gold : 'transparent',
-      color: active ? '#fff' : T.textMed,
-      border: `1px solid ${active ? T.gold : T.border}`,
-      fontSize: 12, fontWeight: active ? 600 : 400, fontFamily: T.sans,
+      padding: '9px 16px', borderRadius: T.radius,
+      background: active ? (T.goldSoft || `${T.gold}15`) : 'transparent',
+      color: active ? T.gold : T.textMuted,
+      border: `1px solid ${active ? `${T.gold}40` : T.border}`,
+      fontSize: 13, fontWeight: active ? 700 : 400, fontFamily: T.sans,
       cursor: 'pointer', transition: 'all 0.2s',
       flex: wide ? 1 : undefined,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -1258,46 +1102,39 @@ function PillButton({ active, onClick, theme: T, children, wide, narrow }) {
   );
 }
 
-function AnswerButton({ label, icon, color, disabled, onClick, theme: T, narrow }) {
+function AnswerButton({ label, icon, color, disabled, onClick, theme: T }) {
   return (
     <button
+      className="pd-tactile"
       onPointerDown={(e) => { if (!disabled) { e.preventDefault(); onClick(); } }}
       style={{
-        flex: narrow ? 0.7 : 1,
-        padding: '20px 0',
-        borderRadius: T.radiusMd,
-        background: disabled ? T.bgSoft : `${color}12`,
-        border: `2px solid ${disabled ? T.borderSoft : color}`,
+        padding: '24px 0', borderRadius: T.radiusMd,
+        background: disabled ? T.bgSoft : `${color}10`,
+        border: `2px solid ${disabled ? T.borderSoft : `${color}30`}`,
         color: disabled ? T.textMuted : color,
         cursor: disabled ? 'default' : 'pointer',
-        transition: 'all 0.2s',
-        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
-        opacity: disabled ? 0.4 : 1,
+        transition: 'transform 0.1s, box-shadow 0.1s, background 0.2s',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
+        opacity: disabled ? 0.35 : 1,
+        boxShadow: disabled ? 'none' : `0 4px 0 0 ${color}30`,
       }}
     >
       {icon}
-      <span style={{ fontSize: 13, fontWeight: 600, fontFamily: T.sans, letterSpacing: 1 }}>
-        {label}
-      </span>
+      <span style={{ fontSize: 11, fontWeight: 700, fontFamily: T.sans, letterSpacing: 3, textTransform: 'uppercase' }}>{label}</span>
     </button>
   );
 }
 
-function BiasBar({ label, pct, color, theme: T }) {
+function BiasBar({ label, sublabel, pct, color, theme: T }) {
   const pctVal = Math.round((pct || 0) * 100);
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-      <div style={{ width: 40, fontSize: 11, color: T.textMed, fontFamily: T.sans, textAlign: 'right' }}>
-        {label}
+    <div style={{ marginBottom: 10 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, fontWeight: 700, fontFamily: T.sans, marginBottom: 4 }}>
+        <span style={{ color }}>{label} {sublabel && <span style={{ fontWeight: 400, color: T.textMuted }}>{sublabel}</span>}</span>
+        <span style={{ color: T.textDark }}>{pctVal}%</span>
       </div>
-      <div style={{ flex: 1, height: 10, background: T.borderSoft, borderRadius: 5, overflow: 'hidden' }}>
-        <div style={{
-          width: `${pctVal}%`, height: '100%', borderRadius: 5, background: color,
-          transition: 'width 0.5s',
-        }} />
-      </div>
-      <div style={{ width: 35, fontSize: 12, fontWeight: 600, color: T.textMed, fontFamily: T.sans }}>
-        {pctVal}%
+      <div style={{ width: '100%', height: 8, background: T.borderSoft, borderRadius: 4, overflow: 'hidden' }}>
+        <div style={{ width: `${pctVal}%`, height: '100%', borderRadius: 4, background: color, transition: 'width 0.6s ease-out' }} />
       </div>
     </div>
   );
@@ -1305,52 +1142,57 @@ function BiasBar({ label, pct, color, theme: T }) {
 
 function StatBadge({ value, label, theme: T }) {
   return (
-    <div style={{ textAlign: 'center' }}>
-      <div style={{ fontSize: 20, fontWeight: 600, color: T.textDark, fontFamily: T.serif }}>
-        {value}
-      </div>
-      <div style={{ fontSize: 10, color: T.textMuted, fontFamily: T.sans }}>{label}</div>
+    <div style={{ background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: T.radiusMd, padding: '12px 8px', textAlign: 'center' }}>
+      <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: T.textMuted, fontFamily: T.sans, marginBottom: 4 }}>{label}</div>
+      <div style={{ fontSize: 20, fontWeight: 600, color: T.textDark, fontFamily: T.serif }}>{value}</div>
     </div>
   );
 }
 
 function ThresholdChart({ sessions, theme: T }) {
-  const w = 480, h = 120, pad = 30;
+  const w = 480, h = 140, pad = 30;
   const thresholds = sessions.map(s => s.threshold);
   const maxT = Math.max(...thresholds, 30);
   const minT = Math.min(...thresholds, 1);
+  const range = Math.max(maxT - minT, 1);
 
-  const points = thresholds.map((t, i) => {
-    const x = pad + (i / Math.max(thresholds.length - 1, 1)) * (w - pad * 2);
-    const y = pad + (1 - (t - minT) / Math.max(maxT - minT, 1)) * (h - pad * 2);
-    return { x, y, t };
-  });
+  const points = thresholds.map((t, i) => ({
+    x: pad + (i / Math.max(thresholds.length - 1, 1)) * (w - pad * 2),
+    y: pad + (1 - (t - minT) / range) * (h - pad * 2),
+    t,
+  }));
 
   const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x},${p.y}`).join(' ');
+  const areaPath = linePath + ` L${points[points.length - 1].x},${h - pad} L${points[0].x},${h - pad} Z`;
 
   return (
     <svg viewBox={`0 0 ${w} ${h}`} style={{ width: '100%', height: 'auto' }}>
-      {/* Grid lines */}
+      <defs>
+        <linearGradient id="pd-gold-grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={T.gold} stopOpacity="0.15" />
+          <stop offset="100%" stopColor={T.gold} stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      {/* Grid */}
       {[minT, Math.round((maxT + minT) / 2), maxT].map(v => {
-        const y = pad + (1 - (v - minT) / Math.max(maxT - minT, 1)) * (h - pad * 2);
+        const y = pad + (1 - (v - minT) / range) * (h - pad * 2);
         return (
           <g key={v}>
-            <line x1={pad} y1={y} x2={w - pad} y2={y} stroke={T.borderSoft} strokeWidth={0.5} />
-            <text x={pad - 4} y={y + 3} textAnchor="end" fill={T.textLight} fontSize={9} fontFamily={T.sans}>
-              {v}¢
-            </text>
+            <line x1={pad} y1={y} x2={w - pad} y2={y} stroke={T.borderSoft} strokeWidth={0.5} strokeDasharray="4 4" />
+            <text x={pad - 6} y={y + 3} textAnchor="end" fill={T.textMuted} fontSize={9} fontFamily={T.sans}>{v}¢</text>
           </g>
         );
       })}
+      {/* Area fill */}
+      <path d={areaPath} fill="url(#pd-gold-grad)" />
       {/* Line */}
       <path d={linePath} fill="none" stroke={T.gold} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
       {/* Dots */}
       {points.map((p, i) => (
-        <circle key={i} cx={p.x} cy={p.y} r={3} fill={T.gold} />
+        <circle key={i} cx={p.x} cy={p.y} r={i === points.length - 1 ? 4 : 2.5} fill={i === points.length - 1 ? T.gold : T.bgCard} stroke={T.gold} strokeWidth={1.5} />
       ))}
-      {/* Trend direction label */}
       {points.length >= 2 && (
-        <text x={w - pad} y={h - 4} textAnchor="end" fill={T.textLight} fontSize={9} fontFamily={T.sans}>
+        <text x={w - pad} y={h - 6} textAnchor="end" fill={T.textMuted} fontSize={9} fontFamily={T.sans}>
           {thresholds[thresholds.length - 1] < thresholds[0] ? '↓ improving' : thresholds[thresholds.length - 1] > thresholds[0] ? '↑ widening' : '— stable'}
         </text>
       )}
