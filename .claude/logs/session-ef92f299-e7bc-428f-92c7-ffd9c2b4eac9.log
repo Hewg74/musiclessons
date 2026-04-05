@@ -1,0 +1,247 @@
+[2026-04-03T08:17:35.115Z] https://claude.ai/code/session_01GpFCc9qc2igcDUhCf7YuRN can you see this?
+[2026-04-03T08:18:17.210Z] how can i get you to access the session?
+[2026-04-03T08:24:21.641Z] Context
+Triads are the most efficient way to unlock the entire guitar fretboard. Currently, the 14-level guitar curriculum only mentions triads in passing (Level 9, as a footnote to 7th chords). Khruangbin's Mark Speer — a key reference artist — builds his entire approach on 3-note triad voicings on top strings, yet the curriculum doesn't teach this systematically.
+The goal: add a complete triad system (all 4 string sets, 3 inversions, major + minor = 24 core shapes) as a dedicated new Level 6, AND enhance later levels to build on triads throughout the curriculum. This transforms triads from a footnote into a foundational pillar alongside open chords, barre chords, and scales.
+Interactive tools (fretboard visualizer with chord tone highlights, color music trainer in chord-tones mode, drone, piano keys) will be deeply integrated into every triad exercise.
+Research Foundation
+Why Triads Are THE Unlock (Not Just A Topic)
+Research and expert consensus from Tomo Fujita (Berklee, John Mayer's teacher), Rotem Sivan, Jens Larsen, and others confirms triads accomplish three things simultaneously that are usually taught separately:
+
+Fretboard geography: Each triad shape maps to exact note locations. Learning Am triad (A-C-E) in 3 inversions on strings 1-2-3 locates every A, C, and E on those strings across the entire neck. Multiply across 4 string sets = the entire fretboard mapped through chord tones, not abstract memorization.
+Chord tone awareness: Because triads ARE the essential chord tones (root, 3rd, 5th), learning them gives instant harmonic awareness — you always know where the "money notes" are for soloing over any chord.
+Melodic vocabulary: Arpeggiated triads are built-in melodic lines. Mark Speer's arpeggio practice is literally "taking different triad shapes and moving them up and down the neck."
+
+Why Triads Are Essential for Gene's Genres
+
+Khruangbin: Mark Speer does "three-note chord melody stuff on the top three strings" — literally triads. He approaches guitar "more like a keyboardist and harpist than a shredder," using triad shapes as his primary vocabulary.
+Funk/Cory Wong: Intentionally removes notes from full barre chords to create "sparser three-note shell voicings" on two or three strings. The 16th-note strumming engine requires small, precise voicings.
+Reggae/Ska: The skank upstroke fundamentally uses triads on top strings. "Their lack of fat is exactly what gives them the light, punchy sound that has made them the standard voicings in ska guitar."
+Soul/Neo-Soul: Open/spread triads create the "chiming, pure" sound characteristic of gospel, neo-soul, and R&B guitar.
+Band context: Full 6-string chords create mud when coexisting with bass and keys. Triads cut through cleanly — the professional studio guitar sound.
+
+Pedagogical Approach (Research-Backed)
+Following Tomo Fujita's teaching order and Rotem Sivan's 10-step system:
+
+Start strings 1-2-3 (universally recommended entry — brightest, most musical, the Khruangbin/reggae/funk set)
+Ear before shapes (hear and sing triads before drilling fingerings — the sound drives learning, per Gordon's audiation theory already used in our vocal curriculum)
+Root position first, then inversions on same string set before moving to new string sets
+Apply immediately to music the student already listens to — not abstract exercises
+B-string offset awareness: Shapes on string sets including the B string (1-2-3, 2-3-4) differ from those without (3-4-5, 4-5-6) due to guitar tuning irregularity
+Voice leading as accelerator: "Voice-leading triads through a ii-V-I is the single exercise that produces the fastest improvement in both comping and soloing" (multiple sources)
+
+The Math: 24 Core Shapes
+
+2 types (major, minor) × 4 string sets × 3 inversions = 24 shapes
+Each string set's inversions chain up the neck: root position → 1st inversion → 2nd inversion → root position (octave up)
+Same chord appears on all 4 string sets at roughly the same fret zone = 4 registers of the same harmony
+
+
+Part 1: Code Infrastructure Changes
+1A. Pass chordToneNotes through FretboardDiagram in App.jsx
+File: sarah-practice-plan/src/App.jsx
+The FretboardDiagram component already supports a chordToneNotes prop (shows dashed rings around chord tones), but App.jsx doesn't pass it from exercise data. Fix two locations:
+
+Line ~1063 (exercise view): Add chordToneNotes={ex.fretboard.chordToneNotes || null} to the FretboardDiagram call
+Line ~2049 (flow mode view): Same addition
+
+Before:
+jsx<FretboardDiagram theme={T} scale={ex.fretboard.scale} position={ex.fretboard.position} highlight={ex.fretboard.highlight || []} />
+After:
+jsx<FretboardDiagram theme={T} scale={ex.fretboard.scale} position={ex.fretboard.position} highlight={ex.fretboard.highlight || []} chordToneNotes={ex.fretboard.chordToneNotes || null} />
+1B. Add triad voicings to CHORD_VOICINGS_MULTI
+File: sarah-practice-plan/src/JungleTools.jsx (~line 5991, after power chords)
+Add a new section of triad-specific voicings for top-string shapes that the chord viewer can display:
+javascript// ─── Triad voicings (3-string shapes) ───
+"Am/tri":  [{ frets: "xxx210", name: "Am", pos: "Root" }, { frets: "xxx555", name: "Am", pos: "5th" }, { frets: "xxx998", name: "Am", pos: "9th" }],
+"C/tri":   [{ frets: "xxx010", name: "C", pos: "Root" }, { frets: "xxx553", name: "C", pos: "5th" }, { frets: "xxxa88", name: "C", pos: "10th" }],
+"G/tri":   [{ frets: "xxx433", name: "G", pos: "Root" }, { frets: "xxx787", name: "G", pos: "7th" }, { frets: "xxxcc0", name: "G", pos: "12th" }],
+"Dm/tri":  [{ frets: "xxx231", name: "Dm", pos: "Root" }, { frets: "xxx665", name: "Dm", pos: "5th" }, { frets: "xxxaa9", name: "Dm", pos: "10th" }],
+"Em/tri":  [{ frets: "xxx000", name: "Em", pos: "Open" }, { frets: "xxx453", name: "Em", pos: "Root" }, { frets: "xxx887", name: "Em", pos: "7th" }],
+// (More shapes to be added for all string sets during implementation — exact frets verified against standard triad charts)
+Note: Exact fret numbers will be verified during implementation against standard triad inversion charts. The pattern is 3 voicings per chord (root, 1st inv, 2nd inv) on each string set.
+
+Part 2: New Level 6 — "Triads Across the Neck"
+File: sarah-practice-plan/src/data/guitarStudy/level-06-triads-across-the-neck.js (NEW)
+Level metadata:
+
+Title: "Triads Across the Neck"
+Subtitle: "Three notes, twelve frets, infinite possibilities — the shapes that unlock the entire fretboard."
+Artists: "Khruangbin, Skinshape, Cory Wong, Nile Rodgers"
+Review: Checks Level 5 barre chord fluency
+
+Exercise Plan (~14 exercises, ~120 min total):
+Follows Tomo Fujita's recommended string-set order and Rotem Sivan's ear-first 10-step system. Each exercise uses the curriculum's established pedagogical template (what/why/setup/steps/feel/wrong/sarah/levelUp) with research-backed why sections.
+Block 1: HEAR & LEARN — Top-String Triads (strings 1-2-3: G-B-E)
+The Khruangbin string set — where Mark Speer lives. Tomo Fujita: "Start here, spend weeks."
+Pedagogical principle: Audiation first (Gordon) — hear and sing the triad before playing it.
+Exercise gs-6-1: "Hear the Triad — Sing Before You Play" (~7 min)
+
+Drone plays A. Piano shows A-C-E. Student sings each note, then finds it on fretboard.
+Tools: drone: { root: "A", octave: 2, texture: "analog" }, pianoKeys: { notes: ["A3", "C4", "E4"], label: "A Minor Triad" }, colorMusic: { root: "A", scale: "natural-minor", mode: "chordTones" }
+Research why: Rotem Sivan step 2 — "Feel/sing the triads before drilling fingerings. The sound should drive the learning." Matches our existing audiation-first approach from vocal curriculum.
+
+Exercise gs-6-2: "The Am Triad — Three Notes, Three Shapes" (~8 min)
+
+Learn Am triad (A-C-E) in root position, 1st inversion, 2nd inversion on strings 1-2-3
+Tools: fretboard: { scale: "a-natural-minor", position: 1, chordToneNotes: ["A", "C", "E"] }, drone: { root: "A", octave: 2, texture: "analog" }, pianoKeys: { notes: ["A3", "C4", "E4"], label: "A Minor Triad" }, chordVoicings: { chords: ["Am/tri"] }
+Why: "Every open Am chord you've played contains these 3 notes scattered across 5 strings. Now you're playing ONLY those 3 notes — pure, portable, moveable. Tomo Fujita (Berklee, John Mayer's teacher) says: 'Don't memorize. Be familiar with each triad — names of notes, degrees, and sound.'"
+Constraint-based learning: Fewer notes = deeper exploration of each one (same principle as Am pentatonic in Level 1)
+
+Exercise gs-6-3: "The C Major Triad — Same Strings, Brighter Color" (~7 min)
+
+C major triad (C-E-G) in 3 inversions on strings 1-2-3
+Tools: fretboard with chordToneNotes: ["C", "E", "G"], drone: { root: "C" }, pianoKeys
+Compare Am and C triads — same strings, different shapes, different emotion
+Note: C and Am share two notes (C and E) — voice leading begins naturally here
+
+Exercise gs-6-4: "Slide the Shape — One Triad, Every Key" (~8 min)
+
+Take the Am root position shape and slide it chromatically up the neck: Am → A#m → Bm → Cm...
+Tools: fretboard (full neck view), colorMusic: { root: "A", scale: "chromatic", mode: "explore" }
+"This is the same revelation as barre chords — one shape, every key. But triads are SMALLER and FASTER. Three fingers, not four. No barre needed. This is why Mark Speer can move so freely — light shapes, fast transitions."
+
+Exercise gs-6-5: "All Three Inversions — The Triad Highway" (~10 min)
+
+Play Am in root position (fret 5), 1st inversion (fret 8-9), 2nd inversion (fret 12-13) — three clusters that chain up the neck
+Tools: fretboard with highlights, drone, colorMusic: { mode: "chordTones" }
+"Three shapes form a highway up the neck. Root → 1st inv → 2nd inv → root (octave up). Learn this chain for Am, and you've learned it for EVERY minor chord. This is how the CAGED system works at a micro level — each inversion corresponds to a CAGED form."
+
+Exercise gs-6-6: "Major vs. Minor — The One-Fret Difference" (~7 min)
+
+Compare Am triad to A major triad — only the 3rd changes (C→C#). One fret shift transforms the emotion.
+Tools: fretboard with chordToneNotes alternating, pianoKeys showing both, recorder: true
+Ear training: play major then minor, eyes closed, feel the color change
+"The 3rd is the most emotionally loaded note in music. It determines whether you feel joy or melancholy. One fret — that's the entire difference between a sunny day and a rainy one."
+
+Block 2: EXPAND — All Four String Sets
+Tomo Fujita's order: strings 1-2-3 first (done above), then 4-5-6 and 3-4-5 (same shapes!), then 2-3-4 (unique shapes due to B-string offset).
+Exercise gs-6-7: "Strings 3-4-5 & 4-5-6 — Same Shapes, Deeper Voice" (~10 min)
+
+Am and C triads on the A-D-G and E-A-D string sets — because guitar tuning is uniform here (all perfect 4ths), the shapes are IDENTICAL between these two string sets, just shifted one string lower
+Tools: fretboard with chordToneNotes, drone, chordVoicings
+"Your power chords from Level 3 were root-5th on these strings. Now add the 3rd — suddenly you hear major vs. minor where before you only heard power. And here's a bonus: strings 3-4-5 and 4-5-6 share the SAME shapes because they're both tuned in perfect 4ths. Learn one, get the other free."
+
+Exercise gs-6-8: "Strings 2-3-4 (D-G-B) — The B-String Shift" (~8 min)
+
+Am and C triads on D-G-B — unique shapes because the G-to-B interval is a major 3rd, not a perfect 4th
+Tools: fretboard, drone, chordVoicings
+"This string set sounds warmer, rounder — Skinshape often comps here. The shapes are different from what you just learned because the B string breaks the pattern. That's OK — there are only 3 new shapes to learn."
+
+Exercise gs-6-9: "The Full Map — One Chord, Four String Sets" (~10 min)
+
+Play Am triads on ALL four string sets at roughly the same fret zone, then slide the whole set to Dm, then to G
+Tools: fretboard (full neck), colorMusic: { root: "A", scale: "natural-minor", mode: "chordTones" }, drone
+"You now have 12 ways to play a minor chord (4 string sets × 3 inversions). You know where A, C, and E live on EVERY string. That's the fretboard knowledge that took some players years to build — and you just did it through 3-note shapes instead of rote note memorization."
+
+Block 3: APPLY — Musical Contexts
+Rotem Sivan steps 3-8: Apply immediately to music. Voice-lead through progressions. Add chromatic approaches.
+Exercise gs-6-10: "Khruangbin Comping — Top-String Triads with Groove" (~10 min)
+
+Play Am → Dm → G → C triads on top strings over a backing track, Khruangbin-style
+Tools: metronome: 85, drone, fretboard with chordToneNotes, backing track
+Song reference: Khruangbin "August 10" or "People Everywhere (Still Alive)"
+"Mark Speer plays EXACTLY this — triads on the top 3 strings while Laura Lee holds down the bass. He told Guitar World he does 'three-note chord melody stuff on the top three strings' and takes 'different shapes and moves them up and down the neck.' That's your Level 6 vocabulary — you're playing his approach."
+
+Exercise gs-6-11: "Voice Leading — The Smallest Moves Win" (~8 min)
+
+Move from Am to C to G to Dm using inversions that minimize finger movement (1-2 frets max per voice)
+Tools: fretboard, pianoKeys, colorMusic: { mode: "chordTones" }
+"Voice leading means connecting chords by moving individual notes the smallest possible distance. Instead of jumping to a new shape, find the inversion of the NEXT chord that's closest to where you are. Multiple expert sources agree: 'Voice-leading triads through a ii-V-I is the single exercise that produces the fastest improvement in both comping and soloing.'"
+
+Exercise gs-6-12: "Triad Stabs — Funk, Reggae, Ska Rhythm" (~8 min)
+
+Rhythmic triad stabs: short, percussive chops on top strings with muting between hits
+Tools: metronome: 90, drone, rhythmCells
+Reference: Nile Rodgers (Chic), Cory Wong, reggae skank
+"Cory Wong intentionally removes notes from full barre chords to create 'sparser three-note shell voicings.' His picking hand maintains steady 16th notes; the fretting hand controls which notes ring. And in reggae, the skank upstroke IS triads — 'their lack of fat is exactly what gives them the light, punchy sound that has made them the standard voicings in ska guitar.'"
+
+Exercise gs-6-13: "Chord-Tone Soloing — Triads as Melody" (~10 min)
+
+Arpeggiate triads as melodic lines over a chord progression. Land on chord tones on strong beats, connect with scale tones between.
+Tools: fretboard with chordToneNotes, drone, recorder: true, colorMusic: { root: "A", scale: "natural-minor", mode: "chordTones" }
+"When you arpeggiate a triad, you're playing a melody that ALWAYS sounds right over the chord. The triad gives you 'safe notes' — the root, 3rd, and 5th — freeing you to take melodic risks in between. This is Rotem Sivan's step 5: 'Use triads as anchor points within scales to create melodic interest.'"
+
+Exercise gs-6-14: "Song Study — Triads in the Wild" (~10 min)
+
+Full song application: play the Am-C-G-D progression (from Level 1) using triads in multiple positions, then the Skinshape cycle Gm-C-A7-Dm with triads
+Tools: metronome, recorder: true, fretboard, backing tracks
+"You just played the same progression you learned in Level 1 — but now you can play it in 12 different positions on the neck. That's the power of triads: the same harmony, accessible everywhere, in every register. You went from knowing ONE way to play Am-C-G-D to knowing DOZENS."
+
+
+Part 3: Renumber Existing Levels 6-14 → 7-15
+Files to modify:
+Old FileNew FileOld LevelNew Levellevel-06-jangle-and-shimmer.jslevel-07-jangle-and-shimmer.js67level-07-the-groove-machine.jslevel-08-the-groove-machine.js78level-08-desert-and-drone.jslevel-09-desert-and-drone.js89level-09-extended-harmony.jslevel-10-extended-harmony.js910level-10-global-colors.jslevel-11-global-colors.js1011level-11-fingerpicking.jslevel-12-fingerpicking.js1112level-12-dynamics-and-expression.jslevel-13-dynamics-and-expression.js1213level-13-the-full-palette.jslevel-14-the-full-palette.js1314level-14-your-sound.jslevel-15-your-sound.js1415
+For each file:
+
+Rename the file (git mv)
+Update the level: number in the exported object
+Update all exercise IDs: gs-6-* → gs-7-*, etc.
+Update unlocks: text to reference the new next level
+Update review.exercises arrays if they reference shifted IDs
+
+Update index.js
+File: sarah-practice-plan/src/data/guitarStudy/index.js
+Add the new level6 import and shift all subsequent imports/references.
+Update references elsewhere
+
+Weekly plans in src/data/weeklyPlans/ — check for guitar study exercise ID references (gs-X-Y)
+App.jsx — check for any hardcoded level numbers or exercise IDs
+appData.js — check for guitar study references
+
+
+Part 4: Enhance Later Levels with Triad References
+Level 10 (was 9): Extended Harmony
+
+Update gs-9-1 (now gs-10-1): Frame 7th chords explicitly as "your triad + one more note" — reference the triad shapes learned in Level 6
+Update gs-9-5 (now gs-10-5): Khruangbin three-note voicings — reference "these are the triads you mastered in Level 6"
+Add fretboard.chordToneNotes to exercises that discuss chord tones
+Add colorMusic: { mode: "chordTones" } where appropriate
+
+Level 11 (was 10): Global Colors
+
+Afrobeat arpeggios — reference triads: "arpeggiating the triads you learned"
+Add fretboard.chordToneNotes to arpeggio exercises
+
+Level 12 (was 11): Fingerpicking
+
+PIMA patterns — connect to triad shapes: "your fingerpicking pattern follows the triad tones"
+Add chord tone highlighting
+
+Level 14 (was 13): The Full Palette
+
+Multi-style integration — add a triad-based variation: "play the same progression as full chords, then as triads on top strings, then as bass-string triads"
+
+
+Part 5: Add Triad Scale Definitions to FretboardDiagram
+File: sarah-practice-plan/src/JungleTools.jsx
+The SCALES object in FretboardDiagram currently has pentatonic/modal scales but no triad-specific layouts. We may want to add a way to display just the 3 triad tones across the full neck as a "scale" view. This could be done by either:
+
+Adding triad "scales" (e.g., "am-triad" showing only A, C, E across all strings)
+OR relying on chordToneNotes highlighting within existing scales (preferred — simpler, already supported)
+
+Decision: Use chordToneNotes within existing scales rather than creating new pseudo-scales. This keeps the fretboard context (showing the full scale with triad tones ringed) which is more educational.
+
+Verification Plan
+
+Build check: cd sarah-practice-plan && npm run build — verify no import errors from renaming
+Visual check: Open the app, navigate to Guitar Study, verify:
+
+New Level 6 appears with all exercises
+Levels 7-15 are correctly renumbered
+FretboardDiagram shows chord tone rings (dashed circles) on triad exercises
+ColorMusicTrainer opens in chordTones mode from exercises
+Drone, metronome, chord voicings all render correctly
+Exercise IDs are consistent (no duplicates, no gaps)
+
+
+Cross-reference check: Verify weekly plans still reference valid exercise IDs
+Flow mode check: Verify triad exercises work in Flow Mode (the second FretboardDiagram rendering path)
+
+
+File Summary
+FileActionsrc/App.jsxAdd chordToneNotes passthrough (2 locations)src/JungleTools.jsxAdd triad voicings to CHORD_VOICINGS_MULTIsrc/data/guitarStudy/level-06-triads-across-the-neck.jsNEW — full triad levelsrc/data/guitarStudy/index.jsAdd level6 import, shift numberingsrc/data/guitarStudy/level-06-jangle-and-shimmer.jsRename → level-07, renumbersrc/data/guitarStudy/level-07-the-groove-machine.jsRename → level-08, renumbersrc/data/guitarStudy/level-08-desert-and-drone.jsRename → level-09, renumbersrc/data/guitarStudy/level-09-extended-harmony.jsRename → level-10, renumber + enhance with triad refssrc/data/guitarStudy/level-10-global-colors.jsRename → level-11, renumber + add chordToneNotessrc/data/guitarStudy/level-11-fingerpicking.jsRename → level-12, renumber + add chordToneNotessrc/data/guitarStudy/level-12-dynamics-and-expression.jsRename → level-13, renumbersrc/data/guitarStudy/level-13-the-full-palette.jsRename → level-14, renumber + add triad variationsrc/data/guitarStudy/level-14-your-sound.jsRename → level-15, renumbersrc/data/weeklyPlans/*.jsUpdate any guitar study exercise ID referencessd what do you think about this? /swarm and /research and see if theres anything else to add. we want to get mastery over the guitar and bake in the most cuttign edge learning science and guitar skill progression out there
+[2026-04-03T09:26:55.764Z] do another pass its super importnat its all accurate and also it reflects on the tools as well
+[2026-04-03T09:34:16.201Z] you think this is enough to get the triads dialed?
+[2026-04-03T09:35:32.697Z] lets do 1-3 in detail
+[2026-04-03T09:41:40.186Z] we can add new excercises... we dont just need to keep it boudn to the existing excercises, if it adds value

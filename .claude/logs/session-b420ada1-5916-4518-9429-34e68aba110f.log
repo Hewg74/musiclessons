@@ -1,0 +1,40 @@
+[2026-03-31T11:03:20.627Z] There are a few improvements we want to make to the chart tab/the stand alone app. i am wondering since its the same, is there a way to just have the code be in 1 place so you dont dont need to do twice the work and to just point both frontends to the same repo? anyways
+
+We want to be able to select differnt strum weights, so light, medium and heavy. So instead of clicking to make the strum change, it could pop up a module like the note seleection style, and then its a 3x3 grid of the up, down and chuck, with doted, normal and heavy. and then clear on the bottom. Make sure that it looks asethetic and nice especially desktop style.
+
+Then we want to have a print page button, that allows for a cleaned up version that will be able to be printed like a music sheet someone can refer to practice with the option of putting varying amounts of bars horizontally to save space
+
+finally, we want to be able to rename the sections with the following possible dropdowns
+Verse 1
+Verse 2
+Verse 3
+Verse 4
+Verse 5
+
+Intro
+Outro
+
+Pre-chorus 1, 2, 3, 4
+
+Chorus 1, 2, 3, 4
+
+Bridge 
+
+Post-chorus 1,2,3,4
+It would also be rad to be able to copy and paste sections 
+❤️
+
+
+as well as be able to copy paste sections (the strum chords, strum pattern and notes) please think of the best UI/UX for these 2, the rename and the copy paste for both desktop and mobile.
+[2026-03-31T11:46:19.539Z] ok fix it and make sure the duplicate UI sint too bulky and that it duplicates at the END of all the current measures
+[2026-03-31T11:54:36.328Z] ok great, and let make the UI for the print job look much better and the final print job look nicer like our app. also i dont see the deplicate section (for chords strums and notes)
+[2026-03-31T11:56:14.429Z] no it should only be visble on labeled sections
+[2026-03-31T12:00:27.576Z] ok and with the copy section and paste after ability, lets make it so once you do it then it turns off, instead of it just being on forever, so you just copy and paste once at atime you know?
+[2026-03-31T12:02:11.701Z] ok give me a short list of things we added and hwo to use  it for a non techincal user. short and to the point then push and commit
+[2026-03-31T12:03:48.002Z] make sure as we add ne notes chords or strums it doesnt mess with the exisinting information as sometimes i find that the strum patterns dissear on older measures if we edit newer ones for some reason, if you find a fix please test end to end and then psuh and ocmmit
+[2026-03-31T18:20:17.852Z] when i try to print it basically repeats the first page over and over
+[2026-03-31T18:22:48.446Z] push and commit
+[2026-03-31T18:28:11.755Z] now its printing a version of the main screen and not the fixed up screen and specalized bars that we had
+[2026-03-31T18:32:31.285Z] ok but now theres like 3 empty pages before the actual page we want
+[2026-03-31T21:46:21.466Z] make sure in the printout that the measure numebrs and names are kept
+[2026-03-31T21:49:54.596Z] did you push and commit?

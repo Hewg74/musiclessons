@@ -560,7 +560,13 @@ export function PitchDiscriminationTrainer({ theme: T, onBack }) {
       });
     }
 
-    setFeedback({ correct, direction: dir, offsetCents: Math.abs(currentOffset) });
+    // Compute which tone was actually higher in presentation order (A then B)
+    // refFirst && sharp → test>ref, B=test → B was higher
+    // refFirst && flat  → test<ref, B=test → B was lower
+    // !refFirst && sharp → test>ref, A=test → A was higher (B was lower)
+    // !refFirst && flat  → test<ref, A=test → A was lower (B was higher)
+    const toneBWasHigher = refFirst ? dir === 'sharp' : dir === 'flat';
+    setFeedback({ correct, direction: dir, offsetCents: Math.abs(currentOffset), toneBWasHigher });
     setPhase('feedback');
 
     // Check round limit
@@ -864,7 +870,8 @@ export function PitchDiscriminationTrainer({ theme: T, onBack }) {
           {/* Feedback detail */}
           {phase === 'feedback' && feedback && (
             <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, marginTop: 6, textAlign: 'center' }}>
-              {feedback.direction === 'same' ? 'Both tones were identical' : `The second tone was ${feedback.offsetCents}¢ ${feedback.direction === 'sharp' ? 'higher' : 'lower'}`}
+              {feedback.direction === 'same' ? 'Both tones were identical'
+                : `Tone B was ${feedback.toneBWasHigher ? 'higher' : 'lower'} by ${feedback.offsetCents}¢`}
             </div>
           )}
         </div>
