@@ -656,7 +656,7 @@ export function PitchDiscriminationTrainer({ theme: T, onBack }) {
 
   // ─── Render ───
   const S = { // shared styles
-    container: { maxWidth: 560, margin: '0 auto', padding: isMobile ? '20px 16px' : '32px 24px', minHeight: '100vh', display: 'flex', flexDirection: 'column' },
+    container: { maxWidth: 560, margin: '0 auto', padding: isMobile ? '20px 16px 80px' : '32px 24px 80px', minHeight: '100vh', display: 'flex', flexDirection: 'column' },
     card: { background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: T.radiusMd, boxShadow: `0 10px 30px -5px ${T.gold}08, 0 4px 10px -2px ${T.gold}04` },
     sectionLabel: { fontSize: 10, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: T.textMuted, fontFamily: T.sans, marginBottom: 10 },
     goldCta: { width: '100%', padding: '16px 0', borderRadius: T.radius, background: T.gold, color: '#fff', border: 'none', fontSize: 14, fontWeight: 700, fontFamily: T.sans, cursor: 'pointer', letterSpacing: 2, textTransform: 'uppercase', boxShadow: `0 4px 0 0 ${T.goldDark || T.gold}60`, transition: 'transform 0.1s, box-shadow 0.1s' },
@@ -689,6 +689,12 @@ export function PitchDiscriminationTrainer({ theme: T, onBack }) {
           <h1 style={{ fontSize: 32, fontWeight: 600, fontFamily: T.serif, color: T.textDark, letterSpacing: -0.5 }}>Pitch Discrimination</h1>
         </header>
 
+        {aggStats.totalSessions === 0 && (
+          <p style={{ fontSize: 14, color: T.textMed, fontFamily: T.sans, lineHeight: 1.6, marginBottom: 24 }}>
+            Train your ear to detect tiny pitch differences between two tones.
+          </p>
+        )}
+
         {/* Quick stats preview */}
         {aggStats.totalSessions > 0 && (
           <div style={{ ...S.card, padding: '14px 20px', marginBottom: 28, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -714,58 +720,64 @@ export function PitchDiscriminationTrainer({ theme: T, onBack }) {
           </div>
         )}
 
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
-          {/* Mode */}
-          <div>
-            <div style={S.sectionLabel}>Mode</div>
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              {Object.entries(MODES).map(([key, m]) => (
-                <PillButton key={key} active={mode === key} onClick={() => setMode(key)} theme={T}>{m.label}</PillButton>
-              ))}
-            </div>
-            <div style={{ fontSize: 12, color: T.textLight, fontFamily: T.sans, marginTop: 8, fontStyle: 'italic' }}>{MODES[mode].desc}</div>
-          </div>
-
-          {/* Difficulty */}
-          <div>
-            <div style={S.sectionLabel}>Difficulty</div>
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              {Object.entries(DIFFICULTIES).map(([key, d]) => (
-                <PillButton key={key} active={difficulty === key} onClick={() => setDifficulty(key)} theme={T}>{d.label}</PillButton>
-              ))}
-            </div>
-            <div style={{ fontSize: 12, color: T.textLight, fontFamily: T.sans, marginTop: 8, fontStyle: 'italic' }}>{DIFFICULTIES[difficulty].desc}</div>
-          </div>
-
-          {/* Timbre */}
-          <div>
-            <div style={S.sectionLabel}>Timbre</div>
-            <div style={{ display: 'flex', gap: 8 }}>
-              {Object.entries(TIMBRES).map(([key, t]) => (
-                <PillButton key={key} active={timbre === key} onClick={() => setTimbre(key)} theme={T} wide>
-                  <span style={{ fontSize: 16, marginRight: 6 }}>{t.icon}</span> {t.label}
-                </PillButton>
-              ))}
-            </div>
-            <div style={{ fontSize: 12, color: T.textLight, fontFamily: T.sans, marginTop: 8, fontStyle: 'italic' }}>
-              {TIMBRES[timbre].desc}
-              {timbre === 'natural' && (difficulty === 'expert' || difficulty === 'adaptive') && (
-                <span style={{ color: T.warm }}> — auto-switches to Pure at small offsets</span>
-              )}
-            </div>
-          </div>
-
-          {/* Rounds */}
-          {mode !== 'thresholdFinder' && (
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 16 }}>
+          {/* Training settings card */}
+          <div style={{ ...S.card, padding: '20px 20px 12px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+            {/* Mode */}
             <div>
-              <div style={S.sectionLabel}>Rounds</div>
-              <div style={{ display: 'flex', gap: 8 }}>
-                {ROUND_OPTIONS.map(n => (
-                  <PillButton key={n} active={roundLimit === n} onClick={() => setRoundLimit(n)} theme={T}>{ROUND_LABELS[n]}</PillButton>
+              <div style={S.sectionLabel}>Mode</div>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                {Object.entries(MODES).map(([key, m]) => (
+                  <PillButton key={key} active={mode === key} onClick={() => setMode(key)} theme={T}>{m.label}</PillButton>
                 ))}
               </div>
+              <div style={{ fontSize: 12, color: T.textLight, fontFamily: T.sans, marginTop: 8, fontStyle: 'italic' }}>{MODES[mode].desc}</div>
             </div>
-          )}
+
+            {/* Difficulty */}
+            <div>
+              <div style={S.sectionLabel}>Difficulty</div>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                {Object.entries(DIFFICULTIES).map(([key, d]) => (
+                  <PillButton key={key} active={difficulty === key} onClick={() => setDifficulty(key)} theme={T}>{d.label}</PillButton>
+                ))}
+              </div>
+              <div style={{ fontSize: 12, color: T.textLight, fontFamily: T.sans, marginTop: 8, fontStyle: 'italic' }}>{DIFFICULTIES[difficulty].desc}</div>
+            </div>
+          </div>
+
+          {/* Sound settings card */}
+          <div style={{ ...S.card, padding: '20px 20px 12px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+            {/* Timbre */}
+            <div>
+              <div style={S.sectionLabel}>Timbre</div>
+              <div style={{ display: 'flex', gap: 8 }}>
+                {Object.entries(TIMBRES).map(([key, t]) => (
+                  <PillButton key={key} active={timbre === key} onClick={() => setTimbre(key)} theme={T} wide>
+                    <span style={{ fontSize: 16, marginRight: 6 }}>{t.icon}</span> {t.label}
+                  </PillButton>
+                ))}
+              </div>
+              <div style={{ fontSize: 12, color: T.textLight, fontFamily: T.sans, marginTop: 8, fontStyle: 'italic' }}>
+                {TIMBRES[timbre].desc}
+                {timbre === 'natural' && (difficulty === 'expert' || difficulty === 'adaptive') && (
+                  <span style={{ color: T.warm }}> — auto-switches to Pure at small offsets</span>
+                )}
+              </div>
+            </div>
+
+            {/* Rounds */}
+            {mode !== 'thresholdFinder' && (
+              <div>
+                <div style={S.sectionLabel}>Rounds</div>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  {ROUND_OPTIONS.map(n => (
+                    <PillButton key={n} active={roundLimit === n} onClick={() => setRoundLimit(n)} theme={T}>{ROUND_LABELS[n]}</PillButton>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         <button className="pd-tactile" onClick={startSession} style={{ ...S.goldCta, marginTop: 32 }}>Begin Session</button>
@@ -782,7 +794,7 @@ export function PitchDiscriminationTrainer({ theme: T, onBack }) {
     const isCorrect = phase === 'feedback' && feedback?.correct;
     const isWrong = phase === 'feedback' && !feedback?.correct;
 
-    const phaseText = { idle: 'Get ready...', playingA: 'Listen to tone A...', pause: '...', playingB: 'Listen to tone B...', awaiting: 'Which was higher?', feedback: feedback?.correct ? 'Correct!' : 'Not quite' };
+    const phaseText = { idle: 'Get ready...', playingA: 'Listen to tone A...', pause: '...', playingB: 'Listen to tone B...', awaiting: 'Higher or lower?', feedback: feedback?.correct ? 'Correct!' : 'Not quite' };
     const phaseColor = isCorrect ? T.success : isWrong ? T.coral : phase === 'awaiting' ? T.gold : T.textMed;
     const circleSize = isMobile ? 200 : 260;
     const innerSize = isMobile ? 100 : 128;
@@ -843,11 +855,16 @@ export function PitchDiscriminationTrainer({ theme: T, onBack }) {
           <div key={phase} style={{ fontSize: 24, fontWeight: 400, fontFamily: T.serif, color: phaseColor, textAlign: 'center', fontStyle: 'italic', minHeight: 36, transition: 'color 0.3s' }}>
             {phaseText[phase]}
           </div>
+          {phase === 'awaiting' && (
+            <div style={{ fontSize: 12, color: T.textMuted, fontFamily: T.sans, marginTop: 4 }}>
+              Was the second tone higher, lower{mode === 'withUnison' ? ', or the same' : ''}?
+            </div>
+          )}
 
           {/* Feedback detail */}
           {phase === 'feedback' && feedback && (
             <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, marginTop: 6, textAlign: 'center' }}>
-              {feedback.direction === 'same' ? 'Both notes were the same pitch' : `${feedback.offsetCents}¢ ${feedback.direction}`}
+              {feedback.direction === 'same' ? 'Both tones were identical' : `The second tone was ${feedback.offsetCents}¢ ${feedback.direction === 'sharp' ? 'higher' : 'lower'}`}
             </div>
           )}
         </div>

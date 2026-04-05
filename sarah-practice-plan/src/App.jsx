@@ -4513,9 +4513,9 @@ export default function App() {
   // Color Music Trainer overlay — full-page experience
   if (colorMusicOpen) {
     return (
-      <div style={{ background: T.bg, minHeight: "100vh", color: T.textDark, fontFamily: T.sans, paddingBottom: 80 }}>
+      <div className="no-bottom-nav" style={{ background: T.bg, minHeight: "100vh", color: T.textDark, fontFamily: T.sans, paddingBottom: metro.playing ? 80 : 0 }}>
         <ColorMusicTrainer theme={T} onBack={() => setColorMusicOpen(false)} />
-        <FloatingMetronome metro={metro} setTab={() => {}} isDark={isDark} theme={T} />
+        {metro.playing && <FloatingMetronome metro={metro} setTab={() => {}} isDark={isDark} theme={T} />}
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;600;700&display=swap" rel="stylesheet" />
       </div>
     );
@@ -4524,9 +4524,9 @@ export default function App() {
   // Pitch Discrimination Trainer overlay — full-page experience
   if (pitchDiscrimOpen) {
     return (
-      <div style={{ background: T.bg, minHeight: "100vh", color: T.textDark, fontFamily: T.sans, paddingBottom: 80 }}>
+      <div className="no-bottom-nav" style={{ background: T.bg, minHeight: "100vh", color: T.textDark, fontFamily: T.sans, paddingBottom: metro.playing ? 80 : 0 }}>
         <PitchDiscriminationTrainer theme={T} onBack={() => setPitchDiscrimOpen(false)} />
-        <FloatingMetronome metro={metro} setTab={() => {}} isDark={isDark} theme={T} />
+        {metro.playing && <FloatingMetronome metro={metro} setTab={() => {}} isDark={isDark} theme={T} />}
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;600;700&display=swap" rel="stylesheet" />
       </div>
     );
