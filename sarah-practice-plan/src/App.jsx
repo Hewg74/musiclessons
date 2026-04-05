@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { MiniAudioPlayer, AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, ChordVoicingViewer, extractChordsFromExercise, VolumeMeter, ChordTransitionTimer, GenreMetronome, SilenceScore, DroneGenerator, TAB_CONTENT, InlineKeyboard, RhythmCellCards, PhraseFormGuide, StrumChartBuilder, ChartListView, makeTemplateChart } from './JungleTools.jsx';
 import { ColorMusicTrainer } from './ColorMusicTrainer.jsx';
+import { PitchDiscriminationTrainer } from './PitchDiscriminationTrainer.jsx';
 import { acquireKeepalive, releaseKeepalive, setMediaSession, clearMediaSession } from './audioKeepalive.js';
 import { DAYS, KEYBOARD_LEVELS, LOOPER_LEVELS, LESSON_POOL, ALL_NOTES, getPitchRange } from './data/appData.js';
 import { WEEKLY_PLANS, CURRENT_WEEK } from './data/weeklyPlans/index.js';
@@ -4391,6 +4392,7 @@ export default function App() {
   const [flowExercises, setFlowExercises] = useState([]);
   const [flowAccentColor, setFlowAccentColor] = useState(null);
   const [colorMusicOpen, setColorMusicOpen] = useState(false);
+  const [pitchDiscrimOpen, setPitchDiscrimOpen] = useState(false);
   const metro = useMetronome();
 
   const [flowStartIndex, setFlowStartIndex] = useState(0);
@@ -4513,6 +4515,17 @@ export default function App() {
     return (
       <div style={{ background: T.bg, minHeight: "100vh", color: T.textDark, fontFamily: T.sans, paddingBottom: 80 }}>
         <ColorMusicTrainer theme={T} onBack={() => setColorMusicOpen(false)} />
+        <FloatingMetronome metro={metro} setTab={() => {}} isDark={isDark} theme={T} />
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;600;700&display=swap" rel="stylesheet" />
+      </div>
+    );
+  }
+
+  // Pitch Discrimination Trainer overlay — full-page experience
+  if (pitchDiscrimOpen) {
+    return (
+      <div style={{ background: T.bg, minHeight: "100vh", color: T.textDark, fontFamily: T.sans, paddingBottom: 80 }}>
+        <PitchDiscriminationTrainer theme={T} onBack={() => setPitchDiscrimOpen(false)} />
         <FloatingMetronome metro={metro} setTab={() => {}} isDark={isDark} theme={T} />
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;600;700&display=swap" rel="stylesheet" />
       </div>
@@ -4794,6 +4807,21 @@ export default function App() {
                   fontSize: 13, fontWeight: 600, fontFamily: T.sans, cursor: 'pointer',
                   transition: 'all 0.2s',
                 }}>Open Color Music Trainer</button>
+              </div>
+            </ToolCard>
+
+            <ToolCard icon="🎯" title="Pitch Discrimination" subtitle="Detect sharp vs flat micro-tuning differences">
+              <div style={{ padding: 12, textAlign: 'center' }}>
+                <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, marginBottom: 12, lineHeight: 1.6 }}>
+                  Can you hear the difference? Train to detect increasingly small tuning offsets.
+                  Find your threshold and track your improvement over time.
+                </div>
+                <button onClick={() => setPitchDiscrimOpen(true)} style={{
+                  padding: '10px 24px', borderRadius: T.radius,
+                  background: T.gold, color: '#fff', border: 'none',
+                  fontSize: 13, fontWeight: 600, fontFamily: T.sans, cursor: 'pointer',
+                  transition: 'all 0.2s',
+                }}>Open Pitch Trainer</button>
               </div>
             </ToolCard>
 
