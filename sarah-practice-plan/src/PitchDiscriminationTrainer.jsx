@@ -344,7 +344,6 @@ export function PitchDiscriminationTrainer({ theme: T, onBack }) {
   const [phase, setPhase] = useState('idle'); // idle | playingA | pause | playingB | awaiting | feedback
   const [currentNote, setCurrentNote] = useState('A4');
   const [currentOffset, setCurrentOffset] = useState(0);
-  const [refFirst, setRefFirst] = useState(true);
   const [feedback, setFeedback] = useState(null); // { correct, direction, offsetCents }
   const [roundNum, setRoundNum] = useState(0);
   const roundStartRef = useRef(0);
@@ -453,10 +452,9 @@ export function PitchDiscriminationTrainer({ theme: T, onBack }) {
 
     const signedCents = dir === 'sharp' ? cents : dir === 'flat' ? -cents : 0;
     const note = pickNote();
-    const isRefFirst = Math.random() < 0.5;
 
     activeTimbreRef.current = effectiveTimbre;
-    return { note, signedCents, dir, isRefFirst, effectiveTimbre };
+    return { note, signedCents, dir, effectiveTimbre };
   }, [mode, difficulty, timbre, staircase.cents, thresholdFinder.cents]);
 
   // ─── Play a round ───
@@ -465,10 +463,9 @@ export function PitchDiscriminationTrainer({ theme: T, onBack }) {
     playingRef.current = true;
     abortRef.current = false;
 
-    const { note, signedCents, dir, isRefFirst, effectiveTimbre } = generateOffset();
+    const { note, signedCents, dir, effectiveTimbre } = generateOffset();
     setCurrentNote(note);
     setCurrentOffset(signedCents);
-    setRefFirst(isRefFirst);
     setFeedback(null);
     setAnswersDisabled(true);
 
@@ -477,12 +474,9 @@ export function PitchDiscriminationTrainer({ theme: T, onBack }) {
     const refFreq = Tone.Frequency(note).toFrequency();
     const testFreq = refFreq * centsToFreqRatio(signedCents);
 
-    const freqA = isRefFirst ? refFreq : testFreq;
-    const freqB = isRefFirst ? testFreq : refFreq;
-
-    // Play tone A
+    // Tone A = reference (in-tune), Tone B = test (offset)
     setPhase('playingA');
-    await playTone(freqA, effectiveTimbre, 0.8, chain, nodes);
+    await playTone(refFreq, effectiveTimbre, 0.8, chain, nodes);
     if (abortRef.current) { playingRef.current = false; setPhase('idle'); return; }
 
     // Pause
@@ -490,9 +484,9 @@ export function PitchDiscriminationTrainer({ theme: T, onBack }) {
     await new Promise(r => setTimeout(r, 500));
     if (abortRef.current) { playingRef.current = false; setPhase('idle'); return; }
 
-    // Play tone B
+    // Play tone B (test — may be sharp or flat)
     setPhase('playingB');
-    await playTone(freqB, effectiveTimbre, 0.8, chain, nodes);
+    await playTone(testFreq, effectiveTimbre, 0.8, chain, nodes);
     if (abortRef.current) { playingRef.current = false; setPhase('idle'); return; }
 
     // Await answer
@@ -514,19 +508,8 @@ export function PitchDiscriminationTrainer({ theme: T, onBack }) {
     const responseMs = Date.now() - roundStartRef.current;
     const dir = currentOffset > 0 ? 'sharp' : currentOffset < 0 ? 'flat' : 'same';
 
-    // Map answer to actual comparison
-    // "higher" = second note is higher than first
-    // If refFirst: higher means test > ref means sharp
-    // If !refFirst: higher means ref > test means flat
-    let userDirection;
-    if (answer === 'same') {
-      userDirection = 'same';
-    } else if (answer === 'higher') {
-      userDirection = refFirst ? 'sharp' : 'flat';
-    } else {
-      userDirection = refFirst ? 'flat' : 'sharp';
-    }
-
+    // Tone A = reference, Tone B = test. "Higher" = test was higher = sharp.
+    const userDirection = answer === 'same' ? 'same' : answer === 'higher' ? 'sharp' : 'flat';
     const correct = userDirection === dir;
 
     const roundData = {
@@ -537,7 +520,6 @@ export function PitchDiscriminationTrainer({ theme: T, onBack }) {
       userDirection,
       correct,
       responseMs,
-      refFirst,
       timestamp: Date.now(),
     };
 
@@ -560,13 +542,7 @@ export function PitchDiscriminationTrainer({ theme: T, onBack }) {
       });
     }
 
-    // Compute which tone was actually higher in presentation order (A then B)
-    // refFirst && sharp → test>ref, B=test → B was higher
-    // refFirst && flat  → test<ref, B=test → B was lower
-    // !refFirst && sharp → test>ref, A=test → A was higher (B was lower)
-    // !refFirst && flat  → test<ref, A=test → A was lower (B was higher)
-    const toneBWasHigher = refFirst ? dir === 'sharp' : dir === 'flat';
-    setFeedback({ correct, direction: dir, offsetCents: Math.abs(currentOffset), toneBWasHigher });
+    setFeedback({ correct, direction: dir, offsetCents: Math.abs(currentOffset) });
     setPhase('feedback');
 
     // Check round limit
@@ -584,7 +560,7 @@ export function PitchDiscriminationTrainer({ theme: T, onBack }) {
         playRoundRef.current();
       }
     }, 1200);
-  }, [answersDisabled, phase, currentOffset, refFirst, currentNote, rounds, roundNum, roundLimit, difficulty, mode]);
+  }, [answersDisabled, phase, currentOffset, currentNote, rounds, roundNum, roundLimit, difficulty, mode]);
 
   // ─── Finish session ───
   const finishSession = useCallback((sessionRounds, thresholdResult) => {
@@ -800,7 +776,7 @@ export function PitchDiscriminationTrainer({ theme: T, onBack }) {
     const isCorrect = phase === 'feedback' && feedback?.correct;
     const isWrong = phase === 'feedback' && !feedback?.correct;
 
-    const phaseText = { idle: 'Get ready...', playingA: 'Listen to tone A...', pause: '...', playingB: 'Listen to tone B...', awaiting: 'Higher or lower?', feedback: feedback?.correct ? 'Correct!' : 'Not quite' };
+    const phaseText = { idle: 'Get ready...', playingA: 'Reference tone...', pause: '...', playingB: 'Second tone...', awaiting: 'Higher or lower?', feedback: feedback?.correct ? 'Correct!' : 'Not quite' };
     const phaseColor = isCorrect ? T.success : isWrong ? T.coral : phase === 'awaiting' ? T.gold : T.textMed;
     const circleSize = isMobile ? 200 : 260;
     const innerSize = isMobile ? 100 : 128;
@@ -871,7 +847,7 @@ export function PitchDiscriminationTrainer({ theme: T, onBack }) {
           {phase === 'feedback' && feedback && (
             <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, marginTop: 6, textAlign: 'center' }}>
               {feedback.direction === 'same' ? 'Both tones were identical'
-                : `Tone B was ${feedback.toneBWasHigher ? 'higher' : 'lower'} by ${feedback.offsetCents}¢`}
+                : `The second tone was ${feedback.direction === 'sharp' ? 'higher' : 'lower'} by ${feedback.offsetCents}¢`}
             </div>
           )}
         </div>
