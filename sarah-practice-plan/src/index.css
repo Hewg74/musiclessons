@@ -250,6 +250,16 @@ button {
   }
 }
 
+/* Overlay screens without BottomNav */
+.no-bottom-nav .floating-metronome {
+  bottom: 0;
+}
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .no-bottom-nav .floating-metronome {
+    bottom: env(safe-area-inset-bottom);
+  }
+}
+
 /* Flow Mode */
 .flow-exercise-enter {
   animation: fade-in-up 0.35s cubic-bezier(0.4, 0, 0.2, 1);
