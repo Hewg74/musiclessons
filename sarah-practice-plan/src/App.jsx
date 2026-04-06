@@ -1857,8 +1857,8 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
             {completed && <CheckCircle2 size={16} color={T.success} strokeWidth={3} />}
             {journalEntry && !open && <CategoryChip category={journalEntry.category} size="sm" />}
           </div>
-          <div style={{ fontSize: 9, color: T.textMuted, fontFamily: T.sans, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.15em", display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ display: "flex", alignItems: "center", gap: 4 }}><Clock size={10} /> {ex.time} MIN</span>
+          <div style={{ fontSize: 11, color: T.textMuted, fontFamily: T.sans, fontWeight: 500, display: "flex", alignItems: "center", gap: 8 }}>
+            <span>{ex.time} min</span>
             <span onClick={e => { e.stopPropagation(); setShowTimer(t => !t); }} style={{ cursor: "pointer", display: "flex", alignItems: "center", opacity: showTimer ? 1 : 0.4, transition: "opacity 0.2s" }} title="Toggle timer">
               <Clock size={12} strokeWidth={2.5} />
             </span>
@@ -2233,29 +2233,26 @@ function DayView({ day, completed, onComplete, metro, onOpenTapMatch, onStartFlo
 
   return (
     <div style={{ animation: "fade-in-up 0.4s ease-out" }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24, borderBottom: `1px solid ${T.borderSoft}`, paddingBottom: 16 }}>
-        <div>
-          <div style={{ fontSize: 9, fontWeight: 900, letterSpacing: 2.5, textTransform: "uppercase", color: c, fontFamily: T.sans, marginBottom: 6 }}>Day {day.num}</div>
-          <div style={{ fontSize: 32, fontWeight: 400, color: T.textDark, fontFamily: T.serif, lineHeight: 1 }}>{day.name}</div>
-          <div style={{ fontSize: 11, color: T.textMuted, fontFamily: T.sans, marginTop: 10, textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 700, display: "flex", alignItems: "center", gap: 10 }}>
-            {day.focus} <span style={{ opacity: 0.3 }}>|</span> <Clock size={12} /> {day.duration}
-          </div>
+      <div style={{ marginBottom: 28 }}>
+        <div style={{ fontSize: 9, fontWeight: 900, letterSpacing: 2.5, textTransform: "uppercase", color: c, fontFamily: T.sans, marginBottom: 8 }}>Day {day.num}</div>
+        <div style={{ fontSize: 32, fontWeight: 400, color: T.textDark, fontFamily: T.serif, lineHeight: 1.15, marginBottom: 12 }}>{day.name}</div>
+        <div style={{ fontSize: 11, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 700, marginBottom: 18 }}>
+          {day.focus} · {day.duration}
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <StartFlowButton onClick={() => onStartFlow(day.exercises, c)} accentColor={c} />
-          <div style={{ textAlign: "right", minWidth: 64 }}>
-            <div style={{ fontSize: 28, fontWeight: 700, fontFamily: T.serif, color: pct === 100 ? T.success : T.textDark, lineHeight: 1, display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 8 }}>
-              {pct === 100 ? <CheckCircle2 size={24} color={T.success} strokeWidth={2.5} /> : `${pct}%`}
-            </div>
+          <div style={{ fontSize: 28, fontWeight: 700, fontFamily: T.serif, color: pct === 100 ? T.success : T.textDark, lineHeight: 1, display: "flex", alignItems: "center", gap: 8 }}>
+            {pct === 100 ? <CheckCircle2 size={24} color={T.success} strokeWidth={2.5} /> : `${pct}%`}
           </div>
         </div>
+        <div style={{ height: 1, background: T.borderSoft, marginTop: 24 }} />
       </div>
 
       {/* Setup */}
       {day.setup && (
         <div style={{
           background: T.getTint(c, 0.03), border: `1px solid ${c}15`, borderRadius: T.radius,
-          padding: "16px 20px", marginBottom: 24, fontSize: 13, color: T.textMed, fontFamily: T.sans,
+          padding: "16px 20px", marginBottom: 28, fontSize: 13, color: T.textMed, fontFamily: T.sans,
           lineHeight: 1.6, boxShadow: `0 4px 12px ${c}08`
         }}>
           <span style={{ fontWeight: 900, color: T.textDark, fontSize: 10, textTransform: "uppercase", letterSpacing: 1.5, marginRight: 10 }}>Setup:</span>{day.setup}
@@ -2429,7 +2426,8 @@ function CurriculumView({ levels, config, completed, onComplete, metro, onOpenTa
 
       {beforePills}
 
-      {/* Level pills — horizontal scroll */}
+      {/* Level pills — horizontal scroll with fade hint */}
+      <ScrollFadeWrapper fadeColor={T.bg + "f2"}>
       <div className="hide-scrollbar sticky-pill-bar" style={{
         display: "flex", gap: 0, overflowX: "auto", padding: "16px 0 0",
         background: T.bg + "e6", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
@@ -2470,6 +2468,7 @@ function CurriculumView({ levels, config, completed, onComplete, metro, onOpenTa
           );
         })}
       </div>
+      </ScrollFadeWrapper>
 
       {/* Level content */}
       {renderExercises
@@ -3446,6 +3445,16 @@ function PracticeTimerTool({ theme: T }) {
         </div>
       </div>
       <TimerInner key={key} mins={activeMins} theme={T} />
+    </div>
+  );
+}
+
+function ScrollFadeWrapper({ children, fadeColor }) {
+  const bg = fadeColor || T.bg;
+  return (
+    <div style={{ position: "relative" }}>
+      {children}
+      <div style={{ position: "absolute", top: 0, right: 0, bottom: 0, width: 48, background: `linear-gradient(to right, transparent, ${bg})`, pointerEvents: "none", zIndex: 2 }} />
     </div>
   );
 }
@@ -4589,32 +4598,19 @@ export default function App() {
           transform: scale(0.98);
         }
       `}</style>
-      {/* Header */}
-      {tab !== "skills" && tab !== "charts" && (
-        <div style={{ background: T.bgCard, borderBottom: `1px solid ${T.border}`, position: "relative", display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <div style={{ padding: "48px 24px 32px", width: "100%", maxWidth: 640, position: "relative" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <img src="/icon-jungle.png" alt="Jungle Tools Logo" style={{
-                  height: 36, width: 36, objectFit: "cover",
-                  borderRadius: 10, boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
-                  mixBlendMode: isDark ? "normal" : "multiply"
-                }} />
-                <div style={{ fontSize: 9, fontWeight: 900, color: T.gold, letterSpacing: 2.5, textTransform: "uppercase", fontFamily: T.sans }}>Jungle Tools</div>
-              </div>
-              <button className="interactive-btn" onClick={toggleTheme} style={{
-                background: isDark ? T.bgSoft : T.goldSoft, border: `1px solid ${isDark ? T.border : T.gold}15`,
-                color: isDark ? T.gold : T.goldDark, padding: "8px", borderRadius: T.radiusMd,
-                cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-                boxShadow: isDark ? "none" : `0 2px 8px ${T.gold}20`
-              }}>
-                {isDark ? <Sun size={18} strokeWidth={2.5} /> : <Moon size={18} strokeWidth={2.5} />}
-              </button>
-            </div>
-            <div style={{ fontSize: 44, fontWeight: 400, fontFamily: T.serif, color: T.textDark, lineHeight: 1.1, marginBottom: 12 }}>Practice Plan</div>
-            <div style={{ fontSize: 11, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: "0.2em", fontWeight: 800, opacity: 0.8, display: "flex", alignItems: "center", gap: 8 }}>
-              Lesson 3/2 <span style={{ opacity: 0.3 }}>|</span> Tenor <span style={{ opacity: 0.3 }}>|</span> Break ≈ A3
-            </div>
+      {/* Header — Practice tab only */}
+      {tab === "practice" && (
+        <div style={{ background: T.bgCard, borderBottom: `1px solid ${T.border}`, display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <div style={{ padding: "36px 24px 24px", width: "100%", maxWidth: 640, display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+            <div style={{ fontSize: 44, fontWeight: 400, fontFamily: T.serif, color: T.textDark, lineHeight: 1.1 }}>Practice Plan</div>
+            <button className="interactive-btn" onClick={toggleTheme} style={{
+              background: isDark ? T.bgSoft : T.goldSoft, border: `1px solid ${isDark ? T.border : T.gold}15`,
+              color: isDark ? T.gold : T.goldDark, padding: "8px", borderRadius: T.radiusMd,
+              cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+              boxShadow: isDark ? "none" : `0 2px 8px ${T.gold}20`, marginTop: 8
+            }}>
+              {isDark ? <Sun size={18} strokeWidth={2.5} /> : <Moon size={18} strokeWidth={2.5} />}
+            </button>
           </div>
         </div>
       )}
@@ -4644,7 +4640,8 @@ export default function App() {
         {/* PRACTICE TAB — Week plan + Lessons archive + Lesson notes */}
         {tab === "practice" && (
           <div>
-            {/* Day pill tabs — horizontal scroll */}
+            {/* Day pill tabs — horizontal scroll with fade hint */}
+            <ScrollFadeWrapper fadeColor={isDark ? "rgba(28, 25, 23, 0.95)" : "rgba(251, 248, 244, 0.95)"}>
             <div className="hide-scrollbar sticky-pill-bar" style={{
               display: "flex", gap: 0, overflowX: "auto", padding: "16px 0 0",
               background: isDark ? "rgba(28, 25, 23, 0.45)" : "rgba(251, 248, 244, 0.55)",
@@ -4685,6 +4682,7 @@ export default function App() {
                 );
               })}
             </div>
+            </ScrollFadeWrapper>
 
             {/* Selected day exercises */}
             <div style={{ marginTop: 28 }}>
@@ -4744,10 +4742,12 @@ export default function App() {
         {/* SKILLS TAB — Voice / Guitar / Keys / Looper with sub-tabs */}
         {tab === "skills" && (
           <div>
-            {/* Skill sub-tabs */}
-            <div style={{
-              display: "flex", justifyContent: "center", gap: 0,
+            {/* Skill sub-tabs — scrollable with fade hint */}
+            <ScrollFadeWrapper fadeColor={T.bg}>
+            <div className="hide-scrollbar" style={{
+              display: "flex", gap: 0, overflowX: "auto",
               marginBottom: 24, borderBottom: `1px solid ${T.border}`,
+              msOverflowStyle: "none", scrollbarWidth: "none",
             }}>
               {skillTabs.map(st => (
                 <button key={st.id} onClick={() => setSkillTab(st.id)} style={{
@@ -4759,6 +4759,7 @@ export default function App() {
                 }}>{st.label}</button>
               ))}
             </div>
+            </ScrollFadeWrapper>
 
             {skillTab === "voice" && (
               <VoiceView completed={completed} onComplete={toggleComplete} metro={metro} onOpenTapMatch={setTapMatchBpm} onStartFlow={startFlow} />
@@ -4786,11 +4787,21 @@ export default function App() {
         {/* TOOLS TAB — grouped by function */}
         {tab === "tools" && (
           <div>
-            <div style={{ textAlign: "center", marginBottom: 24 }}>
-              <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 4, textTransform: "uppercase", color: T.gold, fontFamily: T.sans, marginBottom: 8 }}>
-                Jungle Mode
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24 }}>
+              <div>
+                <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 4, textTransform: "uppercase", color: T.gold, fontFamily: T.sans, marginBottom: 8 }}>
+                  Jungle Mode
+                </div>
+                <div style={{ fontSize: 32, fontWeight: 400, fontFamily: T.serif, color: T.textDark }}>Tools</div>
               </div>
-              <div style={{ fontSize: 32, fontWeight: 400, fontFamily: T.serif, color: T.textDark }}>Tools</div>
+              <button className="interactive-btn" onClick={toggleTheme} style={{
+                background: isDark ? T.bgSoft : T.goldSoft, border: `1px solid ${isDark ? T.border : T.gold}15`,
+                color: isDark ? T.gold : T.goldDark, padding: "8px", borderRadius: T.radiusMd,
+                cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+                boxShadow: isDark ? "none" : `0 2px 8px ${T.gold}20`, marginTop: 8
+              }}>
+                {isDark ? <Sun size={18} strokeWidth={2.5} /> : <Moon size={18} strokeWidth={2.5} />}
+              </button>
             </div>
 
             <SectionHeader label="Ear Training" />

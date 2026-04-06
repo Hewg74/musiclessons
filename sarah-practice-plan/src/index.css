@@ -175,6 +175,12 @@ button {
   margin: 0 -16px;
   scroll-padding-left: 28px;
   scroll-padding-right: 28px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.sticky-pill-bar::-webkit-scrollbar {
+  display: none;
 }
 
 .sticky-pill-bar::before {
