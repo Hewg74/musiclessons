@@ -1,2 +1,6 @@
 # Lesson transcripts (input for Claude, not needed in build)
 transcripts/*.txt
+
+# Claude Code session logs and worktrees
+.claude/logs/
+.claude/worktrees/
