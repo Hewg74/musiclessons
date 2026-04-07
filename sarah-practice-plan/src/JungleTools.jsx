@@ -276,7 +276,7 @@ export function YouTubeAudioPlayer({ videoId, theme: T, title }) {
         if (dur > 0) setProgress(ct / dur);
 
         window.dispatchEvent(new CustomEvent("songTimeUpdate", {
-          detail: { currentTime: ct, isLooping, loopStart, loopEnd, playing: true }
+          detail: { currentTime: ct, src: videoId, isLooping, loopStart, loopEnd, playing: true }
         }));
       }
       syncRafRef.current = requestAnimationFrame(dispatch);
@@ -285,7 +285,7 @@ export function YouTubeAudioPlayer({ videoId, theme: T, title }) {
       syncRafRef.current = requestAnimationFrame(dispatch);
     } else {
       cancelAnimationFrame(syncRafRef.current);
-      window.dispatchEvent(new CustomEvent("songTimeUpdate", { detail: { playing: false } }));
+      window.dispatchEvent(new CustomEvent("songTimeUpdate", { detail: { playing: false, src: videoId } }));
     }
     return () => cancelAnimationFrame(syncRafRef.current);
   }, [isPlaying, isLooping, loopStart, loopEnd, duration]);
@@ -657,7 +657,7 @@ export function MiniAudioPlayer({ src, theme: T, title, playbackRate = 1 }) {
         window.dispatchEvent(new CustomEvent("songTimeUpdate", {
           detail: {
             currentTime: audioRef.current.currentTime,
-            isLooping, loopStart, loopEnd,
+            src, isLooping, loopStart, loopEnd,
             playing: true
           }
         }));
@@ -668,7 +668,7 @@ export function MiniAudioPlayer({ src, theme: T, title, playbackRate = 1 }) {
       syncRafRef.current = requestAnimationFrame(dispatchSync);
     } else {
       cancelAnimationFrame(syncRafRef.current);
-      window.dispatchEvent(new CustomEvent("songTimeUpdate", { detail: { playing: false } }));
+      window.dispatchEvent(new CustomEvent("songTimeUpdate", { detail: { playing: false, src } }));
     }
     return () => cancelAnimationFrame(syncRafRef.current);
   }, [isPlaying, isLooping, loopStart, loopEnd]);

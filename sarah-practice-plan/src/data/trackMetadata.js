@@ -16,6 +16,57 @@
  * notes:          Anything unusual about this track.
  */
 
+const CHROMATIC = ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B'];
+const ENHARMONIC = { 'Db': 'C#', 'Gb': 'F#', 'D#': 'Eb', 'G#': 'Ab', 'A#': 'Bb' };
+
+/**
+ * Parse a chord name into labeled pitch classes.
+ * Returns { all: [...], root, third, fifth, seventh? } for interval-specific filtering.
+ *
+ * "Am7" → { all: ["A","C","E","G"], root: "A", third: "C", fifth: "E", seventh: "G" }
+ * "D"   → { all: ["D","F#","A"],    root: "D", third: "F#", fifth: "A" }
+ *
+ * With target filter:
+ *   chordToNotes("Am", "root")  → ["A"]
+ *   chordToNotes("Am", "third") → ["C"]
+ *   chordToNotes("Am", "triad") → ["A", "C", "E"]
+ *   chordToNotes("Am")          → ["A", "C", "E"]   (all by default)
+ */
+export function chordToNotes(chordName, target) {
+  if (!chordName) return [];
+  const match = chordName.match(/^([A-G][#b]?)(.*)/);
+  if (!match) return [];
+  const root = ENHARMONIC[match[1]] || match[1];
+  const q = match[2].toLowerCase();
+
+  let third = 4, fifth = 7, seventh = null;
+  if (q.match(/^m(?!aj)/) || q.includes('min')) third = 3;
+  if (q.includes('dim')) { third = 3; fifth = 6; }
+  if (q.includes('aug')) { third = 4; fifth = 8; }
+  if (q.includes('sus2')) third = 2;
+  if (q.includes('sus4')) third = 5;
+  if (q.includes('maj7')) seventh = 11;
+  else if (q.includes('7')) seventh = 10;
+  if (q.includes('b5')) fifth = 6;
+
+  const rootIdx = CHROMATIC.indexOf(root);
+  if (rootIdx < 0) return [];
+  const n = (i) => CHROMATIC[(rootIdx + i) % 12];
+
+  const labeled = { root: n(0), third: n(third), fifth: n(fifth) };
+  if (seventh !== null) labeled.seventh = n(seventh);
+  labeled.all = [...new Set(Object.values(labeled))];
+
+  // Target filter for interval-specific exercises
+  if (!target || target === 'all') return labeled.all;
+  if (target === 'root') return [labeled.root];
+  if (target === 'third') return [labeled.third];
+  if (target === 'fifth') return [labeled.fifth];
+  if (target === 'seventh') return labeled.seventh ? [labeled.seventh] : [];
+  if (target === 'triad') return [labeled.root, labeled.third, labeled.fifth];
+  return labeled.all;
+}
+
 const TRACK_METADATA = {
   // ─── CONFIRMED BPM (transients match filename) ────────────────────
 
@@ -336,7 +387,11 @@ export function getTrackMeta(src) {
  */
 export function getChordAtTime(src, currentTimeSec) {
   const meta = getTrackMeta(src);
-  if (!meta || !meta.chords || meta.chords.length <= 1) return null;
+  if (!meta || !meta.chords || meta.chords.length === 0) return null;
+  // Single-chord drones (e.g. Cm) — always return that chord
+  if (meta.chords.length === 1) {
+    return { chord: meta.chords[0], chordIndex: 0, beatInChord: 0, bar: 0 };
+  }
 
   const elapsed = currentTimeSec - meta.grooveStartSec;
   if (elapsed < 0) return null;  // still in the intro

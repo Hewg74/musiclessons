@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import * as Tone from "tone";
 import confetti from "canvas-confetti";
 import {
@@ -16,6 +16,53 @@ import { WEEKLY_PLANS, CURRENT_WEEK } from './data/weeklyPlans/index.js';
 import { VOCAL_LEVELS } from './data/vocalLevels/index.js';
 import { GUITAR_STUDY } from './data/guitarStudy/index.js';
 import { SINGER_SONGWRITER_LEVELS } from './data/singerSongwriter/index.js';
+import { getTrackMeta, getChordAtTime, chordToNotes } from './data/trackMetadata.js';
+
+// ─── Dynamic chord-tone highlighting ──
+// Returns the current chord + filtered pitch classes as a backing track plays.
+// chordToneTarget: "root"|"third"|"fifth"|"seventh"|"triad"|"all" — controls which
+// chord tones light up. Level 7 exercises use this for constraint-first pedagogy:
+//   gs-7-1 (roots) → "root", gs-7-2 (3rds) → "third", gs-7-4+ (full) → "all"
+const EMPTY_SRCS = [];
+function useChordAtTime(pitchedTrackSrcs, chordToneTarget) {
+  const [current, setCurrent] = useState({ chord: null, notes: null });
+  const lastChordRef = useRef(null);
+  useEffect(() => {
+    // Reset stale state when exercise changes (review fix m1)
+    setCurrent({ chord: null, notes: null });
+    lastChordRef.current = null;
+    if (!pitchedTrackSrcs || !pitchedTrackSrcs.length) return;
+    const handler = (e) => {
+      const { currentTime, playing, src: eventSrc } = e.detail;
+      if (!playing) {
+        // Only clear if it's our player or no src specified (review fix m2)
+        if (eventSrc && !pitchedTrackSrcs.includes(eventSrc)) return;
+        if (lastChordRef.current) { setCurrent({ chord: null, notes: null }); lastChordRef.current = null; }
+        return;
+      }
+      if (!eventSrc || !pitchedTrackSrcs.includes(eventSrc)) return;
+      const result = getChordAtTime(eventSrc, currentTime);
+      if (result && result.chord !== lastChordRef.current) {
+        lastChordRef.current = result.chord;
+        setCurrent({ chord: result.chord, notes: chordToNotes(result.chord, chordToneTarget) });
+      }
+    };
+    window.addEventListener('songTimeUpdate', handler);
+    return () => window.removeEventListener('songTimeUpdate', handler);
+  }, [pitchedTrackSrcs, chordToneTarget]);
+  return current;
+}
+
+// Shared hook: finds pitched tracks, applies chordToneTarget filter, provides fallback
+function useChordToneHighlighting(ex, tracks) {
+  const pitchedTrackSrcs = useMemo(() => {
+    if (!tracks?.length) return EMPTY_SRCS;
+    return tracks.filter(t => { const m = getTrackMeta(t.src); return m?.chords?.length >= 1; }).map(t => t.src);
+  }, [tracks]);
+  const liveChord = useChordAtTime(pitchedTrackSrcs, ex.fretboard?.chordToneTarget);
+  const fretboardChordTones = liveChord.notes || ex.fretboard?.chordToneNotes || null;
+  return { liveChord, fretboardChordTones };
+}
 
 // ─── AUDIO CONTEXT CONFIG ──
 // lookAhead 0.1s buffers against main-thread jank (React re-renders) without perceptible latency
@@ -828,7 +875,12 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
   const [trackRates, setTrackRates] = useState({});
   const [timerDone, setTimerDone] = useState(false);
   const [droneActiveNotes, setDroneActiveNotes] = useState({ notes: [], label: "" });
-  
+
+  // Dynamic chord-tone highlighting — lights up chord tones on fretboard as backing track plays
+  // chordToneTarget: exercise-level filter ("root", "third", "fifth", "triad", "all")
+  const tracks = ex.tracks || EMPTY_SRCS;
+  const { liveChord, fretboardChordTones } = useChordToneHighlighting(ex, tracks);
+
   const typeColor = TYPE[ex.type]?.color || accentColor || T.gold;
 
   // Detect timer completion
@@ -862,7 +914,6 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
     setTimeout(() => { try { synth.dispose(); } catch {} }, 2000);
   };
 
-  const tracks = ex.tracks || [];
   const isComplete = completed.has(ex.id);
 
   return (
@@ -1061,7 +1112,12 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
           {/* Fretboard */}
           {ex.fretboard && (
             <div style={{ marginBottom: 24 }}>
-              <FretboardDiagram theme={T} scale={ex.fretboard.scale} position={ex.fretboard.position} highlight={ex.fretboard.highlight || []} chordToneNotes={ex.fretboard.chordToneNotes || null} />
+              {liveChord.chord && (
+                <div style={{ fontSize: 15, fontWeight: 700, color: accentColor, marginBottom: 8, fontFamily: T.sans, display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{ opacity: 0.6, fontSize: 12 }}>Now:</span> {liveChord.chord}
+                </div>
+              )}
+              <FretboardDiagram theme={T} scale={ex.fretboard.scale} position={ex.fretboard.position} highlight={ex.fretboard.highlight || []} chordToneNotes={fretboardChordTones} />
             </div>
           )}
 
@@ -1832,6 +1888,10 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
   };
 
   const tracks = ex.tracks || [];
+
+  // Dynamic chord-tone highlighting
+  const { liveChord, fretboardChordTones } = useChordToneHighlighting(ex, tracks);
+
   const typeColor = TYPE[ex.type]?.color || dayColor || T.gold;
 
   return (
@@ -2047,7 +2107,12 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
               {/* Fretboard & Piano Keys */}
               {ex.fretboard && (
                 <div style={{ marginBottom: 16 }}>
-                  <FretboardDiagram theme={T} scale={ex.fretboard.scale} position={ex.fretboard.position} highlight={ex.fretboard.highlight || []} chordToneNotes={ex.fretboard.chordToneNotes || null} />
+                  {liveChord.chord && (
+                    <div style={{ fontSize: 13, fontWeight: 700, color: accentColor, marginBottom: 6, fontFamily: T.sans }}>
+                      <span style={{ opacity: 0.6, fontSize: 11 }}>Now:</span> {liveChord.chord}
+                    </div>
+                  )}
+                  <FretboardDiagram theme={T} scale={ex.fretboard.scale} position={ex.fretboard.position} highlight={ex.fretboard.highlight || []} chordToneNotes={fretboardChordTones} />
                 </div>
               )}
               {(ex.pianoKeys || droneActiveNotes.notes.length > 0) && (
