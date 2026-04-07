@@ -28,7 +28,7 @@ export const level5 = {
       ],
       feel: "G major should feel like stepping out of a cool forest (Am) into warm sunlight. The brightness is not just theoretical — your voice will naturally open up, vowels widen, and phrasing becomes more buoyant.",
       wrong: "If G major feels exactly like Am, you're not hearing the color difference yet. Focus on the B note (major 3rd) — it's the note that doesn't exist in Am pentatonic. Emphasize it until you hear the shift.",
-      sarah: "Gene, surf rock and Khruangbin's brighter moments live in major keys. This extended time in G major builds the vocal muscle memory that makes major-key songwriting feel natural — not like a translation from minor.",
+      sarah: "Gene, surf rock and Khruangbin's brighter moments live in major keys. This extended time in G major builds the vocal muscle memory that makes major-key songwriting feel natural — not like a translation from minor. When you start writing songs in Level 9, major keys like this will sound completely different from your Am comfort zone — you're building a second palette for future songwriting. Every key has its own emotional color AND its own body landscape.",
       drone: { root: "G", octave: 2, texture: "warm" },
       referencePitches: getPitchRange("G3", "E4"),
       pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4", "F4", "G4"], label: "Reference Notes", range: ["A3", "A4"] },

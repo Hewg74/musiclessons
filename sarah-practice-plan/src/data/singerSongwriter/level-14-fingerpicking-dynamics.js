@@ -7,7 +7,7 @@ export const level14 = {
   description:
     "Fingerpicking is a completely different motor program from strumming — your right hand must relearn from scratch. Apply the same Level-1 autopilot process: drill the pattern until it's automatic, then layer voice on top. Fingerpicking + singing is the signature sound of intimate singer-songwriters: Nick Drake, Tommy Guerrero, Hermanos Gutierrez. This level also masters dynamic range — the difference between whisper and full voice. The embodied dimension: guitar and voice now operate as one instrument. The hear-feel-choose cycle runs for BOTH simultaneously — you feel the guitar phrase in your fingertips AND the vocal phrase in your chest and mask. Two streams of embodied music-making, unified by one body. When fingerpicking becomes autopilot, the body has enough bandwidth to run the cycle for voice and guitar in parallel. That's the integration this level builds.",
   artists: "Nick Drake, Tommy Guerrero, Hermanos Gutierrez, José González",
-  unlocks: "Performance & Identity (Level 14)",
+  unlocks: "Performance & Identity (Level 15)",
   review: { label: "Level 12-13 Check-In", time: 5, exercises: ["ss-12-6", "ss-13-4"], prompt: "Play your arranged song with dynamics (ss-12-6). Then check prosody on your latest lyrics (ss-13-4). Both polished? Move on." },
   exercises: [
     {
@@ -25,7 +25,7 @@ export const level14 = {
       ],
       feel: "Fingerpicking should feel delicate and rolling — a gentle cascade of notes instead of a strum. Each fingertip becomes a point of awareness: the thumb anchors in the bass like a heartbeat, the fingers dance on the treble like breath. The body's attention splits between hands in a new way. When the pattern reaches autopilot, the right hand runs its own embodiment cycle — feeling the strings before striking them — and frees the voice to run its own cycle on top. Two instruments, one body, one unified act.",
       wrong: "If your fingers are catching or producing uneven volume, slow down. Each note should ring clearly with equal volume. If your thumb keeps hitting the wrong bass string, watch it for a while — then close your eyes and feel. If the new technique feels wrong or awkward, that's proprioceptive recalibration — your body map is updating from 'strummer' to 'picker.' Trust the recording over how it feels for the first few sessions. The 'wrong' feeling is actually growth.",
-      sarah: "Gene, fingerpicking + singing is the hardest integration in this curriculum. Your right hand needs a completely new autopilot. Be patient — this is Level 1 all over again, just with different fingers. For inspiration: Jack Johnson's 'Breakdown' (your #3 most-played song) uses Travis picking with percussive thumb slaps on beats 2 and 4 — the guitar becomes a one-person rhythm section. Your Travis picking from Guitar Level 12 (gs-12-5) is the engine here. Hollow Coves' 'Coastline' (G-Bm-A, fingerpicked throughout) even uses an alternate tuning (CGDGGD capo 7) for shimmering open-string resonance. And Tommy Guerrero takes it further — his approach is 'melody-as-vocalist,' the guitar sings a single melody line that a human voice would sing. His fingerpicking on a 1980s Japanese Telecaster through warm Fender amps creates a vocal-like tone. Ethio-jazz flavors, Gabor Szabo influence. All in your DNA.",
+      sarah: "Gene, fingerpicking + singing is the hardest integration in this curriculum. Your right hand needs a completely new autopilot. Be patient — this is Level 1 all over again, just with different fingers. For inspiration: Jack Johnson's 'Breakdown' (your #3 most-played song) uses Travis picking with percussive thumb slaps on beats 2 and 4 — the guitar becomes a one-person rhythm section. Your Travis picking from Guitar Level 13 (gs-13-5) is the engine here. Hollow Coves' 'Coastline' (G-Bm-A, fingerpicked throughout) even uses an alternate tuning (CGDGGD capo 7) for shimmering open-string resonance. And Tommy Guerrero takes it further — his approach is 'melody-as-vocalist,' the guitar sings a single melody line that a human voice would sing. His fingerpicking on a 1980s Japanese Telecaster through warm Fender amps creates a vocal-like tone. Ethio-jazz flavors, Gabor Szabo influence. All in your DNA.",
       metronome: 60,
       speedLadder: { start: 50, end: 80, increment: 5, bars: 8 },
       recorder: true
@@ -94,7 +94,25 @@ export const level14 = {
       metronome: 60,
       referencePitches: getPitchRange("E3", "A4"),
       volumeMeter: true,
-      recorder: true
+      recorder: true,
+      strumPattern: {
+        notation: "T i m T i m T i",
+        subdivision: "8ths",
+        bpm: 60,
+        description: "Basic fingerpick pattern: Thumb (T) on bass strings alternating, index (i) and middle (m) on treble strings. Pattern should feel like a gentle rolling wave."
+      },
+      dynamicArc: [
+        { section: "Speak phase", intensity: "soft", notes: "Voice speaking rhythmically over picking. Guitar is primary." },
+        { section: "Hum phase", intensity: "soft-medium", notes: "Voice adds pitch contour. Guitar and voice begin to breathe together." },
+        { section: "Sing phase", intensity: "medium", notes: "Full singing. Two parallel hear-feel-choose streams running." }
+      ],
+      toneSettings: {
+        pickup: "neck",
+        effects: ["reverb:light-room"],
+        capo: null,
+        tuning: "standard",
+        description: "Intimate, warm. Fingerpicking demands a softer, rounder tone than strumming. Neck pickup, tone rolled back slightly."
+      }
     },
 
     // ─── NEW: ALTERNATE TUNING ───
@@ -114,7 +132,7 @@ export const level14 = {
       ],
       feel: "Alternate tunings should feel like discovering a new instrument. The familiar guitar becomes unfamiliar — and that unfamiliarity sparks creativity. Embrace the disorientation.",
       wrong: "If you're trying to play standard-tuning songs in Drop D, you're missing the point. Let the tuning guide you to new sounds. Don't fight it — explore it.",
-      sarah: "Gene, alternate tunings are how Tinariwen and Hermanos Gutierrez get their signature sounds. Drop D connects to your desert blues side. Open G connects to your psych-rock side. New tunings, new songs.",
+      sarah: "Gene, alternate tunings are how Tinariwen and Hermanos Gutierrez get their signature sounds. Drop D connects to your desert blues side. Open G connects to your psych-rock side. New tunings, new songs. DADGAD is the tuning behind desert blues and Celtic folk — two of your sonic worlds colliding. Tinariwen and Davey Graham both live here. You previewed this in ss-8-23 — now go deeper. Adrianne Lenker drops the HIGH E string to D for persistent drones on Big Thief records.",
       fretboard: { tuning: "drop-d" },
       recorder: true
     },
@@ -156,7 +174,7 @@ export const level14 = {
       ],
       feel: "Travis picking should feel like your thumb has its own brain — it walks the bass independently while your fingers handle the melody. Two parts, one guitarist.",
       wrong: "If your thumb and fingers are playing at the same time on every beat, you're not alternating. The thumb alternates bass notes BETWEEN the finger picks. Slow down until you can hear the independence.",
-      sarah: "Gene, Travis picking is the technique behind Tommy Guerrero's guitar work and Jack Johnson's 'Breakdown.' It sounds complex but it's just a thumb alternation with a simple finger pattern on top. Tommy Guerrero's approach is 'melody-as-vocalist' — the guitar sings a single line where the Travis thumb provides the rhythm section and the fingers provide the vocal melody. That's the power of this technique: you become the whole band.",
+      sarah: "Gene, Travis picking is the technique behind Tommy Guerrero's guitar work and Jack Johnson's 'Breakdown.' It sounds complex but it's just a thumb alternation with a simple finger pattern on top. Tommy Guerrero's approach is 'melody-as-vocalist' — the guitar sings a single line where the Travis thumb provides the rhythm section and the fingers provide the vocal melody. That's the power of this technique: you become the whole band. The full 5-phase independence protocol for Travis picking + singing is in ss-14-16 below. Get the thumb automated here first — that's Phase 1 of the protocol.",
       metronome: 55,
       speedLadder: { start: 45, end: 70, increment: 5, bars: 4 },
       recorder: true
@@ -292,7 +310,34 @@ export const level14 = {
       referencePitches: getPitchRange("E3", "A4"),
       volumeMeter: true,
       recorder: true,
-      levelUp: "Can fingerpick and sing simultaneously, play multiple fingerpick patterns and shift between feels, explore alternate tunings for new sonic territory, control fingerpick dynamics from pp to ff, use Travis picking, harmonize with yourself through recording layers, shape notes with swell and decay, add percussion to fingerstyle, record with intentional warm lo-fi aesthetics, control full dynamic range (pp to ff), and create intimate fingerpicked originals with dynamic arcs."
+      levelUp: "Can fingerpick and sing simultaneously, play multiple fingerpick patterns and shift between feels, explore alternate tunings for new sonic territory, control fingerpick dynamics from pp to ff, use Travis picking, harmonize with yourself through recording layers, shape notes with swell and decay, add percussion to fingerstyle, record with intentional warm lo-fi aesthetics, control full dynamic range (pp to ff), and create intimate fingerpicked originals with dynamic arcs.",
+      songStructure: [
+        { name: "Intro (fingerpick)", bars: 8, chords: ["Am", "G", "C", "Em", "Am", "G", "C", "Em"] },
+        { name: "Verse (fingerpick)", bars: 8, chords: ["Am", "G", "C", "Em", "Am", "G", "C", "Em"] },
+        { name: "Chorus (strum)", bars: 8, chords: ["Am", "G", "C", "Em", "Am", "G", "C", "Em"] },
+        { name: "Verse (fingerpick)", bars: 8, chords: ["Am", "G", "C", "Em", "Am", "G", "C", "Em"] },
+        { name: "Chorus (strum)", bars: 8, chords: ["Am", "G", "C", "Em", "Am", "G", "C", "Em"] },
+        { name: "Outro (fingerpick)", bars: 8, chords: ["Am", "G", "C", "Em", "Am", "G", "C", "Am"] }
+      ],
+      strumPattern: {
+        notation: "T i m T i m T i",
+        subdivision: "8ths",
+        bpm: 60,
+        description: "Fingerpick verses: thumb alternating bass, index/middle on treble. Strum choruses: gentle down-up pattern. The texture change IS the arrangement."
+      },
+      dynamicArc: [
+        { section: "Intro", intensity: "pp", notes: "Fingerpicking alone. Setting the intimate mood." },
+        { section: "Verse", intensity: "mp", notes: "Voice enters low, porch register. Guitar stays quiet underneath." },
+        { section: "Chorus", intensity: "f", notes: "Switch to strumming. Voice lifts. The texture change creates the energy shift." },
+        { section: "Outro", intensity: "pp", notes: "Return to fingerpicking. Voice drops out. Circular form — ending mirrors beginning." }
+      ],
+      toneSettings: {
+        pickup: "neck",
+        effects: ["reverb:warm-plate"],
+        capo: null,
+        tuning: "standard",
+        description: "Warm, intimate. Plate reverb for depth without brightness. The fingerpicked original should sound like a late-night recording — close, personal, slightly lo-fi."
+      }
     },
 
     // ─── NEW: ALTERNATE TUNINGS & DYNAMIC STORYTELLING ───
@@ -340,6 +385,77 @@ export const level14 = {
       referencePitches: getPitchRange("E3", "A4"),
       volumeMeter: true,
       recorder: true
+    },
+
+    // ─── NEW: TRAVIS PICKING INDEPENDENCE PROTOCOL ───
+
+    {
+      id: "ss-14-16",
+      time: 10,
+      title: "Travis Picking Independence Protocol",
+      type: "song",
+      what: "The complete 5-phase Travis picking + singing protocol. Travis picking is the hardest guitar-vocal combination because it involves THREE independent rhythms: the thumb alternating bass notes, the fingers picking melody notes on the 'and' beats, and the voice singing a completely separate rhythm. The 5-phase protocol breaks this 'impossible' task into manageable stages. Phase 1: Thumb-only alternate bass until automatic. Phase 2: Add fingers on 'and' beats. Phase 3: Hum melody over the locked pattern. Phase 4: Speak lyrics, find anchor points where stressed syllables lock onto bass-note thumbstrokes. Phase 5: Full singing.",
+      setup: "Guitar. Metronome at 55 BPM. Start with a simple C chord — the Travis pattern is easiest here.",
+      steps: [
+        { text: "PHASE 1 — THUMB AUTOPILOT: Alternate your thumb between the 5th string (C bass) and 4th string (open D) in steady quarter notes at 55 BPM. Loop for 2 minutes. When you can describe your room while the thumb walks, Phase 1 is complete.", why: "The thumb must run on its own neural track — completely independent of conscious attention. James Taylor spent years developing this. The 'describe your room' test is the same autopilot diagnostic from Level 1, applied to the thumb." },
+        { text: "PHASE 2 — ADD FINGERS: Keep the thumb alternating. Add index finger picking the 2nd string and middle finger picking the 1st string on the 'and' beats (between thumb strokes). Count: 'THUMB-and-THUMB-and' where THUMB = bass note, and = finger pick. 2 minutes until automatic.", why: "Fingers on the 'and' beats create the Travis pattern's rolling quality. The thumb provides the heartbeat, the fingers provide the melody. Two independent rhythms from one hand." },
+        { text: "PHASE 3 — HUM THE MELODY: With the Travis pattern locked, hum a simple melody. Don't try to sing words yet — just melodic contour over the rolling pattern. The hum should float above the guitar, not compete with it. If the pattern breaks, drop back to Phase 2.", why: "Humming adds the third independent rhythm. Your thumb does one thing, your fingers do another, your voice does a third. This is the Three-Voice Independence that makes Travis picking + singing the hardest guitar-vocal skill." },
+        { text: "PHASE 4 — SPEAK LYRICS: Replace the hum with spoken words in rhythm. Find anchor points where stressed syllables land on the thumb's bass notes. 'WALK-ing DOWN-the ROAD' — the capitals land on thumbstrokes. Mark 2-3 anchor points.", why: "Anchor points give the voice structural scaffolding within the three-voice texture. Speaking (rather than singing) removes the pitch variable, isolating the rhythmic coordination." },
+        { text: "PHASE 5 — FULL SINGING: Replace the speech with singing. The anchor points are your safety net. Between them, the melody can float freely over the Travis pattern. Record a full pass. Listen back: can you hear three distinct voices (thumb bass, finger melody, vocal melody) operating independently?", why: "Full singing is the final integration of three independent motor programs. If it collapses, drop to Phase 4 (speaking) or Phase 3 (humming). The protocol is sequential because each phase builds a specific neural pathway. Jack Johnson's 'Breakdown' — one of your most-played songs — does exactly this." }
+      ],
+      feel: "Each phase should feel like adding a new instrument to an ensemble. By Phase 5, you're a one-person band — bass, melody, and voice all operating independently.",
+      wrong: "If you skip to Phase 5 because 'you know the song,' the coordination will collapse under performance pressure. The protocol exists because the 'three independent rhythms' problem can't be solved by raw repetition — it must be solved in layers.",
+      sarah: "Gene, Travis picking while singing is the hardest thing in this curriculum. Jack Johnson's 'Breakdown' does exactly this. The 5-phase protocol breaks the impossible into the possible. Be patient — Phase 1 alone might take several sessions to truly automate.",
+      metronome: 55,
+      speedLadder: { start: 45, end: 70, increment: 5, bars: 4 },
+      recorder: true
+    },
+
+    // ─── NEW: OPEN TUNING SONGWRITING ───
+
+    {
+      id: "ss-14-17",
+      time: 10,
+      title: "Open Tuning Songwriting — From Resonance",
+      type: "song",
+      what: "Adrianne Lenker's method: retune, then listen to the open strings for a full minute before touching a fret. Let the tuning propose ideas — the resonance IS the first draft. Joni Mitchell treated each of her 57 tunings as a new instrument, writing from the tuning's natural harmonics rather than imposing shapes she already knew. Today: DADGAD. Write a complete song section starting from nothing but the open-string resonance.",
+      setup: "Guitar. Tuner. Retune to DADGAD (low to high: D-A-D-G-A-D). Listen to the open strings ring before doing anything.",
+      steps: [
+        { text: "Retune to DADGAD. Strum all 6 open strings. Listen for 60 seconds — feel where the drone lives in your body. Three D strings and two A strings create a Dsus4 wash. The resonance is the starting point, not the destination.", why: "Joni Mitchell's method: re-tune, then simply listen to what the open strings want to say before playing anything. The tuning proposes ideas your fingers would never find in standard tuning. DADGAD reduces left-hand cognitive load — most chords are 1-2 fingers with drones ringing." },
+        { text: "Add one finger — any fret, any string. How does the sound change? Let the drone guide your choices. If a note clashes, move one fret. If it sings, stay. Explore for 2 minutes, letting the tuning lead.", why: "Open tunings create serendipitous harmonies. One finger on one fret changes the entire character of the chord while the drones continue. This is the opposite of standard tuning where each chord requires a full hand shape." },
+        { text: "Hum over the open tuning. Let the drone suggest a vocal melody — the tuning's resonance will pull your voice toward certain notes. Follow the pull. The melody that emerges belongs to this tuning, not to your standard-tuning habits.", why: "Adrianne Lenker starts songwriting from tuning exploration, letting the instrument propose phrases. The vocal melody should feel discovered, not composed. Your voice responds to the specific overtone series of the tuning." },
+        { text: "Add words — even nonsense words. Let the sounds guide the language, not the other way around. A melody that sits on a long 'ooh' might want words with that same open vowel: 'moon,' 'room,' 'you.' Record the whole exploration — 3 minutes minimum.", why: "Sound-first writing (melody and vowels before meaning) produces lyrics that sing naturally. Words chosen for their sound often reveal surprising meanings — the subconscious is better at connecting sound and sense than the conscious mind." },
+        { text: "Shape what you've found into a verse or chorus. You now have a song section that could only exist in DADGAD — it sounds like nothing you'd write in standard tuning. That uniqueness is the whole point of open tunings.", why: "The creative constraint of an unfamiliar tuning forces genuine exploration. Every song written in DADGAD has a distinct character because the tuning limits and guides your choices in ways standard tuning doesn't." }
+      ],
+      feel: "Open tuning songwriting should feel like discovering a secret room in a house you thought you knew. The guitar suggests ideas your fingers would never find in standard tuning. Let yourself be surprised.",
+      wrong: "If you're trying to play standard-tuning chord shapes in DADGAD, you're fighting the tuning. Let go of what you know. Explore with single fingers and drones. The tuning knows what it wants to say.",
+      sarah: "Gene, Adrianne Lenker drops the high E to D for persistent drones on Big Thief records. Joni Mitchell wrote 'Both Sides Now' in open D. Tinariwen's entire sound lives in open and alternate tunings. The tuning does the creative work — your job is to listen. You previewed DADGAD in ss-8-23 — now it's time to write from it.",
+      fretboard: { tuning: "dadgad" },
+      recorder: true,
+      referencePitches: getPitchRange("D3", "A4")
+    },
+
+    // ─── NEW: VOCAL DYNAMICS ARC ───
+
+    {
+      id: "ss-14-18",
+      time: 7,
+      title: "Vocal Dynamics — Whisper to Full Voice Arc",
+      type: "song",
+      what: "Apply a vocal dynamic arc within a single song section: whisper the first line, speak-sing the second, half-voice the third, full voice the fourth. Then reverse: full voice → whisper. The dynamic arc within a single verse creates the effect of a full arrangement — your voice becomes the whole band's dynamic range. Add: play softer during vocal phrases, louder during instrumental fills. The guitar and voice breathe opposite to each other.",
+      setup: "Guitar. A verse from one of your songs. Metronome at 60 BPM (intimate tempo).",
+      steps: [
+        { text: "Sing your verse at one dynamic level — your normal comfortable volume. Record it. This is the 'flat' version.", why: "The flat version is your baseline. Most first performances are dynamically flat — every line at the same volume. The recording reveals this." },
+        { text: "Now: whisper line 1, speak-sing line 2 (pitched but breathy), half-voice line 3 (supported but held back), full voice line 4. Record this version.", why: "The whisper-to-full arc creates a crescendo within a single verse. The listener is drawn in by the whisper and released by the full voice. No band needed — your voice IS the arrangement." },
+        { text: "Reverse: full voice line 1, half-voice line 2, speak-sing line 3, whisper line 4. This is the 'reveal and retreat' arc — powerful opening, intimate ending.", why: "The reverse arc is equally valid. Starting strong and pulling back creates a different emotional story — confidence dissolving into vulnerability. Both directions are tools." },
+        { text: "Now add inverse guitar dynamics: play SOFTER during vocal phrases, LOUDER during instrumental fills (between lines). The guitar and voice breathe opposite to each other — when one inhales, the other exhales. Record the full section.", why: "Guitar-voice inverse dynamics create the illusion of a full arrangement. The volume stays constant overall, but the balance shifts between voice and guitar. James Taylor does this instinctively — his guitar steps forward when his voice rests, then recedes when his voice returns." }
+      ],
+      feel: "The dynamic arc should feel like breathing — each line has its own volume, its own intimacy. The whisper draws the listener close. The full voice opens the room.",
+      wrong: "If every line sounds the same volume, you're not committing to the dynamic range. Whisper means ACTUALLY whisper — barely audible. Full voice means full support, not belting (remember your range: E3-A4, no belting, laid-back porch register).",
+      sarah: "Gene, your laid-back vocal style is perfect for this. The whisper-to-full-voice arc lets you use your natural dynamic range without ever leaving your comfort zone. Skinshape and Angus Stone both use this technique — quiet verses that bloom into present choruses, all within a relaxed dynamic range.",
+      volumeMeter: true,
+      recorder: true,
+      referencePitches: getPitchRange("E3", "A4")
     }
   ]
 };

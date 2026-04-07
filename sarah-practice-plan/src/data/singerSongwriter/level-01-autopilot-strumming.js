@@ -61,7 +61,7 @@ export const level1 = {
       ],
       feel: "When it works, the strumming feels like walking — you don't think about it. Your attention is on what you're saying, and your right hand just keeps going.",
       wrong: "If you catch yourself stopping mid-sentence to focus on a chord change, or your strum pattern simplifies unconsciously, the guitar part hasn't reached autopilot yet. That's not failure — it's the growth zone. Your brain is building a new motor program, and that takes repetition across days, not hours.",
-      sarah: "This is the most important exercise in the entire curriculum. Everything that follows depends on passing this test. Be honest with yourself — and remember, wherever you are right now is exactly the right starting point. The fact that you're here means you're already doing the work.",
+      sarah: "This is the most important exercise in the entire curriculum. Everything that follows depends on passing this test. Be honest with yourself — and remember, wherever you are right now is exactly the right starting point. The fact that you're here means you're already doing the work. One thing to notice while you do this: where do stressed words in your speech land relative to chord changes? That awareness becomes a powerful tool in Level 6.",
       metronome: 90
     },
     {
@@ -99,7 +99,20 @@ export const level1 = {
       wrong: "If the chop sounds heavy or sustained, you're pressing too hard or holding the chord too long. It should be staccato — short, sharp, and bouncy. If your timing is stiff, you're thinking too much — let the metronome carry you.",
       sarah: "Gene, reggae is YOUR genre — this chop is going to be the easiest strum pattern to sing over because it only uses upstrokes on the offbeats. Your voice naturally fills the beats where the guitar is silent. Pick this track because it calls to you, not because it's assigned.",
       tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }],
-      metronome: 85
+      metronome: 85,
+      strumPattern: {
+        notation: "_ x _ x _ x _ x",
+        subdivision: "8ths",
+        bpm: 85,
+        description: "Pure offbeat chop — miss every downbeat, staccato upstroke on every upbeat. Fretting hand lifts immediately after each strum to create the classic reggae 'skank.' The silence on the downbeats is as important as the sound."
+      },
+      toneSettings: {
+        pickup: "neck",
+        effects: ["reverb:spring-medium"],
+        capo: null,
+        tuning: "standard",
+        description: "Warm, dark neck pickup tone. Medium spring reverb for space. Roll tone knob back 30% for that dub warmth."
+      }
     },
     {
       id: "ss-1-5",
@@ -118,7 +131,20 @@ export const level1 = {
       wrong: "If the strumming sounds choppy or stops between chord changes, you're resetting your right hand at each change. The right hand NEVER stops — it's a perpetual motion machine. If it sounds aggressive, lighten your touch.",
       sarah: "This is the sound of your favorite music, Gene. When you can jangle on autopilot, you've got the right hand for everything from Allah-Las to Babe Rainbow to Sun Room.",
       tracks: [{ name: "Surf Rock 120", src: "/surf-rock-120.mp3" }],
-      metronome: 120
+      metronome: 120,
+      strumPattern: {
+        notation: "D U D U D U D U",
+        subdivision: "8ths",
+        bpm: 100,
+        description: "Continuous down-up 8th notes — the pendulum never stops. Slight accent on beats 1 and 3. Chord changes happen inside the continuous strum without breaking the flow."
+      },
+      toneSettings: {
+        pickup: "bridge-or-both",
+        effects: ["reverb:heavy-spring", "tremolo:light"],
+        capo: null,
+        tuning: "standard",
+        description: "Jangly, shimmering tone. Heavy spring reverb for that surf wash. Optional light tremolo for wobble. The reverb IS the texture."
+      }
     },
     {
       id: "ss-1-6",
@@ -178,6 +204,44 @@ export const level1 = {
       metronome: 90,
       recorder: true,
       referencePitches: getPitchRange("G3", "G3")
+    },
+    {
+      id: "ss-1-9",
+      time: 6,
+      title: "Anchor Point Discovery",
+      type: "guitar",
+      what: "While doing the conversation test, notice where STRESSED words naturally land relative to CHORD CHANGES. These collision points are 'anchor points' — where spoken emphasis aligns with harmonic shifts. They'll become the foundation of singing in Level 6. For now, just notice: while strumming G-C-D, speak 'the waves are rolling in today.' Does 'waves' land on the G or the change to C? Does 'rolling' land on C or the change to D? Awareness before skill.",
+      setup: "Guitar. Metronome at 90 BPM. Same G-C-D-G progression from the conversation test.",
+      steps: [
+        { text: "Strum G-C-D-G on repeat at 90 BPM. Get it flowing on autopilot.", why: "The guitar must be invisible before you can notice anything about your speech." },
+        { text: "Speak any phrase in rhythm: 'the waves are rolling in today, the sun is going down.' Say it naturally, not forced. Notice: where do the STRESSED syllables (waves, roll, sun, down) land relative to the chord changes?", why: "Stressed syllables are the peaks of your speech rhythm. Where they land on the chord rhythm creates 'anchor points' — places where voice and guitar naturally lock together. You don't need to place them deliberately yet — just notice where they fall." },
+        { text: "Try different phrases. Some stressed words will land ON a chord change (strong anchor), some will land between changes (floating). Both are natural. Just observe.", why: "This awareness is the seed of the Isolation Protocol you'll learn in Level 6. For now, observation is the entire skill." },
+        { text: "Speak one more phrase and deliberately place the strongest word on beat 1 of a chord change. How does that feel? Different from when it lands between changes?", why: "When a stressed syllable locks onto a chord change, you'll feel a physical alignment — a 'click' in the groove. That click is an anchor point. You'll learn to create these deliberately in Level 6." }
+      ],
+      feel: "This should feel like watching yourself in slow motion — noticing something that already happens naturally. No performance pressure, just curiosity.",
+      wrong: "If you're trying to force words onto specific beats, you're working too hard. This is observation, not control. Speak naturally and just NOTICE.",
+      sarah: "Gene, you're not singing yet — just listening to yourself speak over chords. Where do stressed words land? These collision points are anchor points, and they'll become your most powerful tool in Level 6. For now, awareness is the entire exercise.",
+      metronome: 90,
+      recorder: true
+    },
+    {
+      id: "ss-1-10",
+      time: 5,
+      title: "The Escape Hatch",
+      type: "guitar",
+      what: "When strumming and speaking breaks down, drop to the simplest possible strum: ONE downstroke per bar on beat 1. This is the 'escape hatch' — the bottom rung of a coordination ladder you'll climb throughout this curriculum. Practice deliberately: full strum → break → one-per-bar → stabilize → climb back up.",
+      setup: "Guitar. Metronome at 85 BPM.",
+      steps: [
+        { text: "Strum G-C-D-G with your normal pattern while describing your room. If the strum breaks, IMMEDIATELY drop to one downstroke per bar — just a single strum on beat 1 of each chord.", why: "The escape hatch removes all rhythmic complexity from the guitar, freeing maximum bandwidth for your voice. It's not a failure — it's a recovery tool." },
+        { text: "Once one-per-bar feels stable with speech, climb one rung: two strums per bar (beats 1 and 3). Keep speaking.", why: "Each rung adds right-hand density. Your voice stays constant — the guitar climbs while the voice holds steady." },
+        { text: "Climb again: four strums per bar (all beats). Then try your natural pattern. If it breaks again, drop back down.", why: "This is the strum complexity ladder in miniature. The method applies to every new song you'll ever learn: drop to the simplest guitar, get the voice stable, then add guitar complexity." },
+        { text: "Practice the DELIBERATE drop three times: full pattern → break → one-per-bar → climb back. Make the recovery instinctive.", why: "Drilling the recovery move makes it automatic. When coordination breaks in a real performance, your hands will know where to go without thinking." }
+      ],
+      feel: "The escape hatch should feel like releasing pressure — the moment you drop to one strum, your voice suddenly has room to breathe. That relief is the bandwidth freeing up.",
+      wrong: "If you resist dropping down when the strum breaks, you're fighting the method. The escape hatch is strength, not weakness. Every professional singer-songwriter uses this — they just don't name it.",
+      sarah: "Gene, this is your safety net for the entire curriculum. Whenever voice + guitar coordination breaks — at any level, on any song — drop to one strum per bar. Your voice gets all the bandwidth. Then climb back up. This method works at every level, and you'll formalize it as the Strum Complexity Ladder in Level 6.",
+      metronome: 85,
+      recorder: true
     }
   ]
 };

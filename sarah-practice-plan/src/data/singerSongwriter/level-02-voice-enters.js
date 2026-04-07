@@ -24,7 +24,7 @@ export const level2 = {
       ],
       feel: "Counting should feel rhythmic and locked in — your voice becomes part of the groove, not a distraction from it. When the numbers and strums align perfectly, you'll feel a satisfying click. Always end on a rep that felt locked — let that be the last body memory.",
       wrong: "If counting makes your strum hesitate, the autopilot isn't solid enough. Go back to Level 1 for another session. If your counting drifts off-beat, focus on matching the metronome click with both your strum AND your voice simultaneously. If this feels awkward, that's the rewiring phase — not a sign something's wrong.",
-      sarah: "Gene, this might feel silly — counting out loud while strumming. But it's the gentlest possible voice-over-guitar exercise. Numbers before words. Words before melody. Every step earns the next one. You're already doing it — that's what matters.",
+      sarah: "Gene, this might feel silly — counting out loud while strumming. But it's the gentlest possible voice-over-guitar exercise. Numbers before words. Words before melody. Every step earns the next one. You're already doing it — that's what matters. Counting aloud is step 1 of the coordination method you'll name in Level 6 — the Isolation Protocol.",
       metronome: 90,
       recorder: true
     },
@@ -43,7 +43,7 @@ export const level2 = {
       ],
       feel: "It should feel like rapping or spoken word over a beat. Your voice rides the rhythm of the strum. The words and the chords are in the same groove. End on a phrase that locked in — let that groove be what your body remembers.",
       wrong: "If you're speaking in a monotone without rhythmic placement, you're just talking, not integrating. The words must align with the musical pulse. If the strum simplifies when you start speaking, you're still splitting attention. That's normal — it means the dual-task pathway is building.",
-      sarah: "Gene, this feels weird at first — like talking to yourself while playing guitar. That's fine. It's training your brain to do two rhythmic things at once. The melody comes later. Here's why this matters to YOUR music: every DOPE LEMON vocal rides the rhythm just like this — speech-like, groove-locked.",
+      sarah: "Gene, this feels weird at first — like talking to yourself while playing guitar. That's fine. It's training your brain to do two rhythmic things at once. The melody comes later. Here's why this matters to YOUR music: every DOPE LEMON vocal rides the rhythm just like this — speech-like, groove-locked. Speaking over strumming is step 3 of the Isolation Protocol — you'll learn the full 5-step method in Level 6.",
       metronome: 85,
       recorder: true
     },
@@ -62,7 +62,7 @@ export const level2 = {
       ],
       feel: "The humming should feel lazy and loose — like you're humming along to a song on the radio. Not performative, just following the tune while your hands do their thing. But underneath the ease, notice the vibration traveling: low hums warm your chest, higher hums buzz in your face. Your body is already mapping the melody.",
       wrong: "If your hum is tense or forced, you're working too hard. Humming should be the most relaxed vocal production possible. If you lose the melody, just drone on one comfortable note and let the contour come back naturally.",
-      sarah: "Gene, your vocal style is laid-back — think DOPE LEMON. This humming exercise is actually closer to your target vocal style than belting scales would be. Relax into it. You're not learning to be a singer — you're already one. This is just expanding what your voice can do.",
+      sarah: "Gene, your vocal style is laid-back — think DOPE LEMON. This humming exercise is actually closer to your target vocal style than belting scales would be. Relax into it. You're not learning to be a singer — you're already one. This is just expanding what your voice can do. Humming is step 2 of the Isolation Protocol — the named method you'll learn in Level 6.",
       metronome: 85,
       referencePitches: getPitchRange("E3", "A4"),
       pitchContour: true,
@@ -142,6 +142,7 @@ export const level2 = {
         { text: "Strum Am. Sing the root A — feel it settle deep in your chest, grounded and warm. Then the minor 3rd C — feel the vibration rise into the throat, carrying an ache, a darkening. Then the 5th E — the buzz lifts into the mask, open and spacious. One note per beat, ascending: A... C... E. Three notes, three body addresses, three emotional colors.", why: "Am is the easiest triad to sing — all natural notes, no sharps or flats. The minor 3rd (C) gives it that emotional, melancholic quality. And each note has a distinct body location: A in the chest, C in the throat/jaw, E in the mask. Nummenmaa 2024 (PNAS, n=1,938) confirmed these resonance maps are cross-culturally universal. You're not just learning three pitches — you're mapping three locations in your instrument." },
         { text: "Now descend: E... C... A. Feel the vibration pour downward — mask to throat to chest — like warmth settling back into the earth. Then try the full arc: A-C-E-C-A over 2 bars. The voice traces the shape of the chord, and the body follows: rising through chest-throat-mask, then settling back down.", why: "Ascending and descending through the triad trains your ear to navigate chord tones in both directions. The body mirrors the arc — vibration climbs and then returns. This paired hearing-and-feeling makes the triad a physical experience, not just an interval exercise." },
         { text: "Try G major: G-B-D ascending, D-B-G descending. The major 3rd (B) sounds brighter than the minor 3rd (C). Feel the difference in your body too — the major 3rd sits more forward, more open, warmer than the minor 3rd's darker, throat-based ache.", why: "Major vs minor 3rd is the emotional fork in the road. Hearing and singing both trains your ear to distinguish them — and the body registers the difference too. The minor 3rd carries a quality of longing; the major 3rd carries openness. Your body knows this before your theory knowledge catches up." },
+        { text: "Now the remaining triads with body mapping. C major: C-E-G — C sits in the upper chest (lighter than A), E buzzes in the mask, G opens toward the crown. D major: D-F#-A — D is restless in the throat, F# is bright and forward (it has a sharp, electric quality), A grounds you back to chest. Em: E-G-B — E is mask-level, G floats high, B is light and airy near the top of your range. Sing each triad ascending and descending.", why: "Each chord has its own three-note body journey. C major feels brighter and more forward than Am. D major has the sharpened 3rd (F#) that adds an electric edge. Em is the darkest of the majors-related triads. Mapping all five triads gives you 15 body addresses — a complete spatial vocabulary for your instrument." },
         { text: "Play G-Am-C-D and walk the triad of each chord as it passes. Before each triad, hear the three notes and feel where they'll land in your body. Slow is fine — one note per beat at 80 BPM gives you time to complete the full cycle: hear each note, feel its body address, then let it become sound.", why: "Walking chord tones through a progression is the foundation of melodic movement. Most great melodies are decorated chord tone walks. Adding the embodiment cycle (HEAR-FEEL-PRODUCE) to each step transforms mechanical chord-tone singing into a full-body musical act." }
       ],
       feel: "Walking the triad should feel like stepping up a short staircase through your body and back down. Three notes, three steps, three resonance locations — chest, throat, mask. When you land on the 3rd, you'll hear the chord's emotional character in your own voice AND feel it in a specific place in your body.",
@@ -150,6 +151,26 @@ export const level2 = {
       metronome: 80,
       referencePitches: getPitchRange("A2", "E4"),
       levelUp: "Can sing root, 3rd, and 5th of G, C, D, Em, and Am while strumming at 80 BPM without strum breaks."
+    },
+    {
+      id: "ss-2-4",
+      time: 6,
+      title: "The Simplification Drop",
+      type: "vocal",
+      what: "The escape hatch from Level 1, now applied to singing. Sing a sustained note over full strumming. When the strum breaks, drop to ONE strum per bar. Stabilize. Then climb: half notes → quarter notes → eighth notes → full pattern. This is the strum complexity ladder applied to your first singing.",
+      setup: "Guitar. Metronome at 80 BPM. Sing on 'ooh' — any comfortable pitch.",
+      steps: [
+        { text: "Strum Em with your normal pattern. Sing a sustained 'ooh' on any comfortable pitch. Hold it for 4 bars. If the strum holds, you're doing great — try the next step.", why: "A sustained note is the minimum vocal demand. If this works, your autopilot is strong enough for the next challenge." },
+        { text: "If the strum breaks when you start singing, drop to ONE strum per bar — just beat 1. Sing the same note. The guitar is now invisible, and your voice has full bandwidth.", why: "The drop is the key insight: when coordination fails, simplify the guitar, NOT the voice. In this curriculum, the voice is the priority from Level 2 onward." },
+        { text: "From one-per-bar, climb: two strums per bar (beats 1 and 3) while singing. Then four per bar. Then your full pattern. Each rung adds right-hand density while the voice stays constant.", why: "This is the strum complexity ladder. Each rung tests a specific level of dual-task coordination. Your current ceiling is wherever the singing breaks — that's where to practice." },
+        { text: "Repeat the full cycle three times: full pattern → break → drop → climb. By the third cycle, you'll find your ceiling is one rung higher than the first cycle.", why: "The climb-and-drop cycle is how you expand coordination in real time. Three passes is enough to move the needle — but the real growth happens across days, not minutes." }
+      ],
+      feel: "The drop should feel like releasing a breath you didn't know you were holding. The climb should feel like slowly turning up the complexity dial. Each rung is a small victory.",
+      wrong: "If you're powering through breaks without dropping down, you're reinforcing broken coordination. The drop IS the method. If you can't get past one-per-bar with singing, that's your honest starting point — and it's a completely valid one. Work from there.",
+      sarah: "Gene, this drill IS the method for learning any song from here forward. When something breaks, simplify the guitar, not the voice. Your voice is the priority now — it was the guitar's turn in Level 1. You'll formalize this as a named method in Level 6.",
+      metronome: 80,
+      recorder: true,
+      referencePitches: getPitchRange("E3", "A4")
     }
   ]
 };

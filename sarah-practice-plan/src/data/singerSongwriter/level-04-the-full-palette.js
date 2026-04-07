@@ -688,8 +688,8 @@ export const level4 = {
       time: 8,
       title: "Object Writing — Sensory Vocabulary",
       type: "record",
-      what: "Pat Pattison's #1 daily exercise from Berklee. Pick an object — a surfboard, a bonfire, a highway at dusk. Set a timer for 7 minutes. Write (or speak into your recorder) using ALL your senses: what does it look like, sound like, smell like, taste like, feel against your skin? What does your body feel internally? Where are you in space? No editing, no judging — just sensory flow.",
-      setup: "Phone recorder or notebook. No guitar needed. Timer set to 7 minutes.",
+      what: "Pat Pattison's #1 daily exercise from Berklee — the foundation of his Coursera course taken by 1.3 million students. Pick an object — a surfboard, a bonfire, a highway at dusk. Set a timer for 7 minutes. Write (or speak into your recorder) using ALL 7 senses: sight, sound, smell, taste, touch, plus two most writers skip — organic (internal body: heartbeat, breath, stomach dropping, throat tightening) and kinesthetic (motion and position: gravity, wind on skin, acceleration, the weight shift of walking). Stop at exactly 7 minutes even if you're mid-sentence. No editing, no judging — just sensory flow.",
+      setup: "Phone recorder or notebook. No guitar needed. Timer set to exactly 7 minutes — stop mid-sentence when it rings.",
       steps: [
         { text: "Pick an object that connects to your music — a wave, a desert road, a porch at sunset, a bonfire, a vintage amplifier. Something with sensory richness. Set a 7-minute timer.", why: "Pat Pattison at Berklee assigns this daily. The objects you choose reveal your artistic world. Songwriters who do this daily build a sensory vocabulary that makes lyrics vivid instead of generic." },
         { text: "Start the timer. Speak into your recorder (or write) using ALL 7 senses: sight, sound, smell, taste, touch, organic (internal body feelings — heartbeat, breath, tension), kinesthetic (your body's position in space). Don't stop. Don't edit. Just flow.", why: "The 7-sense framework forces you past the visual default. Most people describe what they SEE. Songwriters who access all senses create lyrics that listeners FEEL. 'The salt air coating my lips' beats 'the beautiful ocean' every time." },
@@ -699,7 +699,7 @@ export const level4 = {
       ],
       feel: "This should feel like stream-of-consciousness — messy, surprising, sometimes nonsensical. The mess is where the gold hides. Don't try to write 'good' — try to write FAST and SPECIFIC.",
       wrong: "If you're writing abstract emotions ('I felt happy,' 'the sunset was beautiful'), you're staying on the surface. Dig into the senses: WHAT does happy feel like in your chest? What COLOR is the sunset — not 'orange' but 'the orange of old rust on a tailgate'? Specificity is everything.",
-      sarah: "Gene, this is the foundation of every great lyric you've ever loved. 'Beautiful day that you know will end' — that's sensory, specific, embodied. Object writing builds the muscle that produces lines like that. Do this daily, even for 5 minutes, and your lyrics will transform.",
+      sarah: "Gene, this is the foundation of every great lyric you've ever loved. 'Beautiful day that you know will end' — that's sensory, specific, embodied. Object writing builds the muscle that produces lines like that. Do this daily, even for 5 minutes, and your lyrics will transform. Gillian Welch says this is the most important thing she learned at Berklee. The organic sense — 'my chest tightened,' 'stomach dropped' — produces the most original material because most writers skip it entirely. Your body already knows these sensations from the hear-feel-choose cycle. Now channel them into words. Good prompts: rain, midnight, old photographs, train stations, candle flames, coffee, rust, August, gasoline.",
       recorder: true
     },
     {

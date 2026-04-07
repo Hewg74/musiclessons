@@ -121,7 +121,17 @@ export const level9 = {
       metronome: 80,
       referencePitches: getPitchRange("E3", "A4"),
       recorder: true,
-      phraseForm: { pattern: ["V", "V", "Ch", "V", "Ch"], barsPerSection: [4, 4, 4, 4, 4], labels: { V: "Verse", Ch: "Chorus" } }
+      phraseForm: { pattern: ["V", "V", "Ch", "V", "Ch"], barsPerSection: [4, 4, 4, 4, 4], labels: { V: "Verse", Ch: "Chorus" } },
+      strumPattern: {
+        notation: "D _ D U _ U D U",
+        subdivision: "8ths",
+        bpm: 80,
+        description: "Whatever your hands default to. The ugly first draft isn't about strum technique — it's about finishing."
+      },
+      dynamicArc: [
+        { section: "Verse", intensity: "soft-medium", notes: "Conversational, low range. Just getting the words out." },
+        { section: "Chorus", intensity: "medium", notes: "Slightly more energy. The hook phrase carries the section." }
+      ]
     },
 
     // ─── CREATING YOUR FIRST SONGS ───
@@ -431,6 +441,43 @@ export const level9 = {
       referencePitches: getPitchRange("A3", "A4"),
       recorder: true,
       levelUp: "Can create two original song sketches with contrasting A/B sections, sing chord-tone melodies with simple lyrics over strumming at 80-85 BPM, dissect songs for structure/contour/phrasing/dynamics, check prosody alignment between speech and melody, assess recordings with a structured protocol, capture song seeds habitually, write ugly first drafts under time pressure, build sensory vocabulary through object writing, generate songs from titles, paint with chord tones as colors, recycle melodies through variation, create complete song sketches in both Am and E major key families, and transpose songs between keys using Nashville numbers."
+    },
+    {
+      id: "ss-9-21",
+      time: 8,
+      title: "Ralph Murphy's First-Minute Test",
+      type: "song",
+      what: "Ralph Murphy's commercial songwriting test: the listener decides in the first 60 seconds whether to stay. Four principles to apply to any song you've written: (1) First-person opening that's personally relatable — 'I' not 'we', (2) Hook at the END of the chorus, not the beginning — build toward it, (3) Pronoun shift verse-to-verse — V1 uses 'I', V2 shifts toward 'you' or 'we' to draw the listener in, (4) Minimize words over 2 syllables — make lyrics easy to sing along with.",
+      setup: "One of your Level 9 song sketches (ss-9-5, ss-9-12, or ss-9-17). Recorder ready.",
+      steps: [
+        { text: "Pick one of your song sketches. Play just the first 60 seconds. Ask yourself: in those 60 seconds, is there a personally relatable moment? Not 'people are lonely' but 'I couldn't sleep last night.' The listener needs to see themselves in your words within a minute.", why: "Ralph Murphy (ASCAP, 40+ years of hit songwriting analysis) found that the first-minute connection is the single biggest predictor of whether a listener stays. Abstract openings lose people immediately." },
+        { text: "Check your chorus: where is the hook (the title phrase or the most memorable line)? If it's at the START of the chorus, move it to the END. The chorus should BUILD toward the hook, not start with it. The hook is the payoff, not the opening.", why: "Murphy's research showed that hooks at the end of the chorus create a stronger 'want to hear it again' impulse. The listener anticipates the hook's arrival, which makes the whole chorus feel like it's going somewhere." },
+        { text: "Check your pronouns: does Verse 1 use 'I'? Does Verse 2 shift toward 'you' or 'we'? The pronoun shift is subtle but powerful — it draws the listener from observer to participant.", why: "V1 'I' establishes the songwriter's perspective. V2 'you/we' invites the listener into the song. This shift is one of the most consistent patterns in commercially successful songs." },
+        { text: "Read your lyrics aloud at normal speaking pace. Circle any word over 2 syllables. Can you replace it with a simpler word? 'Beautiful' → 'pretty.' 'Underneath' → 'under.' Simpler words are easier to sing along with — and singalongs are how songs spread.", why: "Murphy's accessibility rule: if a listener can't sing your lyrics back after hearing them twice, the words are too complex. This isn't dumbing down — it's craft. Bob Dylan's most covered songs use the simplest language." }
+      ],
+      feel: "This should feel like an editing session, not a writing session. You're testing an existing song against proven principles.",
+      wrong: "If you dismiss Murphy's rules as 'too commercial,' remember that DOPE LEMON and Skinshape follow most of them naturally. Simple, relatable, singable — that's the aesthetic you love.",
+      sarah: "Gene, Murphy's principles aren't about selling out — they're about connecting. DOPE LEMON's 'Marinade' hooks you in the first 10 seconds with a relatable image. Skinshape's hooks land at the end of the chorus. These artists follow these principles instinctively — now you're making them conscious.",
+      recorder: true
+    },
+    {
+      id: "ss-9-22",
+      time: 10,
+      title: "Object Writing — Full Seven Senses",
+      type: "record",
+      what: "Pat Pattison's complete 7-sense object writing method from his Berklee Coursera course (1.3 million students). Standard 5 senses PLUS organic (internal body sensations — heartbeat, stomach dropping, throat tightening, breath catching, muscles tensing) and kinesthetic (motion and position in space — the pull of gravity, wind on skin, acceleration, the weight shift of walking, vertigo). Write to the word 'tide' for 10 minutes using ALL seven senses. The organic and kinesthetic senses produce the most original material — they're the ones your conscious mind skips.",
+      setup: "Phone recorder or notebook. Timer set to exactly 10 minutes. No guitar needed.",
+      steps: [
+        { text: "The 7 senses defined. Sight: color, light, movement, shadows. Sound: music, ambient noise, silence. Smell: strongest memory trigger — prioritize this. Taste: flavors, metallic, sweet. Touch: temperature, texture, pressure. ORGANIC: heartbeat quickening, stomach dropping, throat tightening, breath catching — internal body sensations. KINESTHETIC: falling, spinning, weight shift, wind pushing, acceleration — your body in space. The last two are where original lyrics hide.", why: "Pattison extends the standard 5 senses with two that most writers skip entirely. The organic sense ('my chest tightened') and kinesthetic sense ('the floor tilted') produce the most surprising, original material because they bypass the visual default." },
+        { text: "Set 10-minute timer. Write or speak about 'tide' using all 7 senses. Don't stop. Don't edit. Let your mind drift — if 'tide' leads to a childhood memory of the ocean, which leads to the smell of sunscreen, which leads to your stomach dropping on a wave, follow it. The drift is where the gold lives.", why: "Continuous writing under time pressure bypasses your internal editor. Your conscious mind writes 'the ocean was beautiful.' Your subconscious writes 'the salt stung the crack in my lip, and the water pulled my ankles like hands.' The second version is a lyric." },
+        { text: "STOP at exactly 10 minutes, even mid-sentence. Read or listen back. Circle any phrase that surprised you — anything sensory, physical, unexpected. Note which of the 7 senses were UNDERUSED. Those are the senses to target in your next session.", why: "Stopping mid-sentence trains you to treat this as a drill, not a product. The underused senses reveal your blind spots — most writers over-rely on sight and sound, neglecting organic and kinesthetic. The circled surprises are future song seeds." },
+        { text: "Do it again with a different word: 'rust,' 'gasoline,' 'August,' or 'midnight.' This time, deliberately lead with your weakest sense from the first round. If you neglected smell, start with smell. If organic was thin, start with internal body sensations.", why: "Targeting weak senses expands your vocabulary where it's thinnest. Over weeks of daily practice, all 7 senses become equally accessible. Gillian Welch says this is the most important thing she learned at Berklee." },
+        { text: "Save both recordings. These are raw material for Levels 11-13 and beyond. The sensory vocabulary you build now powers every lyric you'll ever write. Do this daily — even 5 minutes counts.", why: "Object writing is cumulative. Each session adds to your sensory database. After months of daily practice, vivid imagery flows naturally into lyrics without conscious effort." }
+      ],
+      feel: "This should feel like stream-of-consciousness — messy, surprising, sometimes nonsensical. Don't try to write 'good.' Try to write FAST and SPECIFIC. The mess is where the gold hides.",
+      wrong: "If you're writing abstract emotions ('I felt sad'), you're staying on the surface. Dig into the senses: WHAT does sad feel like in your chest? What does the salt air TASTE like? If you can't access the organic sense, try putting your hand on your chest and noticing your heartbeat — that physical awareness opens the channel.",
+      sarah: "Gene, Pattison's 1.3 million Coursera students all start here. The organic sense — 'my chest tightened,' 'stomach dropped' — produces the most original lyrics because most writers skip it entirely. Your body already knows these sensations from the hear-feel-choose cycle. Now channel them into words. You've been doing sensory listening since Level 3 (ss-3-20) — this is the writing version.",
+      recorder: true
     }
   ]
 };

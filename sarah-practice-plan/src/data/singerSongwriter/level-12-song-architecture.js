@@ -28,7 +28,28 @@ export const level12 = {
       metronome: 80,
       referencePitches: getPitchRange("E3", "B3"),
       tracks: [{ name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }],
-      recorder: true
+      recorder: true,
+      songStructure: [
+        { name: "Verse 1", bars: 8, chords: ["Am", "C", "G", "Em", "Am", "C", "G", "Em"] },
+        { name: "Verse 2", bars: 8, chords: ["Am", "C", "G", "Em", "Am", "C", "G", "Em"] }
+      ],
+      strumPattern: {
+        notation: "D _ D U _ U",
+        subdivision: "8ths",
+        bpm: 80,
+        description: "Simple verse strum — gentle, conversational, not driving. Supports storytelling without competing."
+      },
+      dynamicArc: [
+        { section: "Verse 1", intensity: "soft-medium", notes: "Establishing story. Voice in porch register (E3-B3). Guitar quiet underneath." },
+        { section: "Verse 2", intensity: "medium", notes: "Story develops. 2-3 notes vary from V1 melody. More conviction." }
+      ],
+      toneSettings: {
+        pickup: "neck",
+        effects: ["reverb:light-room"],
+        capo: null,
+        tuning: "standard",
+        description: "Intimate, warm. The verse tone should sound like a conversation on the lanai — close, not projected."
+      }
     },
     {
       id: "ss-12-2",
@@ -48,7 +69,17 @@ export const level12 = {
       metronome: 85,
       referencePitches: getPitchRange("B3", "E4"),
       volumeMeter: true,
-      recorder: true
+      recorder: true,
+      dynamicArc: [
+        { section: "Chorus", intensity: "full", notes: "Voice lifts to mask register (B3-E4). Guitar strumming fuller, more present. The chorus is the emotional peak — the body opens." }
+      ],
+      toneSettings: {
+        pickup: "both",
+        effects: ["reverb:medium-room"],
+        capo: null,
+        tuning: "standard",
+        description: "Fuller than the verse — slightly more volume, more open strumming. The chorus tone should sound like stepping from a room into the open air."
+      }
     },
     {
       id: "ss-12-3",
@@ -68,7 +99,10 @@ export const level12 = {
       metronome: 80,
       referencePitches: getPitchRange("E3", "A4"),
       tracks: [{ name: "Groove Beat 90", src: "/groove-beat-90.mp3" }],
-      recorder: true
+      recorder: true,
+      dynamicArc: [
+        { section: "Bridge", intensity: "medium-different", notes: "New chords, new body location. The bridge is departure — unfamiliar resonance, neither chest nor mask but somewhere unexpected." }
+      ]
     },
     {
       id: "ss-12-4",
@@ -88,7 +122,10 @@ export const level12 = {
       metronome: 80,
       referencePitches: getPitchRange("E3", "A4"),
       volumeMeter: true,
-      recorder: true
+      recorder: true,
+      dynamicArc: [
+        { section: "Pre-Chorus", intensity: "building", notes: "Rising from verse volume (mp) to chorus volume (f). Melody climbs, breath deepens, body leans forward. The ramp IS the anticipation." }
+      ]
     },
     {
       id: "ss-12-5",
@@ -173,7 +210,8 @@ export const level12 = {
         { text: "Draw a dynamic map for your song: intro (pp) → V1 (mp) → Chorus (f) → V2 (mp) → Chorus (f) → Bridge (p) → Final Chorus (ff) → Outro (pp). Write it down.", why: "Explicit dynamic planning makes your performance intentional. Most amateur performances are one volume throughout — dynamic mapping is the professional difference." },
         { text: "Practice each dynamic level separately: play just the intro at pp — feel the resonance as a private hum deep in the belly. Just the chorus at f — feel the body open, the mask vibrating. Just the bridge at p — feel the resonance retreat to an interior place. Get comfortable at each volume's body state.", why: "Each dynamic level requires different strum technique, breath support, and vocal delivery. Practice them individually before combining." },
         { text: "Play the full song following your dynamic map. Exaggerate the differences — whisper the quiet parts (body still, resonance interior), project the loud parts (body open, resonance radiating). Feel the body journey through its own geography.", why: "Exaggeration in practice creates subtlety in performance. What feels dramatic alone sounds natural to a listener." },
-        { text: "Record it. Listen back. Can you hear the dynamic journey? The song should breathe — expanding and contracting like a living thing.", why: "The recording reveals whether your dynamics are audible or imagined. If the loud and quiet parts sound similar, push the contrast further." }
+        { text: "Record it. Listen back. Can you hear the dynamic journey? The song should breathe — expanding and contracting like a living thing.", why: "The recording reveals whether your dynamics are audible or imagined. If the loud and quiet parts sound similar, push the contrast further." },
+        { text: "Consider 'implied tension': what happens if you REMOVE an element before the climax? Drop the guitar for 2 bars before the final chorus. Stop singing for a bar. The silence creates more anticipation than adding more sound. Absence is a dynamic tool.", why: "Implied tension \u2014 removing elements to create anticipation \u2014 is the most underused dynamic tool for solo performers. Holistic Songwriting\u2019s Friedemann Findeisen identifies this as the key to making solo arrangements sound like full productions." }
       ],
       feel: "A dynamically mapped song should feel like a complete emotional journey through the body — the quiet intro in the low belly, the verse warming through the chest, the chorus blazing in the mask, the bridge retreating to a private interior space, the final chorus opening the whole body. The dynamic map IS a body map. Each volume level lives in a different physical space, and the journey through dynamics is a journey through your own resonance.",
       wrong: "If the whole song is one volume, your dynamics aren't translating. Push the contrast harder. Whisper. Then project. Then whisper again. The range between soft and loud IS the performance.",
@@ -206,7 +244,7 @@ export const level12 = {
       time: 7,
       title: "Alternative Song Forms",
       type: "song",
-      what: "Beyond verse-chorus: (1) AAA (strophic — same melody, different lyrics each verse, like folk and blues), (2) ABAC (verse-chorus-verse-different chorus), (3) Through-composed (no repeated sections — a journey), (4) One-section loop (Tinariwen: one groove, evolving lyrics). Write a short piece in a non-standard form.",
+      what: "Beyond verse-chorus: (1) AAA (strophic \u2014 same melody, different lyrics each verse, like folk and blues), (2) ABAC (verse-chorus-verse-different chorus), (3) Through-composed (no repeated sections \u2014 a journey), (4) One-section loop (Tinariwen: one groove, evolving lyrics). Write a short piece in a non-standard form. Also explore AABA (32-bar form): Say \u2192 Say again \u2192 Change \u2192 Return. The B section changes the meaning of A when it comes back. See ss-12-17 for a dedicated AABA composition exercise.",
       steps: [
         { text: "Write a 3-verse AAA song: same chord progression, same melody, three different sets of lyrics. No chorus. The melody stays in the chest — same body address each verse, intimate and grounded. Let the lyrics do the traveling while the body stays home. Think Dylan, Nick Drake, desert blues.", why: "Strophic form is the oldest song structure — it trusts the melody and lyrics completely. Without a chorus to lean on, every verse must be compelling. This builds lyric-writing muscle." },
         { text: "Now try a one-section loop: one 4-8 bar progression that repeats for 2-3 minutes. The groove never changes. Let the resonance settle deep in the belly and stay there. Instead, evolve the lyrics — start simple, add detail, build intensity, resolve. The body is still; the words move. Like Tinariwen or early reggae.", why: "The loop form teaches you that repetition isn't boring — it's hypnotic. When the music stays constant, small changes in lyrics, delivery, or dynamics become magnified. Less structure, more presence." },
@@ -338,6 +376,63 @@ export const level12 = {
       pitchContour: true,
       recorder: true,
       levelUp: "Can compose and perform a fully arranged original song with verse/chorus/bridge structure, dynamic mapping, intentional intros/outros, and contrasting sections. Can build pre-choruses using rising melody, rhythmic acceleration, and harmonic suspension (individually and stacked) to create anticipation. Can identify, create, and combine 4 types of hooks (melody, rhythm, lyric, guitar) for maximum stickiness. Can manipulate 6 independent dimensions of contrast (pitch range, rhythmic density, dynamics, vowel openness, harmonic tension, lyric specificity) to create sophisticated verse-chorus differentiation. Can deconstruct professional songs architecturally, rewrite with fresh ears after 48 hours, compose in non-standard forms, and refine arrangements through systematic multi-pass editing."
+    },
+    {
+      id: "ss-12-17",
+      time: 8,
+      title: "AABA Composition",
+      type: "song",
+      what: "Write a 32-bar AABA tune: Say something (A), say it again (A), change (B), return (A). The B section changes the MEANING of A when it comes back. This is the form behind Nick Drake\u2019s \u2018Pink Moon,\u2019 most jazz standards, and half of James Taylor\u2019s catalog. It\u2019s circular \u2014 it returns home, but the journey changes what home means.",
+      setup: "Guitar. Any chord progression. Recorder ready.",
+      steps: [
+        { text: "Write an 8-bar A section: a verse with melody and simple lyrics. Keep it conversational \u2014 you\u2019re telling someone something.", why: "The A section establishes the musical and lyrical world. It should feel complete enough to stand alone but open enough to repeat without feeling redundant." },
+        { text: "Play A again with different lyrics. Same melody, same chords, new words. The second A should deepen the first \u2014 a new angle on the same feeling.", why: "The repeated A with new lyrics creates the illusion of exploration within a stable framework. The listener feels safe (same melody) while being drawn deeper (new words)." },
+        { text: "Write a B section: 8 bars with DIFFERENT chords, DIFFERENT melody, DIFFERENT emotional register. If A is intimate, B is expansive. If A is grounded, B takes flight. The B section should surprise.", why: "The B section\u2019s function is to change the meaning of A when it returns. If A says \u2018I\u2019m content,\u2019 B might reveal \u2018but I wasn\u2019t always\u2019 \u2014 so when A returns, \u2018I\u2019m content\u2019 now carries the weight of what came before." },
+        { text: "Return to A: play it one more time. Listen to how the B section changed its meaning. The same melody, the same chords \u2014 but they sound different now. Record the full AABA. Does the return feel like coming home after a journey?", why: "The final A is the test of the form. If it feels exactly like the first A, the B section didn\u2019t do its job. If it feels transformed \u2014 warmer, sadder, deeper, more knowing \u2014 the AABA structure is working." }
+      ],
+      feel: "AABA should feel circular, like a meditation. A-A builds comfort. B creates surprise. The final A resolves with new understanding.",
+      wrong: "If the B section sounds like another verse, you haven\u2019t departed far enough. Change the key, change the register, change the emotional direction. The B section must feel like stepping into a different room.",
+      sarah: "Gene, AABA is the form behind half of Nick Drake\u2019s songs and most jazz standards. It\u2019s circular like your desert blues loops but with a plot twist in the middle. \u2018Pink Moon\u2019 is a perfect example \u2014 the same gentle phrase keeps returning, but each time it means something slightly different.",
+      phraseForm: { pattern: ["A", "A", "B", "A"], barsPerSection: 8, labels: { A: "Verse", B: "Bridge" } },
+      recorder: true
+    },
+    {
+      id: "ss-12-18",
+      time: 8,
+      title: "Energy Arc Mapping",
+      type: "song",
+      what: "BEFORE writing a note, draw the energy curve of your song on paper. X-axis = time (sections from intro through outro). Y-axis = intensity (1-10). Plot where tension builds (rising line), where it releases (falling), and where elements are REMOVED to create implied tension (dotted line \u2014 removing instruments or simplifying creates anticipation through absence). Then compose to match the curve. The visual blueprint prevents the \u2018flat energy\u2019 trap where every section sounds the same.",
+      setup: "Paper and pen. Guitar. One of your existing songs from L9-L11.",
+      steps: [
+        { text: "Draw an energy arc for a reference song you love \u2014 one of Gene\u2019s playlist favorites. X-axis: Intro, V1, Ch1, V2, Ch2, Bridge, Ch3, Outro. Y-axis: 1-10 intensity. Plot each section. Notice: where is the peak? Where does energy DIP before the peak? The dip before the peak is \u2018implied tension.\u2019", why: "Analyzing a reference song visually reveals structural patterns that listening alone misses. The Holistic Songwriting method (Friedemann Findeisen, 400K+ YouTube subscribers) treats energy mapping as the FIRST step of composition." },
+        { text: "Now draw the energy arc for YOUR song. Be honest about where it is now. If the curve is flat (everything at the same level), that\u2019s the problem this exercise solves.", why: "Most first-draft songs have flat energy \u2014 every section at 5/10. The visual reveals this immediately, while listening can mask it because the songwriter hears the song they imagined, not the song that exists." },
+        { text: "Identify tools for each segment of your arc. RISING energy: add strum density, vocal intensity, higher register, louder dynamics. FALLING energy: simplify guitar, drop volume, lower register. IMPLIED TENSION: remove elements (stop strumming, just voice; stop singing, just guitar). Absence creates anticipation.", why: "Implied tension is the most underused tool for solo performers. When you REMOVE the guitar for 2 bars, the silence creates more anticipation than adding another instrument would. The listener\u2019s brain fills the gap with expectation." },
+        { text: "Perform the song following your drawn arc. Compare: does the performance match the blueprint? Record and listen back against the drawing. The visual and the audio should tell the same story.", why: "The gap between the blueprint and the performance reveals where your habits override your intentions. If you drew a dip before the final chorus but performed it at full intensity, that\u2019s a coordination gap between vision and execution." }
+      ],
+      feel: "Energy arc mapping should feel like being a film director \u2014 you\u2019re deciding where the camera lingers, where it cuts, where the music swells. You\u2019re an architect before you\u2019re a performer.",
+      wrong: "If you skip the drawing and just \u2018feel it,\u2019 you\u2019ll default to flat energy. The visual forces deliberate choices. Don\u2019t resist the pen \u2014 it\u2019s a tool, not a constraint.",
+      sarah: "Gene, this is the visual method from Holistic Songwriting. Your Dynamic Mapping exercise (ss-12-9) planned dynamics after writing. This exercise plans the energy FIRST and lets it guide the composition. It\u2019s the difference between navigating by feel and navigating with a map \u2014 both can work, but the map gets you there faster.",
+      recorder: true,
+      volumeMeter: true
+    },
+    {
+      id: "ss-12-19",
+      time: 7,
+      title: "Fingerpick Verses, Strum Choruses",
+      type: "song",
+      what: "The solo performer\u2019s arrangement trick: fingerpick your verses (intimate, delicate, close), strum your choruses (energy, fullness, open). The texture change IS the section change \u2014 your guitar becomes two different instruments. One guitar, two sounds, two emotional worlds. Add: tap the guitar body on beats 2 and 4 during verses for percussion, then STOP tapping in choruses. The contrast creates a dynamic shift without a band.",
+      setup: "Guitar. One of your songs with a clear verse-chorus structure.",
+      steps: [
+        { text: "Play your verse with simple fingerpicking: thumb on bass strings, index/middle on treble. Keep it sparse \u2014 let the notes breathe. Sing in your porch register (E3-B3). The verse should feel intimate, like a whispered secret.", why: "Fingerpicking creates a completely different sonic texture than strumming. The notes are separated, each one audible. This intimacy draws the listener in." },
+        { text: "When the chorus arrives, switch to strumming. Full chords, more volume, higher vocal register (B3-E4). Feel the energy lift \u2014 not because you\u2019re trying harder, but because the guitar texture changed.", why: "The texture change creates the section change. No band needed. The shift from fingerpicking to strumming is the acoustic equivalent of a full arrangement change." },
+        { text: "Add body percussion to the verses: tap the guitar body with your fingertips on beats 2 and 4, between fingerpicked notes. This adds a subtle rhythmic pulse. In the chorus, STOP tapping \u2014 the strum provides its own rhythm.", why: "Body percussion in verses adds rhythmic interest without volume. Stopping it in the chorus creates another layer of contrast \u2014 the absence of the tap is felt even if the listener can\u2019t name it." },
+        { text: "Play the full song: verse (fingerpick + body tap) \u2192 chorus (strum, no tap) \u2192 verse \u2192 chorus. Record and listen back. The texture changes should create a clear dynamic arc without you changing volume at all.", why: "If you can hear the sections without looking at lyrics, the texture arrangement is working. The guitar is doing the arranging that a band would normally do." }
+      ],
+      feel: "Verses should feel like sitting beside someone on a porch. Choruses should feel like standing up and opening your arms. Same guitar, same player \u2014 different energy.",
+      wrong: "If your fingerpicking sounds labored, simplify to thumb-only alternating bass (you\u2019ll learn full fingerpicking technique in Level 14). The texture contrast matters more than technique.",
+      sarah: "Gene, this is how Jack Johnson makes one acoustic guitar sound like a full arrangement. Angus Stone does the same thing on DOPE LEMON\u2019s quieter tracks \u2014 fingerpicked verses that bloom into strummed choruses. You don\u2019t need a band. You need two textures.",
+      volumeMeter: true,
+      recorder: true
     }
   ]
 };

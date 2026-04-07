@@ -68,7 +68,7 @@ export const level13 = {
       ],
       feel: "Object writing should feel like a faucet that starts rusty and then runs clear. The first minute is cliches — your analytical mind produces expected images. Minutes 4-10 are where the body takes over: the trigger word activates physical memories, and the organic/kinesthetic senses (Pattison's 6th and 7th senses) produce material the conscious mind never would. 'Salt' becomes the sting on a cut, the weight of a wave, the grit between toes. The body remembers what the mind forgot.",
       wrong: "If you're editing as you go — crossing out words, restarting sentences — you're defeating the purpose. The rule is: don't stop writing until the timer stops. Quality control comes AFTER, not during.",
-      sarah: "Gene, your trigger words are chosen for your world — salt is the ocean, rust is the old trucks and railings, tide is the rhythm of island life, ember is the fire pit at sunset. These aren't random. They're YOUR sensory anchors. Your lyric DNA from your top 50 songs is ocean, golden hour, travel, warmth, and coastline. Your aesthetic archetype: 'a beautiful day that you know will end.' Use these as trigger words too: sunset, warm rain, golden hour, plumeria, porch, dusk. These aren't just images — they're the emotional vocabulary your music already speaks.",
+      sarah: "Gene, your trigger words are chosen for your world \u2014 salt is the ocean, rust is the old trucks and railings, tide is the rhythm of island life, ember is the fire pit at sunset. These aren\u2019t random. They\u2019re YOUR sensory anchors. Your lyric DNA from your top 50 songs is ocean, golden hour, travel, warmth, and coastline. Your aesthetic archetype: \u2018a beautiful day that you know will end.\u2019 Use these as trigger words too: sunset, warm rain, golden hour, plumeria, porch, dusk. These aren\u2019t just images \u2014 they\u2019re the emotional vocabulary your music already speaks. The full 7-sense method (with organic and kinesthetic senses named explicitly) is covered in ss-9-22. If you skipped it, go back \u2014 the organic sense is where your most original material lives.",
       recorder: true
     },
 
@@ -154,7 +154,7 @@ export const level13 = {
       ],
       feel: "Good prosody feels invisible — the words and melody seem like they were born together because the body produces them as one act. The stressed syllable, the melodic accent, and the body's emphasis all land simultaneously. Bad prosody feels like wearing shoes on the wrong feet: the body wants to stress one syllable but the melody forces another, and that physical mismatch is what makes it sound wrong.",
       wrong: "If you're stressed the wrong way, sometimes flipping two words fixes it: 'today the waves' -> 'the waves today.' Small word-order changes can fix prosody without changing meaning.",
-      sarah: "Gene, your conversational vocal style actually makes prosody easier. You naturally speak-sing. Just make sure the melody matches how you'd say the words in conversation.",
+      sarah: "Gene, your conversational vocal style actually makes prosody easier. You naturally speak-sing. Just make sure the melody matches how you\u2019d say the words in conversation. A quick verification test: speak your lyric out loud as if you\u2019re telling a friend. Notice where your voice naturally rises and falls. If the melody matches those natural inflections, the prosody is aligned. If the melody contradicts them (rising where speech falls, or vice versa), the listener will feel \u2018something is off\u2019 without knowing why.",
       metronome: 80,
       referencePitches: getPitchRange("E3", "A4"),
       recorder: true
@@ -167,7 +167,7 @@ export const level13 = {
       time: 7,
       title: "Pattison's Stable/Unstable",
       type: "song",
-      what: "Every line has an emotional quality: stable (resolved, statement, closure) or unstable (open, questioning, tension). Masculine endings (stress on the final syllable: 'the sea') feel stable. Feminine endings (unstressed final syllable: 'the ocean') feel unstable. Match stability to section function: unstable in verses (unresolved), stable in choruses (resolved).",
+      what: "Every line has an emotional quality: stable (resolved, statement, closure) or unstable (open, questioning, tension). Masculine endings (stress on the final syllable: \u2018the sea\u2019) feel stable. Feminine endings (unstressed final syllable: \u2018the ocean\u2019) feel unstable. Match stability to section function: unstable in verses (unresolved), stable in choruses (resolved). The full 6-dimension diagnostic tool is in ss-13-16 \u2014 it extends this concept into a systematic evaluation framework for every line of your song.",
       setup: "Guitar. A song in progress or a finished song to analyze. Notebook for marking line endings.",
       steps: [
         { text: "Take a verse you've written. Read each line aloud and feel how each one ends in the body: does it land with a physical weight on the last syllable (stable), or does it trail off, the breath continuing past the final sound (unstable)? 'I walked down to the sea' — the body settles. 'I walked down to the ocean' — the body keeps reaching.", why: "Pattison's stable/unstable framework explains why some lines feel like they land and others feel like they float. It's not random — it's the stress pattern of the final word creating resolution or tension." },
@@ -341,6 +341,59 @@ export const level13 = {
       sarah: "Gene, your laid-back delivery benefits enormously from sparse lyrics. Fewer words + more space = more impact. Think about DOPE LEMON's lyrics — they're shockingly simple. 'Honey Bones' barely has 40 unique words in the whole song. Skinshape's lyrics are minimal and warm. That's not laziness — it's craft. Every word left standing carries ten times the weight. Your rewrite should feel like a DOPE LEMON lyric: warm, spacious, every word chosen with care.",
       metronome: 80,
       referencePitches: getPitchRange("E3", "A4"),
+      recorder: true
+    },
+    {
+      id: "ss-13-16",
+      time: 8,
+      title: "Pattison\u2019s Stability Diagnostic",
+      type: "song",
+      what: "The full Pat Pattison stability diagnostic from Berklee. For EVERY section of your song, rate six dimensions: (1) Line count \u2014 even (stable: 2,4,6) or odd (unstable: 1,3,5)? (2) Rhyme scheme \u2014 AABB/ABAB (stable) or ABBA/XAXB (unstable)? (3) Rhyme type \u2014 perfect rhyme (stable) or near-rhyme/assonance (unstable)? (4) Melodic landing \u2014 tonic note (stable) or 2nd/7th (unstable)? (5) Beat placement \u2014 stressed syllables on beat 1 (stable) or beat 2+ (unstable)? (6) Phrase length \u2014 regular/matched (stable) or varied/uneven (unstable)? Then check: does the verse lean unstable and the chorus lean stable? If not, something is fighting its function.",
+      setup: "One of your completed songs from L9-L12. Paper to chart the 6 dimensions. Recorder.",
+      steps: [
+        { text: "Write out the lyrics of your verse and chorus. For each section, evaluate all 6 dimensions. Mark each as S (stable) or U (unstable). Count: how many S\u2019s and U\u2019s does each section have?", why: "Pattison\u2019s framework turns prosody from intuition into a diagnostic tool. A verse that\u2019s 5/6 stable will feel resolved too early \u2014 the listener won\u2019t need the chorus. A verse that\u2019s 5/6 unstable will feel unsettled, creating natural forward momentum toward a stable chorus." },
+        { text: "The verse should lean UNSTABLE (more U\u2019s than S\u2019s). Unstable = unresolved, questioning, seeking. The verse hasn\u2019t found its answer yet \u2014 that\u2019s why the chorus exists.", why: "Instability in the verse creates the \u2018itch\u2019 that the chorus \u2018scratches.\u2019 If your verse feels settled and complete, the listener has no reason to want the chorus." },
+        { text: "The chorus should lean STABLE (more S\u2019s than U\u2019s). Stable = resolved, complete, grounded. The chorus IS the answer. If your chorus feels restless or unresolved, it\u2019s not doing its job.", why: "Stability in the chorus creates the satisfaction of arrival. Even emotionally dark choruses (\u2018I can\u2019t go on\u2019) work better when they feel musically resolved \u2014 the certainty of the despair IS the resolution." },
+        { text: "If a section has the wrong balance: identify the easiest dimension to flip. Changing rhyme type from perfect to near-rhyme shifts one dimension from S to U without rewriting the melody. Changing line count from 4 to 3 shifts another. Small changes, big structural impact.", why: "The diagnostic reveals the surgical fix. Instead of rewriting from scratch, you adjust one dimension at a time. This is craft \u2014 precise, efficient, and grounded in how listeners actually process song structure." }
+      ],
+      feel: "This should feel like a medical diagnostic \u2014 precise, systematic, revealing. You\u2019re not judging the song\u2019s quality \u2014 you\u2019re checking its structural alignment.",
+      wrong: "If every dimension is stable everywhere, the song will feel stiff and predictable. If everything is unstable, it will feel chaotic. The power is in the CONTRAST between sections.",
+      sarah: "Gene, this diagnostic turns Pattison\u2019s concept from ss-13-8 into a surgical tool. Run it on every song \u2014 it takes 5 minutes and reveals structural issues no other method catches. Even songs that FEEL right sometimes have one misaligned dimension that you can fix in a single line.",
+      recorder: true
+    },
+    {
+      id: "ss-13-17",
+      time: 6,
+      title: "Chorus Rhyme Contrast",
+      type: "song",
+      what: "Ralph Murphy\u2019s rule: the verse and chorus MUST use different rhyme schemes. If the verse is ABAB, the chorus should be AABB or XAXA. The rhyme scheme change signals to the listener\u2019s subconscious that a new section has arrived \u2014 it\u2019s a structural marker as powerful as a key change but invisible.",
+      setup: "One of your songs with verse and chorus. Paper to chart rhyme schemes.",
+      steps: [
+        { text: "Write out your verse lyrics. Mark the end-rhymes with letters: first rhyme sound = A, second = B, etc. What\u2019s the pattern? ABAB? AABB? ABCB?", why: "Most writers use the same rhyme scheme throughout a song without realizing it. Making the pattern visible is the first step to using it as a structural tool." },
+        { text: "Write out your chorus lyrics. Mark the rhymes the same way. Is the scheme the same as the verse? If yes, that\u2019s the problem Murphy identified \u2014 the listener\u2019s subconscious doesn\u2019t register the section change.", why: "When verse and chorus share a rhyme scheme, the song sounds like one continuous section. Changing the scheme creates an unconscious signal: \u2018something new is happening now.\u2019" },
+        { text: "Rewrite the weaker section (usually the chorus) with a different scheme. If the verse is ABAB (alternating), make the chorus AABB (couplets) \u2014 couplets feel more resolved, more declarative. If the verse is AABB, make the chorus ABAB \u2014 alternating rhyme creates forward motion.", why: "Couplets (AABB) feel complete, punchy, resolved \u2014 great for choruses. Alternating (ABAB) feels ongoing, narrative, seeking \u2014 great for verses. The scheme itself carries emotional weight." }
+      ],
+      feel: "This should feel like discovering a hidden tool \u2014 once you hear the rhyme scheme contrast, you can\u2019t unhear it.",
+      wrong: "Don\u2019t change the scheme just to be different \u2014 make sure the new scheme serves the section\u2019s function. A stable chorus should have a stable rhyme scheme (AABB). An unstable verse should have a less predictable scheme (ABCB).",
+      sarah: "Gene, Murphy\u2019s rule is one of the simplest and most powerful songwriting principles: verse and chorus MUST use different rhyme schemes. Listen to any DOPE LEMON song \u2014 the verses rhyme differently than the choruses. It\u2019s invisible to the conscious listener but the subconscious registers the shift.",
+      recorder: true
+    },
+    {
+      id: "ss-13-18",
+      time: 7,
+      title: "Bridge as Surprise",
+      type: "song",
+      what: "Three bridge surprise tools that create the \u2018plot twist\u2019 in your song: (1) Melodic surprise \u2014 the bridge melody starts on a note that hasn\u2019t appeared prominently in the song yet. (2) Rhythmic surprise \u2014 the bridge uses a different time feel (triplets in a straight song, or vice versa \u2014 a sudden lilt or a sudden drive). (3) Emotional surprise \u2014 the bridge says what the rest of the song was afraid to say. Apply one to an existing bridge; apply all three to create a new one.",
+      setup: "One of your songs that has (or needs) a bridge. Guitar. Recorder.",
+      steps: [
+        { text: "MELODIC SURPRISE: Look at the notes you\u2019ve used most in your verse and chorus melodies. What note is ABSENT or rare? Start your bridge on that note. If your song lives on A, C, and E, start the bridge on D or F. The unfamiliar note signals departure.", why: "Ralph Murphy\u2019s bridge principle: the bridge must surprise. A new starting note is the quickest way to create the \u2018this is different\u2019 signal. The listener\u2019s ear perks up \u2014 \u2018I haven\u2019t heard this before.\u2019" },
+        { text: "RHYTHMIC SURPRISE: If your song is in a straight feel (even 8th notes), try the bridge in a triplet feel \u2014 or vice versa. Or change the rhythmic density: if verses are wordy, make the bridge spacious. If verses are sparse, make the bridge dense.", why: "Rhythmic surprise is the least-used bridge tool and often the most effective. A sudden triplet feel in a straight song creates a dreamlike, floating quality. A sudden straight feel in a swing song creates urgency." },
+        { text: "EMOTIONAL SURPRISE: The bridge says what the verses were circling around. If the verses are about \u2018I\u2019m fine without you,\u2019 the bridge reveals \u2018but I\u2019m not fine at all.\u2019 The bridge is where the songwriter drops the mask.", why: "The emotional surprise is the bridge\u2019s deepest function. Verses establish a narrative stance. The bridge undermines or deepens it. This is why bridges often start with \u2018But...\u2019 or \u2018Maybe...\u2019 \u2014 they pivot." },
+        { text: "Apply at least one surprise tool to your bridge. Then try applying all three. Record both versions. Which feels more like a genuine departure? The best bridges make you forget the chorus \u2014 and then the chorus\u2019s return feels like a homecoming.", why: "One surprise tool creates a good bridge. All three create a great one. But even one is enough \u2014 the key is that SOMETHING changes. A bridge that sounds like a third verse has failed." }
+      ],
+      feel: "The bridge should feel like stepping through a door into a different room. When you step back out (return to the chorus), the original room looks different.",
+      wrong: "If your bridge sounds like another verse, you haven\u2019t departed far enough. Push further \u2014 change the key, change the register, change the emotional direction. The bridge is not the place for subtlety.",
+      sarah: "Gene, think of the bridge as the plot twist in a short story. Skinshape\u2019s bridges often shift to a completely different chord quality \u2014 from minor to major, or from grounded to floating. That moment of surprise is what makes the final chorus feel earned.",
       recorder: true
     }
   ]

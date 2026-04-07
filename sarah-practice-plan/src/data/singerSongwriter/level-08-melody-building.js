@@ -499,6 +499,45 @@ export const level8 = {
       ],
       feel: "Echo the phrase, then answer with your own. This is how jazz musicians learn \u2014 through musical conversation. The phrases you learn here become your melodic vocabulary.",
       sarah: "Gene, this is the exercise that connects your ear training to your songwriting. Every melodic phrase you echo and answer is a potential lyric melody, a potential guitar lick, a potential hook. The library you build here feeds everything you create."
+    },
+    {
+      id: "ss-8-23",
+      time: 8,
+      title: "Open Tuning Melody Discovery",
+      type: "guitar",
+      what: "Retune to DADGAD — three D strings and two A strings creating a Dsus4 wash. Before touching a single fret, strum the open strings and LISTEN for 30 seconds. The tuning proposes melodies your fingers would never find in standard tuning. Joni Mitchell treated each of her 57 tunings as a completely new instrument. Adrianne Lenker drops the high E to D for persistent drones on Big Thief records. Open tunings reduce left-hand cognitive load — most chords are 1-2 fingers with drones ringing — freeing attention for melody creation.",
+      setup: "Guitar. Tuner. Retune to DADGAD (low to high: D-A-D-G-A-D). Listen to the open strings ring before doing anything else.",
+      steps: [
+        { text: "Retune to DADGAD. Strum all 6 open strings and let them ring. Close your eyes. Listen for 30 seconds — feel where the drone lives in your body. The three D strings and two A strings create a Dsus4 wash that sits in the chest like a warm hum. Don't play anything — just absorb.", why: "Joni Mitchell's method: re-tune, then simply listen to what the open strings want to say before playing anything. The resonance IS the first creative input. DADGAD's Dsus4 is neither major nor minor — it's open, ambiguous, full of possibility." },
+        { text: "Add one finger — any fret, any string. How does the sound change? Move to another fret. Another string. Each position creates a different chord against the droning open strings. You don't need to know what the chords are called — just whether they sound good. If a note clashes, move one fret. If it sings, stay.", why: "Open tunings create serendipitous harmonies. One finger on one fret changes the entire character of the chord while the drones continue underneath. This is the opposite of standard tuning where each chord requires a full hand shape. The cognitive load drops dramatically — freeing bandwidth for melody." },
+        { text: "Hum over the open tuning. Let the drone suggest a vocal melody — the tuning's resonance will pull your voice toward certain notes. Follow the pull. Don't impose a melody you already know — let one emerge from the tuning's overtone series. Feel the melody forming in your chest before it becomes sound.", why: "The vocal melody should feel discovered, not composed. Adrianne Lenker starts songwriting from tuning exploration, letting the instrument propose phrases. Your voice responds to the specific overtone series of the tuning — notes that ring sympathetically will feel 'right' in the body." },
+        { text: "Record a 2-minute melody exploration: open-string strums with 1-2 finger chord shapes, hummed melody on top. This is raw material — it doesn't need to be a finished piece. The tuning is the co-writer.", why: "Capturing the exploration preserves ideas that your conscious mind might dismiss as 'too simple' or 'not a real song.' The best open-tuning songs often emerge from exactly these kinds of casual explorations." }
+      ],
+      feel: "Open tuning melody discovery should feel like finding a secret room in a house you thought you knew. The guitar suggests ideas your fingers would never find in standard tuning. There's a childlike quality to it — everything is new, nothing is wrong.",
+      wrong: "If you're trying to play standard-tuning chord shapes in DADGAD, you're fighting the tuning. Let go of what you know. Explore with single fingers and drones. If everything sounds 'weird,' you're comparing to standard tuning. Stop comparing — DADGAD is a different instrument.",
+      sarah: "Gene, DADGAD is the tuning behind desert blues and Celtic folk — two of your sonic worlds colliding. Tinariwen and Davey Graham both live here. One-finger chords with drones — your left hand barely works while your voice runs free. You'll go deeper with open tuning songwriting in Level 14 (ss-14-17) — this is the preview that plants the seed.",
+      fretboard: { tuning: "dadgad" },
+      recorder: true
+    },
+    {
+      id: "ss-8-24",
+      time: 8,
+      title: "Write Chorus First",
+      type: "song",
+      what: "Reverse the usual order: write a chorus hook FIRST, then build a verse backward from it. The chorus is the emotional destination \u2014 the verse is the journey that earns the payoff. Most professional songwriters start with the chorus because it\u2019s the part that must be undeniable. If the chorus doesn\u2019t hook you on its own, no amount of verse craft will save the song.",
+      setup: "Guitar. Metronome at 80 BPM. Am-C progression as starting point.",
+      steps: [
+        { text: "Strum Am-C on repeat at 80 BPM. Improvise melodic phrases until a singable 2-bar phrase emerges \u2014 something that sticks in your head. That\u2019s your hook candidate.", why: "The hook must be singable and memorable. Testing it over a simple progression lets you focus on the melody\u2019s inherent stickiness, not the chord complexity." },
+        { text: "Repeat the hook 4 times in a row. Does it get MORE interesting with repetition, or less? A good hook reveals new layers on repeat. If it gets boring, modify and try again.", why: "The repetition test is the fastest way to evaluate a hook. Commercial songwriters use Ralph Murphy\u2019s rule: if the hook doesn\u2019t improve on repeat, it\u2019s not sticky enough." },
+        { text: "Now build a verse that sets up the hook\u2019s emotional arrival. Rules: the verse should be in a LOWER range than the chorus (E3-B3 vs B3-E4), use MORE words and LESS space, and build tension toward the chorus. The verse tells the story; the chorus tells the truth.", why: "Contrast between verse and chorus is what makes the chorus feel like a lift. Lower range \u2192 higher range, more words \u2192 fewer words, tension \u2192 release. These contrasts are the architecture of every great pop song." },
+        { text: "Play Verse-Chorus-Verse-Chorus. Does the chorus feel earned? Does the verse make you WANT the chorus? Record and listen back. The transition from verse to chorus should feel like stepping from a dim hallway into sunlight.", why: "The \u2018earned\u2019 feeling is the test of good songwriting. If you can remove the verse and the chorus still works, the verse isn\u2019t doing its job. If the chorus feels flat without the verse, the contrast is working." }
+      ],
+      feel: "The chorus should feel inevitable \u2014 like the melody was always there, you just uncovered it. The verse should feel like it\u2019s leaning forward, pulling you toward the chorus.",
+      wrong: "If you start with the verse, you\u2019ll build a song that wanders. Starting with the chorus forces you to know where you\u2019re going. If the chorus doesn\u2019t work on its own, keep iterating \u2014 don\u2019t try to save a weak chorus with a great verse.",
+      sarah: "Gene, this is how most hit songs are written \u2014 chorus first, then verses that earn it. Think of Skinshape\u2019s \u2018I Still Love You\u2019 \u2014 that chorus hook is undeniable, and the verse exists to set it up. Your natural instinct might be to tell a story from the beginning. Resist it. Start with the destination.",
+      metronome: 80,
+      recorder: true,
+      referencePitches: getPitchRange("E3", "A4")
     }
   ]
 };

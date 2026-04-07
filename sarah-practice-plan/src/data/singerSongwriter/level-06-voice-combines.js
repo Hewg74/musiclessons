@@ -46,7 +46,7 @@ export const level6 = {
       ],
       feel: "The hum should feel effortless — like a quiet soundtrack running underneath your guitar. When both layers are relaxed and steady, you've found the dual-task sweet spot.",
       wrong: "If you're straining to hum or your strum is irregular, you're working too hard. Drop to just Am (one chord) and hum A until both are relaxed. Then add chord changes one at a time.",
-      sarah: "Gene, humming is the gentlest way to introduce your voice to the guitar. No pressure, no performance — just a quiet sound layered on top of a familiar strum. Start here.",
+      sarah: "Gene, humming is the gentlest way to introduce your voice to the guitar. No pressure, no performance — just a quiet sound layered on top of a familiar strum. Start here. This is step 2 of the Isolation Protocol — the named method you're learning in ss-6-29. Humming is the gentlest vocal entry because it requires no words, no pitch precision, just contour.",
       metronome: 80,
       recorder: true,
       referencePitches: getPitchRange("E3", "G4")
@@ -66,7 +66,7 @@ export const level6 = {
       ],
       feel: "This should feel like talking while driving — your hands do their thing automatically while your voice is free. If it feels like juggling, the strum needs more autonomy work.",
       wrong: "If you're speaking in a monotone robot voice to avoid disrupting the strum, that's a sign the dual-task is still taxing. Speak naturally — inflection, emphasis, pauses. The strum must survive real speech.",
-      sarah: "Gene, this is the bridge between the TV Test and actual singing. Your voice is active, your hands are strumming, but there's no pitch pressure yet. One step at a time.",
+      sarah: "Gene, this is the bridge between the TV Test and actual singing. Your voice is active, your hands are strumming, but there's no pitch pressure yet. One step at a time. This is step 3 of the Isolation Protocol (ss-6-29). Speaking over strumming trains the timing layer without the pitch layer — you're isolating one variable at a time.",
       metronome: 80,
       recorder: true
     },
@@ -661,6 +661,70 @@ export const level6 = {
       feel: "Covering your ears should feel like discovering a hidden room in a house you've lived in for years. The bone-conducted sound is more intimate, more physical than air-conducted sound.",
       wrong: "Don't strain — keep the same volume with ears covered as without. If you can't feel pitch differences through bone conduction, try humming instead of singing open vowels.",
       sarah: "Gene, this takes about 3 minutes but it'll change how you hear yourself forever. The bone channel is always there — in practice rooms, on stage, in the shower. Once you notice it, you can use it as a reference even in noisy environments."
+    },
+
+    // ─── VOCAL-GUITAR COORDINATION ───
+
+    {
+      id: "ss-6-29",
+      time: 10,
+      title: "The Isolation Protocol",
+      type: "vocal",
+      what: "The 5-step vocal-guitar independence method used by every singing guitarist from James Taylor to Angus Stone. This is the NAMED PROTOCOL you'll use for every new song from here forward: (1) Guitar to autopilot — play the part until it's invisible, (2) Hum the melody over guitar — no words, just melodic contour, (3) Speak lyrics rhythmically while playing — find anchor points where stressed syllables lock onto chord changes, (4) Hum again with anchor awareness — now your contour knows where to land, (5) Full singing. Research shows 15 minutes daily beats one hour weekly for building this coordination.",
+      setup: "Guitar. Metronome at 80 BPM. A simple melody you know well — use one of the Level 7 genre flows, or any song you can hum from memory.",
+      steps: [
+        { text: "Phase 1 — GUITAR AUTOPILOT: Play the chord progression at 80 BPM until you can hold a conversation while strumming. This is the Level 1 conversation test applied to this specific song's progression. If you can describe your day while the chords flow, Phase 1 is complete.", why: "Every singing guitarist starts here — James Taylor, Jack Johnson, Angus Stone. The guitar must be completely automatic before the voice enters. This isn't about learning chords — it's about pushing them so deep into procedural memory that they require zero conscious attention." },
+        { text: "Phase 2 — HUM THE MELODY: While strumming, hum the melody contour. No words, no exact pitches — just the shape. Where does it rise? Where does it fall? As you hum, track the vibration traveling through your body: rising phrases climb from chest to throat, falling phrases settle back down. The hum should feel like it's floating on top of the guitar, not competing with it.", why: "Humming is the gentlest vocal entry — no words to remember, no pitch precision needed. It adds one new variable (melodic contour) to the already-automatic guitar. If the guitar breaks when you start humming, the autopilot from Phase 1 isn't solid enough." },
+        { text: "Phase 3 — SPEAK LYRICS RHYTHMICALLY: Now speak the words (or made-up words) in rhythm while strumming. Forget the melody entirely — just lock the text timing against the guitar rhythm. Find the ANCHOR POINTS: where do key stressed syllables land on chord changes? You'll feel a physical 'click' when a stressed word locks onto a chord change — that's an anchor point. Mark 2-3 anchor points in the song.", why: "Speaking separates rhythm from pitch. You're solving the coordination problem in two passes instead of one. The anchor points are where voice and guitar have the strongest physical connection — they're the skeleton of the song's vocal-guitar integration. James Taylor describes this as 'lines happening around each other rather than all at once.'" },
+        { text: "Phase 4 — HUM WITH ANCHOR AWARENESS: Hum the melody again, but now you know where the anchor points are. On each anchor point, feel the hum and the chord change arrive together — the vibration in your body and the harmony in your hands aligning. This should feel noticeably different from the Phase 2 hum — more intentional, more locked in.", why: "Phase 4 combines Phases 2 and 3: melodic contour with rhythmic awareness. The anchor points give your hum structural bones to hang on. Without this phase, the jump from speaking to singing is too large." },
+        { text: "Phase 5 — FULL SINGING: Replace the hum with real words and real melody. The anchor points are your safety net — if the coordination wavers, lean on them. Between anchor points, the melody can float more freely. Record a full pass. Listen back: does the voice sit ON the guitar, or does it feel like it's fighting for space?", why: "Full singing is the final integration. The five phases have built separate neural pathways for each layer (guitar, contour, rhythm, anchors, full melody). Now they all fire together. If it falls apart, drop back to Phase 4 and rebuild — the protocol is sequential for a neurological reason." }
+      ],
+      feel: "Each phase should feel like removing training wheels one at a time. By Phase 5, the guitar should feel like it's playing itself while your voice does the creative work. The anchor points are your handrails — you can let go of them eventually, but they're always there.",
+      wrong: "If you skip phases ('I know the melody, I'll just sing it'), the coordination will collapse under pressure — during performance, when nervous, or on a hard section. The protocol is sequential because each phase builds a specific neural pathway. Skipping means building on sand.",
+      sarah: "Gene, this is the method every professional singing guitarist uses — they just don't always name it. From now on, every new song goes through these five steps. James Taylor says 'these are lines happening around each other rather than all at once' — that's the Isolation Protocol in action. The method is your safety net, and the anchor points are your secret weapon.",
+      metronome: 80,
+      recorder: true,
+      referencePitches: getPitchRange("E3", "A4")
+    },
+    {
+      id: "ss-6-30",
+      time: 6,
+      title: "Muted String Singing",
+      type: "vocal",
+      what: "Mute all guitar strings with your fretting hand and strum the rhythm while singing a melody. The guitar becomes pure percussion — no harmonic information, just rhythm. This isolates the rhythmic coordination layer: your hands keep time while your voice carries both melody AND harmony. It's the ultimate test of whether your voice can work independently from your guitar.",
+      setup: "Guitar. Metronome at 80 BPM. A melody you can sing comfortably — any song or improvised phrase.",
+      steps: [
+        { text: "Lay your fretting hand flat across all strings — no pressure, just enough to deaden them. Strum your normal pattern at 80 BPM. You should hear only the percussive 'chk-chk-chk' of muted strings. Get this rhythmic strumming flowing for 30 seconds.", why: "Muted strumming removes all harmonic information from the guitar. Your hands provide ONLY rhythm. This is the purest test of hand-voice independence — your voice must carry the entire musical load while your hands just keep time." },
+        { text: "While strumming muted strings, sing a melody — any comfortable melody. It can be improvised, a song you know, or just a pentatonic exploration. The voice has full freedom because the guitar is providing zero melodic or harmonic guidance.", why: "Without chord tones to lean on, your voice must generate melody entirely from internal resources. This is harder than it sounds — most singer-songwriters unconsciously let the chord progression guide their vocal melody. Here, the melody is all you." },
+        { text: "Now try varying the strum density while singing: quarter notes, then eighth notes, then a reggae offbeat chop — all muted. Does your singing change when the strum pattern changes? It shouldn't, but it probably will.", why: "If your voice shifts when the strum pattern changes, your motor programs are still partially coupled. The goal is complete independence — voice stays constant while guitar varies. This is the same skill that lets James Taylor add fills between vocal phrases without disrupting his singing." },
+        { text: "Unmute — press into real chords and strum the same pattern while singing the same melody. Notice what changes. The harmonic information returns, and your voice should feel like it's being supported by the chords rather than competing with them. That supported feeling is what you're aiming for in every song.", why: "The contrast between muted and unmuted reveals how much your voice relies on the guitar for pitch guidance. After muted singing, the return of real chords should feel like a luxury — the harmony fills in the space your voice was carrying alone." }
+      ],
+      feel: "Muted string singing should feel liberating — your voice is free to go anywhere because the guitar is providing no harmonic constraints. It's like singing a cappella with a built-in rhythm section.",
+      wrong: "If your voice stops or falters when you mute the strings, you're more dependent on the chord tones than you realized. That's valuable diagnostic information — it means your vocal ear needs more independent training (back to drone singing in Level 3).",
+      sarah: "Gene, this drill strips the guitar down to pure rhythm — no chords, no melody, just the percussive skeleton. Your voice has to do ALL the musical heavy lifting. It's harder than it sounds, and it reveals exactly how independent your voice really is from your guitar. Think of it as singing over a drum machine made of guitar strings.",
+      metronome: 80,
+      recorder: true
+    },
+    {
+      id: "ss-6-31",
+      time: 8,
+      title: "Strum Complexity Ladder",
+      type: "song",
+      what: "While singing the SAME melody, climb the strum complexity ladder: whole-note strums (one per bar), half notes (two per bar), quarter notes (four per bar), eighth notes (eight per bar), then your natural pattern. Each rung adds right-hand density while the voice stays constant. When the strum complexity breaks the singing, drop one rung — that's your current coordination ceiling.",
+      setup: "Guitar. Metronome at 80 BPM. Pick a melody you can sing comfortably — use the root-5th pattern from Level 2, or any simple phrase.",
+      steps: [
+        { text: "Rung 1 — ONE STRUM PER BAR: Strum the chord once on beat 1, then silence for 3 beats. Sing your melody over this sparse guitar. This should feel easy — the guitar is barely there.", why: "One strum per bar is the 'escape hatch' from Level 1. It's the absolute minimum guitar involvement. Your voice has 100% of the available bandwidth." },
+        { text: "Rung 2 — TWO STRUMS PER BAR: Strum on beats 1 and 3. Same melody. A bit more guitar presence. Does the singing hold?", why: "Each rung doubles the right-hand activity. Your brain must allocate slightly more attention to the guitar, leaving slightly less for the voice. The melody should remain unchanged — any simplification of the melody means the guitar is stealing bandwidth." },
+        { text: "Rung 3 — FOUR STRUMS PER BAR: Quarter-note strumming. Same melody. This is where most people start to feel the pull — the strum wants to change the singing.", why: "Quarter-note strumming is the threshold where dual-task interference becomes noticeable for most intermediate players. If your melody simplifies here (fewer words, less rhythmic variety), you've found your current ceiling." },
+        { text: "Rung 4 — EIGHT STRUMS PER BAR: Full eighth-note down-up pattern. Same melody. If you can maintain the identical melody at this density, your coordination is strong. If the melody changes — fewer notes, simpler rhythm, pitch drift — note which rung the change happened. That's your training zone.", why: "Eighth-note strumming is the density of surf jangle and most pop accompaniment. Singing over this requires genuine motor independence. The body awareness check: can you still feel where each sung note lives in your body, or has body awareness gone dark? If dark, the guitar is consuming all available bandwidth." },
+        { text: "Rung 5 — YOUR NATURAL PATTERN: Add accents, ghost strums, dynamics — whatever your natural playing style is. Same melody. This is the ceiling test. Record this final rung.", why: "Your natural pattern includes stylistic flourishes that demand conscious attention. If the melody survives your natural pattern, your voice and guitar are truly independent. Listen back: is the melody at Rung 5 identical to Rung 1? Any changes reveal where attention leaked from voice to guitar." }
+      ],
+      feel: "Each rung should feel like turning up a dial. Rungs 1-2 feel easy. Rung 3 feels like resistance. Rungs 4-5 feel like a workout. The melody is the constant — it must NOT change as the guitar gets busier.",
+      wrong: "If you're unconsciously simplifying the melody as the strum gets denser, that's the key diagnostic. Don't power through — notice it. Drop back one rung and rebuild. The goal isn't reaching Rung 5 today — it's finding your honest ceiling and practicing at that edge.",
+      sarah: "Gene, this ladder maps your coordination ceiling and gives you a method to raise it. Most people's ceiling is between Rungs 3 and 4 — quarter notes to eighth notes. That's the zone where your brain switches from 'I can do both' to 'something has to give.' Practice at that edge. The escape hatch (Rung 1) and the ladder are tools you'll use for every song in every level from here forward.",
+      metronome: 80,
+      recorder: true,
+      referencePitches: getPitchRange("E3", "D4")
     }
   ]
 };

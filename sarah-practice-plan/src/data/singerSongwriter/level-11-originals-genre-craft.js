@@ -29,7 +29,38 @@ export const level11 = {
       sarah: "Gene, B-F#-E is the progression from Jah Werx (Susto) — your reggae DNA in three chords. Gimme Love (The Elovaters) runs the same three-chord reggae shape in the key of C — F-C-G (IV-I-V), so both songs share the same engine in different keys. You learned the offbeat chop in Guitar Level 4 (gs-4-1) — that's the rhythm engine for this original. The three-chord reggae doesn't need complex harmony. It needs killer rhythm and pocket. Three chords, one groove, your voice on top. This original should feel like joining a conversation you've been listening to for years. For your reggae vocal: each syllable is a rhythmic event, not just a word in a melody. Slight nasal focus cuts through the bass. Call-and-response structure: sing a short phrase, then stop for a full bar. Let the riddim breathe. Your voice enters the groove like a percussion instrument.",
       metronome: 85,
       referencePitches: getPitchRange("E3", "A4"),
-      recorder: true
+      recorder: true,
+      chordVoicings: { chords: ["B", "F#", "E"] },
+      songStructure: [
+        { name: "Intro", bars: 4, chords: ["B", "B", "B", "B"] },
+        { name: "Verse 1", bars: 8, chords: ["B", "B", "F#", "F#", "E", "E", "B", "B"] },
+        { name: "Verse 2", bars: 8, chords: ["B", "B", "F#", "F#", "E", "E", "B", "B"] },
+        { name: "Chorus", bars: 8, chords: ["E", "E", "F#", "F#", "B", "B", "E", "E"] },
+        { name: "Verse 3", bars: 8, chords: ["B", "B", "F#", "F#", "E", "E", "B", "B"] }
+      ],
+      strumPattern: {
+        notation: "_ x _ x _ x _ x",
+        subdivision: "8ths",
+        bpm: 85,
+        description: "Pure offbeat chop — miss every downbeat, staccato upstroke on every upbeat. Fretting hand lifts immediately after each strum to create the classic reggae 'skank.' The silence on the downbeats is as important as the sound."
+      },
+      embellishments: [
+        { name: "One-drop bass", when: "Beat 3 of every bar", how: "Thumb strikes the bass string (5th or 6th) on beat 3 only. No bass on beat 1 — this creates the reggae 'one-drop' feel.", why: "The one-drop removes the expected bass note on beat 1, creating forward motion and a hypnotic pull.", technique: "thumb-bass" },
+        { name: "Chord choke", when: "After each upbeat strum", how: "Immediately relax fretting hand after each strum to mute strings. The chord rings for a 16th note, then dies.", why: "Creates the percussive, choppy quality that distinguishes reggae guitar from rock strumming.", technique: "mute" }
+      ],
+      dynamicArc: [
+        { section: "Intro", intensity: "soft", notes: "Guitar only, offbeat chop establishing the groove." },
+        { section: "Verse", intensity: "medium", notes: "Voice enters, low and conversational. Guitar stays steady." },
+        { section: "Chorus", intensity: "medium-full", notes: "Voice lifts slightly, more sustained notes." },
+        { section: "Outro", intensity: "soft", notes: "Voice drops out, guitar continues alone, gradually softer." }
+      ],
+      toneSettings: {
+        pickup: "neck",
+        effects: ["reverb:spring-medium", "delay:slapback-100ms"],
+        capo: null,
+        tuning: "standard",
+        description: "Warm, dark neck pickup tone. Medium spring reverb for space. Optional slapback delay at ~100ms for dub echo."
+      }
     },
     {
       id: "ss-11-2",
@@ -50,7 +81,39 @@ export const level11 = {
       sarah: "Gene, Sol Del Sur is your #4 most-played song of the year. The syncopated Sun Room strum from Guitar Level 5 (gs-5-6) is your foundation here. C#m-B-F# with that syncopated strum IS your surf DNA. Sun Room's secret: Jazzmaster + Tubescreamer always on at low gain + spring reverb. Simple gear, simple chords, incredible feel. Your original should capture that same golden simplicity. And here's WHY Sol Del Sur's C#m-B-F# sounds the way it does: the F# is MAJOR — borrowed from the parallel major key, creating 'modal ambiguity.' Neither sad nor happy. That's your golden hour sound. Your tone choice IS your genre choice here: spring reverb = surf, and that reverb-drenched shimmer tells your fingers what to play. For your surf-psych vocal: suppress vibrato, keep your voice at mezzo-piano (quieter than the guitar), let the reverb carry your tone. Float behind the beat. Your voice sits INSIDE the guitar reverb, not on top of it. Think Laura Lee on Texas Sun.",
       metronome: 100,
       referencePitches: getPitchRange("C#4", "G#4"),
-      recorder: true
+      recorder: true,
+      chordVoicings: { chords: ["C#m", "B", "F#", "E"] },
+      songStructure: [
+        { name: "Intro", bars: 4, chords: ["C#m", "B", "F#", "C#m"] },
+        { name: "Verse 1", bars: 8, chords: ["C#m", "C#m", "B", "B", "F#", "F#", "C#m", "C#m"] },
+        { name: "Chorus", bars: 8, chords: ["C#m", "B", "F#", "E", "C#m", "B", "F#", "E"] },
+        { name: "Verse 2", bars: 8, chords: ["C#m", "C#m", "B", "B", "F#", "F#", "C#m", "C#m"] },
+        { name: "Chorus", bars: 8, chords: ["C#m", "B", "F#", "E", "C#m", "B", "F#", "E"] },
+        { name: "Outro (fade)", bars: 8, chords: ["C#m", "B", "F#", "E", "C#m", "B", "F#", "C#m"] }
+      ],
+      strumPattern: {
+        notation: "D _ D U _ U D U",
+        subdivision: "8ths",
+        bpm: 100,
+        description: "Syncopated surf strum: down on 1, down-up on 2-and, down-up on 3-and-4-and. Ghost muted strums fill gaps for percussion."
+      },
+      embellishments: [
+        { name: "Reverb-drenched let-ring", when: "Last beat of each bar", how: "Let the final upstroke ring without muting. Spring reverb carries the chord into the next bar.", why: "The lingering reverb tail is the surf-psych signature.", technique: "sustain" },
+        { name: "Ghost muted strum", when: "Between all accented strums", how: "Left hand relaxes to deaden strings while right arm continues pendulum. Produces 'chk' percussive sound.", why: "Ghost strums are the secret rhythm layer in surf guitar.", technique: "mute" }
+      ],
+      dynamicArc: [
+        { section: "Intro", intensity: "medium", notes: "Guitar only, establishing shimmer. Spring reverb prominent." },
+        { section: "Verse", intensity: "medium", notes: "Voice enters breathy, BELOW guitar volume. Voice sits inside reverb." },
+        { section: "Chorus", intensity: "full", notes: "E chord appears for first time — harmonic lift. Voice rises." },
+        { section: "Outro", intensity: "medium → soft", notes: "Gradual decrease, strumming softer each bar. Like driving away." }
+      ],
+      toneSettings: {
+        pickup: "bridge-or-both",
+        effects: ["reverb:heavy-spring", "tremolo:light", "overdrive:low-gain"],
+        capo: null,
+        tuning: "standard",
+        description: "Jazzmaster through heavy spring reverb. Optional light tremolo. Low-gain drive always on. The reverb IS the genre."
+      }
     },
     {
       id: "ss-11-3",
@@ -67,11 +130,38 @@ export const level11 = {
       ],
       feel: "Desert blues should feel ancient and hypnotic — the music lives in the center of the chest, vibrating like a drone against the breastbone. Your body is still, almost meditative. Breathing deepens. The one-chord trance quiets the analytical mind and lets the body lead completely. If you lose track of time while playing, you've found it — the embodiment cycle has become so automatic that you and the music are the same thing. This is Csikszentmihalyi's flow: when the cycle disappears and only the sound remains.",
       wrong: "If you're changing chords every 4 bars, you're adding too much harmony. Stay on Am. The constraint is the point — one chord reveals the infinite possibilities within that chord.",
-      sarah: "Gene, desert blues is the spiritual ancestor of every genre you love. Use the sus pentatonic and Drop D drone from Guitar Level 9 (gs-9-1 and gs-9-2) as your foundation. The trance, the repetition, the raw vocals — Tommy Guerrero and Tinariwen meet here. Desert blues originals are about patience and repetition — say the same thing until it transforms. For your desert blues vocal: raw, direct, conversational. No vibrato, no decoration. Like talking to someone across a fire. And the silences are architectural — 2-4 bars of not singing is genre-defining. Don't fill the space.",
+      sarah: "Gene, desert blues is the spiritual ancestor of every genre you love. Use the sus pentatonic and Drop D drone from Guitar Level 10 (gs-10-1 and gs-10-2) as your foundation. The trance, the repetition, the raw vocals — Tommy Guerrero and Tinariwen meet here. Desert blues originals are about patience and repetition — say the same thing until it transforms. For your desert blues vocal: raw, direct, conversational. No vibrato, no decoration. Like talking to someone across a fire. And the silences are architectural — 2-4 bars of not singing is genre-defining. Don't fill the space.",
       metronome: 75,
       referencePitches: getPitchRange("E3", "B3"),
       fretboard: { scale: "am-pentatonic", position: 1 },
-      recorder: true
+      recorder: true,
+      chordVoicings: { chords: ["Am"] },
+      songStructure: [
+        { name: "Continuous Flow", bars: 32, chords: ["Am"], repeat: "continuous" }
+      ],
+      strumPattern: {
+        notation: "D _ _ _ D _ _ _",
+        subdivision: "8ths",
+        bpm: 75,
+        description: "Sparse downstrokes — bass note on beat 1, open strum on beat 3, with long silences between. Or: repeating 2-bar fingerpicked riff using Am pentatonic."
+      },
+      embellishments: [
+        { name: "Hammer-on pentatonic fill", when: "Between vocal phrases", how: "Hammer from open string to 2nd fret on G or B string within Am pentatonic.", why: "Fills vocal silences with melodic movement. Guitar speaks when voice rests — James Taylor's principle.", technique: "hammer-on" },
+        { name: "Drone bass", when: "Throughout", how: "Thumb returns to open A string between every melodic phrase, letting it ring as drone.", why: "The A drone is the heartbeat of desert blues — creates hypnotic trance quality.", technique: "drone" }
+      ],
+      dynamicArc: [
+        { section: "Opening", intensity: "soft", notes: "Guitar riff alone. Establishing the trance. 4-8 bars." },
+        { section: "Middle", intensity: "medium", notes: "Voice and guitar in dialogue. Energy builds through vocal intensity, not guitar volume." },
+        { section: "Peak", intensity: "medium-full", notes: "Most emotionally intense vocal passage." },
+        { section: "Close", intensity: "soft", notes: "Voice drops out. Guitar riff continues alone. Circular form." }
+      ],
+      toneSettings: {
+        pickup: "neck",
+        effects: ["reverb:room-medium"],
+        capo: null,
+        tuning: "standard",
+        description: "Dark, warm, almost acoustic tone. Minimal effects — just enough room reverb for space. The rawness IS the aesthetic."
+      }
     },
     {
       id: "ss-11-4",
@@ -93,7 +183,38 @@ export const level11 = {
       metronome: 90,
       referencePitches: getPitchRange("E3", "A4"),
       volumeMeter: true,
-      recorder: true
+      recorder: true,
+      chordVoicings: { chords: ["Gm", "C7", "A7", "Dm"] },
+      songStructure: [
+        { name: "Intro", bars: 4, chords: ["Gm", "C7", "A7", "Dm"] },
+        { name: "Verse 1", bars: 8, chords: ["Gm", "Gm", "C7", "C7", "A7", "A7", "Dm", "Dm"] },
+        { name: "Verse 2", bars: 8, chords: ["Gm", "Gm", "C7", "C7", "A7", "A7", "Dm", "Dm"] },
+        { name: "Chorus", bars: 8, chords: ["D", "Dm", "G", "Gm", "D", "Dm", "G", "Gm"] },
+        { name: "Verse 3", bars: 8, chords: ["Gm", "Gm", "C7", "C7", "A7", "A7", "Dm", "Dm"] }
+      ],
+      strumPattern: {
+        notation: "D _ D U x U D U",
+        subdivision: "16ths",
+        bpm: 90,
+        description: "Warm 16th-note strum with ghost mutes on the 'e' of beat 2. Partial barres on top 3-4 strings with staccato left-hand muting. The chords are cut off almost immediately — dub-influenced soul chop."
+      },
+      embellishments: [
+        { name: "Major-to-minor drop", when: "Chorus bars — D→Dm and G→Gm transitions", how: "Lower the 3rd by one fret (F# to F on D chord, B to Bb on G chord). The shift happens mid-bar.", why: "The major→minor oscillation creates the 'sunset' feeling — warmth dissolving into melancholy. This is the Honey Bones technique.", technique: "slide" },
+        { name: "Ghost strum percussion", when: "Between main strums", how: "Mute strings with fretting hand, strum lightly for percussive 'chk' between chord hits.", why: "The ghost strums add rhythmic density without harmonic density. Soul guitar is as much percussion as harmony.", technique: "mute" }
+      ],
+      dynamicArc: [
+        { section: "Intro", intensity: "medium", notes: "Guitar establishing the groove. Warm, inviting." },
+        { section: "Verse", intensity: "medium", notes: "Voice leads with call-and-response phrasing. Guitar answers between vocal phrases." },
+        { section: "Chorus", intensity: "medium-full", notes: "Major-minor shifts create emotional depth. Voice more sustained, chest-forward." },
+        { section: "Outro", intensity: "soft", notes: "Guitar alone, repeating the intro groove. Fade." }
+      ],
+      toneSettings: {
+        pickup: "neck",
+        effects: ["reverb:plate-warm", "chorus:subtle"],
+        capo: null,
+        tuning: "standard",
+        description: "Warm, round neck pickup tone. Plate reverb for depth. Optional subtle chorus for width. The warmth IS the genre — soul guitar should sound like it's been in the sun."
+      }
     },
     {
       id: "ss-11-5",
@@ -115,7 +236,34 @@ export const level11 = {
       metronome: 75,
       fretboard: { scale: "am-pentatonic", position: 1 },
       referencePitches: getPitchRange("E3", "A4"),
-      recorder: true
+      recorder: true,
+      chordVoicings: { chords: ["Am"] },
+      songStructure: [
+        { name: "Trance Flow", bars: 32, chords: ["Am"], repeat: "continuous" }
+      ],
+      strumPattern: {
+        notation: "D _ _ _ D _ _ _",
+        subdivision: "8ths",
+        bpm: 75,
+        description: "Hypnotic repeating riff — thumb bass on A, pentatonic fragments on treble strings. Micro-variations across repetitions, never breaking the trance."
+      },
+      embellishments: [
+        { name: "Thai funk bend", when: "Every 4-8 bars", how: "Quarter-tone bend on the G string 2nd fret — subtle pitch wobble, not a full bend.", why: "Khruangbin's Thai funk influence: micro-bends that add non-Western flavor without leaving the pentatonic framework.", technique: "bend" },
+        { name: "Afrobeat pulse shift", when: "Midsection", how: "Shift accent from beat 1 to beat 3, creating a Fela Kuti-influenced rhythmic shift within the same riff.", why: "The pulse shift creates forward motion without changing notes. The groove transforms while the harmony stays static.", technique: "accent" }
+      ],
+      dynamicArc: [
+        { section: "Opening", intensity: "soft", notes: "Guitar riff alone, establishing the trance. Let 8 bars pass before voice enters." },
+        { section: "Building", intensity: "medium", notes: "Voice enters with wordless melody. Guitar and voice in dialogue." },
+        { section: "Peak", intensity: "medium-full", notes: "Most complex vocal phrases. Afrobeat pulse shift if used." },
+        { section: "Fade", intensity: "soft", notes: "Voice and guitar both simplify, returning to the opening riff. Circular." }
+      ],
+      toneSettings: {
+        pickup: "neck",
+        effects: ["reverb:room-medium", "delay:dotted-8th"],
+        capo: null,
+        tuning: "standard",
+        description: "Warm neck pickup with room reverb and dotted-8th delay for Khruangbin-style spaciousness. The delay creates rhythmic echoes that fill the single-chord harmonic space."
+      }
     },
     {
       id: "ss-11-6",

@@ -472,6 +472,48 @@ export const level3 = {
       ],
       feel: "Audiation is invisible and internal. This exercise makes it measurable. The pitch detector doesn't lie.",
       sarah: "Gene, improvisation is just audiation at speed. This exercise measures how strong that muscle is. Every second you can hold internally is a second closer to hearing melodies before they happen."
+    },
+
+    // ─── INTEGRATION: SENSORY & AUTOPILOT ───
+
+    {
+      id: "ss-3-20",
+      time: 6,
+      title: "Sensory Listening",
+      type: "record",
+      what: "Proto-object-writing: listen to a backing track for 60 seconds with eyes closed. Then speak into the recorder describing what you heard using BODY SENSATIONS, not musical terms. Not 'the bass is on beat 1' but 'the bass hits like a heartbeat in my stomach.' Not 'the guitar is playing offbeats' but 'the guitar chops feel like tiny waves breaking on my shoulders.' This builds the sensory vocabulary that feeds songwriting in Level 9 and beyond.",
+      setup: "Phone recorder ready. Choose one backing track. Find a comfortable position — seated or lying down.",
+      steps: [
+        { text: "Pick one backing track. Close your eyes. Listen for 60 full seconds without moving. Let the music enter your body — where does the bass land? Where does the guitar live? Where does the rhythm pulse?", why: "Active listening with eyes closed heightens body awareness. Nummenmaa 2024 (PNAS, n=1,938) showed that music activates body-specific sensation maps that are cross-culturally universal. You're tapping into that hardwired connection." },
+        { text: "Open your eyes. Hit record. Describe what you heard using ONLY body sensations and images — no music terms. 'The bass rumbled behind my sternum like a slow heartbeat.' 'The hi-hat sizzled across the top of my skull.' 'The groove made my hips want to sway left-right, not front-back.' Speak for 2 minutes.", why: "Translating music into body language builds the vocabulary that eventually becomes lyrics. Pat Pattison at Berklee calls this 'organic sense' — internal body sensations. It's the sixth sense that most people skip when describing experience, and the one that produces the most original writing." },
+        { text: "Listen to the other backing track. Same process: 60 seconds with eyes closed, then describe. Notice how the two tracks create DIFFERENT body sensations — the reggae groove lives in your hips and chest, the desert blues sits deeper, more in the belly and solar plexus.", why: "Different genres create different somatic experiences. Building this genre→body vocabulary is the foundation of genre-specific songwriting. When you know that reggae lives in your hips and desert blues lives in your belly, you can write FROM those sensations." },
+        { text: "Listen back to both recordings. Circle any phrase that surprised you — anything vivid, physical, unexpected. These surprises are the raw material for future songwriting. Save both recordings.", why: "The surprising phrases are where your subconscious speaks. Your conscious mind writes 'the beat was steady.' Your body writes 'the pulse anchored me to the floor like roots.' The second version is a lyric." }
+      ],
+      feel: "This should feel like meditation meets poetry — no right answers, no musical analysis, just noticing how sound lives in your body. The messier and more surprising your descriptions, the better.",
+      wrong: "If you're describing the music in technical terms ('the guitar is playing a I-IV-V'), you're analyzing, not sensing. Drop into your body. Where does the sound vibrate? What does it make you want to do physically? If this feels hard, that's normal — you're building a new vocabulary from scratch.",
+      sarah: "Gene, this isn't music theory — it's music FEELING. When you describe the bass as 'a warm pulse in your chest,' you're building the vocabulary that great lyrics come from. DOPE LEMON lyrics work because they're sensory, not analytical. 'I'll stick around and melt with you' — that's body language, not music terminology. You're planting seeds for Level 9.",
+      tracks: [{ name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }, { name: "Desert Blues 75", src: "/desert-blues-75.mp3" }],
+      recorder: true
+    },
+    {
+      id: "ss-3-21",
+      time: 5,
+      title: "Conversation While Singing",
+      type: "vocal",
+      what: "The Level 1 conversation test, but now with singing: sustain a single drone note on 'ooh' while someone asks you simple questions. Can your voice hold the pitch while your brain processes conversation? If the pitch drifts, your voice isn't yet on autopilot for sustained tones. This is the vocal equivalent of the guitar autopilot test — and it's surprisingly hard.",
+      setup: "Guitar strumming Am on autopilot. Drone on Am for pitch reference. Someone to ask you questions (or ask yourself questions aloud between held notes).",
+      steps: [
+        { text: "Strum Am. Sing a sustained A3 on 'ooh' — feel it settle into the familiar warmth behind your sternum. Hold it for 8 beats. Easy. Now: while holding the note, think about what you had for breakfast. Don't speak — just think. Does the pitch waver?", why: "Thinking while sustaining a pitch tests whether your voice has reached the first level of autopilot. If the pitch holds while your mind wanders, the vocal motor program is running independently — just like your guitar strum survived the conversation test in Level 1." },
+        { text: "Hold A3 again. This time, nod your head yes or no while someone asks simple questions: 'Is it sunny outside? Did you surf yesterday? Is your guitar in tune?' The physical movement of nodding adds another motor demand. Does the pitch survive?", why: "Adding physical movement (nodding) tests a third concurrent motor program: strum + voice + gesture. This is what performing looks like — singing while moving, playing, and communicating with an audience." },
+        { text: "Final challenge: hold A3 while SPEAKING between held notes. 'Ooooh (hold 4 beats) — yes it's sunny — ooooh (hold 4 beats) — no I didn't surf — ooooh...' Can you re-enter the same pitch after speaking?", why: "Switching between speech and singing is the hardest vocal dual-task. Speech uses different laryngeal settings than sustained pitch. If you can exit to speech and return to the same pitch, your inner ear is tracking the note even when you're not singing it — that's audiation in action." },
+        { text: "Record the last attempt. Listen back: was the pitch consistent across all the speech interruptions? If it drifted, that's normal — it shows where your vocal autopilot still needs development. If it held, your voice is ready for the two-note and three-note work ahead.", why: "The recording is your diagnostic. Pitch drift during speech interruptions is the vocal equivalent of strum breaks during conversation. Both improve with practice across days." }
+      ],
+      feel: "This should feel absurd — humming while nodding and answering questions. That absurdity is the point. When it stops feeling weird and starts feeling easy, your voice has reached autopilot on single pitches.",
+      wrong: "If your pitch drifts every time you think about something else, your voice hasn't reached autopilot yet. That's not failure — it's diagnostic. Spend more time on the earlier single-note exercises (ss-3-1, ss-3-13) before retrying. If the drone helps you stay on pitch, use it as a crutch for now — you'll wean off it in Level 4.",
+      sarah: "Gene, this is weird — hum a note while someone asks you questions. Can the note survive? If yes, your voice is reaching autopilot on single pitches. That's the foundation for everything that follows. The fact that it's hard means you're training something real.",
+      drone: { root: "Am", octave: 2, texture: "pure" },
+      recorder: true,
+      referencePitches: getPitchRange("A3", "A4")
     }
   ]
 };

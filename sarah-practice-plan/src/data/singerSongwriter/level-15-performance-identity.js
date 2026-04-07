@@ -8,7 +8,7 @@ export const level15 = {
     "Everything converges: technique, songwriting, improvisation, and the courage to share your music with another person. This level focuses on performance psychology, live improvisation, building a set of originals, and discovering your musical identity. Based on Csikszentmihalyi's flow state research: performing with 4% challenge above skill level creates optimal experience. In Level 3, you learned to hear one note before singing it. Now, entire songs pass through the hear-feel-choose cycle in real time. The cycle that took 10 seconds per note now runs continuously, automatically, beautifully. You don't 'do' embodiment; you ARE embodied. Every note passes through your whole being before it becomes sound. This is what mastery sounds like: the music flows through you, not from you.",
   artists: "Your own sound — the artist you've been building since Level 1",
   unlocks: "The rest of your musical life",
-  review: { label: "Full Check-In", time: 5, exercises: ["ss-10-7", "ss-14-5"], prompt: "Play your strummed original (ss-10-7) and your fingerpicked original (ss-14-5) back to back. If both feel performance-ready, you're ready for Level 14." },
+  review: { label: "Full Check-In", time: 5, exercises: ["ss-10-7", "ss-14-5"], prompt: "Play your strummed original (ss-10-7) and your fingerpicked original (ss-14-5) back to back. If both feel performance-ready, you're ready for Level 15." },
   exercises: [
     {
       id: "ss-15-1",
@@ -65,7 +65,7 @@ export const level15 = {
       ],
       feel: "Process focus should feel like meditation while playing — present-tense, non-judgmental, attentive to the body. 'Breathe into the phrase' is an embodiment cue. 'Feel the downbeat' is an embodiment cue. Every process-focused thought returns you to the body, where the music lives. Outcome focus ('was that note right?') lives in the head. Process focus lives in the body. The music actually sounds better because you're staying embodied instead of retreating into judgment.",
       wrong: "If you notice yourself keeping score ('I had 3 evaluative thoughts that time'), that's still outcome focus. The goal is not zero evaluative thoughts — it's gently redirecting each time one appears.",
-      sarah: "Gene, this is the single biggest performance psychology tool. Every professional musician deals with evaluative thoughts — the difference is they've trained themselves to redirect. It's a skill, not a personality trait.",
+      sarah: "Gene, this is the single biggest performance psychology tool. Every professional musician deals with evaluative thoughts — the difference is they've trained themselves to redirect. It's a skill, not a personality trait. For a specific tool that replaces blank-mind autopilot with deliberate mental scripts, see ss-15-17 below. Mental scripts are body-cues ('breathe low, tell the story'), not technical instructions.",
       recorder: true
     },
     {
@@ -110,7 +110,14 @@ export const level15 = {
       sarah: "Gene, this is how professional songwriters work. The first draft is the raw material. The editing is the craft. Your songs are already good — this process makes them undeniable.",
       checklist: true,
       volumeContour: true,
-      recorder: true
+      recorder: true,
+      dynamicArc: [
+        { section: "Pass 1 (Melody)", intensity: "focus: pitch", notes: "Tune every note. Find the 'wrong' notes — they feel unstable in the body." },
+        { section: "Pass 2 (Lyrics)", intensity: "focus: specificity", notes: "Replace generic with specific. The body lands harder on specific words." },
+        { section: "Pass 3 (Dynamics)", intensity: "focus: energy arc", notes: "Map the full pp→ff arc. Every section should have a different intensity." },
+        { section: "Pass 4 (Prosody)", intensity: "focus: stress alignment", notes: "Stressed syllables on strong beats. The body's natural emphasis matches the melody." },
+        { section: "Pass 5 (Texture)", intensity: "focus: guitar arrangement", notes: "Fingerpick vs strum, body percussion, capo position. The guitar becomes two instruments." }
+      ]
     },
     {
       id: "ss-15-6",
@@ -332,6 +339,91 @@ export const level15 = {
       wrong: "If you can't identify commonalities across your three recordings, you may be listening for the wrong things. Don't listen for technical quality — listen for TENDENCIES. Do you always pause in the same places? Do you always end phrases the same way? Do you always gravitate toward the same register? The commonalities are in the micro-choices, not the macro-structure. If the artist statement feels pretentious, simplify it: 'I make music that sounds like ______.' Fill in one image. That's enough. VOCAL TIP: If comparing your voice to your favorite artists makes you feel inadequate, remember: you're not comparing quality, you're comparing CHARACTER. Your voice has a character that no other voice has. That's the point.",
       sarah: "Gene, you already have a sound. This level isn't about finding it — it's about RECOGNIZING it. Your musical DNA has been showing up since the first reggae chop in Level 1: the behind-the-beat timing, the pentatonic melodies, the ocean imagery, the warm lo-fi aesthetic. You're a Coastal Psychedelic Omnivore who creates music — and the music you create sounds like golden hour on the North Shore, a hammock and a nylon-string guitar, the feeling of a perfect day that you know will end. That's not a style you learned. That's who you are.",
       referencePitches: getPitchRange("E3", "A4"),
+      recorder: true
+    },
+
+    // ─── NEW: MENTAL SCRIPTS ───
+
+    {
+      id: "ss-15-17",
+      time: 7,
+      title: "Mental Scripts for Performance",
+      type: "play",
+      what: "Replace blank-mind autopilot with deliberate mental scripts for each song section. Performance psychology research (Bulletproof Musician, backed by motor learning studies) shows that trying to go 'blank' under performance pressure actually collapses — anxiety fills the void. Instead, develop specific body-focused phrases you think during each section: Verse 1 = 'breathe low, tell the story.' Chorus = 'chest opens, share it.' Bridge = 'surprise, lean forward.' The script keeps you present without micromanaging technique.",
+      setup: "Your strongest finished song. Paper to write scripts. Recorder.",
+      steps: [
+        { text: "Write a 3-5 word mental script for each section of your best song. The script should be body-focused, not technical. Not 'hit the high note' but 'chest opens, float up.' Not 'strum accurately' but 'hands are waves.' The body language bypasses performance anxiety.", why: "Mental scripts are the middle ground between anxious self-monitoring ('am I doing this right?') and zoned-out autopilot ('just don't think'). Elite athletes use them: 'smooth stride, strong finish.' Your version: 'porch voice, easy groove.'" },
+        { text: "Perform the song while silently thinking each script as the section begins. Don't try to follow the script precisely — just let the words float through your mind as you play. The script colors the performance without controlling it.", why: "The script gives your conscious mind something to do instead of worrying. When the mind has a task ('breathe low, tell the story'), it can't simultaneously produce performance anxiety. The body handles the actual playing." },
+        { text: "Record the performance. Listen back and compare to a recording without scripts. Does the scripted version have more presence? More character? Most musicians find that scripted performances are more consistent AND more expressive.", why: "The comparison reveals the script's effect. Performances with scripts tend to have clearer dynamic contrasts, more intentional phrasing, and fewer 'autopilot' moments where the performer checks out." },
+        { text: "Refine your scripts for your full set (3-5 songs). Each song gets its own scripts. Keep them short — 3-5 words per section maximum. Long scripts become another thing to remember; short scripts are felt more than thought.", why: "Building a library of mental scripts for your repertoire creates a performance toolkit. Over time, the scripts become automatic — you think 'porch voice' and your body adjusts without conscious effort." }
+      ],
+      feel: "Mental scripts should feel like gentle self-direction, not rigid control. They're whispered suggestions to your body, not commands to your technique.",
+      wrong: "If you're trying to follow the script precisely or getting stressed about remembering it, the script is too complex. Simplify until it's a single image or sensation. 'Warm' is a valid script for an entire section.",
+      sarah: "Gene, this is from performance psychology research — elite athletes use mental scripts ('smooth stride, strong finish') instead of blank-mind or hyper-analysis. Your scripts should match your aesthetic: 'porch register, lazy groove, golden hour.' Body cues, not technical instructions.",
+      recorder: true
+    },
+
+    // ─── NEW: GUIDE TRACK RECORDING ───
+
+    {
+      id: "ss-15-18",
+      time: 10,
+      title: "Recording Methodology — Guide Track",
+      type: "record",
+      what: "The professional home recording method used by Angus Stone and Skinshape: (1) Record a full 'guide take' — guitar and vocals together, messy, emotional, just for reference. (2) Re-record guitar only against the guide — optimize the guitar sound. (3) Re-record vocals only against the guitar track — focus entirely on vocal delivery. (4) Discard the guide. Each part gets focused attention without losing the feel of the original performance.",
+      setup: "Phone or recording device. Guitar. A finished song you know well.",
+      steps: [
+        { text: "GUIDE TAKE: Record your song start to finish — guitar and vocals together. Don't worry about perfection. This take captures the FEEL. Mistakes are fine. The groove matters more than the notes.", why: "The guide take is a reference, not a product. Its purpose is to capture the emotional intention of the performance. Angus Stone records multiple guide takes until one 'feels right,' then builds the final recording from that emotional template." },
+        { text: "GUITAR RE-RECORD: Play the guide take through headphones. Re-record just the guitar, playing along with your guide. Now you can focus entirely on the guitar — touch, dynamics, tone. No vocal distraction.", why: "Separating guitar from vocals lets you optimize each independently. Your guitar playing improves when you're not splitting attention with singing. The guide take keeps the feel aligned." },
+        { text: "VOCAL RE-RECORD: Play the new guitar track through headphones. Re-record just the vocal, singing over your clean guitar take. Now focus entirely on vocal delivery — dynamics, phrasing, emotion. The guitar is done; the voice gets full attention.", why: "Vocal performances improve dramatically when the singer isn't also playing guitar. The guide take's emotional blueprint keeps the vocal connected to the original intention, but the execution can be much more refined." },
+        { text: "Compare: play your guide take, then your re-recorded version. The guide has feel. The re-record has quality. The best recordings have both. If the re-record lost the feel, try again — or use the guide take if it's genuinely better. Sometimes the messy first take IS the one.", why: "The guide track method captures feel first, then refines execution. Some songs are better messy (Nick Drake recorded 'Pink Moon' in two takes). The method gives you options — you can always keep the guide." }
+      ],
+      feel: "The guide take should feel free and emotional. The re-records should feel focused and precise. The final product should feel like the best of both.",
+      wrong: "If you're performing the guide take carefully and precisely, you've missed the point. The guide take is supposed to be raw — it's a blueprint for feel, not a demo for quality.",
+      sarah: "Gene, this is how Angus Stone and Skinshape record. The guide take captures the FEEL. The re-records capture the QUALITY. You get both. Position your phone at the point where your mouth meets the guitar's sound hole — that's the natural sweet spot for balanced capture.",
+      recorder: true
+    },
+
+    // ─── NEW: DOUBLE-TRACK VOCALS ───
+
+    {
+      id: "ss-15-19",
+      time: 7,
+      title: "Double-Track Vocals for Chorus",
+      type: "vocal",
+      what: "Record your chorus vocal twice and play them simultaneously. The slight timing and pitch differences between takes create width and warmth — the 'big chorus' effect used on every DOPE LEMON and Skinshape record. Then try: single voice on verses, double-tracked on choruses. The doubling IS the dynamic shift — no other arrangement change needed.",
+      setup: "Recording device that can play back while you record (phone works — record take 1, play it while recording take 2 on a second device, or use a simple DAW).",
+      steps: [
+        { text: "Record your chorus vocal — take 1. Sing naturally, full voice, committed. This is your foundation.", why: "Take 1 establishes the pitch and timing center. Sing it as if it's the only take — committed, not tentative." },
+        { text: "Record take 2 — sing the same chorus WITHOUT listening to take 1. Match the melody from memory, not by following the recording. The small differences between takes are the whole point.", why: "If you sing along to take 1, the takes will be too similar. The magic of double-tracking is in the micro-differences: slightly different timing on each syllable, slightly different pitch on each note. These differences create warmth and width." },
+        { text: "Play both takes simultaneously. The combined sound should be wider, warmer, and more present than either take alone. If the takes are too far apart (sounds like two people singing different versions), one take needs to be tighter.", why: "Perfect double-tracking sounds like one confident voice, not two tentative ones. The micro-differences create a subtle chorus effect that the brain perceives as 'big' and 'warm' without consciously hearing two voices." },
+        { text: "Apply to the full song: single voice on verses, double-tracked on choruses. The doubling creates a natural dynamic lift without changing volume, strum pattern, or anything else. The vocal texture alone signals 'this is the chorus.'", why: "Double-tracked choruses over single-voice verses is the simplest and most effective arrangement trick in recording. DOPE LEMON, Skinshape, and Angus Stone all use this technique on nearly every track." }
+      ],
+      feel: "The doubled vocal should feel lush and confident — like your voice suddenly filled the room. The single-voice verse should feel intimate by contrast.",
+      wrong: "If the double-tracking sounds phasey or weird, the takes are too similar — you might have unconsciously matched take 1 too closely. Record take 2 in a different room or at a different time to get natural variation.",
+      sarah: "Gene, this is the production trick behind every DOPE LEMON chorus. Angus Stone records his vocal twice and stacks them — the slight differences create that warm, dreamy width. Your laid-back vocal style is PERFECT for double-tracking because the relaxed delivery naturally creates pleasing variation between takes.",
+      recorder: true,
+      referencePitches: getPitchRange("E3", "A4")
+    },
+
+    // ─── NEW: CAPO AS COLOR PALETTE ───
+
+    {
+      id: "ss-15-20",
+      time: 6,
+      title: "Capo as Color Palette",
+      type: "guitar",
+      what: "Same chord shapes, different capo positions = different songs. Play your strongest original at capo 0, then capo 3, then capo 5. Each position changes the key, the register, and the emotional color without changing a single chord shape or fingering. Pick the position that makes the song feel most like itself — not the position that's 'correct,' but the one where the guitar's register meets your voice's sweet spot.",
+      setup: "Guitar. Capo. Your strongest original song.",
+      steps: [
+        { text: "Play your song at capo 0 (no capo). Note the key, the vocal register, the emotional quality. Is it dark? Warm? Open?", why: "Capo 0 is your baseline. The song's emotional character at this position is what you know — but it might not be the best version." },
+        { text: "Move to capo 3. Same chord shapes, but the key has shifted up 3 half-steps. Sing the same melody — your voice is now in a higher register. How does the emotional quality change? Brighter? More urgent? More vulnerable?", why: "Capo 3 shifts the guitar into a brighter, more jangly register while your vocal melody moves closer to (or into) your passaggio. This position often adds urgency or vulnerability that didn't exist at capo 0." },
+        { text: "Move to capo 5. Same shapes, even higher key. The guitar is now very bright and small-sounding. Your voice is in the upper part of your range. Does this work, or is it too high?", why: "Capo 5 is often too high for comfort, but sometimes it transforms a song — the brightness and the vocal effort create an energy that lower positions can't match. If it's too high, that's useful information: your song lives between capo 0 and capo 5." },
+        { text: "Pick the position that makes the song feel most like itself. Not 'easiest' — most RIGHT. Some songs want the darkness of capo 0. Others want the jangle of capo 3. Record both the original position and your chosen position.", why: "Capo position is an arrangement decision, not a convenience decision. The 'right' position is where the guitar's timbre meets your vocal sweet spot in a way that serves the song's emotional intention." }
+      ],
+      feel: "Each capo position should feel like putting the same photograph through a different color filter. The composition is the same; the mood shifts.",
+      wrong: "If you pick a capo position because it's easier to sing, you might be prioritizing comfort over character. Sometimes the right position is the one that pushes you slightly — just enough to add emotional intensity.",
+      sarah: "Gene, this is how Jack Johnson finds his sound — same shapes, different positions, different songs. Your sweet spot is E3-A4, so capo positions that put the melody in that range will feel most natural. But don't always choose natural — sometimes capo 3 adds urgency that the song needs.",
       recorder: true
     }
   ]
