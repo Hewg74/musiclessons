@@ -686,7 +686,8 @@ export const level6 = {
       recorder: true,
       referencePitches: getPitchRange("E3", "A4"),
       pitchContour: true,
-      tracks: [{ name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" }, { name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }]
+      tracks: [{ name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" }, { name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }],
+      fretboard: { scale: "am-pentatonic", position: 1 }
     },
     {
       id: "ss-6-30",

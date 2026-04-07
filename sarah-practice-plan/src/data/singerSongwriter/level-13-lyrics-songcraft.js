@@ -361,7 +361,8 @@ export const level13 = {
       sarah: "Gene, this diagnostic turns Pattison\u2019s concept from ss-13-8 into a surgical tool. Run it on every song \u2014 it takes 5 minutes and reveals structural issues no other method catches. Even songs that FEEL right sometimes have one misaligned dimension that you can fix in a single line.",
       recorder: true,
       metronome: 80,
-      referencePitches: getPitchRange("E3", "A4")
+      referencePitches: getPitchRange("E3", "A4"),
+      pianoKeys: { notes: ["A3", "B3", "C4", "D4", "E4", "F4", "G4"], label: "Melodic Landing Notes — tonic (A) = stable, 2nd (B) / 7th (G) = unstable", range: ["A3", "A4"] }
     },
     {
       id: "ss-13-17",
@@ -399,7 +400,8 @@ export const level13 = {
       sarah: "Gene, think of the bridge as the plot twist in a short story. Skinshape\u2019s bridges often shift to a completely different chord quality \u2014 from minor to major, or from grounded to floating. That moment of surprise is what makes the final chorus feel earned.",
       recorder: true,
       metronome: 80,
-      referencePitches: getPitchRange("E3", "A4")
+      referencePitches: getPitchRange("E3", "A4"),
+      chordVoicings: { chords: ["Am", "F", "Dm", "G"] }
     }
   ]
 };

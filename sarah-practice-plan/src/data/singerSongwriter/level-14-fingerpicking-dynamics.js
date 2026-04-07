@@ -409,7 +409,9 @@ export const level14 = {
       metronome: 55,
       speedLadder: { start: 45, end: 70, increment: 5, bars: 4 },
       recorder: true,
-      referencePitches: getPitchRange("E3", "A4")
+      referencePitches: getPitchRange("E3", "A4"),
+      chordVoicings: { chords: ["C", "G", "Am"] },
+      fretboard: { scale: "c-major", position: 1 }
     },
 
     // ─── NEW: OPEN TUNING SONGWRITING ───

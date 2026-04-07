@@ -439,7 +439,8 @@ export const level12 = {
       volumeMeter: true,
       recorder: true,
       metronome: 60,
-      referencePitches: getPitchRange("E3", "A4")
+      referencePitches: getPitchRange("E3", "A4"),
+      chordVoicings: { chords: ["Am", "G", "C", "Em"] }
     }
   ]
 };

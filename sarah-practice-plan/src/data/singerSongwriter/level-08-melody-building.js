@@ -541,7 +541,8 @@ export const level8 = {
       recorder: true,
       referencePitches: getPitchRange("E3", "A4"),
       phraseForm: { pattern: ["V", "Ch", "V", "Ch"], barsPerSection: [8, 8, 8, 8], labels: { V: "Verse", Ch: "Chorus" } },
-      tracks: [{ name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }]
+      tracks: [{ name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }],
+      chordVoicings: { chords: ["Am", "C"] }
     }
   ]
 };
