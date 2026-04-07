@@ -408,7 +408,8 @@ export const level14 = {
       sarah: "Gene, Travis picking while singing is the hardest thing in this curriculum. Jack Johnson's 'Breakdown' does exactly this. The 5-phase protocol breaks the impossible into the possible. Be patient — Phase 1 alone might take several sessions to truly automate.",
       metronome: 55,
       speedLadder: { start: 45, end: 70, increment: 5, bars: 4 },
-      recorder: true
+      recorder: true,
+      referencePitches: getPitchRange("E3", "A4")
     },
 
     // ─── NEW: OPEN TUNING SONGWRITING ───
@@ -432,7 +433,9 @@ export const level14 = {
       sarah: "Gene, Adrianne Lenker drops the high E to D for persistent drones on Big Thief records. Joni Mitchell wrote 'Both Sides Now' in open D. Tinariwen's entire sound lives in open and alternate tunings. The tuning does the creative work — your job is to listen. You previewed DADGAD in ss-8-23 — now it's time to write from it.",
       fretboard: { tuning: "dadgad" },
       recorder: true,
-      referencePitches: getPitchRange("D3", "A4")
+      referencePitches: getPitchRange("D3", "A4"),
+      drone: { root: "D", octave: 2, texture: "warm" },
+      pitchContour: true
     },
 
     // ─── NEW: VOCAL DYNAMICS ARC ───
@@ -455,7 +458,9 @@ export const level14 = {
       sarah: "Gene, your laid-back vocal style is perfect for this. The whisper-to-full-voice arc lets you use your natural dynamic range without ever leaving your comfort zone. Skinshape and Angus Stone both use this technique — quiet verses that bloom into present choruses, all within a relaxed dynamic range.",
       volumeMeter: true,
       recorder: true,
-      referencePitches: getPitchRange("E3", "A4")
+      referencePitches: getPitchRange("E3", "A4"),
+      metronome: 60,
+      pitchContour: true
     }
   ]
 };

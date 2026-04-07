@@ -684,7 +684,9 @@ export const level6 = {
       sarah: "Gene, this is the method every professional singing guitarist uses — they just don't always name it. From now on, every new song goes through these five steps. James Taylor says 'these are lines happening around each other rather than all at once' — that's the Isolation Protocol in action. The method is your safety net, and the anchor points are your secret weapon.",
       metronome: 80,
       recorder: true,
-      referencePitches: getPitchRange("E3", "A4")
+      referencePitches: getPitchRange("E3", "A4"),
+      pitchContour: true,
+      tracks: [{ name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" }, { name: "Reggae One Drop 85", src: "/reggae-one-drop-85.mp3" }]
     },
     {
       id: "ss-6-30",
@@ -703,7 +705,9 @@ export const level6 = {
       wrong: "If your voice stops or falters when you mute the strings, you're more dependent on the chord tones than you realized. That's valuable diagnostic information — it means your vocal ear needs more independent training (back to drone singing in Level 3).",
       sarah: "Gene, this drill strips the guitar down to pure rhythm — no chords, no melody, just the percussive skeleton. Your voice has to do ALL the musical heavy lifting. It's harder than it sounds, and it reveals exactly how independent your voice really is from your guitar. Think of it as singing over a drum machine made of guitar strings.",
       metronome: 80,
-      recorder: true
+      recorder: true,
+      referencePitches: getPitchRange("E3", "A4"),
+      pitchContour: true
     },
     {
       id: "ss-6-31",
@@ -724,7 +728,9 @@ export const level6 = {
       sarah: "Gene, this ladder maps your coordination ceiling and gives you a method to raise it. Most people's ceiling is between Rungs 3 and 4 — quarter notes to eighth notes. That's the zone where your brain switches from 'I can do both' to 'something has to give.' Practice at that edge. The escape hatch (Rung 1) and the ladder are tools you'll use for every song in every level from here forward.",
       metronome: 80,
       recorder: true,
-      referencePitches: getPitchRange("E3", "D4")
+      referencePitches: getPitchRange("E3", "D4"),
+      pitchContour: true,
+      volumeMeter: true
     }
   ]
 };

@@ -359,7 +359,9 @@ export const level13 = {
       feel: "This should feel like a medical diagnostic \u2014 precise, systematic, revealing. You\u2019re not judging the song\u2019s quality \u2014 you\u2019re checking its structural alignment.",
       wrong: "If every dimension is stable everywhere, the song will feel stiff and predictable. If everything is unstable, it will feel chaotic. The power is in the CONTRAST between sections.",
       sarah: "Gene, this diagnostic turns Pattison\u2019s concept from ss-13-8 into a surgical tool. Run it on every song \u2014 it takes 5 minutes and reveals structural issues no other method catches. Even songs that FEEL right sometimes have one misaligned dimension that you can fix in a single line.",
-      recorder: true
+      recorder: true,
+      metronome: 80,
+      referencePitches: getPitchRange("E3", "A4")
     },
     {
       id: "ss-13-17",
@@ -376,7 +378,8 @@ export const level13 = {
       feel: "This should feel like discovering a hidden tool \u2014 once you hear the rhyme scheme contrast, you can\u2019t unhear it.",
       wrong: "Don\u2019t change the scheme just to be different \u2014 make sure the new scheme serves the section\u2019s function. A stable chorus should have a stable rhyme scheme (AABB). An unstable verse should have a less predictable scheme (ABCB).",
       sarah: "Gene, Murphy\u2019s rule is one of the simplest and most powerful songwriting principles: verse and chorus MUST use different rhyme schemes. Listen to any DOPE LEMON song \u2014 the verses rhyme differently than the choruses. It\u2019s invisible to the conscious listener but the subconscious registers the shift.",
-      recorder: true
+      recorder: true,
+      metronome: 80
     },
     {
       id: "ss-13-18",
@@ -394,7 +397,9 @@ export const level13 = {
       feel: "The bridge should feel like stepping through a door into a different room. When you step back out (return to the chorus), the original room looks different.",
       wrong: "If your bridge sounds like another verse, you haven\u2019t departed far enough. Push further \u2014 change the key, change the register, change the emotional direction. The bridge is not the place for subtlety.",
       sarah: "Gene, think of the bridge as the plot twist in a short story. Skinshape\u2019s bridges often shift to a completely different chord quality \u2014 from minor to major, or from grounded to floating. That moment of surprise is what makes the final chorus feel earned.",
-      recorder: true
+      recorder: true,
+      metronome: 80,
+      referencePitches: getPitchRange("E3", "A4")
     }
   ]
 };

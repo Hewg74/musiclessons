@@ -458,7 +458,9 @@ export const level9 = {
       feel: "This should feel like an editing session, not a writing session. You're testing an existing song against proven principles.",
       wrong: "If you dismiss Murphy's rules as 'too commercial,' remember that DOPE LEMON and Skinshape follow most of them naturally. Simple, relatable, singable — that's the aesthetic you love.",
       sarah: "Gene, Murphy's principles aren't about selling out — they're about connecting. DOPE LEMON's 'Marinade' hooks you in the first 10 seconds with a relatable image. Skinshape's hooks land at the end of the chorus. These artists follow these principles instinctively — now you're making them conscious.",
-      recorder: true
+      recorder: true,
+      metronome: 80,
+      referencePitches: getPitchRange("E3", "A4")
     },
     {
       id: "ss-9-22",

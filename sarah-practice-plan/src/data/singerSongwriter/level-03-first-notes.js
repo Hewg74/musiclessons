@@ -513,7 +513,8 @@ export const level3 = {
       sarah: "Gene, this is weird — hum a note while someone asks you questions. Can the note survive? If yes, your voice is reaching autopilot on single pitches. That's the foundation for everything that follows. The fact that it's hard means you're training something real.",
       drone: { root: "Am", octave: 2, texture: "pure" },
       recorder: true,
-      referencePitches: getPitchRange("A3", "A4")
+      referencePitches: getPitchRange("A3", "A4"),
+      pitchContour: true
     }
   ]
 };

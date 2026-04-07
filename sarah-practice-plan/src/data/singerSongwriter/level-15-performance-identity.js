@@ -360,7 +360,8 @@ export const level15 = {
       feel: "Mental scripts should feel like gentle self-direction, not rigid control. They're whispered suggestions to your body, not commands to your technique.",
       wrong: "If you're trying to follow the script precisely or getting stressed about remembering it, the script is too complex. Simplify until it's a single image or sensation. 'Warm' is a valid script for an entire section.",
       sarah: "Gene, this is from performance psychology research — elite athletes use mental scripts ('smooth stride, strong finish') instead of blank-mind or hyper-analysis. Your scripts should match your aesthetic: 'porch register, lazy groove, golden hour.' Body cues, not technical instructions.",
-      recorder: true
+      recorder: true,
+      tracks: [{ name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" }, { name: "Desert Blues 75", src: "/desert-blues-75.mp3" }]
     },
 
     // ─── NEW: GUIDE TRACK RECORDING ───
@@ -424,7 +425,8 @@ export const level15 = {
       feel: "Each capo position should feel like putting the same photograph through a different color filter. The composition is the same; the mood shifts.",
       wrong: "If you pick a capo position because it's easier to sing, you might be prioritizing comfort over character. Sometimes the right position is the one that pushes you slightly — just enough to add emotional intensity.",
       sarah: "Gene, this is how Jack Johnson finds his sound — same shapes, different positions, different songs. Your sweet spot is E3-A4, so capo positions that put the melody in that range will feel most natural. But don't always choose natural — sometimes capo 3 adds urgency that the song needs.",
-      recorder: true
+      recorder: true,
+      metronome: 80
     }
   ]
 };

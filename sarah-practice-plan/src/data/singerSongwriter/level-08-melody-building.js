@@ -517,7 +517,9 @@ export const level8 = {
       wrong: "If you're trying to play standard-tuning chord shapes in DADGAD, you're fighting the tuning. Let go of what you know. Explore with single fingers and drones. If everything sounds 'weird,' you're comparing to standard tuning. Stop comparing — DADGAD is a different instrument.",
       sarah: "Gene, DADGAD is the tuning behind desert blues and Celtic folk — two of your sonic worlds colliding. Tinariwen and Davey Graham both live here. One-finger chords with drones — your left hand barely works while your voice runs free. You'll go deeper with open tuning songwriting in Level 14 (ss-14-17) — this is the preview that plants the seed.",
       fretboard: { tuning: "dadgad" },
-      recorder: true
+      recorder: true,
+      drone: { root: "D", octave: 2, texture: "warm" },
+      referencePitches: getPitchRange("D3", "A4")
     },
     {
       id: "ss-8-24",
@@ -537,7 +539,9 @@ export const level8 = {
       sarah: "Gene, this is how most hit songs are written \u2014 chorus first, then verses that earn it. Think of Skinshape\u2019s \u2018I Still Love You\u2019 \u2014 that chorus hook is undeniable, and the verse exists to set it up. Your natural instinct might be to tell a story from the beginning. Resist it. Start with the destination.",
       metronome: 80,
       recorder: true,
-      referencePitches: getPitchRange("E3", "A4")
+      referencePitches: getPitchRange("E3", "A4"),
+      phraseForm: { pattern: ["V", "Ch", "V", "Ch"], barsPerSection: [8, 8, 8, 8], labels: { V: "Verse", Ch: "Chorus" } },
+      tracks: [{ name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }]
     }
   ]
 };

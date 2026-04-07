@@ -394,7 +394,9 @@ export const level12 = {
       wrong: "If the B section sounds like another verse, you haven\u2019t departed far enough. Change the key, change the register, change the emotional direction. The B section must feel like stepping into a different room.",
       sarah: "Gene, AABA is the form behind half of Nick Drake\u2019s songs and most jazz standards. It\u2019s circular like your desert blues loops but with a plot twist in the middle. \u2018Pink Moon\u2019 is a perfect example \u2014 the same gentle phrase keeps returning, but each time it means something slightly different.",
       phraseForm: { pattern: ["A", "A", "B", "A"], barsPerSection: 8, labels: { A: "Verse", B: "Bridge" } },
-      recorder: true
+      recorder: true,
+      metronome: 80,
+      referencePitches: getPitchRange("E3", "A4")
     },
     {
       id: "ss-12-18",
@@ -413,7 +415,10 @@ export const level12 = {
       wrong: "If you skip the drawing and just \u2018feel it,\u2019 you\u2019ll default to flat energy. The visual forces deliberate choices. Don\u2019t resist the pen \u2014 it\u2019s a tool, not a constraint.",
       sarah: "Gene, this is the visual method from Holistic Songwriting. Your Dynamic Mapping exercise (ss-12-9) planned dynamics after writing. This exercise plans the energy FIRST and lets it guide the composition. It\u2019s the difference between navigating by feel and navigating with a map \u2014 both can work, but the map gets you there faster.",
       recorder: true,
-      volumeMeter: true
+      volumeMeter: true,
+      metronome: 80,
+      referencePitches: getPitchRange("E3", "A4"),
+      phraseForm: { pattern: ["Intro", "V1", "Ch", "V2", "Ch", "Br", "Ch", "Outro"], barsPerSection: [4, 8, 8, 8, 8, 8, 8, 4], labels: { Intro: "Intro", V1: "Verse 1", V2: "Verse 2", Ch: "Chorus", Br: "Bridge", Outro: "Outro" } }
     },
     {
       id: "ss-12-19",
@@ -432,7 +437,9 @@ export const level12 = {
       wrong: "If your fingerpicking sounds labored, simplify to thumb-only alternating bass (you\u2019ll learn full fingerpicking technique in Level 14). The texture contrast matters more than technique.",
       sarah: "Gene, this is how Jack Johnson makes one acoustic guitar sound like a full arrangement. Angus Stone does the same thing on DOPE LEMON\u2019s quieter tracks \u2014 fingerpicked verses that bloom into strummed choruses. You don\u2019t need a band. You need two textures.",
       volumeMeter: true,
-      recorder: true
+      recorder: true,
+      metronome: 60,
+      referencePitches: getPitchRange("E3", "A4")
     }
   ]
 };
