@@ -4364,6 +4364,55 @@ export default function App() {
     localStorage.setItem("guitar-v3-triads-migrated", "true");
   }
 
+  // Migration: Guitar curriculum v4 — chord tone soloing level insertion at Level 7
+  // Shifts gs-7+ exercise IDs by +1, migrates journal & flow sessions, clears guitar unlock state
+  if (!localStorage.getItem("guitar-v4-chordtone-migrated")) {
+    const shiftGsId = (id) => {
+      const match = id.match(/^gs-(\d+)-(.+)$/);
+      if (match && parseInt(match[1]) >= 7) {
+        return `gs-${parseInt(match[1]) + 1}-${match[2]}`;
+      }
+      return id;
+    };
+    // Shift practice-completed
+    const saved = localStorage.getItem("practice-completed");
+    if (saved) {
+      try {
+        const ids = JSON.parse(saved);
+        localStorage.setItem("practice-completed", JSON.stringify(ids.map(shiftGsId)));
+      } catch {
+        try {
+          const all = JSON.parse(localStorage.getItem("practice-completed") || "[]");
+          localStorage.setItem("practice-completed", JSON.stringify(all.filter(id => !id.startsWith("gs-"))));
+        } catch {
+          localStorage.removeItem("practice-completed");
+        }
+      }
+    }
+    // Shift practice-journal exerciseIds
+    try {
+      const journal = JSON.parse(localStorage.getItem("practice-journal") || "[]");
+      if (journal.length) {
+        const migratedJournal = journal.map(entry =>
+          entry.exerciseId ? { ...entry, exerciseId: shiftGsId(entry.exerciseId) } : entry
+        );
+        localStorage.setItem("practice-journal", JSON.stringify(migratedJournal));
+      }
+    } catch { /* ignore journal migration errors */ }
+    // Shift flow-sessions exerciseIds
+    try {
+      const sessions = JSON.parse(localStorage.getItem("flow-sessions") || "[]");
+      if (sessions.length) {
+        const migratedSessions = sessions.map(s =>
+          s.exerciseIds ? { ...s, exerciseIds: s.exerciseIds.map(shiftGsId) } : s
+        );
+        localStorage.setItem("flow-sessions", JSON.stringify(migratedSessions));
+      }
+    } catch { /* ignore flow session migration errors */ }
+    localStorage.removeItem("guitar-study-unlocked");
+    localStorage.setItem("guitar-v4-chordtone-migrated", "true");
+  }
+
   const [tab, setTab] = useState("practice");
   const [selectedDay, setSelectedDay] = useState(DAYS[0]);
   const [completed, setCompleted] = useState(() => {

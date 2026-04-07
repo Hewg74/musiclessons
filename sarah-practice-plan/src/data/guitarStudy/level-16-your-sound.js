@@ -1,24 +1,24 @@
 import { getPitchRange } from "../appData.js";
 
-export const level15 = {
-  level: 15,
+export const level16 = {
+  level: 16,
   title: "Your Sound",
   subtitle: "Build your set. Find your voice. The Golden Hour Set.",
   description:
-    "This is it — the final level. No new techniques, no new scales, no new theory. Everything you need is already in your hands. Level 15 is about identity: what do YOU sound like? You'll curate a 30-minute performance set — the Golden Hour Set — that weaves together the genres, techniques, and feelings that define your sound. Surf, reggae, desert, soul, originals — all stitched into a single arc. The last exercise is a full recorded performance. Then you'll listen to your Level 1 baseline and hear how far you've come.",
+    "This is it — the final level. No new techniques, no new scales, no new theory. Everything you need is already in your hands. Level 16 is about identity: what do YOU sound like? You'll curate a 30-minute performance set — the Golden Hour Set — that weaves together the genres, techniques, and feelings that define your sound. Surf, reggae, desert, soul, originals — all stitched into a single arc. The last exercise is a full recorded performance. Then you'll listen to your Level 1 baseline and hear how far you've come.",
   artists: "Gene's own sound — all influences synthesized",
   review: {
-    label: "Level 14 Check-In",
+    label: "Level 15 Check-In",
     time: 5,
-    exercises: ["gs-14-5", "gs-14-9"],
-    prompt: "Play your 10-minute multi-genre improv (gs-14-5). Then play your extended palette jam (gs-14-9). The full palette is yours? Time to define YOUR sound."
+    exercises: ["gs-15-5", "gs-15-9"],
+    prompt: "Play your 10-minute multi-genre improv (gs-15-5). Then play your extended palette jam (gs-15-9). The full palette is yours? Time to define YOUR sound."
   },
   exercises: [
 
     // ─── IDENTITY ───
 
     {
-      id: "gs-15-1",
+      id: "gs-16-1",
       time: 10,
       title: "Who Do You Sound Like?",
       type: "guitar",
@@ -39,7 +39,7 @@ export const level15 = {
       levelUp: "Can identify your 2-3 strongest style affinities and articulate what makes them feel like home."
     },
     {
-      id: "gs-15-2",
+      id: "gs-16-2",
       time: 10,
       title: "Choosing Your Set — The Golden Hour Playlist",
       type: "guitar",
@@ -62,7 +62,7 @@ export const level15 = {
     // ─── SET BUILDING ───
 
     {
-      id: "gs-15-3",
+      id: "gs-16-3",
       time: 8,
       title: "The Opener — Setting the Tone",
       type: "guitar",
@@ -84,7 +84,7 @@ export const level15 = {
       levelUp: "Can play your opener from the first note with confidence, feel, and zero hesitation — 3 consecutive clean takes."
     },
     {
-      id: "gs-15-4",
+      id: "gs-16-4",
       time: 8,
       title: "Transitions — The Invisible Art",
       type: "guitar",
@@ -104,7 +104,7 @@ export const level15 = {
       levelUp: "Can play through all set transitions smoothly — no dead stops, no fumbled key changes, every transition intentional."
     },
     {
-      id: "gs-15-5",
+      id: "gs-16-5",
       time: 8,
       title: "The Peak — Your High-Energy Moment",
       type: "guitar",
@@ -125,7 +125,7 @@ export const level15 = {
       levelUp: "Can deliver your peak section with full intensity, clear build, identifiable peak moment, and controlled comedown — recorded and reviewed."
     },
     {
-      id: "gs-15-6",
+      id: "gs-16-6",
       time: 8,
       title: "The Quiet Moment — Intimacy and Space",
       type: "guitar",
@@ -134,7 +134,7 @@ export const level15 = {
       steps: [
         { text: "Choose your quiet piece — which moment in your set is the most intimate? It might be a Breakdown-style fingerpicking passage, a Hermanos Gutiérrez cinematic moment, a desert drone meditation, or a soft chord progression played with your fingers instead of a pick. Play it at the quietest volume you can manage while still projecting every note.", why: "Quiet playing is harder than loud playing. Every imperfection is exposed. Your touch, your timing, your tone — all naked. This is where craftsmanship shows." },
         { text: "Play it again, even quieter. Find the threshold where the notes barely exist — where the listener has to hold their breath to hear you. Play at that edge for 2 minutes.", why: "Playing at the edge of silence requires extraordinary control. It also creates incredible intimacy — the audience leans in, the room gets still, the music becomes a shared secret." },
-        { text: "Add space. Wherever you have continuous notes, try adding silences — let a chord ring into nothing for 4 beats before playing the next one. Let a melody note sustain and decay completely. The silence IS the music.", why: "In your quiet moment, silence is your most powerful tool. A note followed by silence has more weight than a note followed by another note. You learned this in desert drone (Level 8) — now apply it to your most personal piece." },
+        { text: "Add space. Wherever you have continuous notes, try adding silences — let a chord ring into nothing for 4 beats before playing the next one. Let a melody note sustain and decay completely. The silence IS the music.", why: "In your quiet moment, silence is your most powerful tool. A note followed by silence has more weight than a note followed by another note. You learned this in desert drone (Level 9) — now apply it to your most personal piece." },
         { text: "Try playing the piece with your eyes closed, fully audiated: hear each note in your mind before your fingers play it. Feel the guitar, feel the room, feel the air. Every note is pre-heard, pre-felt, then released into the silence. Don't perform for anyone — play for yourself, from your inner ear outward. This is the version that will move people.", why: "Eyes-closed audiated playing is the deepest state of musical presence. When you pre-hear every note (Gordon Stage 6), the self-consciousness drops away because your attention is on the SOUND, not the audience. The music becomes authentic and intentional simultaneously. Paradoxically, the version that's least performative is the most moving — because every note was chosen by your inner ear." },
         { text: "Record one final take with eyes closed, minimal volume, maximum space. This is your quiet moment. It should feel like a confessional.", why: "The quiet moment is the emotional center of your set — the peak is physical intensity, but the quiet moment is emotional intensity. Both are essential." }
       ],
@@ -145,7 +145,7 @@ export const level15 = {
       levelUp: "Can play your quiet piece at the edge of silence with full control, intentional space, and emotional presence — one clean recorded take."
     },
     {
-      id: "gs-15-7",
+      id: "gs-16-7",
       time: 8,
       title: "The Closer — Ending with Intention",
       type: "guitar",
@@ -167,7 +167,7 @@ export const level15 = {
     // ─── FULL PERFORMANCE ───
 
     {
-      id: "gs-15-8",
+      id: "gs-16-8",
       time: 30,
       title: "Full Set Run-Through — No Stops",
       type: "guitar",
@@ -187,7 +187,7 @@ export const level15 = {
       levelUp: "Complete a full 30-minute set recording with no stops — mistakes are fine, stops are not."
     },
     {
-      id: "gs-15-9",
+      id: "gs-16-9",
       time: 10,
       title: "The Mirror — Baseline to Golden Hour",
       type: "guitar",
@@ -195,7 +195,7 @@ export const level15 = {
       setup: "Phone or computer for playback. Guitar nearby but this is mostly a listening exercise.",
       steps: [
         { text: "Find your gs-1-1 recording — the first time you played Am pentatonic, probably hesitant, probably with some buzzing strings and uncertain timing. Press play. Listen to the whole thing without judgment. That was you. That was the beginning.", why: "Hearing your starting point with fresh ears — after months of growth — creates a visceral understanding of progress that no verbal encouragement can match. The recording doesn't lie." },
-        { text: "Now listen to your Golden Hour Set recording from gs-15-8. The whole thing, or at least 10 minutes of it. Listen for: the confidence in your strum, the variety in your dynamics, the smoothness of your transitions, the feel in your groove.", why: "Comparing beginning to end makes growth audible. You'll hear things in your current playing that you couldn't have imagined at Level 1 — a reggae skank that sits perfectly in the pocket, a desert drone that breathes, a fingerpicked passage with real delicacy." },
+        { text: "Now listen to your Golden Hour Set recording from gs-16-8. The whole thing, or at least 10 minutes of it. Listen for: the confidence in your strum, the variety in your dynamics, the smoothness of your transitions, the feel in your groove.", why: "Comparing beginning to end makes growth audible. You'll hear things in your current playing that you couldn't have imagined at Level 1 — a reggae skank that sits perfectly in the pocket, a desert drone that breathes, a fingerpicked passage with real delicacy." },
         { text: "Notice the specific differences: tone, timing, confidence, variety, expressiveness, groove. The Level 1 recording probably has one tempo, one dynamic level, one style. The Golden Hour Set has multiple tempos, dynamics from whisper to roar, styles from surf to reggae to desert to soul. That's growth.", why: "Specific identification of growth areas reinforces learning and motivates continued practice. Vague feelings of improvement are nice; hearing EXACTLY how you've improved is powerful." },
         { text: "Pick up the guitar. Play the same Am pentatonic phrase from gs-1-1 — but play it the way you play NOW. Same notes, same scale, but with everything you've learned about feel, dynamics, timing, and space. Record it. This is your new baseline.", why: "Playing the same material with evolved skill demonstrates that growth isn't about knowing more notes — it's about playing the same notes with more intention, more feel, more YOU. The pentatonic hasn't changed. You have." },
         { text: "Say or write one sentence: 'My sound is ___.' Fill in the blank. Not a genre, not a technique — a feeling. 'My sound is golden hour on a warm coast.' 'My sound is desert patience with surf energy.' 'My sound is reggae groove with psych colors.' Whatever it is, that's your artistic statement.", why: "Articulating your sound in one sentence crystallizes months of exploration into an identity. This sentence is your North Star — every future musical decision can be measured against it." }
@@ -208,7 +208,7 @@ export const level15 = {
       levelUp: "Have listened to both the baseline and the Golden Hour Set, identified specific areas of growth, recorded a new Am pentatonic baseline, and articulated your sound in one sentence."
     },
     {
-      id: "gs-15-10",
+      id: "gs-16-10",
       time: 35,
       title: "THE GOLDEN HOUR SET — Final Recorded Performance",
       type: "guitar",

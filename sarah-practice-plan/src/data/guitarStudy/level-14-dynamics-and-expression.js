@@ -1,25 +1,25 @@
 import { getPitchRange } from "../appData.js";
 
-export const level13 = {
-  level: 13,
+export const level14 = {
+  level: 14,
   title: "Dynamics & Expression",
   subtitle: "Volume swells, the major→minor trick, and Phrygian spice. Making the guitar breathe.",
   description:
-    "Level 12 gave you fingerpicking independence — thumb and fingers working as separate musicians. Now you learn the EXPRESSIVE tools: volume swells that make the guitar sound bowed, the major→minor chord shift that DOPE LEMON and modGlyders use for instant emotional depth, dynamic range from whisper to thunder, and Phrygian mode as a color note for Spanish darkness. This is where technique serves emotion — the guitar stops being an instrument and starts breathing.",
+    "Level 13 gave you fingerpicking independence — thumb and fingers working as separate musicians. Now you learn the EXPRESSIVE tools: volume swells that make the guitar sound bowed, the major→minor chord shift that DOPE LEMON and modGlyders use for instant emotional depth, dynamic range from whisper to thunder, and Phrygian mode as a color note for Spanish darkness. This is where technique serves emotion — the guitar stops being an instrument and starts breathing.",
   artists: "Current Swell, Babe Rainbow, DOPE LEMON, modGlyders",
-  unlocks: "The Full Palette (Level 14)",
+  unlocks: "The Full Palette (Level 15)",
   review: {
-    label: "Level 12 Check-In",
+    label: "Level 13 Check-In",
     time: 5,
-    exercises: ["gs-12-5", "gs-12-11"],
-    prompt: "Play Travis picking with alternating thumb over G-Bm-Em-D (gs-12-5). Then play your extended fingerpicking piece (gs-12-11). Fingers are independent? Time to add dynamics."
+    exercises: ["gs-13-5", "gs-13-11"],
+    prompt: "Play Travis picking with alternating thumb over G-Bm-Em-D (gs-13-5). Then play your extended fingerpicking piece (gs-13-11). Fingers are independent? Time to add dynamics."
   },
   exercises: [
 
     // ─── DYNAMIC CONTROL ───
 
     {
-      id: "gs-13-1",
+      id: "gs-14-1",
       time: 8,
       title: "Five Shades of Am — Dynamic Precision",
       type: "guitar",
@@ -44,7 +44,7 @@ export const level13 = {
     // ─── VOLUME SWELLS ───
 
     {
-      id: "gs-13-2",
+      id: "gs-14-2",
       time: 8,
       title: "Volume Swell — The Bowed Guitar",
       type: "guitar",
@@ -70,7 +70,7 @@ export const level13 = {
     // ─── MAJOR→MINOR SHIFT ───
 
     {
-      id: "gs-13-3",
+      id: "gs-14-3",
       time: 8,
       title: "The DOPE LEMON Trick — D to Dm",
       type: "guitar",
@@ -92,7 +92,7 @@ export const level13 = {
       levelUp: "Can play D→Dm→G→Gm (2 bars each) behind the beat with ghost strums, looping smoothly for 2 minutes, with the emotional shift audible on each major→minor transition."
     },
     {
-      id: "gs-13-4",
+      id: "gs-14-4",
       time: 7,
       title: "The G→Gm Shift — Same Trick, Deeper Color",
       type: "guitar",
@@ -116,7 +116,7 @@ export const level13 = {
     // ─── SONG STUDY: MARSHA ───
 
     {
-      id: "gs-13-5",
+      id: "gs-14-5",
       time: 10,
       title: "Song Study: Marsha — Current Swell's Dynamic Masterclass",
       type: "guitar",
@@ -136,7 +136,7 @@ export const level13 = {
       ],
       feel: "The verse should feel like telling a story to one person sitting next to you. The D→Dm moment should feel like the story reaching the part where your voice catches in your throat. The dynamic build should feel like the room slowly filling with people who came to hear the story.",
       wrong: "If all three dynamic passes sound the same volume, you're not committing to the quiet levels. The first pass should be almost whispered. If the D→Dm shift doesn't feel emotional, hold D for longer — really sit in the major brightness before letting it curl into minor. If the intro riff is too hard at tempo, stay at 90 BPM — accuracy over speed.",
-      sarah: "Gene, Current Swell is from your island-vibes world — they're Canadian but their sound is pure coastal sunset. 'Marsha' is the perfect Level 13 vehicle because it combines everything: barre chords you learned in Level 5, the major→minor trick from this level, and a dynamic arc that goes from whisper to anthem. Scott Chicken's guitar playing is all about restraint — he holds back so the moments where he opens up feel massive. The actual strum pattern is D-D-U-U-D-U with continuous 16th-note right-hand motion. The solo acoustic intro (0:00-0:20) perfectly isolates this pattern — listen to those first 20 seconds on repeat and match it exactly before adding the full band feel. The song sits at about 108 BPM with dynamic contrast between softer verse and louder chorus. In Marsha, the guitar matches the vocal dynamics — softer and more muted during verses when the voice is intimate, louder and fuller during choruses when the voice opens up. This is dynamic sympathy: your guitar volume should follow the emotional arc of the melody. If you're going to sing over this, practice dialing your strum volume up and down to match imagined vocal phrases.",
+      sarah: "Gene, Current Swell is from your island-vibes world — they're Canadian but their sound is pure coastal sunset. 'Marsha' is the perfect Level 14 vehicle because it combines everything: barre chords you learned in Level 5, the major→minor trick from this level, and a dynamic arc that goes from whisper to anthem. Scott Chicken's guitar playing is all about restraint — he holds back so the moments where he opens up feel massive. The actual strum pattern is D-D-U-U-D-U with continuous 16th-note right-hand motion. The solo acoustic intro (0:00-0:20) perfectly isolates this pattern — listen to those first 20 seconds on repeat and match it exactly before adding the full band feel. The song sits at about 108 BPM with dynamic contrast between softer verse and louder chorus. In Marsha, the guitar matches the vocal dynamics — softer and more muted during verses when the voice is intimate, louder and fuller during choruses when the voice opens up. This is dynamic sympathy: your guitar volume should follow the emotional arc of the melody. If you're going to sing over this, practice dialing your strum volume up and down to match imagined vocal phrases.",
       metronome: 90,
       chordVoicings: { chords: ["F", "G", "Bb", "C", "D", "Dm"] },
       tracks: [{ name: "Drums Only — Soul/Funk 90", src: "/drums-soul-funk-90.mp3" }],
@@ -147,7 +147,7 @@ export const level13 = {
     // ─── PHRYGIAN COLOR ───
 
     {
-      id: "gs-13-6",
+      id: "gs-14-6",
       time: 8,
       title: "Phrygian Spice — The Bb Over Am",
       type: "guitar",
@@ -173,7 +173,7 @@ export const level13 = {
     // ─── SONG STUDY: PEACE BLOSSOM BOOGY ───
 
     {
-      id: "gs-13-7",
+      id: "gs-14-7",
       time: 8,
       title: "Song Study: Peace Blossom Boogy — Psych-Pop Boogaloo",
       type: "guitar",
@@ -203,7 +203,7 @@ export const level13 = {
     // ─── PReVaDe WITH DYNAMICS ───
 
     {
-      id: "gs-13-8",
+      id: "gs-14-8",
       time: 8,
       title: "PReVaDe With Dynamics — Same Notes, Different Volume",
       type: "guitar",
@@ -231,7 +231,7 @@ export const level13 = {
     // ─── DYNAMIC CONTRAST IN SONG FORM ───
 
     {
-      id: "gs-13-9",
+      id: "gs-14-9",
       time: 8,
       title: "Dynamic Song Form — Quiet Verse, Loud Chorus, Whispered Bridge",
       type: "guitar",
@@ -259,7 +259,7 @@ export const level13 = {
     // ─── EXPRESSIVE DYNAMICS IMPROV ───
 
     {
-      id: "gs-13-10",
+      id: "gs-14-10",
       time: 8,
       title: "Expressive Improv — Dynamics as Language",
       type: "guitar",
@@ -274,7 +274,7 @@ export const level13 = {
       ],
       feel: "This should feel like telling a story without words — the quiet passages are the narrator's soft voice, the loud moments are the plot twists, the Phrygian touches are the mysterious passages. The backing track is the setting. You're the storyteller.",
       wrong: "If everything is at one volume, you've forgotten the exercise's premise. Dynamics FIRST, notes second. If you're playing too many notes, remember: silence and space are your most powerful tools at low volume. If the Phrygian b2 sounds random, always resolve it — Bb→A, every time.",
-      sarah: "Gene, this is the culmination of everything in Level 13 — dynamics, Phrygian color, volume control, expressive intent. Think of how Tommy Guerrero's instrumental pieces breathe — quiet sections that let the groove do the work, and then these moments where the guitar steps forward and says something. That contrast makes every note matter. You're building the same thing.",
+      sarah: "Gene, this is the culmination of everything in Level 14 — dynamics, Phrygian color, volume control, expressive intent. Think of how Tommy Guerrero's instrumental pieces breathe — quiet sections that let the groove do the work, and then these moments where the guitar steps forward and says something. That contrast makes every note matter. You're building the same thing.",
       fretboard: { scale: "a-phrygian", position: 1, highlight: ["Bb"] },
       tracks: [{ name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" }],
       volumeMeter: true,
@@ -286,18 +286,18 @@ export const level13 = {
     // ─── EXTENDED DYNAMICS PIECE ───
 
     {
-      id: "gs-13-11",
+      id: "gs-14-11",
       time: 10,
       title: "Extended Dynamics Piece — Your Dynamic Arc",
       type: "guitar",
-      what: "Compose and perform a 4-5 minute piece that uses EVERY dynamic tool from this level: volume swells, the D→Dm trick, Phrygian color, PReVaDe with dynamic variation, quiet-loud-quiet song form. This is your Level 13 capstone — a complete musical statement where dynamics tell the story. One guitar, one take, recorded.",
+      what: "Compose and perform a 4-5 minute piece that uses EVERY dynamic tool from this level: volume swells, the D→Dm trick, Phrygian color, PReVaDe with dynamic variation, quiet-loud-quiet song form. This is your Level 14 capstone — a complete musical statement where dynamics tell the story. One guitar, one take, recorded.",
       setup: "Guitar. Backing track or drone — your choice. No metronome — play with rubato (flexible tempo).",
       steps: [
         { text: "Plan your arc (2 minutes): sketch a dynamic roadmap on paper or in your head. Example: Volume swell intro (30 sec) → quiet D→Dm meditation (60 sec) → Am pentatonic PReVaDe with dynamic variation (60 sec) → Phrygian color improv building to full volume (60 sec) → volume swell outro fading to silence (30 sec). Your arc should have a clear beginning, middle, climax, and ending.", why: "Planning the dynamic arc before playing prevents the piece from becoming aimless noodling. A musical structure — even a loose one — gives you permission to commit to each section fully. Professional musicians always know where a piece is going before they start." },
         { text: "Practice each section individually: the volume swell intro (smooth, no pick attack), the quiet D→Dm passage (behind the beat, level 2), the PReVaDe section (dynamic variation only), the building improv (level 1 to level 5 over 60 seconds), the volume swell outro. Get each section comfortable before chaining them.", why: "Sectional practice ensures each part of the piece is strong on its own. When you chain them together, transitions will be the only new challenge — not the content of each section." },
         { text: "First full run-through: play the entire piece from start to finish without stopping. Don't worry about mistakes — focus on the DYNAMIC ARC. Did the quiet sections feel quiet? Did the loud climax feel powerful? Did the ending dissolve properly? Note what worked and what didn't.", why: "A complete run-through reveals the shape of the piece. Individual sections might sound great in isolation but feel wrong in sequence — the first full pass shows you the flow." },
         { text: "Refine: play through again, adjusting the transitions that felt awkward. Maybe the volume swell intro needs more time to develop. Maybe the climax needs to peak later. Maybe the D→Dm section should be even quieter. Shape the arc until it feels natural — like a story with a beginning, middle, and end.", why: "Refinement is where the piece goes from exercise to art. Small adjustments to timing, dynamics, and transitions make the difference between a collection of techniques and a musical statement. This is the compositional process." },
-        { text: "Final recording: one take, start to finish. Choose the backing track or drone that serves the piece best. Commit to every dynamic choice. If something goes wrong, keep going — the arc matters more than individual notes. Listen back. Does it tell a story? Does the dynamic journey make sense? This is your Level 13 portfolio piece.", why: "The one-take recording is the performance. All the practice converges here. The piece proves you can use dynamics as a storytelling tool — volume swells, major→minor harmony, Phrygian color, PReVaDe structure, and song-form dynamics in one continuous musical statement." }
+        { text: "Final recording: one take, start to finish. Choose the backing track or drone that serves the piece best. Commit to every dynamic choice. If something goes wrong, keep going — the arc matters more than individual notes. Listen back. Does it tell a story? Does the dynamic journey make sense? This is your Level 14 portfolio piece.", why: "The one-take recording is the performance. All the practice converges here. The piece proves you can use dynamics as a storytelling tool — volume swells, major→minor harmony, Phrygian color, PReVaDe structure, and song-form dynamics in one continuous musical statement." }
       ],
       feel: "This should feel like conducting a one-person orchestra — you're simultaneously the performer and the arranger, deciding in real time how loud, how soft, how dramatic each moment should be. The piece should feel like watching a sunrise: slow, beautiful, building, peaking, and then gentle resolution.",
       wrong: "If the piece feels like a grab bag of techniques strung together, your transitions aren't smooth enough. Each section should LEAD to the next — the end of the volume swell naturally opens into the D→Dm meditation, which naturally leads to the PReVaDe section. If everything is at the same volume, you haven't committed to the quiet sections. If the recording sounds like a practice session rather than a performance, try one more take with full commitment. Before you record: what story are the dynamics telling? After: did the arc surprise you anywhere? Finish with something beautiful — close on the sound you want to carry into tomorrow.",

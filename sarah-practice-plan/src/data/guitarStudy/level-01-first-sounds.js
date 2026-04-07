@@ -245,12 +245,44 @@ export const level1 = {
         src: "/dope-and-smoke.mp3",
         note: "Listen to the lazy strum feel — it's just Am and D alternating with Am7 and D7 creeping in. No G chord. Two chord families, maximum vibe."
       },
+      songStructure: [
+        { name: "Intro", bars: 4, chords: ["Am", "D", "Am", "D"] },
+        { name: "Verse", bars: 8, chords: ["Am", "D", "Am", "D", "Am7", "D7", "Am7", "D7"], repeat: 3 },
+        { name: "Instrumental Break", bars: 4, chords: ["Am", "D", "Am", "D"] },
+        { name: "Outro", bars: 8, chords: ["Am", "D", "Am7", "D7", "Am", "D", "Am7", "D7"] }
+      ],
+      strumPattern: {
+        notation: "D _ (x x) _ U D U",
+        subdivision: "8ths",
+        bpm: 94,
+        description: "Downstroke on beat 1, two muted left-hand scratches on beat 2 (fretting hand relaxes to deaden strings while arm keeps swinging), upstroke on the 'and' of beat 3, down-up to close on beat 4. Accents on beats 2 and 4 with percussive scratches filling the gaps."
+      },
+      embellishments: [
+        { name: "Am7 ghost lift", when: "Every other Am bar, usually bar 3 of each verse section", how: "Lift ring finger off G string fret 2 to expose open G — shape becomes x02210 → x02010. The open G is the minor 7th (b7) of Am.", why: "Adds the lazy, dreamy 7th color without changing hand position. The 7th drifts in and out like haze.", technique: "pull-off" },
+        { name: "D7 ring finger drop", when: "Every other D bar, matching the Am7 pattern", how: "Move ring finger from B string fret 3 down to fret 1. This changes D (octave root) to C (flat 7th), creating D7.", why: "Creates bluesy D7 tension that makes the loop feel like it's melting. The major→7th drift is the DOPE LEMON signature.", technique: "slide" },
+        { name: "Staccato chop", when: "Throughout — chords are squeezed briefly then released", how: "Strum the chord, then immediately relax fretting hand to mute all strings. The chord rings for about a 16th note before being choked.", why: "Creates the percussive 'chuck' sound between ringing notes. The drenched reverb makes each chopped chord trail off into space.", technique: "mute" },
+        { name: "Slide into Am", when: "Downbeat of verse sections", how: "Slide from the 4th fret into the 5th fret Am barre chord shape on the downbeat, followed by a staccato chop.", why: "A rhythmic approach note that adds forward momentum. Preview of barre technique from Level 5.", technique: "slide" }
+      ],
+      dynamicArc: [
+        { section: "Intro", intensity: "soft", notes: "Staccato chops, lots of space. The guitar is a percussive bed — set the hypnotic loop." },
+        { section: "Verse 1", intensity: "soft", notes: "Same intensity as intro. Am and D only — no 7ths yet. Behind-the-beat placement." },
+        { section: "Verse 2", intensity: "medium", notes: "Let chords ring slightly longer. Am7 and D7 variations start creeping in." },
+        { section: "Verse 3", intensity: "medium", notes: "Sustain chords more, reduce muting slightly. The groove deepens but never gets loud." },
+        { section: "Outro", intensity: "medium", notes: "Same as verse 3 — the song doesn't build to a climax, it dissolves. Never push." }
+      ],
+      toneSettings: {
+        pickup: "neck",
+        effects: ["reverb:heavy-spring", "warmth:tape-saturation"],
+        capo: null,
+        tuning: "standard",
+        description: "Dark, warm, tape-saturated tone. Roll tone knob back 50%. Spring or plate reverb cranked generously. Clean channel — no overdrive. The guitar sound should feel like it was recorded to tape through a warm amp."
+      },
       tracks: [{ name: "Groove Beat 90", src: "/groove-beat-90.mp3" }],
       what: "Your first complete song. DOPE LEMON's Dope & Smoke alternates between two chord families — Am/Am7 and D/D7 — at ~94 BPM with a mellow, behind-the-beat strumming feel. It's a two-chord song. The magic is in the lazy feel and the subtle shift from plain Am to Am7, plain D to D7. Hit play above and listen twice before touching the guitar — first time, just absorb the vibe. Second time, let your fretting hand ghost the chord changes without pressing the strings. Your motor system rehearses during focused listening.",
       setup: "Guitar. Metronome at 90 BPM (slow it down — original is ~94 BPM). Dark-warm tone: roll your tone knob back halfway, add reverb (spring or plate) generously. The guitar sound is clean but saturated, like it was recorded to tape. Listen to the song reference first.",
       steps: [
         { text: "Play the core loop: Am (4 beats) → D (4 beats), repeating. Just these two chords, back and forth. Use all downstrokes first, one per beat. Focus ONLY on clean transitions between Am and D.", why: "Dope & Smoke is built on Am-D alternation — that's it. There's no G chord. Separating chord changes from strumming pattern is the 'one focal point' principle. Master the Am-D switch first." },
-        { text: "Once Am-D is smooth, add the 7th variations: Am7 — lift your index finger off the B string 1st fret so the open B rings. D7 — move your ring finger from B string fret 3 down to fret 1 (F# drops to C, the flat 7th). Alternate Am-D for 4 bars, then Am7-D7 for 4 bars. Feel the warmth the 7ths add.", why: "Am7 and D7 add harmonic color without adding new chord shapes — one finger moves in each case. The 7th creates a warmer, hazier quality that IS the DOPE LEMON sound." },
+        { text: "Once Am-D is smooth, add the 7th variations: Am7 — lift your ring finger off the G string 2nd fret so the open G rings (that's the b7). D7 — move your ring finger from B string fret 3 down to fret 1 (D drops to C, the flat 7th). Alternate Am-D for 4 bars, then Am7-D7 for 4 bars. Feel the warmth the 7ths add.", why: "Am7 and D7 add harmonic color without adding new chord shapes — one finger moves in each case. The 7th creates a warmer, hazier quality that IS the DOPE LEMON sound." },
         { text: "Add constant arm motion: down-up-down-up on eighth notes. Hit all strums first — no pattern. Feel how the continuous motion smooths out the Am-D transitions.", why: "Constant arm motion HELPS chord transitions because momentum carries your hand. Isolated downstrokes make each transition a separate event. Continuous motion makes transitions happen inside a flow." },
         { text: "Shape the strum pattern: the core groove is 'Down...(mute-mute)...Up-Down-Up' — a downstroke, two left-hand muted scratches (your fretting hand relaxes to deaden the strings while your arm keeps swinging), then Up-Down-Up to finish the bar. The accents fall on beats 2 and 4 with rhythmic scratches filling the gaps. Mix Am and Am7 freely — switch whenever it feels right. Same with D and D7. Listen to the song and match the feel.", why: "This strum pattern — with the muted scratches between chord strikes — is what gives Dope & Smoke its percussive, breathing quality. The scratches are NOT silence; they're rhythmic texture. Your right hand never stops moving, and your left hand controls whether the strings ring or choke." },
         { text: "Play for 8 full cycles at 90 BPM. No stopping. If you miss a change, keep strumming and catch the next one. Then try the original tempo (~94 BPM). If you can't get past 100 today, stop and try tomorrow — your brain consolidates overnight.", why: "Playing through mistakes is a critical skill. Speed increases should feel like graduating, not struggling. Sleep consolidation is real — 10-13% improvement happens overnight." }
@@ -274,6 +306,35 @@ export const level1 = {
         title: "Real Love Baby — Father John Misty",
         src: "/real-love-baby.mp3",
         note: "Listen to the D-Em-G progression with the hammer-on embellishments on D. Upbeat, sunny energy — contrast with Dope & Smoke."
+      },
+      songStructure: [
+        { name: "Intro", bars: 4, chords: ["D", "Em", "G", "A7"] },
+        { name: "Verse", bars: 8, chords: ["D", "Em", "G", "A7", "D", "Em", "G", "A7"], repeat: 2 },
+        { name: "Chorus", bars: 8, chords: ["D", "Em", "G", "A7", "D", "Em", "G", "A7"] },
+        { name: "Outro", bars: 4, chords: ["D", "Em", "G", "D"] }
+      ],
+      strumPattern: {
+        notation: "D _ D U _ U D U",
+        subdivision: "16ths",
+        bpm: 102,
+        description: "Strong downstroke on beat 1, skip the 'e', down on the 'and', up on the 'a'. Continuous 16th-note pendulum motion — more driving and upbeat than Dope & Smoke. Accent beat 1."
+      },
+      embellishments: [
+        { name: "D chord hammer-on sparkle", when: "Beats 3-4 of every D bar", how: "Fret D chord but leave high E string open, strum, then quickly hammer middle finger onto high E string fret 2. Open E (E) jumps to fretted F# — a quick melodic flick within the chord.", why: "Adds sparkle and movement to a static chord. This open-to-fretted hammer-on on the high E string is one of the most common guitar embellishments in folk/pop.", technique: "hammer-on" },
+        { name: "G chord ring-finger reach", when: "Occasionally on the G chord, beats 1-2", how: "After fretting G, briefly hammer pinky onto high E string fret 3. Adds a high G note ringing on top.", why: "Mirrors the D hammer-on pattern on a different chord. Creates melodic continuity between D and G embellishments.", technique: "hammer-on" }
+      ],
+      dynamicArc: [
+        { section: "Intro", intensity: "medium", notes: "Start with energy — this isn't a slow build. The strum is confident from the first bar." },
+        { section: "Verse", intensity: "medium", notes: "Steady, rhythmic. Hammer-on embellishments on D add sparkle." },
+        { section: "Chorus", intensity: "full", notes: "Open up — strum all strings, let chords ring longer. The A7 pulls you home to D with maximum conviction." },
+        { section: "Outro", intensity: "medium", notes: "Settle back to verse energy. End on D — let it ring." }
+      ],
+      toneSettings: {
+        pickup: "bridge-or-both",
+        effects: ["reverb:light-spring"],
+        capo: null,
+        tuning: "standard",
+        description: "Bright, warm acoustic-style tone. Less reverb than Dope & Smoke — drier, more present. If electric, bridge pickup or both pickups for clarity."
       },
       what: "Your second song uses three chords you already know (D-Em-G) plus one new one (A7). Father John Misty's Real Love Baby is 102 BPM with hammer-on embellishments and a warm, upbeat energy. A7 adds a bluesy tension that pulls you back to D — it's the chord that makes the loop feel alive instead of static. Listen to the recording twice before playing — first time let the energy wash over you, second time ghost the chord changes with your fretting hand.",
       setup: "Guitar. Metronome at 80 BPM (slower than the 102 BPM original). Build up.",

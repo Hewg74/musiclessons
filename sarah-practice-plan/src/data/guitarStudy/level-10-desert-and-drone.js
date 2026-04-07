@@ -1,17 +1,17 @@
 import { getPitchRange } from "../appData.js";
 
-export const level9 = {
-  level: 9,
+export const level10 = {
+  level: 10,
   title: "Desert & Drone",
   subtitle: "Hypnotic repetition. Patience as a technique. The Sahara in your fingers.",
   description:
     "Desert blues comes from the Sahara — Tinariwen, Bombino, Ali Farka Touré, Mdou Moctar, Vieux Farka Touré. It uses a 'sus pentatonic' scale (a Western approximation of Tuareg guitar modes, replacing the minor 3rd with a 2nd), drone strings, and hypnotic repetition to create trance-like music. Drop D tuning gives you the deep bass drone that anchors everything. This level teaches patience as a musical technique, and formalizes PReVaDe as your motif development framework for desert improvisation.",
   artists: "Tinariwen, Bombino, Ali Farka Touré, Mdou Moctar, Vieux Farka Touré",
-  unlocks: "Extended Harmony (Level 10)",
-  review: { label: "Level 8 Check-In", time: 5, exercises: ["gs-8-1", "gs-8-10"], prompt: "Play the SoCal switch: 4 bars clean skank → 4 bars power chords (gs-8-1). Then play your extended reggae-rock jam (gs-8-10). Ready to slow way down? The desert demands patience." },
+  unlocks: "Extended Harmony (Level 11)",
+  review: { label: "Level 9 Check-In", time: 5, exercises: ["gs-9-1", "gs-9-10"], prompt: "Play the SoCal switch: 4 bars clean skank → 4 bars power chords (gs-9-1). Then play your extended reggae-rock jam (gs-9-10). Ready to slow way down? The desert demands patience." },
   exercises: [
     {
-      id: "gs-9-1",
+      id: "gs-10-1",
       time: 8,
       title: "Sus Pentatonic — One Note Different",
       type: "guitar",
@@ -31,7 +31,7 @@ export const level9 = {
       levelUp: "Play A sus pentatonic (A-B-D-E-G) ascending and descending at 70 BPM in the 5th fret position without accidentally playing C (the minor 3rd), and improvise a 1-minute passage using only A, B, and D."
     },
     {
-      id: "gs-9-2",
+      id: "gs-10-2",
       time: 10,
       title: "Drop D Drone Setup",
       type: "guitar",
@@ -51,7 +51,7 @@ export const level9 = {
       levelUp: "Tune to Drop D, play a bass-melody-melody alternating pattern (thumb on 6th string, fingers on top 3 strings) with the sus pentatonic for 2 minutes — drone never drops out — then tune back to standard within 30 seconds."
     },
     {
-      id: "gs-9-3",
+      id: "gs-10-3",
       time: 5,
       title: "Rhythm Drone",
       type: "guitar",
@@ -78,7 +78,7 @@ export const level9 = {
     // ─── FRETBOARD VISUALIZATION ───
 
     {
-      id: "gs-9-15",
+      id: "gs-10-3b",
       time: 6,
       title: "Fretboard Visualization — Sound, Location, Action",
       type: "guitar",
@@ -103,7 +103,7 @@ export const level9 = {
       levelUp: "Can audiate a target note over the drone, visualize its fretboard position, and play it accurately — with at least 6/10 success rate across the full sus pentatonic. Demonstrated in both ascending and descending directions."
     },
     {
-      id: "gs-9-4",
+      id: "gs-10-4",
       time: 10,
       title: "Hypnotic Repetition",
       type: "guitar",
@@ -123,14 +123,14 @@ export const level9 = {
       levelUp: "Play a 4-note sus pentatonic motif 16 times identically, then change exactly one note on repetition 17 — where the single change is audibly dramatic against the established pattern, confirmed by recording playback."
     },
     {
-      id: "gs-9-5",
+      id: "gs-10-5",
       time: 8,
       title: "Drone Motif Development (PReVaDe)",
       type: "guitar",
-      what: "Take your hypnotic 4-note phrase from gs-9-4 and apply PReVaDe — the motif development framework you first encountered in Level 3. Present your motif 8 times, then Repeat with one note changed, then Vary by reversing direction, then Deconstruct back to the drone. This is PReVaDe applied to desert blues — glacial variation with intention.",
+      what: "Take your hypnotic 4-note phrase from gs-10-4 and apply PReVaDe — the motif development framework you first encountered in Level 3. Present your motif 8 times, then Repeat with one note changed, then Vary by reversing direction, then Deconstruct back to the drone. This is PReVaDe applied to desert blues — glacial variation with intention.",
       setup: "Drop D tuning if available. Clean tone, slight reverb.",
       steps: [
-        { text: "Choose a 4-note sus pentatonic phrase from gs-9-4 (or create a new one). Play it with the A string drone 8 times. No variation. Commit to the repetition. This is PReVaDe's PRESENT phase.", why: "The exact repetition baseline proves you can hold a phrase with discipline. Desert blues demands patience. Present establishes the theme before any development begins." },
+        { text: "Choose a 4-note sus pentatonic phrase from gs-10-4 (or create a new one). Play it with the A string drone 8 times. No variation. Commit to the repetition. This is PReVaDe's PRESENT phase.", why: "The exact repetition baseline proves you can hold a phrase with discipline. Desert blues demands patience. Present establishes the theme before any development begins." },
         { text: "Repetition 9: change one note. If your phrase was A-B-D-E, try A-B-D-G. One note changed. Repeat this new version 8 times. Listen to how enormous that tiny change feels. This is the REPEAT/VARY boundary — you're declaring the variation.", why: "This is PReVaDe 'Vary' applied to desert blues. The ratio of 8 repetitions to 1 change is extreme — that's what makes it meaningful." },
         { text: "Repetition 17: reverse the direction of your phrase. If it ascended (A-B-D-E), now descend (E-D-B-A). Keep the same rhythm. Repeat 8 times. This is still the VARY phase — inversion is a variation technique.", why: "Reversing direction is inversion — preserves interval content while changing melodic direction. Creates a mirror effect." },
         { text: "Repetition 25: DECONSTRUCT. Fragment to just the first 2 notes. Repeat as a short ostinato. Then just 1 note with the drone. Then just the drone alone. The piece dissolves back to its origin.", why: "Deconstruction back to the drone creates a full arc: complexity from simplicity, returning to it. This is the complete PReVaDe cycle applied to desert blues — a framework you'll use in every genre going forward." }
@@ -146,7 +146,7 @@ export const level9 = {
       levelUp: "Perform a full PReVaDe cycle over a drone: Present 8x, Vary (one note changed) 8x, Reverse direction 8x, Fragment to 2 notes then 1 note then drone alone — with no variation step containing more than one changed element."
     },
     {
-      id: "gs-9-6",
+      id: "gs-10-6",
       time: 10,
       title: "Drone + Melody — The Communal Guitar",
       type: "guitar",
@@ -168,7 +168,7 @@ export const level9 = {
       levelUp: "Play drone + melody for 5 minutes in Drop D: low D drone on beat 1, A drone on beat 3, sus pentatonic melody on beats 2 & 4. The drone pattern stays rock-steady throughout while the melody evolves by one note every 30 seconds."
     },
     {
-      id: "gs-9-7",
+      id: "gs-10-7",
       time: 5,
       title: "Desert Recovery",
       type: "guitar",
@@ -190,7 +190,7 @@ export const level9 = {
       levelUp: "During a 2-minute desert improvisation, execute 4 intentional C/B slips — recovering 2 with quarter-tone bends and 2 with blues-commitment phrases — where each recovery sounds musical, not corrective."
     },
     {
-      id: "gs-9-8",
+      id: "gs-10-8",
       time: 10,
       title: "Quarter-Tone Bends — Between the Notes",
       type: "guitar",
@@ -211,7 +211,7 @@ export const level9 = {
       levelUp: "Consistently land a quarter-tone bend between B and C (7th fret high E string) — holding it for 2 beats without overshooting to C or falling back to B — on 4 out of 5 attempts, verified by the pitch contour display."
     },
     {
-      id: "gs-9-9",
+      id: "gs-10-9",
       time: 12,
       title: "Song Study: Tinariwen Nànnuflày Style",
       type: "guitar",
@@ -240,7 +240,7 @@ export const level9 = {
       levelUp: "Play a Tinariwen-style piece for 5+ minutes: steady low D drone on 1 & 3, sus pentatonic melody on the upper strings evolving through 3-4 variations, with at least one quarter-tone bend per minute adding vocal quality."
     },
     {
-      id: "gs-9-10",
+      id: "gs-10-10",
       time: 10,
       title: "Desert Blues Toggle",
       type: "guitar",
@@ -263,7 +263,7 @@ export const level9 = {
       levelUp: "Toggle between 4 bars of Am pentatonic (bluesy bends, behind the beat) and 4 bars of sus pentatonic (straight, repetitive, patient) over Desert Blues 75 for 3 minutes — with an audible character shift on each toggle, not just a note change."
     },
     {
-      id: "gs-9-11",
+      id: "gs-10-11",
       time: 15,
       title: "Extended Desert Jam",
       type: "guitar",
@@ -290,7 +290,7 @@ export const level9 = {
     // ─── NEW EXERCISES: EXPANDING THE DESERT ───
 
     {
-      id: "gs-9-12",
+      id: "gs-10-12",
       time: 10,
       title: "Bombino's Fire — Electric Desert",
       type: "guitar",
@@ -300,10 +300,10 @@ export const level9 = {
       setup: "Drop D tuning. Overdrive or light distortion ON — this is the first time in this level you're adding gain. Slight reverb.",
       tracks: [{ name: "Desert Blues 75 BPM", src: "/desert-blues-75.mp3" }],
       steps: [
-        { text: "Play your sus pentatonic drone pattern from gs-9-6 — but now with overdrive engaged. The distortion thickens the drone and adds sustain. Notice how the same notes feel heavier and more urgent with gain.", why: "Bombino's secret is that the foundation is identical to Tinariwen — sus pentatonic over drones — but the amplified tone transforms the feeling from meditative to electrifying. Distortion adds harmonics that make the drone richer and the melody more cutting." },
+        { text: "Play your sus pentatonic drone pattern from gs-10-6 — but now with overdrive engaged. The distortion thickens the drone and adds sustain. Notice how the same notes feel heavier and more urgent with gain.", why: "Bombino's secret is that the foundation is identical to Tinariwen — sus pentatonic over drones — but the amplified tone transforms the feeling from meditative to electrifying. Distortion adds harmonics that make the drone richer and the melody more cutting." },
         { text: "Increase your picking speed. Instead of the patient one-note-per-beat approach, try tremolo picking: rapid alternating picks on a single melody note while the drone sustains. Pick 16th notes on E (5th fret, B string) for 2 bars, then shift to D (7th fret, G string) for 2 bars — staying in the 5th-fret position so the drone remains accessible.", why: "Tremolo picking is Bombino's signature. It creates an urgent, buzzing quality — the note vibrates like a desert wind. The speed creates intensity while the pitch stays minimal. One note, rapidly repeated, becomes a texture rather than a melody." },
         { text: "Build a Bombino-style riff: drone on beats 1 and 3, then a rapid 4-note ascending run (A-B-D-E) on beat 4 leading into the next bar. The run should feel like a burst of energy between the steady drone hits.", why: "Bombino's riffs combine the hypnotic drone foundation with explosive melodic bursts. The contrast between the steady drone and the rapid runs creates the excitement — it's desert blues with rock-and-roll energy." },
-        { text: "Play for 5 minutes: alternate between patient Tinariwen-style phrasing (gs-9-9 approach) and aggressive Bombino-style bursts. The toggle is your choice — 8 bars of meditation, then 4 bars of fire, then back. Let the contrast build.", why: "Switching between meditative and aggressive over the same scale and drone reveals the range of desert blues. Tinariwen and Bombino are two sides of the same coin — patience and intensity sharing the same musical DNA." },
+        { text: "Play for 5 minutes: alternate between patient Tinariwen-style phrasing (gs-10-9 approach) and aggressive Bombino-style bursts. The toggle is your choice — 8 bars of meditation, then 4 bars of fire, then back. Let the contrast build.", why: "Switching between meditative and aggressive over the same scale and drone reveals the range of desert blues. Tinariwen and Bombino are two sides of the same coin — patience and intensity sharing the same musical DNA." },
         { text: "End with a sustained quarter-tone bend at full volume — let the distortion and the microtonal pitch create a wailing, vocal cry. Hold it for 4 beats, then release into the drone. Record the entire 5 minutes.", why: "The sustained bend with distortion is Bombino's emotional climax move. The overdriven tone sustains the note longer, and the quarter-tone pitch creates a sound that's halfway between guitar and human voice." }
       ],
       feel: "This should feel like plugging the desert into an amplifier. The same notes, the same scale, the same drone — but electrified. Where Tinariwen makes you close your eyes and sway, Bombino makes you stand up and move. Both are valid, both are desert blues.",
@@ -313,7 +313,7 @@ export const level9 = {
       levelUp: "Play a 5-minute Bombino-style piece: distorted sus pentatonic over Drop D drone, incorporating tremolo picking and rapid melodic bursts alongside patient drone phrasing. The piece alternates between meditative and aggressive sections with clear dynamic contrast, ending with a sustained quarter-tone bend."
     },
     {
-      id: "gs-9-13",
+      id: "gs-10-13",
       time: 12,
       title: "One Note Per Minute — Extreme Constraint",
       type: "guitar",
@@ -338,7 +338,7 @@ export const level9 = {
       levelUp: "Complete a 12-minute improvisation with no more than one pitch change per minute (12 notes maximum). Recording confirms each note is explored through varied rhythm, dynamics, and articulation before the next note arrives. The piece has a clear arc from single note to full palette and back."
     },
     {
-      id: "gs-9-14",
+      id: "gs-10-14",
       time: 10,
       title: "Vieux Farka Touré — Desert Meets Rock",
       type: "guitar",
@@ -348,7 +348,7 @@ export const level9 = {
       setup: "Drop D tuning. Clean to light overdrive. Slight reverb.",
       tracks: [{ name: "Desert Blues 75 BPM", src: "/desert-blues-75.mp3" }],
       steps: [
-        { text: "Play the Tinariwen drone-and-melody pattern from gs-9-9 — steady, meditative, patient. This is the father's approach: Ali Farka Touré, acoustic, rooted in tradition. Play for 2 minutes to establish the baseline.", why: "Starting with the traditional sound grounds you in the source material. Vieux didn't abandon the tradition — he expanded it. You need to hear where he came from before you can hear where he went." },
+        { text: "Play the Tinariwen drone-and-melody pattern from gs-10-9 — steady, meditative, patient. This is the father's approach: Ali Farka Touré, acoustic, rooted in tradition. Play for 2 minutes to establish the baseline.", why: "Starting with the traditional sound grounds you in the source material. Vieux didn't abandon the tradition — he expanded it. You need to hear where he came from before you can hear where he went." },
         { text: "Now shift the rhythm: instead of placing melody notes on beats 2 and 4, play them on the 'and' of 2 and the 'and' of 4. Syncopate the melody while keeping the drone on 1 and 3. The melody now pushes against the beat — it swings, it grooves, it funkifies the desert.", why: "Vieux Farka Touré's innovation is rhythmic, not harmonic. Same scale, same drone, but the melody is syncopated. This rhythmic displacement is what connects the Sahara to funk and rock — it's the same offbeat energy you practiced in Level 4's reggae skank, applied to desert blues." },
         { text: "Add ghost notes between the melody notes — muted string scratches that fill the rhythmic spaces. These ghost notes create a percussive texture, making your right hand work like a drummer. Your pattern becomes: drone, ghost, melody, ghost, drone, ghost, melody, ghost.", why: "Ghost notes are Vieux's bridge to funk. In traditional Tuareg guitar, the spaces between notes are silence. In Vieux's playing, those spaces are filled with rhythmic texture — muted strums that keep the groove propulsive." },
         { text: "Try a call-and-response within the groove: play a syncopated melody phrase for 2 bars, then 2 bars of pure drone-and-ghost-note groove (no melody, just rhythm). The melody is the voice; the groove is the band responding.", why: "Call-and-response is common to both West African and American music. Vieux uses it to create dynamic variation without changing the harmony — the conversation is between melody and rhythm, not between chords." },
@@ -364,7 +364,7 @@ export const level9 = {
     // ─── COLOR MUSIC: SCALE RUNNER + FREE FLOW ───
 
     {
-      id: "gs-9-15",
+      id: "gs-10-15",
       time: 5,
       title: "Scale Runner: Speed Builds Fluency",
       type: "guitar",
@@ -380,7 +380,7 @@ export const level9 = {
       sarah: "Gene, when the scale is in your fingers at 90+ BPM, you've graduated from playing scales to speaking a language. The colors are your guide — you start recognizing patterns by color before your fingers even move."
     },
     {
-      id: "gs-9-16",
+      id: "gs-10-16",
       time: 8,
       title: "Free Flow: Your First Improv",
       type: "guitar",

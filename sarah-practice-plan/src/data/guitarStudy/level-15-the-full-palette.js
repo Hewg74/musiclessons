@@ -1,25 +1,25 @@
 import { getPitchRange } from "../appData.js";
 
-export const level14 = {
-  level: 14,
+export const level15 = {
+  level: 15,
   title: "The Full Palette",
   subtitle: "Every style, every scale, every technique — deployed on demand. You choose the color.",
   description:
     "You've spent 13 levels building individual colors — surf strum, reggae skank, desert drone, soul groove, psych fuzz, jangle shimmer, fingerpicking, dynamic expression. Now you learn to CHOOSE. This is the integration level: same chords played five different ways, scale selection by ear, PReVaDe across genre boundaries, transcription by ear, and extended multi-style jams where you flow between worlds without stopping. The goal isn't to master a new technique — it's to deploy everything you already know, on demand, with intention.",
   artists: "All previous artists — this is the integration level",
-  unlocks: "Your Sound (Level 15)",
+  unlocks: "Your Sound (Level 16)",
   review: {
-    label: "Level 13 Check-In",
+    label: "Level 14 Check-In",
     time: 5,
-    exercises: ["gs-13-3", "gs-13-8"],
-    prompt: "Play D→Dm with a volume swell on the transition (gs-13-3). Then play a PReVaDe cycle with dynamic variation (gs-13-8). Dynamics are expressive? Time to deploy the full palette."
+    exercises: ["gs-14-3", "gs-14-8"],
+    prompt: "Play D→Dm with a volume swell on the transition (gs-14-3). Then play a PReVaDe cycle with dynamic variation (gs-14-8). Dynamics are expressive? Time to deploy the full palette."
   },
   exercises: [
 
     // ─── STYLE SWITCHING ───
 
     {
-      id: "gs-14-1",
+      id: "gs-15-1",
       time: 10,
       title: "Five Feels, One Progression",
       type: "guitar",
@@ -50,7 +50,7 @@ export const level14 = {
     // ─── SCALE CHOICE ───
 
     {
-      id: "gs-14-2",
+      id: "gs-15-2",
       time: 10,
       title: "Scale Choice Game",
       type: "guitar",
@@ -82,7 +82,7 @@ export const level14 = {
     // ─── PReVaDe ACROSS GENRES ───
 
     {
-      id: "gs-14-3",
+      id: "gs-15-3",
       time: 10,
       title: "PReVaDe Genre Shift",
       type: "guitar",
@@ -91,7 +91,7 @@ export const level14 = {
       steps: [
         { text: "PRESENT: Create a 2-bar motif using Am-G in surf style — bright, ringing, constant arm motion, reverb feel. Play it 4 times exactly. Let the listener memorize it. This is your theme. Keep it simple — the magic is in what happens NEXT.", why: "The Present phase establishes the theme in a specific sonic world. By playing it 4 times in surf style, you're declaring 'this is a surf piece.' The listener's expectations are set." },
         { text: "REPEAT: Play the identical motif 4 more times in surf style. Exact copy. No variation. This confirms the theme — the listener thinks they know where this is going. Repetition creates the expectation that variation will break.", why: "Repetition is what makes the upcoming variation powerful. Without enough repetition, the variation feels random. With enough, it feels like a deliberate artistic choice. 8 bars of identical surf establishes the world firmly." },
-        { text: "VARY: Same notes, same rhythm — but switch to REGGAE. The Am-G motif is now skanked on the upbeats, muted between chops, bouncy. The NOTES didn't change. The WORLD did. Play this for 4-8 bars. Feel how the same melody lives in a completely different universe.", why: "This is the key insight of Level 14: variation doesn't have to mean different notes. Changing the STYLE is the most dramatic variation possible. The listener recognizes the melody but the context has shifted — it's like hearing a familiar face in a dream." },
+        { text: "VARY: Same notes, same rhythm — but switch to REGGAE. The Am-G motif is now skanked on the upbeats, muted between chops, bouncy. The NOTES didn't change. The WORLD did. Play this for 4-8 bars. Feel how the same melody lives in a completely different universe.", why: "This is the key insight of Level 15: variation doesn't have to mean different notes. Changing the STYLE is the most dramatic variation possible. The listener recognizes the melody but the context has shifted — it's like hearing a familiar face in a dream." },
         { text: "DECONSTRUCT: Dissolve the motif. Strip away the reggae rhythm. Let the Am ring as a single chord, then just the A root note, then silence between sparse plucks, then nothing. The piece returns to stillness.", why: "Deconstruction after a genre shift creates a sense of journey — surf → reggae → dissolution. The listener has traveled through two worlds and arrived at silence. This is how great improvisers end their musical stories." },
         { text: "Try the full cycle again with different genre shifts: start in fingerpicking → vary to power chords. Or start in desert drone → vary to soul groove. Record each attempt. The motif stays the same — only the world changes.", why: "Multiple genre-shift cycles prove the concept isn't limited to surf→reggae. Any style can transform into any other style. When you can do this fluently, you can take a listener on a journey across your entire palette within a single improvisation." }
       ],
@@ -113,7 +113,7 @@ export const level14 = {
     // ─── TRANSCRIPTION ───
 
     {
-      id: "gs-14-4",
+      id: "gs-15-4",
       time: 12,
       title: "Ear Transcription Challenge",
       type: "guitar",
@@ -122,7 +122,7 @@ export const level14 = {
       steps: [
         { text: "Choose a song you've studied in earlier levels — start with something simple like Dope & Smoke (Am-D, 2 chord families) or Real Love Baby (D-Em-G-A7). Play the song on your phone. Listen to the bass — hum the lowest note of each chord change. DON'T pick up the guitar yet. Just listen and hum the root movement.", why: "The bass note reveals the root of each chord. Humming it isolates the harmonic movement from the rhythmic complexity. Your ear has been training for this since Level 1 — you already know these bass movements from playing the songs." },
         { text: "Now pick up the guitar. Find each bass note on the low E or A string. Play along with the song, hitting ONLY the root notes in time with the chord changes. Don't worry about full chords yet — just the roots. Write them down: 'The roots are A, D' (for Dope & Smoke) or 'D, E, G, A' (for Real Love Baby).", why: "Finding roots on the fretboard connects your ear to the instrument. This is the foundation of transcription — once you have the roots, determining the chord quality (major/minor) is the next step." },
-        { text: "For each root, determine: is it major or minor? Play a major chord on that root, then a minor chord. Which one matches the song? Listen for the 3rd — does it sound bright (major) or blue (minor)? If you're unsure, try both and let your ear decide.", why: "Major vs minor is the single most important quality distinction. Your Level 13 work on major→minor shifts means your ear is already sensitive to this difference. Trust what sounds 'right' — your ear knows more than you think." },
+        { text: "For each root, determine: is it major or minor? Play a major chord on that root, then a minor chord. Which one matches the song? Listen for the 3rd — does it sound bright (major) or blue (minor)? If you're unsure, try both and let your ear decide.", why: "Major vs minor is the single most important quality distinction. Your Level 14 work on major→minor shifts means your ear is already sensitive to this difference. Trust what sounds 'right' — your ear knows more than you think." },
         { text: "Play through the entire song with your transcribed chords. Does it sound right? Where does it feel wrong? Those spots need another listen. Common mistakes: hearing a minor as major (or vice versa), missing a chord change on a weak beat, hearing the relative major/minor instead of the actual chord.", why: "Playing along is the verification step. Your ear will immediately flag spots where your transcription is wrong — the friction is audible. Each correction sharpens your transcription skill for the next song." },
         { text: "Check your transcription against the verified chords from the curriculum. How close were you? Even getting 2 out of 3 chords right on your first transcription is excellent. Note what you missed and why — was it a chord quality error? A root error? A missed chord change?", why: "The verification step closes the feedback loop. Transcription improves rapidly when you can see exactly where your ear was right and where it was fooled. Each song transcribed makes the next one easier." },
         { text: "Try a harder song: Sol Del Sur (C#m-B-F#) has a barre chord voicing that's harder to hear, or Texas Sun (Am-G-Em-Bm) has more chord changes. Same process — bass notes first, then quality, then verify.", why: "Graduating from 3-chord songs to 4-5 chord songs with barre voicings is the natural progression. C#m is harder to identify by ear than Am because it's less common as a home key — but the process is identical." }
@@ -138,7 +138,7 @@ export const level14 = {
     // ─── MULTI-GENRE IMPROV ───
 
     {
-      id: "gs-14-5",
+      id: "gs-15-5",
       time: 12,
       title: "Multi-Genre Flow",
       type: "guitar",
@@ -149,10 +149,10 @@ export const level14 = {
         { text: "When you feel the first natural impulse to change something — a desire for more energy, more space, more groove — let that impulse guide a style shift. Don't force it. If you're playing surf and your body wants to bounce, let it become reggae. If you're playing reggae and your hands want to slow down, let it become desert. Follow the energy.", why: "Organic style transitions come from listening to your own playing and responding to what it wants to become. Forced transitions sound mechanical. The musician who follows their instinct creates transitions that surprise even themselves." },
         { text: "Navigate through at least 3 different styles during the 10 minutes. You might go surf→soul→desert→surf. You might go reggae→psych→fingerpicking→drone. There's no wrong path. The only requirement is that each style is DISTINCTLY itself for at least 1-2 minutes before transitioning.", why: "Spending at least 1-2 minutes in each style proves you can inhabit it fully, not just touch on it. Quick flickers between styles aren't flowing — they're fidgeting. Each style needs enough time to establish its own identity within the improvisation." },
         { text: "Pay attention to the transitions. What bridges surf to reggae? (Slow the strum, shift to upbeats.) What bridges soul to desert? (Drop the chord changes, drone on one note, add space.) The transitions are the most creative part — they're the moments where you're inventing something that isn't quite any genre.", why: "Transitions between styles are where your personal voice emerges. Every guitarist plays surf and reggae differently, but how you MOVE between them is uniquely yours. These liminal moments — neither surf nor reggae — might become your signature sound." },
-        { text: "For the final 2 minutes, apply the audiation constraint: play nothing you didn't hear first. Every note, every chord, every strum — audiated before execution. This will slow your output dramatically. Let the improvisation dissolve naturally through this constraint: fewer notes because each one must be pre-heard, more space because audiation takes time, quieter because intention breeds restraint. The piece ends when the last audiated note fades.", why: "Ending with the audiation constraint (CLA, Gray 2018) transforms the final minutes from 'winding down' into the deepest musical state of the whole jam. When every note is pre-heard, the music becomes sparse, intentional, and profoundly musical. This previews the capstone exercise (gs-14-10) and gives your 10-minute improvisation an ending that sounds composed — because audiation IS real-time composition." }
+        { text: "For the final 2 minutes, apply the audiation constraint: play nothing you didn't hear first. Every note, every chord, every strum — audiated before execution. This will slow your output dramatically. Let the improvisation dissolve naturally through this constraint: fewer notes because each one must be pre-heard, more space because audiation takes time, quieter because intention breeds restraint. The piece ends when the last audiated note fades.", why: "Ending with the audiation constraint (CLA, Gray 2018) transforms the final minutes from 'winding down' into the deepest musical state of the whole jam. When every note is pre-heard, the music becomes sparse, intentional, and profoundly musical. This previews the capstone exercise (gs-15-10) and gives your 10-minute improvisation an ending that sounds composed — because audiation IS real-time composition." }
       ],
       feel: "This should feel like a road trip through your musical landscape — each style is a different terrain, and you're driving through without stopping. The transitions should feel like cresting a hill and seeing a new vista. If you're grinning during the transitions, you've got it.",
-      wrong: "If you keep defaulting to one style and can't leave it, practice the transition explicitly: play 4 bars of surf, then 4 bars of reggae, alternating. Build the transition muscle before attempting the freeform flow. If all your styles sound the same, go back to exercise gs-14-1 and exaggerate each one.",
+      wrong: "If you keep defaulting to one style and can't leave it, practice the transition explicitly: play 4 bars of surf, then 4 bars of reggae, alternating. Build the transition muscle before attempting the freeform flow. If all your styles sound the same, go back to exercise gs-15-1 and exaggerate each one.",
       sarah: "Gene, this is what your favorite artists do live — Khruangbin's sets drift from Thai funk to Texas country to Iranian psych to dub reggae without a seam. They don't announce 'now we're switching styles.' It just flows. Your 10-minute jam is a miniature version of that. Don't overthink the transitions — your hands know more styles than your brain can track. Trust the palette you've built.",
       metronome: 85,
       tracks: [
@@ -168,7 +168,7 @@ export const level14 = {
     // ─── FEEL TOGGLE ───
 
     {
-      id: "gs-14-6",
+      id: "gs-15-6",
       time: 8,
       title: "The Feel Toggle",
       type: "guitar",
@@ -194,7 +194,7 @@ export const level14 = {
     // ─── COMPOSITION ───
 
     {
-      id: "gs-14-7",
+      id: "gs-15-7",
       time: 12,
       title: "Three-World Composition",
       type: "guitar",
@@ -224,7 +224,7 @@ export const level14 = {
     // ─── SONG STUDY MASHUP ───
 
     {
-      id: "gs-14-8",
+      id: "gs-15-8",
       time: 10,
       title: "Song Study Mashup",
       type: "guitar",
@@ -248,18 +248,18 @@ export const level14 = {
     // ─── EXTENDED PALETTE JAM ───
 
     {
-      id: "gs-14-9",
+      id: "gs-15-9",
       time: 15,
       title: "Extended Palette Jam — 15 Minutes",
       type: "guitar",
-      what: "The culminating exercise. 15 minutes of recorded playing with every tool available — all styles, all scales, all techniques, all backing tracks. No structure required. This is a free-form demonstration of your full palette. Play what you feel. Switch when you want. Use what you know. This recording is your Level 14 portfolio.",
+      what: "The culminating exercise. 15 minutes of recorded playing with every tool available — all styles, all scales, all techniques, all backing tracks. No structure required. This is a free-form demonstration of your full palette. Play what you feel. Switch when you want. Use what you know. This recording is your Level 15 portfolio.",
       setup: "Guitar. All backing tracks available. Recorder ON from the start. Set a 15-minute timer.",
       steps: [
         { text: "Press record. Start with silence — 4-8 beats of nothing. Let the anticipation build. Then begin with whatever calls to you. Don't plan. The first note, the first chord, the first strum — let it emerge.", why: "Starting from silence is a compositional choice. It frames everything that follows as intentional. The silence says 'I chose to begin HERE.' Let the first sound come when it's ready." },
         { text: "For the first 5 minutes, play freely in 1-2 styles. Don't rush to show everything you know. Settle into a groove and let it develop — feel your body adapt to the style's physical signature. Every technique you've learned has a physical fingerprint: surf strum = continuous arm flow. Reggae = wrist snap. Fingerpicking = individual finger independence. Desert = patient, minimal movement. Let your body inhabit whichever style calls to you. Depth in one style is more musical than surface-level touches of five styles.", why: "The temptation in a 15-minute jam is to showcase everything immediately. Resist. When you settle into one style, your body adopts its physical language — the posture, the arm motion, the finger engagement. That embodied commitment is what makes it sound authentic rather than sampled." },
-        { text: "Between minutes 5 and 10, let the style shifts happen. Use what you practiced in gs-14-5 — organic transitions, following the energy. Try to visit at least 2 new styles. Use different scales over different sections — pentatonic for rock, Dorian for soul, sus pentatonic for desert.", why: "The middle section is where your palette unfolds. Each style transition should feel earned — motivated by musical energy, not by a checklist. The scale changes add color that matches the style shifts." },
+        { text: "Between minutes 5 and 10, let the style shifts happen. Use what you practiced in gs-15-5 — organic transitions, following the energy. Try to visit at least 2 new styles. Use different scales over different sections — pentatonic for rock, Dorian for soul, sus pentatonic for desert.", why: "The middle section is where your palette unfolds. Each style transition should feel earned — motivated by musical energy, not by a checklist. The scale changes add color that matches the style shifts." },
         { text: "Between minutes 10 and 15, shift into audiation mode: hear every note before you play it. The jam naturally slows and deepens. You've been playing freely for 10 minutes — now apply the 'play nothing you didn't hear first' constraint. This creates a natural resolution as output drops to the most intentional, essential notes. Let the audiation pace determine the ending.", why: "Ending a 15-minute jam with the audiation constraint (imagine → sing internally → play) creates the most musical resolution possible. After 10 minutes of free playing, the sudden requirement to pre-hear every note naturally produces the sparse, intentional quality that great endings need. Aarhus 2021 showed this protocol equals full learning in 1/3 the time — applied here, it transforms the ending from 'winding down' into 'arriving at depth.'" },
-        { text: "After recording, listen to the whole thing. Note the timestamps where something special happened — a transition that clicked, a scale choice that was perfect, a moment where you surprised yourself. These moments are data points about your emerging sound.", why: "Critical self-listening is the final skill. You're not just playing — you're learning what YOUR palette sounds like when deployed freely. The moments that excite you when you listen back are the seeds of Level 14: Your Sound." }
+        { text: "After recording, listen to the whole thing. Note the timestamps where something special happened — a transition that clicked, a scale choice that was perfect, a moment where you surprised yourself. These moments are data points about your emerging sound.", why: "Critical self-listening is the final skill. You're not just playing — you're learning what YOUR palette sounds like when deployed freely. The moments that excite you when you listen back are the seeds of Level 15: Your Sound." }
       ],
       feel: "This should feel like a journey — not a recital and not a checklist. You're playing for the joy of having all these tools and the freedom to use them. Some moments will be great, some will be mediocre, and that's fine. The 15-minute canvas is big enough for both. Before you start: what mood are you in? Let that guide the opening style. After: what did the jam teach you about your preferences?",
       wrong: "If you're anxiously switching styles every 30 seconds trying to 'show' everything, slow down. It's not a demo reel. Spend at least 2 minutes in each style before moving on. If you get stuck in one style for the entire 15 minutes, that's okay too — it might be telling you something about your natural home.",
@@ -288,7 +288,7 @@ export const level14 = {
     // ─── AUDIATED IMPROVISATION CAPSTONE ───
 
     {
-      id: "gs-14-10",
+      id: "gs-15-10",
       time: 10,
       title: "Audiated Improvisation — Play Nothing You Didn't Hear First",
       type: "guitar",

@@ -100,6 +100,35 @@ export const level4 = {
         src: "/gimme-love.mp3",
         note: "Listen to the offbeat chop — light, bouncy, island vibes. Three open chords in the key of C. Match the feel."
       },
+      songStructure: [
+        { name: "Intro", bars: 4, chords: ["F", "C", "G", "C"] },
+        { name: "Verse", bars: 8, chords: ["F", "C", "G", "C", "F", "C", "G", "C"], repeat: 2 },
+        { name: "Chorus", bars: 8, chords: ["F", "C", "G", "C", "F", "C", "G", "C"] },
+        { name: "Instrumental", bars: 4, chords: ["F", "C", "G", "C"] }
+      ],
+      strumPattern: {
+        notation: "_ U _ U _ U _ U",
+        subdivision: "8ths",
+        bpm: 86,
+        description: "Pure offbeat skank — arm swings on every 8th note but only hits strings on the 'ands' (upbeats). Downbeats are silent swings or ghost notes. Light, bouncy touch with quick mute release."
+      },
+      embellishments: [
+        { name: "Longer ring on chorus", when: "Chorus sections", how: "Let the chord ring for a full 8th note before muting, instead of the tight chop used in verses.", why: "Creates dynamic contrast between verse (tight chop) and chorus (warmer, more open). The Elovaters use this to lift the chorus energy.", technique: "mute" },
+        { name: "Ghost note fill", when: "Downbeats throughout, especially during chord changes", how: "Light muted brush on the downbeat — barely audible percussive 'chk' that fills the space between skanks.", why: "Adds rhythmic continuity and covers chord transitions. Turns silence into active texture.", technique: "ghost-note" }
+      ],
+      dynamicArc: [
+        { section: "Intro", intensity: "soft", notes: "Establish the groove with light skanks. Island vibes — relaxed, swaying." },
+        { section: "Verse", intensity: "medium", notes: "Steady skank with tight muting. Consistent and hypnotic." },
+        { section: "Chorus", intensity: "medium-full", notes: "Open up — let chords ring slightly longer. The bounce lifts." },
+        { section: "Instrumental", intensity: "medium", notes: "Back to verse intensity. The groove is the star, not volume." }
+      ],
+      toneSettings: {
+        pickup: "neck",
+        effects: ["reverb:light-spring"],
+        capo: null,
+        tuning: "standard",
+        description: "Clean, warm tone. Minimal effects — the reggae feel comes from the right hand, not the signal chain. Light spring reverb for space."
+      },
       what: "The Elovaters' Gimme Love is a three-chord reggae tune in the key of C: F-C-G. All open chords — no barres needed. Listen and ghost the skank rhythm before playing. This is reggae with chords you already know from Level 1. The magic is applying the offbeat skank to familiar shapes.",
       setup: "Guitar. Metronome at 80 BPM (song is ~86, start slower). Listen to the song reference first.",
       chordVoicings: { chords: ["F", "C", "G"] },
@@ -127,6 +156,33 @@ export const level4 = {
         title: "Jah Werx — Susto",
         src: "/jah-werx.mp3",
         note: "Listen to the reggae influence on an indie-rock band. B-F#-E with that offbeat bounce. These are barre chords — your first reggae barre workout."
+      },
+      songStructure: [
+        { name: "Verse", bars: 8, chords: ["B", "F#", "E", "B", "B", "F#", "E", "B"], repeat: 2 },
+        { name: "Chorus", bars: 4, chords: ["B", "F#", "E", "B"] },
+        { name: "Bridge", bars: 4, chords: ["E", "B", "E", "B"] }
+      ],
+      strumPattern: {
+        notation: "_ U _ U _ U _ U",
+        subdivision: "8ths",
+        bpm: 85,
+        description: "Same offbeat skank as Gimme Love but on barre chords. Tighter mute required — release barre pressure quickly after each strum for a clean chop. The grip-and-release cycle is the workout."
+      },
+      embellishments: [
+        { name: "B7 substitution", when: "Any B bar where full barre is fatiguing", how: "Replace B barre (x24442) with B7 (x21202) — only two fingers, still sounds great in reggae context.", why: "B7 has the bluesy b7 that adds warmth. It's not a compromise — it's a valid harmonic choice that also rests your hand.", technique: "mute" },
+        { name: "Slide into barre", when: "First beat of each new barre chord", how: "Slide the barre shape up from one fret below into position on the downbeat. The slide creates a rhythmic approach note.", why: "Adds forward momentum to barre chord transitions. Makes the chord change feel intentional rather than abrupt.", technique: "slide" }
+      ],
+      dynamicArc: [
+        { section: "Verse", intensity: "medium", notes: "Steady barre skank. Focus on clean chops and consistent muting." },
+        { section: "Chorus", intensity: "medium-full", notes: "Same chords but let them breathe slightly more. Energy lifts." },
+        { section: "Bridge", intensity: "soft", notes: "Just E and B — simplify. Less muting, more ring. Contrast with the tight verse chop." }
+      ],
+      toneSettings: {
+        pickup: "neck",
+        effects: ["reverb:light"],
+        capo: null,
+        tuning: "standard",
+        description: "Clean warm tone. The barre chords have a naturally thicker sound than open chords — the neck pickup keeps it from getting harsh."
       },
       what: "Susto's Jah Werx uses B-F#-E — three chords in the key of B, all requiring barre chord shapes. This is a step up from Gimme Love's open chords. B is a barre at fret 2, F# is a barre at fret 2 (E-shape), and E is your familiar open chord. The reggae rhythm is the same offbeat skank — now applied to barre shapes.",
       setup: "Guitar. Metronome at 80 BPM (song is ~85). Listen to the song reference first.",
@@ -259,6 +315,36 @@ export const level4 = {
         title: "Surf Hat — Surf Hat",
         src: "/surf-hat.mp3",
         note: "Reggae/ska off-beat chops with dominant 7th voicings. Clean tone with chorus/vibrato effect and spring reverb. Listen for the tight left-hand muting."
+      },
+      songStructure: [
+        { name: "Intro", bars: 4, chords: ["E7", "A7", "E7", "A7"] },
+        { name: "Verse", bars: 8, chords: ["E7", "E7", "A7", "A7", "E7", "E7", "B7", "A7"], repeat: 2 },
+        { name: "Chorus", bars: 4, chords: ["B7", "F#7", "E7", "A7"] },
+        { name: "Turnaround", bars: 2, chords: ["B7", "E7"] }
+      ],
+      strumPattern: {
+        notation: "_ U _ U _ U _ U",
+        subdivision: "8ths",
+        bpm: 85,
+        description: "Tight offbeat skank with immediate left-hand muting. Squeeze-and-choke: press chord to sound it, immediately relax to kill the ring. Ghost strums (muted 'chukka' scratches) fill the downbeats. Continuous 8th-note arm motion."
+      },
+      embellishments: [
+        { name: "Slide-into-chord approach", when: "First beat of each new chord change", how: "Slide the chord shape up from one fret below into position. E.g., slide from fret 1 into E7 at fret 2.", why: "Gives each chord a slight 'wah' attack and makes chord changes sound smooth even at speed.", technique: "slide" },
+        { name: "Tremolo-picked accent", when: "Last bar of each verse section (lead guitar, not rhythm)", how: "Tremolo pick a single note on the high E string over the rhythm chops. Preview of surf lead technique.", why: "Adds surf character. The rhythm guitar stays locked while the lead adds shimmer on top.", technique: "mute" },
+        { name: "Whammy bar dip (if available)", when: "End of chorus, on the last E7 chord", how: "Push the whammy bar down after strumming to dip the pitch, then release. Creates a wobbly, seasick effect.", why: "Classic surf technique. Even a small dip adds psychedelic character. Skip if your guitar has no whammy.", technique: "bend" }
+      ],
+      dynamicArc: [
+        { section: "Intro", intensity: "soft", notes: "Establish the groove with E7 and A7 only. Tight chops, lots of space." },
+        { section: "Verse", intensity: "medium", notes: "Steady staccato skank. Every chord chopped short — percussive and bouncy." },
+        { section: "Chorus", intensity: "full", notes: "B7 and F#7 add tension. Let the chords ring slightly longer — the chorus breathes more." },
+        { section: "Turnaround", intensity: "medium", notes: "Quick B7→E7 resolution. Snap back to tight chops for the next verse." }
+      ],
+      toneSettings: {
+        pickup: "neck-or-middle",
+        effects: ["chorus:light", "reverb:spring"],
+        capo: null,
+        tuning: "standard",
+        description: "Clean tone with chorus/vibrato effect for that wobbly, underwater quality. Spring reverb adds surf character. No overdrive — the percussive chop needs clean headroom."
       },
       what: "Surf Hat by Surf Hat uses E7-A7-B7-F#7 — all dominant 7th chords. These voicings add a bluesy, unresolved color to the reggae/ska off-beat chops you've been learning. The strum is the same offbeat skank, but the chord shapes are new.",
       setup: "Electric guitar. Clean tone with chorus or vibrato effect if available. Spring reverb. Metronome at 85 BPM.",

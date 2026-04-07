@@ -7,7 +7,7 @@ export const level6 = {
   description:
     "Every chord you've played so far — open shapes, barre chords — uses 5 or 6 strings. A triad uses only 3. Three notes: root, 3rd, 5th. That's all a chord IS. Strip away the doubles and octaves, and you're left with the purest form of harmony. These 3-note shapes are small, fast, moveable, and they map the ENTIRE fretboard through chord tones instead of abstract memorization. Mark Speer (Khruangbin) builds his whole approach on triads — 'three-note chord melody stuff on the top three strings.' Cory Wong strips barre chords down to triads for punchy funk. Reggae skank? Triads on top strings. This level transforms how you see the neck.",
   artists: "Khruangbin, Skinshape, Cory Wong, Nile Rodgers",
-  unlocks: "Jangle & Shimmer (Level 7)",
+  unlocks: "Chord Tone Soloing (Level 7)",
   review: {
     label: "Level 5 Check-In",
     time: 5,

@@ -1,25 +1,25 @@
 import { getPitchRange } from "../appData.js";
 
-export const level10 = {
-  level: 10,
+export const level11 = {
+  level: 11,
   title: "Extended Harmony",
   subtitle: "Seventh chords, Dorian mode, and the soul grooves that make simple progressions feel deep.",
   description:
     "You've spent nine levels building rhythm, feel, and desert patience. Now we add harmonic color — the 7th chords that separate folk guitar from soul guitar. Am7 instead of Am. Dm7 instead of Dm. One extra note per chord transforms your sound from campfire to candlelit lounge. You'll learn the Skinshape soul cycle, the Dorian mode's brighter shade of minor, ghost-note grooves, and Khruangbin's three-note voicings. This is where your guitar starts to sound expensive.",
   artists: "Skinshape, Cotton Jones, Khruangbin, Leon Bridges",
-  unlocks: "Global Colors (Level 11)",
+  unlocks: "Global Colors (Level 12)",
   review: {
-    label: "Level 9 Check-In",
+    label: "Level 10 Check-In",
     time: 5,
-    exercises: ["gs-9-4", "gs-9-11"],
-    prompt: "Play a 4-note sus pentatonic motif 16 times identically (gs-9-4). Then play your extended desert jam with drone throughout (gs-9-11). Desert patience is solid? Time to add harmonic color."
+    exercises: ["gs-10-4", "gs-10-11"],
+    prompt: "Play a 4-note sus pentatonic motif 16 times identically (gs-10-4). Then play your extended desert jam with drone throughout (gs-10-11). Desert patience is solid? Time to add harmonic color."
   },
   exercises: [
 
     // ─── LEARN: 7TH CHORD VOICINGS ───
 
     {
-      id: "gs-10-1",
+      id: "gs-11-1",
       time: 8,
       title: "Open 7th Chords — Am7, Dm7, Em7",
       type: "guitar",
@@ -40,7 +40,7 @@ export const level10 = {
       levelUp: "Play Am7, Dm7, and Em7 cleanly with no buzzing, cycling between them on 4-beat changes, and describe the sonic difference between each 7th chord and its triad. Retrieval check: set the guitar down for 60 seconds, then form each 7th shape from memory."
     },
     {
-      id: "gs-10-2",
+      id: "gs-11-2",
       time: 7,
       title: "Triad vs. 7th — Hearing the Color",
       type: "guitar",
@@ -62,7 +62,7 @@ export const level10 = {
       levelUp: "Play Am-D-Dm7-Dm at 80 BPM and accurately describe the moment when the 7th appears and disappears in the progression."
     },
     {
-      id: "gs-10-3",
+      id: "gs-11-3",
       time: 8,
       title: "Barre 7th Chords — Gm7, C7, A7",
       type: "guitar",
@@ -86,7 +86,7 @@ export const level10 = {
     // ─── PLAY: SONG STUDIES ───
 
     {
-      id: "gs-10-4",
+      id: "gs-11-4",
       time: 10,
       title: "Song Study: I Didn't Know — Skinshape Soul Cycle",
       type: "guitar",
@@ -114,7 +114,7 @@ export const level10 = {
       levelUp: "Play the Gm7-C7-A7-Dm7 cycle with ghost-scratch groove at 80 BPM for 2 minutes straight — chord changes relaxed and behind the beat, ghost scratches clearly audible, no stops or hesitations."
     },
     {
-      id: "gs-10-5",
+      id: "gs-11-5",
       time: 8,
       title: "A Dorian Mode — The Brighter Minor",
       type: "guitar",
@@ -139,7 +139,7 @@ export const level10 = {
       levelUp: "Play A Dorian ascending and descending at 80 BPM, then improvise for 1 minute emphasizing the F# as the Dorian color note, and correctly identify the difference between A Dorian and A natural minor by ear."
     },
     {
-      id: "gs-10-6",
+      id: "gs-11-6",
       time: 7,
       title: "Ghost-Note Groove — Muted Scratches for Soul Texture",
       type: "guitar",
@@ -163,7 +163,7 @@ export const level10 = {
     // ─── PLAY: MORE SONG STUDIES ───
 
     {
-      id: "gs-10-7",
+      id: "gs-11-7",
       time: 8,
       title: "Song Study: Chewing Gum — The 7th That Appears and Vanishes",
       type: "guitar",
@@ -191,7 +191,7 @@ export const level10 = {
       levelUp: "Play Am-D-Dm7-Dm at 120 BPM for 2 minutes with light strum and a single ghost note per bar, and identify the Dm7 moment by ear when listening back."
     },
     {
-      id: "gs-10-8",
+      id: "gs-11-8",
       time: 9,
       title: "Song Study: Texas Sun — Speer Melody Over Soul Chords",
       type: "guitar",
@@ -223,7 +223,7 @@ export const level10 = {
     // ─── JAM: EXTENDED TECHNIQUES ───
 
     {
-      id: "gs-10-9",
+      id: "gs-11-9",
       time: 8,
       title: "Khruangbin Three-Note Voicings — Top Strings Only",
       type: "guitar",
@@ -245,11 +245,11 @@ export const level10 = {
       levelUp: "Play three-note voicings on the top 3 strings across at least 4 different fret positions, sliding smoothly between them with space and intention, over a backing track for 2 minutes."
     },
     {
-      id: "gs-10-10",
+      id: "gs-11-10",
       time: 8,
       title: "Dorian Soul Improv — Ghost Notes Over 7th Chords",
       type: "guitar",
-      what: "Combine everything from this level: A Dorian scale, ghost-note groove technique, and 7th chord voicings. Improvise over a soul backing track using Dorian melody lines interleaved with ghost-note chord grooves. This is the full Level 10 technique stack deployed simultaneously. Guitar as rhythm section AND melody instrument.",
+      what: "Combine everything from this level: A Dorian scale, ghost-note groove technique, and 7th chord voicings. Improvise over a soul backing track using Dorian melody lines interleaved with ghost-note chord grooves. This is the full Level 11 technique stack deployed simultaneously. Guitar as rhythm section AND melody instrument.",
       setup: "Guitar. Backing track. Metronome at 80 BPM. Volume 7, tone 5-6.",
       fretboard: { scale: "a-dorian", position: 1 },
       tracks: [{ name: "Soul Funk Groove 90", src: "/soul-funk-groove-90.mp3" }, { name: "Drums Only — Soul/Funk 90", src: "/drums-soul-funk-90.mp3" }],
@@ -258,11 +258,11 @@ export const level10 = {
         { text: "After 4 bars of groove, switch to 2 bars of Dorian melody: but before each melody phrase, hear it internally first — audiate 2-3 notes that belong over Am7, then play them on the top 2 strings. The melody should come from your inner ear, not from running the scale shape. Then drop back into 4 bars of groove. Alternate: groove → audiate → melody → groove.", why: "Alternating between rhythm and melody is how soul guitarists function in a band. Adding the audiation step between groove and melody ensures your melody phrases are intentional, not scale-pattern habits. Khruangbin's Mark Speer audibly pre-hears his phrases — each note sounds like it was chosen, not found. Switching between roles builds the musical multitasking that defines great guitar playing." },
         { text: "Try combining in the same bar: ghost-note strum on beats 1-2, single melody note on beat 3, ghost note on beat 4. The melody emerges FROM the groove instead of interrupting it.", why: "When melody notes emerge from within the ghost-note texture, the guitar sounds like one cohesive instrument rather than two alternating approaches. This is advanced soul guitar — the groove and melody are woven together." },
         { text: "Change chords every 4 bars: Am7 (groove + melody) → Dm7 (groove + melody) → Em7 (groove + melody) → Am7. Adjust your Dorian notes to fit each chord — emphasize chord tones (A-C-E over Am7, D-F-A over Dm7, E-G-B over Em7).", why: "Targeting chord tones within the Dorian scale ensures your melody lines track the harmony. Playing C over Am7 emphasizes the minor 3rd. Playing F# over Dm7 creates Dorian brightness. Your note choices color the chords from inside." },
-        { text: "Extended improv: 3 minutes over the backing track. Mix groove sections and melody sections freely. Let the balance shift — sometimes mostly groove, sometimes mostly melody. Record everything.", why: "Extended improvisation integrates all the Level 10 skills into fluid, instinctive playing. Recording captures your progress and reveals patterns in your playing you might not notice in real time." }
+        { text: "Extended improv: 3 minutes over the backing track. Mix groove sections and melody sections freely. Let the balance shift — sometimes mostly groove, sometimes mostly melody. Record everything.", why: "Extended improvisation integrates all the Level 11 skills into fluid, instinctive playing. Recording captures your progress and reveals patterns in your playing you might not notice in real time." }
       ],
       feel: "This should feel like being in a soul band — you're the rhythm guitarist AND the lead player, switching roles within a single bar. The groove should feel steady and locked in, and the melody notes should feel like they're being extracted from the groove, not inserted into it.",
       wrong: "If the groove falls apart when you add melody, simplify: play one melody note per 4 bars of groove. If the melody notes sound random over the chords, stick to chord tones (root, 3rd, 5th) before adding scale tones. If you lose the beat, stop the melody and re-establish the groove before continuing.",
-      sarah: "Gene, this exercise is where everything from Level 10 converges. Ghost notes from Skinshape, Dorian from soul music, space from Khruangbin, 7th chords from jazz. You're not playing a genre — you're playing YOUR sound, built from all your influences. The recording of this improv will sound different from anyone else's because your mix of influences is unique.",
+      sarah: "Gene, this exercise is where everything from Level 11 converges. Ghost notes from Skinshape, Dorian from soul music, space from Khruangbin, 7th chords from jazz. You're not playing a genre — you're playing YOUR sound, built from all your influences. The recording of this improv will sound different from anyone else's because your mix of influences is unique.",
       metronome: 80,
       recorder: true,
       phraseForm: { pattern: "PRVD", barsPerSection: 4, labels: { P: "Present (groove)", R: "Repeat (groove)", V: "Vary (add melody)", D: "Deconstruct (melody only)" } },
@@ -272,11 +272,11 @@ export const level10 = {
     // ─── CREATE: EXTENDED JAM ───
 
     {
-      id: "gs-10-11",
+      id: "gs-11-11",
       time: 10,
       title: "Extended Soul Jam — Your 7th Chord Groove, Recorded",
       type: "guitar",
-      what: "Build a 5-minute soul jam using everything from this level. Choose your own 7th chord progression (3-4 chords), add ghost-note grooves, weave in Dorian melody lines, and use three-note voicings for contrast. This is your Level 10 showcase — a recorded performance that proves you've internalized extended harmony.",
+      what: "Build a 5-minute soul jam using everything from this level. Choose your own 7th chord progression (3-4 chords), add ghost-note grooves, weave in Dorian melody lines, and use three-note voicings for contrast. This is your Level 11 showcase — a recorded performance that proves you've internalized extended harmony.",
       setup: "Guitar. Backing track of your choice. Recorder on from the start. Volume 7, tone 5-6.",
       tracks: [
         { name: "Deep Soul Groove 80", src: "/deep-soul-groove-80.mp3" },
