@@ -87,6 +87,7 @@ export const level13 = {
     },
 
     // ─── SONG STUDY: BREAKDOWN ───
+    // SONG CHORDS UNVERIFIED — verify from tabs before playing along with the recording
 
     {
       id: "gs-13-4",
@@ -168,6 +169,7 @@ export const level13 = {
     },
 
     // ─── SONG STUDY: COASTLINE FEEL ───
+    // SONG CHORDS UNVERIFIED — verify from tabs before playing along with the recording
 
     {
       id: "gs-13-7",

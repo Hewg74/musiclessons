@@ -7,7 +7,7 @@ export const level11 = {
   description:
     "Apply your melodic and rhythmic skills to create original pieces in specific genres — reggae, surf-psych, desert blues, and soul. Each genre has its own strum feel, tempo pocket, and melodic personality. You'll create one original per genre, then blend them. Based on Lucy Green's 'create within a style' approach: genre constraints channel creativity productively. Here's the embodied truth: different genres live in different parts of the body. Reggae bounces in the hips and feet — grounded, physical, below the waist. Desert blues drones in the chest — meditative, expansive, centered. Surf-psych floats in the mask and forehead — shimmering, airy, slightly detached. Soul settles into the warm center of the chest with a rhythmic sway. When you choose a genre, you're choosing WHERE in the body the music lives. Your genre preference reveals your natural embodiment center.",
   artists: "DOPE LEMON, Allah-Las, Khruangbin, Skinshape, Tinariwen, Tommy Guerrero",
-  unlocks: "Song Architecture (Level 11)",
+  unlocks: "Song Architecture (Level 12)",
   review: { label: "Level 8-9 Check-In", time: 5, exercises: ["ss-8-4", "ss-9-5"], prompt: "Play Am-C-G-Em in 3 different feels (ss-8-4). Then improvise pentatonic melody for 2 minutes over a backing track (ss-9-5). Both fluid? Move on." },
   exercises: [
     {

@@ -7,8 +7,8 @@ export const level13 = {
   description:
     "Your songs have structure and melody. Now craft the words. Based on Pat Pattison's Berklee lyric method: use concrete images instead of abstract emotions. Show the listener a scene and let them feel the feeling themselves. Strong lyrics are specific, sensory, and surprising. This level teaches observation, imagery, prosody, and the art of editing. The embodied dimension: words carry physical weight. 'Ocean' opens the mouth wide (ahh) and resonates in the chest. 'Sky' narrows the mouth and rises to the mask. 'Stone' closes the mouth and drops to the belly. Vowel choices in lyrics are body choices — when a lyric feels right, it's because the word, the note, and the body location all align. The hear-feel-choose cycle now operates on language itself.",
   artists: "DOPE LEMON, Nick Drake, Khruangbin (instrumental as lyric), Angus Stone",
-  unlocks: "Fingerpicking & Dynamics (Level 13)",
-  review: { label: "Level 11-12 Check-In", time: 5, exercises: ["ss-11-3", "ss-12-6"], prompt: "Sing over G-C-D-G feeling tension and resolution (ss-11-3). Then play through your arranged song (ss-12-6). Both solid? Move on." },
+  unlocks: "Fingerpicking & Dynamics (Level 14)",
+  review: { label: "Level 11-12 Check-In", time: 5, exercises: ["ss-10-3", "ss-12-6"], prompt: "Sing over G-C-D-G feeling tension and resolution (ss-10-3). Then play through your arranged song (ss-12-6). Both solid? Move on." },
   exercises: [
     {
       id: "ss-13-1",

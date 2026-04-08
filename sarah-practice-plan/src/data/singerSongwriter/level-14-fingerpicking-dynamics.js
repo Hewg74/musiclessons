@@ -361,7 +361,7 @@ export const level14 = {
       wrong: "If you're trying to learn 'DADGAD chord charts' from the internet, you've missed the point. This exercise is about DISCOVERY through familiar shapes, not memorizing new ones. If everything sounds dissonant, try Open D (DADF#AD) instead — it's a major chord when strummed open, which gives more immediately pleasing results. If your voice can't find melodies, simplify: just sing one note that fits the drone, then slowly add a second note. VOCAL TIP: Let the open strings ring while you sing — the drone gives your voice a harmonic anchor, making it easier to find resonant notes.",
       sarah: "Gene, Tommy Guerrero uses alternate tunings constantly — that ambient, meditative quality comes from strings ringing open in unexpected ways. His nylon-string fingerpicking in DADGAD creates the warm, spacious sound you love. Tinariwen's guitarists use open tunings as their standard — the desert blues drone IS an open tuning. And Nick Drake's 'Pink Moon' uses an alternate tuning for its haunting, intimate quality. You're not learning a new technique — you're accessing a sound world that's already in your DNA.",
       recorder: true,
-      drone: { note: "D3", type: "fifth" }
+      drone: { root: "D", octave: 3, texture: "fifth" }
     },
     {
       id: "ss-14-15",

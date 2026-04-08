@@ -2458,12 +2458,12 @@ const SCALES = {
 };
 
 const STRING_MIDI = [
-  { label: 'E', start: 52 }, // string 1 (high E) — E4
-  { label: 'B', start: 47 }, // string 2 — B3
-  { label: 'G', start: 43 }, // string 3 — G3
-  { label: 'D', start: 38 }, // string 4 — D3
-  { label: 'A', start: 33 }, // string 5 — A2
-  { label: 'E', start: 28 }, // string 6 (low E) — E2
+  { label: 'E', start: 64 }, // string 1 (high E) — E4
+  { label: 'B', start: 59 }, // string 2 — B3
+  { label: 'G', start: 55 }, // string 3 — G3
+  { label: 'D', start: 50 }, // string 4 — D3
+  { label: 'A', start: 45 }, // string 5 — A2
+  { label: 'E', start: 40 }, // string 6 (low E) — E2
 ];
 
 

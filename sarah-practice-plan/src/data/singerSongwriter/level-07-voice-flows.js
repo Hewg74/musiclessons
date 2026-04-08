@@ -7,7 +7,7 @@ export const level7 = {
   description:
     "Levels 3-5 isolated skills. Level 6 combined them in pairs. Now everything flows together: pitch, rhythm, dynamics, emotion, vowels, chord changes, genre feel — all at once, across multiple genres and progressions. This is full integration. Based on Csikszentmihalyi's flow research: flow states emerge when all sub-skills are automated and the challenge matches your ability. The hear-feel-choose cycle starts as a conscious practice. With enough repetition, it becomes automatic — and that automaticity IS flow. You're not thinking 'hear, feel, choose' anymore. You're simply PRESENT with the music, and the three channels run on their own. The embodiment check at this level becomes a light diagnostic rather than a corrective: when you notice whether the cycle is running or has gone to autopilot, that noticing itself is the practice.",
   artists: "Khruangbin, DOPE LEMON, Allah-Las, Tinariwen, Hermanos Gutiérrez, Skinshape",
-  unlocks: "Melody Building (Level 7)",
+  unlocks: "Melody Building (Level 8)",
   review: { label: "Level 6 Check-In", time: 5, exercises: ["ss-6-20", "ss-6-24"], prompt: "Do a Color Palette Freestyle (ss-6-20). Then a Strum + Vocal Rhythm Conversation (ss-6-24). Both fluid with no strum breaks? Move on." },
   exercises: [
 

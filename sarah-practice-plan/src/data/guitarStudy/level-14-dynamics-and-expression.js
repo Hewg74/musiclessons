@@ -171,6 +171,7 @@ export const level14 = {
     },
 
     // ─── SONG STUDY: PEACE BLOSSOM BOOGY ───
+    // SONG CHORDS UNVERIFIED — verify from tabs before playing along with the recording
 
     {
       id: "gs-14-7",

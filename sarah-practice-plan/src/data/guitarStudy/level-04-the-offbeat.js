@@ -306,6 +306,7 @@ export const level4 = {
       levelUp: "Full A-E-C#m-B-F# progression at 110+ BPM with clean skanks, immediate mutes, and no rhythmic collapse during barre chord transitions."
     },
 
+    // SONG CHORDS UNVERIFIED — verify from tabs before playing along with the recording
     {
       id: "gs-4-8b",
       time: 8,

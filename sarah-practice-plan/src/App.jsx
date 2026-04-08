@@ -1755,7 +1755,7 @@ function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor
       <FlowProgressRail exercises={exercises} currentIndex={currentIndex} completed={completed} onJump={handleJump} accentColor={accentColor} />
 
       {/* Exercise content — key forces remount */}
-      <div style={{ flex: 1, maxWidth: 560, width: "100%", margin: "0 auto", padding: "16px 16px 120px", overflowY: "auto" }}>
+      <div style={{ flex: 1, maxWidth: 560, width: "100%", margin: "0 auto", padding: `16px 16px ${metro.playing ? 176 : 120}px`, overflowY: "auto" }}>
 
         {/* Exercise header */}
         <div style={{ marginBottom: 20 }}>
@@ -1782,13 +1782,14 @@ function FlowMode({ exercises, completed, onComplete, metro, onExit, accentColor
 
       {/* Bottom action bar */}
       <div className="flow-bottom-bar" style={{
-        position: "fixed", bottom: 0, left: 0, right: 0,
-        padding: "12px 16px", paddingBottom: "calc(12px + env(safe-area-inset-bottom, 0px))",
+        position: "fixed", bottom: journalCaptureExId && metro.playing ? 56 : 0, left: 0, right: 0,
+        padding: "12px 16px", paddingBottom: journalCaptureExId && metro.playing ? "12px" : "calc(12px + env(safe-area-inset-bottom, 0px))",
         background: `${T.bgCard}b8`, backdropFilter: "blur(24px) saturate(140%)",
         WebkitBackdropFilter: "blur(24px) saturate(140%)",
         borderTop: `1px solid ${T.border}`,
         boxShadow: `0 -4px 32px ${T.bg === "#ffffff" ? "rgba(44,40,37,0.04)" : "rgba(0,0,0,0.3)"}`,
-        zIndex: journalCaptureExId ? 999 : 101, display: "flex", flexDirection: "column", alignItems: "center"
+        zIndex: journalCaptureExId ? 1100 : 101, display: "flex", flexDirection: "column", alignItems: "center",
+        transition: "bottom 0.3s ease"
       }}>
         {journalCaptureExId ? (
           <div style={{ width: "100%", maxWidth: 560 }}>
@@ -4671,7 +4672,7 @@ export default function App() {
           journal={journal}
           onJournalEntry={addJournalEntry}
         />
-        <FloatingMetronome metro={metro} setTab={() => {}} isDark={isDark} theme={T} />
+        {metro.playing && <FloatingMetronome metro={metro} setTab={() => {}} isDark={isDark} theme={T} />}
         {tapMatchBpm && (
           <TapMatchModal targetBpm={tapMatchBpm} onClose={() => setTapMatchBpm(null)} metro={metro} />
         )}

@@ -174,7 +174,7 @@ const GUIDED_EXERCISES = [
   {
     id: 'bodymap', title: 'Body Map', desc: 'Each note has a home in your body.',
     steps: [
-      { text: 'Drone on. Sing the root. Feel it in your chest — grounding, stable.', dur: 6000, action: 'play_root' },
+      { text: 'The drone holds the root. Sing it. Feel it in your chest — grounding, stable.', dur: 6000, action: 'play_root' },
       { text: 'Now sing the minor third. It moves up to your upper chest — an ache, a longing.', dur: 6000, action: 'play_third' },
       { text: 'The fourth. Throat area. A bridge between worlds.', dur: 6000, action: 'play_fourth' },
       { text: 'The fifth. Clarity, openness. Feel it in the mask of your face.', dur: 6000, action: 'play_fifth' },
@@ -187,9 +187,9 @@ const GUIDED_EXERCISES = [
     steps: [
       { text: 'Listen to the drone. Let the root saturate your hearing.', dur: 5000, action: 'play_root' },
       { text: 'Sing the root along with the drone. Match it perfectly.', dur: 5000, action: 'sing' },
-      { text: 'Now the drone stops. Hold the note internally for 5 seconds. Don\'t sing yet.', dur: 6000 },
-      { text: 'Sing it now. Did you stay on pitch?', dur: 5000, action: 'sing' },
-      { text: 'Again — hold for 10 seconds this time. Feel it inside before you produce it.', dur: 12000 },
+      { text: 'Now the drone stops. Hold the note internally for 5 seconds. Don\'t sing yet.', dur: 6000, action: 'stop_drone' },
+      { text: 'Sing it now. Did you stay on pitch?', dur: 5000, action: 'start_drone' },
+      { text: 'Again — hold for 10 seconds this time. Feel it inside before you produce it.', dur: 12000, action: 'stop_drone' },
       { text: 'Improvisation is just audiation at speed. This is the muscle.', dur: 3000 },
     ]
   },
@@ -206,7 +206,7 @@ const GUIDED_EXERCISES = [
   {
     id: 'freeflow', title: 'Free Flow', desc: 'Your first improv.',
     steps: [
-      { text: 'Drone on. Play any scale note. Let the color guide you.', dur: 6000, action: 'play_root' },
+      { text: 'The drone is playing. Play any scale note. Let the color guide you.', dur: 6000, action: 'play_root' },
       { text: 'Play adjacent colors for smooth, stepwise motion.', dur: 8000 },
       { text: 'Now jump to a far color. Feel the tension. Then resolve back toward the root.', dur: 8000 },
       { text: 'There are no wrong notes — only different levels of tension. You choose when to resolve.', dur: 5000 },
@@ -748,6 +748,8 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
       const withOct = assignGuitarOctaves(scaleData.notes, root);
       withOct.forEach((n, i) => setTimeout(() => playWarmNote(n, '4n'), 300 + i * 500));
     }
+    if (step.action === 'stop_drone') drone.stop();
+    if (step.action === 'start_drone') drone.start(root);
   }, [drone, root, scaleData]);
 
   const advanceGuided = useCallback(() => {
@@ -771,7 +773,9 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
       const withOct = assignGuitarOctaves(scaleData.notes, root);
       withOct.forEach((n, i) => setTimeout(() => playWarmNote(n, '2n'), i * 900));
     }
-  }, [guidedEx, guidedStep, root, scaleData]);
+    if (step.action === 'stop_drone') drone.stop();
+    if (step.action === 'start_drone') drone.start(root);
+  }, [guidedEx, guidedStep, root, scaleData, drone]);
 
   // ─── Interval Trainer ───
   const newInterval = useCallback(() => {
@@ -1109,6 +1113,25 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
               <option value="slow">3s</option>
             </select>
           )}
+        </div>
+      )}
+
+      {/* ── EMBEDDED DRONE CONTROL ── */}
+      {embedded && (
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 8,
+          padding: '8px 0', marginBottom: 8,
+        }}>
+          <button onClick={() => drone.playing ? drone.stop() : drone.start(root)} style={{
+            ...btnStyle(drone.playing, rootColor),
+            animation: drone.playing ? 'droneGlow 3s ease-in-out infinite' : 'none',
+          }}>
+            <Volume2 size={14} />
+            {drone.playing ? 'Drone On' : 'Drone'}
+          </button>
+          <span style={{ fontSize: 10, color: T.textMuted, fontFamily: T.sans }}>
+            {root} {typeInfo.name}
+          </span>
         </div>
       )}
 

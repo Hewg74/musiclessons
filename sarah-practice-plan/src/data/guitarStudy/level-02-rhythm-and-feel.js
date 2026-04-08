@@ -228,6 +228,7 @@ export const level2 = {
     },
 
     // ─── SONG STUDY: MEXICO FEEL ───
+    // SONG CHORDS UNVERIFIED — verify from tabs before playing along with the recording
 
     {
       id: "gs-2-9",

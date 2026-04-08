@@ -173,7 +173,7 @@ export const level12 = {
         src: "/rules-khruangbin.mp3",
         note: "Am-G, behind the beat, 60%+ silence. Mark Speer at his most minimal — space IS the music."
       },
-      what: "Khruangbin's Rules is a masterclass in space. The chord progression is just Am-G (confirmed: G-Am-F-G-Em-F-Em-Am, but the core vamp is Am-G). Mark Speer plays a melody on top using three-note voicings and single notes with enormous gaps between phrases. The rule: 60% or more of the song is SILENCE. Your job is to play as LITTLE as possible while still making music.",
+      what: "Khruangbin's Rules is a masterclass in space. The chord progression is just Am-G — a two-chord vamp. Mark Speer plays a melody on top using three-note voicings and single notes with enormous gaps between phrases. The rule: 60% or more of the song is SILENCE. Your job is to play as LITTLE as possible while still making music.",
       setup: "Guitar. Tone at 5-6. Parked wah if available. Metronome at 69 BPM (original tempo).",
       steps: [
         { text: "Set up the Am-G vamp: strum Am for 2 bars, G for 2 bars. Very gentle, almost whispered strumming. This is the bed — quiet, warm, behind the beat. Play 4 repetitions of the Am-G cycle to establish the groove.", why: "Rules sits at 69 BPM — slow for Khruangbin. The chord bed is barely there: whisper-strummed, not driven. If your strumming is louder than a speaking voice, it's too much. Speer's rhythm guitar on this track is almost inaudible — it's a texture, not a groove." },

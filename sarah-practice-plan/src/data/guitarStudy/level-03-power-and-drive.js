@@ -86,6 +86,7 @@ export const level3 = {
     },
 
     // ─── SONG STUDIES ───
+    // SONG CHORDS UNVERIFIED — verify from tabs before playing along with the recording
 
     {
       id: "gs-3-4",
@@ -202,6 +203,7 @@ export const level3 = {
     },
 
     // ─── MORE SONG STUDY + APPLICATION ───
+    // SONG CHORDS UNVERIFIED — verify from tabs before playing along with the recording
 
     {
       id: "gs-3-8",

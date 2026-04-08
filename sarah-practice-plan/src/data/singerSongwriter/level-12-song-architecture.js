@@ -7,7 +7,7 @@ export const level12 = {
   description:
     "You can create melodies and feel harmony. Now build complete songs with intentional structure — verse/chorus/bridge, dynamic arcs, intros and outros. Based on Berklee's songwriting sequence: melody and structure are taught together because they're inseparable. A great melody in a bad structure is a wasted melody. Embodied truth: song sections have body arcs. The verse sits in the chest — grounded, storytelling, conversational. The chorus rises to the mask — open, projecting, communal. The bridge might go to the head — intimate, vulnerable, unexpected. Your body tells you when the form needs to shift: there's a physical sensation of needing to rise or ground, and that sensation IS your structural instinct.",
   artists: "DOPE LEMON, Nick Drake, Skinshape, BALTHVS",
-  unlocks: "Lyrics & Songcraft (Level 12)",
+  unlocks: "Lyrics & Songcraft (Level 13)",
   review: { label: "Level 10-11 Check-In", time: 5, exercises: ["ss-10-7", "ss-11-6"], prompt: "Play your complete original (ss-10-7). Then improvise over a new progression for 2 minutes (ss-11-6). Both confident? Move on." },
   exercises: [
     {

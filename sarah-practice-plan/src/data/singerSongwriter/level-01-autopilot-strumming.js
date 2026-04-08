@@ -120,7 +120,7 @@ export const level1 = {
       title: "Surf Jangle",
       type: "guitar",
       what: "Learn a jangly 8th-note strum pattern — continuous down-up alternating strums that create the shimmering sound of surf rock. This is the guitar texture of Allah-Las, Babe Rainbow, and most of your favorite psych-surf.",
-      setup: "Guitar, preferably with some reverb if electric. Metronome at 100 BPM.",
+      setup: "Guitar, preferably with some reverb if electric. Metronome at 120 BPM.",
       steps: [
         { text: "Strum G with steady 8th notes: down-up-down-up, every strum even in volume and timing. 4 bars.", why: "Even 8th notes are the engine of jangle. No accents yet — just smooth, continuous strumming." },
         { text: "Add a slight accent on beats 1 and 3 (the downstrokes on those beats hit a little harder). This creates the surf pulse.", why: "The accent gives the jangle shape without breaking the flow. It's subtle — listeners feel it more than hear it." },
@@ -135,7 +135,7 @@ export const level1 = {
       strumPattern: {
         notation: "D U D U D U D U",
         subdivision: "8ths",
-        bpm: 100,
+        bpm: 120,
         description: "Continuous down-up 8th notes — the pendulum never stops. Slight accent on beats 1 and 3. Chord changes happen inside the continuous strum without breaking the flow."
       },
       toneSettings: {

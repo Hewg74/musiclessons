@@ -40,6 +40,7 @@ export const level9 = {
       recorder: true,
       levelUp: "Can play the SoCal switch — 4 bars clean skank to 4 bars distorted power chords — at 90 BPM with an instant, clean tone transition on beat 1. No hesitation, no fumbled pedal stomps."
     },
+    // SONG CHORDS UNVERIFIED — verify from tabs before playing along with the recording
     {
       id: "gs-9-2",
       time: 8,
@@ -116,6 +117,7 @@ export const level9 = {
       recorder: true,
       levelUp: "Can play the full Stormtrooper-style structure (intro → verse → chorus → verse → chorus → outro) at 130+ BPM with clean transitions and strong dynamic contrast between skank and power chord sections."
     },
+    // SONG CHORDS UNVERIFIED — verify from tabs before playing along with the recording
     {
       id: "gs-9-5",
       time: 8,
