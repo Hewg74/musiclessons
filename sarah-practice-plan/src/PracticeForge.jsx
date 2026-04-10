@@ -8,15 +8,46 @@ import {
 import { CHROMATIC, CIRCLE_OF_FIFTHS, SCALE_TYPES, generateScale } from './ColorMusicTrainer.jsx';
 import GUIDANCE_CACHE from './data/practiceForgeGuidance.json';
 
-// Look up pre-generated LLM guidance for a card by its pitch+rhythm+dynamics combo.
-// Returns null if any of the three are missing (tier-3+ cards that drew other dims).
+// Canonical order used to build combo-mode keys so lookups are deterministic
+// regardless of draw order.
+const DIM_ORDER = ['pitchConstraint','rhythmConstraint','dynamics','articulation','phraseLength','vocalTechnique','guitarTechnique'];
+
+// Route a card's guidance lookup by its mode.
+//   scales → null (no guidance)
+//   focus  → GUIDANCE_CACHE.focus[constraintId]
+//   combo  → GUIDANCE_CACHE.combos[dim1id_dim2id] (canonically ordered)
+//   matrix → GUIDANCE_CACHE.matrix[pitch_rhythm_dynamics]
 function lookupGuidance(card) {
   const c = card.constraints;
-  const pitch = c.pitchConstraint?.id;
-  const rhythm = c.rhythmConstraint?.id;
-  const dynamics = c.dynamics?.id;
-  if (!pitch || !rhythm || !dynamics) return null;
-  return GUIDANCE_CACHE.combos?.[`${pitch}_${rhythm}_${dynamics}`] || null;
+  const mode = card.mode || 'matrix'; // default to matrix for legacy cards
+
+  if (mode === 'focus') {
+    // Find the single qualitative constraint that was actually drawn
+    const drawnIds = DIM_ORDER.filter(d => c[d] && typeof c[d] === 'object' && c[d].id);
+    if (drawnIds.length !== 1) return null;
+    return GUIDANCE_CACHE.focus?.[c[drawnIds[0]].id] || null;
+  }
+
+  if (mode === 'combo') {
+    const drawnIds = DIM_ORDER.filter(d => c[d] && typeof c[d] === 'object' && c[d].id);
+    if (drawnIds.length !== 2) return null;
+    const id1 = c[drawnIds[0]].id;
+    const id2 = c[drawnIds[1]].id;
+    return GUIDANCE_CACHE.combos?.[`${id1}_${id2}`] || null;
+  }
+
+  if (mode === 'matrix') {
+    const pitch = c.pitchConstraint?.id;
+    const rhythm = c.rhythmConstraint?.id;
+    const dynamics = c.dynamics?.id;
+    if (!pitch || !rhythm || !dynamics) return null;
+    // Prefer new .matrix section; fall back to legacy .combos for old cached files
+    return GUIDANCE_CACHE.matrix?.[`${pitch}_${rhythm}_${dynamics}`]
+        || GUIDANCE_CACHE.combos?.[`${pitch}_${rhythm}_${dynamics}`]
+        || null;
+  }
+
+  return null;
 }
 
 function lookupScaleCharacter(scaleId) {
@@ -240,13 +271,14 @@ function getScaleWeights(tier) {
 // maxConstraints limits how many qualitative constraints appear per card.
 // Key, scale, and tempo are always generated. The qualitative pool is shuffled
 // and only the first N are drawn — this keeps cognitive load manageable.
-function generateCard(activeDimensions, lockedDimensions, history, constraintWeights, tier, _retryCount = 0, maxConstraints = 3) {
+function generateCard(activeDimensions, lockedDimensions, history, constraintWeights, tier, _retryCount = 0, maxConstraints = 3, mode = 'matrix') {
   const card = {
     id: generateId(),
     timestamp: Date.now(),
     constraints: {},
     activeDimensions: [...activeDimensions],
     tier,
+    mode, // 'scales' | 'focus' | 'combo' | 'matrix' — drives guidance lookup
   };
 
   // Generate key first (needed for forbidden note, target landing, etc.)
@@ -383,14 +415,14 @@ function generateCard(activeDimensions, lockedDimensions, history, constraintWei
 }
 
 // ─── Session generation ───
-function generateSession(count, activeDimensions, lockedDimensions, constraintWeights, tier, maxConstraints = 3) {
+function generateSession(count, activeDimensions, lockedDimensions, constraintWeights, tier, maxConstraints = 3, mode = 'matrix') {
   const cards = [];
   const keyCount = {};
   for (let i = 0; i < count; i++) {
     let card;
     let attempts = 0;
     do {
-      card = generateCard(activeDimensions, lockedDimensions, cards, constraintWeights, tier, 0, maxConstraints);
+      card = generateCard(activeDimensions, lockedDimensions, cards, constraintWeights, tier, 0, maxConstraints, mode);
       attempts++;
     } while ((keyCount[card.constraints.key] || 0) >= 2 && attempts < 10);
     keyCount[card.constraints.key] = (keyCount[card.constraints.key] || 0) + 1;
@@ -569,102 +601,163 @@ function ChallengeCard({ card, T, entering }) {
         })}
       </div>
 
-      {/* LLM-generated guidance for this specific pitch+rhythm+dynamics combo */}
-      {guidance && (
-        <>
-          <div style={{ height: 1, background: T.border, margin: '24px 0 20px', opacity: 0.5 }} />
-          <div style={{
-            background: T.bgSoft,
-            border: `1px solid ${T.borderSoft || T.border}`,
-            borderRadius: 10,
-            padding: '18px 20px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 16,
-          }}>
-            {scaleChar && (
-              <div style={{
-                fontFamily: T.sans,
-                fontSize: 12,
-                color: T.textLight,
-                lineHeight: 1.6,
-                fontStyle: 'italic',
-                paddingBottom: 10,
-                borderBottom: `1px dashed ${T.border}`,
-              }}>
-                {scaleChar.character} <span style={{ opacity: 0.85 }}>{scaleChar.watchPoint}</span>
-              </div>
-            )}
+      {/* LLM-generated guidance — mode-aware: focus renders a richer schema,
+          combo/matrix render the original schema. */}
+      {guidance && (() => {
+        const isFocus = card.mode === 'focus';
+        const eyebrowStyle = {
+          fontSize: 10, fontWeight: 700, color: T.goldDark, textTransform: 'uppercase',
+          letterSpacing: 1.2, fontFamily: T.sans, marginBottom: 6,
+        };
+        const bodyStyle = { fontFamily: T.sans, fontSize: 13.5, color: T.textDark, lineHeight: 1.6 };
+        const listStyle = { margin: 0, paddingLeft: 20, fontFamily: T.sans, fontSize: 13, color: T.textMed, lineHeight: 1.65 };
 
-            <div>
-              <div style={{
-                fontSize: 10, fontWeight: 700, color: T.goldDark, textTransform: 'uppercase',
-                letterSpacing: 1.2, fontFamily: T.sans, marginBottom: 6,
-              }}>
-                How they work together
-              </div>
-              <div style={{ fontFamily: T.sans, fontSize: 13.5, color: T.textDark, lineHeight: 1.6 }}>
-                {guidance.interaction}
-              </div>
+        return (
+          <>
+            <div style={{ height: 1, background: T.border, margin: '24px 0 20px', opacity: 0.5 }} />
+            <div style={{
+              background: T.bgSoft,
+              border: `1px solid ${T.borderSoft || T.border}`,
+              borderRadius: 10,
+              padding: '18px 20px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 16,
+            }}>
+              {scaleChar && (
+                <div style={{
+                  fontFamily: T.sans, fontSize: 12, color: T.textLight, lineHeight: 1.6,
+                  fontStyle: 'italic', paddingBottom: 10, borderBottom: `1px dashed ${T.border}`,
+                }}>
+                  {scaleChar.character} <span style={{ opacity: 0.85 }}>{scaleChar.watchPoint}</span>
+                </div>
+              )}
+
+              {isFocus ? (
+                <>
+                  {/* Focus mode: character + whyPractice + steps + progression + examples + etude + watchOut + listenTo */}
+                  <div>
+                    <div style={eyebrowStyle}>Character</div>
+                    <div style={bodyStyle}>{guidance.character}</div>
+                  </div>
+
+                  <div>
+                    <div style={eyebrowStyle}>Why practice this</div>
+                    <div style={bodyStyle}>{guidance.whyPractice}</div>
+                  </div>
+
+                  <div>
+                    <div style={eyebrowStyle}>Steps</div>
+                    <ol style={listStyle}>
+                      {(guidance.steps || []).map((s, i) => <li key={i} style={{ marginBottom: 4 }}>{s}</li>)}
+                    </ol>
+                  </div>
+
+                  {guidance.progression && guidance.progression.length > 0 && (
+                    <div>
+                      <div style={eyebrowStyle}>Progression</div>
+                      <ol style={listStyle}>
+                        {guidance.progression.map((p, i) => <li key={i} style={{ marginBottom: 4 }}>{p}</li>)}
+                      </ol>
+                    </div>
+                  )}
+
+                  <div>
+                    <div style={eyebrowStyle}>Try these phrases</div>
+                    <ul style={{ ...listStyle, paddingLeft: 0, listStyleType: 'none' }}>
+                      {(guidance.examples || []).map((e, i) => (
+                        <li key={i} style={{ marginBottom: 4, paddingLeft: 16, position: 'relative' }}>
+                          <span style={{ position: 'absolute', left: 0, color: T.gold, fontSize: 12 }}>♪</span>
+                          {e}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {guidance.etude && (
+                    <div>
+                      <div style={eyebrowStyle}>Etude</div>
+                      <div style={{ ...bodyStyle, fontFamily: T.serif, fontSize: 13, fontStyle: 'italic', color: T.textMed }}>
+                        {guidance.etude}
+                      </div>
+                    </div>
+                  )}
+
+                  <div>
+                    <div style={{ ...eyebrowStyle, color: T.warm }}>Watch out</div>
+                    <div style={{ fontFamily: T.sans, fontSize: 13, color: T.textMed, lineHeight: 1.6 }}>
+                      {guidance.watchOut}
+                    </div>
+                  </div>
+
+                  {guidance.listenTo && (
+                    <div style={{
+                      borderTop: `1px dashed ${T.border}`,
+                      paddingTop: 12,
+                      fontFamily: T.sans,
+                      fontSize: 12,
+                      color: T.textLight,
+                    }}>
+                      <span style={{ fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, fontSize: 10, color: T.goldDark, marginRight: 8 }}>
+                        Listen to
+                      </span>
+                      {guidance.listenTo}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  {/* Combo / Matrix mode: interaction + steps + examples + watchOut + deeperInsight */}
+                  <div>
+                    <div style={eyebrowStyle}>How they work together</div>
+                    <div style={bodyStyle}>{guidance.interaction}</div>
+                  </div>
+
+                  <div>
+                    <div style={eyebrowStyle}>Steps</div>
+                    <ol style={listStyle}>
+                      {(guidance.steps || []).map((s, i) => <li key={i} style={{ marginBottom: 4 }}>{s}</li>)}
+                    </ol>
+                  </div>
+
+                  <div>
+                    <div style={eyebrowStyle}>Try these phrases</div>
+                    <ul style={{ ...listStyle, paddingLeft: 0, listStyleType: 'none' }}>
+                      {(guidance.examples || []).map((e, i) => (
+                        <li key={i} style={{ marginBottom: 4, paddingLeft: 16, position: 'relative' }}>
+                          <span style={{ position: 'absolute', left: 0, color: T.gold, fontSize: 12 }}>♪</span>
+                          {e}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div>
+                    <div style={{ ...eyebrowStyle, color: T.warm }}>Watch out</div>
+                    <div style={{ fontFamily: T.sans, fontSize: 13, color: T.textMed, lineHeight: 1.6 }}>
+                      {guidance.watchOut}
+                    </div>
+                  </div>
+
+                  {guidance.deeperInsight && (
+                    <div style={{
+                      borderTop: `1px dashed ${T.border}`,
+                      paddingTop: 12,
+                      fontFamily: T.serif,
+                      fontSize: 13,
+                      fontStyle: 'italic',
+                      color: T.textLight,
+                      lineHeight: 1.65,
+                    }}>
+                      {guidance.deeperInsight}
+                    </div>
+                  )}
+                </>
+              )}
             </div>
-
-            <div>
-              <div style={{
-                fontSize: 10, fontWeight: 700, color: T.goldDark, textTransform: 'uppercase',
-                letterSpacing: 1.2, fontFamily: T.sans, marginBottom: 6,
-              }}>
-                Steps
-              </div>
-              <ol style={{ margin: 0, paddingLeft: 20, fontFamily: T.sans, fontSize: 13, color: T.textMed, lineHeight: 1.65 }}>
-                {guidance.steps.map((s, i) => <li key={i} style={{ marginBottom: 4 }}>{s}</li>)}
-              </ol>
-            </div>
-
-            <div>
-              <div style={{
-                fontSize: 10, fontWeight: 700, color: T.goldDark, textTransform: 'uppercase',
-                letterSpacing: 1.2, fontFamily: T.sans, marginBottom: 6,
-              }}>
-                Try these phrases
-              </div>
-              <ul style={{ margin: 0, paddingLeft: 0, fontFamily: T.sans, fontSize: 13, color: T.textMed, lineHeight: 1.65, listStyleType: 'none' }}>
-                {guidance.examples.map((e, i) => (
-                  <li key={i} style={{ marginBottom: 4, paddingLeft: 16, position: 'relative' }}>
-                    <span style={{ position: 'absolute', left: 0, color: T.gold, fontSize: 12 }}>♪</span>
-                    {e}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <div style={{
-                fontSize: 10, fontWeight: 700, color: T.warm, textTransform: 'uppercase',
-                letterSpacing: 1.2, fontFamily: T.sans, marginBottom: 6,
-              }}>
-                Watch out
-              </div>
-              <div style={{ fontFamily: T.sans, fontSize: 13, color: T.textMed, lineHeight: 1.6 }}>
-                {guidance.watchOut}
-              </div>
-            </div>
-
-            {guidance.deeperInsight && (
-              <div style={{
-                borderTop: `1px dashed ${T.border}`,
-                paddingTop: 12,
-                fontFamily: T.serif,
-                fontSize: 13,
-                fontStyle: 'italic',
-                color: T.textLight,
-                lineHeight: 1.65,
-              }}>
-                {guidance.deeperInsight}
-              </div>
-            )}
-          </div>
-        </>
-      )}
+          </>
+        );
+      })()}
 
       {/* Oblique modifier */}
       {oblique && (
@@ -758,19 +851,57 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
   }, []);
 
   // Settings state
-  const [tier, setTier] = useState(() => Math.min(4, forgeData.settings?.tier ?? defaultTier));
+  // Mode is the primary user-facing selector. Tier/maxConstraints/activeDimensions
+  // are derived from it. Migration: if a persisted mode exists use it, otherwise
+  // map the legacy tier setting to a reasonable mode.
+  const legacyTier = forgeData.settings?.tier ?? defaultTier;
+  const tierToMode = (t) => (t === 1 ? 'scales' : t === 2 ? 'matrix' : 'combo');
+  const [mode, setMode] = useState(() => forgeData.settings?.mode ?? tierToMode(legacyTier));
+  const [instrument, setInstrument] = useState(() => forgeData.settings?.instrument ?? 'voice');
   const [timerDuration, setTimerDuration] = useState(() => forgeData.settings?.timerDuration ?? 180);
-  const [activeDimensions, setActiveDimensions] = useState(() => {
-    // Filter out any persisted dimensions that no longer exist (e.g. removed genreFeel, density, etc.)
-    const validIds = new Set(DIMENSIONS.map(d => d.id));
-    const persisted = forgeData.settings?.activeDimensions ?? getDimensionsForTier(defaultTier);
-    return persisted.filter(id => validIds.has(id));
-  });
   const [lockedDimensions, setLockedDimensions] = useState(() =>
     forgeData.settings?.lockedDimensions ?? {}
   );
   const [sessionCardCount, setSessionCardCount] = useState(() => forgeData.settings?.sessionCardCount ?? 1);
-  const [maxConstraints, setMaxConstraints] = useState(() => forgeData.settings?.maxConstraints ?? 3);
+
+  // Derived: tier, maxConstraints, activeDimensions all come from mode + instrument.
+  // This replaces the old user-facing tier/constraints/dimension toggles.
+  const { tier, maxConstraints, activeDimensions } = useMemo(() => {
+    // Instrument-specific technique dim
+    const techDim = instrument === 'guitar' ? 'guitarTechnique' : 'vocalTechnique';
+    // Full qualitative pool excluding the OTHER instrument's technique
+    const fullQualPool = [
+      'pitchConstraint', 'rhythmConstraint', 'dynamics',
+      'articulation', 'phraseLength', techDim,
+    ];
+    const baseDims = ['key', 'scale', 'tempo'];
+
+    if (mode === 'scales') {
+      return { tier: 1, maxConstraints: 0, activeDimensions: baseDims };
+    }
+    if (mode === 'matrix') {
+      // Classic pitch + rhythm + dynamics trio
+      return {
+        tier: 2,
+        maxConstraints: 3,
+        activeDimensions: [...baseDims, 'pitchConstraint', 'rhythmConstraint', 'dynamics'],
+      };
+    }
+    if (mode === 'focus') {
+      // Draw exactly 1 qualitative constraint from any dimension in the full pool
+      return {
+        tier: 4,
+        maxConstraints: 1,
+        activeDimensions: [...baseDims, ...fullQualPool],
+      };
+    }
+    // combo mode — draw exactly 2 qualitative constraints (always from different dims)
+    return {
+      tier: 4,
+      maxConstraints: 2,
+      activeDimensions: [...baseDims, ...fullQualPool],
+    };
+  }, [mode, instrument]);
 
   // Card state
   const [currentCard, setCurrentCard] = useState(null);
@@ -794,24 +925,12 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
   // History
   const [showHistory, setShowHistory] = useState(false);
 
-  // Persist settings
+  // Persist settings — mode + instrument are the primary user-facing state.
+  // tier/maxConstraints/activeDimensions are derived so they're not persisted separately.
   useEffect(() => {
-    const updated = { ...forgeData, settings: { tier, timerDuration, activeDimensions, lockedDimensions, sessionCardCount, maxConstraints } };
+    const updated = { ...forgeData, settings: { mode, instrument, timerDuration, lockedDimensions, sessionCardCount } };
     saveForgeData(updated);
-  }, [tier, timerDuration, activeDimensions, lockedDimensions, sessionCardCount, maxConstraints]);
-
-  // Update active dimensions when tier changes
-  const handleTierChange = useCallback((newTier) => {
-    setTier(newTier);
-    setActiveDimensions(getDimensionsForTier(newTier));
-  }, []);
-
-  // Toggle a dimension
-  const toggleDimension = useCallback((dimId) => {
-    setActiveDimensions(prev =>
-      prev.includes(dimId) ? prev.filter(d => d !== dimId) : [...prev, dimId]
-    );
-  }, []);
+  }, [mode, instrument, timerDuration, lockedDimensions, sessionCardCount]);
 
   // Lock/unlock a dimension
   const toggleLock = useCallback((dimId, value) => {
@@ -831,13 +950,13 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
     setTimerRunning(false);
 
     if (sessionCardCount > 1) {
-      const cards = generateSession(sessionCardCount, activeDimensions, lockedDimensions, forgeData.constraintWeights, tier, maxConstraints);
+      const cards = generateSession(sessionCardCount, activeDimensions, lockedDimensions, forgeData.constraintWeights, tier, maxConstraints, mode);
       setSessionCards(cards);
       setSessionIndex(0);
       setCurrentCard(cards[0]);
     } else {
       const card = generateCard(activeDimensions, lockedDimensions,
-        forgeData.sessions.flatMap(s => s.cards || []), forgeData.constraintWeights, tier, 0, maxConstraints);
+        forgeData.sessions.flatMap(s => s.cards || []), forgeData.constraintWeights, tier, 0, maxConstraints, mode);
       setCurrentCard(card);
       setSessionCards([card]);
       setSessionIndex(0);
@@ -846,7 +965,7 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
     setCardEntering(true);
     setTimeout(() => setCardEntering(false), 700);
     setTimerKey(k => k + 1);
-  }, [activeDimensions, lockedDimensions, forgeData, tier, sessionCardCount, maxConstraints]);
+  }, [activeDimensions, lockedDimensions, forgeData, tier, sessionCardCount, maxConstraints, mode]);
 
   // Sync metro BPM when card changes
   useEffect(() => {
@@ -960,16 +1079,19 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
     return allCards.slice(-10).reverse();
   }, [forgeData.sessions]);
 
-  // ─── Tier descriptions ───
-  const TIER_DESCRIPTIONS = {
-    1: 'Foundation — Key, scale, and tempo only. Get comfortable with the randomizer.',
-    2: 'The Matrix — Adds pitch, rhythm, and dynamics constraints. This is the SS Level 4 combination matrix where most practice happens.',
-    3: 'Expression — Adds articulation (how each note is shaped) and phrase length (how long each musical sentence is).',
-    4: 'Mastery — Adds vocal or guitar technique constraints depending on your instrument.',
+  // ─── Mode descriptions ───
+  const MODE_DESCRIPTIONS = {
+    scales:  'Scale Runner — just key, scale, and tempo. No constraints. Noodle freely and internalize the palette.',
+    focus:   'Focus — ONE constraint at a time. Deep single-target practice. This is where real instincts get rewired. Most serious practice lives here.',
+    combo:   'Combo — TWO constraints from different categories. Balanced integration practice. Pair a melodic rule with a delivery rule and hear how they interact.',
+    matrix:  'Matrix — pitch + rhythm + dynamics all at once. The composition-pressure mode. Harder; best for occasional creative challenge rather than daily practice.',
   };
+  const MODE_LABELS = { scales: 'Scales', focus: 'Focus', combo: 'Combo', matrix: 'Matrix' };
 
   // ─── Render ───
-  const maxW = 480;
+  // Wider than the default 480 — the guidance block has a lot of text per card
+  // and the old width wasted ~40% of a desktop viewport on empty margins.
+  const maxW = 760;
 
   return (
     <div style={{ maxWidth: maxW, margin: '0 auto', padding: '20px 20px 120px', fontFamily: T.sans }}>
@@ -1011,49 +1133,50 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
       {/* Settings Panel */}
       {settingsOpen && (
         <div style={{ marginBottom: 24, padding: 20, background: T.bgSoft, borderRadius: 10, border: `1px solid ${T.borderSoft}` }}>
-          {/* Tier selector */}
+          {/* Mode selector */}
           <div style={{ marginBottom: 20 }}>
             <div style={{ fontSize: 11, fontWeight: 500, color: T.textLight, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>
-              Tier — Controls the Constraint Pool
+              Mode — What kind of exercise?
             </div>
             <div style={{ display: 'flex', gap: 4, marginBottom: 6 }}>
-              {[1, 2, 3, 4].map(t => (
-                <button key={t} onClick={() => handleTierChange(t)} style={{
-                  flex: 1, padding: '10px 0', border: `1px solid ${tier === t ? T.gold : T.border}`,
-                  borderRadius: 6, fontSize: 13, fontWeight: tier === t ? 600 : 400,
+              {['scales', 'focus', 'combo', 'matrix'].map(m => (
+                <button key={m} onClick={() => setMode(m)} style={{
+                  flex: 1, padding: '10px 0', border: `1px solid ${mode === m ? T.gold : T.border}`,
+                  borderRadius: 6, fontSize: 13, fontWeight: mode === m ? 600 : 400,
                   fontFamily: T.sans, cursor: 'pointer', transition: 'all 0.2s',
-                  background: tier === t ? T.goldSoft : 'transparent',
-                  color: tier === t ? T.goldDark : T.textMed,
+                  background: mode === m ? T.goldSoft : 'transparent',
+                  color: mode === m ? T.goldDark : T.textMed,
                 }}>
-                  {['I', 'II', 'III', 'IV'][t - 1]}
+                  {MODE_LABELS[m]}
                 </button>
               ))}
             </div>
             <div style={{ fontSize: 12, color: T.textLight, lineHeight: 1.5 }}>
-              {TIER_DESCRIPTIONS[tier]}
+              {MODE_DESCRIPTIONS[mode]}
             </div>
           </div>
 
-          {/* Constraints per card */}
+          {/* Instrument toggle */}
           <div style={{ marginBottom: 20 }}>
             <div style={{ fontSize: 11, fontWeight: 500, color: T.textLight, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>
-              Constraints per Card
+              Instrument
             </div>
             <div style={{ display: 'flex', gap: 6 }}>
-              {[2, 3, 4].map(n => (
-                <button key={n} onClick={() => setMaxConstraints(n)} style={{
-                  flex: 1, padding: '10px 0', border: `1px solid ${maxConstraints === n ? T.gold : T.border}`,
-                  borderRadius: 6, fontSize: 13, fontWeight: maxConstraints === n ? 600 : 400,
+              {['voice', 'guitar'].map(inst => (
+                <button key={inst} onClick={() => setInstrument(inst)} style={{
+                  flex: 1, padding: '10px 0', border: `1px solid ${instrument === inst ? T.gold : T.border}`,
+                  borderRadius: 6, fontSize: 13, fontWeight: instrument === inst ? 600 : 400,
                   fontFamily: T.sans, cursor: 'pointer', transition: 'all 0.2s',
-                  background: maxConstraints === n ? T.goldSoft : 'transparent',
-                  color: maxConstraints === n ? T.goldDark : T.textMed,
+                  background: instrument === inst ? T.goldSoft : 'transparent',
+                  color: instrument === inst ? T.goldDark : T.textMed,
+                  textTransform: 'capitalize',
                 }}>
-                  {n}
+                  {inst}
                 </button>
               ))}
             </div>
             <div style={{ fontSize: 11, color: T.textMuted, marginTop: 4 }}>
-              How many constraints to focus on per round. Higher tiers add more to the pool, but you always practice {maxConstraints} at a time. Working memory handles 3-4 constraints well.
+              Focus and Combo modes may draw instrument-specific technique constraints (placement for voice, picking for guitar).
             </div>
           </div>
 
@@ -1103,34 +1226,31 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
             </div>
           </div>
 
-          {/* Dimension toggles */}
+          {/* Active dimensions — readout only, derived from mode */}
           <div>
             <div style={{ fontSize: 11, fontWeight: 500, color: T.textLight, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>
-              Active Dimensions
+              Draw Pool (derived from mode)
             </div>
             <div style={{ fontSize: 11, color: T.textMuted, marginBottom: 10 }}>
-              Tap to enable/disable. Changing tiers pre-selects recommended dimensions, but you can customize freely.
+              These are the dimensions the current mode can draw from. Change mode to reshape the pool.
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-              {DIMENSIONS.map(dim => {
-                const active = activeDimensions.includes(dim.id);
-                const locked = lockedDimensions[dim.id] !== undefined;
-                return (
-                  <button key={dim.id} onClick={() => toggleDimension(dim.id)} style={{
-                    padding: '7px 12px', borderRadius: 16, fontSize: 12, fontWeight: 500,
-                    fontFamily: T.sans, cursor: 'pointer', transition: 'all 0.2s',
-                    border: `1px solid ${active ? dim.color : T.border}`,
-                    background: active ? `${dim.color}15` : 'transparent',
-                    color: active ? dim.color : T.textMuted,
-                    opacity: active ? 1 : 0.5,
-                    display: 'flex', alignItems: 'center', gap: 5,
-                  }}>
-                    {dim.label}
-                    {locked && <Lock size={10} />}
-                    <span style={{ fontSize: 9, opacity: 0.6 }}>T{dim.tier}</span>
-                  </button>
-                );
-              })}
+              {DIMENSIONS.filter(dim => activeDimensions.includes(dim.id) && dim.type === 'qualitative').map(dim => (
+                <div key={dim.id} style={{
+                  padding: '7px 12px', borderRadius: 16, fontSize: 12, fontWeight: 500,
+                  fontFamily: T.sans,
+                  border: `1px solid ${dim.color}`,
+                  background: `${dim.color}15`,
+                  color: dim.color,
+                }}>
+                  {dim.label}
+                </div>
+              ))}
+              {activeDimensions.filter(id => DIMENSIONS.find(d => d.id === id)?.type === 'qualitative').length === 0 && (
+                <div style={{ fontSize: 12, color: T.textMuted, fontStyle: 'italic' }}>
+                  No qualitative constraints — pure scale practice.
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -1144,9 +1264,11 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
           marginBottom: 16, border: `1px solid ${T.borderSoft}`,
         }}>
           <div style={{ fontSize: 12, color: T.textMed, fontFamily: T.sans }}>
-            Tier <strong style={{ color: T.goldDark }}>{['I', 'II', 'III', 'IV'][tier - 1]}</strong>
+            <strong style={{ color: T.goldDark }}>{MODE_LABELS[mode]}</strong>
             {' '} &middot; {' '}
-            <strong>{maxConstraints}</strong> constraints/card
+            <strong>{maxConstraints === 0 ? 'scale only' : `${maxConstraints} constraint${maxConstraints === 1 ? '' : 's'}/card`}</strong>
+            {' '} &middot; {' '}
+            <span style={{ textTransform: 'capitalize' }}>{instrument}</span>
             {' '} &middot; {' '}
             {formatTime(timerDuration)} rounds
           </div>
