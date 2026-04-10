@@ -1237,9 +1237,10 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
     setExpandedTools(prev => ({ ...prev, [toolId]: !prev[toolId] }));
   }, []);
 
-  // Guidance expand state — persisted across card draws so power users don't have to
-  // click "Show full" every time they flip a card.
-  const [showFullGuidance, setShowFullGuidance] = useState(false);
+  // Guidance expand state — persisted across card draws. Default to EXPANDED so the
+  // full pedagogical depth is visible on every card without the user hunting for a toggle.
+  // They can still collapse it if they want a cleaner surface mid-practice.
+  const [showFullGuidance, setShowFullGuidance] = useState(true);
 
   // History
   const [showHistory, setShowHistory] = useState(false);

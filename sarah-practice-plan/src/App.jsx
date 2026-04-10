@@ -1973,243 +1973,273 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
             )}
           </div>
 
-          {/* PANEL B: TOOLS */}
-          {(showTimer || tracks.length > 0 || ex.metronome || ex.drone || ex.recorder || ex.songRef?.src) && (
-            <div style={{ 
-              background: T.bgCard, borderRadius: T.radiusMd, border: `1px solid ${T.border}`,
-              padding: "18px", marginBottom: 20, boxShadow: T.sm
-            }}>
-              <div style={{ fontSize: 9, fontWeight: 800, color: T.textMuted, letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 16, borderBottom: `1px solid ${T.borderSoft}`, paddingBottom: 6 }}>
-                Tools & Accompaniment
+          {/* PRACTICE TOOLS (was two panels — unified so the eye stops pingponging between
+              "Tools & Accompaniment" and "Guide & Reference". Grouped visually by sub-eyebrows:
+              Play & Listen → See → Pace → Patterns. One container, one header.) */}
+          {(showTimer || tracks.length > 0 || ex.metronome || ex.drone || ex.recorder || ex.songRef?.src ||
+            ex.speedLadder || ex.chordVoicings || ex.fretboard || ex.pianoKeys || ex.volumeMeter ||
+            ex.silenceTarget || ex.chordTimer || ex.metronomeMode || ex.rhythmCells || ex.phraseForm ||
+            (ex.tabs && TAB_CONTENT[ex.tabs]) || (ex.referencePitches && ex.referencePitches.length > 0)) && (() => {
+            // Sub-eyebrow helper — mirrors Practice Forge's subtle section labels
+            const SubEyebrow = ({ children, first }) => (
+              <div style={{
+                fontSize: 9, fontWeight: 700, color: T.textLight, letterSpacing: 1.4,
+                textTransform: "uppercase", fontFamily: T.sans,
+                marginTop: first ? 0 : 18, marginBottom: 10, opacity: 0.85,
+                display: "flex", alignItems: "center", gap: 8,
+              }}>
+                <span>{children}</span>
+                <span style={{ flex: 1, height: 1, background: T.borderSoft, opacity: 0.6 }} />
               </div>
+            );
 
-              {/* Timer */}
-              {showTimer && (
-                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16, padding: "10px 14px", background: T.bgSoft, borderRadius: T.radius, border: `1px solid ${T.border}` }}>
-                  <TimerRing pct={timer.pct} fmt={timer.fmt} size={38} />
-                  <div style={{ flex: 1, fontFamily: T.sans, fontSize: 13, color: T.textDark, fontWeight: 700 }}>{timer.fmt}</div>
-                  <div style={{ display: "flex", gap: 4 }}>
-                    <button onClick={timer.toggle} style={{
-                      background: timer.on ? T.coral : (dayColor || T.gold), border: "none", color: "#fff",
-                      padding: "6px 12px", fontSize: 10, fontWeight: 700, cursor: "pointer", borderRadius: T.radius,
-                      fontFamily: T.sans, textTransform: "uppercase"
-                    }}>{timer.on ? "Pause" : "Start"}</button>
-                    <button onClick={timer.reset} style={{
-                      background: "transparent", border: `1px solid ${T.border}`, color: T.textLight,
-                      padding: "6px 10px", fontSize: 10, fontWeight: 700, cursor: "pointer", borderRadius: T.radius,
-                      fontFamily: T.sans, textTransform: "uppercase"
-                    }}>Reset</button>
-                  </div>
+            // Figure out which groups have content so we only render the eyebrows that apply
+            const hasPlayListen = showTimer || ex.songRef?.src || tracks.length > 0 || ex.metronome || ex.drone || ex.recorder;
+            const hasSee = (ex.referencePitches && ex.referencePitches.length > 0) || ex.chordVoicings ||
+                           (ex.type === "guitar" && (() => { const c = extractChordsFromExercise(ex); return c && c.length; })()) ||
+                           ex.fretboard || ex.pianoKeys || droneActiveNotes.notes.length > 0 || ex.volumeMeter;
+            const hasPace = ex.speedLadder || ex.silenceTarget || ex.chordTimer || ex.metronomeMode;
+            const hasPatterns = ex.rhythmCells || ex.phraseForm || (ex.tabs && TAB_CONTENT[ex.tabs]);
+            // Only show sub-eyebrows when more than one group is present — otherwise they're noise
+            const multiGroup = [hasPlayListen, hasSee, hasPace, hasPatterns].filter(Boolean).length > 1;
+
+            return (
+              <div style={{
+                background: T.bgCard, borderRadius: T.radiusMd, border: `1px solid ${T.border}`,
+                padding: "18px", marginBottom: 20, boxShadow: T.sm
+              }}>
+                <div style={{ fontSize: 9, fontWeight: 800, color: T.textMuted, letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 16, borderBottom: `1px solid ${T.borderSoft}`, paddingBottom: 6 }}>
+                  Practice Tools
                 </div>
-              )}
 
-              {/* Song Reference — listen to the actual song */}
-              {ex.songRef?.src && (
-                <div style={{ marginBottom: 16 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-                    <Music size={14} style={{ color: dayColor || T.gold }} />
-                    <div style={{ fontSize: 10, fontWeight: 900, color: T.textDark, letterSpacing: 1.5, fontFamily: T.sans, textTransform: "uppercase" }}>
-                      {ex.songRef.title || "Reference Song"}
+                {/* === PLAY & LISTEN === */}
+                {hasPlayListen && multiGroup && <SubEyebrow first>Play &amp; Listen</SubEyebrow>}
+
+                {/* Timer */}
+                {showTimer && (
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16, padding: "10px 14px", background: T.bgSoft, borderRadius: T.radius, border: `1px solid ${T.border}` }}>
+                    <TimerRing pct={timer.pct} fmt={timer.fmt} size={38} />
+                    <div style={{ flex: 1, fontFamily: T.sans, fontSize: 13, color: T.textDark, fontWeight: 700 }}>{timer.fmt}</div>
+                    <div style={{ display: "flex", gap: 4 }}>
+                      <button onClick={timer.toggle} style={{
+                        background: timer.on ? T.coral : (dayColor || T.gold), border: "none", color: "#fff",
+                        padding: "6px 12px", fontSize: 10, fontWeight: 700, cursor: "pointer", borderRadius: T.radius,
+                        fontFamily: T.sans, textTransform: "uppercase"
+                      }}>{timer.on ? "Pause" : "Start"}</button>
+                      <button onClick={timer.reset} style={{
+                        background: "transparent", border: `1px solid ${T.border}`, color: T.textLight,
+                        padding: "6px 10px", fontSize: 10, fontWeight: 700, cursor: "pointer", borderRadius: T.radius,
+                        fontFamily: T.sans, textTransform: "uppercase"
+                      }}>Reset</button>
                     </div>
                   </div>
-                  <MiniAudioPlayer theme={T} src={ex.songRef.src} />
-                  {ex.songRef.note && (
-                    <div style={{ fontSize: 11, color: T.textMed, marginTop: 6, fontStyle: "italic", lineHeight: 1.5 }}>
-                      {ex.songRef.note}
-                    </div>
-                  )}
-                </div>
-              )}
+                )}
 
-              {/* Audio Tracks */}
-              {tracks.length > 0 && (
-                <div style={{ marginBottom: 16 }}>
-                  {tracks.map((t, i) => (
-                    <div key={i} style={{ marginBottom: 12 }}>
-                      <div style={{ fontSize: 10, fontWeight: 800, color: T.textDark, letterSpacing: 1.2, marginBottom: 6, fontFamily: T.sans, textTransform: "uppercase" }}>{t.name}</div>
-                      <MiniAudioPlayer theme={T} src={t.src} playbackRate={trackRates[i] || 1} />
-                      <div style={{ display: "flex", gap: 4, marginTop: 6 }}>
-                        {[0.75, 1, 1.25].map(rate => (
-                          <button key={rate} onClick={() => setTrackRates(r => ({ ...r, [i]: rate }))} style={{
-                            background: (trackRates[i] || 1) === rate ? (dayColor || T.gold) : "transparent",
-                            color: (trackRates[i] || 1) === rate ? "#fff" : T.textMed,
-                            border: `1px solid ${(trackRates[i] || 1) === rate ? (dayColor || T.gold) : T.borderSoft}`,
-                            padding: "3px 8px", fontSize: 9, fontWeight: 800, cursor: "pointer",
-                            borderRadius: T.radius, fontFamily: T.sans
-                          }}>{rate === 1 ? "1x" : `${rate}x`}</button>
+                {/* Song Reference — listen to the actual song */}
+                {ex.songRef?.src && (
+                  <div style={{ marginBottom: 16 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                      <Music size={14} style={{ color: dayColor || T.gold }} />
+                      <div style={{ fontSize: 10, fontWeight: 900, color: T.textDark, letterSpacing: 1.5, fontFamily: T.sans, textTransform: "uppercase" }}>
+                        {ex.songRef.title || "Reference Song"}
+                      </div>
+                    </div>
+                    <MiniAudioPlayer theme={T} src={ex.songRef.src} />
+                    {ex.songRef.note && (
+                      <div style={{ fontSize: 11, color: T.textMed, marginTop: 6, fontStyle: "italic", lineHeight: 1.5 }}>
+                        {ex.songRef.note}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Audio Tracks */}
+                {tracks.length > 0 && (
+                  <div style={{ marginBottom: 16 }}>
+                    {tracks.map((t, i) => (
+                      <div key={i} style={{ marginBottom: 12 }}>
+                        <div style={{ fontSize: 10, fontWeight: 800, color: T.textDark, letterSpacing: 1.2, marginBottom: 6, fontFamily: T.sans, textTransform: "uppercase" }}>{t.name}</div>
+                        <MiniAudioPlayer theme={T} src={t.src} playbackRate={trackRates[i] || 1} />
+                        <div style={{ display: "flex", gap: 4, marginTop: 6 }}>
+                          {[0.75, 1, 1.25].map(rate => (
+                            <button key={rate} onClick={() => setTrackRates(r => ({ ...r, [i]: rate }))} style={{
+                              background: (trackRates[i] || 1) === rate ? (dayColor || T.gold) : "transparent",
+                              color: (trackRates[i] || 1) === rate ? "#fff" : T.textMed,
+                              border: `1px solid ${(trackRates[i] || 1) === rate ? (dayColor || T.gold) : T.borderSoft}`,
+                              padding: "3px 8px", fontSize: 9, fontWeight: 800, cursor: "pointer",
+                              borderRadius: T.radius, fontFamily: T.sans
+                            }}>{rate === 1 ? "1x" : `${rate}x`}</button>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Metronome */}
+                {ex.metronome && (
+                  <div style={{ display: "flex", gap: 8, marginBottom: 16, alignItems: "center", background: T.bgSoft, padding: "10px 14px", borderRadius: T.radius, border: `1px solid ${T.border}`, flexWrap: "wrap" }}>
+                    <div style={{ flex: 1, display: "flex", alignItems: "center", gap: 6 }}>
+                      <button onClick={() => metro.changeBpm(Math.max(40, metro.bpm - 1))} style={{ background: "transparent", border: "none", fontSize: 18, cursor: "pointer", color: T.textMed }}>−</button>
+                      <div style={{ fontSize: 16, fontFamily: T.sans, color: T.textDark, fontWeight: 700, minWidth: 36, textAlign: "center" }}>{metro.bpm}</div>
+                      <button onClick={() => metro.changeBpm(Math.min(280, metro.bpm + 1))} style={{ background: "transparent", border: "none", fontSize: 18, cursor: "pointer", color: T.textMed }}>+</button>
+                      <button onClick={() => metro.changeBpm(ex.metronome)} style={{ marginLeft: 8, fontSize: 9, background: T.goldSoft, border: "none", padding: "4px 10px", borderRadius: T.radius, color: T.goldDark, cursor: "pointer", fontWeight: 800, textTransform: "uppercase", letterSpacing: 1 }}>Target: {ex.metronome}</button>
+                    </div>
+                    <div style={{ display: "flex", gap: 6 }}>
+                      <button onClick={() => metro.playing ? metro.stop() : metro.start()} style={{
+                        background: metro.playing ? T.coral : (dayColor || T.gold), border: "none", color: "#fff",
+                        padding: "8px 14px", fontSize: 10, fontWeight: 700, cursor: "pointer", borderRadius: T.radius,
+                        fontFamily: T.sans, textTransform: "uppercase"
+                      }}>{metro.playing ? "Stop" : "Start"}</button>
+                      <button onClick={() => onOpenTapMatch && onOpenTapMatch(ex.metronome)} style={{
+                        background: "transparent", border: `1px solid ${T.slate}40`, color: T.slate, padding: "8px 10px", borderRadius: T.radius,
+                        fontSize: 10, cursor: "pointer", fontWeight: 700, fontFamily: T.sans, textTransform: "uppercase"
+                      }}>Tap</button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Drone */}
+                {ex.drone && (
+                  <div style={{ marginBottom: 12 }}>
+                    <DroneGenerator theme={T} inline={true} onActiveNotesChange={setDroneActiveNotes}
+                      {...(typeof ex.drone === 'object' ? {
+                        defaultRoot: ex.drone.root, defaultOctave: ex.drone.octave,
+                        defaultTexture: ex.drone.texture, defaultMode: ex.drone.mode,
+                        defaultPreset: ex.drone.preset, defaultProgression: ex.drone.progression,
+                        defaultBpm: ex.drone.bpm, defaultStepDuration: ex.drone.stepDuration,
+                      } : {})}
+                    />
+                  </div>
+                )}
+                {ex.recorder && <AudioRecorder theme={T} inline={true} />}
+
+                {/* === SEE === */}
+                {hasSee && multiGroup && <SubEyebrow first={!hasPlayListen}>See</SubEyebrow>}
+
+                {/* Pitch detector */}
+                {ex.referencePitches && ex.referencePitches.length > 0 && (
+                  <div style={{ marginBottom: 16 }}>
+                    <LivePitchDetector theme={T} referencePitches={ex.referencePitches} inline={true} pitchContour={!!ex.pitchContour} />
+                  </div>
+                )}
+
+                {/* Chord Voicings — explicit or auto-extracted */}
+                {(() => {
+                  const explicitChords = ex.chordVoicings?.chords;
+                  const autoChords = !explicitChords && ex.type === "guitar" ? extractChordsFromExercise(ex) : null;
+                  const chords = explicitChords || (autoChords?.length ? autoChords : null);
+                  return chords ? (
+                    <ChordVoicingViewer theme={T} chords={chords} defaultChord={ex.chordVoicings?.defaultChord} />
+                  ) : null;
+                })()}
+
+                {/* Fretboard & Piano Keys */}
+                {ex.fretboard && (
+                  <div style={{ marginBottom: 16 }}>
+                    {liveChord.chord && (
+                      <div style={{ fontSize: 13, fontWeight: 700, color: accentColor, marginBottom: 6, fontFamily: T.sans }}>
+                        <span style={{ opacity: 0.6, fontSize: 11 }}>Now:</span> {liveChord.chord}
+                      </div>
+                    )}
+                    <FretboardDiagram theme={T} scale={ex.fretboard.scale} position={ex.fretboard.position} highlight={ex.fretboard.highlight || []} chordToneNotes={fretboardChordTones} />
+                  </div>
+                )}
+                {(ex.pianoKeys || droneActiveNotes.notes.length > 0) && (
+                  <div style={{ marginBottom: 16 }}>
+                    {ex.pianoKeys ? (
+                      <PianoKeysDiagram notes={droneActiveNotes.notes.length > 0 ? normalizeDroneNotes(droneActiveNotes.notes, ex.pianoKeys.range) : ex.pianoKeys.notes} label={droneActiveNotes.notes.length > 0 ? droneActiveNotes.label : ex.pianoKeys.label} range={ex.pianoKeys.range} />
+                    ) : (
+                      <PianoKeysDiagram notes={normalizeDroneNotes(droneActiveNotes.notes, ["C3", "C5"])} label={droneActiveNotes.label} range={["C3", "C5"]} />
+                    )}
+                  </div>
+                )}
+
+                {/* Volume Meter */}
+                {ex.volumeMeter && <VolumeMeter theme={T} inline={true} volumeContour={!!ex.volumeContour} />}
+
+                {/* === PACE === */}
+                {hasPace && multiGroup && <SubEyebrow first={!hasPlayListen && !hasSee}>Pace</SubEyebrow>}
+
+                {/* Speed Ladder */}
+                {ex.speedLadder && (() => {
+                  const { start, end, increment, bars } = ex.speedLadder;
+                  const steps = [];
+                  for (let bpm = start; bpm <= end; bpm += increment) steps.push(bpm);
+                  return (
+                    <div style={{ marginBottom: 16 }}>
+                      <div style={{ fontSize: 9, fontWeight: 800, color: T.textMuted, letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 8 }}>
+                        Speed Ladder — {bars} bars each
+                      </div>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 4, alignItems: "center" }}>
+                        {steps.map((bpm, i) => (
+                          <React.Fragment key={bpm}>
+                            <div style={{
+                              padding: "6px 10px", borderRadius: T.radius, fontSize: 11, fontWeight: 700,
+                              fontFamily: T.mono, border: `1px solid ${T.border}`,
+                              background: i === steps.length - 1 ? (dayColor || T.accent) : T.bgSoft,
+                              color: i === steps.length - 1 ? "#fff" : T.textMed,
+                            }}>
+                              {bpm} <span style={{ fontSize: 8, opacity: 0.6 }}>BPM</span>
+                            </div>
+                            {i < steps.length - 1 && <span style={{ fontSize: 9, opacity: 0.3 }}>→</span>}
+                          </React.Fragment>
                         ))}
                       </div>
                     </div>
-                  ))}
-                </div>
-              )}
+                  );
+                })()}
 
-              {/* Metronome */}
-              {ex.metronome && (
-                <div style={{ display: "flex", gap: 8, marginBottom: 16, alignItems: "center", background: T.bgSoft, padding: "10px 14px", borderRadius: T.radius, border: `1px solid ${T.border}`, flexWrap: "wrap" }}>
-                  <div style={{ flex: 1, display: "flex", alignItems: "center", gap: 6 }}>
-                    <button onClick={() => metro.changeBpm(Math.max(40, metro.bpm - 1))} style={{ background: "transparent", border: "none", fontSize: 18, cursor: "pointer", color: T.textMed }}>−</button>
-                    <div style={{ fontSize: 16, fontFamily: T.sans, color: T.textDark, fontWeight: 700, minWidth: 36, textAlign: "center" }}>{metro.bpm}</div>
-                    <button onClick={() => metro.changeBpm(Math.min(280, metro.bpm + 1))} style={{ background: "transparent", border: "none", fontSize: 18, cursor: "pointer", color: T.textMed }}>+</button>
-                    <button onClick={() => metro.changeBpm(ex.metronome)} style={{ marginLeft: 8, fontSize: 9, background: T.goldSoft, border: "none", padding: "4px 10px", borderRadius: T.radius, color: T.goldDark, cursor: "pointer", fontWeight: 800, textTransform: "uppercase", letterSpacing: 1 }}>Target: {ex.metronome}</button>
+                {/* Silence Score */}
+                {ex.silenceTarget && <SilenceScore theme={T} target={ex.silenceTarget} />}
+
+                {/* Chord Transition Timer */}
+                {ex.chordTimer && <ChordTransitionTimer theme={T} chords={ex.chordTimer.chords} duration={ex.chordTimer.duration || 60} />}
+
+                {/* Genre Metronome */}
+                {ex.metronomeMode && <GenreMetronome theme={T} mode={ex.metronomeMode} bpm={ex.metronome || 80} />}
+
+                {/* === PATTERNS === */}
+                {hasPatterns && multiGroup && <SubEyebrow first={!hasPlayListen && !hasSee && !hasPace}>Patterns</SubEyebrow>}
+
+                {/* Rhythm Cells */}
+                {ex.rhythmCells && (
+                  <div style={{ marginTop: 16 }}>
+                    <RhythmCellCards cells={ex.rhythmCells} theme={T} bpm={ex.metronome?.bpm || 80} />
                   </div>
-                  <div style={{ display: "flex", gap: 6 }}>
-                    <button onClick={() => metro.playing ? metro.stop() : metro.start()} style={{
-                      background: metro.playing ? T.coral : (dayColor || T.gold), border: "none", color: "#fff",
-                      padding: "8px 14px", fontSize: 10, fontWeight: 700, cursor: "pointer", borderRadius: T.radius,
-                      fontFamily: T.sans, textTransform: "uppercase"
-                    }}>{metro.playing ? "Stop" : "Start"}</button>
-                    <button onClick={() => onOpenTapMatch && onOpenTapMatch(ex.metronome)} style={{
-                      background: "transparent", border: `1px solid ${T.slate}40`, color: T.slate, padding: "8px 10px", borderRadius: T.radius,
-                      fontSize: 10, cursor: "pointer", fontWeight: 700, fontFamily: T.sans, textTransform: "uppercase"
-                    }}>Tap</button>
+                )}
+
+                {/* Phrase Form */}
+                {ex.phraseForm && (
+                  <div style={{ marginTop: 16 }}>
+                    <PhraseFormGuide form={ex.phraseForm} theme={T} />
                   </div>
-                </div>
-              )}
+                )}
 
-              {/* Drone & Recorder */}
-              {ex.drone && (
-                <div style={{ marginBottom: 12 }}>
-                  <DroneGenerator theme={T} inline={true} onActiveNotesChange={setDroneActiveNotes}
-                    {...(typeof ex.drone === 'object' ? {
-                      defaultRoot: ex.drone.root, defaultOctave: ex.drone.octave,
-                      defaultTexture: ex.drone.texture, defaultMode: ex.drone.mode,
-                      defaultPreset: ex.drone.preset, defaultProgression: ex.drone.progression,
-                      defaultBpm: ex.drone.bpm, defaultStepDuration: ex.drone.stepDuration,
-                    } : {})}
-                  />
-                </div>
-              )}
-              {ex.recorder && <AudioRecorder theme={T} inline={true} />}
-            </div>
-          )}
-
-          {/* PANEL C: CONTENT */}
-          {(ex.speedLadder || ex.chordVoicings || ex.fretboard || ex.pianoKeys || ex.volumeMeter || ex.rhythmCells || ex.phraseForm || (ex.tabs && TAB_CONTENT[ex.tabs]) || (ex.referencePitches && ex.referencePitches.length > 0)) && (
-            <div style={{ 
-              background: T.bgCard, borderRadius: T.radiusMd, border: `1px solid ${T.border}`,
-              padding: "18px", marginBottom: 20, boxShadow: T.sm
-            }}>
-              <div style={{ fontSize: 9, fontWeight: 800, color: T.textMuted, letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 16, borderBottom: `1px solid ${T.borderSoft}`, paddingBottom: 6 }}>
-                Guide & Reference
+                {/* Tabs & Lyrics */}
+                {ex.tabs && TAB_CONTENT[ex.tabs] && (
+                  <div style={{ marginTop: 16 }}>
+                    <button onClick={() => setShowTabs(!showTabs)} className="interactive-btn" style={{
+                      background: "transparent", border: `1px solid ${T.border}`, color: T.textMed,
+                      padding: "10px 14px", borderRadius: T.radius, cursor: "pointer", fontWeight: 800,
+                      fontFamily: T.sans, fontSize: 10, letterSpacing: 1.5, textTransform: "uppercase",
+                      width: "100%", textAlign: "left", display: "flex", justifyContent: "space-between", alignItems: "center"
+                    }}>
+                      <span>Tabs & Lyrics</span>
+                      <span style={{ transition: "transform 0.2s", transform: showTabs ? "rotate(180deg)" : "" }}>&#9660;</span>
+                    </button>
+                    {showTabs && (
+                      <pre style={{
+                        background: T.bgSoft, padding: 16, border: `1px solid ${T.border}`, borderTop: "none",
+                        borderRadius: `0 0 ${T.radius} ${T.radius}`, overflowX: "auto",
+                        fontFamily: "monospace", fontSize: 12, color: T.textDark, lineHeight: 1.5, marginTop: 0, whiteSpace: "pre-wrap"
+                      }}>{TAB_CONTENT[ex.tabs].trim()}</pre>
+                    )}
+                  </div>
+                )}
               </div>
-
-              {/* Pitch detector */}
-              {ex.referencePitches && ex.referencePitches.length > 0 && (
-                <div style={{ marginBottom: 16 }}>
-                  <LivePitchDetector theme={T} referencePitches={ex.referencePitches} inline={true} pitchContour={!!ex.pitchContour} />
-                </div>
-              )}
-
-              {/* Chord Voicings — explicit or auto-extracted */}
-              {(() => {
-                const explicitChords = ex.chordVoicings?.chords;
-                const autoChords = !explicitChords && ex.type === "guitar" ? extractChordsFromExercise(ex) : null;
-                const chords = explicitChords || (autoChords?.length ? autoChords : null);
-                return chords ? (
-                  <ChordVoicingViewer theme={T} chords={chords} defaultChord={ex.chordVoicings?.defaultChord} />
-                ) : null;
-              })()}
-
-              {/* Fretboard & Piano Keys */}
-              {ex.fretboard && (
-                <div style={{ marginBottom: 16 }}>
-                  {liveChord.chord && (
-                    <div style={{ fontSize: 13, fontWeight: 700, color: accentColor, marginBottom: 6, fontFamily: T.sans }}>
-                      <span style={{ opacity: 0.6, fontSize: 11 }}>Now:</span> {liveChord.chord}
-                    </div>
-                  )}
-                  <FretboardDiagram theme={T} scale={ex.fretboard.scale} position={ex.fretboard.position} highlight={ex.fretboard.highlight || []} chordToneNotes={fretboardChordTones} />
-                </div>
-              )}
-              {(ex.pianoKeys || droneActiveNotes.notes.length > 0) && (
-                <div style={{ marginBottom: 16 }}>
-                  {ex.pianoKeys ? (
-                    <PianoKeysDiagram notes={droneActiveNotes.notes.length > 0 ? normalizeDroneNotes(droneActiveNotes.notes, ex.pianoKeys.range) : ex.pianoKeys.notes} label={droneActiveNotes.notes.length > 0 ? droneActiveNotes.label : ex.pianoKeys.label} range={ex.pianoKeys.range} />
-                  ) : (
-                    <PianoKeysDiagram notes={normalizeDroneNotes(droneActiveNotes.notes, ["C3", "C5"])} label={droneActiveNotes.label} range={["C3", "C5"]} />
-                  )}
-                </div>
-              )}
-
-              {/* Speed Ladder */}
-              {ex.speedLadder && (() => {
-                const { start, end, increment, bars } = ex.speedLadder;
-                const steps = [];
-                for (let bpm = start; bpm <= end; bpm += increment) steps.push(bpm);
-                return (
-                  <div style={{ marginBottom: 16 }}>
-                    <div style={{ fontSize: 9, fontWeight: 800, color: T.textMuted, letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 8 }}>
-                      Speed Ladder — {bars} bars each
-                    </div>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 4, alignItems: "center" }}>
-                      {steps.map((bpm, i) => (
-                        <React.Fragment key={bpm}>
-                          <div style={{
-                            padding: "6px 10px", borderRadius: T.radius, fontSize: 11, fontWeight: 700,
-                            fontFamily: T.mono, border: `1px solid ${T.border}`,
-                            background: i === steps.length - 1 ? (dayColor || T.accent) : T.bgSoft,
-                            color: i === steps.length - 1 ? "#fff" : T.textMed,
-                          }}>
-                            {bpm} <span style={{ fontSize: 8, opacity: 0.6 }}>BPM</span>
-                          </div>
-                          {i < steps.length - 1 && <span style={{ fontSize: 9, opacity: 0.3 }}>→</span>}
-                        </React.Fragment>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })()}
-
-              {/* Volume Meter */}
-              {ex.volumeMeter && <VolumeMeter theme={T} inline={true} volumeContour={!!ex.volumeContour} />}
-
-              {/* Silence Score */}
-              {ex.silenceTarget && <SilenceScore theme={T} target={ex.silenceTarget} />}
-
-              {/* Chord Transition Timer */}
-              {ex.chordTimer && <ChordTransitionTimer theme={T} chords={ex.chordTimer.chords} duration={ex.chordTimer.duration || 60} />}
-
-              {/* Genre Metronome */}
-              {ex.metronomeMode && <GenreMetronome theme={T} mode={ex.metronomeMode} bpm={ex.metronome || 80} />}
-
-              {/* Rhythm Cells */}
-              {ex.rhythmCells && (
-                <div style={{ marginTop: 16 }}>
-                  <RhythmCellCards cells={ex.rhythmCells} theme={T} bpm={ex.metronome?.bpm || 80} />
-                </div>
-              )}
-
-              {/* Phrase Form */}
-              {ex.phraseForm && (
-                <div style={{ marginTop: 16 }}>
-                  <PhraseFormGuide form={ex.phraseForm} theme={T} />
-                </div>
-              )}
-
-              {/* Tabs & Lyrics */}
-              {ex.tabs && TAB_CONTENT[ex.tabs] && (
-                <div style={{ marginTop: 16 }}>
-                  <button onClick={() => setShowTabs(!showTabs)} className="interactive-btn" style={{
-                    background: "transparent", border: `1px solid ${T.border}`, color: T.textMed,
-                    padding: "10px 14px", borderRadius: T.radius, cursor: "pointer", fontWeight: 800,
-                    fontFamily: T.sans, fontSize: 10, letterSpacing: 1.5, textTransform: "uppercase",
-                    width: "100%", textAlign: "left", display: "flex", justifyContent: "space-between", alignItems: "center"
-                  }}>
-                    <span>Tabs & Lyrics</span>
-                    <span style={{ transition: "transform 0.2s", transform: showTabs ? "rotate(180deg)" : "" }}>&#9660;</span>
-                  </button>
-                  {showTabs && (
-                    <pre style={{
-                      background: T.bgSoft, padding: 16, border: `1px solid ${T.border}`, borderTop: "none",
-                      borderRadius: `0 0 ${T.radius} ${T.radius}`, overflowX: "auto",
-                      fontFamily: "monospace", fontSize: 12, color: T.textDark, lineHeight: 1.5, marginTop: 0, whiteSpace: "pre-wrap"
-                    }}>{TAB_CONTENT[ex.tabs].trim()}</pre>
-                  )}
-                </div>
-              )}
-            </div>
-          )}
+            );
+          })()}
 
           {/* Steps */}
           <div style={{ marginBottom: 16 }}>
