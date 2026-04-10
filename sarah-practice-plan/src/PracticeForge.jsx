@@ -97,91 +97,95 @@ const KEY_WEIGHTS = {
 };
 
 const PITCH_CONSTRAINTS = [
-  { id: 'leaps', name: 'Leaps Only', desc: 'Only non-adjacent scale tones — no stepwise motion', icon: '↗' },
-  { id: 'arch', name: 'Arch Contour', desc: 'Rise to a peak, then descend', icon: '⌢' },
-  { id: 'seed', name: 'Seed + Variations', desc: '3-note motif — then develop it', icon: '🌱' },
+  { id: 'leaps', name: 'Leaps Only', desc: 'Only non-adjacent scale tones — no stepwise motion', icon: '↗',
+    example: (notes) => notes.length >= 4 ? `e.g. ${notes[0]}→${notes[2]}→${notes[4] || notes[0]}→${notes[1]} (skip neighbors)` : '' },
+  { id: 'arch', name: 'Arch Contour', desc: 'Rise to a peak, then descend — every phrase is a hill', icon: '⌢',
+    example: (notes) => notes.length >= 4 ? `e.g. ${notes[0]}→${notes[1]}→${notes[3]}→${notes[1]}→${notes[0]}` : '' },
+  { id: 'seed', name: 'Seed + Variations', desc: 'Pick a 3-note motif and develop it — change one note each time, keep the shape', icon: '🌱',
+    example: (notes) => notes.length >= 3 ? `e.g. seed: ${notes[0]}-${notes[1]}-${notes[2]}, then ${notes[0]}-${notes[1]}-${notes[3] || notes[2]}...` : '' },
   { id: 'forbidden', name: 'Forbidden Note', desc: 'One scale note is off-limits', icon: '🚫', hasExtra: true },
-  { id: 'targetLanding', name: 'Target Landing', desc: 'Every phrase must end on one note', icon: '🎯', hasExtra: true },
-  { id: 'questionAnswer', name: 'Question / Answer', desc: 'Phrases alternate: tension then resolution', icon: '❓' },
+  { id: 'targetLanding', name: 'Target Landing', desc: 'Every phrase must end on one specific note — wander freely but always come home', icon: '🎯', hasExtra: true },
+  { id: 'questionAnswer', name: 'Question / Answer', desc: 'Alternate phrases: first one rises or feels unresolved, second one descends and resolves', icon: '❓',
+    example: (notes) => notes.length >= 3 ? `e.g. Q: ${notes[1]}→${notes[2]}→${notes[3] || notes[2]}? A: ${notes[2]}→${notes[1]}→${notes[0]}.` : '' },
 ];
 
 const RHYTHM_CONSTRAINTS = [
-  { id: 'river', name: 'River', desc: 'Even quarter-note flow — metronome-like regularity', icon: '🌊' },
-  { id: 'burst', name: 'Burst', desc: 'Front-loaded density — quick climb, then space', icon: '💥' },
-  { id: 'space', name: 'Space', desc: 'Silence-heavy — notes as islands in an ocean of rest', icon: '🏝' },
-  { id: 'offbeat', name: 'Offbeat', desc: 'Syncopated — notes land between the beats', icon: '⚡' },
-  { id: 'rhythmSeed', name: 'Rhythmic Seed', desc: 'A short rhythmic cell — repeat and vary', icon: '🔄' },
+  { id: 'river', name: 'River', desc: 'Even quarter-note flow — one note per beat, like a calm river. Rhythm becomes invisible so melody carries everything.', icon: '🌊' },
+  { id: 'burst', name: 'Burst', desc: 'Front-loaded density — pack 4-6 quick notes at the start of each phrase, then leave 2-3 beats of silence. The burst creates energy, the space lets it breathe.', icon: '💥' },
+  { id: 'space', name: 'Space', desc: 'Silence-heavy — at least half of every bar is rest. Each note is precious because there are so few. Think Tinariwen or Khruangbin vocal lines.', icon: '🏝' },
+  { id: 'offbeat', name: 'Offbeat', desc: 'Syncopated — notes land between the beats, never on 1 or 3. Feel the groove push and pull against the metronome.', icon: '⚡' },
+  { id: 'rhythmSeed', name: 'Rhythmic Seed', desc: 'Choose a short rhythmic cell (e.g. long-short-short or short-long-short-rest) and repeat it, varying the pitches each time.', icon: '🔄' },
 ];
 
 const DYNAMICS_CONSTRAINTS = [
-  { id: 'swell', name: 'Swell', desc: 'pp → f → pp — a wave of energy', icon: '🌊' },
-  { id: 'terraces', name: 'Terraces', desc: 'Sudden level jumps — flat plateaus, no fades', icon: '🪜' },
-  { id: 'whisper', name: 'Whisper', desc: 'Sustained pianissimo — intimate, controlled', icon: '🤫' },
-  { id: 'accentMap', name: 'Accent Map', desc: 'One note per phrase pops loud — the rest whisper', icon: '🎯' },
-  { id: 'forte', name: 'Constant Forte', desc: 'Full power throughout — no holding back', icon: '🔊' },
+  { id: 'swell', name: 'The Swell', desc: 'Start barely audible (pp), gradually crescendo to full voice (f) over 4 bars, then drop instantly to silence. A wave of energy — build, crest, vanish.', icon: '🌊' },
+  { id: 'terraces', name: 'Terraces', desc: 'Sudden level jumps with no gradual transitions — sing 2 bars at pp, jump to mf for 2 bars, jump to f for 2 bars. Like climbing stairs.', icon: '🪜' },
+  { id: 'whisper', name: 'Whisper', desc: 'Entire performance at pianissimo — so quiet each note feels like a secret. This is NOT timidity, it is CHOSEN intimacy. Requires more breath control, not less.', icon: '🤫' },
+  { id: 'accentMap', name: 'Accent Map', desc: 'Sing a steady phrase, but one note per bar explodes loud (sforzando) while everything else stays quiet. Move the accent to different positions each bar.', icon: '🎯' },
+  { id: 'forte', name: 'Constant Forte', desc: 'Full power throughout — fill the room with every note. No holding back, no dynamic variation. Pure confident projection.', icon: '🔊' },
 ];
 
 const ARTICULATION_CONSTRAINTS = [
-  { id: 'legato', name: 'All Legato', desc: 'Smooth and connected — no gaps between notes', icon: '〰️' },
-  { id: 'staccato', name: 'All Staccato', desc: 'Short and detached — notes bounce', icon: '·' },
-  { id: 'mixed', name: 'Mixed', desc: 'Alternate legato phrases with staccato bursts', icon: '⟿' },
-  { id: 'accentedFirst', name: 'Accented Firsts', desc: 'Punch the first beat of every bar', icon: '▶' },
+  { id: 'legato', name: 'All Legato', desc: 'Smooth and connected — each note flows into the next with no gaps. Think of a single breath carrying the entire phrase.', icon: '〰️' },
+  { id: 'staccato', name: 'All Staccato', desc: 'Short and detached — every note bounces with space after it. Like speaking in single syllables with pauses between.', icon: '·' },
+  { id: 'mixed', name: 'Mixed', desc: 'Alternate legato phrases with staccato bursts — let the contrast create interest. Two bars flowing, two bars bouncing.', icon: '⟿' },
+  { id: 'accentedFirst', name: 'Accented Firsts', desc: 'Punch the downbeat of every bar hard, then let the remaining notes be light. Creates a strong rhythmic anchor.', icon: '▶' },
 ];
 
 const GENRE_CONSTRAINTS = [
-  { id: 'reggae', name: 'Reggae', desc: 'Behind the beat + offbeat emphasis + space', icon: '🇯🇲', genre: 'reggae' },
-  { id: 'surf', name: 'Surf / Psych', desc: 'Ahead of beat + legato sustains + mask float', icon: '🏄', genre: 'surf' },
-  { id: 'desertBlues', name: 'Desert Blues', desc: 'Patient + drone-centered + sternum depth', icon: '🏜️', genre: 'desert-blues' },
-  { id: 'soul', name: 'Soul', desc: 'On the beat + dynamic swells + melisma', icon: '🎷', genre: 'soul' },
+  { id: 'reggae', name: 'Reggae', desc: 'Sit behind the beat by 10-20ms. Emphasize offbeats. Leave lots of space — sing short fragments (1 bar max). Chest-heavy placement, jaw relaxed. Think roots dub.', icon: '🇯🇲', genre: 'reggae' },
+  { id: 'surf', name: 'Surf / Psych', desc: 'Push slightly ahead of the beat (5-10ms early). Use sustained legato notes with airy mask placement. Soft with occasional swells. Think Allah-Las or Khruangbin guitar tones.', icon: '🏄', genre: 'surf' },
+  { id: 'desertBlues', name: 'Desert Blues', desc: 'Even and patient — river rhythm, on the beat. Favor the root note, hold it long. Deep sternum resonance. Meditative repetition. Think Tinariwen or Tommy Guerrero.', icon: '🏜️', genre: 'desert-blues' },
+  { id: 'soul', name: 'Soul', desc: 'Locked on the beat with a deep pocket. Wide dynamic range (pp whisper → f belt). Use melisma (sliding between notes). Full body engagement — chest for intimacy, mask for power.', icon: '🎷', genre: 'soul' },
 ];
 
 const EMOTIONAL_CONSTRAINTS = [
-  { id: 'stormy', name: 'Stormy', desc: 'Turbulent, aggressive, dark energy', icon: '⛈' },
-  { id: 'sunny', name: 'Sunny', desc: 'Bright, optimistic, warm and open', icon: '☀️' },
-  { id: 'foggy', name: 'Foggy', desc: 'Ambiguous, drifting, uncertain and hazy', icon: '🌫' },
-  { id: 'arid', name: 'Arid', desc: 'Sparse, dry, shimmering desert heat', icon: '🌵' },
-  { id: 'goldenHour', name: 'Golden Hour', desc: 'Nostalgic, warm, fading light', icon: '🌅' },
-  { id: 'midnight', name: 'Midnight', desc: 'Dark, introspective, still and deep', icon: '🌙' },
+  { id: 'stormy', name: 'Stormy', desc: 'Turbulent, aggressive energy — sharp attacks, unpredictable phrasing, angular melodic leaps. Channel frustration or urgency.', icon: '⛈' },
+  { id: 'sunny', name: 'Sunny', desc: 'Bright and optimistic — open vowels, upward melodic motion, buoyant rhythm. Sing like the best day of your life.', icon: '☀️' },
+  { id: 'foggy', name: 'Foggy', desc: 'Ambiguous and drifting — blur the edges of notes, let phrases trail off unresolved. Nothing is certain. Dreamy, hazy, uncommitted.', icon: '🌫' },
+  { id: 'arid', name: 'Arid', desc: 'Sparse and dry — minimal notes, maximum space. Shimmering desert heat. Each note bakes in the sun before the next one arrives.', icon: '🌵' },
+  { id: 'goldenHour', name: 'Golden Hour', desc: 'Nostalgic warmth — gentle dynamics, bittersweet intervals, phrases that linger. "Beautiful day that you know will end."', icon: '🌅' },
+  { id: 'midnight', name: 'Midnight', desc: 'Dark, introspective, still — low register, quiet dynamics, long pauses between phrases. The world is asleep and you are the only sound.', icon: '🌙' },
 ];
 
 const PHRASE_CONSTRAINTS = [
-  { id: '1bar', name: '1-Bar Phrases', desc: 'Fragments — short, punchy ideas', bars: 1 },
-  { id: '2bar', name: '2-Bar Phrases', desc: 'Sentences — complete musical thoughts', bars: 2 },
-  { id: '4bar', name: '4-Bar Phrases', desc: 'Paragraphs — developed melodic arcs', bars: 4 },
-  { id: '8bar', name: '8-Bar Phrases', desc: 'Epics — full stories with beginning, middle, end', bars: 8 },
+  { id: '1bar', name: '1-Bar Phrases', desc: 'Fragments — short, punchy ideas. Say one thing and stop. Let the silence respond.', bars: 1 },
+  { id: '2bar', name: '2-Bar Phrases', desc: 'Sentences — complete musical thoughts with a beginning and end. The natural phrase length for most vocal lines.', bars: 2 },
+  { id: '4bar', name: '4-Bar Phrases', desc: 'Paragraphs — developed melodic arcs with internal shape. Rise, peak, fall, resolve.', bars: 4 },
+  { id: '8bar', name: '8-Bar Phrases', desc: 'Epics — full stories with a beginning, middle, climax, and conclusion. Requires sustained breath and intention.', bars: 8 },
 ];
 
 const DENSITY_CONSTRAINTS = [
-  { id: 'sparse', name: 'Sparse', desc: 'Max 3 notes per bar — silence is the instrument', icon: '○' },
-  { id: 'medium', name: 'Medium', desc: 'Balanced density — breath between ideas', icon: '◐' },
-  { id: 'dense', name: 'Dense', desc: 'No empty beats — fill every moment', icon: '●' },
+  { id: 'sparse', name: 'Sparse', desc: 'Max 3 notes per bar — silence is the instrument. Every note must earn its place. The gaps between notes carry as much meaning as the notes themselves.', icon: '○' },
+  { id: 'medium', name: 'Medium', desc: 'Balanced density — a breath between ideas. Not rushed, not empty. The natural flow of conversation turned into melody.', icon: '◐' },
+  { id: 'dense', name: 'Dense', desc: 'No empty beats — fill every rhythmic slot. A constant stream of melodic invention. Exhausting and exhilarating in equal measure.', icon: '●' },
 ];
 
 const VOCAL_CONSTRAINTS = [
-  { id: 'chest', name: 'Chest Voice', desc: 'Stay in chest register — grounded, warm', icon: '🫁' },
-  { id: 'head', name: 'Head Voice', desc: 'Light, heady placement — floating', icon: '💭' },
-  { id: 'mixed', name: 'Mixed Voice', desc: 'Bridge the registers seamlessly', icon: '🔀' },
-  { id: 'falsetto', name: 'Falsetto', desc: 'Airy, floaty top register', icon: '🎈' },
-  { id: 'breathy', name: 'Breathy', desc: 'Air-forward, intimate whispered tone', icon: '💨' },
+  { id: 'chest', name: 'Chest Voice', desc: 'Stay in chest register — grounded, warm, full resonance. Feel the vibration in your sternum and ribs. Your "speaking voice" turned into melody.', icon: '🫁' },
+  { id: 'head', name: 'Head Voice', desc: 'Light, heady placement — the vibration moves to your mask (cheeks, bridge of nose). Floaty and ethereal, like singing from above your head.', icon: '💭' },
+  { id: 'mixed', name: 'Mixed Voice', desc: 'Bridge chest and head registers seamlessly — no audible "break" as you move through your range. The holy grail of vocal technique.', icon: '🔀' },
+  { id: 'falsetto', name: 'Falsetto', desc: 'Airy, floaty top register — breathy and detached from chest resonance. Think DOPE LEMON or Bon Iver. Beautiful for intimacy.', icon: '🎈' },
+  { id: 'breathy', name: 'Breathy', desc: 'Air-forward tone — more breath than voice. Intimate, close-mic energy. Like singing a secret directly into someone\'s ear.', icon: '💨' },
 ];
 
 const GUITAR_CONSTRAINTS = [
-  { id: 'downstrokes', name: 'Downstrokes Only', desc: 'All downstrokes — punk energy', icon: '⬇' },
-  { id: 'fingerpick', name: 'Fingerpick', desc: 'No pick — fingers only', icon: '🤚' },
-  { id: 'muted', name: 'Muted', desc: 'Palm-muted or ghost notes only', icon: '✋' },
-  { id: 'harmonics', name: 'Harmonics', desc: 'Natural or artificial harmonics', icon: '✨' },
-  { id: 'hybrid', name: 'Hybrid Picking', desc: 'Pick + fingers simultaneously', icon: '🤙' },
+  { id: 'downstrokes', name: 'Downstrokes Only', desc: 'All downstrokes — heavier, more aggressive attack. Creates a driving, punk-influenced energy. No upstrokes allowed.', icon: '⬇' },
+  { id: 'fingerpick', name: 'Fingerpick', desc: 'No pick — fingers only. Softer attack, more control over individual strings. Opens up simultaneous bass + melody patterns.', icon: '🤚' },
+  { id: 'muted', name: 'Muted', desc: 'Palm-muted or ghost notes only — the guitar becomes a percussion instrument. Rhythmic texture with pitched undertones.', icon: '✋' },
+  { id: 'harmonics', name: 'Harmonics', desc: 'Natural or artificial harmonics — bell-like tones that ring out above the fretted notes. Ethereal, shimmering texture.', icon: '✨' },
+  { id: 'hybrid', name: 'Hybrid Picking', desc: 'Pick + fingers simultaneously — the pick handles bass notes while fingers pluck upper strings. Country, jazz, and surf technique.', icon: '🤙' },
 ];
 
 const OBLIQUE_MODIFIERS = [
-  { id: 'honorError', name: 'Honor Thy Error', desc: 'If you play a "wrong" note, build on it' },
-  { id: 'fewerNotes', name: 'Use Fewer Notes', desc: 'Half the notes you think you need' },
-  { id: 'justLearned', name: 'Just Learned', desc: 'Pretend you just picked up this instrument' },
-  { id: 'underwater', name: 'Play It Underwater', desc: 'Everything slower, heavier, dreamier' },
-  { id: 'lastTime', name: 'Last Time Ever', desc: 'Play as if you\'ll never play this again' },
-  { id: 'robot', name: 'Mechanical', desc: 'Perfectly even, no expression — then rebel' },
-  { id: 'blindfolded', name: 'Eyes Closed', desc: 'Close your eyes — feel, don\'t see' },
-  { id: 'storyteller', name: 'The Storyteller', desc: 'Every phrase is a sentence in a story' },
+  { id: 'honorError', name: 'Honor Thy Error', desc: 'If you play a "wrong" note, build on it — make it the start of something new. Mistakes are doorways.' },
+  { id: 'fewerNotes', name: 'Use Fewer Notes', desc: 'Whatever you\'re about to play, use half the notes. Then halve it again. What\'s left is the essence.' },
+  { id: 'justLearned', name: 'Just Learned', desc: 'Pretend you just picked up this instrument for the first time. No habits, no shortcuts, pure curiosity.' },
+  { id: 'underwater', name: 'Play It Underwater', desc: 'Everything slower, heavier, dreamier. Time moves at half speed. Each note sinks through water.' },
+  { id: 'lastTime', name: 'Last Time Ever', desc: 'Play as if you\'ll never play this again. Every note matters. Maximum intention, zero waste.' },
+  { id: 'robot', name: 'Mechanical', desc: 'Perfectly even, no expression, robotic — then at the 1-minute mark, rebel. Let the human flood back in.' },
+  { id: 'blindfolded', name: 'Eyes Closed', desc: 'Close your eyes for the entire round. Navigate by ear and feel alone. Your fingers know more than you think.' },
+  { id: 'storyteller', name: 'The Storyteller', desc: 'Every phrase is a sentence in a story. The melody has a plot: introduction, tension, climax, resolution.' },
 ];
 
 // ─── Dimension Registry ───
@@ -378,8 +382,11 @@ async function playChime() {
 function ChallengeCard({ card, T, entering }) {
   const keyColor = getColorForNote(card.constraints.key) || T.gold;
   const scaleName = SCALE_TYPES[card.constraints.scale]?.name || card.constraints.scale;
+  const scaleData = generateScale(card.constraints.key, card.constraints.scale);
+  const scaleNotes = scaleData.notes || [];
+  const scaleDesc = SCALE_TYPES[card.constraints.scale]?.desc || '';
 
-  // Collect active qualitative constraints for display
+  // Collect active qualitative constraints for display (oblique handled separately with its own style)
   const constraintLines = [];
   const qualDimIds = ['pitchConstraint', 'rhythmConstraint', 'dynamics', 'articulation', 'genreFeel',
     'emotionalIntent', 'phraseLength', 'density', 'vocalTechnique', 'guitarTechnique'];
@@ -397,69 +404,115 @@ function ChallengeCard({ card, T, entering }) {
       background: T.bgCard,
       border: `1px solid ${T.border}`,
       borderRadius: 12,
-      padding: 24,
+      padding: '28px 24px',
       boxShadow: `0 2px 12px rgba(181, 132, 84, 0.06), 0 12px 32px rgba(181, 132, 84, 0.04)`,
       position: 'relative',
       overflow: 'hidden',
       animation: entering ? 'forgeCardEnter 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both' : undefined,
     }}>
-      {/* Header: Key + Scale + BPM */}
-      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 4 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+      {/* Header: Key + Scale */}
+      <div style={{ marginBottom: 6 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
           <div style={{
-            width: 10, height: 10, borderRadius: '50%', background: keyColor,
-            boxShadow: `0 0 6px ${keyColor}40`,
+            width: 12, height: 12, borderRadius: '50%', background: keyColor,
+            boxShadow: `0 0 8px ${keyColor}40`,
           }} />
-          <span style={{ fontFamily: T.serif, fontSize: 22, fontWeight: 500, color: T.textDark, letterSpacing: -0.5 }}>
+          <span style={{ fontFamily: T.serif, fontSize: 24, fontWeight: 500, color: T.textDark, letterSpacing: -0.5 }}>
             {card.constraints.key} {scaleName}
           </span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: T.textLight, fontSize: 14 }}>
-          <Music size={14} />
-          <span style={{ fontFamily: T.sans, fontWeight: 500 }}>{card.constraints.tempo} BPM</span>
+        {/* Scale description + notes */}
+        <div style={{ paddingLeft: 20, marginBottom: 4 }}>
+          <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, lineHeight: 1.5, marginBottom: 6 }}>
+            {scaleDesc}
+          </div>
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+            {scaleNotes.map((note, i) => {
+              const nc = getColorForNote(note) || T.textMed;
+              return (
+                <span key={i} style={{
+                  fontSize: 12, fontWeight: 600, fontFamily: T.sans,
+                  padding: '2px 8px', borderRadius: 10,
+                  background: `${nc}18`, color: nc,
+                  border: `1px solid ${nc}30`,
+                }}>
+                  {note}
+                </span>
+              );
+            })}
+          </div>
         </div>
+      </div>
+
+      {/* Tempo + BPM */}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 6, paddingLeft: 20,
+        color: T.textLight, fontSize: 14, marginBottom: 4,
+      }}>
+        <Music size={14} />
+        <span style={{ fontFamily: T.sans, fontWeight: 500 }}>{card.constraints.tempo} BPM</span>
       </div>
 
       {/* Divider */}
       {constraintLines.length > 0 && (
-        <div style={{ height: 1, background: T.border, margin: '16px 0', opacity: 0.6 }} />
+        <div style={{ height: 1, background: T.border, margin: '20px 0', opacity: 0.6 }} />
       )}
 
       {/* Constraint lines */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-        {constraintLines.map(({ dim, constraint }, i) => (
-          <div key={dim.id} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-            {/* Left color bar */}
-            <div style={{
-              width: 3, minHeight: 36, borderRadius: 4,
-              background: dim.color, opacity: 0.8, flexShrink: 0, marginTop: 2,
-            }} />
-            {/* Icon + text */}
-            <div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+        {constraintLines.map(({ dim, constraint }) => {
+          // Generate dynamic example if the constraint has an example function
+          const exampleText = constraint.example ? constraint.example(scaleNotes) : null;
+          return (
+            <div key={dim.id} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+              {/* Left color bar */}
               <div style={{
-                fontFamily: T.serif, fontSize: 16, fontWeight: 400, color: T.textDark,
-                lineHeight: 1.3, marginBottom: 2,
-              }}>
-                {constraint.icon && <span style={{ marginRight: 6 }}>{constraint.icon}</span>}
-                {constraint.name}
-              </div>
-              <div style={{
-                fontFamily: T.sans, fontSize: 13, color: T.textMed, lineHeight: 1.5,
-              }}>
-                {constraint.desc}
+                width: 3, alignSelf: 'stretch', borderRadius: 4,
+                background: dim.color, opacity: 0.8, flexShrink: 0,
+              }} />
+              {/* Content */}
+              <div style={{ flex: 1 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                  {constraint.icon && <span style={{ fontSize: 15 }}>{constraint.icon}</span>}
+                  <span style={{
+                    fontFamily: T.serif, fontSize: 17, fontWeight: 400, color: T.textDark,
+                    lineHeight: 1.3,
+                  }}>
+                    {constraint.name}
+                  </span>
+                  <span style={{
+                    fontSize: 10, fontWeight: 600, color: dim.color, textTransform: 'uppercase',
+                    letterSpacing: 0.8, fontFamily: T.sans, opacity: 0.7,
+                  }}>
+                    {dim.label}
+                  </span>
+                </div>
+                <div style={{
+                  fontFamily: T.sans, fontSize: 13, color: T.textMed, lineHeight: 1.6,
+                }}>
+                  {constraint.desc}
+                </div>
+                {exampleText && (
+                  <div style={{
+                    fontFamily: T.sans, fontSize: 12, color: T.textLight, lineHeight: 1.5,
+                    marginTop: 4, fontStyle: 'italic', paddingLeft: 2,
+                  }}>
+                    {exampleText}
+                  </div>
+                )}
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Oblique modifier */}
       {oblique && (
         <>
-          <div style={{ height: 1, background: T.border, margin: '16px 0', opacity: 0.4 }} />
+          <div style={{ height: 1, background: T.border, margin: '20px 0', opacity: 0.4 }} />
           <div style={{
-            fontFamily: T.serif, fontStyle: 'italic', fontSize: 14, color: T.textLight,
-            textAlign: 'center', lineHeight: 1.5,
+            fontFamily: T.serif, fontStyle: 'italic', fontSize: 15, color: T.textLight,
+            textAlign: 'center', lineHeight: 1.6, padding: '4px 8px',
           }}>
             "{oblique.desc}"
           </div>
@@ -469,10 +522,11 @@ function ChallengeCard({ card, T, entering }) {
       {/* Suggested track */}
       {card.suggestedTrack && (
         <div style={{
-          marginTop: 12, padding: '6px 10px', background: T.bgSoft, borderRadius: 6,
+          marginTop: 16, padding: '8px 12px', background: T.bgSoft, borderRadius: 8,
           fontSize: 12, color: T.textLight, fontFamily: T.sans, textAlign: 'center',
+          border: `1px solid ${T.borderSoft}`,
         }}>
-          Suggested: {card.suggestedTrack.name} ({card.suggestedTrack.bpm} BPM)
+          Suggested track: <strong style={{ color: T.textMed }}>{card.suggestedTrack.name}</strong> ({card.suggestedTrack.bpm} BPM)
         </div>
       )}
     </div>
@@ -752,11 +806,20 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
     return allCards.slice(-10).reverse();
   }, [forgeData.sessions]);
 
+  // ─── Tier descriptions ───
+  const TIER_DESCRIPTIONS = {
+    1: 'Foundation — Key, scale, and tempo only. Get comfortable with the randomizer.',
+    2: 'The Full Matrix — Adds pitch, rhythm, and dynamics constraints from the SS Level 4 combination matrix.',
+    3: 'Expression — Adds articulation (legato/staccato) and genre feel (reggae, surf, desert blues, soul).',
+    4: 'Intent & Structure — Adds emotional intent, phrase length, and textural density.',
+    5: 'Mastery — Everything unlocked including vocal/guitar technique and oblique modifiers.',
+  };
+
   // ─── Render ───
-  const maxW = 420;
+  const maxW = 480;
 
   return (
-    <div style={{ maxWidth: maxW, margin: '0 auto', padding: '16px 16px 100px', fontFamily: T.sans }}>
+    <div style={{ maxWidth: maxW, margin: '0 auto', padding: '20px 20px 120px', fontFamily: T.sans }}>
       {/* CSS Animations */}
       <style>{`
         @keyframes forgeCardEnter {
@@ -772,7 +835,7 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
       `}</style>
 
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <button onClick={handleBack} style={{
             background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: T.textMed,
@@ -792,38 +855,38 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
         </button>
       </div>
 
-      {/* Settings Panel */}
-      {settingsOpen && (
-        <div style={{ marginBottom: 20, padding: 16, background: T.bgSoft, borderRadius: 8, border: `1px solid ${T.borderSoft}` }}>
-          {/* Tier selector */}
-          <div style={{ marginBottom: 16 }}>
-            <div style={{ fontSize: 11, fontWeight: 500, color: T.textLight, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>
-              Tier
-            </div>
-            <div style={{ display: 'flex', gap: 4 }}>
-              {[1, 2, 3, 4, 5].map(t => (
-                <button key={t} onClick={() => handleTierChange(t)} style={{
-                  flex: 1, padding: '8px 0', border: `1px solid ${tier === t ? T.gold : T.border}`,
-                  borderRadius: 6, fontSize: 13, fontWeight: tier === t ? 600 : 400,
-                  fontFamily: T.sans, cursor: 'pointer', transition: 'all 0.2s',
-                  background: tier === t ? T.goldSoft : 'transparent',
-                  color: tier === t ? T.goldDark : T.textMed,
-                }}>
-                  {['I', 'II', 'III', 'IV', 'V'][t - 1]}
-                </button>
-              ))}
-            </div>
-          </div>
+      {/* Tier Selector — always visible */}
+      <div style={{ marginBottom: 24 }}>
+        <div style={{ display: 'flex', gap: 4, marginBottom: 8 }}>
+          {[1, 2, 3, 4, 5].map(t => (
+            <button key={t} onClick={() => handleTierChange(t)} style={{
+              flex: 1, padding: '10px 0', border: `1px solid ${tier === t ? T.gold : T.border}`,
+              borderRadius: 6, fontSize: 13, fontWeight: tier === t ? 600 : 400,
+              fontFamily: T.sans, cursor: 'pointer', transition: 'all 0.2s',
+              background: tier === t ? T.goldSoft : 'transparent',
+              color: tier === t ? T.goldDark : T.textMed,
+            }}>
+              {['I', 'II', 'III', 'IV', 'V'][t - 1]}
+            </button>
+          ))}
+        </div>
+        <div style={{ fontSize: 12, color: T.textLight, fontFamily: T.sans, lineHeight: 1.5, paddingLeft: 2 }}>
+          {TIER_DESCRIPTIONS[tier]}
+        </div>
+      </div>
 
+      {/* Settings Panel (timer, cards, dimensions) */}
+      {settingsOpen && (
+        <div style={{ marginBottom: 24, padding: 20, background: T.bgSoft, borderRadius: 10, border: `1px solid ${T.borderSoft}` }}>
           {/* Timer duration */}
-          <div style={{ marginBottom: 16 }}>
+          <div style={{ marginBottom: 20 }}>
             <div style={{ fontSize: 11, fontWeight: 500, color: T.textLight, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>
-              Timer
+              Round Duration
             </div>
-            <div style={{ display: 'flex', gap: 4 }}>
+            <div style={{ display: 'flex', gap: 6 }}>
               {[{ s: 90, l: '1:30' }, { s: 120, l: '2:00' }, { s: 180, l: '3:00' }, { s: 300, l: '5:00' }].map(({ s, l }) => (
                 <button key={s} onClick={() => setTimerDuration(s)} style={{
-                  flex: 1, padding: '8px 0', border: `1px solid ${timerDuration === s ? T.gold : T.border}`,
+                  flex: 1, padding: '10px 0', border: `1px solid ${timerDuration === s ? T.gold : T.border}`,
                   borderRadius: 6, fontSize: 13, fontWeight: timerDuration === s ? 600 : 400,
                   fontFamily: T.sans, cursor: 'pointer', transition: 'all 0.2s',
                   background: timerDuration === s ? T.goldSoft : 'transparent',
@@ -833,25 +896,31 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
                 </button>
               ))}
             </div>
+            <div style={{ fontSize: 11, color: T.textMuted, marginTop: 4 }}>
+              Research suggests 3-minute rounds for optimal interleaved practice (Carter & Grahn 2016).
+            </div>
           </div>
 
           {/* Session card count */}
-          <div style={{ marginBottom: 16 }}>
+          <div style={{ marginBottom: 20 }}>
             <div style={{ fontSize: 11, fontWeight: 500, color: T.textLight, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>
               Cards per Session
             </div>
-            <div style={{ display: 'flex', gap: 4 }}>
+            <div style={{ display: 'flex', gap: 6 }}>
               {[1, 3, 5].map(n => (
                 <button key={n} onClick={() => setSessionCardCount(n)} style={{
-                  flex: 1, padding: '8px 0', border: `1px solid ${sessionCardCount === n ? T.gold : T.border}`,
+                  flex: 1, padding: '10px 0', border: `1px solid ${sessionCardCount === n ? T.gold : T.border}`,
                   borderRadius: 6, fontSize: 13, fontWeight: sessionCardCount === n ? 600 : 400,
                   fontFamily: T.sans, cursor: 'pointer', transition: 'all 0.2s',
                   background: sessionCardCount === n ? T.goldSoft : 'transparent',
                   color: sessionCardCount === n ? T.goldDark : T.textMed,
                 }}>
-                  {n === 1 ? 'Single' : n}
+                  {n === 1 ? 'Single' : `${n} Cards`}
                 </button>
               ))}
+            </div>
+            <div style={{ fontSize: 11, color: T.textMuted, marginTop: 4 }}>
+              Multiple cards enforce variety — no key repeated more than twice per session.
             </div>
           </div>
 
@@ -860,22 +929,26 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
             <div style={{ fontSize: 11, fontWeight: 500, color: T.textLight, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>
               Active Dimensions
             </div>
+            <div style={{ fontSize: 11, color: T.textMuted, marginBottom: 10 }}>
+              Tap to enable/disable. Changing tiers pre-selects recommended dimensions, but you can customize freely.
+            </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
               {DIMENSIONS.map(dim => {
                 const active = activeDimensions.includes(dim.id);
                 const locked = lockedDimensions[dim.id] !== undefined;
                 return (
                   <button key={dim.id} onClick={() => toggleDimension(dim.id)} style={{
-                    padding: '6px 10px', borderRadius: 16, fontSize: 12, fontWeight: 500,
+                    padding: '7px 12px', borderRadius: 16, fontSize: 12, fontWeight: 500,
                     fontFamily: T.sans, cursor: 'pointer', transition: 'all 0.2s',
                     border: `1px solid ${active ? dim.color : T.border}`,
                     background: active ? `${dim.color}15` : 'transparent',
                     color: active ? dim.color : T.textMuted,
-                    opacity: active ? 1 : 0.6,
-                    display: 'flex', alignItems: 'center', gap: 4,
+                    opacity: active ? 1 : 0.5,
+                    display: 'flex', alignItems: 'center', gap: 5,
                   }}>
                     {dim.label}
                     {locked && <Lock size={10} />}
+                    <span style={{ fontSize: 9, opacity: 0.6 }}>T{dim.tier}</span>
                   </button>
                 );
               })}
@@ -887,12 +960,12 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
       {/* Draw Button (when no card active) */}
       {!currentCard && (
         <button onClick={drawCard} style={{
-          width: '100%', padding: '14px 24px', borderRadius: 8,
+          width: '100%', padding: '16px 24px', borderRadius: 8,
           background: T.gold, color: '#fff', border: 'none',
           fontSize: 16, fontWeight: 500, fontFamily: T.sans, cursor: 'pointer',
           transition: 'all 0.2s', letterSpacing: 0.5,
           boxShadow: `0 2px 8px rgba(212, 163, 115, 0.25)`,
-          marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+          marginBottom: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
         }}>
           <Shuffle size={18} />
           Draw Card
@@ -901,15 +974,15 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
 
       {/* Active Card */}
       {currentCard && (
-        <div style={{ marginBottom: 20 }}>
+        <div style={{ marginBottom: 28 }}>
           {/* Session progress indicator */}
           {sessionCards.length > 1 && (
             <div style={{
-              display: 'flex', gap: 4, justifyContent: 'center', marginBottom: 12,
+              display: 'flex', gap: 6, justifyContent: 'center', marginBottom: 16,
             }}>
               {sessionCards.map((_, i) => (
                 <div key={i} style={{
-                  width: 8, height: 8, borderRadius: '50%',
+                  width: 10, height: 10, borderRadius: '50%',
                   background: i === sessionIndex ? T.gold : i < sessionIndex ? T.success : T.border,
                   transition: 'all 0.3s',
                 }} />
@@ -920,7 +993,7 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
           <ChallengeCard card={currentCard} T={T} entering={cardEntering} />
 
           {/* Timer */}
-          <div style={{ marginTop: 20 }}>
+          <div style={{ marginTop: 28 }}>
             <ForgeTimer
               key={timerKey}
               duration={timerDuration}
@@ -931,26 +1004,26 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
 
             {/* Timer controls */}
             <div style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, marginTop: 12,
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20, marginTop: 16,
             }}>
               <button onClick={() => { setTimerKey(k => k + 1); setTimerRunning(false); }} style={{
-                background: 'none', border: 'none', cursor: 'pointer', color: T.textMuted, padding: 8,
+                background: 'none', border: 'none', cursor: 'pointer', color: T.textMuted, padding: 10,
               }}>
                 <RotateCcw size={20} />
               </button>
 
               <button onClick={timerRunning ? toggleTimer : startTimer} style={{
-                width: 52, height: 52, borderRadius: '50%',
+                width: 56, height: 56, borderRadius: '50%',
                 background: T.gold, border: 'none', cursor: 'pointer',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 boxShadow: `0 2px 8px rgba(212, 163, 115, 0.3)`,
                 transition: 'all 0.2s',
               }}>
-                {timerRunning ? <Pause size={22} color="#fff" /> : <Play size={22} color="#fff" style={{ marginLeft: 2 }} />}
+                {timerRunning ? <Pause size={24} color="#fff" /> : <Play size={24} color="#fff" style={{ marginLeft: 2 }} />}
               </button>
 
               <button onClick={endEarly} style={{
-                background: 'none', border: 'none', cursor: 'pointer', color: T.textMuted, padding: 8,
+                background: 'none', border: 'none', cursor: 'pointer', color: T.textMuted, padding: 10,
               }}>
                 <SkipForward size={20} />
               </button>
@@ -960,39 +1033,44 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
           {/* Rating panel */}
           {showRating && (
             <div style={{
-              marginTop: 20, textAlign: 'center',
+              marginTop: 28, textAlign: 'center',
               animation: 'forgeCardEnter 0.3s ease-out both',
             }}>
               <div style={{
-                fontSize: 11, fontWeight: 500, color: T.textLight, letterSpacing: 1.5,
-                textTransform: 'uppercase', marginBottom: 12,
+                fontSize: 12, fontWeight: 500, color: T.textLight, letterSpacing: 1.5,
+                textTransform: 'uppercase', marginBottom: 14,
               }}>
                 How was that?
               </div>
-              <div style={{ display: 'flex', gap: 8 }}>
+              <div style={{ display: 'flex', gap: 10 }}>
                 {[
-                  { rating: 'easy', label: 'Easy', color: T.success, bg: T.successSoft },
-                  { rating: 'good', label: 'Good', color: T.goldDark, bg: T.goldSoft },
-                  { rating: 'hard', label: 'Hard', color: T.coral, bg: T.coralSoft },
-                ].map(({ rating, label, color, bg }) => (
+                  { rating: 'easy', label: 'Easy', sub: 'I owned it', color: T.success, bg: T.successSoft },
+                  { rating: 'good', label: 'Good', sub: 'Solid work', color: T.goldDark, bg: T.goldSoft },
+                  { rating: 'hard', label: 'Hard', sub: 'Stretched me', color: T.coral, bg: T.coralSoft },
+                ].map(({ rating, label, sub, color, bg }) => (
                   <button key={rating} onClick={() => rateRound(rating)} style={{
-                    flex: 1, padding: '12px 0', borderRadius: 8,
+                    flex: 1, padding: '14px 0', borderRadius: 8,
                     background: bg, border: `1px solid ${color}30`,
                     color, fontSize: 14, fontWeight: 600, fontFamily: T.sans,
                     cursor: 'pointer', transition: 'all 0.2s',
+                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
                   }}>
                     {label}
+                    <span style={{ fontSize: 10, fontWeight: 400, opacity: 0.7 }}>{sub}</span>
                   </button>
                 ))}
+              </div>
+              <div style={{ fontSize: 11, color: T.textMuted, marginTop: 8 }}>
+                Hard-rated constraints appear more often in future sessions (SRS weighting).
               </div>
             </div>
           )}
 
-          {/* New card / back buttons */}
+          {/* New card button */}
           {!showRating && !timerRunning && (
-            <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
+            <div style={{ display: 'flex', gap: 8, marginTop: 20 }}>
               <button onClick={drawCard} style={{
-                flex: 1, padding: '10px 0', borderRadius: 8,
+                flex: 1, padding: '12px 0', borderRadius: 8,
                 background: 'transparent', border: `1px solid ${T.border}`,
                 color: T.textMed, fontSize: 13, fontWeight: 500, fontFamily: T.sans,
                 cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
@@ -1004,96 +1082,103 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
         </div>
       )}
 
-      {/* Tool Integration (collapsible) */}
+      {/* Practice Tools — full-width, below the card */}
       {currentCard && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 20 }}>
-          {/* Drone */}
-          <details style={{ background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 8 }}>
-            <summary style={{
-              padding: '10px 14px', cursor: 'pointer', fontSize: 13, fontWeight: 500,
-              color: T.textMed, fontFamily: T.sans, listStyle: 'none',
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            }}>
-              <span>🌫 Drone — {currentCard.droneRoot}</span>
-              <ChevronDown size={14} />
-            </summary>
-            <div style={{ padding: '0 14px 14px', borderTop: `1px solid ${T.borderSoft}` }}>
-              <DroneGenerator theme={T} inline={true} defaultRoot={currentCard.droneRoot} />
-            </div>
-          </details>
+        <div style={{ marginBottom: 28 }}>
+          <div style={{
+            fontSize: 11, fontWeight: 500, color: T.textLight, letterSpacing: 1.5,
+            textTransform: 'uppercase', marginBottom: 14,
+          }}>
+            Practice Tools
+          </div>
 
-          {/* Fretboard */}
+          {/* Drone — full width */}
+          <div style={{
+            background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10,
+            padding: 16, marginBottom: 12,
+          }}>
+            <div style={{ fontSize: 13, fontWeight: 500, color: T.textDark, fontFamily: T.sans, marginBottom: 4 }}>
+              Drone — {currentCard.droneRoot}
+            </div>
+            <div style={{ fontSize: 11, color: T.textMuted, marginBottom: 10 }}>
+              Sustained root tone for pitch reference. Start the drone before you begin improvising.
+            </div>
+            <DroneGenerator theme={T} inline={true} defaultRoot={currentCard.droneRoot} />
+          </div>
+
+          {/* Fretboard — full width */}
           {scaleData && (
-            <details style={{ background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 8 }}>
-              <summary style={{
-                padding: '10px 14px', cursor: 'pointer', fontSize: 13, fontWeight: 500,
-                color: T.textMed, fontFamily: T.sans, listStyle: 'none',
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              }}>
-                <span>🎸 Fretboard — {scaleData.name}</span>
-                <ChevronDown size={14} />
-              </summary>
-              <div style={{ padding: '8px 4px 14px', borderTop: `1px solid ${T.borderSoft}` }}>
+            <div style={{
+              background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10,
+              padding: 16, marginBottom: 12,
+            }}>
+              <div style={{ fontSize: 13, fontWeight: 500, color: T.textDark, fontFamily: T.sans, marginBottom: 4 }}>
+                Fretboard — {scaleData.name}
+              </div>
+              <div style={{ fontSize: 11, color: T.textMuted, marginBottom: 10 }}>
+                Scale positions highlighted on the fretboard. Tap notes to hear them.
+              </div>
+              <div style={{ margin: '0 -8px' }}>
                 <FretboardDiagram theme={T} scaleData={scaleData} colorMode={true} />
               </div>
-            </details>
+            </div>
           )}
 
-          {/* Volume Meter (auto-shown for dynamics constraints) */}
+          {/* Volume Meter — full width, auto-shown for dynamics */}
           {showVolumeMeter && (
-            <details open style={{ background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 8 }}>
-              <summary style={{
-                padding: '10px 14px', cursor: 'pointer', fontSize: 13, fontWeight: 500,
-                color: T.textMed, fontFamily: T.sans, listStyle: 'none',
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              }}>
-                <span>📢 Volume Meter</span>
-                <ChevronDown size={14} />
-              </summary>
-              <div style={{ padding: '8px 14px 14px', borderTop: `1px solid ${T.borderSoft}` }}>
-                <VolumeMeter theme={T} inline={true} />
+            <div style={{
+              background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10,
+              padding: 16, marginBottom: 12,
+            }}>
+              <div style={{ fontSize: 13, fontWeight: 500, color: T.textDark, fontFamily: T.sans, marginBottom: 4 }}>
+                Volume Meter
               </div>
-            </details>
+              <div style={{ fontSize: 11, color: T.textMuted, marginBottom: 10 }}>
+                Real-time mic volume feedback — use this to see your dynamic range while practicing the {currentCard.constraints.dynamics?.name || 'dynamics'} constraint.
+              </div>
+              <VolumeMeter theme={T} inline={true} />
+            </div>
           )}
 
-          {/* Mini Color Wheel */}
+          {/* Color Wheel — full width */}
           {scaleData && (
-            <details style={{ background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 8 }}>
-              <summary style={{
-                padding: '10px 14px', cursor: 'pointer', fontSize: 13, fontWeight: 500,
-                color: T.textMed, fontFamily: T.sans, listStyle: 'none',
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              }}>
-                <span>🎨 Scale Colors</span>
-                <ChevronDown size={14} />
-              </summary>
-              <div style={{ padding: '8px 14px 14px', borderTop: `1px solid ${T.borderSoft}`, display: 'flex', justifyContent: 'center' }}>
+            <div style={{
+              background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10,
+              padding: 16, marginBottom: 12,
+            }}>
+              <div style={{ fontSize: 13, fontWeight: 500, color: T.textDark, fontFamily: T.sans, marginBottom: 4 }}>
+                Scale Colors — Circle of Fifths
+              </div>
+              <div style={{ fontSize: 11, color: T.textMuted, marginBottom: 10 }}>
+                Your available notes highlighted on the circle of fifths. Each note has a unique color to help you visualize the scale.
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <MiniColorWheel notes={scaleData.notes} root={currentCard.constraints.key} T={T} />
               </div>
-            </details>
+            </div>
           )}
         </div>
       )}
 
       {/* History */}
       {!currentCard && recentHistory.length > 0 && (
-        <div style={{ marginTop: 24 }}>
+        <div style={{ marginTop: 28 }}>
           <div style={{
             fontSize: 11, fontWeight: 500, color: T.textLight, letterSpacing: 1.5,
-            textTransform: 'uppercase', marginBottom: 12,
+            textTransform: 'uppercase', marginBottom: 14,
           }}>
             Recent Sessions
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {recentHistory.slice(0, 5).map((card, i) => {
-              const keyColor = getColorForNote(card.constraints?.key) || T.gold;
+              const kc = getColorForNote(card.constraints?.key) || T.gold;
               const ratingColor = card.rating === 'easy' ? T.success : card.rating === 'hard' ? T.coral : T.goldDark;
               return (
                 <div key={card.id || i} style={{
-                  display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px',
+                  display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px',
                   background: T.bgCard, border: `1px solid ${T.borderSoft}`, borderRadius: 8,
                 }}>
-                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: keyColor, flexShrink: 0 }} />
+                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: kc, flexShrink: 0 }} />
                   <div style={{ flex: 1, fontSize: 13, color: T.textMed, fontFamily: T.sans }}>
                     {card.constraints?.key} {SCALE_TYPES[card.constraints?.scale]?.name || ''}
                   </div>
@@ -1118,10 +1203,17 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
       {/* Empty state */}
       {!currentCard && recentHistory.length === 0 && (
         <div style={{
-          textAlign: 'center', padding: '40px 20px', color: T.textMuted,
-          fontFamily: T.sans, fontSize: 14, fontStyle: 'italic',
+          textAlign: 'center', padding: '48px 24px', color: T.textMuted,
+          fontFamily: T.sans, fontSize: 14,
         }}>
-          No sessions recorded yet. Draw a card to begin.
+          <div style={{ fontFamily: T.serif, fontSize: 18, color: T.textLight, marginBottom: 8 }}>
+            No sessions yet
+          </div>
+          <div style={{ lineHeight: 1.6 }}>
+            Draw a card to generate randomized practice constraints.
+            Each card combines musical dimensions — pitch, rhythm, dynamics, and more —
+            into a unique challenge for improvisation practice.
+          </div>
         </div>
       )}
     </div>
