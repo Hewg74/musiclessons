@@ -10,7 +10,11 @@ import {
 import { MiniAudioPlayer, AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, ChordVoicingViewer, extractChordsFromExercise, VolumeMeter, ChordTransitionTimer, GenreMetronome, SilenceScore, DroneGenerator, TAB_CONTENT, InlineKeyboard, RhythmCellCards, PhraseFormGuide, StrumChartBuilder, ChartListView, makeTemplateChart } from './JungleTools.jsx';
 import { ColorMusicTrainer } from './ColorMusicTrainer.jsx';
 import { PitchDiscriminationTrainer } from './PitchDiscriminationTrainer.jsx';
-import { PracticeForge } from './PracticeForge.jsx';
+// PracticeForge is code-split — it pulls in a 280 KB guidance JSON that only users who
+// open the Ear Training → Practice Forge overlay should pay for on initial load.
+const PracticeForge = React.lazy(() =>
+  import('./PracticeForge.jsx').then(m => ({ default: m.PracticeForge }))
+);
 import { acquireKeepalive, releaseKeepalive, setMediaSession, clearMediaSession } from './audioKeepalive.js';
 import { DAYS, KEYBOARD_LEVELS, LOOPER_LEVELS, LESSON_POOL, ALL_NOTES, getPitchRange } from './data/appData.js';
 import { WEEKLY_PLANS, CURRENT_WEEK } from './data/weeklyPlans/index.js';
@@ -4662,7 +4666,13 @@ export default function App() {
   if (practiceForgeOpen) {
     return (
       <div className="no-bottom-nav" style={{ background: T.bg, minHeight: "100vh", color: T.textDark, fontFamily: T.sans, paddingBottom: metro.playing ? 80 : 0 }}>
-        <PracticeForge theme={T} metro={metro} onBack={() => setPracticeForgeOpen(false)} />
+        <React.Suspense fallback={
+          <div style={{ padding: 40, textAlign: 'center', color: T.textMed, fontFamily: T.serif, fontSize: 15 }}>
+            Loading Practice Forge…
+          </div>
+        }>
+          <PracticeForge theme={T} metro={metro} onBack={() => setPracticeForgeOpen(false)} />
+        </React.Suspense>
         {metro.playing && <FloatingMetronome metro={metro} setTab={() => {}} isDark={isDark} theme={T} />}
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;600;700&display=swap" rel="stylesheet" />
       </div>
