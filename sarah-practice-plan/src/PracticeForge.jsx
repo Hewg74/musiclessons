@@ -37,14 +37,47 @@ function lookupGuidance(card) {
   }
 
   if (mode === 'matrix') {
-    const pitch = c.pitchConstraint?.id;
-    const rhythm = c.rhythmConstraint?.id;
-    const dynamics = c.dynamics?.id;
-    if (!pitch || !rhythm || !dynamics) return null;
-    // Prefer new .matrix section; fall back to legacy .combos for old cached files
-    return GUIDANCE_CACHE.matrix?.[`${pitch}_${rhythm}_${dynamics}`]
-        || GUIDANCE_CACHE.combos?.[`${pitch}_${rhythm}_${dynamics}`]
-        || null;
+    // Collect whichever qualitative constraints were actually drawn, in canonical order
+    const drawnIds = DIM_ORDER.filter(d => c[d] && typeof c[d] === 'object' && c[d].id);
+    if (drawnIds.length < 2) return null;
+
+    // Classic pitch × rhythm × dynamics trio → use the bespoke 210-entry matrix cache
+    // Returns the raw entry so rendering is identical to combo mode.
+    const isClassicTrio =
+      drawnIds.length === 3 &&
+      drawnIds.includes('pitchConstraint') &&
+      drawnIds.includes('rhythmConstraint') &&
+      drawnIds.includes('dynamics');
+    if (isClassicTrio) {
+      const key = `${c.pitchConstraint.id}_${c.rhythmConstraint.id}_${c.dynamics.id}`;
+      const entry = GUIDANCE_CACHE.matrix?.[key];
+      if (entry) return entry;
+    }
+
+    // Non-classic or missing trio entry → decompose into pair lookups from the combos cache
+    const labelFor = (dimId) => ({
+      pitchConstraint: 'Pitch',
+      rhythmConstraint: 'Rhythm',
+      dynamics: 'Dynamics',
+      articulation: 'Articulation',
+      phraseLength: 'Phrase',
+      vocalTechnique: 'Vocal',
+      guitarTechnique: 'Guitar',
+    }[dimId] || dimId);
+    const pairs = [];
+    for (let i = 0; i < drawnIds.length; i++) {
+      for (let j = i + 1; j < drawnIds.length; j++) {
+        const dimA = drawnIds[i], dimB = drawnIds[j];
+        const idA = c[dimA].id, idB = c[dimB].id;
+        const entry = GUIDANCE_CACHE.combos?.[`${idA}_${idB}`];
+        if (entry) {
+          pairs.push({ labelA: labelFor(dimA), labelB: labelFor(dimB), entry });
+        }
+      }
+    }
+    if (pairs.length === 0) return null;
+    // Return a special wrapper object; ChallengeCard detects `.pairs` and renders a multi-pair layout.
+    return { _pairs: pairs };
   }
 
   return null;
@@ -601,16 +634,66 @@ function ChallengeCard({ card, T, entering }) {
         })}
       </div>
 
-      {/* LLM-generated guidance — mode-aware: focus renders a richer schema,
-          combo/matrix render the original schema. */}
+      {/* LLM-generated guidance — mode-aware:
+          - focus renders a rich single-constraint schema
+          - combo / matrix-trio render the interaction schema
+          - matrix-pairs (Matrix mode with non-classic trio) renders stacked per-pair blocks
+       */}
       {guidance && (() => {
         const isFocus = card.mode === 'focus';
+        const isPairs = !!guidance._pairs;
         const eyebrowStyle = {
           fontSize: 10, fontWeight: 700, color: T.goldDark, textTransform: 'uppercase',
           letterSpacing: 1.2, fontFamily: T.sans, marginBottom: 6,
         };
         const bodyStyle = { fontFamily: T.sans, fontSize: 13.5, color: T.textDark, lineHeight: 1.6 };
         const listStyle = { margin: 0, paddingLeft: 20, fontFamily: T.sans, fontSize: 13, color: T.textMed, lineHeight: 1.65 };
+
+        // Helper: render a single combo-shaped entry (used by combo mode, matrix trio, and each matrix pair)
+        const renderComboEntry = (entry) => (
+          <>
+            <div>
+              <div style={eyebrowStyle}>How they work together</div>
+              <div style={bodyStyle}>{entry.interaction}</div>
+            </div>
+            <div>
+              <div style={eyebrowStyle}>Steps</div>
+              <ol style={listStyle}>
+                {(entry.steps || []).map((s, i) => <li key={i} style={{ marginBottom: 4 }}>{s}</li>)}
+              </ol>
+            </div>
+            <div>
+              <div style={eyebrowStyle}>Try these phrases</div>
+              <ul style={{ ...listStyle, paddingLeft: 0, listStyleType: 'none' }}>
+                {(entry.examples || []).map((e, i) => (
+                  <li key={i} style={{ marginBottom: 4, paddingLeft: 16, position: 'relative' }}>
+                    <span style={{ position: 'absolute', left: 0, color: T.gold, fontSize: 12 }}>♪</span>
+                    {e}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <div style={{ ...eyebrowStyle, color: T.warm }}>Watch out</div>
+              <div style={{ fontFamily: T.sans, fontSize: 13, color: T.textMed, lineHeight: 1.6 }}>
+                {entry.watchOut}
+              </div>
+            </div>
+            {entry.deeperInsight && (
+              <div style={{
+                borderTop: `1px dashed ${T.border}`,
+                paddingTop: 12,
+                fontFamily: T.serif,
+                fontSize: 13,
+                fontStyle: 'italic',
+                color: T.textLight,
+                lineHeight: 1.65,
+              }}>
+                {entry.deeperInsight}
+              </div>
+            )}
+          </>
+        );
 
         return (
           <>
@@ -705,53 +788,35 @@ function ChallengeCard({ card, T, entering }) {
                     </div>
                   )}
                 </>
+              ) : isPairs ? (
+                <>
+                  {/* Matrix mode, non-classic trio: render each pair as a labeled block */}
+                  <div style={{
+                    fontFamily: T.sans, fontSize: 12, color: T.textLight,
+                    fontStyle: 'italic', paddingBottom: 6,
+                  }}>
+                    Matrix draws three constraints at once. Here's how each pair of constraints on this card plays against the other — work through all three dimensions simultaneously.
+                  </div>
+                  {guidance._pairs.map((pair, i) => (
+                    <div key={i} style={{
+                      padding: i > 0 ? '16px 0 0' : 0,
+                      borderTop: i > 0 ? `1px solid ${T.border}` : 'none',
+                      display: 'flex', flexDirection: 'column', gap: 14,
+                    }}>
+                      <div style={{
+                        fontFamily: T.serif, fontSize: 14, fontWeight: 500, color: T.goldDark,
+                        letterSpacing: 0.3,
+                      }}>
+                        {pair.labelA} × {pair.labelB}
+                      </div>
+                      {renderComboEntry(pair.entry)}
+                    </div>
+                  ))}
+                </>
               ) : (
                 <>
-                  {/* Combo / Matrix mode: interaction + steps + examples + watchOut + deeperInsight */}
-                  <div>
-                    <div style={eyebrowStyle}>How they work together</div>
-                    <div style={bodyStyle}>{guidance.interaction}</div>
-                  </div>
-
-                  <div>
-                    <div style={eyebrowStyle}>Steps</div>
-                    <ol style={listStyle}>
-                      {(guidance.steps || []).map((s, i) => <li key={i} style={{ marginBottom: 4 }}>{s}</li>)}
-                    </ol>
-                  </div>
-
-                  <div>
-                    <div style={eyebrowStyle}>Try these phrases</div>
-                    <ul style={{ ...listStyle, paddingLeft: 0, listStyleType: 'none' }}>
-                      {(guidance.examples || []).map((e, i) => (
-                        <li key={i} style={{ marginBottom: 4, paddingLeft: 16, position: 'relative' }}>
-                          <span style={{ position: 'absolute', left: 0, color: T.gold, fontSize: 12 }}>♪</span>
-                          {e}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div>
-                    <div style={{ ...eyebrowStyle, color: T.warm }}>Watch out</div>
-                    <div style={{ fontFamily: T.sans, fontSize: 13, color: T.textMed, lineHeight: 1.6 }}>
-                      {guidance.watchOut}
-                    </div>
-                  </div>
-
-                  {guidance.deeperInsight && (
-                    <div style={{
-                      borderTop: `1px dashed ${T.border}`,
-                      paddingTop: 12,
-                      fontFamily: T.serif,
-                      fontSize: 13,
-                      fontStyle: 'italic',
-                      color: T.textLight,
-                      lineHeight: 1.65,
-                    }}>
-                      {guidance.deeperInsight}
-                    </div>
-                  )}
+                  {/* Combo / Matrix classic trio: single interaction-schema entry */}
+                  {renderComboEntry(guidance)}
                 </>
               )}
             </div>
@@ -778,35 +843,57 @@ function ChallengeCard({ card, T, entering }) {
 
 // ═══════════════════════════════════════════
 // ─── ForgeTimer ───
+// duration === 0 (or falsy) means UNLIMITED — stopwatch mode. Counts up from 0,
+// never auto-completes, user ends the round manually. Any positive duration is a
+// countdown that calls onComplete when time runs out.
 // ═══════════════════════════════════════════
 function ForgeTimer({ duration, running, onComplete, T }) {
-  const [remaining, setRemaining] = useState(duration);
+  const unlimited = !duration || duration <= 0;
+  const [remaining, setRemaining] = useState(duration || 0);
+  const [elapsed, setElapsed] = useState(0);
   const intervalRef = useRef(null);
   const startTimeRef = useRef(null);
 
-  useEffect(() => { setRemaining(duration); }, [duration]);
+  useEffect(() => {
+    if (unlimited) setElapsed(0);
+    else setRemaining(duration);
+  }, [duration, unlimited]);
 
   useEffect(() => {
     if (running) {
-      startTimeRef.current = Date.now() - (duration - remaining) * 1000;
-      intervalRef.current = setInterval(() => {
-        const elapsed = Math.floor((Date.now() - startTimeRef.current) / 1000);
-        const r = Math.max(0, duration - elapsed);
-        setRemaining(r);
-        if (r <= 0) {
-          clearInterval(intervalRef.current);
-          onComplete();
-        }
-      }, 250); // Check every 250ms for accuracy
+      if (unlimited) {
+        startTimeRef.current = Date.now() - elapsed * 1000;
+        intervalRef.current = setInterval(() => {
+          const e = Math.floor((Date.now() - startTimeRef.current) / 1000);
+          setElapsed(e);
+        }, 250);
+      } else {
+        startTimeRef.current = Date.now() - (duration - remaining) * 1000;
+        intervalRef.current = setInterval(() => {
+          const el = Math.floor((Date.now() - startTimeRef.current) / 1000);
+          const r = Math.max(0, duration - el);
+          setRemaining(r);
+          if (r <= 0) {
+            clearInterval(intervalRef.current);
+            onComplete();
+          }
+        }, 250);
+      }
     } else {
       clearInterval(intervalRef.current);
     }
     return () => clearInterval(intervalRef.current);
-  }, [running, duration]);
+  }, [running, duration, unlimited]);
 
-  const progress = duration > 0 ? remaining / duration : 0;
   const circumference = 2 * Math.PI * 60;
-  const strokeOffset = circumference * (1 - progress);
+  // In unlimited mode the ring fills over a notional 10-minute arc as visual feedback —
+  // it tops out at ~full circle around 10 minutes and then stays there. Purely aesthetic.
+  const progress = unlimited
+    ? Math.min(1, elapsed / 600)
+    : (duration > 0 ? remaining / duration : 0);
+  const strokeOffset = circumference * (unlimited ? (1 - progress) : (1 - progress));
+  const displayTime = unlimited ? elapsed : remaining;
+  const label = unlimited ? 'ELAPSED' : 'REMAINING';
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
@@ -821,11 +908,11 @@ function ForgeTimer({ duration, running, onComplete, T }) {
         {/* Time text */}
         <text x={72} y={68} textAnchor="middle" dominantBaseline="central"
           style={{ fontFamily: T.serif, fontSize: 32, fill: T.textDark, fontWeight: 400, letterSpacing: -1 }}>
-          {formatTime(remaining)}
+          {formatTime(displayTime)}
         </text>
         <text x={72} y={90} textAnchor="middle"
           style={{ fontFamily: T.sans, fontSize: 10, fill: T.textLight, fontWeight: 500, letterSpacing: 2, textTransform: 'uppercase' }}>
-          REMAINING
+          {label}
         </text>
       </svg>
     </div>
@@ -858,7 +945,9 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
   const tierToMode = (t) => (t === 1 ? 'scales' : t === 2 ? 'matrix' : 'combo');
   const [mode, setMode] = useState(() => forgeData.settings?.mode ?? tierToMode(legacyTier));
   const [instrument, setInstrument] = useState(() => forgeData.settings?.instrument ?? 'voice');
-  const [timerDuration, setTimerDuration] = useState(() => forgeData.settings?.timerDuration ?? 180);
+  // Timer duration: 0 means UNLIMITED (stopwatch, user ends manually). This is the default now —
+  // counting down from 3 minutes was interrupting deep practice rounds.
+  const [timerDuration, setTimerDuration] = useState(() => forgeData.settings?.timerDuration ?? 0);
   const [lockedDimensions, setLockedDimensions] = useState(() =>
     forgeData.settings?.lockedDimensions ?? {}
   );
@@ -879,14 +968,6 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
     if (mode === 'scales') {
       return { tier: 1, maxConstraints: 0, activeDimensions: baseDims };
     }
-    if (mode === 'matrix') {
-      // Classic pitch + rhythm + dynamics trio
-      return {
-        tier: 2,
-        maxConstraints: 3,
-        activeDimensions: [...baseDims, 'pitchConstraint', 'rhythmConstraint', 'dynamics'],
-      };
-    }
     if (mode === 'focus') {
       // Draw exactly 1 qualitative constraint from any dimension in the full pool
       return {
@@ -895,10 +976,21 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
         activeDimensions: [...baseDims, ...fullQualPool],
       };
     }
-    // combo mode — draw exactly 2 qualitative constraints (always from different dims)
+    if (mode === 'combo') {
+      // Draw exactly 2 qualitative constraints (always from different dims)
+      return {
+        tier: 4,
+        maxConstraints: 2,
+        activeDimensions: [...baseDims, ...fullQualPool],
+      };
+    }
+    // Matrix mode — draw 3 constraints from the FULL pool (not just pitch/rhythm/dynamics).
+    // The classic pitch×rhythm×dynamics trio is still possible; it's now just one of many
+    // possible trios. Guidance lookup handles both: if the classic trio comes up it uses
+    // the bespoke 210-entry matrix cache, otherwise it decomposes into 3 pair entries.
     return {
       tier: 4,
-      maxConstraints: 2,
+      maxConstraints: 3,
       activeDimensions: [...baseDims, ...fullQualPool],
     };
   }, [mode, instrument]);
@@ -1005,7 +1097,7 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
   const rateRound = useCallback((rating) => {
     if (!currentCard) return;
 
-    const timeUsed = roundStartTime ? Math.floor((Date.now() - roundStartTime) / 1000) : timerDuration;
+    const timeUsed = roundStartTime ? Math.floor((Date.now() - roundStartTime) / 1000) : (timerDuration || 0);
 
     // Update constraint weights
     const newWeights = { ...forgeData.constraintWeights };
@@ -1186,7 +1278,7 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
               Round Duration
             </div>
             <div style={{ display: 'flex', gap: 6 }}>
-              {[{ s: 90, l: '1:30' }, { s: 120, l: '2:00' }, { s: 180, l: '3:00' }, { s: 300, l: '5:00' }].map(({ s, l }) => (
+              {[{ s: 0, l: '∞' }, { s: 90, l: '1:30' }, { s: 120, l: '2:00' }, { s: 180, l: '3:00' }, { s: 300, l: '5:00' }].map(({ s, l }) => (
                 <button key={s} onClick={() => setTimerDuration(s)} style={{
                   flex: 1, padding: '10px 0', border: `1px solid ${timerDuration === s ? T.gold : T.border}`,
                   borderRadius: 6, fontSize: 13, fontWeight: timerDuration === s ? 600 : 400,
@@ -1199,7 +1291,7 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
               ))}
             </div>
             <div style={{ fontSize: 11, color: T.textMuted, marginTop: 4 }}>
-              Research suggests 3-minute rounds for optimal interleaved practice (Carter & Grahn 2016).
+              ∞ is unlimited — the timer counts up and you end the round when you're ready. Use a fixed duration when you want interleaved-practice pressure (research: Carter & Grahn 2016 ≈ 3-minute rounds).
             </div>
           </div>
 
@@ -1270,7 +1362,7 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
             {' '} &middot; {' '}
             <span style={{ textTransform: 'capitalize' }}>{instrument}</span>
             {' '} &middot; {' '}
-            {formatTime(timerDuration)} rounds
+            {timerDuration > 0 ? `${formatTime(timerDuration)} rounds` : '∞ rounds'}
           </div>
           <button onClick={() => setSettingsOpen(true)} style={{
             fontSize: 11, color: T.gold, background: 'none', border: 'none',
