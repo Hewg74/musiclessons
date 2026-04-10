@@ -78,15 +78,10 @@ const BACKING_TRACKS = [
 ];
 
 function suggestTrack(card) {
-  const genre = card.constraints.genreFeel?.genre || null;
+  // Match by tempo proximity only — genre is no longer a separate constraint
+  // (it emerges from the combination of rhythm + dynamics + articulation choices)
   const tempo = card.constraints.tempo;
-  let candidates = BACKING_TRACKS;
-  if (genre) {
-    const genreMatches = candidates.filter(t => t.genre === genre);
-    if (genreMatches.length > 0) candidates = genreMatches;
-  }
-  // Sort by tempo proximity
-  candidates = [...candidates].sort((a, b) => Math.abs(a.bpm - tempo) - Math.abs(b.bpm - tempo));
+  const candidates = [...BACKING_TRACKS].sort((a, b) => Math.abs(a.bpm - tempo) - Math.abs(b.bpm - tempo));
   return candidates[0] || null;
 }
 
@@ -140,39 +135,17 @@ const DYNAMICS_CONSTRAINTS = [
 ];
 
 const ARTICULATION_CONSTRAINTS = [
-  { id: 'legato', name: 'All Legato', desc: 'Smooth and connected — each note flows into the next with no gaps between them.', icon: '〰️' },
-  { id: 'staccato', name: 'All Staccato', desc: 'Short and detached — every note bounces with space after it.', icon: '·' },
-  { id: 'mixed', name: 'Mixed', desc: 'Alternate: two bars legato, two bars staccato. Let the contrast create interest.', icon: '⟿' },
-  { id: 'accentedFirst', name: 'Accented Firsts', desc: 'Punch the downbeat of every bar, let the remaining notes be light.', icon: '▶' },
-];
-
-const GENRE_CONSTRAINTS = [
-  { id: 'reggae', name: 'Reggae', desc: 'Sit behind the beat by 10-20ms. Emphasize offbeats. Leave lots of space — sing short fragments (1 bar max). Chest-heavy placement, jaw relaxed. Think roots dub.', icon: '🇯🇲', genre: 'reggae' },
-  { id: 'surf', name: 'Surf / Psych', desc: 'Push slightly ahead of the beat (5-10ms early). Use sustained legato notes with airy mask placement. Soft with occasional swells. Think Allah-Las or Khruangbin guitar tones.', icon: '🏄', genre: 'surf' },
-  { id: 'desertBlues', name: 'Desert Blues', desc: 'Even and patient — river rhythm, on the beat. Favor the root note, hold it long. Deep sternum resonance. Meditative repetition. Think Tinariwen or Tommy Guerrero.', icon: '🏜️', genre: 'desert-blues' },
-  { id: 'soul', name: 'Soul', desc: 'Locked on the beat with a deep pocket. Wide dynamic range (pp whisper → f belt). Use melisma (sliding between notes). Full body engagement — chest for intimacy, mask for power.', icon: '🎷', genre: 'soul' },
-];
-
-const EMOTIONAL_CONSTRAINTS = [
-  { id: 'stormy', name: 'Stormy', desc: 'Turbulent, aggressive energy — sharp attacks, unpredictable phrasing, angular melodic leaps. Channel frustration or urgency.', icon: '⛈' },
-  { id: 'sunny', name: 'Sunny', desc: 'Bright and optimistic — open vowels, upward melodic motion, buoyant rhythm. Sing like the best day of your life.', icon: '☀️' },
-  { id: 'foggy', name: 'Foggy', desc: 'Ambiguous and drifting — blur the edges of notes, let phrases trail off unresolved. Nothing is certain. Dreamy, hazy, uncommitted.', icon: '🌫' },
-  { id: 'arid', name: 'Arid', desc: 'Sparse and dry — minimal notes, maximum space. Shimmering desert heat. Each note bakes in the sun before the next one arrives.', icon: '🌵' },
-  { id: 'goldenHour', name: 'Golden Hour', desc: 'Nostalgic warmth — gentle dynamics, bittersweet intervals, phrases that linger. "Beautiful day that you know will end."', icon: '🌅' },
-  { id: 'midnight', name: 'Midnight', desc: 'Dark, introspective, still — low register, quiet dynamics, long pauses between phrases. The world is asleep and you are the only sound.', icon: '🌙' },
+  { id: 'legato', name: 'All Legato', desc: 'Smooth and connected — each note flows into the next with no gap between them. One continuous breath of sound, like singing on a single sustained vowel.', icon: '〰️' },
+  { id: 'staccato', name: 'All Staccato', desc: 'Short and detached — every note bounces with clear space after it. Like speaking in single syllables with little pauses between each one.', icon: '·' },
+  { id: 'slurredPairs', name: 'Slurred Pairs', desc: 'Group every two notes together as a smooth pair, then leave a tiny gap before the next pair. Da-DA, da-DA. Creates a swinging, lilted feel.', icon: '⌒' },
+  { id: 'tenuto', name: 'Tenuto', desc: 'Hold every note for its full value — no clipping, no early release. Each note gets its complete time slice, slightly emphasized but still distinct from the next.', icon: '—' },
 ];
 
 const PHRASE_CONSTRAINTS = [
-  { id: '1bar', name: '1-Bar Phrases', desc: 'Fragments — short, punchy ideas. Say one thing and stop. Let the silence respond.', bars: 1 },
-  { id: '2bar', name: '2-Bar Phrases', desc: 'Sentences — complete musical thoughts with a beginning and end. The natural phrase length for most vocal lines.', bars: 2 },
-  { id: '4bar', name: '4-Bar Phrases', desc: 'Paragraphs — developed melodic arcs with internal shape. Rise, peak, fall, resolve.', bars: 4 },
-  { id: '8bar', name: '8-Bar Phrases', desc: 'Epics — full stories with a beginning, middle, climax, and conclusion. Requires sustained breath and intention.', bars: 8 },
-];
-
-const DENSITY_CONSTRAINTS = [
-  { id: 'sparse', name: 'Sparse', desc: 'Max 3 notes per bar — silence is the instrument. Every note must earn its place. The gaps between notes carry as much meaning as the notes themselves.', icon: '○' },
-  { id: 'medium', name: 'Medium', desc: 'Balanced density — a breath between ideas. Not rushed, not empty. The natural flow of conversation turned into melody.', icon: '◐' },
-  { id: 'dense', name: 'Dense', desc: 'No empty beats — fill every rhythmic slot. A constant stream of melodic invention. Exhausting and exhilarating in equal measure.', icon: '●' },
+  { id: '1bar', name: '1-Bar Phrases', desc: 'Fragments — short, punchy ideas. Say one thing and stop. Let the silence respond before you start the next fragment.', bars: 1 },
+  { id: '2bar', name: '2-Bar Phrases', desc: 'Sentences — complete musical thoughts with a beginning and end. The natural phrase length for most melodies.', bars: 2 },
+  { id: '4bar', name: '4-Bar Phrases', desc: 'Paragraphs — developed melodic arcs with internal shape. Rise, peak, fall, resolve. Room for a real story.', bars: 4 },
+  { id: '8bar', name: '8-Bar Phrases', desc: 'Epics — full stories with a beginning, middle, climax, and conclusion. Requires sustained breath and intention across a long arc.', bars: 8 },
 ];
 
 const VOCAL_CONSTRAINTS = [
@@ -184,11 +157,11 @@ const VOCAL_CONSTRAINTS = [
 ];
 
 const GUITAR_CONSTRAINTS = [
-  { id: 'downstrokes', name: 'Downstrokes Only', desc: 'All downstrokes — heavier attack, driving energy. No upstrokes allowed.', icon: '⬇' },
-  { id: 'fingerpick', name: 'Fingerpick', desc: 'No pick — fingers only. Softer attack, opens up simultaneous bass + melody.', icon: '🤚' },
-  { id: 'muted', name: 'Muted', desc: 'Palm-muted or ghost notes only — guitar becomes a percussion instrument.', icon: '✋' },
-  { id: 'harmonics', name: 'Harmonics', desc: 'Natural or artificial harmonics — bell-like tones above the fretted notes.', icon: '✨' },
-  { id: 'hybrid', name: 'Hybrid Picking', desc: 'Pick + fingers simultaneously — pick handles bass, fingers pluck upper strings.', icon: '🤙' },
+  { id: 'downstrokes', name: 'Downstrokes Only', desc: 'All downstrokes — heavier attack, driving energy. No upstrokes allowed. Builds wrist endurance and a more aggressive groove.', icon: '⬇' },
+  { id: 'fingerpick', name: 'Fingerpick', desc: 'No pick — fingers only. Softer attack, more independent control over each string. Opens up simultaneous bass + melody patterns.', icon: '🤚' },
+  { id: 'muted', name: 'Muted', desc: 'Palm-muted or ghost notes throughout — the guitar becomes a percussion instrument. Rhythmic texture with pitched undertones.', icon: '✋' },
+  { id: 'hybrid', name: 'Hybrid Picking', desc: 'Pick + fingers simultaneously — pick handles bass strings, fingers pluck the upper strings. Country, jazz, and surf technique.', icon: '🤙' },
+  { id: 'slide', name: 'Slide', desc: 'Use a slide for everything — no fretted notes. Forces gliding between pitches and trains pitch accuracy by ear since there are no frets to lock onto.', icon: '➡' },
 ];
 
 const OBLIQUE_MODIFIERS = [
@@ -203,22 +176,29 @@ const OBLIQUE_MODIFIERS = [
 ];
 
 // ─── Dimension Registry ───
+// Each dimension is something the user can practice INDEPENDENTLY of the others.
+// Genre/emotion/density were dropped because they emerge from combinations of
+// the other dimensions (genre = rhythm + dynamics + articulation, etc.) — they
+// aren't primary, orthogonal practice axes.
+// Oblique modifiers live in a separate "creative spice" mode, not in the random pool.
 const DIMENSIONS = [
-  { id: 'key', label: 'Key', tier: 1, type: 'quantitative', color: '#d4a373' },
-  { id: 'scale', label: 'Scale', tier: 1, type: 'quantitative', color: '#9e829c' },
-  { id: 'tempo', label: 'Tempo', tier: 1, type: 'quantitative', color: '#d97d54' },
-  { id: 'pitchConstraint', label: 'Pitch', tier: 2, type: 'qualitative', options: PITCH_CONSTRAINTS, color: '#d68383' },
-  { id: 'rhythmConstraint', label: 'Rhythm', tier: 2, type: 'qualitative', options: RHYTHM_CONSTRAINTS, color: '#d97d54' },
-  { id: 'dynamics', label: 'Dynamics', tier: 2, type: 'qualitative', options: DYNAMICS_CONSTRAINTS, color: '#6b8e9f' },
-  { id: 'articulation', label: 'Articulation', tier: 3, type: 'qualitative', options: ARTICULATION_CONSTRAINTS, color: '#5b9e8f' },
-  { id: 'genreFeel', label: 'Genre Feel', tier: 3, type: 'qualitative', options: GENRE_CONSTRAINTS, color: '#b58454' },
-  { id: 'emotionalIntent', label: 'Emotion', tier: 4, type: 'qualitative', options: EMOTIONAL_CONSTRAINTS, color: '#d4a373' },
-  { id: 'phraseLength', label: 'Phrase', tier: 4, type: 'qualitative', options: PHRASE_CONSTRAINTS, color: '#9e829c' },
-  { id: 'density', label: 'Density', tier: 4, type: 'qualitative', options: DENSITY_CONSTRAINTS, color: '#7f9e88' },
-  { id: 'vocalTechnique', label: 'Vocal', tier: 5, type: 'qualitative', options: VOCAL_CONSTRAINTS, color: '#d68383' },
-  { id: 'guitarTechnique', label: 'Guitar', tier: 5, type: 'qualitative', options: GUITAR_CONSTRAINTS, color: '#b58454' },
-  { id: 'obliqueModifier', label: 'Oblique', tier: 5, type: 'qualitative', options: OBLIQUE_MODIFIERS, color: '#9e829c' },
+  { id: 'key',              label: 'Key',          tier: 1, type: 'quantitative', color: '#d4a373' },
+  { id: 'scale',            label: 'Scale',        tier: 1, type: 'quantitative', color: '#9e829c' },
+  { id: 'tempo',            label: 'Tempo',        tier: 1, type: 'quantitative', color: '#d97d54' },
+  { id: 'pitchConstraint',  label: 'Pitch',        tier: 2, type: 'qualitative',  options: PITCH_CONSTRAINTS,        color: '#d68383' },
+  { id: 'rhythmConstraint', label: 'Rhythm',       tier: 2, type: 'qualitative',  options: RHYTHM_CONSTRAINTS,       color: '#d97d54' },
+  { id: 'dynamics',         label: 'Dynamics',     tier: 2, type: 'qualitative',  options: DYNAMICS_CONSTRAINTS,     color: '#6b8e9f' },
+  { id: 'articulation',     label: 'Articulation', tier: 3, type: 'qualitative',  options: ARTICULATION_CONSTRAINTS, color: '#5b9e8f' },
+  { id: 'phraseLength',     label: 'Phrase',       tier: 3, type: 'qualitative',  options: PHRASE_CONSTRAINTS,       color: '#9e829c' },
+  { id: 'vocalTechnique',   label: 'Vocal',        tier: 4, type: 'qualitative',  options: VOCAL_CONSTRAINTS,        color: '#d68383', instrument: 'voice' },
+  { id: 'guitarTechnique',  label: 'Guitar',       tier: 4, type: 'qualitative',  options: GUITAR_CONSTRAINTS,       color: '#b58454', instrument: 'guitar' },
 ];
+
+// Oblique modifiers are creative breakthrough prompts, NOT skill-building constraints.
+// They're applied as an optional spice on top of any drawn card, not part of the
+// random draw. Use them when you want to break out of a habit, not when you're
+// trying to build technique.
+const OBLIQUE_POOL = OBLIQUE_MODIFIERS;
 
 function getDimensionsForTier(tier) {
   return DIMENSIONS.filter(d => d.tier <= tier).map(d => d.id);
@@ -435,10 +415,9 @@ function ChallengeCard({ card, T, entering }) {
   const scaleNotes = scaleData.notes || [];
   const scaleDesc = SCALE_TYPES[card.constraints.scale]?.desc || '';
 
-  // Collect active qualitative constraints for display (oblique handled separately with its own style)
+  // Collect active qualitative constraints for display
   const constraintLines = [];
-  const qualDimIds = ['pitchConstraint', 'rhythmConstraint', 'dynamics', 'articulation', 'genreFeel',
-    'emotionalIntent', 'phraseLength', 'density', 'vocalTechnique', 'guitarTechnique'];
+  const qualDimIds = ['pitchConstraint', 'rhythmConstraint', 'dynamics', 'articulation', 'phraseLength', 'vocalTechnique', 'guitarTechnique'];
   for (const dimId of qualDimIds) {
     const c = card.constraints[dimId];
     if (!c) continue;
@@ -446,6 +425,7 @@ function ChallengeCard({ card, T, entering }) {
     constraintLines.push({ dim, constraint: c });
   }
 
+  // Oblique modifier is rendered separately with italic styling — it's a creative spice, not a constraint
   const oblique = card.constraints.obliqueModifier;
 
   return (
@@ -648,11 +628,14 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
   }, []);
 
   // Settings state
-  const [tier, setTier] = useState(() => forgeData.settings?.tier ?? defaultTier);
+  const [tier, setTier] = useState(() => Math.min(4, forgeData.settings?.tier ?? defaultTier));
   const [timerDuration, setTimerDuration] = useState(() => forgeData.settings?.timerDuration ?? 180);
-  const [activeDimensions, setActiveDimensions] = useState(() =>
-    forgeData.settings?.activeDimensions ?? getDimensionsForTier(defaultTier)
-  );
+  const [activeDimensions, setActiveDimensions] = useState(() => {
+    // Filter out any persisted dimensions that no longer exist (e.g. removed genreFeel, density, etc.)
+    const validIds = new Set(DIMENSIONS.map(d => d.id));
+    const persisted = forgeData.settings?.activeDimensions ?? getDimensionsForTier(defaultTier);
+    return persisted.filter(id => validIds.has(id));
+  });
   const [lockedDimensions, setLockedDimensions] = useState(() =>
     forgeData.settings?.lockedDimensions ?? {}
   );
@@ -850,10 +833,9 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
   // ─── Tier descriptions ───
   const TIER_DESCRIPTIONS = {
     1: 'Foundation — Key, scale, and tempo only. Get comfortable with the randomizer.',
-    2: 'The Full Matrix — Adds pitch, rhythm, and dynamics constraints from the SS Level 4 combination matrix.',
-    3: 'Expression — Adds articulation (legato/staccato) and genre feel (reggae, surf, desert blues, soul).',
-    4: 'Intent & Structure — Adds emotional intent, phrase length, and textural density.',
-    5: 'Mastery — Everything unlocked including vocal/guitar technique and oblique modifiers.',
+    2: 'The Matrix — Adds pitch, rhythm, and dynamics constraints. This is the SS Level 4 combination matrix where most practice happens.',
+    3: 'Expression — Adds articulation (how each note is shaped) and phrase length (how long each musical sentence is).',
+    4: 'Mastery — Adds vocal or guitar technique constraints depending on your instrument.',
   };
 
   // ─── Render ───
@@ -905,7 +887,7 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
               Tier — Controls the Constraint Pool
             </div>
             <div style={{ display: 'flex', gap: 4, marginBottom: 6 }}>
-              {[1, 2, 3, 4, 5].map(t => (
+              {[1, 2, 3, 4].map(t => (
                 <button key={t} onClick={() => handleTierChange(t)} style={{
                   flex: 1, padding: '10px 0', border: `1px solid ${tier === t ? T.gold : T.border}`,
                   borderRadius: 6, fontSize: 13, fontWeight: tier === t ? 600 : 400,
@@ -913,7 +895,7 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
                   background: tier === t ? T.goldSoft : 'transparent',
                   color: tier === t ? T.goldDark : T.textMed,
                 }}>
-                  {['I', 'II', 'III', 'IV', 'V'][t - 1]}
+                  {['I', 'II', 'III', 'IV'][t - 1]}
                 </button>
               ))}
             </div>
@@ -1032,7 +1014,7 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
           marginBottom: 16, border: `1px solid ${T.borderSoft}`,
         }}>
           <div style={{ fontSize: 12, color: T.textMed, fontFamily: T.sans }}>
-            Tier <strong style={{ color: T.goldDark }}>{['I', 'II', 'III', 'IV', 'V'][tier - 1]}</strong>
+            Tier <strong style={{ color: T.goldDark }}>{['I', 'II', 'III', 'IV'][tier - 1]}</strong>
             {' '} &middot; {' '}
             <strong>{maxConstraints}</strong> constraints/card
             {' '} &middot; {' '}
