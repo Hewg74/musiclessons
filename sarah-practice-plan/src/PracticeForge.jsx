@@ -3,7 +3,7 @@ import * as Tone from 'tone';
 import { ArrowLeft, Settings, Play, Pause, RotateCcw, SkipForward, Lock, Unlock, Shuffle, Timer, ChevronDown, ChevronUp, Zap, Music } from 'lucide-react';
 import {
   normalizeNote, COLOR_MUSIC, getColorForNote, playWarmNote,
-  FretboardDiagram, DroneGenerator, VolumeMeter,
+  FretboardDiagram, DroneGenerator, VolumeMeter, MiniAudioPlayer, AudioRecorder,
 } from './JungleTools.jsx';
 import { CHROMATIC, CIRCLE_OF_FIFTHS, SCALE_TYPES, generateScale } from './ColorMusicTrainer.jsx';
 
@@ -97,16 +97,16 @@ const KEY_WEIGHTS = {
 };
 
 const PITCH_CONSTRAINTS = [
-  { id: 'leaps', name: 'Leaps Only', desc: 'Skip over adjacent notes — only jump to non-neighboring scale tones. This forces angular, unexpected melodies instead of safe stepwise motion.', icon: '↗',
-    example: (notes) => notes.length >= 5 ? `Your notes: ${notes.join(', ')}. Try: ${notes[0]}→${notes[2]}→${notes[4]}→${notes[1]} (always skip at least one)` : '' },
-  { id: 'arch', name: 'Arch Contour', desc: 'Every phrase must rise to a peak note and then descend back down. The shape is a hill — you go up, you come down. No flat phrases.', icon: '⌢',
+  { id: 'leaps', name: 'Leaps Only', desc: 'Never sing two neighboring notes in a row. Always skip at least one note in the scale when moving. This forces big, dramatic jumps instead of smooth walking.', icon: '↗',
+    example: (notes) => notes.length >= 5 ? `Your notes: ${notes.join(', ')}. Try: ${notes[0]}→${notes[2]}→${notes[4]}→${notes[1]} (skipping at least one each time)` : '' },
+  { id: 'arch', name: 'Arch Contour', desc: 'Every phrase must climb up to a peak note and then come back down. The shape is a hill — go up, come down. No flat or downward-only phrases.', icon: '⌢',
     example: (notes) => notes.length >= 5 ? `Try: ${notes[0]}→${notes[2]}→${notes[4]}→${notes[2]}→${notes[0]} (up to ${notes[4]}, back to ${notes[0]})` : '' },
-  { id: 'seed', name: 'Seed + Variations', desc: 'Start with a 3-note motif. Repeat it, but change exactly one note each time. The shape stays recognizable while the melody evolves.', icon: '🌱',
+  { id: 'seed', name: 'Seed + Variations', desc: 'Pick any 3 notes as your "seed" idea. Repeat it again and again, but change exactly ONE note each time. The shape stays recognizable while the melody slowly evolves.', icon: '🌱',
     example: (notes) => notes.length >= 4 ? `Seed: ${notes[0]}-${notes[1]}-${notes[2]}. Var 1: ${notes[0]}-${notes[1]}-${notes[3]}. Var 2: ${notes[0]}-${notes[3]}-${notes[2]}.` : '' },
-  { id: 'forbidden', name: 'Forbidden Note', desc: 'One scale note is banned — work around it. This forces you to find new melodic paths you wouldn\'t normally take.', icon: '🚫', hasExtra: true },
-  { id: 'targetLanding', name: 'Target Landing', desc: 'Wander freely through the scale, but every phrase must resolve to one specific note. The journey changes each time; the destination never does.', icon: '🎯', hasExtra: true },
-  { id: 'questionAnswer', name: 'Question / Answer', desc: 'Sing in pairs: first phrase rises or ends unresolved (tension), second phrase descends and resolves (release). Musical conversation with yourself.', icon: '❓',
-    example: (notes) => notes.length >= 4 ? `Q: ${notes[1]}→${notes[2]}→${notes[3]}? (rising, unresolved) A: ${notes[3]}→${notes[1]}→${notes[0]}. (falling, home)` : '' },
+  { id: 'forbidden', name: 'Forbidden Note', desc: 'One note in your scale is off-limits for the entire round. Pretend it doesn\'t exist. This forces you to find melodic paths you wouldn\'t normally take.', icon: '🚫', hasExtra: true },
+  { id: 'targetLanding', name: 'Target Landing', desc: 'Wander freely through any notes you want, but every phrase MUST end on one specific target note. The journey changes; the destination never does.', icon: '🎯', hasExtra: true },
+  { id: 'questionAnswer', name: 'Question & Answer', desc: 'Sing in pairs of phrases. First phrase asks a question (rising or ending unresolved). Second phrase answers (descending, ending on a stable note). Like a musical conversation with yourself.', icon: '❓',
+    example: (notes) => notes.length >= 4 ? `Q: ${notes[1]}→${notes[2]}→${notes[3]}? (rising, unfinished) A: ${notes[3]}→${notes[1]}→${notes[0]}. (falling, home)` : '' },
 ];
 
 // Tempo-aware helper: returns seconds per beat and seconds per bar (4/4)
@@ -129,14 +129,14 @@ const RHYTHM_CONSTRAINTS = [
 ];
 
 const DYNAMICS_CONSTRAINTS = [
-  { id: 'swell', name: 'The Swell', desc: 'pp → f → pp over 4 bars. Gradually crescendo to full voice, then drop instantly to silence.', icon: '🌊',
-    example: (notes, tempo) => `At ${tempo} BPM: 4 bars = ${(16*60/tempo).toFixed(0)}s. Crescendo for ${(12*60/tempo).toFixed(0)}s, hold peak 1 beat, drop to silence.` },
-  { id: 'terraces', name: 'Terraces', desc: 'Sudden level jumps — 2 bars at pp, jump to mf, jump to f. No gradual transitions between plateaus.', icon: '🪜',
+  { id: 'swell', name: 'The Swell', desc: 'Start barely audible, slowly grow to full voice, then drop instantly to silence. Like a wave: build, crest, vanish.', icon: '🌊',
+    example: (notes, tempo) => `At ${tempo} BPM: 4 bars = ${(16*60/tempo).toFixed(0)}s. Build for ${(12*60/tempo).toFixed(0)}s, hold peak 1 beat, then silence.` },
+  { id: 'terraces', name: 'Terraces', desc: 'Jump suddenly between volume levels — quiet for 2 bars, then medium, then loud. No fading between, just hard switches like climbing stairs.', icon: '🪜',
     example: (notes, tempo) => `Each plateau is 2 bars = ${(8*60/tempo).toFixed(0)}s. Switch dynamic instantly on the downbeat — no fades.` },
-  { id: 'whisper', name: 'Whisper', desc: 'Sustained pianissimo throughout. Chosen intimacy, not timidity — requires more breath control, not less.', icon: '🤫' },
-  { id: 'accentMap', name: 'Accent Map', desc: 'One note per bar pops loud (sforzando), everything else stays quiet. Move the accent to different positions.', icon: '🎯',
+  { id: 'whisper', name: 'Whisper', desc: 'Sing the entire round at the quietest volume you can manage — almost inaudible, like telling a secret. Requires MORE breath control, not less.', icon: '🤫' },
+  { id: 'accentMap', name: 'Accent Map', desc: 'Sing quietly, but punch one note per bar suddenly loud — then back to quiet. The loud note stands out like a highlighted word.', icon: '🎯',
     example: (notes, tempo) => `1 accent per bar (${(4*60/tempo).toFixed(1)}s window). Try: bar 1 accent on beat 1, bar 2 on beat 3, bar 3 on the "&" of 2.` },
-  { id: 'forte', name: 'Constant Forte', desc: 'Full power throughout — fill the room with every note. No holding back.', icon: '🔊' },
+  { id: 'forte', name: 'Constant Forte', desc: 'Sing at full volume throughout — fill the room. No holding back, no quiet moments. Pure power.', icon: '🔊' },
 ];
 
 const ARTICULATION_CONSTRAINTS = [
@@ -569,16 +569,6 @@ function ChallengeCard({ card, T, entering }) {
         </>
       )}
 
-      {/* Suggested track */}
-      {card.suggestedTrack && (
-        <div style={{
-          marginTop: 16, padding: '8px 12px', background: T.bgSoft, borderRadius: 8,
-          fontSize: 12, color: T.textLight, fontFamily: T.sans, textAlign: 'center',
-          border: `1px solid ${T.borderSoft}`,
-        }}>
-          Suggested track: <strong style={{ color: T.textMed }}>{card.suggestedTrack.name}</strong> ({card.suggestedTrack.bpm} BPM)
-        </div>
-      )}
     </div>
   );
 }
@@ -1192,6 +1182,49 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
             Practice Tools
           </div>
 
+          {/* Metronome — editable, syncs to card BPM but user can override */}
+          {metro && (
+            <div style={{
+              background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10,
+              padding: 16, marginBottom: 12,
+            }}>
+              <div style={{ fontSize: 13, fontWeight: 500, color: T.textDark, fontFamily: T.sans, marginBottom: 4 }}>
+                Metronome — {metro.bpm} BPM
+              </div>
+              <div style={{ fontSize: 11, color: T.textMuted, marginBottom: 10 }}>
+                Auto-set to the card's tempo. Tap −/+ to adjust, or reset to {currentCard.constraints.tempo} BPM. Hit Start to play.
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <button onClick={() => metro.changeBpm(Math.max(40, metro.bpm - 1))} style={{
+                    width: 32, height: 32, borderRadius: 6, border: `1px solid ${T.border}`,
+                    background: T.bgSoft, fontSize: 18, color: T.textMed, cursor: 'pointer',
+                  }}>−</button>
+                  <div style={{
+                    fontFamily: T.serif, fontSize: 22, fontWeight: 500, color: T.textDark,
+                    minWidth: 56, textAlign: 'center',
+                  }}>{metro.bpm}</div>
+                  <button onClick={() => metro.changeBpm(Math.min(280, metro.bpm + 1))} style={{
+                    width: 32, height: 32, borderRadius: 6, border: `1px solid ${T.border}`,
+                    background: T.bgSoft, fontSize: 18, color: T.textMed, cursor: 'pointer',
+                  }}>+</button>
+                  <button onClick={() => metro.changeBpm(currentCard.constraints.tempo)} style={{
+                    marginLeft: 6, padding: '6px 10px', borderRadius: 6, border: 'none',
+                    background: T.goldSoft, color: T.goldDark, fontSize: 11, fontWeight: 600,
+                    fontFamily: T.sans, cursor: 'pointer', textTransform: 'uppercase', letterSpacing: 0.5,
+                  }}>Reset</button>
+                </div>
+                <button onClick={() => metro.playing ? metro.stop() : metro.start()} style={{
+                  padding: '8px 16px', borderRadius: 6, border: 'none',
+                  background: metro.playing ? T.coral : T.gold, color: '#fff',
+                  fontSize: 13, fontWeight: 600, fontFamily: T.sans, cursor: 'pointer',
+                }}>
+                  {metro.playing ? 'Stop' : 'Start'}
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Drone — full width */}
           <div style={{
             background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10,
@@ -1239,6 +1272,40 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
               <VolumeMeter theme={T} inline={true} />
             </div>
           )}
+
+          {/* Backing Track — playable, suggested by genre + tempo */}
+          {currentCard.suggestedTrack && (
+            <div style={{
+              background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10,
+              padding: 16, marginBottom: 12,
+            }}>
+              <div style={{ fontSize: 13, fontWeight: 500, color: T.textDark, fontFamily: T.sans, marginBottom: 4 }}>
+                Backing Track — {currentCard.suggestedTrack.name}
+              </div>
+              <div style={{ fontSize: 11, color: T.textMuted, marginBottom: 10 }}>
+                Suggested track at {currentCard.suggestedTrack.bpm} BPM. Loop it under your improvisation for groove and harmonic context.
+              </div>
+              <MiniAudioPlayer
+                src={currentCard.suggestedTrack.src}
+                theme={T}
+                title={currentCard.suggestedTrack.name}
+              />
+            </div>
+          )}
+
+          {/* Recorder — capture your practice */}
+          <div style={{
+            background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10,
+            padding: 16, marginBottom: 12,
+          }}>
+            <div style={{ fontSize: 13, fontWeight: 500, color: T.textDark, fontFamily: T.sans, marginBottom: 4 }}>
+              Recorder
+            </div>
+            <div style={{ fontSize: 11, color: T.textMuted, marginBottom: 10 }}>
+              Record yourself working through the constraints. Listening back is one of the fastest ways to spot what worked and what didn't.
+            </div>
+            <AudioRecorder theme={T} inline={true} />
+          </div>
 
           {/* Color Wheel — full width */}
           {scaleData && (
