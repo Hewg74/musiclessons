@@ -335,15 +335,21 @@ function generateCard(activeDimensions, lockedDimensions, history, constraintWei
   // Derive drone root
   card.droneRoot = droneRootFromCard(card.constraints.key, card.constraints.scale);
 
-  // No-immediate-repeat check
+  // No-immediate-repeat check: compare all drawn constraints, not just pitch+rhythm
+  // (higher tiers may not draw those specific dimensions)
   if (history.length > 0 && _retryCount < 5) {
     const last = history[history.length - 1];
     const sameKey = card.constraints.key === last.constraints.key;
     const sameScale = card.constraints.scale === last.constraints.scale;
-    const samePitch = card.constraints.pitchConstraint?.id === last.constraints.pitchConstraint?.id;
-    const sameRhythm = card.constraints.rhythmConstraint?.id === last.constraints.rhythmConstraint?.id;
-    if (sameKey && sameScale && samePitch && sameRhythm) {
-      return generateCard(activeDimensions, lockedDimensions, history, constraintWeights, tier, _retryCount + 1);
+    let sameConstraints = true;
+    const allDimsToCheck = new Set([...(card.drawnConstraints || []), ...(last.drawnConstraints || [])]);
+    for (const dimId of allDimsToCheck) {
+      const a = card.constraints[dimId]?.id;
+      const b = last.constraints[dimId]?.id;
+      if (a !== b) { sameConstraints = false; break; }
+    }
+    if (sameKey && sameScale && sameConstraints) {
+      return generateCard(activeDimensions, lockedDimensions, history, constraintWeights, tier, _retryCount + 1, maxConstraints);
     }
   }
 
