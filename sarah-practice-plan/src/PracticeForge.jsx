@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import * as Tone from 'tone';
-import { ArrowLeft, Settings, Play, Pause, RotateCcw, SkipForward, Lock, Unlock, Shuffle, Timer, ChevronDown, ChevronUp, Zap, Music } from 'lucide-react';
+import { ArrowLeft, Play, Pause, RotateCcw, SkipForward, Lock, Unlock, Shuffle, ChevronDown, ChevronUp, Music } from 'lucide-react';
 import {
   normalizeNote, COLOR_MUSIC, getColorForNote, playWarmNote,
   FretboardDiagram, DroneGenerator, VolumeMeter, MiniAudioPlayer, AudioRecorder,
@@ -502,7 +502,13 @@ async function playChime() {
 // ═══════════════════════════════════════════
 // ─── ChallengeCard ───
 // ═══════════════════════════════════════════
-function ChallengeCard({ card, T, entering }) {
+function ChallengeCard({
+  card, T, entering,
+  lockedDimensions = {},
+  onToggleLock,
+  showFullGuidance = false,
+  onToggleFullGuidance,
+}) {
   const keyColor = getColorForNote(card.constraints.key) || T.gold;
   const scaleName = SCALE_TYPES[card.constraints.scale]?.name || card.constraints.scale;
   const scaleData = generateScale(card.constraints.key, card.constraints.scale);
@@ -522,9 +528,39 @@ function ChallengeCard({ card, T, entering }) {
   // Oblique modifier is rendered separately with italic styling — it's a creative spice, not a constraint
   const oblique = card.constraints.obliqueModifier;
 
-  // Pre-generated LLM guidance for the specific pitch+rhythm+dynamics combo (Tier 2 cards always hit the cache)
+  // Pre-generated LLM guidance — mode-aware routing inside lookupGuidance
   const guidance = lookupGuidance(card);
   const scaleChar = lookupScaleCharacter(card.constraints.scale);
+
+  // Lock chip: small pill at the end of header rows. onToggleLock is a parent callback
+  // that adds/removes from lockedDimensions. Tapping an unlocked chip locks the CURRENT
+  // drawn value; tapping a locked chip unlocks it.
+  const LockChip = ({ dimId, currentValue, label }) => {
+    if (!onToggleLock) return null;
+    const isLocked = lockedDimensions[dimId] !== undefined;
+    const Icon = isLocked ? Lock : Unlock;
+    return (
+      <button
+        type="button"
+        onClick={() => onToggleLock(dimId, currentValue)}
+        aria-label={isLocked ? `Unlock ${label}` : `Lock ${label} at ${currentValue}`}
+        title={isLocked ? `${label} is locked — tap to unlock` : `Lock ${label} at ${currentValue} for future draws`}
+        style={{
+          display: 'inline-flex', alignItems: 'center', gap: 4,
+          padding: '2px 7px', borderRadius: 10,
+          background: isLocked ? T.goldSoft : 'transparent',
+          border: `1px solid ${isLocked ? T.gold : T.border}`,
+          color: isLocked ? T.goldDark : T.textMuted,
+          fontSize: 10, fontWeight: 600, fontFamily: T.sans,
+          textTransform: 'uppercase', letterSpacing: 0.5,
+          cursor: 'pointer', transition: 'all 0.15s',
+        }}
+      >
+        <Icon size={10} strokeWidth={2.5} />
+        {label}
+      </button>
+    );
+  };
 
   return (
     <div style={{
@@ -571,13 +607,28 @@ function ChallengeCard({ card, T, entering }) {
         </div>
       </div>
 
-      {/* Tempo + BPM */}
+      {/* Tempo + lock cluster */}
       <div style={{
-        display: 'flex', alignItems: 'center', gap: 6, paddingLeft: 20,
-        color: T.textLight, fontSize: 14, marginBottom: 4,
+        display: 'flex', alignItems: 'center', gap: 12, paddingLeft: 20,
+        color: T.textLight, fontSize: 14, marginBottom: 4, flexWrap: 'wrap',
       }}>
-        <Music size={14} />
-        <span style={{ fontFamily: T.sans, fontWeight: 500 }}>{card.constraints.tempo} BPM</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <Music size={14} />
+          <span style={{ fontFamily: T.sans, fontWeight: 500 }}>{card.constraints.tempo} BPM</span>
+        </div>
+        {onToggleLock && (
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 5, marginLeft: 'auto',
+            paddingLeft: 8,
+          }}>
+            <span style={{ fontSize: 10, color: T.textMuted, fontFamily: T.sans, letterSpacing: 0.4 }}>
+              PIN
+            </span>
+            <LockChip dimId="key"   currentValue={card.constraints.key}   label="Key" />
+            <LockChip dimId="scale" currentValue={card.constraints.scale} label="Scale" />
+            <LockChip dimId="tempo" currentValue={card.constraints.tempo} label="Tempo" />
+          </div>
+        )}
       </div>
 
       {/* Divider */}
@@ -634,10 +685,13 @@ function ChallengeCard({ card, T, entering }) {
         })}
       </div>
 
-      {/* LLM-generated guidance — mode-aware:
-          - focus renders a rich single-constraint schema
-          - combo / matrix-trio render the interaction schema
-          - matrix-pairs (Matrix mode with non-classic trio) renders stacked per-pair blocks
+      {/* LLM-generated guidance — mode-aware with primary + expand-full progressive disclosure.
+          - Primary (always visible): scale character italic + headline paragraph
+            * focus:  character + whyPractice
+            * combo/matrix-trio: interaction
+            * matrix-pairs: intro note + first pair's interaction
+          - Expanded (behind toggle): steps, examples, etude, watchOut, deeperInsight, etc.
+          The expand state is controlled by parent so it persists across card draws.
        */}
       {guidance && (() => {
         const isFocus = card.mode === 'focus';
@@ -649,13 +703,9 @@ function ChallengeCard({ card, T, entering }) {
         const bodyStyle = { fontFamily: T.sans, fontSize: 13.5, color: T.textDark, lineHeight: 1.6 };
         const listStyle = { margin: 0, paddingLeft: 20, fontFamily: T.sans, fontSize: 13, color: T.textMed, lineHeight: 1.65 };
 
-        // Helper: render a single combo-shaped entry (used by combo mode, matrix trio, and each matrix pair)
-        const renderComboEntry = (entry) => (
+        // Helper: the DEEP section of a combo-shaped entry (everything after the interaction paragraph)
+        const renderComboDeep = (entry) => (
           <>
-            <div>
-              <div style={eyebrowStyle}>How they work together</div>
-              <div style={bodyStyle}>{entry.interaction}</div>
-            </div>
             <div>
               <div style={eyebrowStyle}>Steps</div>
               <ol style={listStyle}>
@@ -695,6 +745,133 @@ function ChallengeCard({ card, T, entering }) {
           </>
         );
 
+        // Primary content — the single most important pedagogical sentence(s) for this card
+        const primary = isFocus ? (
+          <>
+            <div>
+              <div style={eyebrowStyle}>Character</div>
+              <div style={bodyStyle}>{guidance.character}</div>
+            </div>
+            <div>
+              <div style={eyebrowStyle}>Why practice this</div>
+              <div style={bodyStyle}>{guidance.whyPractice}</div>
+            </div>
+          </>
+        ) : isPairs ? (
+          <>
+            <div style={{
+              fontFamily: T.sans, fontSize: 12, color: T.textLight,
+              fontStyle: 'italic',
+            }}>
+              Matrix drew three constraints at once — here's how the first pair interacts. Expand to see how every pair plays against the others.
+            </div>
+            {guidance._pairs[0] && (
+              <div>
+                <div style={{
+                  fontFamily: T.serif, fontSize: 13, fontWeight: 500, color: T.goldDark,
+                  letterSpacing: 0.3, marginBottom: 6,
+                }}>
+                  {guidance._pairs[0].labelA} × {guidance._pairs[0].labelB}
+                </div>
+                <div style={bodyStyle}>{guidance._pairs[0].entry.interaction}</div>
+              </div>
+            )}
+          </>
+        ) : (
+          <div>
+            <div style={eyebrowStyle}>How they work together</div>
+            <div style={bodyStyle}>{guidance.interaction}</div>
+          </div>
+        );
+
+        // Expanded content
+        const expanded = isFocus ? (
+          <>
+            <div>
+              <div style={eyebrowStyle}>Steps</div>
+              <ol style={listStyle}>
+                {(guidance.steps || []).map((s, i) => <li key={i} style={{ marginBottom: 4 }}>{s}</li>)}
+              </ol>
+            </div>
+            {guidance.progression && guidance.progression.length > 0 && (
+              <div>
+                <div style={eyebrowStyle}>Progression</div>
+                <ol style={listStyle}>
+                  {guidance.progression.map((p, i) => <li key={i} style={{ marginBottom: 4 }}>{p}</li>)}
+                </ol>
+              </div>
+            )}
+            <div>
+              <div style={eyebrowStyle}>Try these phrases</div>
+              <ul style={{ ...listStyle, paddingLeft: 0, listStyleType: 'none' }}>
+                {(guidance.examples || []).map((e, i) => (
+                  <li key={i} style={{ marginBottom: 4, paddingLeft: 16, position: 'relative' }}>
+                    <span style={{ position: 'absolute', left: 0, color: T.gold, fontSize: 12 }}>♪</span>
+                    {e}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            {guidance.etude && (
+              <div>
+                <div style={eyebrowStyle}>Etude</div>
+                <div style={{ ...bodyStyle, fontFamily: T.serif, fontSize: 13, fontStyle: 'italic', color: T.textMed }}>
+                  {guidance.etude}
+                </div>
+              </div>
+            )}
+            <div>
+              <div style={{ ...eyebrowStyle, color: T.warm }}>Watch out</div>
+              <div style={{ fontFamily: T.sans, fontSize: 13, color: T.textMed, lineHeight: 1.6 }}>
+                {guidance.watchOut}
+              </div>
+            </div>
+            {guidance.listenTo && (
+              <div style={{
+                borderTop: `1px dashed ${T.border}`,
+                paddingTop: 12,
+                fontFamily: T.sans,
+                fontSize: 12,
+                color: T.textLight,
+              }}>
+                <span style={{ fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, fontSize: 10, color: T.goldDark, marginRight: 8 }}>
+                  Listen to
+                </span>
+                {guidance.listenTo}
+              </div>
+            )}
+          </>
+        ) : isPairs ? (
+          <>
+            {/* First pair's full content */}
+            {guidance._pairs[0] && renderComboDeep(guidance._pairs[0].entry)}
+            {/* Remaining pairs */}
+            {guidance._pairs.slice(1).map((pair, i) => (
+              <div key={i} style={{
+                paddingTop: 16,
+                borderTop: `1px solid ${T.border}`,
+                display: 'flex', flexDirection: 'column', gap: 14,
+              }}>
+                <div style={{
+                  fontFamily: T.serif, fontSize: 14, fontWeight: 500, color: T.goldDark,
+                  letterSpacing: 0.3,
+                }}>
+                  {pair.labelA} × {pair.labelB}
+                </div>
+                <div>
+                  <div style={eyebrowStyle}>How they work together</div>
+                  <div style={bodyStyle}>{pair.entry.interaction}</div>
+                </div>
+                {renderComboDeep(pair.entry)}
+              </div>
+            ))}
+          </>
+        ) : (
+          renderComboDeep(guidance)
+        );
+
+        const hasExpandable = !!expanded;
+
         return (
           <>
             <div style={{ height: 1, background: T.border, margin: '24px 0 20px', opacity: 0.5 }} />
@@ -716,108 +893,40 @@ function ChallengeCard({ card, T, entering }) {
                 </div>
               )}
 
-              {isFocus ? (
-                <>
-                  {/* Focus mode: character + whyPractice + steps + progression + examples + etude + watchOut + listenTo */}
-                  <div>
-                    <div style={eyebrowStyle}>Character</div>
-                    <div style={bodyStyle}>{guidance.character}</div>
-                  </div>
+              {primary}
 
-                  <div>
-                    <div style={eyebrowStyle}>Why practice this</div>
-                    <div style={bodyStyle}>{guidance.whyPractice}</div>
-                  </div>
+              {showFullGuidance && (
+                <div style={{
+                  display: 'flex', flexDirection: 'column', gap: 16,
+                  paddingTop: 12, borderTop: `1px dashed ${T.border}`,
+                  animation: 'forgeGuidanceExpand 0.3s ease-out both',
+                }}>
+                  {expanded}
+                </div>
+              )}
 
-                  <div>
-                    <div style={eyebrowStyle}>Steps</div>
-                    <ol style={listStyle}>
-                      {(guidance.steps || []).map((s, i) => <li key={i} style={{ marginBottom: 4 }}>{s}</li>)}
-                    </ol>
-                  </div>
-
-                  {guidance.progression && guidance.progression.length > 0 && (
-                    <div>
-                      <div style={eyebrowStyle}>Progression</div>
-                      <ol style={listStyle}>
-                        {guidance.progression.map((p, i) => <li key={i} style={{ marginBottom: 4 }}>{p}</li>)}
-                      </ol>
-                    </div>
-                  )}
-
-                  <div>
-                    <div style={eyebrowStyle}>Try these phrases</div>
-                    <ul style={{ ...listStyle, paddingLeft: 0, listStyleType: 'none' }}>
-                      {(guidance.examples || []).map((e, i) => (
-                        <li key={i} style={{ marginBottom: 4, paddingLeft: 16, position: 'relative' }}>
-                          <span style={{ position: 'absolute', left: 0, color: T.gold, fontSize: 12 }}>♪</span>
-                          {e}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {guidance.etude && (
-                    <div>
-                      <div style={eyebrowStyle}>Etude</div>
-                      <div style={{ ...bodyStyle, fontFamily: T.serif, fontSize: 13, fontStyle: 'italic', color: T.textMed }}>
-                        {guidance.etude}
-                      </div>
-                    </div>
-                  )}
-
-                  <div>
-                    <div style={{ ...eyebrowStyle, color: T.warm }}>Watch out</div>
-                    <div style={{ fontFamily: T.sans, fontSize: 13, color: T.textMed, lineHeight: 1.6 }}>
-                      {guidance.watchOut}
-                    </div>
-                  </div>
-
-                  {guidance.listenTo && (
-                    <div style={{
-                      borderTop: `1px dashed ${T.border}`,
-                      paddingTop: 12,
-                      fontFamily: T.sans,
-                      fontSize: 12,
-                      color: T.textLight,
-                    }}>
-                      <span style={{ fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, fontSize: 10, color: T.goldDark, marginRight: 8 }}>
-                        Listen to
-                      </span>
-                      {guidance.listenTo}
-                    </div>
-                  )}
-                </>
-              ) : isPairs ? (
-                <>
-                  {/* Matrix mode, non-classic trio: render each pair as a labeled block */}
-                  <div style={{
-                    fontFamily: T.sans, fontSize: 12, color: T.textLight,
-                    fontStyle: 'italic', paddingBottom: 6,
-                  }}>
-                    Matrix draws three constraints at once. Here's how each pair of constraints on this card plays against the other — work through all three dimensions simultaneously.
-                  </div>
-                  {guidance._pairs.map((pair, i) => (
-                    <div key={i} style={{
-                      padding: i > 0 ? '16px 0 0' : 0,
-                      borderTop: i > 0 ? `1px solid ${T.border}` : 'none',
-                      display: 'flex', flexDirection: 'column', gap: 14,
-                    }}>
-                      <div style={{
-                        fontFamily: T.serif, fontSize: 14, fontWeight: 500, color: T.goldDark,
-                        letterSpacing: 0.3,
-                      }}>
-                        {pair.labelA} × {pair.labelB}
-                      </div>
-                      {renderComboEntry(pair.entry)}
-                    </div>
-                  ))}
-                </>
-              ) : (
-                <>
-                  {/* Combo / Matrix classic trio: single interaction-schema entry */}
-                  {renderComboEntry(guidance)}
-                </>
+              {hasExpandable && (
+                <button
+                  type="button"
+                  onClick={onToggleFullGuidance}
+                  aria-expanded={showFullGuidance}
+                  style={{
+                    alignSelf: 'flex-start',
+                    marginTop: showFullGuidance ? 4 : 0,
+                    padding: '8px 14px',
+                    borderRadius: 8,
+                    background: 'transparent',
+                    border: `1px solid ${T.border}`,
+                    color: T.goldDark,
+                    fontSize: 11, fontWeight: 600,
+                    fontFamily: T.sans, letterSpacing: 0.8, textTransform: 'uppercase',
+                    cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
+                    transition: 'all 0.15s',
+                  }}
+                >
+                  {showFullGuidance ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+                  {showFullGuidance ? 'Hide full guidance' : 'Show full guidance'}
+                </button>
               )}
             </div>
           </>
@@ -842,12 +951,19 @@ function ChallengeCard({ card, T, entering }) {
 }
 
 // ═══════════════════════════════════════════
-// ─── ForgeTimer ───
-// duration === 0 (or falsy) means UNLIMITED — stopwatch mode. Counts up from 0,
-// never auto-completes, user ends the round manually. Any positive duration is a
-// countdown that calls onComplete when time runs out.
+// ─── CompactTimerStrip ───
+// Horizontal, music-object feel. Thin progress bar + digital time + label + inline controls.
+// Replaces the old 144×144 circular ForgeTimer — vertical real estate was too precious
+// during practice flow to spend on stopwatch decoration.
+//
+// Behavior:
+//   duration === 0 (or falsy) → UNLIMITED stopwatch (counts up, never auto-completes)
+//   duration > 0               → countdown that calls onComplete at 0
+//
+// Also pauses on tab blur when fixed-duration (Page Visibility API). Unlimited mode
+// keeps running when the tab is hidden — user may have tabbed away deliberately.
 // ═══════════════════════════════════════════
-function ForgeTimer({ duration, running, onComplete, T }) {
+function CompactTimerStrip({ duration, running, onComplete, onToggle, onReset, onEnd, T, isMobile }) {
   const unlimited = !duration || duration <= 0;
   const [remaining, setRemaining] = useState(duration || 0);
   const [elapsed, setElapsed] = useState(0);
@@ -885,36 +1001,133 @@ function ForgeTimer({ duration, running, onComplete, T }) {
     return () => clearInterval(intervalRef.current);
   }, [running, duration, unlimited]);
 
-  const circumference = 2 * Math.PI * 60;
-  // In unlimited mode the ring fills over a notional 10-minute arc as visual feedback —
-  // it tops out at ~full circle around 10 minutes and then stays there. Purely aesthetic.
+  // Pause on tab blur for FIXED durations only. Unlimited keeps running.
+  useEffect(() => {
+    if (unlimited) return;
+    const handleVis = () => {
+      if (document.visibilityState === 'hidden' && running) {
+        onToggle && onToggle();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVis);
+    return () => document.removeEventListener('visibilitychange', handleVis);
+  }, [unlimited, running, onToggle]);
+
   const progress = unlimited
-    ? Math.min(1, elapsed / 600)
-    : (duration > 0 ? remaining / duration : 0);
-  const strokeOffset = circumference * (unlimited ? (1 - progress) : (1 - progress));
+    ? Math.min(1, elapsed / 600)      // fills over a notional 10-min arc
+    : (duration > 0 ? (duration - remaining) / duration : 0);
   const displayTime = unlimited ? elapsed : remaining;
   const label = unlimited ? 'ELAPSED' : 'REMAINING';
 
+  // Deep flow marker — gentle nudge at 30/60 min when unlimited
+  const deepFlowNote = unlimited && elapsed >= 1800
+    ? elapsed >= 3600 ? 'You\'re deep in flow — over an hour elapsed' : 'You\'re in deep flow — 30+ minutes elapsed'
+    : null;
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-      <svg width={144} height={144} viewBox="0 0 144 144">
-        {/* Track */}
-        <circle cx={72} cy={72} r={60} fill="none" stroke={T.border} strokeWidth={3} />
-        {/* Progress */}
-        <circle cx={72} cy={72} r={60} fill="none" stroke={T.gold} strokeWidth={4}
-          strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={strokeOffset}
-          style={{ transform: 'rotate(-90deg)', transformOrigin: '50% 50%', transition: 'stroke-dashoffset 0.3s linear' }}
-        />
-        {/* Time text */}
-        <text x={72} y={68} textAnchor="middle" dominantBaseline="central"
-          style={{ fontFamily: T.serif, fontSize: 32, fill: T.textDark, fontWeight: 400, letterSpacing: -1 }}>
-          {formatTime(displayTime)}
-        </text>
-        <text x={72} y={90} textAnchor="middle"
-          style={{ fontFamily: T.sans, fontSize: 10, fill: T.textLight, fontWeight: 500, letterSpacing: 2, textTransform: 'uppercase' }}>
-          {label}
-        </text>
-      </svg>
+    <div
+      role="timer"
+      aria-live="polite"
+      aria-label={`${label} ${formatTime(displayTime)}`}
+      style={{
+        background: T.bgCard,
+        border: `1px solid ${T.border}`,
+        borderRadius: 10,
+        padding: '14px 18px',
+        boxShadow: `0 1px 6px rgba(181, 132, 84, 0.04)`,
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Ambient progress fill — gold wash behind the row as the round elapses */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        background: `linear-gradient(90deg, ${T.goldSoft} 0%, ${T.goldSoft} ${progress * 100}%, transparent ${progress * 100}%)`,
+        opacity: 0.6,
+        transition: 'all 0.4s linear',
+        pointerEvents: 'none',
+      }} />
+
+      <div style={{
+        position: 'relative', display: 'flex', alignItems: 'center', gap: isMobile ? 12 : 20,
+        flexWrap: isMobile ? 'wrap' : 'nowrap',
+      }}>
+        {/* Time + label (left side, vertical pair) */}
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flex: isMobile ? '1 1 100%' : '0 0 auto' }}>
+          <div style={{
+            fontFamily: T.serif, fontSize: 34, fontWeight: 400, color: T.textDark,
+            letterSpacing: -1, lineHeight: 1, fontVariantNumeric: 'tabular-nums',
+          }}>
+            {formatTime(displayTime)}
+          </div>
+          <div style={{
+            fontFamily: T.sans, fontSize: 10, fontWeight: 600, color: T.textLight,
+            letterSpacing: 2, textTransform: 'uppercase',
+          }}>
+            {label}
+          </div>
+        </div>
+
+        {/* Spacer fills remaining space on desktop */}
+        {!isMobile && <div style={{ flex: 1 }} />}
+
+        {/* Control cluster (right side) */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flex: isMobile ? '1 1 100%' : '0 0 auto', justifyContent: isMobile ? 'center' : 'flex-end' }}>
+          <button
+            onClick={onReset}
+            aria-label="Reset timer"
+            title="Reset timer"
+            style={{
+              width: 38, height: 38, borderRadius: 8,
+              background: 'transparent', border: `1px solid ${T.border}`,
+              color: T.textMuted, cursor: 'pointer', display: 'flex',
+              alignItems: 'center', justifyContent: 'center',
+            }}
+          >
+            <RotateCcw size={16} />
+          </button>
+
+          <button
+            onClick={onToggle}
+            aria-label={running ? 'Pause round' : 'Start round'}
+            title={running ? 'Pause (Space)' : 'Start round (Space)'}
+            style={{
+              width: 52, height: 52, borderRadius: '50%',
+              background: T.gold, border: 'none', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: `0 3px 10px rgba(212, 163, 115, 0.35)`,
+              transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+            onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+          >
+            {running ? <Pause size={22} color="#fff" /> : <Play size={22} color="#fff" style={{ marginLeft: 2 }} />}
+          </button>
+
+          <button
+            onClick={onEnd}
+            aria-label="End round"
+            title="End round"
+            style={{
+              width: 38, height: 38, borderRadius: 8,
+              background: 'transparent', border: `1px solid ${T.border}`,
+              color: T.textMuted, cursor: 'pointer', display: 'flex',
+              alignItems: 'center', justifyContent: 'center',
+            }}
+          >
+            <SkipForward size={16} />
+          </button>
+        </div>
+      </div>
+
+      {deepFlowNote && (
+        <div style={{
+          marginTop: 8, fontSize: 11, color: T.textLight, fontStyle: 'italic',
+          textAlign: 'center', position: 'relative',
+        }}>
+          {deepFlowNote}
+        </div>
+      )}
     </div>
   );
 }
@@ -1009,10 +1222,23 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
   const [showRating, setShowRating] = useState(false);
   const [roundStartTime, setRoundStartTime] = useState(null);
 
-  // Integration state
-  const [showDrone, setShowDrone] = useState(false);
-  const [showFretboard, setShowFretboard] = useState(false);
-  const [showVolumeMeter, setShowVolumeMeter] = useState(false);
+  // Advanced tools: expand-on-demand panel state
+  // Each key is a tool ID; value is boolean "expanded".
+  // Volume meter auto-expands when dynamics constraint is present.
+  const [expandedTools, setExpandedTools] = useState({
+    fretboard: false,
+    volumeMeter: false,
+    recorder: false,
+    colorWheel: false,
+    backingTrack: false,
+  });
+  const toggleTool = useCallback((toolId) => {
+    setExpandedTools(prev => ({ ...prev, [toolId]: !prev[toolId] }));
+  }, []);
+
+  // Guidance expand state — persisted across card draws so power users don't have to
+  // click "Show full" every time they flip a card.
+  const [showFullGuidance, setShowFullGuidance] = useState(false);
 
   // History
   const [showHistory, setShowHistory] = useState(false);
@@ -1066,12 +1292,10 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
     }
   }, [currentCard?.constraints?.tempo]);
 
-  // Auto-show volume meter when dynamics constraint is active
+  // Auto-expand volume meter when dynamics constraint is active
   useEffect(() => {
     if (currentCard?.constraints?.dynamics) {
-      setShowVolumeMeter(true);
-    } else {
-      setShowVolumeMeter(false);
+      setExpandedTools(prev => ({ ...prev, volumeMeter: true }));
     }
   }, [currentCard?.constraints?.dynamics]);
 
@@ -1149,6 +1373,24 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
     setShowRating(true);
   }, []);
 
+  // One more round — re-run the timer on the SAME card (no re-draw).
+  // Clears the rating panel and resets the timer.
+  const oneMoreRound = useCallback(() => {
+    setShowRating(false);
+    setTimerRunning(false);
+    setTimerKey(k => k + 1);
+    setRoundStartTime(null);
+  }, []);
+
+  // End session — bail out of a multi-card session early.
+  const endSession = useCallback(() => {
+    setCurrentCard(null);
+    setSessionCards([]);
+    setSessionIndex(0);
+    setShowRating(false);
+    setTimerRunning(false);
+  }, []);
+
   // Back handler with audio cleanup
   const handleBack = useCallback(() => {
     setTimerRunning(false);
@@ -1158,6 +1400,33 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
     }
     onBack();
   }, [onBack]);
+
+  // Keyboard shortcuts:
+  //   Space       → toggle timer play/pause (when a card is active, not typing in a field)
+  //   1/2/3       → Easy/Good/Hard (when rating panel is showing)
+  //   Escape      → close overflow menu
+  //   n           → draw new card (when no timer running)
+  useEffect(() => {
+    const handleKey = (e) => {
+      // Ignore if user is typing in an input
+      const tag = e.target?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || e.target?.isContentEditable) return;
+
+      if (showRating) {
+        if (e.key === '1') { e.preventDefault(); rateRound('easy'); return; }
+        if (e.key === '2') { e.preventDefault(); rateRound('good'); return; }
+        if (e.key === '3') { e.preventDefault(); rateRound('hard'); return; }
+      }
+
+      if (currentCard && e.code === 'Space' && !showRating) {
+        e.preventDefault();
+        if (timerRunning) toggleTimer();
+        else startTimer();
+      }
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [currentCard, showRating, timerRunning, rateRound, toggleTimer, startTimer]);
 
   // Scale data for fretboard
   const scaleData = useMemo(() => {
@@ -1176,168 +1445,274 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
     scales:  'Scale Runner — just key, scale, and tempo. No constraints. Noodle freely and internalize the palette.',
     focus:   'Focus — ONE constraint at a time. Deep single-target practice. This is where real instincts get rewired. Most serious practice lives here.',
     combo:   'Combo — TWO constraints from different categories. Balanced integration practice. Pair a melodic rule with a delivery rule and hear how they interact.',
-    matrix:  'Matrix — pitch + rhythm + dynamics all at once. The composition-pressure mode. Harder; best for occasional creative challenge rather than daily practice.',
+    matrix:  'Matrix — THREE constraints at once from the full pool. Composition-pressure mode: any trio of pitch, rhythm, dynamics, articulation, phrase, or technique. Harder; save it for occasional creative challenge, not daily drilling.',
   };
   const MODE_LABELS = { scales: 'Scales', focus: 'Focus', combo: 'Combo', matrix: 'Matrix' };
 
   // ─── Render ───
   // Wider than the default 480 — the guidance block has a lot of text per card
   // and the old width wasted ~40% of a desktop viewport on empty margins.
-  const maxW = 760;
+  const maxW = 820;
+  const MODES = ['scales', 'focus', 'combo', 'matrix'];
+
+  // Advanced tool descriptors for the expand-on-demand bar
+  const advancedTools = [
+    { id: 'fretboard',    label: 'Fretboard',  icon: '⛶',  available: !!scaleData },
+    { id: 'volumeMeter',  label: 'Meter',      icon: '◉',  available: true },
+    { id: 'colorWheel',   label: 'Wheel',      icon: '◐',  available: !!scaleData },
+    { id: 'backingTrack', label: 'Track',      icon: '♫',  available: !!currentCard?.suggestedTrack },
+    { id: 'recorder',     label: 'Record',     icon: '●',  available: true },
+  ];
 
   return (
-    <div style={{ maxWidth: maxW, margin: '0 auto', padding: '20px 20px 120px', fontFamily: T.sans }}>
+    <div
+      style={{
+        maxWidth: maxW, margin: '0 auto',
+        padding: isMobile ? '14px 14px 120px' : '20px 20px 120px',
+        fontFamily: T.sans,
+      }}
+    >
       {/* CSS Animations */}
       <style>{`
         @keyframes forgeCardEnter {
           from { opacity: 0; transform: translateY(40px) scale(0.95) rotate(-2deg); }
           to { opacity: 1; transform: translateY(0) scale(1) rotate(0); }
         }
+        @keyframes forgeGuidanceExpand {
+          from { opacity: 0; max-height: 0; }
+          to { opacity: 1; max-height: 4000px; }
+        }
+        @keyframes forgeToolExpand {
+          from { opacity: 0; transform: translateY(-6px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
         @media (prefers-reduced-motion: reduce) {
-          @keyframes forgeCardEnter {
-            from { opacity: 0; }
-            to { opacity: 1; }
-          }
+          @keyframes forgeCardEnter { from { opacity: 0; } to { opacity: 1; } }
+          @keyframes forgeGuidanceExpand { from { opacity: 0; } to { opacity: 1; } }
+          @keyframes forgeToolExpand { from { opacity: 0; } to { opacity: 1; } }
         }
       `}</style>
 
-      {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <button onClick={handleBack} style={{
-            background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: T.textMed,
-          }}>
+      {/* ═══ Header: back arrow + title + ⋮ overflow ═══ */}
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        marginBottom: 14,
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <button
+            onClick={handleBack}
+            aria-label="Back to tools"
+            style={{
+              background: 'none', border: 'none', cursor: 'pointer',
+              padding: 6, color: T.textMed, display: 'flex', alignItems: 'center',
+            }}
+          >
             <ArrowLeft size={20} />
           </button>
-          <h1 style={{ fontFamily: T.serif, fontSize: 22, fontWeight: 500, color: T.textDark, margin: 0, letterSpacing: -0.5 }}>
+          <h1 style={{
+            fontFamily: T.serif, fontSize: isMobile ? 20 : 24, fontWeight: 500,
+            color: T.textDark, margin: 0, letterSpacing: -0.5,
+          }}>
             Practice Forge
           </h1>
         </div>
-        <button onClick={() => setSettingsOpen(!settingsOpen)} style={{
-          background: 'none', border: `1px solid ${T.border}`, borderRadius: 8,
-          width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center',
-          cursor: 'pointer', color: T.textMed,
-        }}>
-          <Settings size={16} />
-        </button>
-      </div>
 
-      {/* Settings Panel */}
-      {settingsOpen && (
-        <div style={{ marginBottom: 24, padding: 20, background: T.bgSoft, borderRadius: 10, border: `1px solid ${T.borderSoft}` }}>
-          {/* Mode selector */}
-          <div style={{ marginBottom: 20 }}>
-            <div style={{ fontSize: 11, fontWeight: 500, color: T.textLight, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>
-              Mode — What kind of exercise?
-            </div>
-            <div style={{ display: 'flex', gap: 4, marginBottom: 6 }}>
-              {['scales', 'focus', 'combo', 'matrix'].map(m => (
-                <button key={m} onClick={() => setMode(m)} style={{
-                  flex: 1, padding: '10px 0', border: `1px solid ${mode === m ? T.gold : T.border}`,
-                  borderRadius: 6, fontSize: 13, fontWeight: mode === m ? 600 : 400,
-                  fontFamily: T.sans, cursor: 'pointer', transition: 'all 0.2s',
-                  background: mode === m ? T.goldSoft : 'transparent',
-                  color: mode === m ? T.goldDark : T.textMed,
-                }}>
-                  {MODE_LABELS[m]}
-                </button>
-              ))}
-            </div>
-            <div style={{ fontSize: 12, color: T.textLight, lineHeight: 1.5 }}>
-              {MODE_DESCRIPTIONS[mode]}
-            </div>
-          </div>
-
-          {/* Instrument toggle */}
-          <div style={{ marginBottom: 20 }}>
-            <div style={{ fontSize: 11, fontWeight: 500, color: T.textLight, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>
-              Instrument
-            </div>
-            <div style={{ display: 'flex', gap: 6 }}>
-              {['voice', 'guitar'].map(inst => (
-                <button key={inst} onClick={() => setInstrument(inst)} style={{
-                  flex: 1, padding: '10px 0', border: `1px solid ${instrument === inst ? T.gold : T.border}`,
-                  borderRadius: 6, fontSize: 13, fontWeight: instrument === inst ? 600 : 400,
-                  fontFamily: T.sans, cursor: 'pointer', transition: 'all 0.2s',
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          {/* Instrument toggle — voice/guitar pill */}
+          <div
+            role="tablist"
+            aria-label="Instrument"
+            style={{
+              display: 'flex', padding: 3, borderRadius: 8,
+              background: T.bgSoft, border: `1px solid ${T.border}`,
+            }}
+          >
+            {['voice', 'guitar'].map(inst => (
+              <button
+                key={inst}
+                role="tab"
+                aria-selected={instrument === inst}
+                onClick={() => setInstrument(inst)}
+                style={{
+                  padding: '6px 12px', borderRadius: 6, border: 'none',
                   background: instrument === inst ? T.goldSoft : 'transparent',
                   color: instrument === inst ? T.goldDark : T.textMed,
-                  textTransform: 'capitalize',
-                }}>
-                  {inst}
-                </button>
-              ))}
-            </div>
-            <div style={{ fontSize: 11, color: T.textMuted, marginTop: 4 }}>
-              Focus and Combo modes may draw instrument-specific technique constraints (placement for voice, picking for guitar).
-            </div>
+                  fontSize: 11, fontWeight: 600, fontFamily: T.sans,
+                  textTransform: 'capitalize', cursor: 'pointer',
+                  letterSpacing: 0.3, transition: 'all 0.15s',
+                }}
+              >
+                {inst}
+              </button>
+            ))}
           </div>
 
+          <button
+            onClick={() => setSettingsOpen(!settingsOpen)}
+            aria-label="More options"
+            aria-expanded={settingsOpen}
+            style={{
+              background: settingsOpen ? T.goldSoft : 'transparent',
+              border: `1px solid ${settingsOpen ? T.gold : T.border}`,
+              borderRadius: 8, width: 36, height: 36,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer', color: settingsOpen ? T.goldDark : T.textMed,
+              transition: 'all 0.15s',
+            }}
+          >
+            {/* Three-dot overflow glyph */}
+            <span style={{ fontSize: 20, letterSpacing: 1, lineHeight: 0.5 }}>⋮</span>
+          </button>
+        </div>
+      </div>
+
+      {/* ═══ Mode chip row (Tier 1 — always visible) ═══ */}
+      <div
+        role="tablist"
+        aria-label="Practice mode"
+        style={{
+          display: 'flex', gap: isMobile ? 4 : 6, marginBottom: 8,
+        }}
+      >
+        {MODES.map(m => {
+          const active = mode === m;
+          return (
+            <button
+              key={m}
+              role="tab"
+              aria-selected={active}
+              onClick={() => setMode(m)}
+              style={{
+                flex: 1,
+                padding: isMobile ? '10px 4px' : '12px 8px',
+                borderRadius: 10,
+                border: `1px solid ${active ? T.gold : T.border}`,
+                background: active ? T.goldSoft : T.bgCard,
+                color: active ? T.goldDark : T.textMed,
+                fontSize: isMobile ? 12 : 13,
+                fontWeight: active ? 700 : 500,
+                fontFamily: T.sans, cursor: 'pointer',
+                letterSpacing: 0.3,
+                transition: 'all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1)',
+                transform: active ? 'translateY(-1px)' : 'translateY(0)',
+                boxShadow: active ? `0 3px 10px rgba(212, 163, 115, 0.22)` : 'none',
+              }}
+            >
+              {MODE_LABELS[m]}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Mode hint — always visible, one-line contextual explainer */}
+      <div style={{
+        fontSize: isMobile ? 11 : 12, color: T.textLight, lineHeight: 1.5,
+        fontFamily: T.sans, marginBottom: 18,
+        padding: '0 2px',
+      }}>
+        {MODE_DESCRIPTIONS[mode]}
+      </div>
+
+      {/* ═══ Overflow menu (⋮) — duration, session count, draw pool readout ═══ */}
+      {settingsOpen && (
+        <div
+          role="menu"
+          style={{
+            marginBottom: 22, padding: 18,
+            background: T.bgSoft, borderRadius: 10,
+            border: `1px solid ${T.borderSoft}`,
+            animation: 'forgeToolExpand 0.25s ease-out both',
+          }}
+        >
           {/* Timer duration */}
-          <div style={{ marginBottom: 20 }}>
-            <div style={{ fontSize: 11, fontWeight: 500, color: T.textLight, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>
+          <div style={{ marginBottom: 18 }}>
+            <div style={{
+              fontSize: 10, fontWeight: 600, color: T.textLight, letterSpacing: 1.2,
+              textTransform: 'uppercase', marginBottom: 8,
+            }}>
               Round Duration
             </div>
-            <div style={{ display: 'flex', gap: 6 }}>
-              {[{ s: 0, l: '∞' }, { s: 90, l: '1:30' }, { s: 120, l: '2:00' }, { s: 180, l: '3:00' }, { s: 300, l: '5:00' }].map(({ s, l }) => (
-                <button key={s} onClick={() => setTimerDuration(s)} style={{
-                  flex: 1, padding: '10px 0', border: `1px solid ${timerDuration === s ? T.gold : T.border}`,
-                  borderRadius: 6, fontSize: 13, fontWeight: timerDuration === s ? 600 : 400,
-                  fontFamily: T.sans, cursor: 'pointer', transition: 'all 0.2s',
-                  background: timerDuration === s ? T.goldSoft : 'transparent',
-                  color: timerDuration === s ? T.goldDark : T.textMed,
-                }}>
+            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+              {[
+                { s: 0, l: '∞' }, { s: 90, l: '1:30' }, { s: 120, l: '2:00' },
+                { s: 180, l: '3:00' }, { s: 300, l: '5:00' },
+              ].map(({ s, l }) => (
+                <button
+                  key={s}
+                  onClick={() => setTimerDuration(s)}
+                  style={{
+                    flex: '1 1 60px', padding: '9px 0',
+                    border: `1px solid ${timerDuration === s ? T.gold : T.border}`,
+                    borderRadius: 6,
+                    fontSize: 13, fontWeight: timerDuration === s ? 700 : 400,
+                    fontFamily: T.sans, cursor: 'pointer', transition: 'all 0.15s',
+                    background: timerDuration === s ? T.goldSoft : 'transparent',
+                    color: timerDuration === s ? T.goldDark : T.textMed,
+                  }}
+                >
                   {l}
                 </button>
               ))}
             </div>
-            <div style={{ fontSize: 11, color: T.textMuted, marginTop: 4 }}>
-              ∞ is unlimited — the timer counts up and you end the round when you're ready. Use a fixed duration when you want interleaved-practice pressure (research: Carter & Grahn 2016 ≈ 3-minute rounds).
+            <div style={{ fontSize: 11, color: T.textMuted, marginTop: 6, lineHeight: 1.5 }}>
+              ∞ is the stopwatch default — end the round when you're ready. Fixed durations pause on tab blur so you don't lose time to a notification.
             </div>
           </div>
 
           {/* Session card count */}
-          <div style={{ marginBottom: 20 }}>
-            <div style={{ fontSize: 11, fontWeight: 500, color: T.textLight, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>
+          <div style={{ marginBottom: 18 }}>
+            <div style={{
+              fontSize: 10, fontWeight: 600, color: T.textLight, letterSpacing: 1.2,
+              textTransform: 'uppercase', marginBottom: 8,
+            }}>
               Cards per Session
             </div>
             <div style={{ display: 'flex', gap: 6 }}>
               {[1, 3, 5].map(n => (
-                <button key={n} onClick={() => setSessionCardCount(n)} style={{
-                  flex: 1, padding: '10px 0', border: `1px solid ${sessionCardCount === n ? T.gold : T.border}`,
-                  borderRadius: 6, fontSize: 13, fontWeight: sessionCardCount === n ? 600 : 400,
-                  fontFamily: T.sans, cursor: 'pointer', transition: 'all 0.2s',
-                  background: sessionCardCount === n ? T.goldSoft : 'transparent',
-                  color: sessionCardCount === n ? T.goldDark : T.textMed,
-                }}>
-                  {n === 1 ? 'Single' : `${n} Cards`}
+                <button
+                  key={n}
+                  onClick={() => setSessionCardCount(n)}
+                  style={{
+                    flex: 1, padding: '9px 0',
+                    border: `1px solid ${sessionCardCount === n ? T.gold : T.border}`,
+                    borderRadius: 6,
+                    fontSize: 13, fontWeight: sessionCardCount === n ? 700 : 400,
+                    fontFamily: T.sans, cursor: 'pointer', transition: 'all 0.15s',
+                    background: sessionCardCount === n ? T.goldSoft : 'transparent',
+                    color: sessionCardCount === n ? T.goldDark : T.textMed,
+                  }}
+                >
+                  {n === 1 ? 'Single' : `${n} cards`}
                 </button>
               ))}
             </div>
-            <div style={{ fontSize: 11, color: T.textMuted, marginTop: 4 }}>
-              Multiple cards enforce variety — no key repeated more than twice per session.
+            <div style={{ fontSize: 11, color: T.textMuted, marginTop: 6, lineHeight: 1.5 }}>
+              Multi-card sessions enforce key variety — nothing repeats more than twice.
             </div>
           </div>
 
-          {/* Active dimensions — readout only, derived from mode */}
+          {/* Draw pool readout */}
           <div>
-            <div style={{ fontSize: 11, fontWeight: 500, color: T.textLight, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>
-              Draw Pool (derived from mode)
-            </div>
-            <div style={{ fontSize: 11, color: T.textMuted, marginBottom: 10 }}>
-              These are the dimensions the current mode can draw from. Change mode to reshape the pool.
+            <div style={{
+              fontSize: 10, fontWeight: 600, color: T.textLight, letterSpacing: 1.2,
+              textTransform: 'uppercase', marginBottom: 8,
+            }}>
+              Draw Pool ({MODE_LABELS[mode]}, {instrument})
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-              {DIMENSIONS.filter(dim => activeDimensions.includes(dim.id) && dim.type === 'qualitative').map(dim => (
-                <div key={dim.id} style={{
-                  padding: '7px 12px', borderRadius: 16, fontSize: 12, fontWeight: 500,
-                  fontFamily: T.sans,
-                  border: `1px solid ${dim.color}`,
-                  background: `${dim.color}15`,
-                  color: dim.color,
-                }}>
-                  {dim.label}
-                </div>
-              ))}
+              {DIMENSIONS
+                .filter(dim => activeDimensions.includes(dim.id) && dim.type === 'qualitative')
+                .map(dim => (
+                  <div key={dim.id} style={{
+                    padding: '6px 11px', borderRadius: 14, fontSize: 11, fontWeight: 600,
+                    fontFamily: T.sans,
+                    border: `1px solid ${dim.color}60`,
+                    background: `${dim.color}12`,
+                    color: dim.color,
+                  }}>
+                    {dim.label}
+                  </div>
+                ))}
               {activeDimensions.filter(id => DIMENSIONS.find(d => d.id === id)?.type === 'qualitative').length === 0 && (
                 <div style={{ fontSize: 12, color: T.textMuted, fontStyle: 'italic' }}>
                   No qualitative constraints — pure scale practice.
@@ -1345,369 +1720,529 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
               )}
             </div>
           </div>
+
+          {/* Clear all locks (only shown when some are set) */}
+          {Object.keys(lockedDimensions).length > 0 && (
+            <div style={{ marginTop: 16, paddingTop: 14, borderTop: `1px solid ${T.border}` }}>
+              <div style={{
+                fontSize: 10, fontWeight: 600, color: T.textLight, letterSpacing: 1.2,
+                textTransform: 'uppercase', marginBottom: 8,
+              }}>
+                Pinned: {Object.keys(lockedDimensions).join(', ')}
+              </div>
+              <button
+                onClick={() => setLockedDimensions({})}
+                style={{
+                  padding: '6px 12px', borderRadius: 6, border: `1px solid ${T.border}`,
+                  background: 'transparent', color: T.textMed, fontSize: 11,
+                  fontFamily: T.sans, cursor: 'pointer', fontWeight: 600,
+                }}
+              >
+                Clear all pins
+              </button>
+            </div>
+          )}
         </div>
       )}
 
-      {/* Current config summary (when no card active) */}
+      {/* ═══ IDLE state: draw panel + recent history ═══ */}
       {!currentCard && (
-        <div style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '10px 14px', background: T.bgSoft, borderRadius: 8,
-          marginBottom: 16, border: `1px solid ${T.borderSoft}`,
-        }}>
-          <div style={{ fontSize: 12, color: T.textMed, fontFamily: T.sans }}>
-            <strong style={{ color: T.goldDark }}>{MODE_LABELS[mode]}</strong>
-            {' '} &middot; {' '}
-            <strong>{maxConstraints === 0 ? 'scale only' : `${maxConstraints} constraint${maxConstraints === 1 ? '' : 's'}/card`}</strong>
-            {' '} &middot; {' '}
-            <span style={{ textTransform: 'capitalize' }}>{instrument}</span>
-            {' '} &middot; {' '}
-            {timerDuration > 0 ? `${formatTime(timerDuration)} rounds` : '∞ rounds'}
-          </div>
-          <button onClick={() => setSettingsOpen(true)} style={{
-            fontSize: 11, color: T.gold, background: 'none', border: 'none',
-            cursor: 'pointer', fontWeight: 600, fontFamily: T.sans,
-          }}>
-            Change
+        <>
+          {/* Primary draw button */}
+          <button
+            onClick={drawCard}
+            style={{
+              width: '100%',
+              padding: isMobile ? '18px 24px' : '22px 28px',
+              borderRadius: 12,
+              background: `linear-gradient(135deg, ${T.gold} 0%, ${T.goldDark} 100%)`,
+              color: '#fff', border: 'none',
+              fontSize: isMobile ? 15 : 17, fontWeight: 600, fontFamily: T.sans,
+              cursor: 'pointer', letterSpacing: 0.8,
+              boxShadow: `0 4px 14px rgba(212, 163, 115, 0.32)`,
+              marginBottom: 18,
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+              transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-1px)';
+              e.currentTarget.style.boxShadow = `0 6px 18px rgba(212, 163, 115, 0.4)`;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = `0 4px 14px rgba(212, 163, 115, 0.32)`;
+            }}
+          >
+            <Shuffle size={20} />
+            Draw {MODE_LABELS[mode]} Card
           </button>
-        </div>
+
+          {/* Recent history */}
+          {recentHistory.length > 0 ? (
+            <div>
+              <div style={{
+                fontSize: 10, fontWeight: 600, color: T.textLight, letterSpacing: 1.2,
+                textTransform: 'uppercase', marginBottom: 10, paddingLeft: 2,
+              }}>
+                Recently Practiced
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {recentHistory.slice(0, 5).map((card, i) => {
+                  const kc = getColorForNote(card.constraints?.key) || T.gold;
+                  const ratingColor = card.rating === 'easy' ? T.success : card.rating === 'hard' ? T.coral : T.goldDark;
+                  const drawnLabels = (card.drawnConstraints || [])
+                    .map(dimId => {
+                      const c = card.constraints?.[dimId];
+                      return c?.name;
+                    })
+                    .filter(Boolean)
+                    .slice(0, 3)
+                    .join(' · ');
+                  return (
+                    <div
+                      key={card.id || i}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: 10,
+                        padding: '9px 13px',
+                        background: T.bgCard, border: `1px solid ${T.borderSoft}`,
+                        borderRadius: 8,
+                      }}
+                    >
+                      <div style={{
+                        width: 8, height: 8, borderRadius: '50%',
+                        background: kc, flexShrink: 0,
+                      }} />
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{
+                          fontSize: 13, color: T.textDark,
+                          fontFamily: T.sans, fontWeight: 600,
+                        }}>
+                          {card.constraints?.key} {SCALE_TYPES[card.constraints?.scale]?.name || ''}
+                        </div>
+                        {drawnLabels && (
+                          <div style={{
+                            fontSize: 11, color: T.textLight,
+                            fontFamily: T.sans,
+                            overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                          }}>
+                            {drawnLabels}
+                          </div>
+                        )}
+                      </div>
+                      {card.rating && (
+                        <div style={{
+                          fontSize: 10, fontWeight: 700, color: ratingColor,
+                          textTransform: 'uppercase', letterSpacing: 0.6,
+                        }}>
+                          {card.rating}
+                        </div>
+                      )}
+                      <div style={{ fontSize: 10, color: T.textMuted }}>
+                        {card.date}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ) : (
+            /* First-ever open onboarding */
+            <div style={{
+              textAlign: 'center', padding: '36px 24px', color: T.textMuted,
+              fontFamily: T.sans, fontSize: 14, background: T.bgSoft,
+              borderRadius: 10, border: `1px dashed ${T.border}`,
+            }}>
+              <div style={{
+                fontFamily: T.serif, fontSize: 18, color: T.textLight, marginBottom: 8,
+              }}>
+                Your first round
+              </div>
+              <div style={{ lineHeight: 1.6, maxWidth: 440, margin: '0 auto' }}>
+                <strong style={{ color: T.goldDark }}>Start with Focus</strong> — one constraint at a time.
+                Deep single-target practice is where real musical instincts get rewired. Hit Draw above and follow the card.
+              </div>
+            </div>
+          )}
+        </>
       )}
 
-      {/* Draw Button (when no card active) */}
-      {!currentCard && (
-        <button onClick={drawCard} style={{
-          width: '100%', padding: '16px 24px', borderRadius: 8,
-          background: T.gold, color: '#fff', border: 'none',
-          fontSize: 16, fontWeight: 500, fontFamily: T.sans, cursor: 'pointer',
-          transition: 'all 0.2s', letterSpacing: 0.5,
-          boxShadow: `0 2px 8px rgba(212, 163, 115, 0.25)`,
-          marginBottom: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-        }}>
-          <Shuffle size={18} />
-          Draw Card
-        </button>
-      )}
-
-      {/* Active Card */}
+      {/* ═══ ACTIVE state: card + timer + inline tools + advanced bar ═══ */}
       {currentCard && (
-        <div style={{ marginBottom: 28 }}>
+        <>
           {/* Session progress indicator */}
           {sessionCards.length > 1 && (
             <div style={{
-              display: 'flex', gap: 6, justifyContent: 'center', marginBottom: 16,
+              display: 'flex', gap: 8, justifyContent: 'center', alignItems: 'center',
+              marginBottom: 14,
             }}>
               {sessionCards.map((_, i) => (
                 <div key={i} style={{
-                  width: 10, height: 10, borderRadius: '50%',
+                  width: i === sessionIndex ? 18 : 9, height: 9, borderRadius: 6,
                   background: i === sessionIndex ? T.gold : i < sessionIndex ? T.success : T.border,
                   transition: 'all 0.3s',
                 }} />
               ))}
+              <button
+                onClick={endSession}
+                style={{
+                  marginLeft: 12, padding: '4px 10px', borderRadius: 6,
+                  background: 'transparent', border: `1px solid ${T.border}`,
+                  color: T.textMuted, fontSize: 10, fontWeight: 600,
+                  fontFamily: T.sans, cursor: 'pointer',
+                  textTransform: 'uppercase', letterSpacing: 0.5,
+                }}
+              >
+                End Session
+              </button>
             </div>
           )}
 
-          <ChallengeCard card={currentCard} T={T} entering={cardEntering} />
+          {/* The card */}
+          <ChallengeCard
+            card={currentCard}
+            T={T}
+            entering={cardEntering}
+            lockedDimensions={lockedDimensions}
+            onToggleLock={toggleLock}
+            showFullGuidance={showFullGuidance}
+            onToggleFullGuidance={() => setShowFullGuidance(v => !v)}
+          />
 
-          {/* Timer */}
-          <div style={{ marginTop: 28 }}>
-            <ForgeTimer
+          {/* Compact timer strip (directly below the card — no scrolling) */}
+          <div style={{ marginTop: 16 }}>
+            <CompactTimerStrip
               key={timerKey}
               duration={timerDuration}
               running={timerRunning}
               onComplete={handleTimerComplete}
+              onToggle={timerRunning ? toggleTimer : startTimer}
+              onReset={() => { setTimerKey(k => k + 1); setTimerRunning(false); }}
+              onEnd={endEarly}
               T={T}
+              isMobile={isMobile}
             />
-
-            {/* Timer controls */}
-            <div style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20, marginTop: 16,
-            }}>
-              <button onClick={() => { setTimerKey(k => k + 1); setTimerRunning(false); }} style={{
-                background: 'none', border: 'none', cursor: 'pointer', color: T.textMuted, padding: 10,
-              }}>
-                <RotateCcw size={20} />
-              </button>
-
-              <button onClick={timerRunning ? toggleTimer : startTimer} style={{
-                width: 56, height: 56, borderRadius: '50%',
-                background: T.gold, border: 'none', cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                boxShadow: `0 2px 8px rgba(212, 163, 115, 0.3)`,
-                transition: 'all 0.2s',
-              }}>
-                {timerRunning ? <Pause size={24} color="#fff" /> : <Play size={24} color="#fff" style={{ marginLeft: 2 }} />}
-              </button>
-
-              <button onClick={endEarly} style={{
-                background: 'none', border: 'none', cursor: 'pointer', color: T.textMuted, padding: 10,
-              }}>
-                <SkipForward size={20} />
-              </button>
-            </div>
           </div>
 
-          {/* Rating panel */}
-          {showRating && (
-            <div style={{
-              marginTop: 28, textAlign: 'center',
-              animation: 'forgeCardEnter 0.3s ease-out both',
-            }}>
-              <div style={{
-                fontSize: 12, fontWeight: 500, color: T.textLight, letterSpacing: 1.5,
-                textTransform: 'uppercase', marginBottom: 14,
-              }}>
-                How was that?
-              </div>
-              <div style={{ display: 'flex', gap: 10 }}>
-                {[
-                  { rating: 'easy', label: 'Easy', sub: 'I owned it', color: T.success, bg: T.successSoft },
-                  { rating: 'good', label: 'Good', sub: 'Solid work', color: T.goldDark, bg: T.goldSoft },
-                  { rating: 'hard', label: 'Hard', sub: 'Stretched me', color: T.coral, bg: T.coralSoft },
-                ].map(({ rating, label, sub, color, bg }) => (
-                  <button key={rating} onClick={() => rateRound(rating)} style={{
-                    flex: 1, padding: '14px 0', borderRadius: 8,
-                    background: bg, border: `1px solid ${color}30`,
-                    color, fontSize: 14, fontWeight: 600, fontFamily: T.sans,
-                    cursor: 'pointer', transition: 'all 0.2s',
-                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
-                  }}>
-                    {label}
-                    <span style={{ fontSize: 10, fontWeight: 400, opacity: 0.7 }}>{sub}</span>
-                  </button>
-                ))}
-              </div>
-              <div style={{ fontSize: 11, color: T.textMuted, marginTop: 8 }}>
-                Hard-rated constraints appear more often in future sessions (SRS weighting).
-              </div>
-            </div>
-          )}
-
-          {/* New card button */}
-          {!showRating && !timerRunning && (
-            <div style={{ display: 'flex', gap: 8, marginTop: 20 }}>
-              <button onClick={drawCard} style={{
-                flex: 1, padding: '12px 0', borderRadius: 8,
-                background: 'transparent', border: `1px solid ${T.border}`,
-                color: T.textMed, fontSize: 13, fontWeight: 500, fontFamily: T.sans,
-                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-              }}>
-                <Shuffle size={14} /> New Card
-              </button>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Practice Tools — full-width, below the card */}
-      {currentCard && (
-        <div style={{ marginBottom: 28 }}>
-          <div style={{
-            fontSize: 11, fontWeight: 500, color: T.textLight, letterSpacing: 1.5,
-            textTransform: 'uppercase', marginBottom: 14,
-          }}>
-            Practice Tools
-          </div>
-
-          {/* Metronome — editable, syncs to card BPM but user can override */}
+          {/* Inline Metronome row — Tier 1, always visible, no scroll */}
           {metro && (
             <div style={{
+              display: 'flex', alignItems: 'center', gap: 12,
+              padding: '12px 16px', marginTop: 10,
               background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10,
-              padding: 16, marginBottom: 12,
+              flexWrap: isMobile ? 'wrap' : 'nowrap',
             }}>
-              <div style={{ fontSize: 13, fontWeight: 500, color: T.textDark, fontFamily: T.sans, marginBottom: 4 }}>
-                Metronome — {metro.bpm} BPM
+              <div style={{
+                fontFamily: T.sans, fontSize: 12, fontWeight: 700, color: T.textLight,
+                textTransform: 'uppercase', letterSpacing: 1, minWidth: 72,
+              }}>
+                Metronome
               </div>
-              <div style={{ fontSize: 11, color: T.textMuted, marginBottom: 10 }}>
-                Auto-set to the card's tempo. Tap −/+ to adjust, or reset to {currentCard.constraints.tempo} BPM. Hit Start to play.
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <button
+                  onClick={() => metro.changeBpm(Math.max(40, metro.bpm - 1))}
+                  aria-label="Decrease BPM"
+                  style={{
+                    width: 28, height: 28, borderRadius: 6, border: `1px solid ${T.border}`,
+                    background: T.bgSoft, fontSize: 16, color: T.textMed, cursor: 'pointer',
+                  }}
+                >−</button>
+                <div style={{
+                  fontFamily: T.serif, fontSize: 18, fontWeight: 500, color: T.textDark,
+                  minWidth: 40, textAlign: 'center', fontVariantNumeric: 'tabular-nums',
+                }}>{metro.bpm}</div>
+                <button
+                  onClick={() => metro.changeBpm(Math.min(280, metro.bpm + 1))}
+                  aria-label="Increase BPM"
+                  style={{
+                    width: 28, height: 28, borderRadius: 6, border: `1px solid ${T.border}`,
+                    background: T.bgSoft, fontSize: 16, color: T.textMed, cursor: 'pointer',
+                  }}
+                >+</button>
+                {metro.bpm !== currentCard.constraints.tempo && (
+                  <button
+                    onClick={() => metro.changeBpm(currentCard.constraints.tempo)}
+                    title={`Reset to ${currentCard.constraints.tempo}`}
+                    style={{
+                      marginLeft: 4, padding: '4px 8px', borderRadius: 6, border: 'none',
+                      background: T.goldSoft, color: T.goldDark,
+                      fontSize: 9, fontWeight: 700, fontFamily: T.sans, cursor: 'pointer',
+                      textTransform: 'uppercase', letterSpacing: 0.5,
+                    }}
+                  >
+                    {currentCard.constraints.tempo}
+                  </button>
+                )}
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <button onClick={() => metro.changeBpm(Math.max(40, metro.bpm - 1))} style={{
-                    width: 32, height: 32, borderRadius: 6, border: `1px solid ${T.border}`,
-                    background: T.bgSoft, fontSize: 18, color: T.textMed, cursor: 'pointer',
-                  }}>−</button>
-                  <div style={{
-                    fontFamily: T.serif, fontSize: 22, fontWeight: 500, color: T.textDark,
-                    minWidth: 56, textAlign: 'center',
-                  }}>{metro.bpm}</div>
-                  <button onClick={() => metro.changeBpm(Math.min(280, metro.bpm + 1))} style={{
-                    width: 32, height: 32, borderRadius: 6, border: `1px solid ${T.border}`,
-                    background: T.bgSoft, fontSize: 18, color: T.textMed, cursor: 'pointer',
-                  }}>+</button>
-                  <button onClick={() => metro.changeBpm(currentCard.constraints.tempo)} style={{
-                    marginLeft: 6, padding: '6px 10px', borderRadius: 6, border: 'none',
-                    background: T.goldSoft, color: T.goldDark, fontSize: 11, fontWeight: 600,
-                    fontFamily: T.sans, cursor: 'pointer', textTransform: 'uppercase', letterSpacing: 0.5,
-                  }}>Reset</button>
-                </div>
-                <button onClick={() => metro.playing ? metro.stop() : metro.start()} style={{
-                  padding: '8px 16px', borderRadius: 6, border: 'none',
+              <div style={{ flex: 1 }} />
+              <button
+                onClick={() => metro.playing ? metro.stop() : metro.start()}
+                style={{
+                  padding: '7px 16px', borderRadius: 6, border: 'none',
                   background: metro.playing ? T.coral : T.gold, color: '#fff',
-                  fontSize: 13, fontWeight: 600, fontFamily: T.sans, cursor: 'pointer',
-                }}>
-                  {metro.playing ? 'Stop' : 'Start'}
-                </button>
-              </div>
+                  fontSize: 11, fontWeight: 700, fontFamily: T.sans, cursor: 'pointer',
+                  textTransform: 'uppercase', letterSpacing: 0.5,
+                }}
+              >
+                {metro.playing ? 'Stop' : 'Start'}
+              </button>
             </div>
           )}
 
-          {/* Drone — full width */}
+          {/* Inline Drone row — Tier 1 */}
           <div style={{
+            padding: '12px 16px', marginTop: 8,
             background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10,
-            padding: 16, marginBottom: 12,
           }}>
-            <div style={{ fontSize: 13, fontWeight: 500, color: T.textDark, fontFamily: T.sans, marginBottom: 4 }}>
-              Drone — {currentCard.droneRoot}
-            </div>
-            <div style={{ fontSize: 11, color: T.textMuted, marginBottom: 10 }}>
-              Sustained root tone for pitch reference. Start the drone before you begin improvising.
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
+              <div style={{
+                fontFamily: T.sans, fontSize: 12, fontWeight: 700, color: T.textLight,
+                textTransform: 'uppercase', letterSpacing: 1, minWidth: 72,
+              }}>
+                Drone
+              </div>
+              <div style={{
+                fontFamily: T.serif, fontSize: 15, fontWeight: 500, color: T.textDark,
+              }}>
+                {currentCard.droneRoot}
+              </div>
+              <div style={{ fontSize: 10, color: T.textMuted, fontStyle: 'italic' }}>
+                root tone reference
+              </div>
             </div>
             <DroneGenerator theme={T} inline={true} defaultRoot={currentCard.droneRoot} />
           </div>
 
-          {/* Fretboard — full width */}
-          {scaleData && (
+          {/* Advanced tools bar — toggle chips */}
+          <div style={{ marginTop: 14 }}>
             <div style={{
-              background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10,
-              padding: 16, marginBottom: 12,
+              display: 'flex', gap: 6, flexWrap: isMobile ? 'nowrap' : 'wrap',
+              overflowX: isMobile ? 'auto' : 'visible',
+              paddingBottom: isMobile ? 4 : 0,
             }}>
-              <div style={{ fontSize: 13, fontWeight: 500, color: T.textDark, fontFamily: T.sans, marginBottom: 4 }}>
-                Fretboard — {scaleData.name}
-              </div>
-              <div style={{ fontSize: 11, color: T.textMuted, marginBottom: 10 }}>
-                Scale positions highlighted on the fretboard. Tap notes to hear them.
-              </div>
-              <div style={{ margin: '0 -8px' }}>
-                <FretboardDiagram theme={T} scaleData={scaleData} colorMode={true} />
-              </div>
+              {advancedTools.filter(t => t.available).map(tool => {
+                const expanded = expandedTools[tool.id];
+                return (
+                  <button
+                    key={tool.id}
+                    onClick={() => toggleTool(tool.id)}
+                    aria-expanded={expanded}
+                    aria-label={`${expanded ? 'Hide' : 'Show'} ${tool.label}`}
+                    style={{
+                      flexShrink: 0,
+                      padding: '8px 14px', borderRadius: 20,
+                      border: `1px solid ${expanded ? T.gold : T.border}`,
+                      background: expanded ? T.goldSoft : T.bgCard,
+                      color: expanded ? T.goldDark : T.textMed,
+                      fontSize: 11, fontWeight: 600, fontFamily: T.sans,
+                      textTransform: 'uppercase', letterSpacing: 0.6,
+                      cursor: 'pointer', transition: 'all 0.15s',
+                      display: 'inline-flex', alignItems: 'center', gap: 6,
+                    }}
+                  >
+                    <span style={{ fontSize: 12 }}>{tool.icon}</span>
+                    {tool.label}
+                  </button>
+                );
+              })}
             </div>
-          )}
 
-          {/* Volume Meter — full width, auto-shown for dynamics */}
-          {showVolumeMeter && (
-            <div style={{
-              background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10,
-              padding: 16, marginBottom: 12,
-            }}>
-              <div style={{ fontSize: 13, fontWeight: 500, color: T.textDark, fontFamily: T.sans, marginBottom: 4 }}>
-                Volume Meter
-              </div>
-              <div style={{ fontSize: 11, color: T.textMuted, marginBottom: 10 }}>
-                Real-time mic volume feedback — use this to see your dynamic range while practicing the {currentCard.constraints.dynamics?.name || 'dynamics'} constraint.
-              </div>
-              <VolumeMeter theme={T} inline={true} />
-            </div>
-          )}
-
-          {/* Backing Track — playable, suggested by genre + tempo */}
-          {currentCard.suggestedTrack && (
-            <div style={{
-              background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10,
-              padding: 16, marginBottom: 12,
-            }}>
-              <div style={{ fontSize: 13, fontWeight: 500, color: T.textDark, fontFamily: T.sans, marginBottom: 4 }}>
-                Backing Track — {currentCard.suggestedTrack.name}
-              </div>
-              <div style={{ fontSize: 11, color: T.textMuted, marginBottom: 10 }}>
-                Suggested track at {currentCard.suggestedTrack.bpm} BPM. Loop it under your improvisation for groove and harmonic context.
-              </div>
-              <MiniAudioPlayer
-                src={currentCard.suggestedTrack.src}
-                theme={T}
-                title={currentCard.suggestedTrack.name}
-              />
-            </div>
-          )}
-
-          {/* Recorder — capture your practice */}
-          <div style={{
-            background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10,
-            padding: 16, marginBottom: 12,
-          }}>
-            <div style={{ fontSize: 13, fontWeight: 500, color: T.textDark, fontFamily: T.sans, marginBottom: 4 }}>
-              Recorder
-            </div>
-            <div style={{ fontSize: 11, color: T.textMuted, marginBottom: 10 }}>
-              Record yourself working through the constraints. Listening back is one of the fastest ways to spot what worked and what didn't.
-            </div>
-            <AudioRecorder theme={T} inline={true} />
-          </div>
-
-          {/* Color Wheel — full width */}
-          {scaleData && (
-            <div style={{
-              background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10,
-              padding: 16, marginBottom: 12,
-            }}>
-              <div style={{ fontSize: 13, fontWeight: 500, color: T.textDark, fontFamily: T.sans, marginBottom: 4 }}>
-                Scale Colors — Circle of Fifths
-              </div>
-              <div style={{ fontSize: 11, color: T.textMuted, marginBottom: 10 }}>
-                Your available notes highlighted on the circle of fifths. Each note has a unique color to help you visualize the scale.
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <MiniColorWheel notes={scaleData.notes} root={currentCard.constraints.key} T={T} />
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* History */}
-      {!currentCard && recentHistory.length > 0 && (
-        <div style={{ marginTop: 28 }}>
-          <div style={{
-            fontSize: 11, fontWeight: 500, color: T.textLight, letterSpacing: 1.5,
-            textTransform: 'uppercase', marginBottom: 14,
-          }}>
-            Recent Sessions
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {recentHistory.slice(0, 5).map((card, i) => {
-              const kc = getColorForNote(card.constraints?.key) || T.gold;
-              const ratingColor = card.rating === 'easy' ? T.success : card.rating === 'hard' ? T.coral : T.goldDark;
-              return (
-                <div key={card.id || i} style={{
-                  display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px',
-                  background: T.bgCard, border: `1px solid ${T.borderSoft}`, borderRadius: 8,
+            {/* Expanded tool panels */}
+            {expandedTools.fretboard && scaleData && (
+              <div style={{
+                marginTop: 10, background: T.bgCard,
+                border: `1px solid ${T.border}`, borderRadius: 10, padding: 14,
+                animation: 'forgeToolExpand 0.25s ease-out both',
+              }}>
+                <div style={{
+                  fontSize: 10, fontWeight: 700, color: T.goldDark, letterSpacing: 1.2,
+                  textTransform: 'uppercase', marginBottom: 8,
                 }}>
-                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: kc, flexShrink: 0 }} />
-                  <div style={{ flex: 1, fontSize: 13, color: T.textMed, fontFamily: T.sans }}>
-                    {card.constraints?.key} {SCALE_TYPES[card.constraints?.scale]?.name || ''}
-                  </div>
-                  {card.rating && (
-                    <div style={{
-                      fontSize: 11, fontWeight: 600, color: ratingColor, textTransform: 'uppercase',
-                      letterSpacing: 0.5,
-                    }}>
-                      {card.rating}
-                    </div>
-                  )}
-                  <div style={{ fontSize: 11, color: T.textMuted }}>
-                    {card.date}
-                  </div>
+                  Fretboard — {scaleData.name}
                 </div>
-              );
-            })}
+                <div style={{ margin: '0 -6px' }}>
+                  <FretboardDiagram theme={T} scaleData={scaleData} colorMode={true} />
+                </div>
+              </div>
+            )}
+            {expandedTools.volumeMeter && (
+              <div style={{
+                marginTop: 10, background: T.bgCard,
+                border: `1px solid ${T.border}`, borderRadius: 10, padding: 14,
+                animation: 'forgeToolExpand 0.25s ease-out both',
+              }}>
+                <div style={{
+                  fontSize: 10, fontWeight: 700, color: T.goldDark, letterSpacing: 1.2,
+                  textTransform: 'uppercase', marginBottom: 6,
+                }}>
+                  Volume Meter
+                </div>
+                {currentCard.constraints.dynamics && (
+                  <div style={{ fontSize: 11, color: T.textMuted, marginBottom: 10, fontStyle: 'italic' }}>
+                    Watch your range while working {currentCard.constraints.dynamics.name}.
+                  </div>
+                )}
+                <VolumeMeter theme={T} inline={true} />
+              </div>
+            )}
+            {expandedTools.colorWheel && scaleData && (
+              <div style={{
+                marginTop: 10, background: T.bgCard,
+                border: `1px solid ${T.border}`, borderRadius: 10, padding: 14,
+                animation: 'forgeToolExpand 0.25s ease-out both',
+              }}>
+                <div style={{
+                  fontSize: 10, fontWeight: 700, color: T.goldDark, letterSpacing: 1.2,
+                  textTransform: 'uppercase', marginBottom: 6, textAlign: 'center',
+                }}>
+                  Circle of Fifths
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  <MiniColorWheel notes={scaleData.notes} root={currentCard.constraints.key} T={T} />
+                </div>
+              </div>
+            )}
+            {expandedTools.backingTrack && currentCard.suggestedTrack && (
+              <div style={{
+                marginTop: 10, background: T.bgCard,
+                border: `1px solid ${T.border}`, borderRadius: 10, padding: 14,
+                animation: 'forgeToolExpand 0.25s ease-out both',
+              }}>
+                <div style={{
+                  fontSize: 10, fontWeight: 700, color: T.goldDark, letterSpacing: 1.2,
+                  textTransform: 'uppercase', marginBottom: 4,
+                }}>
+                  Backing Track — {currentCard.suggestedTrack.name}
+                </div>
+                <div style={{ fontSize: 11, color: T.textMuted, marginBottom: 10, fontStyle: 'italic' }}>
+                  {currentCard.suggestedTrack.bpm} BPM · loop under your improvisation for groove and harmonic context.
+                </div>
+                <MiniAudioPlayer
+                  src={currentCard.suggestedTrack.src}
+                  theme={T}
+                  title={currentCard.suggestedTrack.name}
+                />
+              </div>
+            )}
+            {expandedTools.recorder && (
+              <div style={{
+                marginTop: 10, background: T.bgCard,
+                border: `1px solid ${T.border}`, borderRadius: 10, padding: 14,
+                animation: 'forgeToolExpand 0.25s ease-out both',
+              }}>
+                <div style={{
+                  fontSize: 10, fontWeight: 700, color: T.goldDark, letterSpacing: 1.2,
+                  textTransform: 'uppercase', marginBottom: 6,
+                }}>
+                  Recorder
+                </div>
+                <div style={{ fontSize: 11, color: T.textMuted, marginBottom: 10, fontStyle: 'italic' }}>
+                  Listening back is the fastest way to spot what worked.
+                </div>
+                <AudioRecorder theme={T} inline={true} />
+              </div>
+            )}
           </div>
-        </div>
-      )}
 
-      {/* Empty state */}
-      {!currentCard && recentHistory.length === 0 && (
-        <div style={{
-          textAlign: 'center', padding: '48px 24px', color: T.textMuted,
-          fontFamily: T.sans, fontSize: 14,
-        }}>
-          <div style={{ fontFamily: T.serif, fontSize: 18, color: T.textLight, marginBottom: 8 }}>
-            No sessions yet
-          </div>
-          <div style={{ lineHeight: 1.6 }}>
-            Draw a card to generate randomized practice constraints.
-            Each card combines musical dimensions — pitch, rhythm, dynamics, and more —
-            into a unique challenge for improvisation practice.
-          </div>
-        </div>
+          {/* Post-round panel: rating + continue actions */}
+          {showRating && (
+            <div
+              style={{
+                marginTop: 22, padding: 18,
+                background: T.bgSoft, border: `1px solid ${T.goldSoft}`,
+                borderRadius: 12, textAlign: 'center',
+                animation: 'forgeCardEnter 0.3s ease-out both',
+              }}
+              role="dialog"
+              aria-label="Rate this round"
+            >
+              <div style={{
+                fontSize: 11, fontWeight: 600, color: T.textLight, letterSpacing: 1.5,
+                textTransform: 'uppercase', marginBottom: 12,
+              }}>
+                How was that? <span style={{ opacity: 0.5 }}>(1 / 2 / 3)</span>
+              </div>
+              <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
+                {[
+                  { rating: 'easy', label: 'Easy', sub: 'I owned it',     color: T.success,   bg: T.successSoft, key: '1' },
+                  { rating: 'good', label: 'Good', sub: 'Solid work',     color: T.goldDark,  bg: T.goldSoft,    key: '2' },
+                  { rating: 'hard', label: 'Hard', sub: 'Stretched me',   color: T.coral,     bg: T.coralSoft,   key: '3' },
+                ].map(({ rating, label, sub, color, bg, key }) => (
+                  <button
+                    key={rating}
+                    onClick={() => rateRound(rating)}
+                    style={{
+                      flex: 1, padding: '14px 0', borderRadius: 10,
+                      background: bg, border: `1px solid ${color}30`,
+                      color, fontSize: 14, fontWeight: 700, fontFamily: T.sans,
+                      cursor: 'pointer', transition: 'all 0.15s',
+                      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3,
+                    }}
+                  >
+                    <span>{label}</span>
+                    <span style={{ fontSize: 10, fontWeight: 500, opacity: 0.7 }}>{sub}</span>
+                  </button>
+                ))}
+              </div>
+              {/* Skip-rating actions — bypass SRS weighting */}
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button
+                  onClick={oneMoreRound}
+                  title="Reset the timer and keep this exact card"
+                  style={{
+                    flex: 1, padding: '10px 0', borderRadius: 8,
+                    background: 'transparent', border: `1px solid ${T.border}`,
+                    color: T.textMed, fontSize: 11, fontWeight: 600, fontFamily: T.sans,
+                    cursor: 'pointer',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                    textTransform: 'uppercase', letterSpacing: 0.4,
+                  }}
+                >
+                  <RotateCcw size={12} /> One more round
+                </button>
+                <button
+                  onClick={() => {
+                    // Skip rating — dismiss panel and draw a fresh card without affecting SRS weights.
+                    setShowRating(false);
+                    drawCard();
+                  }}
+                  title="Draw a new card without rating this one (SRS weights unchanged)"
+                  style={{
+                    flex: 1, padding: '10px 0', borderRadius: 8,
+                    background: 'transparent', border: `1px solid ${T.border}`,
+                    color: T.textMed, fontSize: 11, fontWeight: 600, fontFamily: T.sans,
+                    cursor: 'pointer',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                    textTransform: 'uppercase', letterSpacing: 0.4,
+                  }}
+                >
+                  <Shuffle size={12} /> Skip & new card
+                </button>
+              </div>
+              <div style={{ fontSize: 10, color: T.textMuted, marginTop: 10, fontStyle: 'italic', lineHeight: 1.5 }}>
+                Rate to affect SRS weighting — hard-rated constraints appear more often. The bottom row skips rating.
+              </div>
+            </div>
+          )}
+
+          {/* Bottom action row (when no rating showing, timer idle) — draw new card */}
+          {!showRating && !timerRunning && (
+            <div style={{ display: 'flex', gap: 8, marginTop: 18 }}>
+              <button
+                onClick={drawCard}
+                style={{
+                  flex: 1, padding: '12px 0', borderRadius: 8,
+                  background: 'transparent', border: `1px solid ${T.border}`,
+                  color: T.textMed, fontSize: 12, fontWeight: 600, fontFamily: T.sans,
+                  cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                  textTransform: 'uppercase', letterSpacing: 0.5,
+                }}
+              >
+                <Shuffle size={13} /> New Card
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
