@@ -4,3 +4,5 @@ transcripts/*.txt
 # Claude Code session logs and worktrees
 .claude/logs/
 .claude/worktrees/
+
+.vercel
