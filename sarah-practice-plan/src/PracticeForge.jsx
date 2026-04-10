@@ -313,11 +313,17 @@ function generateCard(activeDimensions, lockedDimensions, history, constraintWei
     if (chosen.id === 'forbidden' && scaleNotes.length > 1) {
       const nonRoot = scaleNotes.filter(n => n !== card.constraints.key);
       chosen.forbiddenNote = randomPick(nonRoot.length > 0 ? nonRoot : scaleNotes);
-      chosen.desc = `One scale note is off-limits: avoid ${chosen.forbiddenNote}. Use the remaining ${scaleNotes.length - 1} notes to build phrases.`;
+      const allowed = scaleNotes.filter(n => n !== chosen.forbiddenNote);
+      chosen.desc = `One scale note is off-limits: avoid ${chosen.forbiddenNote}. Use only the remaining ${allowed.length} notes to build phrases.`;
+      chosen.dynamicExample = `Allowed notes: ${allowed.join(', ')}. Example phrase: ${allowed.slice(0, 4).join('→')}`;
     }
     if (chosen.id === 'targetLanding' && scaleNotes.length > 0) {
       chosen.targetNote = randomPick(scaleNotes);
       chosen.desc = `Every phrase must resolve to ${chosen.targetNote}. Wander freely through the scale but always land on this note.`;
+      const others = scaleNotes.filter(n => n !== chosen.targetNote);
+      if (others.length >= 3) {
+        chosen.dynamicExample = `Try: ${others[0]}→${others[1]}→${others[2]}→${chosen.targetNote} (wander, then home)`;
+      }
     }
 
     card.constraints[dimId] = chosen;
@@ -484,8 +490,9 @@ function ChallengeCard({ card, T, entering }) {
       {/* Constraint lines */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         {constraintLines.map(({ dim, constraint }) => {
-          // Generate dynamic example if the constraint has an example function
-          const exampleText = constraint.example ? constraint.example(scaleNotes) : null;
+          // Dynamic example: either a pre-computed one from generateCard (forbidden, targetLanding)
+          // or computed here from the example() function (leaps, arch, seed, questionAnswer)
+          const exampleText = constraint.dynamicExample || (constraint.example ? constraint.example(scaleNotes) : null);
           return (
             <div key={dim.id} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
               {/* Left color bar */}
