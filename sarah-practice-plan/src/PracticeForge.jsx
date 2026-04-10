@@ -97,39 +97,39 @@ const KEY_WEIGHTS = {
 };
 
 const PITCH_CONSTRAINTS = [
-  { id: 'leaps', name: 'Leaps Only', desc: 'Only non-adjacent scale tones — no stepwise motion', icon: '↗',
-    example: (notes) => notes.length >= 4 ? `e.g. ${notes[0]}→${notes[2]}→${notes[4] || notes[0]}→${notes[1]} (skip neighbors)` : '' },
-  { id: 'arch', name: 'Arch Contour', desc: 'Rise to a peak, then descend — every phrase is a hill', icon: '⌢',
-    example: (notes) => notes.length >= 4 ? `e.g. ${notes[0]}→${notes[1]}→${notes[3]}→${notes[1]}→${notes[0]}` : '' },
-  { id: 'seed', name: 'Seed + Variations', desc: 'Pick a 3-note motif and develop it — change one note each time, keep the shape', icon: '🌱',
-    example: (notes) => notes.length >= 3 ? `e.g. seed: ${notes[0]}-${notes[1]}-${notes[2]}, then ${notes[0]}-${notes[1]}-${notes[3] || notes[2]}...` : '' },
-  { id: 'forbidden', name: 'Forbidden Note', desc: 'One scale note is off-limits', icon: '🚫', hasExtra: true },
-  { id: 'targetLanding', name: 'Target Landing', desc: 'Every phrase must end on one specific note — wander freely but always come home', icon: '🎯', hasExtra: true },
-  { id: 'questionAnswer', name: 'Question / Answer', desc: 'Alternate phrases: first one rises or feels unresolved, second one descends and resolves', icon: '❓',
-    example: (notes) => notes.length >= 3 ? `e.g. Q: ${notes[1]}→${notes[2]}→${notes[3] || notes[2]}? A: ${notes[2]}→${notes[1]}→${notes[0]}.` : '' },
+  { id: 'leaps', name: 'Leaps Only', desc: 'Skip over adjacent notes — only jump to non-neighboring scale tones. This forces angular, unexpected melodies instead of safe stepwise motion.', icon: '↗',
+    example: (notes) => notes.length >= 5 ? `Your notes: ${notes.join(', ')}. Try: ${notes[0]}→${notes[2]}→${notes[4]}→${notes[1]} (always skip at least one)` : '' },
+  { id: 'arch', name: 'Arch Contour', desc: 'Every phrase must rise to a peak note and then descend back down. The shape is a hill — you go up, you come down. No flat phrases.', icon: '⌢',
+    example: (notes) => notes.length >= 5 ? `Try: ${notes[0]}→${notes[2]}→${notes[4]}→${notes[2]}→${notes[0]} (up to ${notes[4]}, back to ${notes[0]})` : '' },
+  { id: 'seed', name: 'Seed + Variations', desc: 'Start with a 3-note motif. Repeat it, but change exactly one note each time. The shape stays recognizable while the melody evolves.', icon: '🌱',
+    example: (notes) => notes.length >= 4 ? `Seed: ${notes[0]}-${notes[1]}-${notes[2]}. Var 1: ${notes[0]}-${notes[1]}-${notes[3]}. Var 2: ${notes[0]}-${notes[3]}-${notes[2]}.` : '' },
+  { id: 'forbidden', name: 'Forbidden Note', desc: 'One scale note is banned — work around it. This forces you to find new melodic paths you wouldn\'t normally take.', icon: '🚫', hasExtra: true },
+  { id: 'targetLanding', name: 'Target Landing', desc: 'Wander freely through the scale, but every phrase must resolve to one specific note. The journey changes each time; the destination never does.', icon: '🎯', hasExtra: true },
+  { id: 'questionAnswer', name: 'Question / Answer', desc: 'Sing in pairs: first phrase rises or ends unresolved (tension), second phrase descends and resolves (release). Musical conversation with yourself.', icon: '❓',
+    example: (notes) => notes.length >= 4 ? `Q: ${notes[1]}→${notes[2]}→${notes[3]}? (rising, unresolved) A: ${notes[3]}→${notes[1]}→${notes[0]}. (falling, home)` : '' },
 ];
 
 const RHYTHM_CONSTRAINTS = [
-  { id: 'river', name: 'River', desc: 'Even quarter-note flow — one note per beat, like a calm river. Rhythm becomes invisible so melody carries everything.', icon: '🌊' },
-  { id: 'burst', name: 'Burst', desc: 'Front-loaded density — pack 4-6 quick notes at the start of each phrase, then leave 2-3 beats of silence. The burst creates energy, the space lets it breathe.', icon: '💥' },
-  { id: 'space', name: 'Space', desc: 'Silence-heavy — at least half of every bar is rest. Each note is precious because there are so few. Think Tinariwen or Khruangbin vocal lines.', icon: '🏝' },
-  { id: 'offbeat', name: 'Offbeat', desc: 'Syncopated — notes land between the beats, never on 1 or 3. Feel the groove push and pull against the metronome.', icon: '⚡' },
-  { id: 'rhythmSeed', name: 'Rhythmic Seed', desc: 'Choose a short rhythmic cell (e.g. long-short-short or short-long-short-rest) and repeat it, varying the pitches each time.', icon: '🔄' },
+  { id: 'river', name: 'River', desc: 'Even quarter-note flow — one note per beat. Rhythm becomes invisible so melody carries everything.', icon: '🌊' },
+  { id: 'burst', name: 'Burst', desc: 'Pack 4-6 quick notes at the start of each phrase, then leave 2-3 beats of silence.', icon: '💥' },
+  { id: 'space', name: 'Space', desc: 'At least half of every bar is rest. Each note is precious because there are so few.', icon: '🏝' },
+  { id: 'offbeat', name: 'Offbeat', desc: 'Notes land between the beats, never on 1 or 3. Feel the groove push and pull against the metronome.', icon: '⚡' },
+  { id: 'rhythmSeed', name: 'Rhythmic Seed', desc: 'Pick a short cell (long-short-short or short-long-rest) and repeat it, varying the pitches each time.', icon: '🔄' },
 ];
 
 const DYNAMICS_CONSTRAINTS = [
-  { id: 'swell', name: 'The Swell', desc: 'Start barely audible (pp), gradually crescendo to full voice (f) over 4 bars, then drop instantly to silence. A wave of energy — build, crest, vanish.', icon: '🌊' },
-  { id: 'terraces', name: 'Terraces', desc: 'Sudden level jumps with no gradual transitions — sing 2 bars at pp, jump to mf for 2 bars, jump to f for 2 bars. Like climbing stairs.', icon: '🪜' },
-  { id: 'whisper', name: 'Whisper', desc: 'Entire performance at pianissimo — so quiet each note feels like a secret. This is NOT timidity, it is CHOSEN intimacy. Requires more breath control, not less.', icon: '🤫' },
-  { id: 'accentMap', name: 'Accent Map', desc: 'Sing a steady phrase, but one note per bar explodes loud (sforzando) while everything else stays quiet. Move the accent to different positions each bar.', icon: '🎯' },
-  { id: 'forte', name: 'Constant Forte', desc: 'Full power throughout — fill the room with every note. No holding back, no dynamic variation. Pure confident projection.', icon: '🔊' },
+  { id: 'swell', name: 'The Swell', desc: 'pp → f → pp over 4 bars. Gradually crescendo to full voice, then drop instantly to silence.', icon: '🌊' },
+  { id: 'terraces', name: 'Terraces', desc: 'Sudden level jumps — 2 bars at pp, jump to mf, jump to f. No gradual transitions between plateaus.', icon: '🪜' },
+  { id: 'whisper', name: 'Whisper', desc: 'Sustained pianissimo throughout. Chosen intimacy, not timidity — requires more breath control, not less.', icon: '🤫' },
+  { id: 'accentMap', name: 'Accent Map', desc: 'One note per bar pops loud (sforzando), everything else stays quiet. Move the accent to different positions.', icon: '🎯' },
+  { id: 'forte', name: 'Constant Forte', desc: 'Full power throughout — fill the room with every note. No holding back.', icon: '🔊' },
 ];
 
 const ARTICULATION_CONSTRAINTS = [
-  { id: 'legato', name: 'All Legato', desc: 'Smooth and connected — each note flows into the next with no gaps. Think of a single breath carrying the entire phrase.', icon: '〰️' },
-  { id: 'staccato', name: 'All Staccato', desc: 'Short and detached — every note bounces with space after it. Like speaking in single syllables with pauses between.', icon: '·' },
-  { id: 'mixed', name: 'Mixed', desc: 'Alternate legato phrases with staccato bursts — let the contrast create interest. Two bars flowing, two bars bouncing.', icon: '⟿' },
-  { id: 'accentedFirst', name: 'Accented Firsts', desc: 'Punch the downbeat of every bar hard, then let the remaining notes be light. Creates a strong rhythmic anchor.', icon: '▶' },
+  { id: 'legato', name: 'All Legato', desc: 'Smooth and connected — each note flows into the next with no gaps between them.', icon: '〰️' },
+  { id: 'staccato', name: 'All Staccato', desc: 'Short and detached — every note bounces with space after it.', icon: '·' },
+  { id: 'mixed', name: 'Mixed', desc: 'Alternate: two bars legato, two bars staccato. Let the contrast create interest.', icon: '⟿' },
+  { id: 'accentedFirst', name: 'Accented Firsts', desc: 'Punch the downbeat of every bar, let the remaining notes be light.', icon: '▶' },
 ];
 
 const GENRE_CONSTRAINTS = [
@@ -162,19 +162,19 @@ const DENSITY_CONSTRAINTS = [
 ];
 
 const VOCAL_CONSTRAINTS = [
-  { id: 'chest', name: 'Chest Voice', desc: 'Stay in chest register — grounded, warm, full resonance. Feel the vibration in your sternum and ribs. Your "speaking voice" turned into melody.', icon: '🫁' },
-  { id: 'head', name: 'Head Voice', desc: 'Light, heady placement — the vibration moves to your mask (cheeks, bridge of nose). Floaty and ethereal, like singing from above your head.', icon: '💭' },
-  { id: 'mixed', name: 'Mixed Voice', desc: 'Bridge chest and head registers seamlessly — no audible "break" as you move through your range. The holy grail of vocal technique.', icon: '🔀' },
-  { id: 'falsetto', name: 'Falsetto', desc: 'Airy, floaty top register — breathy and detached from chest resonance. Think DOPE LEMON or Bon Iver. Beautiful for intimacy.', icon: '🎈' },
-  { id: 'breathy', name: 'Breathy', desc: 'Air-forward tone — more breath than voice. Intimate, close-mic energy. Like singing a secret directly into someone\'s ear.', icon: '💨' },
+  { id: 'chest', name: 'Chest Voice', desc: 'Stay in chest register — feel the vibration in your sternum and ribs.', icon: '🫁' },
+  { id: 'head', name: 'Head Voice', desc: 'Light, heady placement — vibration in the mask (cheeks, bridge of nose). Floaty and ethereal.', icon: '💭' },
+  { id: 'mixed', name: 'Mixed Voice', desc: 'Bridge chest and head seamlessly — no audible "break" as you move through your range.', icon: '🔀' },
+  { id: 'falsetto', name: 'Falsetto', desc: 'Airy top register — breathy and detached from chest resonance.', icon: '🎈' },
+  { id: 'breathy', name: 'Breathy', desc: 'More breath than voice. Intimate, close-mic energy.', icon: '💨' },
 ];
 
 const GUITAR_CONSTRAINTS = [
-  { id: 'downstrokes', name: 'Downstrokes Only', desc: 'All downstrokes — heavier, more aggressive attack. Creates a driving, punk-influenced energy. No upstrokes allowed.', icon: '⬇' },
-  { id: 'fingerpick', name: 'Fingerpick', desc: 'No pick — fingers only. Softer attack, more control over individual strings. Opens up simultaneous bass + melody patterns.', icon: '🤚' },
-  { id: 'muted', name: 'Muted', desc: 'Palm-muted or ghost notes only — the guitar becomes a percussion instrument. Rhythmic texture with pitched undertones.', icon: '✋' },
-  { id: 'harmonics', name: 'Harmonics', desc: 'Natural or artificial harmonics — bell-like tones that ring out above the fretted notes. Ethereal, shimmering texture.', icon: '✨' },
-  { id: 'hybrid', name: 'Hybrid Picking', desc: 'Pick + fingers simultaneously — the pick handles bass notes while fingers pluck upper strings. Country, jazz, and surf technique.', icon: '🤙' },
+  { id: 'downstrokes', name: 'Downstrokes Only', desc: 'All downstrokes — heavier attack, driving energy. No upstrokes allowed.', icon: '⬇' },
+  { id: 'fingerpick', name: 'Fingerpick', desc: 'No pick — fingers only. Softer attack, opens up simultaneous bass + melody.', icon: '🤚' },
+  { id: 'muted', name: 'Muted', desc: 'Palm-muted or ghost notes only — guitar becomes a percussion instrument.', icon: '✋' },
+  { id: 'harmonics', name: 'Harmonics', desc: 'Natural or artificial harmonics — bell-like tones above the fretted notes.', icon: '✨' },
+  { id: 'hybrid', name: 'Hybrid Picking', desc: 'Pick + fingers simultaneously — pick handles bass, fingers pluck upper strings.', icon: '🤙' },
 ];
 
 const OBLIQUE_MODIFIERS = [
@@ -222,7 +222,10 @@ function getScaleWeights(tier) {
 }
 
 // ─── Card Generation ───
-function generateCard(activeDimensions, lockedDimensions, history, constraintWeights, tier, _retryCount = 0) {
+// maxConstraints limits how many qualitative constraints appear per card.
+// Key, scale, and tempo are always generated. The qualitative pool is shuffled
+// and only the first N are drawn — this keeps cognitive load manageable.
+function generateCard(activeDimensions, lockedDimensions, history, constraintWeights, tier, _retryCount = 0, maxConstraints = 3) {
   const card = {
     id: generateId(),
     timestamp: Date.now(),
@@ -268,20 +271,37 @@ function generateCard(activeDimensions, lockedDimensions, history, constraintWei
     card.constraints.tempo = 90;
   }
 
-  // Generate qualitative constraints
+  // Collect available qualitative dimensions, separating locked from random
   const scaleData = generateScale(card.constraints.key, card.constraints.scale);
   const scaleNotes = scaleData.notes || [];
 
+  const lockedQualDims = [];
+  const availableQualDims = [];
   for (const dimId of activeDimensions) {
     const dim = DIMENSIONS.find(d => d.id === dimId);
     if (!dim || dim.type === 'quantitative') continue;
-    if (lockedDimensions[dimId] !== undefined) {
-      card.constraints[dimId] = lockedDimensions[dimId];
-      continue;
-    }
     if (!dim.options || dim.options.length === 0) continue;
+    if (lockedDimensions[dimId] !== undefined) {
+      lockedQualDims.push(dimId);
+    } else {
+      availableQualDims.push(dimId);
+    }
+  }
 
-    // SRS-weighted pick
+  // Locked dims always get included
+  for (const dimId of lockedQualDims) {
+    card.constraints[dimId] = lockedDimensions[dimId];
+  }
+
+  // From the remaining pool, shuffle and pick up to maxConstraints
+  const slotsLeft = Math.max(0, maxConstraints - lockedQualDims.length);
+  const shuffled = [...availableQualDims].sort(() => Math.random() - 0.5);
+  const selectedDims = shuffled.slice(0, slotsLeft);
+
+  for (const dimId of selectedDims) {
+    const dim = DIMENSIONS.find(d => d.id === dimId);
+
+    // SRS-weighted pick from the dimension's options
     const weights = dim.options.map(opt => {
       const wKey = `${dimId}:${opt.id}`;
       const w = constraintWeights[wKey] || { easy: 0, good: 0, hard: 0 };
@@ -293,15 +313,18 @@ function generateCard(activeDimensions, lockedDimensions, history, constraintWei
     if (chosen.id === 'forbidden' && scaleNotes.length > 1) {
       const nonRoot = scaleNotes.filter(n => n !== card.constraints.key);
       chosen.forbiddenNote = randomPick(nonRoot.length > 0 ? nonRoot : scaleNotes);
-      chosen.desc = `One scale note is off-limits: avoid ${chosen.forbiddenNote}`;
+      chosen.desc = `One scale note is off-limits: avoid ${chosen.forbiddenNote}. Use the remaining ${scaleNotes.length - 1} notes to build phrases.`;
     }
     if (chosen.id === 'targetLanding' && scaleNotes.length > 0) {
       chosen.targetNote = randomPick(scaleNotes);
-      chosen.desc = `Every phrase must end on ${chosen.targetNote}`;
+      chosen.desc = `Every phrase must resolve to ${chosen.targetNote}. Wander freely through the scale but always land on this note.`;
     }
 
     card.constraints[dimId] = chosen;
   }
+
+  // Track which qualitative dims were actually drawn
+  card.drawnConstraints = [...lockedQualDims, ...selectedDims];
 
   // Derive drone root
   card.droneRoot = droneRootFromCard(card.constraints.key, card.constraints.scale);
@@ -325,14 +348,14 @@ function generateCard(activeDimensions, lockedDimensions, history, constraintWei
 }
 
 // ─── Session generation ───
-function generateSession(count, activeDimensions, lockedDimensions, constraintWeights, tier) {
+function generateSession(count, activeDimensions, lockedDimensions, constraintWeights, tier, maxConstraints = 3) {
   const cards = [];
   const keyCount = {};
   for (let i = 0; i < count; i++) {
     let card;
     let attempts = 0;
     do {
-      card = generateCard(activeDimensions, lockedDimensions, cards, constraintWeights, tier);
+      card = generateCard(activeDimensions, lockedDimensions, cards, constraintWeights, tier, 0, maxConstraints);
       attempts++;
     } while ((keyCount[card.constraints.key] || 0) >= 2 && attempts < 10);
     keyCount[card.constraints.key] = (keyCount[card.constraints.key] || 0) + 1;
@@ -617,6 +640,7 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
     forgeData.settings?.lockedDimensions ?? {}
   );
   const [sessionCardCount, setSessionCardCount] = useState(() => forgeData.settings?.sessionCardCount ?? 1);
+  const [maxConstraints, setMaxConstraints] = useState(() => forgeData.settings?.maxConstraints ?? 3);
 
   // Card state
   const [currentCard, setCurrentCard] = useState(null);
@@ -642,9 +666,9 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
 
   // Persist settings
   useEffect(() => {
-    const updated = { ...forgeData, settings: { tier, timerDuration, activeDimensions, lockedDimensions, sessionCardCount } };
+    const updated = { ...forgeData, settings: { tier, timerDuration, activeDimensions, lockedDimensions, sessionCardCount, maxConstraints } };
     saveForgeData(updated);
-  }, [tier, timerDuration, activeDimensions, lockedDimensions, sessionCardCount]);
+  }, [tier, timerDuration, activeDimensions, lockedDimensions, sessionCardCount, maxConstraints]);
 
   // Update active dimensions when tier changes
   const handleTierChange = useCallback((newTier) => {
@@ -677,13 +701,13 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
     setTimerRunning(false);
 
     if (sessionCardCount > 1) {
-      const cards = generateSession(sessionCardCount, activeDimensions, lockedDimensions, forgeData.constraintWeights, tier);
+      const cards = generateSession(sessionCardCount, activeDimensions, lockedDimensions, forgeData.constraintWeights, tier, maxConstraints);
       setSessionCards(cards);
       setSessionIndex(0);
       setCurrentCard(cards[0]);
     } else {
       const card = generateCard(activeDimensions, lockedDimensions,
-        forgeData.sessions.flatMap(s => s.cards || []), forgeData.constraintWeights, tier);
+        forgeData.sessions.flatMap(s => s.cards || []), forgeData.constraintWeights, tier, 0, maxConstraints);
       setCurrentCard(card);
       setSessionCards([card]);
       setSessionIndex(0);
@@ -692,7 +716,7 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
     setCardEntering(true);
     setTimeout(() => setCardEntering(false), 700);
     setTimerKey(k => k + 1);
-  }, [activeDimensions, lockedDimensions, forgeData, tier, sessionCardCount]);
+  }, [activeDimensions, lockedDimensions, forgeData, tier, sessionCardCount, maxConstraints]);
 
   // Sync metro BPM when card changes
   useEffect(() => {
@@ -855,29 +879,55 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
         </button>
       </div>
 
-      {/* Tier Selector — always visible */}
-      <div style={{ marginBottom: 24 }}>
-        <div style={{ display: 'flex', gap: 4, marginBottom: 8 }}>
-          {[1, 2, 3, 4, 5].map(t => (
-            <button key={t} onClick={() => handleTierChange(t)} style={{
-              flex: 1, padding: '10px 0', border: `1px solid ${tier === t ? T.gold : T.border}`,
-              borderRadius: 6, fontSize: 13, fontWeight: tier === t ? 600 : 400,
-              fontFamily: T.sans, cursor: 'pointer', transition: 'all 0.2s',
-              background: tier === t ? T.goldSoft : 'transparent',
-              color: tier === t ? T.goldDark : T.textMed,
-            }}>
-              {['I', 'II', 'III', 'IV', 'V'][t - 1]}
-            </button>
-          ))}
-        </div>
-        <div style={{ fontSize: 12, color: T.textLight, fontFamily: T.sans, lineHeight: 1.5, paddingLeft: 2 }}>
-          {TIER_DESCRIPTIONS[tier]}
-        </div>
-      </div>
-
-      {/* Settings Panel (timer, cards, dimensions) */}
+      {/* Settings Panel */}
       {settingsOpen && (
         <div style={{ marginBottom: 24, padding: 20, background: T.bgSoft, borderRadius: 10, border: `1px solid ${T.borderSoft}` }}>
+          {/* Tier selector */}
+          <div style={{ marginBottom: 20 }}>
+            <div style={{ fontSize: 11, fontWeight: 500, color: T.textLight, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>
+              Tier — Controls the Constraint Pool
+            </div>
+            <div style={{ display: 'flex', gap: 4, marginBottom: 6 }}>
+              {[1, 2, 3, 4, 5].map(t => (
+                <button key={t} onClick={() => handleTierChange(t)} style={{
+                  flex: 1, padding: '10px 0', border: `1px solid ${tier === t ? T.gold : T.border}`,
+                  borderRadius: 6, fontSize: 13, fontWeight: tier === t ? 600 : 400,
+                  fontFamily: T.sans, cursor: 'pointer', transition: 'all 0.2s',
+                  background: tier === t ? T.goldSoft : 'transparent',
+                  color: tier === t ? T.goldDark : T.textMed,
+                }}>
+                  {['I', 'II', 'III', 'IV', 'V'][t - 1]}
+                </button>
+              ))}
+            </div>
+            <div style={{ fontSize: 12, color: T.textLight, lineHeight: 1.5 }}>
+              {TIER_DESCRIPTIONS[tier]}
+            </div>
+          </div>
+
+          {/* Constraints per card */}
+          <div style={{ marginBottom: 20 }}>
+            <div style={{ fontSize: 11, fontWeight: 500, color: T.textLight, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>
+              Constraints per Card
+            </div>
+            <div style={{ display: 'flex', gap: 6 }}>
+              {[2, 3, 4].map(n => (
+                <button key={n} onClick={() => setMaxConstraints(n)} style={{
+                  flex: 1, padding: '10px 0', border: `1px solid ${maxConstraints === n ? T.gold : T.border}`,
+                  borderRadius: 6, fontSize: 13, fontWeight: maxConstraints === n ? 600 : 400,
+                  fontFamily: T.sans, cursor: 'pointer', transition: 'all 0.2s',
+                  background: maxConstraints === n ? T.goldSoft : 'transparent',
+                  color: maxConstraints === n ? T.goldDark : T.textMed,
+                }}>
+                  {n}
+                </button>
+              ))}
+            </div>
+            <div style={{ fontSize: 11, color: T.textMuted, marginTop: 4 }}>
+              How many constraints to focus on per round. Higher tiers add more to the pool, but you always practice {maxConstraints} at a time. Working memory handles 3-4 constraints well.
+            </div>
+          </div>
+
           {/* Timer duration */}
           <div style={{ marginBottom: 20 }}>
             <div style={{ fontSize: 11, fontWeight: 500, color: T.textLight, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>
@@ -954,6 +1004,29 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
               })}
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Current config summary (when no card active) */}
+      {!currentCard && (
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '10px 14px', background: T.bgSoft, borderRadius: 8,
+          marginBottom: 16, border: `1px solid ${T.borderSoft}`,
+        }}>
+          <div style={{ fontSize: 12, color: T.textMed, fontFamily: T.sans }}>
+            Tier <strong style={{ color: T.goldDark }}>{['I', 'II', 'III', 'IV', 'V'][tier - 1]}</strong>
+            {' '} &middot; {' '}
+            <strong>{maxConstraints}</strong> constraints/card
+            {' '} &middot; {' '}
+            {formatTime(timerDuration)} rounds
+          </div>
+          <button onClick={() => setSettingsOpen(true)} style={{
+            fontSize: 11, color: T.gold, background: 'none', border: 'none',
+            cursor: 'pointer', fontWeight: 600, fontFamily: T.sans,
+          }}>
+            Change
+          </button>
         </div>
       )}
 
