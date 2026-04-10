@@ -25,3 +25,6 @@ dist-ssr
 
 .vercel
 
+# Transient Practice Forge guidance generation batches (merged into src/data/practiceForgeGuidance.json)
+src/data/practice-forge-cache/
+

@@ -6,6 +6,22 @@ import {
   FretboardDiagram, DroneGenerator, VolumeMeter, MiniAudioPlayer, AudioRecorder,
 } from './JungleTools.jsx';
 import { CHROMATIC, CIRCLE_OF_FIFTHS, SCALE_TYPES, generateScale } from './ColorMusicTrainer.jsx';
+import GUIDANCE_CACHE from './data/practiceForgeGuidance.json';
+
+// Look up pre-generated LLM guidance for a card by its pitch+rhythm+dynamics combo.
+// Returns null if any of the three are missing (tier-3+ cards that drew other dims).
+function lookupGuidance(card) {
+  const c = card.constraints;
+  const pitch = c.pitchConstraint?.id;
+  const rhythm = c.rhythmConstraint?.id;
+  const dynamics = c.dynamics?.id;
+  if (!pitch || !rhythm || !dynamics) return null;
+  return GUIDANCE_CACHE.combos?.[`${pitch}_${rhythm}_${dynamics}`] || null;
+}
+
+function lookupScaleCharacter(scaleId) {
+  return GUIDANCE_CACHE.scales?.[scaleId] || null;
+}
 
 // ─── Hooks ───
 function useIsMobile(bp = 640) {
@@ -441,6 +457,10 @@ function ChallengeCard({ card, T, entering }) {
   // Oblique modifier is rendered separately with italic styling — it's a creative spice, not a constraint
   const oblique = card.constraints.obliqueModifier;
 
+  // Pre-generated LLM guidance for the specific pitch+rhythm+dynamics combo (Tier 2 cards always hit the cache)
+  const guidance = lookupGuidance(card);
+  const scaleChar = lookupScaleCharacter(card.constraints.scale);
+
   return (
     <div style={{
       background: T.bgCard,
@@ -548,6 +568,103 @@ function ChallengeCard({ card, T, entering }) {
           );
         })}
       </div>
+
+      {/* LLM-generated guidance for this specific pitch+rhythm+dynamics combo */}
+      {guidance && (
+        <>
+          <div style={{ height: 1, background: T.border, margin: '24px 0 20px', opacity: 0.5 }} />
+          <div style={{
+            background: T.bgSoft,
+            border: `1px solid ${T.borderSoft || T.border}`,
+            borderRadius: 10,
+            padding: '18px 20px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 16,
+          }}>
+            {scaleChar && (
+              <div style={{
+                fontFamily: T.sans,
+                fontSize: 12,
+                color: T.textLight,
+                lineHeight: 1.6,
+                fontStyle: 'italic',
+                paddingBottom: 10,
+                borderBottom: `1px dashed ${T.border}`,
+              }}>
+                {scaleChar.character} <span style={{ opacity: 0.85 }}>{scaleChar.watchPoint}</span>
+              </div>
+            )}
+
+            <div>
+              <div style={{
+                fontSize: 10, fontWeight: 700, color: T.goldDark, textTransform: 'uppercase',
+                letterSpacing: 1.2, fontFamily: T.sans, marginBottom: 6,
+              }}>
+                How they work together
+              </div>
+              <div style={{ fontFamily: T.sans, fontSize: 13.5, color: T.textDark, lineHeight: 1.6 }}>
+                {guidance.interaction}
+              </div>
+            </div>
+
+            <div>
+              <div style={{
+                fontSize: 10, fontWeight: 700, color: T.goldDark, textTransform: 'uppercase',
+                letterSpacing: 1.2, fontFamily: T.sans, marginBottom: 6,
+              }}>
+                Steps
+              </div>
+              <ol style={{ margin: 0, paddingLeft: 20, fontFamily: T.sans, fontSize: 13, color: T.textMed, lineHeight: 1.65 }}>
+                {guidance.steps.map((s, i) => <li key={i} style={{ marginBottom: 4 }}>{s}</li>)}
+              </ol>
+            </div>
+
+            <div>
+              <div style={{
+                fontSize: 10, fontWeight: 700, color: T.goldDark, textTransform: 'uppercase',
+                letterSpacing: 1.2, fontFamily: T.sans, marginBottom: 6,
+              }}>
+                Try these phrases
+              </div>
+              <ul style={{ margin: 0, paddingLeft: 0, fontFamily: T.sans, fontSize: 13, color: T.textMed, lineHeight: 1.65, listStyleType: 'none' }}>
+                {guidance.examples.map((e, i) => (
+                  <li key={i} style={{ marginBottom: 4, paddingLeft: 16, position: 'relative' }}>
+                    <span style={{ position: 'absolute', left: 0, color: T.gold, fontSize: 12 }}>♪</span>
+                    {e}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <div style={{
+                fontSize: 10, fontWeight: 700, color: T.warm, textTransform: 'uppercase',
+                letterSpacing: 1.2, fontFamily: T.sans, marginBottom: 6,
+              }}>
+                Watch out
+              </div>
+              <div style={{ fontFamily: T.sans, fontSize: 13, color: T.textMed, lineHeight: 1.6 }}>
+                {guidance.watchOut}
+              </div>
+            </div>
+
+            {guidance.deeperInsight && (
+              <div style={{
+                borderTop: `1px dashed ${T.border}`,
+                paddingTop: 12,
+                fontFamily: T.serif,
+                fontSize: 13,
+                fontStyle: 'italic',
+                color: T.textLight,
+                lineHeight: 1.65,
+              }}>
+                {guidance.deeperInsight}
+              </div>
+            )}
+          </div>
+        </>
+      )}
 
       {/* Oblique modifier */}
       {oblique && (
