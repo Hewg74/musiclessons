@@ -10,6 +10,7 @@ import {
 import { MiniAudioPlayer, AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, ChordVoicingViewer, extractChordsFromExercise, VolumeMeter, ChordTransitionTimer, GenreMetronome, SilenceScore, DroneGenerator, TAB_CONTENT, InlineKeyboard, RhythmCellCards, PhraseFormGuide, StrumChartBuilder, ChartListView, makeTemplateChart } from './JungleTools.jsx';
 import { ColorMusicTrainer } from './ColorMusicTrainer.jsx';
 import { PitchDiscriminationTrainer } from './PitchDiscriminationTrainer.jsx';
+import { CompactDroneWheel } from './CompactDroneWheel.jsx';
 // PracticeForge is code-split — it pulls in a 280 KB guidance JSON that only users who
 // open the Ear Training → Practice Forge overlay should pay for on initial load.
 const PracticeForge = React.lazy(() =>
@@ -5022,8 +5023,8 @@ export default function App() {
 
             <SectionHeader label="Pitch" />
 
-            <ToolCard icon="🌫️" title="Drone Generator" subtitle="Sustained tones for pitch training">
-              <DroneGenerator theme={T} />
+            <ToolCard icon="🌫️" title="Drone Generator" subtitle="Circle-of-fifths sustained drone with chord voicings">
+              <CompactDroneWheel theme={T} standalone />
             </ToolCard>
 
             <ToolCard icon="🎤" title="Live Pitch Detector" subtitle="Real-time mic analysis">
