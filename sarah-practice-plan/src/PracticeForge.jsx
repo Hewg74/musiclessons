@@ -109,19 +109,33 @@ const PITCH_CONSTRAINTS = [
     example: (notes) => notes.length >= 4 ? `Q: ${notes[1]}→${notes[2]}→${notes[3]}? (rising, unresolved) A: ${notes[3]}→${notes[1]}→${notes[0]}. (falling, home)` : '' },
 ];
 
+// Tempo-aware helper: returns seconds per beat and seconds per bar (4/4)
+function tempoTimings(bpm) {
+  const beatSec = 60 / bpm;
+  return { beatSec, barSec: beatSec * 4 };
+}
+
 const RHYTHM_CONSTRAINTS = [
-  { id: 'river', name: 'River', desc: 'Even quarter-note flow — one note per beat. Rhythm becomes invisible so melody carries everything.', icon: '🌊' },
-  { id: 'burst', name: 'Burst', desc: 'Pack 4-6 quick notes at the start of each phrase, then leave 2-3 beats of silence.', icon: '💥' },
-  { id: 'space', name: 'Space', desc: 'At least half of every bar is rest. Each note is precious because there are so few.', icon: '🏝' },
-  { id: 'offbeat', name: 'Offbeat', desc: 'Notes land between the beats, never on 1 or 3. Feel the groove push and pull against the metronome.', icon: '⚡' },
-  { id: 'rhythmSeed', name: 'Rhythmic Seed', desc: 'Pick a short cell (long-short-short or short-long-rest) and repeat it, varying the pitches each time.', icon: '🔄' },
+  { id: 'river', name: 'River', desc: 'Even quarter-note flow — one note per beat. Rhythm becomes invisible so melody carries everything.', icon: '🌊',
+    example: (notes, tempo) => `At ${tempo} BPM: one note every ${(60/tempo).toFixed(2)}s. Play through all ${notes.length} scale notes in order, then reverse.` },
+  { id: 'burst', name: 'Burst', desc: 'Pack 4-6 quick notes at the start of each phrase, then leave 2-3 beats of silence.', icon: '💥',
+    example: (notes, tempo) => `At ${tempo} BPM: burst 4 eighth-notes in ~${(2*60/tempo).toFixed(1)}s, then rest ~${(3*60/tempo).toFixed(1)}s.` },
+  { id: 'space', name: 'Space', desc: 'At least half of every bar is rest. Each note is precious because there are so few.', icon: '🏝',
+    example: (notes, tempo) => `At ${tempo} BPM: 1 bar = ${(4*60/tempo).toFixed(1)}s. Sing for 2 beats, rest for 2+ beats.` },
+  { id: 'offbeat', name: 'Offbeat', desc: 'Notes land between the beats, never on 1 or 3. Feel the groove push and pull against the metronome.', icon: '⚡',
+    example: (notes, tempo) => `At ${tempo} BPM: metronome clicks on 1,2,3,4 — you sing on the "&" between each click (every ${(30/tempo).toFixed(2)}s offset).` },
+  { id: 'rhythmSeed', name: 'Rhythmic Seed', desc: 'Pick a short cell (long-short-short or short-long-rest) and repeat it, varying the pitches each time.', icon: '🔄',
+    example: (notes, tempo) => `Seed: quarter-eighth-eighth (${(60/tempo).toFixed(2)}s + ${(30/tempo).toFixed(2)}s + ${(30/tempo).toFixed(2)}s). Keep the rhythm, change the notes.` },
 ];
 
 const DYNAMICS_CONSTRAINTS = [
-  { id: 'swell', name: 'The Swell', desc: 'pp → f → pp over 4 bars. Gradually crescendo to full voice, then drop instantly to silence.', icon: '🌊' },
-  { id: 'terraces', name: 'Terraces', desc: 'Sudden level jumps — 2 bars at pp, jump to mf, jump to f. No gradual transitions between plateaus.', icon: '🪜' },
+  { id: 'swell', name: 'The Swell', desc: 'pp → f → pp over 4 bars. Gradually crescendo to full voice, then drop instantly to silence.', icon: '🌊',
+    example: (notes, tempo) => `At ${tempo} BPM: 4 bars = ${(16*60/tempo).toFixed(0)}s. Crescendo for ${(12*60/tempo).toFixed(0)}s, hold peak 1 beat, drop to silence.` },
+  { id: 'terraces', name: 'Terraces', desc: 'Sudden level jumps — 2 bars at pp, jump to mf, jump to f. No gradual transitions between plateaus.', icon: '🪜',
+    example: (notes, tempo) => `Each plateau is 2 bars = ${(8*60/tempo).toFixed(0)}s. Switch dynamic instantly on the downbeat — no fades.` },
   { id: 'whisper', name: 'Whisper', desc: 'Sustained pianissimo throughout. Chosen intimacy, not timidity — requires more breath control, not less.', icon: '🤫' },
-  { id: 'accentMap', name: 'Accent Map', desc: 'One note per bar pops loud (sforzando), everything else stays quiet. Move the accent to different positions.', icon: '🎯' },
+  { id: 'accentMap', name: 'Accent Map', desc: 'One note per bar pops loud (sforzando), everything else stays quiet. Move the accent to different positions.', icon: '🎯',
+    example: (notes, tempo) => `1 accent per bar (${(4*60/tempo).toFixed(1)}s window). Try: bar 1 accent on beat 1, bar 2 on beat 3, bar 3 on the "&" of 2.` },
   { id: 'forte', name: 'Constant Forte', desc: 'Full power throughout — fill the room with every note. No holding back.', icon: '🔊' },
 ];
 
@@ -497,8 +511,8 @@ function ChallengeCard({ card, T, entering }) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         {constraintLines.map(({ dim, constraint }) => {
           // Dynamic example: either a pre-computed one from generateCard (forbidden, targetLanding)
-          // or computed here from the example() function (leaps, arch, seed, questionAnswer)
-          const exampleText = constraint.dynamicExample || (constraint.example ? constraint.example(scaleNotes) : null);
+          // or computed here from the example() function (uses scaleNotes + tempo where relevant)
+          const exampleText = constraint.dynamicExample || (constraint.example ? constraint.example(scaleNotes, card.constraints.tempo) : null);
           return (
             <div key={dim.id} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
               {/* Left color bar */}
