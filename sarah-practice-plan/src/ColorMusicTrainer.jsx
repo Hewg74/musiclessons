@@ -19,10 +19,10 @@ function useIsMobile(bp = 640) {
 }
 
 // ─── Constants ───
-const CHROMATIC = ['C', 'C#', 'D', 'E♭', 'E', 'F', 'F#', 'G', 'A♭', 'A', 'B♭', 'B'];
-const CIRCLE_OF_FIFTHS = ['C', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#', 'A♭', 'E♭', 'B♭', 'F'];
+export const CHROMATIC = ['C', 'C#', 'D', 'E♭', 'E', 'F', 'F#', 'G', 'A♭', 'A', 'B♭', 'B'];
+export const CIRCLE_OF_FIFTHS = ['C', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#', 'A♭', 'E♭', 'B♭', 'F'];
 
-const SCALE_TYPES = {
+export const SCALE_TYPES = {
   'minor-pentatonic': { name: 'Min Pent',    intervals: [0, 3, 5, 7, 10], desc: '5 notes, zero tension. The backbone.' },
   'major-pentatonic': { name: 'Maj Pent',    intervals: [0, 2, 4, 7, 9], desc: 'Happy pentatonic. Uplifting.' },
   'blues':            { name: 'Blues',        intervals: [0, 3, 5, 6, 7, 10], desc: 'Pentatonic + blue note. Raw.' },
@@ -217,7 +217,7 @@ const GUIDED_EXERCISES = [
 ];
 
 // ─── Dynamic scale generator ───
-function generateScale(root, scaleType) {
+export function generateScale(root, scaleType) {
   const type = SCALE_TYPES[scaleType] || SCALE_TYPES['minor-pentatonic'];
   const rootIdx = CHROMATIC.indexOf(normalizeNote(root));
   if (rootIdx < 0) return { name: `${root} ${type.name}`, root: normalizeNote(root), notes: [], positions: { 1: [0, 4] } };

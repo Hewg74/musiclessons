@@ -10,6 +10,7 @@ import {
 import { MiniAudioPlayer, AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, ChordVoicingViewer, extractChordsFromExercise, VolumeMeter, ChordTransitionTimer, GenreMetronome, SilenceScore, DroneGenerator, TAB_CONTENT, InlineKeyboard, RhythmCellCards, PhraseFormGuide, StrumChartBuilder, ChartListView, makeTemplateChart } from './JungleTools.jsx';
 import { ColorMusicTrainer } from './ColorMusicTrainer.jsx';
 import { PitchDiscriminationTrainer } from './PitchDiscriminationTrainer.jsx';
+import { PracticeForge } from './PracticeForge.jsx';
 import { acquireKeepalive, releaseKeepalive, setMediaSession, clearMediaSession } from './audioKeepalive.js';
 import { DAYS, KEYBOARD_LEVELS, LOOPER_LEVELS, LESSON_POOL, ALL_NOTES, getPitchRange } from './data/appData.js';
 import { WEEKLY_PLANS, CURRENT_WEEK } from './data/weeklyPlans/index.js';
@@ -4084,7 +4085,7 @@ function KeysView({ completed, onComplete, metro, onOpenTapMatch, onStartFlow })
   );
 }
 
-const LOOPER_COLORS = ["#3d8b6e", "#2e7d5e", "#d97d54", "#5b7fa5", "#7f9e88", "#9e829c", "#72a8a8", "#d68383", "#d4a373", "#6b8e9f"];
+const LOOPER_COLORS = ["#3d8b6e", "#2e7d5e", "#d97d54", "#5b7fa5", "#7f9e88", "#9e829c", "#72a8a8", "#d68383", "#d4a373", "#6b8e9f", "#8b6e3d", "#5e9c7d", "#a57f5b", "#6e8b9e", "#9c829e"];
 
 function LooperView({ completed, onComplete, metro, onOpenTapMatch, onStartFlow }) {
   return (
@@ -4517,6 +4518,7 @@ export default function App() {
   const [flowAccentColor, setFlowAccentColor] = useState(null);
   const [colorMusicOpen, setColorMusicOpen] = useState(false);
   const [pitchDiscrimOpen, setPitchDiscrimOpen] = useState(false);
+  const [practiceForgeOpen, setPracticeForgeOpen] = useState(false);
   const metro = useMetronome();
 
   const [flowStartIndex, setFlowStartIndex] = useState(0);
@@ -4650,6 +4652,17 @@ export default function App() {
     return (
       <div className="no-bottom-nav" style={{ background: T.bg, minHeight: "100vh", color: T.textDark, fontFamily: T.sans, paddingBottom: metro.playing ? 80 : 0 }}>
         <PitchDiscriminationTrainer theme={T} onBack={() => setPitchDiscrimOpen(false)} />
+        {metro.playing && <FloatingMetronome metro={metro} setTab={() => {}} isDark={isDark} theme={T} />}
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;600;700&display=swap" rel="stylesheet" />
+      </div>
+    );
+  }
+
+  // Practice Forge overlay — full-page constraint card generator
+  if (practiceForgeOpen) {
+    return (
+      <div className="no-bottom-nav" style={{ background: T.bg, minHeight: "100vh", color: T.textDark, fontFamily: T.sans, paddingBottom: metro.playing ? 80 : 0 }}>
+        <PracticeForge theme={T} metro={metro} onBack={() => setPracticeForgeOpen(false)} />
         {metro.playing && <FloatingMetronome metro={metro} setTab={() => {}} isDark={isDark} theme={T} />}
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;600;700&display=swap" rel="stylesheet" />
       </div>
@@ -4948,6 +4961,21 @@ export default function App() {
                   fontSize: 13, fontWeight: 600, fontFamily: T.sans, cursor: 'pointer',
                   transition: 'all 0.2s',
                 }}>Open Pitch Trainer</button>
+              </div>
+            </ToolCard>
+
+            <ToolCard icon="🔥" title="Practice Forge" subtitle="Constraint-based challenge cards">
+              <div style={{ padding: 12, textAlign: 'center' }}>
+                <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, marginBottom: 12, lineHeight: 1.6 }}>
+                  Draw randomized constraint cards that combine pitch, rhythm, dynamics, and more.
+                  Each card wires your practice tools automatically.
+                </div>
+                <button onClick={() => setPracticeForgeOpen(true)} style={{
+                  padding: '10px 24px', borderRadius: T.radius,
+                  background: T.gold, color: '#fff', border: 'none',
+                  fontSize: 13, fontWeight: 600, fontFamily: T.sans, cursor: 'pointer',
+                  transition: 'all 0.2s',
+                }}>Open Practice Forge</button>
               </div>
             </ToolCard>
 
