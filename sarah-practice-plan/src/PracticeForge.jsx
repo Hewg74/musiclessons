@@ -94,11 +94,13 @@ const KEY_WEIGHTS = {
 const PITCH_CONSTRAINTS = [
   { id: 'leaps', name: 'Leaps Only', desc: 'Never sing two neighboring notes in a row. Always skip at least one note in the scale when moving. This forces big, dramatic jumps instead of smooth walking.', icon: '↗',
     example: (notes) => notes.length >= 5 ? `Your notes: ${notes.join(', ')}. Try: ${notes[0]}→${notes[2]}→${notes[4]}→${notes[1]} (skipping at least one each time)` : '' },
+  { id: 'stepwise', name: 'Stepwise Only', desc: 'Always move to a neighboring note in the scale — never skip. Walking melodies, no jumps allowed. Trains the smooth voice-leading every great melody depends on.', icon: '↘',
+    example: (notes) => notes.length >= 5 ? `Your notes: ${notes.join(', ')}. Try: ${notes[0]}→${notes[1]}→${notes[2]}→${notes[1]}→${notes[0]} (only neighbors)` : '' },
   { id: 'arch', name: 'Arch Contour', desc: 'Every phrase must climb up to a peak note and then come back down. The shape is a hill — go up, come down. No flat or downward-only phrases.', icon: '⌢',
     example: (notes) => notes.length >= 5 ? `Try: ${notes[0]}→${notes[2]}→${notes[4]}→${notes[2]}→${notes[0]} (up to ${notes[4]}, back to ${notes[0]})` : '' },
   { id: 'seed', name: 'Seed + Variations', desc: 'Pick any 3 notes as your "seed" idea. Repeat it again and again, but change exactly ONE note each time. The shape stays recognizable while the melody slowly evolves.', icon: '🌱',
     example: (notes) => notes.length >= 4 ? `Seed: ${notes[0]}-${notes[1]}-${notes[2]}. Var 1: ${notes[0]}-${notes[1]}-${notes[3]}. Var 2: ${notes[0]}-${notes[3]}-${notes[2]}.` : '' },
-  { id: 'forbidden', name: 'Forbidden Note', desc: 'One note in your scale is off-limits for the entire round. Pretend it doesn\'t exist. This forces you to find melodic paths you wouldn\'t normally take.', icon: '🚫', hasExtra: true },
+  { id: 'forbidden', name: 'Forbidden Notes', desc: 'Some notes from the scale are off-limits — pretend they don\'t exist. The fewer notes you have, the more rhythm, dynamics, and phrasing have to do the melodic work. This is mastery training.', icon: '🚫', hasExtra: true },
   { id: 'targetLanding', name: 'Target Landing', desc: 'Wander freely through any notes you want, but every phrase MUST end on one specific target note. The journey changes; the destination never does.', icon: '🎯', hasExtra: true },
   { id: 'questionAnswer', name: 'Question & Answer', desc: 'Sing in pairs of phrases. First phrase asks a question (rising or ending unresolved). Second phrase answers (descending, ending on a stable note). Like a musical conversation with yourself.', icon: '❓',
     example: (notes) => notes.length >= 4 ? `Q: ${notes[1]}→${notes[2]}→${notes[3]}? (rising, unfinished) A: ${notes[3]}→${notes[1]}→${notes[0]}. (falling, home)` : '' },
@@ -121,6 +123,8 @@ const RHYTHM_CONSTRAINTS = [
     example: (notes, tempo) => `At ${tempo} BPM: metronome clicks on 1,2,3,4 — you sing on the "&" between each click (every ${(30/tempo).toFixed(2)}s offset).` },
   { id: 'rhythmSeed', name: 'Rhythmic Seed', desc: 'Pick a short cell (long-short-short or short-long-rest) and repeat it, varying the pitches each time.', icon: '🔄',
     example: (notes, tempo) => `Seed: quarter-eighth-eighth (${(60/tempo).toFixed(2)}s + ${(30/tempo).toFixed(2)}s + ${(30/tempo).toFixed(2)}s). Keep the rhythm, change the notes.` },
+  { id: 'triplets', name: 'Triplets Only', desc: 'Three notes per beat instead of the usual two or four. Forces a different internal pulse — the swung, rolling feel of triplet subdivision instead of the straight square of duple time.', icon: '⋯',
+    example: (notes, tempo) => `At ${tempo} BPM: 1 beat = ${(60/tempo).toFixed(2)}s. Each triplet note = ${(20/tempo).toFixed(2)}s. Count "tri-pl-et, tri-pl-et" instead of "1-and-2-and".` },
 ];
 
 const DYNAMICS_CONSTRAINTS = [
@@ -162,6 +166,7 @@ const GUITAR_CONSTRAINTS = [
   { id: 'muted', name: 'Muted', desc: 'Palm-muted or ghost notes throughout — the guitar becomes a percussion instrument. Rhythmic texture with pitched undertones.', icon: '✋' },
   { id: 'hybrid', name: 'Hybrid Picking', desc: 'Pick + fingers simultaneously — pick handles bass strings, fingers pluck the upper strings. Country, jazz, and surf technique.', icon: '🤙' },
   { id: 'slide', name: 'Slide', desc: 'Use a slide for everything — no fretted notes. Forces gliding between pitches and trains pitch accuracy by ear since there are no frets to lock onto.', icon: '➡' },
+  { id: 'bends', name: 'Bends Only', desc: 'Every pitch movement happens via string bending instead of moving to a different fret. Trains pitch accuracy by ear and forces expressive note shaping.', icon: '↪' },
 ];
 
 const OBLIQUE_MODIFIERS = [
@@ -304,12 +309,20 @@ function generateCard(activeDimensions, lockedDimensions, history, constraintWei
     const chosen = { ...weightedPick(dim.options, weights) };
 
     // Generate extra data for specific constraints
-    if (chosen.id === 'forbidden' && scaleNotes.length > 1) {
+    if (chosen.id === 'forbidden' && scaleNotes.length > 2) {
+      // Dynamic count: remove 1, 2, or 3 notes — but always leave at least 2 notes remaining.
+      // Pentatonic (5 notes): max remove = 3 → leaves 2
+      // 7-note scales: max remove = 3 → leaves 4
+      const maxRemovable = Math.min(3, scaleNotes.length - 2);
+      const removeCount = 1 + Math.floor(Math.random() * maxRemovable);
       const nonRoot = scaleNotes.filter(n => n !== card.constraints.key);
-      chosen.forbiddenNote = randomPick(nonRoot.length > 0 ? nonRoot : scaleNotes);
-      const allowed = scaleNotes.filter(n => n !== chosen.forbiddenNote);
-      chosen.desc = `One scale note is off-limits: avoid ${chosen.forbiddenNote}. Use only the remaining ${allowed.length} notes to build phrases.`;
-      chosen.dynamicExample = `Allowed notes: ${allowed.join(', ')}. Example phrase: ${allowed.slice(0, 4).join('→')}`;
+      // Shuffle and take the first N
+      const shuffled = [...nonRoot].sort(() => Math.random() - 0.5);
+      chosen.forbiddenNotes = shuffled.slice(0, removeCount);
+      const allowed = scaleNotes.filter(n => !chosen.forbiddenNotes.includes(n));
+      const removeWord = removeCount === 1 ? 'note is' : 'notes are';
+      chosen.desc = `${removeCount} scale ${removeWord} off-limits: avoid ${chosen.forbiddenNotes.join(', ')}. Use only the remaining ${allowed.length} notes (${allowed.join(', ')}) to build phrases. The fewer notes you have, the more rhythm, dynamics, and phrasing must carry the melody.`;
+      chosen.dynamicExample = `Example phrase using only allowed notes: ${allowed.slice(0, Math.min(4, allowed.length)).join('→')}`;
     }
     if (chosen.id === 'targetLanding' && scaleNotes.length > 0) {
       chosen.targetNote = randomPick(scaleNotes);
