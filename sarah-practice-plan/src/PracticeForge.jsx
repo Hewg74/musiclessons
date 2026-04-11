@@ -10,8 +10,31 @@ import GUIDANCE_CACHE from './data/practiceForgeGuidance.json';
 import { CompactDroneWheel } from './CompactDroneWheel.jsx';
 
 // Canonical order used to build combo-mode keys so lookups are deterministic
-// regardless of draw order.
-const DIM_ORDER = ['pitchConstraint','rhythmConstraint','dynamics','articulation','phraseLength','vocalTechnique','guitarTechnique'];
+// regardless of draw order. Positions of the legacy dims (pitch, rhythm,
+// dynamics, articulation, phrase, register, pickingHand) are preserved so
+// the v1 guidance cache (553 combos keyed on value IDs like `leaps_chest`
+// and `leaps_downstrokes`) keeps working unchanged — the cache is indexed
+// on value IDs, not dim IDs, so renaming `vocalTechnique` → `register` and
+// `guitarTechnique` → `pickingHand` is safe as long as the relative order
+// of dims in this array stays identical.
+//
+// Foundational dims (texture, vowel) are NEW in v2 and don't have cache
+// entries yet — their combos fall through to per-dim `desc` until Phase E
+// seeds hand-crafted overlays.
+const DIM_ORDER = [
+  'pitchConstraint', 'rhythmConstraint', 'dynamics',
+  'articulation', 'phraseLength',
+  'register',        // was vocalTechnique — position 5 preserved
+  'pickingHand',     // was guitarTechnique — position 6 preserved
+  'texture',         // Phase A foundational (guitar)
+  'vowel',           // Phase A foundational (voice)
+  'harmonicTarget',  // Phase B shared random
+  'phraseStructure', // Phase B shared random
+  'neckZone',        // Phase C guitar branch
+  'noteTransition',  // Phase C guitar branch
+  'vibrato',         // Phase C guitar branch
+  'onset',           // Phase D voice branch
+];
 
 // Route a card's guidance lookup by its mode.
 //   scales → null (no guidance)
@@ -62,8 +85,16 @@ function lookupGuidance(card) {
       dynamics: 'Dynamics',
       articulation: 'Articulation',
       phraseLength: 'Phrase',
-      vocalTechnique: 'Vocal',
-      guitarTechnique: 'Guitar',
+      register: 'Register',
+      pickingHand: 'Picking',
+      texture: 'Texture',
+      vowel: 'Vowel',
+      harmonicTarget: 'Harmonic',
+      phraseStructure: 'Form',
+      neckZone: 'Neck Zone',
+      noteTransition: 'Transition',
+      vibrato: 'Vibrato',
+      onset: 'Onset',
     }[dimId] || dimId);
     const pairs = [];
     for (let i = 0; i < drawnIds.length; i++) {
@@ -86,6 +117,173 @@ function lookupGuidance(card) {
 
 function lookupScaleCharacter(scaleId) {
   return GUIDANCE_CACHE.scales?.[scaleId] || null;
+}
+
+// ─── Phase E: Lock-set presets ───
+// Curated "drill day" setups that pin specific values to isolate a single
+// skill focus. Applied by the preset button in the settings panel — it
+// replaces `lockedDimensions` with the preset's locks. User can still add
+// additional locks on top.
+//
+// Each preset lists `instrument` (which mode it's designed for), a human
+// label + description, and a `locks` map. The value objects match the
+// shape that lockedDimensions expects (same structure as a drawn value).
+const LOCK_PRESETS = [
+  {
+    id: 'triad-tuesday',
+    instrument: 'guitar',
+    label: 'Triad Tuesday',
+    desc: 'Upper-register 3-string triad partials drilling arpeggio outlines. Reggae skanks, jazz comping, pop voicings.',
+    locks: {
+      texture: { id: 'triadPartial', name: 'Triad Partials' },
+      harmonicTarget: { id: 'arpeggio135', name: 'Arpeggio 1-3-5' },
+      neckZone: { id: 'high', name: 'High Neck' },
+    },
+  },
+  {
+    id: 'comp-sunday',
+    instrument: 'guitar',
+    label: 'Comp Sunday',
+    desc: 'Chord comping with color tones — 7ths, 9ths, 11ths. Jazz, bossa, Khruangbin territory.',
+    locks: {
+      texture: { id: 'fullChord', name: 'Full Chord' },
+      harmonicTarget: { id: 'colorTone79', name: 'Color Tones 7/9/11' },
+    },
+  },
+  {
+    id: 'desert-solo',
+    instrument: 'guitar',
+    label: 'Desert Solo',
+    desc: 'Single-line melodic soloing targeting chord tones over a backing progression. Khruangbin, Tinariwen, desert blues.',
+    locks: {
+      texture: { id: 'singleLine', name: 'Single Line' },
+      harmonicTarget: { id: 'chordToneLanding', name: 'Chord-Tone Landing' },
+      noteTransition: { id: 'slideConnect', name: 'Slide Connect' },
+    },
+  },
+  {
+    id: 'vowel-friday',
+    instrument: 'voice',
+    label: 'Vowel Friday',
+    desc: 'Scat-syllable improvisation in mixed voice — pure melodic freedom without lyric responsibility.',
+    locks: {
+      vowel: { id: 'scatSyllables', name: 'Scat Syllables' },
+      register: { id: 'mixed', name: 'Mixed Voice' },
+    },
+  },
+  {
+    id: 'song-work',
+    instrument: 'voice',
+    label: 'Song Work',
+    desc: 'Real lyrics from your "Songs 2 Learn" list, in the register that fits the song. The brief should fit the words.',
+    locks: {
+      vowel: { id: 'realLyrics', name: 'Real Lyrics' },
+    },
+  },
+  {
+    id: 'head-voice-drill',
+    instrument: 'voice',
+    label: 'Head Voice Drill',
+    desc: 'Every card locks head voice — isolate the mechanism and let rhythm, dynamics, and phrase shape do the variation.',
+    locks: {
+      register: { id: 'head', name: 'Head Voice' },
+    },
+  },
+];
+
+// ─── Phase E: Mood overlay library ───
+// One-sentence overlay per mood. Colors every card in a round with the
+// session mood's intent WITHOUT overriding mechanical dims — mood fights
+// the mechanics productively rather than dictating them. Launch list
+// mirrors MOOD_LIBRARY (25 entries). If a mood isn't in this map, the
+// overlay falls back to a generic "Bring a sense of {mood}." sentence.
+const MOOD_OVERLAYS = {
+  // Outward longing
+  longing:     'Play like you\'re reaching for something just out of reach — every phrase pulls forward, nothing fully lands.',
+  yearning:    'Hold every resolution one beat longer than you want to. Let the hunger for the home note do the work.',
+  nostalgic:   'Every phrase is a half-remembered melody from a decade ago. Let the wobble and imperfection carry the weight.',
+  wistful:     'Gentle, unhurried, looking sideways. Nothing argues with anything else — the whole round is a quiet exhale.',
+  // Inward warmth
+  tender:      'Close-mic intimacy. Nothing above mezzo-forte. Every note is a hand on a shoulder, not a declaration.',
+  intimate:    'Sing this like the room has three people in it and you mean only one of them. Distance is the enemy.',
+  serene:      'The pulse should feel optional — let the notes settle into the air before the next one arrives.',
+  // Light
+  playful:     'Let mistakes become jokes. Change your mind mid-phrase. Keep the eyebrow raised throughout.',
+  mischievous: 'Set an expectation then refuse to deliver it. Land somewhere the listener wasn\'t ready for.',
+  joyous:      'Forward lean, bright attack, no apologies. The room should feel louder with you in it.',
+  // Heavy
+  melancholy:  'Everything slightly late, slightly behind the beat. Let gravity pull the phrases down.',
+  elegiac:     'Play as if this is the last time. Each note is final. No ornament is casual.',
+  weary:       'The voice that can\'t quite summon full engagement. Half-committed onsets, dropped final consonants, space where power should be.',
+  // Trance
+  hypnotic:    'Never leave the center of gravity — every phrase circles back to the same note like a pendulum. No dramatic arcs.',
+  dreamy:      'Soft onsets, long tails, fuzzy pitch centers. Blur the edges of every note.',
+  floating:    'Remove the weight from the downbeats. Everything hangs suspended — no firm landings, no clear takeoffs.',
+  // Fire
+  defiant:     'Lean into dissonance. Don\'t apologize for any note. The phrases push back against the backing, not with it.',
+  fierce:      'Maximum commitment at all volumes. Even whispers have teeth. No neutral moments.',
+  driven:      'Every phrase is headed somewhere. Don\'t let the groove settle — always pushing the next beat.',
+  // Gene's world
+  'sun-bleached':     'Dry, mid-tempo, slightly detached. Think palm shade and an iced tea. Nothing urgent ever happens here.',
+  'bourbon-warm':     'Slow-burn tenor warmth. Every phrase has a slight growl under it. Laid-back but never lazy.',
+  'highway-hypnosis': 'Repetitive, hypnotic, forward-moving. Like six hours of empty desert at 75 mph. Small changes matter more than big ones.',
+  'motel-neon':       'Late-night, flickering, slightly unstable. Pitch that drifts just a shade. Reverb in the mind, not the signal.',
+  'slow-sunday':      'No hurry, no struggle. Every phrase finishes itself. The only enemy is trying too hard.',
+};
+
+// ─── Phase E: High-value pairwise overlays for the new dims ───
+// Hand-crafted guidance snippets for combos where texture × harmonic-target
+// (or other pairs) produce something more than the sum of parts. Keys are
+// `${dimId1}:${valueId1}|${dimId2}:${valueId2}` with dims sorted alphabetically.
+// ChallengeCard consults these AFTER the main guidance and renders them as
+// a highlight if any match the current card's drawn dims.
+const PHASE_E_COMBO_OVERLAYS = {
+  // Texture × Harmonic target — the highest-leverage pairs for guitar mastery
+  'harmonicTarget:arpeggio135|texture:fullChord':    'Play the triad as a block voicing on the downbeat, then arpeggiate through 1-3-5 on the upbeats. The chord and the arpeggio are the same three notes — this drills your ability to hear them as one thing.',
+  'harmonicTarget:arpeggio135|texture:triadPartial': 'Use upper-register 3-string partials (top three strings) — the triad IS the texture. Each strum is the full arpeggio. No wasted motion.',
+  'harmonicTarget:arpeggio135|texture:doubleStops':  'Play thirds and sixths — any two of root/3rd/5th at a time. 3rds are tight, 6ths are open; alternating them is how you build harmonized lines.',
+  'harmonicTarget:chordToneLanding|texture:mixed':   'Stab a chord, then land a single-note fill on the 3rd or 5th of whatever chord is sounding. The chord stab is your reminder of WHERE to aim the fill.',
+  'harmonicTarget:colorTone79|texture:fullChord':    'Build voicings that include the 7th and/or 9th — no plain triads. Jazz and bossa territory. Let the extension be the loudest note in the voicing.',
+  'harmonicTarget:colorTone79|texture:triadPartial': 'Play upper-string partials that hit a 7th or 9th against the root on a lower string. The classic Khruangbin/jazz comping sound — small voicings, wide harmony.',
+  // Texture × Note transition
+  'noteTransition:slideConnect|texture:fullChord':   'Slide entire chord shapes between positions — like reggae upstrokes with sliding triads or surf-rock parallel sixth chords. The slide IS the groove.',
+  'noteTransition:hammerPull|texture:fullChord':     'Chord hammers — pick the bass string, hammer the rest into the chord. Pop/country ornamentation. The left hand builds the chord after the attack starts.',
+  // Texture × Picking hand — strumming patterns emerge compositionally
+  'pickingHand:fingerpick|texture:fullChord':        'Arpeggiate the chord with independent fingers. Travis, PIMA, clawhammer — the pattern emerges from your wrist, not a rule.',
+  'pickingHand:alternate|texture:fullChord':         'Alternating down-up strums. The "and" between each beat gets an upstroke. Standard rock, punk, ska rhythm guitar.',
+  'pickingHand:downstrokes|texture:triadPartial':    'Downstroke-only partial voicings — reggae skank territory. The accent lands on 2 and 4, never on 1 or 3. Let the space between hits do most of the work.',
+  // Vowel × Onset — voice-specific pedagogically rich combos
+  'onset:breathy|vowel:ee':                          '/ee/ is the tightest vowel — forcing a breathy onset on it trains glottal release. Start with air, let pitch arrive second.',
+  'onset:slideIn|vowel:ah':                          'Slide up into an open /ah/ from a half-step below. The mouth is already in the right shape; only pitch has to travel.',
+  // Vibrato × Note transition
+  'noteTransition:bendTarget|vibrato:lateEntry':     'Bend to the target, land, hold straight for one beat, then let vibrato bloom in. The classic blues/rock lead vocabulary.',
+};
+
+// Look up a pairwise overlay for the current card's drawn dims. Returns
+// the first match found, or null. Called from ChallengeCard alongside the
+// existing guidance lookup.
+function lookupPhaseECombo(card) {
+  const c = card.constraints;
+  // Gather drawn dim:value pairs in the Phase B+C+D dim set.
+  const drawn = [];
+  for (const dimId of ['harmonicTarget', 'phraseStructure', 'texture', 'vowel', 'onset', 'pickingHand', 'neckZone', 'noteTransition', 'vibrato']) {
+    const v = c[dimId];
+    if (v && v.id) drawn.push(`${dimId}:${v.id}`);
+  }
+  // Try all alphabetically-sorted pairs.
+  const hits = [];
+  for (let i = 0; i < drawn.length; i++) {
+    for (let j = i + 1; j < drawn.length; j++) {
+      const key = [drawn[i], drawn[j]].sort().join('|');
+      if (PHASE_E_COMBO_OVERLAYS[key]) hits.push({ key, text: PHASE_E_COMBO_OVERLAYS[key] });
+    }
+  }
+  return hits;
+}
+
+function lookupMoodOverlay(mood) {
+  if (!mood) return null;
+  return MOOD_OVERLAYS[mood] || `Bring a sense of ${mood} to every phrase — let the mood color your choices without changing the mechanical constraints.`;
 }
 
 // ─── Hooks ───
@@ -141,21 +339,51 @@ function formatTime(seconds) {
 }
 
 // ─── Backing tracks ───
+//
+// Phase B: each track now carries an optional `progression` sidecar with:
+//   - trackKey: the tonal center of the loop (pitch class)
+//   - mode: 'major' | 'minor' | 'modal'
+//   - chords: array of roman-numeral chords in loop order (one per bar/hit)
+//
+// The `harmonicTarget = chord-tone-landing` value uses this metadata to tell
+// the player which chord tones to target. If a track has no `progression`,
+// chord-tone-landing falls back to `arpeggio-1-3-5` (which targets the tonic
+// triad and works over a drone — no chord changes required).
+//
+// Chord annotations are approximate — they describe the harmonic feel of the
+// loop, not a transcription. For Gene's practice context this is enough: the
+// goal is to learn to TARGET the 3rd of whatever chord is sounding, not to
+// analyze the exact voicing. Progressions below were informed by the track
+// names (reggae one-drop = I-V / I-IV typical, bossa = ii-V-I, etc.) and are
+// transposable to any key via the normal Roman numeral mapping.
 const BACKING_TRACKS = [
-  { src: '/reggae-one-drop-85.mp3', genre: 'reggae', bpm: 85, name: 'Reggae One Drop' },
-  { src: '/khruangbin-style-80.mp3', genre: 'desert-blues', bpm: 80, name: 'Khruangbin Style' },
-  { src: '/desert-blues-75.mp3', genre: 'desert-blues', bpm: 75, name: 'Desert Blues' },
-  { src: '/surf-rock-120.mp3', genre: 'surf', bpm: 120, name: 'Surf Rock' },
-  { src: '/soul-funk-groove-90.mp3', genre: 'soul', bpm: 90, name: 'Soul Funk Groove' },
-  { src: '/groove-beat-90.mp3', genre: null, bpm: 90, name: 'Groove Beat' },
-  { src: '/psych-rock-120.mp3', genre: 'surf', bpm: 120, name: 'Psych Rock' },
-  { src: '/deep-soul-groove-80.mp3', genre: 'soul', bpm: 80, name: 'Deep Soul Groove' },
-  { src: '/dub-reggae-85.mp3', genre: 'reggae', bpm: 85, name: 'Dub Reggae' },
-  { src: '/bossa-nova-75.mp3', genre: null, bpm: 75, name: 'Bossa Nova' },
-  { src: '/afrobeat-100.mp3', genre: null, bpm: 100, name: 'Afrobeat' },
-  { src: '/ska-upbeat-95.mp3', genre: 'reggae', bpm: 95, name: 'Ska Upbeat' },
-  { src: '/cinematic-western-80.mp3', genre: 'desert-blues', bpm: 80, name: 'Cinematic Western' },
-  { src: '/reggae-rock-100.mp3', genre: 'reggae', bpm: 100, name: 'Reggae Rock' },
+  { src: '/reggae-one-drop-85.mp3', genre: 'reggae', bpm: 85, name: 'Reggae One Drop',
+    progression: { mode: 'minor', chords: ['i', 'VII', 'VI', 'VII'] } },
+  { src: '/khruangbin-style-80.mp3', genre: 'desert-blues', bpm: 80, name: 'Khruangbin Style',
+    progression: { mode: 'minor', chords: ['i', 'iv', 'v', 'i'] } },
+  { src: '/desert-blues-75.mp3', genre: 'desert-blues', bpm: 75, name: 'Desert Blues',
+    progression: { mode: 'minor', chords: ['i', 'iv', 'i', 'v'] } },
+  { src: '/surf-rock-120.mp3', genre: 'surf', bpm: 120, name: 'Surf Rock',
+    progression: { mode: 'minor', chords: ['i', 'VI', 'III', 'VII'] } },
+  { src: '/soul-funk-groove-90.mp3', genre: 'soul', bpm: 90, name: 'Soul Funk Groove',
+    progression: { mode: 'minor', chords: ['i7', 'iv7', 'i7', 'v7'] } },
+  { src: '/groove-beat-90.mp3', genre: null, bpm: 90, name: 'Groove Beat' /* no progression → drone only */ },
+  { src: '/psych-rock-120.mp3', genre: 'surf', bpm: 120, name: 'Psych Rock',
+    progression: { mode: 'minor', chords: ['i', 'bVII', 'VI', 'V'] } },
+  { src: '/deep-soul-groove-80.mp3', genre: 'soul', bpm: 80, name: 'Deep Soul Groove',
+    progression: { mode: 'minor', chords: ['i7', 'IV7', 'i7', 'iv7'] } },
+  { src: '/dub-reggae-85.mp3', genre: 'reggae', bpm: 85, name: 'Dub Reggae',
+    progression: { mode: 'minor', chords: ['i', 'iv'] } },
+  { src: '/bossa-nova-75.mp3', genre: null, bpm: 75, name: 'Bossa Nova',
+    progression: { mode: 'minor', chords: ['ii7', 'V7', 'i7', 'i7'] } },
+  { src: '/afrobeat-100.mp3', genre: null, bpm: 100, name: 'Afrobeat',
+    progression: { mode: 'minor', chords: ['i', 'iv', 'i', 'iv'] } },
+  { src: '/ska-upbeat-95.mp3', genre: 'reggae', bpm: 95, name: 'Ska Upbeat',
+    progression: { mode: 'major', chords: ['I', 'IV', 'V', 'IV'] } },
+  { src: '/cinematic-western-80.mp3', genre: 'desert-blues', bpm: 80, name: 'Cinematic Western',
+    progression: { mode: 'minor', chords: ['i', 'VI', 'VII', 'i'] } },
+  { src: '/reggae-rock-100.mp3', genre: 'reggae', bpm: 100, name: 'Reggae Rock',
+    progression: { mode: 'minor', chords: ['i', 'VII', 'VI', 'V'] } },
 ];
 
 function suggestTrack(card) {
@@ -166,12 +394,23 @@ function suggestTrack(card) {
   return candidates[0] || null;
 }
 
+// Does a given track have usable chord-progression metadata for
+// chord-tone-landing? Used by the fallback logic in drawRandom.
+function trackHasProgression(track) {
+  return !!(track && track.progression && Array.isArray(track.progression.chords) && track.progression.chords.length > 0);
+}
+
 // ─── Constraint Dimensions ───
 const KEY_WEIGHTS = {
   'A': 4, 'E': 3, 'G': 3, 'D': 2, 'C': 2, 'F': 1, 'B♭': 1,
   'F#': 1, 'B': 1, 'C#': 0.5, 'A♭': 0.5, 'E♭': 0.5,
 };
 
+// Pitch contour = pure shape constraint. `questionAnswer` was moved to the
+// PHRASE_STRUCTURE_CONSTRAINTS dim in Phase B (v2) — it's a phrase-level form,
+// not a note-level contour, and keeping it here overloaded the axis.
+// v1 cards with `questionAnswer` migrate to `phraseStructure:question-answer`
+// via migrateForgeDataV1ToV2.
 const PITCH_CONSTRAINTS = [
   { id: 'leaps', name: 'Leaps Only', desc: 'Never sing two neighboring notes in a row. Always skip at least one note in the scale when moving. This forces big, dramatic jumps instead of smooth walking.', icon: '↗',
     example: (notes) => notes.length >= 5 ? `Your notes: ${notes.join(', ')}. Try: ${notes[0]}→${notes[2]}→${notes[4]}→${notes[1]} (skipping at least one each time)` : '' },
@@ -183,8 +422,6 @@ const PITCH_CONSTRAINTS = [
     example: (notes) => notes.length >= 4 ? `Seed: ${notes[0]}-${notes[1]}-${notes[2]}. Var 1: ${notes[0]}-${notes[1]}-${notes[3]}. Var 2: ${notes[0]}-${notes[3]}-${notes[2]}.` : '' },
   { id: 'forbidden', name: 'Forbidden Notes', desc: 'Some notes from the scale are off-limits — pretend they don\'t exist. The fewer notes you have, the more rhythm, dynamics, and phrasing have to do the melodic work. This is mastery training.', icon: '🚫', hasExtra: true },
   { id: 'targetLanding', name: 'Target Landing', desc: 'Wander freely through any notes you want, but every phrase MUST end on one specific target note. The journey changes; the destination never does.', icon: '🎯', hasExtra: true },
-  { id: 'questionAnswer', name: 'Question & Answer', desc: 'Sing in pairs of phrases. First phrase asks a question (rising or ending unresolved). Second phrase answers (descending, ending on a stable note). Like a musical conversation with yourself.', icon: '❓',
-    example: (notes) => notes.length >= 4 ? `Q: ${notes[1]}→${notes[2]}→${notes[3]}? (rising, unfinished) A: ${notes[3]}→${notes[1]}→${notes[0]}. (falling, home)` : '' },
 ];
 
 // Tempo-aware helper: returns seconds per beat and seconds per bar (4/4)
@@ -206,6 +443,8 @@ const RHYTHM_CONSTRAINTS = [
     example: (notes, tempo) => `Seed: quarter-eighth-eighth (${(60/tempo).toFixed(2)}s + ${(30/tempo).toFixed(2)}s + ${(30/tempo).toFixed(2)}s). Keep the rhythm, change the notes.` },
   { id: 'triplets', name: 'Triplets Only', desc: 'Three notes per beat instead of the usual two or four. Forces a different internal pulse — the swung, rolling feel of triplet subdivision instead of the straight square of duple time.', icon: '⋯',
     example: (notes, tempo) => `At ${tempo} BPM: 1 beat = ${(60/tempo).toFixed(2)}s. Each triplet note = ${(20/tempo).toFixed(2)}s. Count "tri-pl-et, tri-pl-et" instead of "1-and-2-and".` },
+  { id: '3-3-2', name: '3-3-2 Tresillo', desc: 'Divide 8 eighth-notes into groups of 3 + 3 + 2. Accents land on beats 1, the "&" of 2, and beat 4. The backbone of clave, habanera, reggaeton, and a huge swath of Latin/Afro-Cuban music. Mathematically pure — it\'s not a genre preset, it\'s a subdivision pattern you can overlay on any groove.', icon: '▞',
+    example: (notes, tempo) => `At ${tempo} BPM over 1 bar: accent on beat 1, accent on the "&" of 2, accent on beat 4. Play/rest between. Count "1-2-3, 1-2-3, 1-2".` },
 ];
 
 const DYNAMICS_CONSTRAINTS = [
@@ -233,7 +472,10 @@ const PHRASE_CONSTRAINTS = [
   { id: '8bar', name: '8-Bar Phrases', desc: 'Epics — full stories with a beginning, middle, climax, and conclusion. Requires sustained breath and intention across a long arc.', bars: 8 },
 ];
 
-const VOCAL_CONSTRAINTS = [
+// Register = physical voice production mechanism (what WAS vocalTechnique).
+// Foundational for voice — every sung note has a register. Values preserved
+// from v1 so the 130-entry guidance cache continues to work unchanged.
+const REGISTER_CONSTRAINTS = [
   { id: 'chest', name: 'Chest Voice', desc: 'Stay in chest register — feel the vibration in your sternum and ribs.', icon: '🫁' },
   { id: 'head', name: 'Head Voice', desc: 'Light, heady placement — vibration in the mask (cheeks, bridge of nose). Floaty and ethereal.', icon: '💭' },
   { id: 'mixed', name: 'Mixed Voice', desc: 'Bridge chest and head seamlessly — no audible "break" as you move through your range.', icon: '🔀' },
@@ -241,14 +483,131 @@ const VOCAL_CONSTRAINTS = [
   { id: 'breathy', name: 'Breathy', desc: 'More breath than voice. Intimate, close-mic energy.', icon: '💨' },
 ];
 
-const GUITAR_CONSTRAINTS = [
-  { id: 'downstrokes', name: 'Downstrokes Only', desc: 'All downstrokes — heavier attack, driving energy. No upstrokes allowed. Builds wrist endurance and a more aggressive groove.', icon: '⬇' },
-  { id: 'fingerpick', name: 'Fingerpick', desc: 'No pick — fingers only. Softer attack, more independent control over each string. Opens up simultaneous bass + melody patterns.', icon: '🤚' },
-  { id: 'muted', name: 'Muted', desc: 'Palm-muted or ghost notes throughout — the guitar becomes a percussion instrument. Rhythmic texture with pitched undertones.', icon: '✋' },
-  { id: 'hybrid', name: 'Hybrid Picking', desc: 'Pick + fingers simultaneously — pick handles bass strings, fingers pluck the upper strings. Country, jazz, and surf technique.', icon: '🤙' },
-  { id: 'slide', name: 'Slide', desc: 'Use a slide for everything — no fretted notes. Forces gliding between pitches and trains pitch accuracy by ear since there are no frets to lock onto.', icon: '➡' },
-  { id: 'bends', name: 'Bends Only', desc: 'Every pitch movement happens via string bending instead of moving to a different fret. Trains pitch accuracy by ear and forces expressive note shaping.', icon: '↪' },
+// Vowel/Text = what sound comes out of your mouth. Foundational for voice —
+// every vocal sound has a shape. NEW in v2. Guidance entries don't exist yet;
+// they fall back to the per-dim `desc` string on every card until Phase E.
+const VOWEL_CONSTRAINTS = [
+  { id: 'ah', name: '/ah/ (father)', desc: 'Open throat, dropped jaw. Warmest, most resonant vowel — the default for power singing.', icon: 'â' },
+  { id: 'eh', name: '/eh/ (bed)', desc: 'Mid-open mouth, tongue slightly forward. Bright, forward placement.', icon: 'ê' },
+  { id: 'ee', name: '/ee/ (feet)', desc: 'Narrow mouth, high tongue. Tight and focused — easiest for clean pitch, hardest for power.', icon: 'î' },
+  { id: 'oh', name: '/oh/ (boat)', desc: 'Rounded lips, lifted soft palate. Dark and ringing — great for sustaining.', icon: 'ô' },
+  { id: 'oo', name: '/oo/ (boot)', desc: 'Tightly rounded lips, low jaw. Dark, hollow, trance-friendly.', icon: 'û' },
+  { id: 'hum', name: 'Hum (mouth closed)', desc: 'Lips sealed, sound resonates through the nose and mask. Forces interoception — you feel the vibration instead of hearing it.', icon: '🫦' },
+  { id: 'scatSyllables', name: 'Scat Syllables', desc: 'Nonsense syllables — "doo bee da", "skoo bi dap", your own syllables. Frees you from lyric responsibility to practice pure melodic improvisation.', icon: '🎤' },
+  { id: 'realLyrics', name: 'Real Lyrics', desc: 'Use words from an actual song you\'re working on. The constraint is: make the brief fit the lyrics. Pull from your "Songs 2 Learn" list if stuck.', icon: '📜' },
 ];
+
+// Texture = how many notes at once. Foundational for guitar — every guitar
+// moment has a texture (single-line vs chord vs partial vs mixed). NEW in v2.
+// This is the axis that absorbs chords, double-stops, triad-partial comping,
+// and mixed rhythm/lead work. Strumming patterns emerge from texture × picking
+// × rhythm, not from a separate dim.
+const TEXTURE_CONSTRAINTS = [
+  { id: 'singleLine', name: 'Single Line', desc: 'One note at a time — melodic thinking only. Solos, basslines, melodic fills. No chords, no doubles.', icon: '│' },
+  { id: 'doubleStops', name: 'Double Stops', desc: 'Two notes at once — harmonized lines. Thirds, sixths, octaves. Forces harmonic awareness while still playing a line.', icon: '║' },
+  { id: 'triadPartial', name: 'Triad Partials', desc: 'Three-string partial voicings (typically top 3 strings). Reggae skanks, pop comping, upper-register jazz voicings. Small, mobile, and rhythmic.', icon: '⫶' },
+  { id: 'fullChord', name: 'Full Chord', desc: 'Four or more notes — full voicings. Strumming, arpeggiating chord shapes, comping with changes. The rhythm guitarist\'s mode.', icon: '▦' },
+  { id: 'mixed', name: 'Mixed Textures', desc: 'Alternate between chord stabs and single-note fills within the phrase. Khruangbin, surf-rock, reggae-rock, psych territory. Rhythm and lead in one part.', icon: '◫' },
+];
+
+// Harmonic target = which notes you're aiming for. Shared dim — singers
+// target chord tones and outline arpeggios exactly as guitarists do. Added
+// in Phase B. Four orthogonal values compressed from the original 6 draft:
+//   - scale-shape: use any scale notes freely (the "default" — no harmonic
+//     constraint beyond staying in key)
+//   - arpeggio-1-3-5: outline the root/3rd/5th of the tonic triad in sequence
+//     (works over the drone; no chord changes required)
+//   - chord-tone-landing: over a backing track with real changes, land on a
+//     chord tone (1/3/5) of whatever chord is sounding at the phrase end.
+//     Falls back to arpeggio-1-3-5 if no suggested track has chord metadata.
+//   - color-tone-7-9-11: aim for extensions (7ths, 9ths, 11ths) — jazz color.
+const HARMONIC_TARGET_CONSTRAINTS = [
+  { id: 'scaleShape', name: 'Scale Shape', desc: 'Use any note from the active scale — no harmonic targeting. The "default" state: melody is governed by scale choice alone.', icon: '◌' },
+  { id: 'arpeggio135', name: 'Arpeggio 1-3-5', desc: 'Outline the tonic triad — root, third, fifth — in sequence or any order. Every phrase spells the chord. Works over the drone; no backing changes needed.', icon: '△' },
+  { id: 'chordToneLanding', name: 'Chord-Tone Landing', desc: 'Over the suggested backing track, every phrase must END on a chord tone (root, 3rd, or 5th) of whatever chord is sounding at that moment. Wander freely in between; land on strength.', icon: '⊙' },
+  { id: 'colorTone79', name: 'Color Tones 7/9/11', desc: 'Emphasize chord extensions — 7ths, 9ths, 11ths — instead of the plain triad. The sound of jazz, bossa, Khruangbin-mellow, and modal color playing.', icon: '✦' },
+];
+
+// Phrase structure = how phrases relate to each other across time. Added in
+// Phase B. Absorbs the `questionAnswer` value from v1's pitchConstraint dim
+// (which was always a phrase-level form, not a note-level contour). Soft-gated
+// to phraseLength ≥ 2 bars — call-response in a 1-bar phrase is cramped.
+const PHRASE_STRUCTURE_CONSTRAINTS = [
+  { id: 'question-answer', name: 'Question & Answer', desc: 'Pairs of phrases. First asks (rising, unresolved), second answers (descending, home). Musical conversation with yourself.', icon: '❓' },
+  { id: 'call-response', name: 'Call & Response', desc: 'Statement then echo or answer. The second phrase responds to the first — could be a variation, a rebuttal, or a completion. Gospel, blues, West African music.', icon: '↔' },
+  { id: 'theme-variation', name: 'Theme & Variation', desc: 'Play a simple theme in the first phrase, then vary it in each subsequent phrase. Keep the contour recognizable while the details evolve.', icon: '♲' },
+  { id: 'ostinato', name: 'Ostinato', desc: 'Repeat the same short phrase throughout. Hypnotic, trance-inducing. The melodic commitment is a statement — "this is the idea; sit with it."', icon: '↻' },
+];
+
+// Picking hand = attack method. Phase C compresses this to 4 orthogonal
+// values: how the picking hand CHOOSES to attack each note. Dropped:
+//   - muted (v1): damping, not a picking-hand choice — migrated to downstrokes
+//     (muted strums are overwhelmingly downstroke-driven)
+//   - slide (v1): a note-transition gesture, not a picking choice —
+//     migrated to noteTransition:slideConnect
+//   - bends (v1): a note-transition gesture, not a picking choice —
+//     migrated to noteTransition:bendTarget
+// See migrateV2ToV3 for the weight/lock translations.
+const PICKING_HAND_CONSTRAINTS = [
+  { id: 'downstrokes', name: 'Downstrokes Only', desc: 'All downstrokes — heavier attack, driving energy. No upstrokes allowed. Builds wrist endurance and a more aggressive groove.', icon: '⬇' },
+  { id: 'alternate', name: 'Alternate Picking', desc: 'Strict down-up alternation on every note. The economy-of-motion default for fast single-line playing. On chords it becomes alternating strum direction.', icon: '⇅' },
+  { id: 'fingerpick', name: 'Fingerpick', desc: 'No pick — fingers only. Softer attack, independent control over each string. Opens up simultaneous bass + melody patterns.', icon: '🤚' },
+  { id: 'hybrid', name: 'Hybrid Picking', desc: 'Pick + fingers simultaneously — pick handles bass strings, fingers pluck the upper strings. Country, jazz, and surf technique.', icon: '🤙' },
+];
+
+// Neck zone = where on the fretboard you play. Pure spatial axis. Every
+// scale in every key can be played in any zone. Phase C.
+const NECK_ZONE_CONSTRAINTS = [
+  { id: 'open', name: 'Open Position', desc: 'Frets 0–5. Open strings ringing out, cowboy chords, folk voicings. Bright, resonant, sometimes ragged.', icon: '◖' },
+  { id: 'mid', name: 'Mid Neck', desc: 'Frets 5–9. The core barre/power-chord territory. Fatter and more compressed than open, but still weighty.', icon: '◐' },
+  { id: 'high', name: 'High Neck', desc: 'Frets 9–15. Thin, vocal, soaring. Triad partials and upper-register solos live here.', icon: '◗' },
+  { id: 'fullRange', name: 'Full Range', desc: 'Use the whole neck — move between zones within the phrase. Trains left-hand navigation and horizontal thinking.', icon: '◉' },
+];
+
+// Note transition = how one note connects to the next. Every transition
+// uses exactly one of these mechanisms. Orthogonal to picking hand (attack
+// happens at note ONSET; transition happens BETWEEN notes). Phase C.
+const NOTE_TRANSITION_CONSTRAINTS = [
+  { id: 'cleanAttack', name: 'Clean Attack', desc: 'Every note freshly fretted and struck. No connection sounds between notes — each one is its own event. The "default" state.', icon: '┃' },
+  { id: 'hammerPull', name: 'Hammer-On / Pull-Off', desc: 'Legato phrasing — pick only the first note of each group, let hammer-ons and pull-offs do the rest. Left hand carries the phrase.', icon: 'ᜧ' },
+  { id: 'slideConnect', name: 'Slide Connect', desc: 'Slide into the target note from below or above. Glides between pitches. Common in blues, desert blues, reggae, surf.', icon: '⟿' },
+  { id: 'bendTarget', name: 'Bend to Target', desc: 'Reach the target note by bending up from a lower fret. Full bends, half bends, pre-bends all count. Expressive pitch-shaping.', icon: '↗' },
+];
+
+// Onset = how each phrase starts. Per-phrase gesture at the moment the
+// voice first makes contact with the note. Orthogonal to register, vowel,
+// and every shared dim. Phase D.
+const ONSET_CONSTRAINTS = [
+  { id: 'hardAttack', name: 'Hard Attack', desc: 'Clean, immediate onset — the note begins at full intended pitch and volume with no warmup. Assertive, declamatory, rock/pop idiom.', icon: '!' },
+  { id: 'soft', name: 'Soft Onset', desc: 'Gentle rise into the note over a beat or so — breath first, then pitch, then full tone. The classical/art-song default.', icon: '◡' },
+  { id: 'breathy', name: 'Breathy Onset', desc: 'Start with more air than tone — a whisper that resolves into pitch. Intimate, confessional, close-mic aesthetic.', icon: '∽' },
+  { id: 'slideIn', name: 'Slide In', desc: 'Start the note a half-step or more below the target and slide up into it. Vocal expressiveness borrowed from blues, R&B, country.', icon: '↗' },
+];
+
+// Vibrato = sustain-time pitch modulation. Fretting-hand physical gesture
+// on guitar. Phase C. Voice vibrato is a CONSEQUENCE of breath support and
+// is not controllable on command, so this dim is guitar-only.
+const VIBRATO_CONSTRAINTS = [
+  { id: 'straight', name: 'Straight (no vibrato)', desc: 'No vibrato at all. Pure, held pitches. Focus on tone and sustain without modulation. Teaches you what vibrato ADDS by taking it away.', icon: '━' },
+  { id: 'slow', name: 'Slow Vibrato', desc: 'Wide, slow oscillation — about 2–3 cycles per second. B.B. King, David Gilmour. Expressive and deliberate.', icon: '≈' },
+  { id: 'fast', name: 'Fast Vibrato', desc: 'Narrow, quick oscillation — 5–7 cycles per second. Classical/flamenco style. Shimmers rather than wobbles.', icon: '∿' },
+  { id: 'lateEntry', name: 'Late-Entry Vibrato', desc: 'Hold each note straight at first, then let vibrato bloom in at the end. The most common vocal-inspired guitar approach.', icon: '╌' },
+];
+
+// ─── Mood library (session-level overlay, not a random dim) ───
+// 25 launch moods organized into 7 families. Expands to ~70 in Phase E2
+// based on actual usage. NOT randomized — picked once per round and colors
+// every card's guidance overlay with a single emotional intent.
+const MOOD_LIBRARY = {
+  'Outward longing':  ['longing', 'yearning', 'nostalgic', 'wistful'],
+  'Inward warmth':    ['tender', 'intimate', 'serene'],
+  'Light':            ['playful', 'mischievous', 'joyous'],
+  'Heavy':            ['melancholy', 'elegiac', 'weary'],
+  'Trance':           ['hypnotic', 'dreamy', 'floating'],
+  'Fire':             ['defiant', 'fierce', 'driven'],
+  "Gene's world":     ['sun-bleached', 'bourbon-warm', 'highway-hypnosis', 'motel-neon', 'slow-sunday'],
+};
+const MOOD_FLAT = Object.values(MOOD_LIBRARY).flat(); // 25 moods total
 
 const OBLIQUE_MODIFIERS = [
   { id: 'honorError', name: 'Honor Thy Error', desc: 'If you play a "wrong" note, build on it — make it the start of something new. Mistakes are doorways.' },
@@ -261,24 +620,60 @@ const OBLIQUE_MODIFIERS = [
   { id: 'storyteller', name: 'The Storyteller', desc: 'Every phrase is a sentence in a story. The melody has a plot: introduction, tension, climax, resolution.' },
 ];
 
-// ─── Dimension Registry ───
-// Each dimension is something the user can practice INDEPENDENTLY of the others.
-// Genre/emotion/density were dropped because they emerge from combinations of
-// the other dimensions (genre = rhythm + dynamics + articulation, etc.) — they
-// aren't primary, orthogonal practice axes.
-// Oblique modifiers live in a separate "creative spice" mode, not in the random pool.
+// ─── Dimension Registry (v2 three-tier structure) ───
+// Three tiers of presence:
+//   1. Musical context (always set, auto-generated): key, scale, tempo
+//   2. Foundational (always drawn per card, exempt from tier gating):
+//      - texture for guitar; register + vowel for voice
+//      - These are the inescapable facts of the instrument — you cannot play
+//        guitar without choosing some texture, cannot sing without some register
+//   3. Randomizable pool (drawn per user-selected N, tier soft-gated): everything else
+//
+// Foundational dims are marked with `foundational: 'guitar'` or `'voice'`.
+// Randomizable instrument-branch dims use the `instrument` field as before.
+// Shared randomizable dims have neither.
+// Tier mapping (Phase B): how deep each dim sits in the soft-gate.
+//   tier-2 (always eligible): pitch contour, rhythm, dynamics, harmonic target, picking hand
+//   tier-3 (ideal mode+): articulation, phrase length, neck zone, note transition, onset
+//   tier-4 (advanced): phrase structure, vibrato
+// Tier determines how often a dim gets drawn relative to others — higher tier
+// = drawn less often at default settings — not whether it appears at all.
 const DIMENSIONS = [
+  // Musical context (tier 1, quantitative, always set)
   { id: 'key',              label: 'Key',          tier: 1, type: 'quantitative', color: '#d4a373' },
   { id: 'scale',            label: 'Scale',        tier: 1, type: 'quantitative', color: '#9e829c' },
   { id: 'tempo',            label: 'Tempo',        tier: 1, type: 'quantitative', color: '#d97d54' },
+  // Foundational — always drawn on every card (not optional via tier)
+  { id: 'texture',          label: 'Texture',      tier: 2, type: 'qualitative',  options: TEXTURE_CONSTRAINTS,      color: '#b58454', foundational: 'guitar' },
+  { id: 'register',         label: 'Register',     tier: 2, type: 'qualitative',  options: REGISTER_CONSTRAINTS,     color: '#d68383', foundational: 'voice' },
+  { id: 'vowel',            label: 'Vowel',        tier: 2, type: 'qualitative',  options: VOWEL_CONSTRAINTS,        color: '#d6a5a5', foundational: 'voice' },
+  // Shared randomizable pool — tier 2 (always eligible)
   { id: 'pitchConstraint',  label: 'Pitch',        tier: 2, type: 'qualitative',  options: PITCH_CONSTRAINTS,        color: '#d68383' },
   { id: 'rhythmConstraint', label: 'Rhythm',       tier: 2, type: 'qualitative',  options: RHYTHM_CONSTRAINTS,       color: '#d97d54' },
   { id: 'dynamics',         label: 'Dynamics',     tier: 2, type: 'qualitative',  options: DYNAMICS_CONSTRAINTS,     color: '#6b8e9f' },
+  { id: 'harmonicTarget',   label: 'Harmonic',     tier: 2, type: 'qualitative',  options: HARMONIC_TARGET_CONSTRAINTS, color: '#a59e6b' },
+  // Shared randomizable pool — tier 3 (ideal mode and up)
   { id: 'articulation',     label: 'Articulation', tier: 3, type: 'qualitative',  options: ARTICULATION_CONSTRAINTS, color: '#5b9e8f' },
   { id: 'phraseLength',     label: 'Phrase',       tier: 3, type: 'qualitative',  options: PHRASE_CONSTRAINTS,       color: '#9e829c' },
-  { id: 'vocalTechnique',   label: 'Vocal',        tier: 4, type: 'qualitative',  options: VOCAL_CONSTRAINTS,        color: '#d68383', instrument: 'voice' },
-  { id: 'guitarTechnique',  label: 'Guitar',       tier: 4, type: 'qualitative',  options: GUITAR_CONSTRAINTS,       color: '#b58454', instrument: 'guitar' },
+  // Shared randomizable pool — tier 4 (advanced)
+  { id: 'phraseStructure',  label: 'Form',         tier: 4, type: 'qualitative',  options: PHRASE_STRUCTURE_CONSTRAINTS, color: '#9e6b9e' },
+  // Instrument-branch randomizable dims (voice)
+  { id: 'onset',            label: 'Onset',        tier: 3, type: 'qualitative',  options: ONSET_CONSTRAINTS,            color: '#d6a5a5', instrument: 'voice' },
+  // Instrument-branch randomizable dims (guitar)
+  { id: 'pickingHand',      label: 'Picking',      tier: 2, type: 'qualitative',  options: PICKING_HAND_CONSTRAINTS,     color: '#b58454', instrument: 'guitar' },
+  { id: 'neckZone',         label: 'Neck Zone',    tier: 3, type: 'qualitative',  options: NECK_ZONE_CONSTRAINTS,        color: '#a58454', instrument: 'guitar' },
+  { id: 'noteTransition',   label: 'Transition',   tier: 3, type: 'qualitative',  options: NOTE_TRANSITION_CONSTRAINTS,  color: '#a57454', instrument: 'guitar' },
+  { id: 'vibrato',          label: 'Vibrato',      tier: 4, type: 'qualitative',  options: VIBRATO_CONSTRAINTS,          color: '#b56484', instrument: 'guitar' },
 ];
+
+// Foundational dim IDs per instrument — drawn on every card regardless of N.
+const FOUNDATIONAL_DIMS = {
+  guitar: ['texture'],
+  voice:  ['register', 'vowel'],
+};
+
+// Musical context dims — always set, auto-generated, not in the random pool.
+const MUSICAL_CONTEXT_DIMS = ['key', 'scale', 'tempo'];
 
 // Oblique modifiers are creative breakthrough prompts, NOT skill-building constraints.
 // They're applied as an optional spice on top of any drawn card, not part of the
@@ -301,21 +696,72 @@ function getScaleWeights(tier) {
   });
 }
 
-// ─── Card Generation ───
-// maxConstraints limits how many qualitative constraints appear per card.
-// Key, scale, and tempo are always generated. The qualitative pool is shuffled
-// and only the first N are drawn — this keeps cognitive load manageable.
-function generateCard(activeDimensions, lockedDimensions, history, constraintWeights, tier, _retryCount = 0, maxConstraints = 3, mode = 'matrix') {
-  const card = {
-    id: generateId(),
-    timestamp: Date.now(),
-    constraints: {},
-    activeDimensions: [...activeDimensions],
-    tier,
-    mode, // 'scales' | 'focus' | 'combo' | 'matrix' — drives guidance lookup
-  };
+// ─── Card Generation (v2 three-tier structure) ───
+//
+// Pipeline:
+//   drawContext()       → always sets key, scale, tempo (musical context)
+//   drawFoundational()  → always draws foundational dims for the active instrument
+//                         (texture for guitar; register + vowel for voice)
+//   drawRandom()        → draws up to maxConstraints from the randomizable pool
+//   validateAndRepair() → catches entanglements via redraw; fails loud on lock conflicts
+//
+// SRS weight keys are scoped by instrument (`${instrument}:${dimId}:${valueId}`)
+// so ratings on a voice card never affect guitar weights. Fallback to the v1
+// unscoped key is used if the scoped key is missing (handles mid-migration reads).
 
-  // Generate key first (needed for forbidden note, target landing, etc.)
+// Instrument that a dim is "played on" — determines the SRS weight-key prefix.
+// Foundational dims are instrument-specific; shared random dims take whatever
+// instrument the card was drawn in.
+function instrumentForDim(dimId, cardInstrument) {
+  const dim = DIMENSIONS.find(d => d.id === dimId);
+  if (!dim) return cardInstrument;
+  if (dim.foundational) return dim.foundational;
+  if (dim.instrument) return dim.instrument;
+  return cardInstrument;
+}
+
+// SRS-weighted pick from a dim's options list. Accepts the card's instrument
+// so weight keys can be scoped. Falls back to the v1 unscoped key if the scoped
+// entry is missing (handles reads during migration or partial data).
+function srsWeightedPick(dim, constraintWeights, cardInstrument) {
+  const dimInstr = instrumentForDim(dim.id, cardInstrument);
+  const weights = dim.options.map(opt => {
+    const scopedKey = `${dimInstr}:${dim.id}:${opt.id}`;
+    const legacyKey = `${dim.id}:${opt.id}`;
+    const w = constraintWeights[scopedKey] || constraintWeights[legacyKey] || { easy: 0, good: 0, hard: 0 };
+    return Math.max(0.5, 1 + w.hard * 0.5 - w.easy * 0.15);
+  });
+  return { ...weightedPick(dim.options, weights) };
+}
+
+// Dynamic-data enrichment for specific constraint values (forbidden notes,
+// target landing). Mutates `chosen` in place based on the card's scaleNotes
+// and key. Extracted from the old inline logic so both foundational and
+// random draws go through the same enrichment.
+function enrichDynamicConstraint(chosen, card, scaleNotes) {
+  if (chosen.id === 'forbidden' && scaleNotes.length > 2) {
+    const maxRemovable = Math.min(3, scaleNotes.length - 2);
+    const removeCount = 1 + Math.floor(Math.random() * maxRemovable);
+    const nonRoot = scaleNotes.filter(n => n !== card.constraints.key);
+    const shuffled = [...nonRoot].sort(() => Math.random() - 0.5);
+    chosen.forbiddenNotes = shuffled.slice(0, removeCount);
+    const allowed = scaleNotes.filter(n => !chosen.forbiddenNotes.includes(n));
+    const removeWord = removeCount === 1 ? 'note is' : 'notes are';
+    chosen.desc = `${removeCount} scale ${removeWord} off-limits: avoid ${chosen.forbiddenNotes.join(', ')}. Use only the remaining ${allowed.length} notes (${allowed.join(', ')}) to build phrases. The fewer notes you have, the more rhythm, dynamics, and phrasing must carry the melody.`;
+    chosen.dynamicExample = `Example phrase using only allowed notes: ${allowed.slice(0, Math.min(4, allowed.length)).join('→')}`;
+  }
+  if (chosen.id === 'targetLanding' && scaleNotes.length > 0) {
+    chosen.targetNote = randomPick(scaleNotes);
+    chosen.desc = `Every phrase must resolve to ${chosen.targetNote}. Wander freely through the scale but always land on this note.`;
+    const others = scaleNotes.filter(n => n !== chosen.targetNote);
+    if (others.length >= 3) {
+      chosen.dynamicExample = `Try: ${others[0]}→${others[1]}→${others[2]}→${chosen.targetNote} (wander, then home)`;
+    }
+  }
+}
+
+// Pass 1: musical context (key, scale, tempo). Always set.
+function drawContext(card, activeDimensions, lockedDimensions, tier) {
   if (activeDimensions.includes('key')) {
     if (lockedDimensions.key !== undefined) {
       card.constraints.key = lockedDimensions.key;
@@ -325,10 +771,9 @@ function generateCard(activeDimensions, lockedDimensions, history, constraintWei
       card.constraints.key = weightedPick(keys, weights);
     }
   } else {
-    card.constraints.key = 'A'; // fallback
+    card.constraints.key = 'A';
   }
 
-  // Generate scale
   if (activeDimensions.includes('scale')) {
     if (lockedDimensions.scale !== undefined) {
       card.constraints.scale = lockedDimensions.scale;
@@ -341,7 +786,6 @@ function generateCard(activeDimensions, lockedDimensions, history, constraintWei
     card.constraints.scale = 'minor-pentatonic';
   }
 
-  // Generate tempo
   if (activeDimensions.includes('tempo')) {
     if (lockedDimensions.tempo !== undefined) {
       card.constraints.tempo = lockedDimensions.tempo;
@@ -351,14 +795,44 @@ function generateCard(activeDimensions, lockedDimensions, history, constraintWei
   } else {
     card.constraints.tempo = 90;
   }
+}
 
-  // Collect available qualitative dimensions, separating locked from random
-  const scaleData = generateScale(card.constraints.key, card.constraints.scale);
-  const scaleNotes = scaleData.notes || [];
+// Pass 2: foundational dims. Always drawn for the active instrument, exempt
+// from the random N count. Respects locks and per-value excludes. Returns the
+// list of dim IDs that were drawn so the caller can track them in
+// `drawnConstraints`.
+function drawFoundational(card, instrument, lockedDimensions, constraintWeights, scaleNotes) {
+  const drawn = [];
+  const foundational = FOUNDATIONAL_DIMS[instrument] || [];
+  for (const dimId of foundational) {
+    const dim = DIMENSIONS.find(d => d.id === dimId);
+    if (!dim || !dim.options || dim.options.length === 0) continue;
 
+    let chosen;
+    if (lockedDimensions[dimId] !== undefined) {
+      // Lock wins — use the pinned value. Locked values are objects carrying the
+      // same shape as a drawn value (id, name, desc).
+      chosen = { ...lockedDimensions[dimId] };
+    } else {
+      chosen = srsWeightedPick(dim, constraintWeights, instrument);
+    }
+    enrichDynamicConstraint(chosen, card, scaleNotes);
+    card.constraints[dimId] = chosen;
+    drawn.push(dimId);
+  }
+  return drawn;
+}
+
+// Pass 3: random draws from the instrument's randomizable pool, up to
+// maxConstraints. Locks inside the randomizable pool still count against the
+// slot budget (unchanged from v1 behavior). Foundational dims are EXCLUDED
+// from this pool because they were already drawn in pass 2.
+function drawRandom(card, activeDimensions, lockedDimensions, constraintWeights, instrument, maxConstraints, scaleNotes) {
+  const foundationalSet = new Set(FOUNDATIONAL_DIMS[instrument] || []);
   const lockedQualDims = [];
   const availableQualDims = [];
   for (const dimId of activeDimensions) {
+    if (foundationalSet.has(dimId)) continue; // foundational already drawn
     const dim = DIMENSIONS.find(d => d.id === dimId);
     if (!dim || dim.type === 'quantitative') continue;
     if (!dim.options || dim.options.length === 0) continue;
@@ -369,63 +843,169 @@ function generateCard(activeDimensions, lockedDimensions, history, constraintWei
     }
   }
 
-  // Locked dims always get included
+  // Locked dims inside the random pool always get included.
   for (const dimId of lockedQualDims) {
-    card.constraints[dimId] = lockedDimensions[dimId];
+    const chosen = { ...lockedDimensions[dimId] };
+    enrichDynamicConstraint(chosen, card, scaleNotes);
+    card.constraints[dimId] = chosen;
   }
 
-  // From the remaining pool, shuffle and pick up to maxConstraints
+  // Random pick for the remaining slots.
   const slotsLeft = Math.max(0, maxConstraints - lockedQualDims.length);
   const shuffled = [...availableQualDims].sort(() => Math.random() - 0.5);
   const selectedDims = shuffled.slice(0, slotsLeft);
 
   for (const dimId of selectedDims) {
     const dim = DIMENSIONS.find(d => d.id === dimId);
-
-    // SRS-weighted pick from the dimension's options
-    const weights = dim.options.map(opt => {
-      const wKey = `${dimId}:${opt.id}`;
-      const w = constraintWeights[wKey] || { easy: 0, good: 0, hard: 0 };
-      return Math.max(0.5, 1 + w.hard * 0.5 - w.easy * 0.15);
-    });
-    const chosen = { ...weightedPick(dim.options, weights) };
-
-    // Generate extra data for specific constraints
-    if (chosen.id === 'forbidden' && scaleNotes.length > 2) {
-      // Dynamic count: remove 1, 2, or 3 notes — but always leave at least 2 notes remaining.
-      // Pentatonic (5 notes): max remove = 3 → leaves 2
-      // 7-note scales: max remove = 3 → leaves 4
-      const maxRemovable = Math.min(3, scaleNotes.length - 2);
-      const removeCount = 1 + Math.floor(Math.random() * maxRemovable);
-      const nonRoot = scaleNotes.filter(n => n !== card.constraints.key);
-      // Shuffle and take the first N
-      const shuffled = [...nonRoot].sort(() => Math.random() - 0.5);
-      chosen.forbiddenNotes = shuffled.slice(0, removeCount);
-      const allowed = scaleNotes.filter(n => !chosen.forbiddenNotes.includes(n));
-      const removeWord = removeCount === 1 ? 'note is' : 'notes are';
-      chosen.desc = `${removeCount} scale ${removeWord} off-limits: avoid ${chosen.forbiddenNotes.join(', ')}. Use only the remaining ${allowed.length} notes (${allowed.join(', ')}) to build phrases. The fewer notes you have, the more rhythm, dynamics, and phrasing must carry the melody.`;
-      chosen.dynamicExample = `Example phrase using only allowed notes: ${allowed.slice(0, Math.min(4, allowed.length)).join('→')}`;
-    }
-    if (chosen.id === 'targetLanding' && scaleNotes.length > 0) {
-      chosen.targetNote = randomPick(scaleNotes);
-      chosen.desc = `Every phrase must resolve to ${chosen.targetNote}. Wander freely through the scale but always land on this note.`;
-      const others = scaleNotes.filter(n => n !== chosen.targetNote);
-      if (others.length >= 3) {
-        chosen.dynamicExample = `Try: ${others[0]}→${others[1]}→${others[2]}→${chosen.targetNote} (wander, then home)`;
-      }
-    }
-
+    const chosen = srsWeightedPick(dim, constraintWeights, instrument);
+    enrichDynamicConstraint(chosen, card, scaleNotes);
     card.constraints[dimId] = chosen;
   }
 
-  // Track which qualitative dims were actually drawn
-  card.drawnConstraints = [...lockedQualDims, ...selectedDims];
+  return [...lockedQualDims, ...selectedDims];
+}
 
-  // Derive drone root
+// Coherence validation. Catches entanglements between orthogonal dims that
+// produce impossible or musically nonsense combinations. Redraws the affected
+// dim in place. Redraw priority: NON-LOCKED dims go first. If every
+// conflicting dim is locked, throws LockConflictError — the UI catches this
+// and surfaces "These locks are incompatible" to the user. No silent retries.
+class LockConflictError extends Error {
+  constructor(message, locks) {
+    super(message);
+    this.name = 'LockConflictError';
+    this.locks = locks;
+  }
+}
+
+// Scales that have no stable 1-3-5 tonic triad — targeting the "third"
+// or "fifth" of the tonic is either undefined or musically weird. Phase B
+// mostly ships pentatonic/modal/minor scales that DO have a clear triad,
+// so this set is minimal for now. Expand if/when chromatic or non-Western
+// scales are added to SCALE_TYPES.
+const ATONAL_SCALES = new Set([
+  // 'chromatic', // not currently in SCALE_TYPES but reserved for future
+]);
+
+function validateAndRepair(card, lockedDimensions, constraintWeights, instrument) {
+  // Phase B rules:
+  //   Rule 1: atonal scale × arpeggio-1-3-5 / chord-tone-landing / color-tone →
+  //           redraw harmonic target to scale-shape (the tonic is ambiguous,
+  //           so targeting intervals of it produces nonsense). No-op as of
+  //           Phase B because no atonal scales are in SCALE_TYPES yet; the
+  //           rule is wired for when chromatic/whole-tone/octatonic land.
+  //
+  // Redraw priority (always): non-locked dims first. If all conflicting dims
+  // are locked, throw LockConflictError — UI catches it and shows a banner
+  // with a "Clear conflicting locks" button.
+  const MAX_REPAIRS = 4;
+  let repairs = 0;
+  while (repairs < MAX_REPAIRS) {
+    let didRepair = false;
+
+    // Rule 1: scale × harmonic target
+    const scale = card.constraints.scale;
+    const ht = card.constraints.harmonicTarget;
+    if (scale && ht && ATONAL_SCALES.has(scale)) {
+      const incompatible = ht.id === 'arpeggio135' || ht.id === 'chordToneLanding' || ht.id === 'colorTone79';
+      if (incompatible) {
+        const htLocked = lockedDimensions.harmonicTarget !== undefined;
+        const scaleLocked = lockedDimensions.scale !== undefined;
+        if (!htLocked) {
+          // Redraw harmonic target to scaleShape (the only sensible value
+          // for an atonal scale).
+          const htDim = DIMENSIONS.find(d => d.id === 'harmonicTarget');
+          const fallback = htDim.options.find(o => o.id === 'scaleShape');
+          if (fallback) {
+            card.constraints.harmonicTarget = { ...fallback };
+            didRepair = true;
+          }
+        } else if (!scaleLocked) {
+          // Redraw scale to something with a clear tonic.
+          const stableScales = ['minor-pentatonic', 'major-pentatonic', 'blues', 'major', 'natural-minor'];
+          card.constraints.scale = randomPick(stableScales);
+          didRepair = true;
+        } else {
+          throw new LockConflictError(
+            `Harmonic target "${ht.name}" is incompatible with the ${scale} scale (no clear tonic). Adjust one of the locks.`,
+            { harmonicTarget: ht.name, scale }
+          );
+        }
+      }
+    }
+
+    if (!didRepair) break;
+    repairs++;
+  }
+  return card;
+}
+
+// Top-level card generator. Assembles context → foundational → random → repair,
+// then checks for a no-repeat collision against history. The activeDimensions
+// argument must already include musical context + foundational + the random
+// pool for the target instrument (the derived `activeDimensions` useMemo in
+// the main component handles this).
+function generateCard(activeDimensions, lockedDimensions, history, constraintWeights, tier, _retryCount = 0, maxConstraints = 3, mode = 'matrix', instrument = 'voice') {
+  const card = {
+    id: generateId(),
+    timestamp: Date.now(),
+    constraints: {},
+    activeDimensions: [...activeDimensions],
+    instrument,
+    tier,
+    mode, // 'scales' | 'focus' | 'combo' | 'matrix' — drives guidance lookup
+  };
+
+  // Pass 1: musical context.
+  drawContext(card, activeDimensions, lockedDimensions, tier);
+  const scaleData = generateScale(card.constraints.key, card.constraints.scale);
+  const scaleNotes = scaleData.notes || [];
+
+  // Pass 2: foundational dims (always drawn).
+  const foundationalDrawn = drawFoundational(card, instrument, lockedDimensions, constraintWeights, scaleNotes);
+
+  // Pass 3: random pool draws (up to maxConstraints).
+  const randomDrawn = drawRandom(card, activeDimensions, lockedDimensions, constraintWeights, instrument, maxConstraints, scaleNotes);
+
+  // Pass 3.5: suggest backing track early so Pass 4 can consult it for
+  // chord-tone-landing fallback logic. suggestTrack depends only on tempo,
+  // which was set in Pass 1, so it's safe to call here.
+  card.suggestedTrack = suggestTrack(card);
+
+  // Pass 3.6: chord-tone-landing fallback. If harmonicTarget drew
+  // `chordToneLanding` but the suggested backing track has no chord
+  // progression metadata, collapse to `arpeggio135` — which targets the
+  // tonic triad and works over the drone alone. This is a targeted
+  // value-level redraw, NOT a validateAndRepair rule, because it depends
+  // on external state (the track library) rather than dim×dim entanglement.
+  // Locked harmonicTarget values are respected — if the user explicitly
+  // pinned chordToneLanding we leave it alone and trust them to pick a
+  // track manually.
+  const ht = card.constraints.harmonicTarget;
+  if (ht && ht.id === 'chordToneLanding'
+      && !trackHasProgression(card.suggestedTrack)
+      && lockedDimensions.harmonicTarget === undefined) {
+    const htDim = DIMENSIONS.find(d => d.id === 'harmonicTarget');
+    const fallback = htDim.options.find(o => o.id === 'arpeggio135');
+    if (fallback) {
+      card.constraints.harmonicTarget = { ...fallback };
+      card.constraints.harmonicTarget._fallbackFrom = 'chordToneLanding';
+    }
+  }
+
+  // Pass 4: coherence repair. May throw LockConflictError if all conflicting
+  // dims are locked — the UI handles that by displaying a lock-conflict banner
+  // and is expected not to call generateCard again until the user adjusts.
+  validateAndRepair(card, lockedDimensions, constraintWeights, instrument);
+
+  // Track which qualitative dims were drawn (foundational + random).
+  card.drawnConstraints = [...foundationalDrawn, ...randomDrawn];
+
+  // Derive drone root (unchanged from v1).
   card.droneRoot = droneRootFromCard(card.constraints.key, card.constraints.scale);
 
-  // No-immediate-repeat check: compare all drawn constraints, not just pitch+rhythm
-  // (higher tiers may not draw those specific dimensions)
+  // No-immediate-repeat check: if the new card is identical to the last one,
+  // retry up to 5 times. Checks all drawn dims — foundational and random.
   if (history.length > 0 && _retryCount < 5) {
     const last = history[history.length - 1];
     const sameKey = card.constraints.key === last.constraints.key;
@@ -438,25 +1018,129 @@ function generateCard(activeDimensions, lockedDimensions, history, constraintWei
       if (a !== b) { sameConstraints = false; break; }
     }
     if (sameKey && sameScale && sameConstraints) {
-      return generateCard(activeDimensions, lockedDimensions, history, constraintWeights, tier, _retryCount + 1, maxConstraints);
+      return generateCard(activeDimensions, lockedDimensions, history, constraintWeights, tier, _retryCount + 1, maxConstraints, mode, instrument);
     }
   }
 
-  // Suggest backing track
-  card.suggestedTrack = suggestTrack(card);
+  // (suggestedTrack was already set in Pass 3.5 so chord-tone-landing
+  // fallback could consult it. No need to set again here.)
 
   return card;
 }
 
+// ─── Orthogonality simulation (Phase A exit gate) ───
+// Generates N cards per instrument mode, measures how often
+// validateAndRepair triggers a dim redraw, and logs the result.
+// Must pass <10% redraw rate before Phase B starts.
+//
+// Invocation: open the browser console on the Practice Forge page and run
+//   window.__forgeOrthogonalityTest({ perInstrument: 500 })
+// Pure JS — no UI state touched. Safe to run anytime.
+function runOrthogonalityTest({ perInstrument = 500 } = {}) {
+  const instruments = ['voice', 'guitar'];
+  const results = {};
+
+  const SHARED_RANDOM = [
+    'pitchConstraint', 'rhythmConstraint', 'dynamics',
+    'harmonicTarget',
+    'articulation', 'phraseLength',
+    'phraseStructure',
+  ];
+  const GUITAR_RANDOM = [...SHARED_RANDOM, 'pickingHand', 'neckZone', 'noteTransition', 'vibrato'];
+  const VOICE_RANDOM  = [...SHARED_RANDOM, 'onset'];
+
+  for (const inst of instruments) {
+    const pool = inst === 'guitar' ? GUITAR_RANDOM : VOICE_RANDOM;
+    const activeDimensions = [
+      ...MUSICAL_CONTEXT_DIMS,
+      ...(FOUNDATIONAL_DIMS[inst] || []),
+      ...pool,
+    ];
+
+    let repairs = 0;
+    let lockConflicts = 0;
+    let otherErrors = 0;
+    const foundationalHits = {};
+
+    for (let i = 0; i < perInstrument; i++) {
+      try {
+        // Track whether validateAndRepair changes the card by capturing
+        // pre/post register values (the only repair rule in Phase A).
+        const card = generateCard(
+          activeDimensions, /* lockedDimensions */ {},
+          /* history */ [], /* constraintWeights */ {},
+          /* tier */ 4, /* _retryCount */ 0,
+          /* maxConstraints */ 3, /* mode */ 'matrix', inst
+        );
+        // Track which foundational values showed up
+        for (const fid of FOUNDATIONAL_DIMS[inst] || []) {
+          const v = card.constraints[fid]?.id;
+          if (v) {
+            const key = `${fid}:${v}`;
+            foundationalHits[key] = (foundationalHits[key] || 0) + 1;
+          }
+        }
+      } catch (err) {
+        if (err && err.name === 'LockConflictError') lockConflicts++;
+        else otherErrors++;
+      }
+    }
+
+    // Second pass: directly measure repair rate by instrumenting the repair
+    // function. We re-simulate with forced-eligible cards and count how often
+    // the rule at the head of validateAndRepair fires. A cheaper proxy: force
+    // 100 low-pitch keys + head register and measure repair rate in isolation.
+    let directRepairs = 0;
+    const LOW_KEYS = ['F', 'E', 'E♭', 'D', 'C#', 'C'];
+    if (inst === 'voice') {
+      for (let i = 0; i < 100; i++) {
+        const testCard = {
+          id: 'test',
+          constraints: {
+            key: LOW_KEYS[i % LOW_KEYS.length],
+            scale: 'minor-pentatonic',
+            tempo: 90,
+            register: { id: i % 2 === 0 ? 'head' : 'falsetto', name: 'Test' },
+          },
+        };
+        const before = testCard.constraints.register.id;
+        try {
+          validateAndRepair(testCard, {}, {}, 'voice');
+          if (testCard.constraints.register.id !== before) directRepairs++;
+        } catch (e) { /* lock conflict impossible with empty locks */ }
+      }
+    }
+
+    results[inst] = {
+      perInstrument,
+      lockConflicts,
+      otherErrors,
+      directRepairRate: inst === 'voice' ? `${directRepairs}/100 (${directRepairs}%)` : 'n/a (no guitar rules yet)',
+      foundationalHits,
+    };
+  }
+
+  // eslint-disable-next-line no-console
+  console.table(results);
+  // eslint-disable-next-line no-console
+  console.log('[Phase A exit gate] Target: direct repair rate < 10%. Current:', results);
+  return results;
+}
+
+// Expose to window for manual invocation from the browser console.
+if (typeof window !== 'undefined') {
+  window.__forgeOrthogonalityTest = runOrthogonalityTest;
+}
+
 // ─── Session generation ───
-function generateSession(count, activeDimensions, lockedDimensions, constraintWeights, tier, maxConstraints = 3, mode = 'matrix') {
+function generateSession(count, activeDimensions, lockedDimensions, constraintWeights, tier, maxConstraints = 3, mode = 'matrix', instrument = 'voice') {
   const cards = [];
   const keyCount = {};
   for (let i = 0; i < count; i++) {
     let card;
     let attempts = 0;
     do {
-      card = generateCard(activeDimensions, lockedDimensions, cards, constraintWeights, tier, 0, maxConstraints, mode);
+      card = generateCard(activeDimensions, lockedDimensions, cards, constraintWeights, tier, 0, maxConstraints, mode, instrument);
       attempts++;
     } while ((keyCount[card.constraints.key] || 0) >= 2 && attempts < 10);
     keyCount[card.constraints.key] = (keyCount[card.constraints.key] || 0) + 1;
@@ -467,18 +1151,275 @@ function generateSession(count, activeDimensions, lockedDimensions, constraintWe
 
 // ─── localStorage ───
 const STORAGE_KEY = 'practiceforge-data';
+const V1_BACKUP_KEY = 'practiceforge-data-v1-backup';
+const CURRENT_SCHEMA_VERSION = 3;
+
+// v2 → v3 migration (Phase C). Remaps deprecated picking-hand values that
+// were compressed out of the dim:
+//   guitar:pickingHand:muted  → guitar:pickingHand:downstrokes   (muted
+//                               strums are downstroke-dominant)
+//   guitar:pickingHand:slide  → guitar:noteTransition:slideConnect
+//   guitar:pickingHand:bends  → guitar:noteTransition:bendTarget
+//
+// Same mapping is applied to lockedDimensions. If the target key already
+// exists in weights (unlikely but possible for a merge), counts are summed
+// conservatively rather than overwriting. Idempotent — a v3 blob passes
+// through unchanged.
+function migrateForgeDataV2ToV3(v2Data) {
+  if (!v2Data || typeof v2Data !== 'object') return v2Data;
+  if ((v2Data.version || 0) >= 3) return v2Data;
+
+  const PICKING_HAND_REMAP = {
+    // [legacyDim, legacyValue] → [newDim, newValue]
+    'pickingHand:muted':  ['pickingHand',     'downstrokes'],
+    'pickingHand:slide':  ['noteTransition',  'slideConnect'],
+    'pickingHand:bends':  ['noteTransition',  'bendTarget'],
+  };
+
+  // 1. Weights — iterate v2-format keys "instrument:dim:value" and remap
+  //    the (dim, value) pair when it matches a deprecated picking-hand value.
+  const oldWeights = v2Data.constraintWeights || {};
+  const newWeights = { ...oldWeights };
+  for (const [key, weights] of Object.entries(oldWeights)) {
+    const parts = key.split(':');
+    if (parts.length !== 3) continue; // skip unscoped or malformed
+    const [inst, dim, val] = parts;
+    const remap = PICKING_HAND_REMAP[`${dim}:${val}`];
+    if (!remap) continue;
+    if (inst !== 'guitar') continue; // these values only existed on guitar
+    const [newDim, newVal] = remap;
+    const newKey = `${inst}:${newDim}:${newVal}`;
+    // Delete the legacy key (unconditionally) and merge weights into the
+    // new key — if a target already exists, sum the counts.
+    delete newWeights[key];
+    const existing = newWeights[newKey];
+    if (existing) {
+      newWeights[newKey] = {
+        easy: (existing.easy || 0) + (weights.easy || 0),
+        good: (existing.good || 0) + (weights.good || 0),
+        hard: (existing.hard || 0) + (weights.hard || 0),
+      };
+    } else {
+      newWeights[newKey] = { ...weights };
+    }
+  }
+
+  // 2. Locks — pickingHand can be locked to a value that no longer exists.
+  //    If so, move the lock onto the new dim with the remapped value.
+  //    The value objects are our own constant lookups (so the lock UI
+  //    continues to read proper name/desc/icon from the new dim's options).
+  const oldLocks = (v2Data.settings && v2Data.settings.lockedDimensions) || {};
+  const newLocks = { ...oldLocks };
+  const pickingLock = oldLocks.pickingHand;
+  if (pickingLock && pickingLock.id) {
+    const remap = PICKING_HAND_REMAP[`pickingHand:${pickingLock.id}`];
+    if (remap) {
+      const [newDim, newVal] = remap;
+      delete newLocks.pickingHand;
+      // Pull the target value object from the new dim's options so the lock
+      // chip renders the right label/icon/desc after migration.
+      const newDimDef = DIMENSIONS.find(d => d.id === newDim);
+      const newValObj = newDimDef && newDimDef.options.find(o => o.id === newVal);
+      newLocks[newDim] = newValObj ? { ...newValObj } : { id: newVal };
+    }
+  }
+
+  return {
+    ...v2Data,
+    version: 3,
+    constraintWeights: newWeights,
+    settings: {
+      ...(v2Data.settings || {}),
+      lockedDimensions: newLocks,
+    },
+  };
+}
+
+// v1 → v2 migration. Called from loadForgeData on any blob that doesn't
+// have `version === CURRENT_SCHEMA_VERSION`. Atomic: constructs the full
+// v2 structure, backs up the v1 blob, then writes the v2 blob. If anything
+// throws, the v1 data is still intact in localStorage (we haven't mutated
+// the original raw until the last line).
+//
+// What changes in v2:
+//   - `version: 2` tag added
+//   - `constraintWeights` keys rewritten from `"${dimId}:${valueId}"` to
+//     `"${instrument}:${dimId}:${valueId}"`:
+//       * `vocalTechnique:X` → `voice:register:X`
+//       * `guitarTechnique:X` → `guitar:pickingHand:X`
+//       * shared dim keys (pitch/rhythm/dynamics/articulation/phraseLength)
+//         get BOTH `voice:${dimId}:X` and `guitar:${dimId}:X` entries seeded
+//         with the v1 count so practice history carries over to both modes
+//   - `settings.lockedDimensions` keys translated:
+//       * `vocalTechnique` → `register`
+//       * `guitarTechnique` → `pickingHand`
+//       * others unchanged
+//   - `settings.excludedDimensions` array: `vocalTechnique` → `register`,
+//     `guitarTechnique` → `pickingHand`
+//   - `sessions[]` frozen in v1 format with `schemaVersion: 1` tag per session;
+//     historical cards render in a legacy read-only mode, not translated
+//   - Defensive: missing/corrupt/undefined version → treat as fresh install
+function migrateForgeDataV1ToV2(v1Data) {
+  // Defensive init: if the blob is missing essential fields, return a fresh v2.
+  if (!v1Data || typeof v1Data !== 'object') {
+    return { version: CURRENT_SCHEMA_VERSION, sessions: [], constraintWeights: {}, settings: null };
+  }
+
+  // Already v2? No-op.
+  if (v1Data.version === CURRENT_SCHEMA_VERSION) return v1Data;
+
+  // Back up the v1 blob once (idempotent — don't overwrite if already backed up).
+  try {
+    if (!localStorage.getItem(V1_BACKUP_KEY)) {
+      localStorage.setItem(V1_BACKUP_KEY, JSON.stringify({
+        ...v1Data,
+        _backedUpAt: new Date().toISOString(),
+      }));
+    }
+  } catch {}
+
+  // 1. Migrate constraintWeights.
+  const oldWeights = v1Data.constraintWeights || {};
+  const newWeights = {};
+  // Dim → new scoped prefix mapping
+  const DIM_RENAME = { vocalTechnique: 'register', guitarTechnique: 'pickingHand' };
+  const GUITAR_DIM_INSTR = new Set(['pickingHand', 'texture']);
+  const VOICE_DIM_INSTR  = new Set(['register', 'vowel']);
+  for (const [oldKey, weights] of Object.entries(oldWeights)) {
+    if (typeof oldKey !== 'string') continue;
+    const parts = oldKey.split(':');
+    if (parts.length !== 2) {
+      // Already scoped or malformed — preserve as-is.
+      newWeights[oldKey] = weights;
+      continue;
+    }
+    let [oldDim, valueId] = parts;
+
+    // Phase B: questionAnswer value moved from pitchConstraint to phraseStructure.
+    // Translate the value id to the new kebab-case form and retarget the dim.
+    if (oldDim === 'pitchConstraint' && valueId === 'questionAnswer') {
+      oldDim = 'phraseStructure';
+      valueId = 'question-answer';
+    }
+
+    const newDim = DIM_RENAME[oldDim] || oldDim;
+    if (GUITAR_DIM_INSTR.has(newDim)) {
+      newWeights[`guitar:${newDim}:${valueId}`] = { ...weights };
+    } else if (VOICE_DIM_INSTR.has(newDim)) {
+      newWeights[`voice:${newDim}:${valueId}`] = { ...weights };
+    } else {
+      // Shared dim: seed both instruments so practice history carries over.
+      newWeights[`voice:${newDim}:${valueId}`] = { ...weights };
+      newWeights[`guitar:${newDim}:${valueId}`] = { ...weights };
+    }
+  }
+
+  // 2. Migrate lockedDimensions.
+  // Special case: if pitchConstraint was locked to the `questionAnswer` value,
+  // the lock needs to move to phraseStructure (where that value now lives) and
+  // the value object needs to be rewritten with the new id.
+  const oldLocks = (v1Data.settings && v1Data.settings.lockedDimensions) || {};
+  const newLocks = {};
+  for (const [oldKey, value] of Object.entries(oldLocks)) {
+    if (oldKey === 'pitchConstraint' && value && value.id === 'questionAnswer') {
+      newLocks.phraseStructure = {
+        id: 'question-answer',
+        name: 'Question & Answer',
+        desc: value.desc || 'Pairs of phrases. First asks, second answers.',
+        icon: '❓',
+      };
+      continue;
+    }
+    const newKey = DIM_RENAME[oldKey] || oldKey;
+    newLocks[newKey] = value;
+  }
+
+  // 3. Migrate excludedDimensions.
+  const oldExcludes = (v1Data.settings && v1Data.settings.excludedDimensions) || [];
+  const newExcludes = oldExcludes.map(id => DIM_RENAME[id] || id);
+
+  // 4. Freeze sessions with schemaVersion: 1 (don't translate historical cards).
+  const frozenSessions = (v1Data.sessions || []).map(s => ({
+    ...s,
+    schemaVersion: s.schemaVersion || 1,
+  }));
+
+  // 5. Assemble v2 blob. Hard-coded `version: 2` (not CURRENT_SCHEMA_VERSION)
+  //    because this migration step only upgrades v1 → v2. The migrateForgeData
+  //    chain will then pass the result to migrateForgeDataV2ToV3 if needed.
+  return {
+    ...v1Data,
+    version: 2,
+    sessions: frozenSessions,
+    constraintWeights: newWeights,
+    settings: {
+      ...(v1Data.settings || {}),
+      lockedDimensions: newLocks,
+      excludedDimensions: newExcludes,
+      mood: (v1Data.settings && v1Data.settings.mood) || null, // v2 addition, default unset
+    },
+  };
+}
+
+// Age-out the v1 backup after 14 days. Called from loadForgeData on every
+// read — cheap, so users don't need an explicit cleanup step.
+function ageOutV1Backup() {
+  try {
+    const raw = localStorage.getItem(V1_BACKUP_KEY);
+    if (!raw) return;
+    const backup = JSON.parse(raw);
+    if (!backup._backedUpAt) return;
+    const ageMs = Date.now() - new Date(backup._backedUpAt).getTime();
+    const FOURTEEN_DAYS = 14 * 24 * 60 * 60 * 1000;
+    if (ageMs > FOURTEEN_DAYS) {
+      localStorage.removeItem(V1_BACKUP_KEY);
+    }
+  } catch {}
+}
+
+// Run the full migration chain on any blob that isn't at the current
+// schema version. Chains: v1 → v2 → v3. Idempotent — each step is a no-op
+// when the blob is already at or past that version. New migration steps
+// go here when bumped: add the callable and chain it at the end.
+function migrateForgeData(data) {
+  if (!data || typeof data !== 'object') return data;
+  if (data.version === CURRENT_SCHEMA_VERSION) return data;
+  let cur = data;
+  if ((cur.version || 0) < 2) cur = migrateForgeDataV1ToV2(cur);
+  if ((cur.version || 0) < 3) cur = migrateForgeDataV2ToV3(cur);
+  return cur;
+}
+
 function loadForgeData() {
+  ageOutV1Backup();
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      // Run migration on every read if the blob isn't current. Each step
+      // is idempotent. First-run migration is also written back to
+      // localStorage via the caller (the settings-persist useEffect).
+      if (parsed && parsed.version !== CURRENT_SCHEMA_VERSION) {
+        return migrateForgeData(parsed);
+      }
+      return parsed;
+    }
   } catch {}
-  return { sessions: [], constraintWeights: {}, settings: null };
+  return {
+    version: CURRENT_SCHEMA_VERSION,
+    sessions: [],
+    constraintWeights: {},
+    settings: null,
+  };
 }
+
 function saveForgeData(data) {
   try {
     // Cap at 100 sessions
     if (data.sessions.length > 100) data.sessions = data.sessions.slice(-100);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    // Always tag with current schema version on write.
+    const toWrite = { ...data, version: CURRENT_SCHEMA_VERSION };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(toWrite));
   } catch {}
 }
 
@@ -509,17 +1450,37 @@ function ChallengeCard({
   onToggleLock,
   showFullGuidance = false,
   onToggleFullGuidance,
+  mood = null,
 }) {
+  const moodOverlay = lookupMoodOverlay(mood);
+  const phaseECombos = lookupPhaseECombo(card);
   const keyColor = getColorForNote(card.constraints.key) || T.gold;
   const scaleName = SCALE_TYPES[card.constraints.scale]?.name || card.constraints.scale;
   const scaleData = generateScale(card.constraints.key, card.constraints.scale);
   const scaleNotes = scaleData.notes || [];
   const scaleDesc = SCALE_TYPES[card.constraints.scale]?.desc || '';
 
-  // Collect active qualitative constraints for display
+  // Collect active qualitative constraints for display.
+  // Foundational dims (texture / register / vowel) are drawn on every card and
+  // get their own visual zone — "the ground" — separated from the N random draws.
+  const FOUNDATIONAL_DIM_IDS = ['texture', 'register', 'vowel'];
+  const RANDOM_DIM_IDS = [
+    'pitchConstraint', 'rhythmConstraint', 'dynamics',
+    'harmonicTarget',
+    'articulation', 'phraseLength',
+    'phraseStructure',
+    'onset',
+    'pickingHand', 'neckZone', 'noteTransition', 'vibrato',
+  ];
+  const foundationalLines = [];
   const constraintLines = [];
-  const qualDimIds = ['pitchConstraint', 'rhythmConstraint', 'dynamics', 'articulation', 'phraseLength', 'vocalTechnique', 'guitarTechnique'];
-  for (const dimId of qualDimIds) {
+  for (const dimId of FOUNDATIONAL_DIM_IDS) {
+    const c = card.constraints[dimId];
+    if (!c) continue;
+    const dim = DIMENSIONS.find(d => d.id === dimId);
+    foundationalLines.push({ dim, constraint: c });
+  }
+  for (const dimId of RANDOM_DIM_IDS) {
     const c = card.constraints[dimId];
     if (!c) continue;
     const dim = DIMENSIONS.find(d => d.id === dimId);
@@ -574,6 +1535,31 @@ function ChallengeCard({
       overflow: 'hidden',
       animation: entering ? 'forgeCardEnter 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both' : undefined,
     }}>
+      {/* Phase E: Mood overlay banner. Sits above the key/scale as the
+          emotional "ground" that colors every card this round. Null when
+          no mood is picked. */}
+      {moodOverlay && (
+        <div style={{
+          marginBottom: 20,
+          paddingBottom: 14,
+          borderBottom: `1px dashed ${T.border}`,
+        }}>
+          <div style={{
+            fontSize: 9, fontWeight: 700, color: T.goldDark || T.textMuted,
+            letterSpacing: 1.6, textTransform: 'uppercase', fontFamily: T.sans,
+            marginBottom: 6,
+          }}>
+            Mood · {mood}
+          </div>
+          <div style={{
+            fontFamily: T.serif, fontSize: 14, color: T.textDark,
+            lineHeight: 1.55, fontStyle: 'italic',
+          }}>
+            {moodOverlay}
+          </div>
+        </div>
+      )}
+
       {/* Header: Key + Scale */}
       <div style={{ marginBottom: 6 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
@@ -632,6 +1618,77 @@ function ChallengeCard({
         )}
       </div>
 
+      {/* Foundational dim zone — "the ground" the random constraints rest on.
+          Texture for guitar; register + vowel for voice. Always present on
+          every card regardless of mode/N. Visually distinct: subtle gold tint
+          background, labeled as FOUNDATION, sitting above the random draws. */}
+      {foundationalLines.length > 0 && (
+        <div style={{
+          marginTop: 18,
+          padding: '14px 16px',
+          background: `${T.goldSoft || 'rgba(212, 163, 115, 0.08)'}`,
+          border: `1px solid ${T.border}`,
+          borderRadius: 10,
+          opacity: 0.98,
+        }}>
+          <div style={{
+            fontSize: 9, fontWeight: 700, color: T.goldDark || T.textMuted,
+            textTransform: 'uppercase', letterSpacing: 1.6, fontFamily: T.sans,
+            marginBottom: 10,
+          }}>
+            Foundation
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            {foundationalLines.map(({ dim, constraint }) => {
+              const exampleText = constraint.dynamicExample || (constraint.example ? constraint.example(scaleNotes, card.constraints.tempo) : null);
+              return (
+                <div key={dim.id} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+                  <div style={{
+                    width: 3, alignSelf: 'stretch', borderRadius: 4,
+                    background: dim.color, opacity: 0.9, flexShrink: 0,
+                  }} />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3 }}>
+                      {constraint.icon && <span style={{ fontSize: 14 }}>{constraint.icon}</span>}
+                      <span style={{
+                        fontFamily: T.serif, fontSize: 16, fontWeight: 500, color: T.textDark,
+                        lineHeight: 1.3,
+                      }}>
+                        {constraint.name}
+                      </span>
+                      <span style={{
+                        fontSize: 9, fontWeight: 700, color: dim.color, textTransform: 'uppercase',
+                        letterSpacing: 0.8, fontFamily: T.sans, opacity: 0.75,
+                      }}>
+                        {dim.label}
+                      </span>
+                      {onToggleLock && (
+                        <span style={{ marginLeft: 'auto' }}>
+                          <LockChip dimId={dim.id} currentValue={constraint} label={dim.label} />
+                        </span>
+                      )}
+                    </div>
+                    <div style={{
+                      fontFamily: T.sans, fontSize: 12.5, color: T.textMed, lineHeight: 1.55,
+                    }}>
+                      {constraint.desc}
+                    </div>
+                    {exampleText && (
+                      <div style={{
+                        fontFamily: T.sans, fontSize: 11.5, color: T.textLight, lineHeight: 1.5,
+                        marginTop: 3, fontStyle: 'italic',
+                      }}>
+                        {exampleText}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* Divider */}
       {constraintLines.length > 0 && (
         <div style={{ height: 1, background: T.border, margin: '20px 0', opacity: 0.6 }} />
@@ -685,6 +1742,37 @@ function ChallengeCard({
           );
         })}
       </div>
+
+      {/* Phase E: Pairwise combo overlays for Phase B–D dims. Rendered as
+          highlighted tips above the main LLM guidance block. Only shows if
+          the current card's drawn dims match a hand-crafted pair in
+          PHASE_E_COMBO_OVERLAYS. Typically 0-2 hits per card. */}
+      {phaseECombos && phaseECombos.length > 0 && (
+        <div style={{
+          marginTop: 24,
+          padding: '16px 18px',
+          background: `${T.goldSoft || 'rgba(212, 163, 115, 0.08)'}`,
+          border: `1px solid ${T.gold || '#d4a373'}`,
+          borderRadius: 10,
+        }}>
+          <div style={{
+            fontSize: 9, fontWeight: 700, color: T.goldDark || T.textMuted,
+            letterSpacing: 1.6, textTransform: 'uppercase', fontFamily: T.sans,
+            marginBottom: 10,
+          }}>
+            Pairwise Insight
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {phaseECombos.map((h, i) => (
+              <div key={i} style={{
+                fontFamily: T.sans, fontSize: 13, color: T.textDark, lineHeight: 1.6,
+              }}>
+                {h.text}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* LLM-generated guidance — mode-aware with primary + expand-full progressive disclosure.
           - Primary (always visible): scale character italic + headline paragraph
@@ -1160,6 +2248,10 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
   const tierToMode = (t) => (t === 1 ? 'scales' : t === 2 ? 'matrix' : 'combo');
   const [mode, setMode] = useState(() => forgeData.settings?.mode ?? tierToMode(legacyTier));
   const [instrument, setInstrument] = useState(() => forgeData.settings?.instrument ?? 'voice');
+  // Session-level mood overlay. NOT randomized — picked once per round and
+  // colors every card's guidance with a single emotional intent. Null = no mood set.
+  const [mood, setMood] = useState(() => forgeData.settings?.mood ?? null);
+  const [moodPickerOpen, setMoodPickerOpen] = useState(false);
   // Timer duration: 0 means UNLIMITED (stopwatch, user ends manually). This is the default now —
   // counting down from 3 minutes was interrupting deep practice rounds.
   const [timerDuration, setTimerDuration] = useState(() => forgeData.settings?.timerDuration ?? 0);
@@ -1176,45 +2268,58 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
   );
 
   // Derived: tier, maxConstraints, activeDimensions all come from mode + instrument.
-  // This replaces the old user-facing tier/constraints/dimension toggles.
+  //
+  // Three-tier dim structure (v2):
+  //   1. Musical context (always set): key, scale, tempo
+  //   2. Foundational (always drawn per card): texture for guitar; register + vowel for voice
+  //   3. Randomizable pool (drawn per mode's maxConstraints): shared dims + instrument-branch
+  //      non-foundational dims, excluding the OTHER instrument's branch dims
+  //
+  // maxConstraints counts ONLY the randomizable-pool draws. Foundational dims
+  // are drawn in addition, not instead — a "2-constraint" card in guitar mode
+  // shows 2 random + texture = 3 qualitative dims above the musical context.
   const { tier, maxConstraints, activeDimensions } = useMemo(() => {
-    // Instrument-specific technique dim
-    const techDim = instrument === 'guitar' ? 'guitarTechnique' : 'vocalTechnique';
-    // Full qualitative pool excluding the OTHER instrument's technique
-    const fullQualPool = [
+    // Randomizable pool per instrument: shared dims + instrument-branch dims,
+    // excluding foundational dims (those are drawn separately, always).
+    // Phase B adds harmonicTarget and phraseStructure to the shared pool.
+    // Phase C adds neckZone/noteTransition/vibrato to the guitar branch.
+    const SHARED_RANDOM = [
       'pitchConstraint', 'rhythmConstraint', 'dynamics',
-      'articulation', 'phraseLength', techDim,
+      'harmonicTarget',
+      'articulation', 'phraseLength',
+      'phraseStructure',
     ];
-    const baseDims = ['key', 'scale', 'tempo'];
+    const GUITAR_RANDOM = [...SHARED_RANDOM, 'pickingHand', 'neckZone', 'noteTransition', 'vibrato'];
+    const VOICE_RANDOM  = [...SHARED_RANDOM, 'onset'];
+    const randomPool = instrument === 'guitar' ? GUITAR_RANDOM : VOICE_RANDOM;
+    const foundationalForInstrument = FOUNDATIONAL_DIMS[instrument] || [];
+    // activeDimensions is what generateCard iterates. It must include:
+    //   - musical context (always set)
+    //   - foundational dims (always drawn)
+    //   - the randomizable pool (drawn up to maxConstraints)
+    // Foundational dims ride alongside the random pool so generateCard's loop
+    // over activeDimensions covers them. drawFoundational() inside generateCard
+    // handles them specially.
+    const buildDims = () => [
+      ...MUSICAL_CONTEXT_DIMS,
+      ...foundationalForInstrument,
+      ...randomPool,
+    ];
 
     if (mode === 'scales') {
-      return { tier: 1, maxConstraints: 0, activeDimensions: baseDims };
+      // Scales mode: musical context only, no foundational, no random. Preserved from v1.
+      return { tier: 1, maxConstraints: 0, activeDimensions: [...MUSICAL_CONTEXT_DIMS] };
     }
     if (mode === 'focus') {
-      // Draw exactly 1 qualitative constraint from any dimension in the full pool
-      return {
-        tier: 4,
-        maxConstraints: 1,
-        activeDimensions: [...baseDims, ...fullQualPool],
-      };
+      return { tier: 4, maxConstraints: 1, activeDimensions: buildDims() };
     }
     if (mode === 'combo') {
-      // Draw exactly 2 qualitative constraints (always from different dims)
-      return {
-        tier: 4,
-        maxConstraints: 2,
-        activeDimensions: [...baseDims, ...fullQualPool],
-      };
+      return { tier: 4, maxConstraints: 2, activeDimensions: buildDims() };
     }
-    // Matrix mode — draw 3 constraints from the FULL pool (not just pitch/rhythm/dynamics).
-    // The classic pitch×rhythm×dynamics trio is still possible; it's now just one of many
-    // possible trios. Guidance lookup handles both: if the classic trio comes up it uses
-    // the bespoke 210-entry matrix cache, otherwise it decomposes into 3 pair entries.
-    return {
-      tier: 4,
-      maxConstraints: 3,
-      activeDimensions: [...baseDims, ...fullQualPool],
-    };
+    // Matrix mode: 3 random draws + foundational. The classic pitch × rhythm × dynamics
+    // trio is still a possible draw; guidance lookup handles it via the 210-entry matrix
+    // cache when the trio comes up.
+    return { tier: 4, maxConstraints: 3, activeDimensions: buildDims() };
   }, [mode, instrument]);
 
   // Apply user-toggled exclusions to produce the actual pool used for draws.
@@ -1270,18 +2375,19 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
   // History
   const [showHistory, setShowHistory] = useState(false);
 
-  // Persist settings — mode + instrument are the primary user-facing state.
+  // Persist settings — mode + instrument + mood are the primary user-facing state.
   // tier/maxConstraints/activeDimensions are derived so they're not persisted separately.
   useEffect(() => {
     const updated = {
       ...forgeData,
+      version: CURRENT_SCHEMA_VERSION,
       settings: {
-        mode, instrument, timerDuration, lockedDimensions, sessionCardCount,
+        mode, instrument, mood, timerDuration, lockedDimensions, sessionCardCount,
         excludedDimensions: Array.from(excludedDimensions),
       },
     };
     saveForgeData(updated);
-  }, [mode, instrument, timerDuration, lockedDimensions, sessionCardCount, excludedDimensions]);
+  }, [mode, instrument, mood, timerDuration, lockedDimensions, sessionCardCount, excludedDimensions]);
 
   // Lock/unlock a dimension
   const toggleLock = useCallback((dimId, value) => {
@@ -1295,28 +2401,43 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
     });
   }, []);
 
+  // Lock-conflict banner state — populated when validateAndRepair throws.
+  // The user sees a message and a "Clear conflicting locks" button; no card
+  // is rendered until they resolve the conflict.
+  const [lockConflict, setLockConflict] = useState(null);
+
   // Draw a new card
   const drawCard = useCallback(() => {
     setShowRating(false);
     setTimerRunning(false);
+    setLockConflict(null);
 
-    if (sessionCardCount > 1) {
-      const cards = generateSession(sessionCardCount, effectiveActiveDimensions, lockedDimensions, forgeData.constraintWeights, tier, maxConstraints, mode);
-      setSessionCards(cards);
-      setSessionIndex(0);
-      setCurrentCard(cards[0]);
-    } else {
-      const card = generateCard(effectiveActiveDimensions, lockedDimensions,
-        forgeData.sessions.flatMap(s => s.cards || []), forgeData.constraintWeights, tier, 0, maxConstraints, mode);
-      setCurrentCard(card);
-      setSessionCards([card]);
-      setSessionIndex(0);
+    try {
+      if (sessionCardCount > 1) {
+        const cards = generateSession(sessionCardCount, effectiveActiveDimensions, lockedDimensions, forgeData.constraintWeights, tier, maxConstraints, mode, instrument);
+        setSessionCards(cards);
+        setSessionIndex(0);
+        setCurrentCard(cards[0]);
+      } else {
+        const card = generateCard(effectiveActiveDimensions, lockedDimensions,
+          forgeData.sessions.flatMap(s => s.cards || []), forgeData.constraintWeights, tier, 0, maxConstraints, mode, instrument);
+        setCurrentCard(card);
+        setSessionCards([card]);
+        setSessionIndex(0);
+      }
+
+      setCardEntering(true);
+      setTimeout(() => setCardEntering(false), 700);
+      setTimerKey(k => k + 1);
+    } catch (err) {
+      if (err instanceof LockConflictError) {
+        setLockConflict({ message: err.message, locks: err.locks });
+        setCurrentCard(null);
+      } else {
+        throw err;
+      }
     }
-
-    setCardEntering(true);
-    setTimeout(() => setCardEntering(false), 700);
-    setTimerKey(k => k + 1);
-  }, [effectiveActiveDimensions, lockedDimensions, forgeData, tier, sessionCardCount, maxConstraints, mode]);
+  }, [effectiveActiveDimensions, lockedDimensions, forgeData, tier, sessionCardCount, maxConstraints, mode, instrument]);
 
   // Sync metro BPM when card changes
   useEffect(() => {
@@ -1331,6 +2452,31 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
       setExpandedTools(prev => ({ ...prev, volumeMeter: true }));
     }
   }, [currentCard?.constraints?.dynamics]);
+
+  // Phase C: auto-expand fretboard in guitar mode when any dim that benefits
+  // from visual neck context is drawn — texture (especially chord/triad/pair),
+  // harmonic target (arpeggio/chord-tone/color-tone), neck zone, or note
+  // transition. This gives the player a live reference for where the shapes
+  // and targets sit on the neck. Voice mode leaves the fretboard collapsed.
+  useEffect(() => {
+    if (!currentCard || instrument !== 'guitar') return;
+    const c = currentCard.constraints;
+    const texture = c.texture?.id;
+    const ht = c.harmonicTarget?.id;
+    const hasTextureNeedingBoard = texture && texture !== 'singleLine';
+    const hasHarmonicTarget = ht && ht !== 'scaleShape';
+    const hasNeckZone = !!c.neckZone;
+    const hasNoteTransition = !!c.noteTransition;
+    if (hasTextureNeedingBoard || hasHarmonicTarget || hasNeckZone || hasNoteTransition) {
+      setExpandedTools(prev => ({ ...prev, fretboard: true }));
+    }
+  }, [
+    currentCard?.constraints?.texture?.id,
+    currentCard?.constraints?.harmonicTarget?.id,
+    currentCard?.constraints?.neckZone?.id,
+    currentCard?.constraints?.noteTransition?.id,
+    instrument,
+  ]);
 
   // Start timer
   const startTimer = useCallback(() => {
@@ -1356,12 +2502,18 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
 
     const timeUsed = roundStartTime ? Math.floor((Date.now() - roundStartTime) / 1000) : (timerDuration || 0);
 
-    // Update constraint weights
+    // Update constraint weights. Keys are scoped by instrument in v2:
+    //   "${instrument}:${dimId}:${valueId}"
+    // Foundational dims (texture for guitar; register + vowel for voice) use
+    // their foundational instrument; other dims use the CARD's instrument.
+    // This prevents voice ratings from polluting guitar weights and vice versa.
+    const cardInstrument = currentCard.instrument || instrument;
     const newWeights = { ...forgeData.constraintWeights };
     for (const dimId of currentCard.activeDimensions) {
       const c = currentCard.constraints[dimId];
       if (c && typeof c === 'object' && c.id) {
-        const wKey = `${dimId}:${c.id}`;
+        const dimInstr = instrumentForDim(dimId, cardInstrument);
+        const wKey = `${dimInstr}:${dimId}:${c.id}`;
         if (!newWeights[wKey]) newWeights[wKey] = { easy: 0, good: 0, hard: 0 };
         newWeights[wKey][rating]++;
       }
@@ -1596,6 +2748,28 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
             ))}
           </div>
 
+          {/* Mood selector — session-level overlay, picked once per round.
+              Closed state shows current mood (or "Mood"). Click opens a
+              family-organized picker. Not a randomized dim. */}
+          <button
+            onClick={() => setMoodPickerOpen(o => !o)}
+            aria-label="Session mood"
+            aria-expanded={moodPickerOpen}
+            title={mood ? `Mood: ${mood} (click to change)` : 'Set a session mood'}
+            style={{
+              padding: '6px 12px', borderRadius: 8,
+              background: mood ? T.goldSoft : 'transparent',
+              border: `1px solid ${mood ? T.gold : T.border}`,
+              color: mood ? T.goldDark : T.textMed,
+              fontSize: 11, fontWeight: 600, fontFamily: T.sans,
+              textTransform: 'capitalize', cursor: 'pointer',
+              letterSpacing: 0.3, transition: 'all 0.15s',
+              maxWidth: 140, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+            }}
+          >
+            {mood || 'Mood'}
+          </button>
+
           <button
             onClick={() => setSettingsOpen(!settingsOpen)}
             aria-label="More options"
@@ -1662,6 +2836,133 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
         {MODE_DESCRIPTIONS[mode]}
       </div>
 
+      {/* Mood picker panel — opens via the Mood chip in the header. Family-
+          organized two-column grid for quick browsing. Clicking a mood sets it
+          and closes the picker. Clicking "Clear" removes the mood. */}
+      {moodPickerOpen && (
+        <div
+          role="menu"
+          style={{
+            marginBottom: 22, padding: 16,
+            background: T.bgSoft, borderRadius: 10,
+            border: `1px solid ${T.borderSoft}`,
+            animation: 'forgeToolExpand 0.25s ease-out both',
+          }}
+        >
+          <div style={{
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12,
+          }}>
+            <div style={{
+              fontSize: 10, fontWeight: 700, color: T.textLight,
+              letterSpacing: 1.4, textTransform: 'uppercase',
+            }}>
+              Session Mood {mood && <span style={{ color: T.goldDark }}>· {mood}</span>}
+            </div>
+            {mood && (
+              <button
+                onClick={() => { setMood(null); }}
+                style={{
+                  background: 'transparent', border: `1px solid ${T.border}`,
+                  borderRadius: 6, padding: '3px 8px', fontSize: 10,
+                  color: T.textMuted, cursor: 'pointer', fontFamily: T.sans,
+                  textTransform: 'uppercase', letterSpacing: 0.6,
+                }}
+              >
+                Clear
+              </button>
+            )}
+          </div>
+          <div style={{
+            fontSize: 11, color: T.textLight, fontStyle: 'italic',
+            fontFamily: T.sans, marginBottom: 12, lineHeight: 1.5,
+          }}>
+            Pick a single emotional intent for this round. It colors every card's brief without changing the mechanical constraints.
+          </div>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+            gap: 14,
+          }}>
+            {Object.entries(MOOD_LIBRARY).map(([family, moods]) => (
+              <div key={family}>
+                <div style={{
+                  fontSize: 9, fontWeight: 700, color: T.goldDark,
+                  letterSpacing: 1.2, textTransform: 'uppercase',
+                  marginBottom: 6,
+                }}>
+                  {family}
+                </div>
+                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                  {moods.map(m => {
+                    const active = mood === m;
+                    return (
+                      <button
+                        key={m}
+                        onClick={() => { setMood(m); setMoodPickerOpen(false); }}
+                        style={{
+                          padding: '5px 10px', borderRadius: 14,
+                          background: active ? T.gold : T.bgCard,
+                          border: `1px solid ${active ? T.gold : T.borderSoft}`,
+                          color: active ? '#fff' : T.textMed,
+                          fontSize: 11, fontWeight: 500, fontFamily: T.sans,
+                          cursor: 'pointer', textTransform: 'lowercase',
+                          letterSpacing: 0.2, transition: 'all 0.15s',
+                        }}
+                      >
+                        {m}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Lock-conflict banner — shown when validateAndRepair throws because
+          every conflicting dim is locked. User must adjust or clear a lock. */}
+      {lockConflict && (
+        <div style={{
+          marginBottom: 18, padding: 16,
+          background: `${T.warm || '#d97d54'}14`,
+          border: `1px solid ${T.warm || '#d97d54'}`,
+          borderRadius: 10,
+        }}>
+          <div style={{
+            fontSize: 11, fontWeight: 700, color: T.warm || '#d97d54',
+            textTransform: 'uppercase', letterSpacing: 1.2, marginBottom: 6, fontFamily: T.sans,
+          }}>
+            Lock Conflict
+          </div>
+          <div style={{ fontSize: 13, color: T.textDark, lineHeight: 1.5, fontFamily: T.sans, marginBottom: 10 }}>
+            {lockConflict.message}
+          </div>
+          <button
+            onClick={() => {
+              // Clear the conflicting locks and retry.
+              setLockedDimensions(prev => {
+                const next = { ...prev };
+                for (const key of Object.keys(lockConflict.locks || {})) {
+                  delete next[key];
+                }
+                return next;
+              });
+              setLockConflict(null);
+            }}
+            style={{
+              padding: '6px 12px', borderRadius: 6,
+              background: T.bgCard, border: `1px solid ${T.border}`,
+              color: T.textDark, fontSize: 11, fontWeight: 600,
+              fontFamily: T.sans, cursor: 'pointer',
+              textTransform: 'uppercase', letterSpacing: 0.5,
+            }}
+          >
+            Clear conflicting locks
+          </button>
+        </div>
+      )}
+
       {/* ═══ Overflow menu (⋮) — duration, session count, draw pool readout ═══ */}
       {settingsOpen && (
         <div
@@ -1673,6 +2974,75 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
             animation: 'forgeToolExpand 0.25s ease-out both',
           }}
         >
+          {/* Phase E: Lock-set presets — one-click drill-day setups that
+              pin specific values to isolate a skill focus. Filters by the
+              active instrument so only guitar presets show in guitar mode
+              and vice versa. */}
+          <div style={{ marginBottom: 18 }}>
+            <div style={{
+              fontSize: 10, fontWeight: 600, color: T.textLight, letterSpacing: 1.2,
+              textTransform: 'uppercase', marginBottom: 8,
+            }}>
+              Drill Day Presets
+            </div>
+            <div style={{
+              fontSize: 11, color: T.textLight, fontStyle: 'italic',
+              fontFamily: T.sans, marginBottom: 10, lineHeight: 1.4,
+            }}>
+              One-click lock sets. Tap a preset to pin its values; tap the matching preset again to clear.
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {LOCK_PRESETS.filter(p => p.instrument === instrument).map(preset => {
+                // Detect "active" by checking whether every lock in the preset
+                // currently matches the user's lockedDimensions state.
+                const active = Object.entries(preset.locks).every(([dimId, val]) => {
+                  const cur = lockedDimensions[dimId];
+                  return cur && cur.id === val.id;
+                });
+                return (
+                  <button
+                    key={preset.id}
+                    onClick={() => {
+                      if (active) {
+                        // Toggle off: clear the locks this preset sets
+                        setLockedDimensions(prev => {
+                          const next = { ...prev };
+                          for (const dimId of Object.keys(preset.locks)) delete next[dimId];
+                          return next;
+                        });
+                      } else {
+                        // Apply: merge the preset locks on top of existing
+                        setLockedDimensions(prev => ({ ...prev, ...preset.locks }));
+                      }
+                    }}
+                    style={{
+                      textAlign: 'left', padding: '10px 14px',
+                      borderRadius: 8,
+                      background: active ? T.goldSoft : T.bgCard,
+                      border: `1px solid ${active ? T.gold : T.border}`,
+                      color: active ? T.goldDark : T.textDark,
+                      cursor: 'pointer',
+                      transition: 'all 0.15s',
+                      fontFamily: T.sans,
+                    }}
+                  >
+                    <div style={{
+                      fontSize: 13, fontWeight: 700, marginBottom: 3,
+                    }}>
+                      {preset.label}{active && ' ·  active'}
+                    </div>
+                    <div style={{
+                      fontSize: 11, color: active ? T.goldDark : T.textMed,
+                      lineHeight: 1.45, opacity: 0.85,
+                    }}>
+                      {preset.desc}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           {/* Timer duration */}
           <div style={{ marginBottom: 18 }}>
             <div style={{
@@ -2016,6 +3386,7 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
             onToggleLock={toggleLock}
             showFullGuidance={showFullGuidance}
             onToggleFullGuidance={() => setShowFullGuidance(v => !v)}
+            mood={mood}
           />
 
           {/* Compact timer strip (directly below the card — no scrolling) */}
