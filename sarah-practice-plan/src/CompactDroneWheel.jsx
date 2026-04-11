@@ -2,6 +2,32 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import * as Tone from 'tone';
 import { Play, Pause, ChevronDown, ChevronUp, Sliders } from 'lucide-react';
 import { getColorForNote, normalizeNote } from './JungleTools.jsx';
+import { acquireKeepalive, releaseKeepalive, setMediaSession, clearMediaSession } from './audioKeepalive.js';
+
+// ─── Web Worker timer — background-tab-safe interval ────────────────────────
+// Browsers throttle setInterval to ~1Hz in hidden tabs and on locked phones,
+// which destroys sequence-mode timing for long practice rounds. Worker timers
+// are NOT throttled, so a cycle progression stays in lockstep even when the
+// screen is off. Duplicated from JungleTools to keep this file self-contained.
+function createTimerWorker() {
+  const blob = new Blob([`
+    let tid = null;
+    self.onmessage = (e) => {
+      if (e.data.cmd === 'start')  { clearInterval(tid); tid = setInterval(() => self.postMessage('tick'), e.data.ms); }
+      else if (e.data.cmd === 'stop')   { clearInterval(tid); tid = null; }
+      else if (e.data.cmd === 'update') { clearInterval(tid); tid = setInterval(() => self.postMessage('tick'), e.data.ms); }
+    };
+  `], { type: 'application/javascript' });
+  const url = URL.createObjectURL(blob);
+  const worker = new Worker(url);
+  worker._blobUrl = url;
+  return worker;
+}
+function terminateWorker(worker) {
+  if (!worker) return;
+  try { URL.revokeObjectURL(worker._blobUrl); } catch {}
+  try { worker.terminate(); } catch {}
+}
 
 // ═══════════════════════════════════════════════════════════════════════════
 // CompactDroneWheel — brass astrolabe circle-of-fifths drone
@@ -484,7 +510,31 @@ function usePrefersReducedMotion() {
 // ═══════════════════════════════════════════════════════════════════════════
 // Main component
 // ═══════════════════════════════════════════════════════════════════════════
-export function CompactDroneWheel({ theme: T, standalone = false, rootKey: rootKeyHint }) {
+export function CompactDroneWheel({
+  theme: T,
+  standalone = false,
+  rootKey: rootKeyHint,
+  // ─── Embedded exercise props ───
+  // When this wheel is dropped into a skill-tab ExerciseCard, the exercise JSON
+  // can seed any of these to pre-configure the drone for that specific practice
+  // round. onActiveNotesChange lets the parent card light up its PianoKeysDiagram
+  // with whatever voicing the drone is currently holding. Mode tabs (manual /
+  // single / sequence) become available when the exercise specifies a non-manual
+  // defaultMode, a defaultPreset, or an explicit defaultProgression — simple
+  // "hold an A drone" exercises stay locked to manual for a cleaner surface.
+  onActiveNotesChange,
+  defaultRoot,
+  defaultOctave,
+  defaultTexture,
+  defaultMode,
+  defaultPreset,
+  defaultProgression,
+  defaultBpm,
+  defaultStepDuration,
+  // Legacy prop from the old DroneGenerator API — accepted for parity but
+  // has no visual effect; the embedded layout here is the default.
+  inline = false, // eslint-disable-line no-unused-vars
+}) {
   const isMobile = useIsMobile();
   const reducedMotion = usePrefersReducedMotion();
 
@@ -507,13 +557,27 @@ export function CompactDroneWheel({ theme: T, standalone = false, rootKey: rootK
     return { root: majorMatch ? majorMatch[1] : 'A', isMinor: false };
   };
 
+  // Normalize legacy mode name — lesson data predates this component and uses
+  // "cycle", the old DroneGenerator's name for sequence mode.
+  const normalizeMode = (m) => (m === 'cycle' ? 'sequence' : m);
+
+  // Any signal from the exercise that it wants sequence-capable UI. When true,
+  // mode tabs become available in embedded mode so the user can flip between
+  // manual/single/sequence on cards that ship with progression content.
+  const hasSequenceIntent =
+    normalizeMode(defaultMode) === 'sequence' ||
+    !!defaultPreset ||
+    (Array.isArray(defaultProgression) && defaultProgression.length > 0);
+
   const initial = useMemo(() => {
     if (standalone) {
       if (prefs.rootLetter) return { root: prefs.rootLetter, isMinor: prefs.isMinor ?? false };
       return { root: 'A', isMinor: false };
     }
-    return seedFromHint(rootKeyHint);
-  }, [standalone, rootKeyHint, prefs]);
+    // Embedded: defaultRoot from the exercise wins over the live card hint.
+    // This lets lessons like "hold an A drone" pin the voicing explicitly.
+    return seedFromHint(defaultRoot || rootKeyHint);
+  }, [standalone, defaultRoot, rootKeyHint, prefs]);
 
   // Chord (manual mode)
   const [rootLetter, setRootLetter]     = useState(initial.root);
@@ -522,37 +586,77 @@ export function CompactDroneWheel({ theme: T, standalone = false, rootKey: rootK
     EXTENSIONS.find(e => e.id === prefs.extensionId) ? prefs.extensionId : 'none'
   );
 
-  // Playback
-  const [octave, setOctave]             = useState(() =>
-    typeof prefs.octave === 'number' && prefs.octave >= 2 && prefs.octave <= 5 ? prefs.octave : 3
-  );
+  // Playback — widened ranges match legacy DroneGenerator (octave 1-5, volume -40 to +6)
+  // so exercises that pass the old defaults land in range.
+  const [octave, setOctave]             = useState(() => {
+    // Embedded exercise default wins
+    if (!standalone && typeof defaultOctave === 'number' && defaultOctave >= 1 && defaultOctave <= 5) {
+      return defaultOctave;
+    }
+    return typeof prefs.octave === 'number' && prefs.octave >= 1 && prefs.octave <= 5 ? prefs.octave : 3;
+  });
   const [volume, setVolume]             = useState(() =>
-    typeof prefs.volume === 'number' && prefs.volume >= -40 && prefs.volume <= 0 ? prefs.volume : -12
+    typeof prefs.volume === 'number' && prefs.volume >= -40 && prefs.volume <= 6 ? prefs.volume : -12
   );
-  const [textureId, setTextureId]       = useState(() =>
-    TEXTURES.find(t => t.id === prefs.textureId) ? prefs.textureId : 'warm'
-  );
+  const [textureId, setTextureId]       = useState(() => {
+    if (!standalone && TEXTURES.find(t => t.id === defaultTexture)) return defaultTexture;
+    return TEXTURES.find(t => t.id === prefs.textureId) ? prefs.textureId : 'warm';
+  });
   const [playing, setPlaying]           = useState(false);
 
-  // Mode + sequence (standalone only). Valid modes: 'manual', 'single', 'sequence'.
-  // Embedded mode is always 'manual' — the wheel drives a single chord from the card.
+  // Mode + sequence. Embedded exercises can seed a specific mode (manual/single/
+  // sequence — or the legacy alias "cycle"). Defaults to manual when nothing
+  // specified so simple drone exercises stay clean.
   const [mode, setMode]                           = useState(() => {
-    if (!standalone) return 'manual';
+    if (!standalone) {
+      const seeded = normalizeMode(defaultMode);
+      if (['manual', 'single', 'sequence'].includes(seeded)) return seeded;
+      return 'manual';
+    }
     if (['manual', 'single', 'sequence'].includes(prefs.mode)) return prefs.mode;
     return 'manual';
   });
-  const [activePreset, setActivePreset]           = useState(() => prefs.activePreset || null);
+  const [activePreset, setActivePreset]           = useState(() => {
+    if (!standalone && defaultPreset && PROGRESSION_PRESETS.find(p => p.id === defaultPreset)) {
+      return defaultPreset;
+    }
+    return prefs.activePreset || null;
+  });
   const [sequenceChords, setSequenceChords]       = useState(() => {
+    if (!standalone) {
+      if (Array.isArray(defaultProgression) && defaultProgression.length > 0) {
+        return [...defaultProgression];
+      }
+      if (defaultPreset) {
+        const p = PROGRESSION_PRESETS.find(pp => pp.id === defaultPreset);
+        if (p) return [...p.chords];
+      }
+    }
     const p = PROGRESSION_PRESETS.find(pp => pp.id === prefs.activePreset);
     return p ? [...p.chords] : ['Am', 'G', 'F', 'E'];
   });
-  const [sequenceBpm, setSequenceBpm]             = useState(() =>
-    typeof prefs.sequenceBpm === 'number' && prefs.sequenceBpm >= 40 && prefs.sequenceBpm <= 200
-      ? prefs.sequenceBpm : 85
-  );
-  const [sequenceStepDuration, setSequenceStepDuration] = useState(() =>
-    STEP_DURATIONS.find(s => s.id === prefs.sequenceStepDuration) ? prefs.sequenceStepDuration : '1m'
-  );
+  const [sequenceBpm, setSequenceBpm]             = useState(() => {
+    if (!standalone && typeof defaultBpm === 'number' && defaultBpm >= 40 && defaultBpm <= 240) {
+      return defaultBpm;
+    }
+    // If an exercise provided a defaultPreset, inherit its bpm
+    if (!standalone && defaultPreset) {
+      const p = PROGRESSION_PRESETS.find(pp => pp.id === defaultPreset);
+      if (p) return p.bpm;
+    }
+    return typeof prefs.sequenceBpm === 'number' && prefs.sequenceBpm >= 40 && prefs.sequenceBpm <= 240
+      ? prefs.sequenceBpm : 85;
+  });
+  const [sequenceStepDuration, setSequenceStepDuration] = useState(() => {
+    if (!standalone && STEP_DURATIONS.find(s => s.id === defaultStepDuration)) {
+      return defaultStepDuration;
+    }
+    if (!standalone && defaultPreset) {
+      const p = PROGRESSION_PRESETS.find(pp => pp.id === defaultPreset);
+      if (p && STEP_DURATIONS.find(s => s.id === p.stepDuration)) return p.stepDuration;
+    }
+    return STEP_DURATIONS.find(s => s.id === prefs.sequenceStepDuration) ? prefs.sequenceStepDuration : '1m';
+  });
   const [sequenceStep, setSequenceStep]           = useState(0);
 
   // Options drawer — hides texture + presets + bpm + step duration behind a toggle
@@ -583,7 +687,26 @@ export function CompactDroneWheel({ theme: T, standalone = false, rootKey: rootK
   const octaveRef     = useRef(octave);
   const volumeRef     = useRef(volume);
   const textureIdRef  = useRef(textureId);
+  // Worker-based sequence timer — survives background tab throttling.
+  // Holds a Worker instance or null. Stopped (but not terminated) during
+  // visibility hidden so it can restart fresh when the tab returns.
   const sequenceTimerRef = useRef(null);
+  // Periodic 3-min chord re-trigger for manual/single modes — prevents voice
+  // drift on long-held drones. Sequence mode already re-triggers via the worker.
+  const refreshTimerRef = useRef(null);
+  // Last voicing that was handed to the synth — used to restore the drone
+  // after visibility-change / mic-release suspend cycles and to feed the
+  // onActiveNotesChange callback when the parent card needs to light up piano keys.
+  const previousNotesRef = useRef([]);
+  // onActiveNotesChange is a parent callback that may churn identity across renders.
+  // Hold the latest version in a ref so effects don't re-fire and so the audio
+  // code can call it synchronously without stale closures.
+  const onActiveNotesChangeRef = useRef(onActiveNotesChange);
+  useEffect(() => { onActiveNotesChangeRef.current = onActiveNotesChange; }, [onActiveNotesChange]);
+  // Track "stopped" across async handlers — mirrors legacy DroneGenerator's stoppedRef.
+  // Used by the mic-release recovery + visibility resume paths so an in-flight
+  // restore doesn't fire against a drone the user stopped in the meantime.
+  const stoppedRef = useRef(false);
 
   useEffect(() => { playingRef.current = playing; }, [playing]);
   useEffect(() => { modeRef.current = mode; }, [mode]);
@@ -599,12 +722,16 @@ export function CompactDroneWheel({ theme: T, standalone = false, rootKey: rootK
   useEffect(() => { textureIdRef.current = textureId; }, [textureId]);
 
   // ─── Persist prefs ───
+  // Only the standalone instance in the Tools tab writes to localStorage.
+  // Exercise-embedded instances should NOT overwrite the user's standalone
+  // prefs when a lesson happens to load them in Am with a different texture.
   useEffect(() => {
+    if (!standalone) return;
     savePrefs({
       rootLetter, isMinor, extensionId, octave, volume, textureId,
       mode, activePreset, sequenceBpm, sequenceStepDuration, showOptions,
     });
-  }, [rootLetter, isMinor, extensionId, octave, volume, textureId, mode, activePreset, sequenceBpm, sequenceStepDuration, showOptions]);
+  }, [standalone, rootLetter, isMinor, extensionId, octave, volume, textureId, mode, activePreset, sequenceBpm, sequenceStepDuration, showOptions]);
 
   // ─── Embedded mode: follow the card hint ───
   useEffect(() => {
@@ -721,30 +848,48 @@ export function CompactDroneWheel({ theme: T, standalone = false, rootKey: rootK
     return { synth, userGain };
   }, []);
 
-  // Trigger the current chord on the existing synth
-  const triggerCurrentChord = useCallback(() => {
-    if (!synthRef.current || synthRef.current.disposed) return;
-    let notes = [];
+  // Label helper — the string the parent exercise card uses to caption the
+  // piano-keys display next to the drone (e.g. "Am7", "C", or "Am" for
+  // sequence chord at current step).
+  const computeCurrentLabel = () => {
+    if (modeRef.current === 'sequence') {
+      return sequenceChordsRef.current[sequenceStepRef.current] || '';
+    }
+    if (modeRef.current === 'single') {
+      return rootLetterRef.current;
+    }
+    const suffix = EXTENSIONS.find(e => e.id === extensionIdRef.current)?.suffix || '';
+    return `${rootLetterRef.current}${isMinorRef.current ? 'm' : ''}${suffix}`;
+  };
+
+  // Compute the voicing notes for the current mode without side effects.
+  // Lets visibility / mic-release handlers query "what should be playing right now"
+  // without duplicating mode-routing logic.
+  const computeCurrentVoicing = () => {
     if (modeRef.current === 'sequence') {
       const chordStr = sequenceChordsRef.current[sequenceStepRef.current] || 'Am';
       const parsed = parseChordString(chordStr);
-      notes = parseChordVoicing(parsed.rootLetter, parsed.quality, parsed.extensionId, octaveRef.current).notes;
-    } else if (modeRef.current === 'single') {
-      notes = parseChordVoicing(
-        rootLetterRef.current,
-        'major', 'none',
-        octaveRef.current,
-        'single',
-      ).notes;
-    } else {
-      notes = parseChordVoicing(
-        rootLetterRef.current,
-        isMinorRef.current ? 'minor' : 'major',
-        extensionIdRef.current,
-        octaveRef.current,
-      ).notes;
+      return parseChordVoicing(parsed.rootLetter, parsed.quality, parsed.extensionId, octaveRef.current).notes;
     }
+    if (modeRef.current === 'single') {
+      return parseChordVoicing(rootLetterRef.current, 'major', 'none', octaveRef.current, 'single').notes;
+    }
+    return parseChordVoicing(
+      rootLetterRef.current,
+      isMinorRef.current ? 'minor' : 'major',
+      extensionIdRef.current,
+      octaveRef.current,
+    ).notes;
+  };
+
+  // Trigger the current chord on the existing synth. Also fires the parent
+  // onActiveNotesChange callback so the exercise card's piano keys can light up.
+  const triggerCurrentChord = useCallback(() => {
+    if (!synthRef.current || synthRef.current.disposed) return;
+    const notes = computeCurrentVoicing();
+    const label = computeCurrentLabel();
     if (notes.length === 0) return;
+    previousNotesRef.current = notes;
     try {
       synthRef.current.releaseAll();
       setTimeout(() => {
@@ -755,6 +900,8 @@ export function CompactDroneWheel({ theme: T, standalone = false, rootKey: rootK
         } catch {}
       }, 20);
     } catch {}
+    try { onActiveNotesChangeRef.current?.({ notes, label }); } catch {}
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Sequence step advance — moves to next chord and re-triggers
@@ -768,24 +915,42 @@ export function CompactDroneWheel({ theme: T, standalone = false, rootKey: rootK
     triggerCurrentChord();
   }, [triggerCurrentChord]);
 
-  // Clear any running sequence timer
+  // Clear any running sequence timer — terminates the Worker if one exists.
   const clearSequenceTimer = useCallback(() => {
     if (sequenceTimerRef.current) {
-      clearInterval(sequenceTimerRef.current);
+      try { sequenceTimerRef.current.postMessage({ cmd: 'stop' }); } catch {}
+      terminateWorker(sequenceTimerRef.current);
       sequenceTimerRef.current = null;
     }
   }, []);
 
-  // Start the sequence timer — cycles through chords at the current BPM + step duration
+  // Start the sequence timer — creates a Worker and cycles chords at the
+  // current BPM + step duration. Worker-based so background tab throttling
+  // doesn't break the progression clock.
   const startSequenceTimer = useCallback(() => {
     clearSequenceTimer();
     const ms = stepMsFromDuration(sequenceStepDurationRef.current, sequenceBpmRef.current);
-    sequenceTimerRef.current = setInterval(advanceSequence, ms);
+    const worker = createTimerWorker();
+    worker.onmessage = () => advanceSequence();
+    worker.postMessage({ cmd: 'start', ms });
+    sequenceTimerRef.current = worker;
   }, [clearSequenceTimer, advanceSequence]);
 
+  // Clear the periodic manual-mode refresh timer (see startDrone for rationale).
+  const clearRefreshTimer = useCallback(() => {
+    if (refreshTimerRef.current) {
+      clearInterval(refreshTimerRef.current);
+      refreshTimerRef.current = null;
+    }
+  }, []);
+
   // ─── Stop the drone ───
+  // Tears down timers + media session + keepalive, rolls the gain to zero,
+  // releases voices, and tells the parent to clear its piano keys display.
   const stopDrone = useCallback((fadeMs = 120) => {
+    stoppedRef.current = true;
     clearSequenceTimer();
+    clearRefreshTimer();
     try {
       if (userGainRef.current) {
         userGainRef.current.gain.cancelScheduledValues(Tone.now());
@@ -793,13 +958,23 @@ export function CompactDroneWheel({ theme: T, standalone = false, rootKey: rootK
       }
       setTimeout(() => {
         try { synthRef.current?.releaseAll(); } catch {}
+        previousNotesRef.current = [];
       }, fadeMs + 20);
     } catch {}
     setPlaying(false);
-  }, [clearSequenceTimer]);
+    playingRef.current = false;
+    try { onActiveNotesChangeRef.current?.({ notes: [], label: '' }); } catch {}
+    try { releaseKeepalive(); } catch {}
+    try { clearMediaSession(); } catch {}
+  }, [clearSequenceTimer, clearRefreshTimer]);
 
   // ─── Start the drone ───
+  // Boots the audio context, builds the chain if needed, fades in, fires the
+  // first chord, starts the sequence worker (or the 3-min refresh timer for
+  // manual/single), and acquires background audio keepalive + media session
+  // so the drone keeps playing with the phone locked.
   const startDrone = useCallback(async () => {
+    stoppedRef.current = false;
     try { if (Tone.context.state !== 'running') await Tone.context.resume(); } catch {}
     try { if (Tone.getContext().state !== 'running') await Tone.start(); } catch {}
 
@@ -829,8 +1004,36 @@ export function CompactDroneWheel({ theme: T, standalone = false, rootKey: rootK
     // In sequence mode, start the step timer
     if (modeRef.current === 'sequence') {
       startSequenceTimer();
+    } else {
+      // Manual/single — periodic re-trigger every 3 min to prevent oscillator
+      // drift on long held drones. PolySynth voices degrade after many minutes
+      // of continuous attack; this cheap release+re-attack cycle resets them
+      // transparently (the envelope handles the crossfade).
+      clearRefreshTimer();
+      refreshTimerRef.current = setInterval(() => {
+        if (stoppedRef.current || !synthRef.current || synthRef.current.disposed) return;
+        triggerCurrentChord();
+      }, 3 * 60 * 1000);
     }
-  }, [buildChain, triggerCurrentChord, startSequenceTimer]);
+
+    // Background audio keepalive + OS-level media session (lock screen controls).
+    // Togglers on the media session call togglePlay via the ref so they work
+    // while this closure is stale.
+    try { acquireKeepalive(); } catch {}
+    try {
+      setMediaSession('Harmonic Drone', 'Practice', {
+        pause: () => stopDroneRef.current?.(),
+        play:  () => startDroneRef.current?.(),
+      });
+    } catch {}
+  }, [buildChain, triggerCurrentChord, startSequenceTimer, clearRefreshTimer]);
+
+  // Refs for the media session handlers — need stable callables that always
+  // hit the latest start/stop implementations.
+  const startDroneRef = useRef(startDrone);
+  const stopDroneRef  = useRef(stopDrone);
+  useEffect(() => { startDroneRef.current = startDrone; }, [startDrone]);
+  useEffect(() => { stopDroneRef.current  = stopDrone;  }, [stopDrone]);
 
   const togglePlay = useCallback(() => {
     if (playingRef.current) stopDrone(120);
@@ -888,10 +1091,111 @@ export function CompactDroneWheel({ theme: T, standalone = false, rootKey: rootK
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [textureId]);
 
+  // ─── Visibility change — survive screen-off / tab-switch ───
+  // When the tab is hidden, ramp gain to near-zero and pause the sequence
+  // worker so accumulated ticks don't fire a flurry of chord changes when
+  // the tab returns. On visible, resume the audio context, restart the
+  // worker fresh, restore volume, and re-trigger the held chord if the
+  // synth dropped its voices during the suspend.
+  useEffect(() => {
+    const onVisibility = async () => {
+      if (!playingRef.current) return;
+      try {
+        if (document.hidden) {
+          if (userGainRef.current) {
+            try {
+              userGainRef.current.gain.cancelScheduledValues(Tone.now());
+              userGainRef.current.gain.rampTo(0.001, 0.05);
+            } catch {}
+          }
+          // Stop the worker (but don't terminate it — we'll restart when visible)
+          if (sequenceTimerRef.current) {
+            try { sequenceTimerRef.current.postMessage({ cmd: 'stop' }); } catch {}
+          }
+        } else {
+          try { await Tone.getContext().rawContext.resume(); } catch {}
+          if (Tone.getContext().state !== 'running') {
+            try { await Tone.start(); } catch {}
+            await new Promise(r => setTimeout(r, 300));
+            try { await Tone.getContext().rawContext.resume(); } catch {}
+          }
+          // Restart the worker with fresh timing (no accumulated ticks)
+          if (sequenceTimerRef.current && modeRef.current === 'sequence') {
+            try {
+              const ms = stepMsFromDuration(sequenceStepDurationRef.current, sequenceBpmRef.current);
+              sequenceTimerRef.current.postMessage({ cmd: 'start', ms });
+            } catch {}
+          }
+          // Restore volume + re-trigger chord if voices dropped
+          setTimeout(() => {
+            if (stoppedRef.current) return;
+            try {
+              if (userGainRef.current) {
+                userGainRef.current.gain.cancelScheduledValues(Tone.now());
+                userGainRef.current.gain.rampTo(Tone.dbToGain(volumeRef.current), 0.15);
+              }
+              if (synthRef.current && previousNotesRef.current.length > 0) {
+                synthRef.current.releaseAll();
+                synthRef.current.triggerAttack(previousNotesRef.current);
+              }
+            } catch {}
+          }, 200);
+        }
+      } catch {}
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => document.removeEventListener('visibilitychange', onVisibility);
+  }, []);
+
+  // ─── Mic release recovery ───
+  // When LivePitchDetector closes its mic context, the OS keeps Tone.js's
+  // context in "play-and-record" mode (~6-10dB ducked). The 'micReleased'
+  // CustomEvent lets us cycle the raw AudioContext (suspend → resume) with a
+  // smooth fade, then re-trigger the held notes to recover full volume.
+  // Without this, using the pitch detector mid-drone permanently quiets it.
+  useEffect(() => {
+    const onMicReleased = async () => {
+      if (!playingRef.current || !synthRef.current || !userGainRef.current) return;
+      try {
+        const savedNotes = previousNotesRef.current;
+        const savedVolume = volumeRef.current;
+        userGainRef.current.gain.cancelScheduledValues(Tone.now());
+        userGainRef.current.gain.rampTo(0, 0.05);
+        await new Promise(r => setTimeout(r, 80));
+        if (!synthRef.current || stoppedRef.current) return;
+        try { synthRef.current.releaseAll(); } catch {}
+        const rawCtx = Tone.getContext()?.rawContext;
+        if (rawCtx && rawCtx.state === 'running') {
+          await rawCtx.suspend();
+          await new Promise(r => setTimeout(r, 150));
+          await rawCtx.resume();
+        }
+        await new Promise(r => setTimeout(r, 100));
+        if (!synthRef.current || stoppedRef.current) return;
+        if (savedNotes.length > 0) {
+          synthRef.current.triggerAttack(savedNotes);
+        }
+        userGainRef.current.gain.cancelScheduledValues(Tone.now());
+        userGainRef.current.gain.rampTo(Tone.dbToGain(savedVolume), 0.15);
+      } catch {}
+    };
+    window.addEventListener('micReleased', onMicReleased);
+    return () => window.removeEventListener('micReleased', onMicReleased);
+  }, []);
+
   // ─── Cleanup on unmount ───
+  // Tear down the audio chain + timers + media session + keepalive so a
+  // drone embedded in an exercise card doesn't leave audio + lock-screen
+  // artifacts behind when the user navigates away.
   useEffect(() => {
     return () => {
+      stoppedRef.current = true;
       clearSequenceTimer();
+      clearRefreshTimer();
+      try { releaseKeepalive(); } catch {}
+      try { clearMediaSession(); } catch {}
+      // Fire callback one final time so the parent clears its display
+      try { onActiveNotesChangeRef.current?.({ notes: [], label: '' }); } catch {}
       teardownChain(40);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1452,8 +1756,12 @@ export function CompactDroneWheel({ theme: T, standalone = false, rootKey: rootK
         </button>
       </div>
 
-      {/* ─── MODE TABS (standalone only) — MANUAL / SINGLE / SEQUENCE ─── */}
-      {standalone && (
+      {/* ─── MODE TABS — MANUAL / SINGLE / SEQUENCE ───
+          Shown in standalone (full Tools tab drone) and in embedded mode when
+          the exercise signals sequence intent (defaultMode !== manual,
+          defaultPreset, or defaultProgression). Simple "hold an A drone"
+          exercises stay clean because they never set those props. */}
+      {(standalone || hasSequenceIntent) && (
         <div style={{ marginTop: isMobile ? 24 : 36, textAlign: 'center' }}>
           <div
             role="tablist"

@@ -7,7 +7,7 @@ import {
   Mic, Headphones, Info, AlertCircle, Quote, ArrowRight, Check,
   Volume2, Sun, Moon, Zap, TrendingUp
 } from 'lucide-react';
-import { MiniAudioPlayer, AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, ChordVoicingViewer, extractChordsFromExercise, VolumeMeter, ChordTransitionTimer, GenreMetronome, SilenceScore, DroneGenerator, TAB_CONTENT, InlineKeyboard, RhythmCellCards, PhraseFormGuide, StrumChartBuilder, ChartListView, makeTemplateChart } from './JungleTools.jsx';
+import { MiniAudioPlayer, AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, ChordVoicingViewer, extractChordsFromExercise, VolumeMeter, ChordTransitionTimer, GenreMetronome, SilenceScore, TAB_CONTENT, InlineKeyboard, RhythmCellCards, PhraseFormGuide, StrumChartBuilder, ChartListView, makeTemplateChart } from './JungleTools.jsx';
 import { ColorMusicTrainer } from './ColorMusicTrainer.jsx';
 import { PitchDiscriminationTrainer } from './PitchDiscriminationTrainer.jsx';
 import { CompactDroneWheel } from './CompactDroneWheel.jsx';
@@ -1062,10 +1062,13 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
             </div>
           )}
 
-          {/* Drone */}
+          {/* Drone — CompactDroneWheel replaces the legacy DroneGenerator here.
+              Full feature parity: accepts the same ex.drone default props, fires
+              onActiveNotesChange for piano-keys display, handles visibility + mic
+              recovery + media session + Web Worker sequence timer internally. */}
           {ex.drone && (
             <div style={{ marginBottom: 24 }}>
-              <DroneGenerator theme={T} inline={true} onActiveNotesChange={setDroneActiveNotes}
+              <CompactDroneWheel theme={T} onActiveNotesChange={setDroneActiveNotes}
                 {...(typeof ex.drone === 'object' ? {
                   defaultRoot: ex.drone.root, defaultOctave: ex.drone.octave,
                   defaultTexture: ex.drone.texture, defaultMode: ex.drone.mode,
@@ -2099,10 +2102,10 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
                   </div>
                 )}
 
-                {/* Drone */}
+                {/* Drone — CompactDroneWheel (see Flow-mode copy above for rationale) */}
                 {ex.drone && (
                   <div style={{ marginBottom: 12 }}>
-                    <DroneGenerator theme={T} inline={true} onActiveNotesChange={setDroneActiveNotes}
+                    <CompactDroneWheel theme={T} onActiveNotesChange={setDroneActiveNotes}
                       {...(typeof ex.drone === 'object' ? {
                         defaultRoot: ex.drone.root, defaultOctave: ex.drone.octave,
                         defaultTexture: ex.drone.texture, defaultMode: ex.drone.mode,
