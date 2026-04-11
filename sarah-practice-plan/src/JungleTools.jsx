@@ -3546,6 +3546,14 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
   const [activeStep, setActiveStep] = useState(-1);
   const [editingIndex, setEditingIndex] = useState(null);
   const [activePreset, setActivePreset] = useState(defaultPreset || null);
+  // Incremented to force the chain useEffect to tear down and rebuild the synth
+  // + effects chain. Tone.js effect nodes (Freeverb delay lines, chorus/tremolo
+  // LFOs, limiter running averages) accumulate stale internal state during long
+  // silence or AudioContext suspension (screen off, tab switch). That stale state
+  // produces static/crackling on resume — releasing voices doesn't clear it, only
+  // disposing and recreating the nodes does. Bumped on stop (prep for next play)
+  // and on visibility resume while playing.
+  const [chainEpoch, setChainEpoch] = useState(0);
 
   const synthRef = useRef(null);
   const lastWorkerTickRef = useRef(0);
@@ -3619,23 +3627,22 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
             await new Promise(r => setTimeout(r, 300));
             try { await Tone.getContext().rawContext.resume(); } catch {}
           }
-          // Restart worker timer fresh (no accumulated ticks)
+          if (stoppedRef.current) return;  // user stopped the drone during the await
+          // Recreate the synth + effects chain. Effect nodes (Freeverb buffers,
+          // chorus/tremolo LFOs, limiter running averages) accumulate stale state
+          // while the AudioContext is suspended and produce static on resume —
+          // releasing voices is not enough, the nodes themselves must be rebuilt.
+          // The chain useEffect's internal re-trigger logic will reattack the held
+          // chord on the new synth, and the new userGain is created at the correct
+          // volume, so no separate retrigger/ramp is needed here.
+          setChainEpoch(e => e + 1);
+          // Restart worker timer fresh (no accumulated ticks). First tick fires
+          // `stepToMs` later — by then the chain effect has committed and the
+          // worker's playStep will see the new synth via synthRef.current.
           if (workerRef.current) {
             lastWorkerTickRef.current = performance.now();
             workerRef.current.postMessage({ cmd: 'start', ms: stepToMs(stepDurationRef.current) });
           }
-          // Restore volume and re-trigger chord if it died
-          setTimeout(() => {
-            try {
-              if (userGainRef.current) {
-                userGainRef.current.gain.cancelScheduledValues(Tone.now());
-                userGainRef.current.gain.rampTo(Tone.dbToGain(volume), 0.15);
-              }
-              // Re-assert the held chord via safe retrigger helper (avoids the
-              // releaseAll+triggerAttack voice-stealing race on shared pitches).
-              retriggerCurrentChord();
-            } catch {}
-          }, 200);
         }
       } catch {}
     };
@@ -3992,7 +3999,7 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       }, 100);
       disposeTimersRef.current.push({ timer: disposeTimer, synth: effectSynth, nodes: effectNodes });
     };
-  }, [texture]); // re-run only when texture changes
+  }, [texture, chainEpoch]); // re-run on texture change OR forced chain recreate
 
   useEffect(() => {
     if (userGainRef.current) {
@@ -4036,6 +4043,12 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       setPlaying(false);
       onActiveNotesChangeRef.current?.({ notes: [], label: "" });
       setActiveStep(-1);
+      // Recreate the synth chain so the NEXT play starts from clean state.
+      // Effect nodes accumulate stale buffers/LFO phase during silence; without
+      // this the second play back is staticky. Bump batches with setPlaying(false)
+      // — the chain effect re-runs with playing=false, so no chord is retriggered;
+      // we just get a fresh silent chain ready for the next play.
+      setChainEpoch(e => e + 1);
     } else {
       stoppedRef.current = false;
       setEditingIndex(null);
