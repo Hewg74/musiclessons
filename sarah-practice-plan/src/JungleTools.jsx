@@ -3631,10 +3631,9 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
                 userGainRef.current.gain.cancelScheduledValues(Tone.now());
                 userGainRef.current.gain.rampTo(Tone.dbToGain(volume), 0.15);
               }
-              if (synthRef.current && previousNotesRef.current.length > 0) {
-                synthRef.current.releaseAll();
-                synthRef.current.triggerAttack(previousNotesRef.current);
-              }
+              // Re-assert the held chord via safe retrigger helper (avoids the
+              // releaseAll+triggerAttack voice-stealing race on shared pitches).
+              retriggerCurrentChord();
             } catch {}
           }, 200);
         }
@@ -4059,17 +4058,10 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
           const r = match ? match[0].replace('b', '♭') : "C";
           const chordNotes = parseChordToNotes(rawChord, octaveRef.current, "chord");
 
-          if (chordNotes) {
-            // Release all → immediately attack new chord. The envelope handles
-            // the crossfade: old notes fade via release tail, new notes ramp via attack.
-            // Works for ANY chord combination — no note diffing needed.
-            synthRef.current.releaseAll();
-            synthRef.current.triggerAttack(chordNotes);
-            previousNotesRef.current = chordNotes;
-          } else {
-            synthRef.current.releaseAll();
-            previousNotesRef.current = [];
-          }
+          // Diff-based transition. Avoids the PolySynth voice-stealing race that
+          // used to silence the first chord of a preset (shared pitches between
+          // adjacent chords in the progression). See transitionToChord comment.
+          transitionToChord(chordNotes || []);
 
           // Visual update
           setRoot(r);
@@ -4111,12 +4103,8 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
       if (refreshRef.current) clearInterval(refreshRef.current);
       if (mode !== "cycle") {
         refreshRef.current = setInterval(() => {
-          if (stoppedRef.current || !synthRef.current || synthRef.current.disposed) return;
-          const notes = previousNotesRef.current;
-          if (notes.length > 0) {
-            synthRef.current.releaseAll();
-            synthRef.current.triggerAttack(notes);
-          }
+          // Safe retrigger helper — no voice-stealing race on same-notes reattack.
+          retriggerCurrentChord();
         }, 3 * 60 * 1000);
       }
       // Start background audio keepalive so screen-off doesn't kill the AudioContext
@@ -4129,15 +4117,54 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     }
   };
 
+  // Smoothly transition the drone to a new chord without voice-stealing race.
+  // Tone.js PolySynth has a quirk: calling releaseAll() + triggerAttack() in the
+  // same synchronous tick can silence new attacks whose pitches match voices still
+  // in their release tail (e.g. C major contains G2 as its fifth; G major contains
+  // G2 as its root octave — the releasing G2 voice "captures" the new G attack).
+  // Fix: diff the note sets. Release only notes leaving the chord; attack only
+  // notes entering it; leave shared pitches playing untouched. Also produces a
+  // smoother audible transition because shared tones don't retrigger.
+  const transitionToChord = (newNotes) => {
+    const synth = synthRef.current;
+    if (!synth || synth.disposed) return;
+    const newArr = newNotes || [];
+    const prevArr = previousNotesRef.current || [];
+    const newSet = new Set(newArr);
+    const prevSet = new Set(prevArr);
+    const toRelease = prevArr.filter(x => !newSet.has(x));
+    const toAttack = newArr.filter(x => !prevSet.has(x));
+    try {
+      const now = Tone.now();
+      if (toRelease.length > 0) synth.triggerRelease(toRelease, now);
+      if (toAttack.length > 0) synth.triggerAttack(toAttack, now);
+    } catch {}
+    previousNotesRef.current = newArr;
+  };
+
+  // Force re-trigger the currently held chord. Used by recovery paths (visibility
+  // resume, periodic refresh) where the intent is "re-assert the chord" regardless
+  // of diff. Release on the current voices, then defer triggerAttack via setTimeout
+  // so the voice allocator runs AFTER the release has taken effect — avoids the
+  // same-tick voice-stealing race that releaseAll+triggerAttack used to hit.
+  const retriggerCurrentChord = () => {
+    const synth = synthRef.current;
+    if (!synth || synth.disposed) return;
+    const held = (previousNotesRef.current || []).slice();
+    if (held.length === 0) return;
+    try { synth.triggerRelease(held); } catch {}
+    setTimeout(() => {
+      const s = synthRef.current;
+      if (stoppedRef.current || !s || s.disposed) return;
+      try { s.triggerAttack(held); } catch {}
+    }, 50);
+  };
+
   const changeRoot = (n) => {
     if (playing && (mode === "manual" || mode === "single")) {
       const chordNotes = parseChordToNotes(n, octaveRef.current, mode === "single" ? "single" : "chord");
-      if (chordNotes && synthRef.current) {
-        try {
-          synthRef.current.releaseAll();
-          synthRef.current.triggerAttack(chordNotes);
-          previousNotesRef.current = chordNotes;
-        } catch {}
+      if (chordNotes) {
+        transitionToChord(chordNotes);
         onActiveNotesChangeRef.current?.({ notes: chordNotes, label: n });
       }
     }
@@ -4148,12 +4175,8 @@ export function DroneGenerator({ theme: T, defaultRoot, defaultOctave, defaultTe
     setOctave(oct);
     if (playing && (mode === "manual" || mode === "single")) {
       const chordNotes = parseChordToNotes(root, oct, mode === "single" ? "single" : "chord");
-      if (chordNotes && synthRef.current) {
-        try {
-          synthRef.current.releaseAll();
-          synthRef.current.triggerAttack(chordNotes);
-          previousNotesRef.current = chordNotes;
-        } catch {}
+      if (chordNotes) {
+        transitionToChord(chordNotes);
         onActiveNotesChangeRef.current?.({ notes: chordNotes, label: root });
       }
     }
