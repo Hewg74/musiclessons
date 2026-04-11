@@ -1167,6 +1167,13 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
     forgeData.settings?.lockedDimensions ?? {}
   );
   const [sessionCardCount, setSessionCardCount] = useState(() => forgeData.settings?.sessionCardCount ?? 1);
+  // Excluded qualitative dims — user-toggleable from the Draw Pool chip row in the
+  // overflow menu. Clicking a chip removes that dim from the random pool; clicking
+  // again restores it. Persisted across sessions. The toggle handler prevents
+  // disabling below the current mode's maxConstraints so generation can't fail.
+  const [excludedDimensions, setExcludedDimensions] = useState(() =>
+    new Set(forgeData.settings?.excludedDimensions ?? [])
+  );
 
   // Derived: tier, maxConstraints, activeDimensions all come from mode + instrument.
   // This replaces the old user-facing tier/constraints/dimension toggles.
@@ -1210,6 +1217,24 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
     };
   }, [mode, instrument]);
 
+  // Apply user-toggled exclusions to produce the actual pool used for draws.
+  // Base dims (key/scale/tempo) are never excluded — they're always required.
+  // If exclusions would drop the qualitative count below maxConstraints,
+  // ignore them entirely so generation can't fail (toggle handler also guards).
+  const effectiveActiveDimensions = useMemo(() => {
+    const qualDims = activeDimensions.filter(id =>
+      DIMENSIONS.find(d => d.id === id)?.type === 'qualitative'
+    );
+    const baseDims = activeDimensions.filter(id =>
+      DIMENSIONS.find(d => d.id === id)?.type !== 'qualitative'
+    );
+    const remainingQual = qualDims.filter(id => !excludedDimensions.has(id));
+    if (remainingQual.length < maxConstraints) {
+      return activeDimensions;
+    }
+    return [...baseDims, ...remainingQual];
+  }, [activeDimensions, excludedDimensions, maxConstraints]);
+
   // Card state
   const [currentCard, setCurrentCard] = useState(null);
   const [cardEntering, setCardEntering] = useState(false);
@@ -1248,9 +1273,15 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
   // Persist settings — mode + instrument are the primary user-facing state.
   // tier/maxConstraints/activeDimensions are derived so they're not persisted separately.
   useEffect(() => {
-    const updated = { ...forgeData, settings: { mode, instrument, timerDuration, lockedDimensions, sessionCardCount } };
+    const updated = {
+      ...forgeData,
+      settings: {
+        mode, instrument, timerDuration, lockedDimensions, sessionCardCount,
+        excludedDimensions: Array.from(excludedDimensions),
+      },
+    };
     saveForgeData(updated);
-  }, [mode, instrument, timerDuration, lockedDimensions, sessionCardCount]);
+  }, [mode, instrument, timerDuration, lockedDimensions, sessionCardCount, excludedDimensions]);
 
   // Lock/unlock a dimension
   const toggleLock = useCallback((dimId, value) => {
@@ -1270,12 +1301,12 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
     setTimerRunning(false);
 
     if (sessionCardCount > 1) {
-      const cards = generateSession(sessionCardCount, activeDimensions, lockedDimensions, forgeData.constraintWeights, tier, maxConstraints, mode);
+      const cards = generateSession(sessionCardCount, effectiveActiveDimensions, lockedDimensions, forgeData.constraintWeights, tier, maxConstraints, mode);
       setSessionCards(cards);
       setSessionIndex(0);
       setCurrentCard(cards[0]);
     } else {
-      const card = generateCard(activeDimensions, lockedDimensions,
+      const card = generateCard(effectiveActiveDimensions, lockedDimensions,
         forgeData.sessions.flatMap(s => s.cards || []), forgeData.constraintWeights, tier, 0, maxConstraints, mode);
       setCurrentCard(card);
       setSessionCards([card]);
@@ -1285,7 +1316,7 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
     setCardEntering(true);
     setTimeout(() => setCardEntering(false), 700);
     setTimerKey(k => k + 1);
-  }, [activeDimensions, lockedDimensions, forgeData, tier, sessionCardCount, maxConstraints, mode]);
+  }, [effectiveActiveDimensions, lockedDimensions, forgeData, tier, sessionCardCount, maxConstraints, mode]);
 
   // Sync metro BPM when card changes
   useEffect(() => {
@@ -1709,7 +1740,9 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
             </div>
           </div>
 
-          {/* Draw pool readout */}
+          {/* Draw pool readout — chips are toggleable. Click to exclude/include
+              a qualitative dimension from the random pool. Greyed-out + struck-
+              through means excluded. Can't disable below mode's maxConstraints. */}
           <div>
             <div style={{
               fontSize: 10, fontWeight: 600, color: T.textLight, letterSpacing: 1.2,
@@ -1718,25 +1751,84 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
               Draw Pool ({MODE_LABELS[mode]}, {instrument})
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-              {DIMENSIONS
-                .filter(dim => activeDimensions.includes(dim.id) && dim.type === 'qualitative')
-                .map(dim => (
-                  <div key={dim.id} style={{
-                    padding: '6px 11px', borderRadius: 14, fontSize: 11, fontWeight: 600,
-                    fontFamily: T.sans,
-                    border: `1px solid ${dim.color}60`,
-                    background: `${dim.color}12`,
-                    color: dim.color,
-                  }}>
-                    {dim.label}
-                  </div>
-                ))}
+              {(() => {
+                const qualInPool = DIMENSIONS.filter(d =>
+                  d.type === 'qualitative' && activeDimensions.includes(d.id)
+                );
+                const enabledCount = qualInPool.filter(d => !excludedDimensions.has(d.id)).length;
+                return qualInPool.map(dim => {
+                  const excluded = excludedDimensions.has(dim.id);
+                  const isLocked = lockedDimensions[dim.id] !== undefined;
+                  // If currently enabled, turning it off must leave >= maxConstraints enabled.
+                  const wouldBreak = !excluded && enabledCount - 1 < maxConstraints;
+                  // Locked dims can't be excluded — exclusion would silently orphan
+                  // the lock. User must unlock from the card header first.
+                  const blocked = wouldBreak || isLocked;
+                  return (
+                    <button
+                      key={dim.id}
+                      onClick={() => {
+                        if (blocked) return;
+                        setExcludedDimensions(prev => {
+                          const next = new Set(prev);
+                          if (next.has(dim.id)) next.delete(dim.id);
+                          else next.add(dim.id);
+                          return next;
+                        });
+                      }}
+                      disabled={blocked}
+                      title={
+                        isLocked
+                          ? `${dim.label} is pinned — unlock it from the card header to exclude.`
+                          : wouldBreak
+                            ? `${MODE_LABELS[mode]} mode needs ${maxConstraints} qualitative dimensions — can't disable any more.`
+                            : excluded
+                              ? `Tap to include ${dim.label} in the draw pool`
+                              : `Tap to exclude ${dim.label} from the draw pool`
+                      }
+                      style={{
+                        padding: '6px 11px', borderRadius: 14, fontSize: 11, fontWeight: 600,
+                        fontFamily: T.sans,
+                        border: `1px solid ${excluded ? T.border : `${dim.color}60`}`,
+                        background: excluded ? 'transparent' : `${dim.color}12`,
+                        color: excluded ? T.textMuted : dim.color,
+                        textDecoration: excluded ? 'line-through' : 'none',
+                        cursor: blocked ? 'not-allowed' : 'pointer',
+                        opacity: blocked ? 0.55 : 1,
+                        transition: 'background 0.15s ease, color 0.15s ease, border-color 0.15s ease',
+                      }}
+                    >
+                      {isLocked ? '📌 ' : ''}{dim.label}
+                    </button>
+                  );
+                });
+              })()}
               {activeDimensions.filter(id => DIMENSIONS.find(d => d.id === id)?.type === 'qualitative').length === 0 && (
                 <div style={{ fontSize: 12, color: T.textMuted, fontStyle: 'italic' }}>
                   No qualitative constraints — pure scale practice.
                 </div>
               )}
             </div>
+            {DIMENSIONS.some(d => d.type === 'qualitative' && activeDimensions.includes(d.id)) && (
+              <div style={{ fontSize: 11, color: T.textMuted, marginTop: 6, lineHeight: 1.5 }}>
+                Tap a chip to exclude it from random draws.
+                {Array.from(excludedDimensions).some(id => activeDimensions.includes(id)) && (
+                  <>
+                    {' '}
+                    <button
+                      onClick={() => setExcludedDimensions(new Set())}
+                      style={{
+                        background: 'none', border: 'none', padding: 0,
+                        color: T.gold, fontSize: 11, fontFamily: T.sans,
+                        cursor: 'pointer', textDecoration: 'underline', fontWeight: 600,
+                      }}
+                    >
+                      Reset
+                    </button>
+                  </>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Clear all locks (only shown when some are set) */}
