@@ -3,7 +3,11 @@
     "allow": [
       "Skill(swarm)",
       "Bash(npx vite:*)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(mv C:/Users/hewg7/.claude/servers/design-forge/prompts/reference C:/Users/hewg7/.claude/servers/design-forge/prompts/domains)",
+      "Read(//c/Users/hewg7/.claude/servers/design-forge/prompts/**)",
+      "Bash(mkdir -p C:/Users/hewg7/.claude/servers/design-forge/prompts/archive)",
+      "Bash(cp C:/Users/hewg7/.claude/servers/design-forge/prompts/system-aesthetics.md C:/Users/hewg7/.claude/servers/design-forge/prompts/archive/system-aesthetics-v1.md)"
     ]
   }
 }
