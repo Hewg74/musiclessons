@@ -58,9 +58,15 @@ function lookupGuidance(card) {
   const c = card.constraints;
   const mode = card.mode || 'matrix'; // default to matrix for legacy cards
 
+  // Foundational dims (texture/register/vowel) are ALWAYS on every v3 card.
+  // Exclude them from the guidance-lookup count — the cache was generated for
+  // RANDOM dims only. Foundational × random pairs are handled separately by
+  // lookupPhaseECombo().
+  const _FSET = new Set(['texture', 'register', 'vowel']);
+  const randomDrawn = () => DIM_ORDER.filter(d => c[d] && typeof c[d] === 'object' && c[d].id && !_FSET.has(d));
+
   if (mode === 'focus') {
-    // Find the single qualitative constraint that was actually drawn
-    const drawnIds = DIM_ORDER.filter(d => c[d] && typeof c[d] === 'object' && c[d].id);
+    const drawnIds = randomDrawn();
     if (drawnIds.length !== 1) return null;
     const dimId = drawnIds[0];
     const valId = c[dimId].id;
@@ -68,7 +74,7 @@ function lookupGuidance(card) {
   }
 
   if (mode === 'combo') {
-    const drawnIds = DIM_ORDER.filter(d => c[d] && typeof c[d] === 'object' && c[d].id);
+    const drawnIds = randomDrawn();
     if (drawnIds.length !== 2) return null;
     const dim1 = drawnIds[0], dim2 = drawnIds[1];
     const id1 = c[dim1].id, id2 = c[dim2].id;
@@ -77,7 +83,7 @@ function lookupGuidance(card) {
 
   if (mode === 'matrix') {
     // Collect whichever qualitative constraints were actually drawn, in canonical order
-    const drawnIds = DIM_ORDER.filter(d => c[d] && typeof c[d] === 'object' && c[d].id);
+    const drawnIds = randomDrawn();
     if (drawnIds.length < 2) return null;
 
     // Classic pitch × rhythm × dynamics trio → use the bespoke 210-entry matrix cache
@@ -246,6 +252,168 @@ const MOOD_OVERLAYS = {
   'highway-hypnosis': 'Repetitive, hypnotic, forward-moving. Like six hours of empty desert at 75 mph. Small changes matter more than big ones.',
   'motel-neon':       'Late-night, flickering, slightly unstable. Pitch that drifts just a shade. Reverb in the mind, not the signal.',
   'slow-sunday':      'No hurry, no struggle. Every phrase finishes itself. The only enemy is trying too hard.',
+  // Phase F — Outward longing additions
+  'homesick':         'Play for the place you can\'t go back to. Every phrase bends toward a resolution that keeps drifting further away.',
+  'searching':        'Nothing settles. Every phrase opens a new door instead of closing the last one. Forward motion with no destination.',
+  'unrequited':       'Give everything to each phrase and let it fall. Maximum commitment, zero return. The beauty is in the offering.',
+  // Inward warmth additions
+  'reverent':         'Handle each note like something borrowed. Hushed dynamics, deliberate placement — nothing casual, nothing loud.',
+  'content':          'Settle into the center of every phrase. No pushing, no pulling — just the quiet satisfaction of being exactly here.',
+  'loving':           'Warm, unhurried, and generous. Let every note ring longer than necessary. Give the listener more than they expect.',
+  // Light additions
+  'whimsical':        'Change direction mid-phrase like a thought you didn\'t finish. Light touch, quick pivots, no commitment to any one idea.',
+  'buoyant':          'Everything lifts. Push the onsets slightly ahead of the beat — not rushing, just eager. The air under each note matters.',
+  'celebratory':      'Full commitment, bright attacks, nothing held back. This is the victory lap — play like the hard part is already over.',
+  // Heavy additions
+  'haunted':          'Something follows every phrase. Let the silence after each note carry more weight than the note itself.',
+  'bruised':          'Tender but damaged. Every note works but none of them feel easy. Play through the resistance, not around it.',
+  'ashen':            'Drained of color. Flat dynamics, narrow range, minimal ornament. The emptiness IS the expression.',
+  // Trance additions
+  'mystical':         'Blurred edges, no clear attack. Let notes emerge from silence and dissolve back into it — nothing starts or ends cleanly.',
+  'meditative':       'One breath per phrase. Long tones, minimal movement, absolute attention to the space between each note.',
+  'hallucinated':     'Nothing is quite where it should be. Drift off the center of each pitch by a shade — not wrong, just uncertain.',
+  'ritual':           'Cyclical and deliberate. Every phrase returns to the same anchor note. Repetition is the point, not the problem.',
+  'astral':           'Weightless. Remove all rhythmic gravity — let phrases float without downbeats, land without impact.',
+  // Fire additions
+  'triumphant':       'The stakes are over and you won. Big intervals, strong arrivals, no hedging. Plant each phrase like a flag.',
+  'vengeful':         'Controlled aggression. Sharp attacks, clipped releases, every note aimed at something. Precision over volume.',
+  'urgent':           'Push. Every phrase crowds the next one. No space between ideas — the tempo feels too slow no matter what.',
+  // Gene's world additions
+  'dawn-patrol':      'First light, cold water, no one else out. Clean, sparse, wide-open. Every note has the whole ocean behind it.',
+  'riptide':          'Strong undercurrent beneath a calm surface. The groove pulls harder than it sounds. Resist and ride at the same time.',
+  'cactus-bloom':     'Unexpected beauty in a harsh landscape. One bright melodic idea surrounded by dry, sparse accompaniment.',
+  'last-ferry':       'Running out of time but too proud to rush. Each phrase is deliberate and final — you get one shot at each note.',
+  'summer-squall':    'Short burst of intensity, then clear sky. Build fast, peak hard, let the silence after the storm do the talking.',
+  'red-rock':         'Wide, ancient, sun-baked. Long sustained tones, desert reverb, nothing moves fast. The landscape plays you.',
+  'siesta':           'Half-asleep in afternoon heat. Lazy bends, dropped endings, phrases that trail off before finishing.',
+  'after-party':      'The energy is still in the room but everyone\'s gone quiet. Play the afterglow — warm, slightly sloppy, grateful.',
+  'porch-swing':      'Pendulum groove. Every phrase rocks between two notes, two chords, two ideas. The sway is the whole song.',
+  'palm-shade':       'Dappled and easy. Nothing harsh, nothing direct — everything filtered through something softer.',
+  'saltwater':        'Briny and bright. Open intervals, surf-tremolo shimmer, phrases that break and reform like waves.',
+  'fogbank':          'Muffled, close, no horizon. Soft attacks, rolled-off highs, everything sounds like it\'s coming through cotton.',
+  'gold-hour':        'Warm light on everything. Rich low-mids, gentle saturation, the kind of tone that makes average phrases beautiful.',
+  'backroad':         'Dusty, unhurried, no traffic. Simple motifs repeated with small variations — the scenery changes, the speed doesn\'t.',
+  'agave-sun':        'Dry heat, slow burn, sweet underneath. Sparse phrases with one honeyed note that makes the whole thing worthwhile.',
+  // Cosmic
+  'vast':             'Scale up. Every interval should feel like a canyon. Wide leaps, long sustains, nothing small or fussy.',
+  'oceanic':          'Deep, slow swells. Phrases rise gradually, crest, and dissolve. No sharp edges — everything is tide.',
+  'interstellar':     'Cold beauty. Precise intervals, crystalline tone, zero vibrato. Each note hangs in vacuum.',
+  'sublime':          'Overwhelmingly beautiful. Push the dynamic range to its edges — whisper and roar in the same phrase.',
+  'luminous':         'Radiant, even tone. No shadows, no grit — pure signal. Let the clarity do the emotional work.',
+  'gravitational':    'Everything pulls toward one center note. Build orbits around it — close passes, wide swings, always returning.',
+  // Edge
+  'anxious':          'Short, clipped phrases with too-quick breathing. The rests between notes are tense, not restful.',
+  'restless':         'Can\'t stay in one register or rhythm for more than two bars. Keep moving — stillness feels wrong.',
+  'electric':         'Crackling, on-edge energy. Bright attacks, sharp dynamics, every note slightly too loud for comfort.',
+  'paranoid':         'Creeping. Quiet phrases that flinch at their own sound. Play like you\'re being watched.',
+  // Cold
+  'icy':              'Brittle, precise, and distant. No warmth in the tone — crystalline attacks with immediate decay.',
+  'aloof':            'Play past the listener, not to them. Emotionally detached phrasing — technically present, personally absent.',
+  'clinical':         'Mechanical precision. Equal dynamics, metronomic time, zero expression. Let the pattern speak.',
+  'alienated':        'Disconnected from the groove. Phrases that ignore the backing track\'s pulse — you\'re in a different room.',
+  // Grit
+  'smoldering':       'Low heat, high tension. Barely-there dynamics with an edge underneath. The restraint IS the intensity.',
+  'sensual':          'Slow, deliberate, tactile. Feel the physical vibration of each note — let the instrument\'s body resonate.',
+  'weathered':        'Worn-in and comfortable with imperfection. Cracked tone, wobbly pitch, phrases shaped by years not lessons.',
+  'repressed':        'Hold back. Everything at half the volume and half the range you want. The constraint creates the pressure.',
+  'stoic':            'Unmoved by anything. Even, measured phrases with zero dynamic variation. Endurance over expression.',
+};
+
+// ─── Phase F: Mood → musical context affinities ───
+// Each mood maps to key/scale/tempo preferences that bias drawContext().
+// Keys use CHROMATIC symbols (♭ not 'b'). Unlisted keys get baseline × 0.5.
+// scaleWeights replace (not multiply) getScaleWeights when mood is active.
+// tempoRange replaces the default gaussianRange params entirely.
+const MOOD_AFFINITY = {
+  // ── Outward longing ──
+  'longing':     { keyWeights: { A: 4, E: 3, D: 3, 'F#': 2 }, scaleWeights: { 'minor-pentatonic': 4, 'natural-minor': 3, dorian: 3, 'harmonic-minor': 2 }, tempoRange: { min: 65, max: 100, sweetMin: 72, sweetMax: 90 } },
+  'yearning':    { keyWeights: { E: 4, A: 3, B: 3, 'F#': 2 }, scaleWeights: { 'natural-minor': 4, 'harmonic-minor': 3, 'melodic-minor': 3, dorian: 2 }, tempoRange: { min: 60, max: 95, sweetMin: 70, sweetMax: 85 } },
+  'nostalgic':   { keyWeights: { G: 4, D: 3, A: 3, C: 2 }, scaleWeights: { 'major-pentatonic': 4, major: 3, mixolydian: 3, dorian: 2 }, tempoRange: { min: 70, max: 100, sweetMin: 78, sweetMax: 92 } },
+  'wistful':     { keyWeights: { D: 4, G: 3, A: 3, E: 2 }, scaleWeights: { dorian: 4, 'minor-pentatonic': 3, 'natural-minor': 3, mixolydian: 2 }, tempoRange: { min: 65, max: 95, sweetMin: 75, sweetMax: 88 } },
+  'homesick':    { keyWeights: { A: 4, D: 3, G: 3, E: 2 }, scaleWeights: { 'minor-pentatonic': 4, 'natural-minor': 3, dorian: 2, blues: 2 }, tempoRange: { min: 60, max: 90, sweetMin: 68, sweetMax: 82 } },
+  'searching':   { keyWeights: { E: 4, A: 3, 'F#': 3, B: 2 }, scaleWeights: { dorian: 4, 'melodic-minor': 3, 'natural-minor': 3, mixolydian: 2 }, tempoRange: { min: 75, max: 110, sweetMin: 82, sweetMax: 98 } },
+  'unrequited':  { keyWeights: { D: 4, A: 3, F: 3, 'B♭': 2 }, scaleWeights: { 'natural-minor': 4, 'harmonic-minor': 3, 'minor-pentatonic': 3, phrygian: 2 }, tempoRange: { min: 55, max: 85, sweetMin: 62, sweetMax: 78 } },
+  // ── Inward warmth ──
+  'tender':      { keyWeights: { A: 4, E: 4, D: 3, G: 2 }, scaleWeights: { 'minor-pentatonic': 4, dorian: 3, 'natural-minor': 3, 'major-pentatonic': 2 }, tempoRange: { min: 60, max: 88, sweetMin: 68, sweetMax: 80 } },
+  'intimate':    { keyWeights: { E: 4, A: 3, D: 3, 'F#': 2 }, scaleWeights: { 'minor-pentatonic': 4, dorian: 3, blues: 3, 'natural-minor': 2 }, tempoRange: { min: 55, max: 85, sweetMin: 65, sweetMax: 78 } },
+  'serene':      { keyWeights: { G: 4, D: 4, C: 3, A: 2 }, scaleWeights: { 'major-pentatonic': 4, major: 3, lydian: 3, dorian: 2 }, tempoRange: { min: 55, max: 82, sweetMin: 62, sweetMax: 75 } },
+  'reverent':    { keyWeights: { D: 4, G: 3, A: 3, E: 2 }, scaleWeights: { major: 4, lydian: 3, 'major-pentatonic': 3, 'natural-minor': 2 }, tempoRange: { min: 50, max: 78, sweetMin: 58, sweetMax: 72 } },
+  'content':     { keyWeights: { G: 4, D: 4, A: 3, C: 2 }, scaleWeights: { 'major-pentatonic': 4, major: 3, mixolydian: 3, dorian: 2 }, tempoRange: { min: 65, max: 95, sweetMin: 75, sweetMax: 88 } },
+  'loving':      { keyWeights: { A: 4, E: 3, D: 3, G: 2 }, scaleWeights: { 'major-pentatonic': 4, major: 3, dorian: 3, 'minor-pentatonic': 2 }, tempoRange: { min: 60, max: 90, sweetMin: 70, sweetMax: 82 } },
+  // ── Light ──
+  'playful':     { keyWeights: { G: 4, D: 4, A: 3, C: 3 }, scaleWeights: { 'major-pentatonic': 4, major: 4, lydian: 2, mixolydian: 2 }, tempoRange: { min: 100, max: 130, sweetMin: 108, sweetMax: 122 } },
+  'mischievous': { keyWeights: { A: 4, D: 3, G: 3, E: 2 }, scaleWeights: { mixolydian: 4, blues: 3, 'major-pentatonic': 3, dorian: 2 }, tempoRange: { min: 95, max: 130, sweetMin: 105, sweetMax: 120 } },
+  'joyous':      { keyWeights: { G: 4, D: 4, A: 3, C: 3 }, scaleWeights: { major: 4, 'major-pentatonic': 4, lydian: 3, mixolydian: 2 }, tempoRange: { min: 105, max: 135, sweetMin: 112, sweetMax: 128 } },
+  'whimsical':   { keyWeights: { D: 4, G: 3, A: 3, 'F#': 2 }, scaleWeights: { lydian: 4, 'major-pentatonic': 3, major: 3, 'whole-tone': 2 }, tempoRange: { min: 90, max: 125, sweetMin: 100, sweetMax: 115 } },
+  'buoyant':     { keyWeights: { G: 4, A: 4, D: 3, C: 2 }, scaleWeights: { 'major-pentatonic': 4, major: 3, mixolydian: 3, lydian: 2 }, tempoRange: { min: 100, max: 128, sweetMin: 108, sweetMax: 120 } },
+  'celebratory': { keyWeights: { A: 4, D: 4, G: 3, E: 3 }, scaleWeights: { major: 4, 'major-pentatonic': 4, mixolydian: 3, lydian: 2 }, tempoRange: { min: 108, max: 140, sweetMin: 115, sweetMax: 132 } },
+  // ── Heavy ──
+  'melancholy':  { keyWeights: { D: 4, A: 3, F: 3, B: 2 }, scaleWeights: { 'natural-minor': 4, 'minor-pentatonic': 3, 'harmonic-minor': 3, dorian: 2 }, tempoRange: { min: 55, max: 82, sweetMin: 62, sweetMax: 75 } },
+  'elegiac':     { keyWeights: { D: 4, F: 3, 'B♭': 3, A: 2 }, scaleWeights: { 'natural-minor': 4, 'harmonic-minor': 3, phrygian: 3, 'minor-pentatonic': 2 }, tempoRange: { min: 50, max: 78, sweetMin: 58, sweetMax: 70 } },
+  'weary':       { keyWeights: { A: 4, D: 3, E: 3, G: 2 }, scaleWeights: { blues: 4, 'minor-pentatonic': 4, dorian: 2, 'natural-minor': 2 }, tempoRange: { min: 55, max: 80, sweetMin: 62, sweetMax: 75 } },
+  'haunted':     { keyWeights: { 'C#': 4, F: 3, B: 3, 'E♭': 2 }, scaleWeights: { 'harmonic-minor': 4, phrygian: 3, locrian: 3, 'natural-minor': 2 }, tempoRange: { min: 50, max: 78, sweetMin: 55, sweetMax: 68 } },
+  'bruised':     { keyWeights: { D: 4, A: 3, F: 3, 'B♭': 2 }, scaleWeights: { 'natural-minor': 4, blues: 3, 'minor-pentatonic': 3, dorian: 2 }, tempoRange: { min: 58, max: 85, sweetMin: 65, sweetMax: 78 } },
+  'ashen':       { keyWeights: { B: 4, 'E♭': 3, 'C#': 3, F: 2 }, scaleWeights: { phrygian: 4, locrian: 3, 'natural-minor': 3, 'whole-tone': 2 }, tempoRange: { min: 45, max: 72, sweetMin: 52, sweetMax: 65 } },
+  // ── Trance ──
+  'hypnotic':    { keyWeights: { E: 4, A: 3, D: 3 }, scaleWeights: { dorian: 4, 'phrygian-dominant': 3, 'whole-tone': 3, phrygian: 2 }, tempoRange: { min: 75, max: 100, sweetMin: 80, sweetMax: 92 } },
+  'dreamy':      { keyWeights: { D: 4, G: 3, A: 3, 'E♭': 2 }, scaleWeights: { lydian: 4, 'whole-tone': 3, 'major-pentatonic': 3, dorian: 2 }, tempoRange: { min: 60, max: 90, sweetMin: 68, sweetMax: 82 } },
+  'floating':    { keyWeights: { G: 4, D: 3, 'E♭': 3, A: 2 }, scaleWeights: { lydian: 4, 'whole-tone': 4, 'major-pentatonic': 2, dorian: 2 }, tempoRange: { min: 55, max: 85, sweetMin: 65, sweetMax: 78 } },
+  'mystical':    { keyWeights: { E: 4, 'C#': 3, 'A♭': 3, B: 2 }, scaleWeights: { 'harmonic-minor': 4, 'phrygian-dominant': 3, hirajoshi: 3, 'double-harmonic': 2 }, tempoRange: { min: 60, max: 90, sweetMin: 68, sweetMax: 82 } },
+  'meditative':  { keyWeights: { D: 4, A: 4, E: 3, G: 2 }, scaleWeights: { 'minor-pentatonic': 4, dorian: 3, hirajoshi: 3, 'major-pentatonic': 2 }, tempoRange: { min: 50, max: 78, sweetMin: 58, sweetMax: 70 } },
+  'hallucinated':{ keyWeights: { 'E♭': 4, 'F#': 3, 'B♭': 3, 'C#': 2 }, scaleWeights: { 'whole-tone': 4, lydian: 3, 'phrygian-dominant': 3, 'harmonic-minor': 2 }, tempoRange: { min: 58, max: 88, sweetMin: 65, sweetMax: 80 } },
+  'ritual':      { keyWeights: { E: 4, A: 4, D: 3 }, scaleWeights: { 'phrygian-dominant': 4, phrygian: 3, 'hungarian-minor': 3, 'harmonic-minor': 2 }, tempoRange: { min: 70, max: 100, sweetMin: 78, sweetMax: 92 } },
+  'astral':      { keyWeights: { 'E♭': 4, 'A♭': 3, 'B♭': 3, 'F#': 2 }, scaleWeights: { 'whole-tone': 4, lydian: 4, 'melodic-minor': 3, hirajoshi: 2 }, tempoRange: { min: 55, max: 82, sweetMin: 62, sweetMax: 75 } },
+  // ── Fire ──
+  'defiant':     { keyWeights: { A: 4, E: 4, D: 3 }, scaleWeights: { phrygian: 4, blues: 3, 'harmonic-minor': 3, 'phrygian-dominant': 2 }, tempoRange: { min: 100, max: 140, sweetMin: 112, sweetMax: 132 } },
+  'fierce':      { keyWeights: { E: 4, A: 3, D: 3, 'F#': 2 }, scaleWeights: { blues: 4, 'minor-pentatonic': 3, 'harmonic-minor': 3, 'phrygian-dominant': 2 }, tempoRange: { min: 105, max: 140, sweetMin: 115, sweetMax: 135 } },
+  'driven':      { keyWeights: { A: 4, E: 4, D: 3, G: 2 }, scaleWeights: { 'minor-pentatonic': 4, blues: 3, mixolydian: 3, dorian: 2 }, tempoRange: { min: 100, max: 135, sweetMin: 110, sweetMax: 125 } },
+  'triumphant':  { keyWeights: { D: 4, A: 4, G: 3, E: 3 }, scaleWeights: { major: 4, mixolydian: 3, 'major-pentatonic': 3, lydian: 2 }, tempoRange: { min: 108, max: 140, sweetMin: 118, sweetMax: 135 } },
+  'vengeful':    { keyWeights: { E: 4, 'C#': 3, A: 3, 'F#': 2 }, scaleWeights: { 'harmonic-minor': 4, phrygian: 3, 'hungarian-minor': 3, 'phrygian-dominant': 2 }, tempoRange: { min: 110, max: 140, sweetMin: 120, sweetMax: 138 } },
+  'urgent':      { keyWeights: { A: 4, E: 4, D: 3, G: 2 }, scaleWeights: { 'minor-pentatonic': 4, blues: 3, dorian: 3, phrygian: 2 }, tempoRange: { min: 115, max: 140, sweetMin: 122, sweetMax: 138 } },
+  // ── Gene's world ──
+  'sun-bleached':     { keyWeights: { A: 4, E: 4, G: 3, D: 2 }, scaleWeights: { 'minor-pentatonic': 4, mixolydian: 3, dorian: 3, blues: 2 }, tempoRange: { min: 78, max: 108, sweetMin: 85, sweetMax: 98 } },
+  'bourbon-warm':     { keyWeights: { A: 4, E: 4, G: 3, D: 2 }, scaleWeights: { 'minor-pentatonic': 4, blues: 4, dorian: 2, 'natural-minor': 2 }, tempoRange: { min: 70, max: 95, sweetMin: 75, sweetMax: 88 } },
+  'highway-hypnosis': { keyWeights: { E: 4, A: 4, D: 3 }, scaleWeights: { dorian: 4, 'minor-pentatonic': 3, mixolydian: 3, 'phrygian-dominant': 2 }, tempoRange: { min: 78, max: 105, sweetMin: 85, sweetMax: 98 } },
+  'motel-neon':       { keyWeights: { 'C#': 3, 'E♭': 3, 'B♭': 3, F: 2 }, scaleWeights: { dorian: 4, phrygian: 3, 'natural-minor': 3, 'harmonic-minor': 2 }, tempoRange: { min: 80, max: 105, sweetMin: 85, sweetMax: 98 } },
+  'slow-sunday':      { keyWeights: { G: 4, D: 4, A: 3, C: 2 }, scaleWeights: { 'major-pentatonic': 4, major: 3, dorian: 3, mixolydian: 2 }, tempoRange: { min: 62, max: 88, sweetMin: 70, sweetMax: 82 } },
+  'dawn-patrol':      { keyWeights: { A: 4, E: 4, G: 3 }, scaleWeights: { 'minor-pentatonic': 4, dorian: 3, 'major-pentatonic': 3, mixolydian: 2 }, tempoRange: { min: 75, max: 100, sweetMin: 82, sweetMax: 95 } },
+  'riptide':          { keyWeights: { E: 4, A: 4, D: 3, G: 2 }, scaleWeights: { 'minor-pentatonic': 4, blues: 3, mixolydian: 3, dorian: 2 }, tempoRange: { min: 85, max: 115, sweetMin: 92, sweetMax: 108 } },
+  'cactus-bloom':     { keyWeights: { A: 4, E: 3, G: 3, D: 2 }, scaleWeights: { 'major-pentatonic': 4, mixolydian: 3, dorian: 3, lydian: 2 }, tempoRange: { min: 78, max: 105, sweetMin: 85, sweetMax: 98 } },
+  'last-ferry':       { keyWeights: { D: 4, A: 3, G: 3, E: 2 }, scaleWeights: { dorian: 4, 'minor-pentatonic': 3, 'natural-minor': 3, blues: 2 }, tempoRange: { min: 72, max: 98, sweetMin: 80, sweetMax: 92 } },
+  'summer-squall':    { keyWeights: { A: 4, E: 4, D: 3, G: 2 }, scaleWeights: { 'minor-pentatonic': 4, blues: 3, phrygian: 3, 'phrygian-dominant': 2 }, tempoRange: { min: 95, max: 130, sweetMin: 105, sweetMax: 122 } },
+  'red-rock':         { keyWeights: { E: 4, A: 4, D: 3 }, scaleWeights: { 'phrygian-dominant': 4, 'minor-pentatonic': 3, blues: 3, 'hungarian-minor': 2 }, tempoRange: { min: 70, max: 98, sweetMin: 78, sweetMax: 90 } },
+  'siesta':           { keyWeights: { A: 4, D: 4, G: 3, E: 2 }, scaleWeights: { dorian: 4, 'major-pentatonic': 3, mixolydian: 3, 'minor-pentatonic': 2 }, tempoRange: { min: 60, max: 85, sweetMin: 68, sweetMax: 78 } },
+  'after-party':      { keyWeights: { A: 4, G: 3, D: 3, E: 2 }, scaleWeights: { blues: 4, 'minor-pentatonic': 4, mixolydian: 2, dorian: 2 }, tempoRange: { min: 72, max: 100, sweetMin: 80, sweetMax: 92 } },
+  'porch-swing':      { keyWeights: { G: 4, D: 4, A: 3, C: 2 }, scaleWeights: { 'major-pentatonic': 4, mixolydian: 3, dorian: 3, major: 2 }, tempoRange: { min: 68, max: 95, sweetMin: 75, sweetMax: 88 } },
+  'palm-shade':       { keyWeights: { A: 4, E: 3, G: 3, D: 2 }, scaleWeights: { dorian: 4, 'minor-pentatonic': 3, mixolydian: 3, 'major-pentatonic': 2 }, tempoRange: { min: 70, max: 95, sweetMin: 78, sweetMax: 90 } },
+  'saltwater':        { keyWeights: { E: 4, A: 4, G: 3, D: 2 }, scaleWeights: { 'minor-pentatonic': 4, mixolydian: 3, dorian: 3, hirajoshi: 2 }, tempoRange: { min: 82, max: 112, sweetMin: 90, sweetMax: 105 } },
+  'fogbank':          { keyWeights: { D: 4, G: 3, 'E♭': 3, A: 2 }, scaleWeights: { dorian: 4, 'whole-tone': 3, lydian: 3, hirajoshi: 2 }, tempoRange: { min: 58, max: 85, sweetMin: 65, sweetMax: 78 } },
+  'gold-hour':        { keyWeights: { A: 4, E: 4, G: 3, D: 2 }, scaleWeights: { 'major-pentatonic': 4, mixolydian: 3, dorian: 3, major: 2 }, tempoRange: { min: 75, max: 100, sweetMin: 82, sweetMax: 95 } },
+  'backroad':         { keyWeights: { E: 4, A: 4, D: 3, G: 2 }, scaleWeights: { 'minor-pentatonic': 4, blues: 3, mixolydian: 3, dorian: 2 }, tempoRange: { min: 75, max: 100, sweetMin: 82, sweetMax: 95 } },
+  'agave-sun':        { keyWeights: { A: 4, E: 3, D: 3, G: 2 }, scaleWeights: { mixolydian: 4, 'major-pentatonic': 3, dorian: 3, 'minor-pentatonic': 2 }, tempoRange: { min: 72, max: 98, sweetMin: 80, sweetMax: 92 } },
+  // ── Cosmic ──
+  'vast':         { keyWeights: { 'E♭': 4, 'B♭': 3, 'F#': 3, A: 2 }, scaleWeights: { lydian: 4, 'whole-tone': 3, 'melodic-minor': 3, major: 2 }, tempoRange: { min: 55, max: 82, sweetMin: 62, sweetMax: 75 } },
+  'oceanic':      { keyWeights: { E: 4, A: 3, D: 3, 'E♭': 2 }, scaleWeights: { dorian: 4, 'minor-pentatonic': 3, lydian: 3, 'whole-tone': 2 }, tempoRange: { min: 60, max: 88, sweetMin: 68, sweetMax: 80 } },
+  'interstellar': { keyWeights: { 'F#': 4, 'C#': 3, 'E♭': 3, B: 2 }, scaleWeights: { lydian: 4, 'whole-tone': 4, hirajoshi: 3, 'melodic-minor': 2 }, tempoRange: { min: 55, max: 80, sweetMin: 60, sweetMax: 72 } },
+  'sublime':      { keyWeights: { A: 4, 'E♭': 3, D: 3, 'B♭': 2 }, scaleWeights: { major: 4, lydian: 3, 'harmonic-minor': 3, 'natural-minor': 2 }, tempoRange: { min: 58, max: 90, sweetMin: 65, sweetMax: 82 } },
+  'luminous':     { keyWeights: { G: 4, D: 4, A: 3, 'E♭': 2 }, scaleWeights: { major: 4, lydian: 4, 'major-pentatonic': 3, 'melodic-minor': 2 }, tempoRange: { min: 62, max: 92, sweetMin: 70, sweetMax: 85 } },
+  'gravitational':{ keyWeights: { E: 4, A: 4, D: 3 }, scaleWeights: { 'minor-pentatonic': 4, dorian: 3, 'phrygian-dominant': 3, 'natural-minor': 2 }, tempoRange: { min: 60, max: 88, sweetMin: 68, sweetMax: 80 } },
+  // ── Edge ──
+  'anxious':      { keyWeights: { 'C#': 4, 'F#': 3, B: 3, 'B♭': 2 }, scaleWeights: { 'harmonic-minor': 4, phrygian: 3, locrian: 3, 'natural-minor': 2 }, tempoRange: { min: 100, max: 132, sweetMin: 108, sweetMax: 125 } },
+  'restless':     { keyWeights: { A: 4, E: 3, 'F#': 3, D: 2 }, scaleWeights: { dorian: 4, 'melodic-minor': 3, mixolydian: 3, blues: 2 }, tempoRange: { min: 95, max: 130, sweetMin: 105, sweetMax: 122 } },
+  'electric':     { keyWeights: { E: 4, A: 4, D: 3, G: 2 }, scaleWeights: { blues: 4, 'minor-pentatonic': 3, 'phrygian-dominant': 3, mixolydian: 2 }, tempoRange: { min: 105, max: 140, sweetMin: 115, sweetMax: 132 } },
+  'paranoid':     { keyWeights: { 'C#': 4, F: 3, B: 3, 'E♭': 2 }, scaleWeights: { phrygian: 4, locrian: 3, 'harmonic-minor': 3, 'hungarian-minor': 2 }, tempoRange: { min: 88, max: 120, sweetMin: 95, sweetMax: 112 } },
+  // ── Cold ──
+  'icy':          { keyWeights: { B: 4, 'C#': 3, 'E♭': 3, 'F#': 2 }, scaleWeights: { lydian: 4, 'whole-tone': 3, 'melodic-minor': 3, locrian: 2 }, tempoRange: { min: 50, max: 78, sweetMin: 55, sweetMax: 68 } },
+  'aloof':        { keyWeights: { 'F#': 4, 'C#': 3, B: 3, 'E♭': 2 }, scaleWeights: { dorian: 4, lydian: 3, 'whole-tone': 3, 'melodic-minor': 2 }, tempoRange: { min: 62, max: 90, sweetMin: 70, sweetMax: 82 } },
+  'clinical':     { keyWeights: { C: 4, 'E♭': 3, 'A♭': 3, F: 2 }, scaleWeights: { major: 4, lydian: 3, 'whole-tone': 3, 'melodic-minor': 2 }, tempoRange: { min: 80, max: 115, sweetMin: 90, sweetMax: 105 } },
+  'alienated':    { keyWeights: { 'E♭': 4, 'B♭': 3, 'C#': 3, 'A♭': 2 }, scaleWeights: { locrian: 4, 'whole-tone': 3, phrygian: 3, 'harmonic-minor': 2 }, tempoRange: { min: 55, max: 82, sweetMin: 62, sweetMax: 75 } },
+  // ── Grit ──
+  'smoldering':   { keyWeights: { A: 4, E: 4, D: 3, 'F#': 2 }, scaleWeights: { blues: 4, 'minor-pentatonic': 3, dorian: 3, 'phrygian-dominant': 2 }, tempoRange: { min: 72, max: 100, sweetMin: 80, sweetMax: 92 } },
+  'sensual':      { keyWeights: { A: 4, D: 4, E: 3, G: 2 }, scaleWeights: { dorian: 4, 'minor-pentatonic': 3, blues: 3, mixolydian: 2 }, tempoRange: { min: 65, max: 92, sweetMin: 72, sweetMax: 85 } },
+  'weathered':    { keyWeights: { E: 4, A: 4, D: 3, G: 2 }, scaleWeights: { blues: 4, 'minor-pentatonic': 4, dorian: 2, mixolydian: 2 }, tempoRange: { min: 70, max: 98, sweetMin: 78, sweetMax: 90 } },
+  'repressed':    { keyWeights: { D: 4, F: 3, B: 3, 'C#': 2 }, scaleWeights: { 'natural-minor': 4, 'harmonic-minor': 3, phrygian: 3, 'minor-pentatonic': 2 }, tempoRange: { min: 58, max: 85, sweetMin: 65, sweetMax: 78 } },
+  'stoic':        { keyWeights: { A: 4, E: 3, D: 3, B: 2 }, scaleWeights: { 'minor-pentatonic': 4, 'natural-minor': 3, dorian: 3, blues: 2 }, tempoRange: { min: 68, max: 95, sweetMin: 75, sweetMax: 88 } },
 };
 
 // ─── Phase E: High-value pairwise overlays for the new dims ───
@@ -345,7 +513,11 @@ function generateId() {
 
 // Derive drone chord root from key + scale (Am vs A)
 function droneRootFromCard(key, scale) {
-  const minorScales = ['minor-pentatonic', 'natural-minor', 'blues', 'dorian', 'phrygian'];
+  const minorScales = [
+    'minor-pentatonic', 'natural-minor', 'blues', 'dorian', 'phrygian',
+    // Phase F additions (minor-quality: have ♭3)
+    'harmonic-minor', 'melodic-minor', 'hungarian-minor', 'locrian', 'hirajoshi',
+  ];
   return minorScales.includes(scale) ? `${key}m` : key;
 }
 
@@ -422,6 +594,42 @@ const KEY_WEIGHTS = {
   'A': 4, 'E': 3, 'G': 3, 'D': 2, 'C': 2, 'F': 1, 'B♭': 1,
   'F#': 1, 'B': 1, 'C#': 0.5, 'A♭': 0.5, 'E♭': 0.5,
 };
+
+// ─── Phase F: Mood-aware context resolution ───
+const MOOD_COHERENCE_RATE = 0.7; // 70% chance to keep previous card's mood
+
+function drawMood(previousMood, lockedMood) {
+  if (lockedMood) return lockedMood;
+  if (previousMood && Math.random() < MOOD_COHERENCE_RATE) return previousMood;
+  return MOOD_FLAT[Math.floor(Math.random() * MOOD_FLAT.length)];
+}
+
+function resolveKeyWeights(mood) {
+  const affinity = mood && MOOD_AFFINITY[mood] && MOOD_AFFINITY[mood].keyWeights;
+  if (!affinity) return CHROMATIC.map(k => KEY_WEIGHTS[k] || 1);
+  return CHROMATIC.map(k => {
+    const baseline = KEY_WEIGHTS[k] || 1;
+    const boost = affinity[k];
+    return boost !== undefined ? boost : baseline * 0.5;
+  });
+}
+
+function resolveScaleWeights(mood, tier) {
+  const base = getScaleWeights(tier);
+  const affinity = mood && MOOD_AFFINITY[mood] && MOOD_AFFINITY[mood].scaleWeights;
+  if (!affinity) return base;
+  return Object.keys(SCALE_TYPES).map((k, i) => {
+    if (base[i] === 0) return 0; // tier gate still wins
+    const boost = affinity[k];
+    return boost !== undefined ? boost : base[i] * 0.5;
+  });
+}
+
+function resolveTempoRange(mood) {
+  const range = mood && MOOD_AFFINITY[mood] && MOOD_AFFINITY[mood].tempoRange;
+  if (!range) return { min: 60, max: 140, sweetMin: 85, sweetMax: 120 };
+  return range;
+}
 
 // Pitch contour = pure shape constraint. `questionAnswer` was moved to the
 // PHRASE_STRUCTURE_CONSTRAINTS dim in Phase B (v2) — it's a phrase-level form,
@@ -617,19 +825,26 @@ const VIBRATO_CONSTRAINTS = [
 ];
 
 // ─── Mood library (session-level overlay, not a random dim) ───
-// 25 launch moods organized into 7 families. Expands to ~70 in Phase E2
-// based on actual usage. NOT randomized — picked once per round and colors
-// every card's guidance overlay with a single emotional intent.
+// ~79 moods across 11 families. Phase F: mood is auto-drawn per card
+// (with 70% coherence bias) and biases key/scale/tempo via MOOD_AFFINITY.
+// Picker becomes an optional lock.
 const MOOD_LIBRARY = {
-  'Outward longing':  ['longing', 'yearning', 'nostalgic', 'wistful'],
-  'Inward warmth':    ['tender', 'intimate', 'serene'],
-  'Light':            ['playful', 'mischievous', 'joyous'],
-  'Heavy':            ['melancholy', 'elegiac', 'weary'],
-  'Trance':           ['hypnotic', 'dreamy', 'floating'],
-  'Fire':             ['defiant', 'fierce', 'driven'],
-  "Gene's world":     ['sun-bleached', 'bourbon-warm', 'highway-hypnosis', 'motel-neon', 'slow-sunday'],
+  'Outward longing':  ['longing', 'yearning', 'nostalgic', 'wistful', 'homesick', 'searching', 'unrequited'],
+  'Inward warmth':    ['tender', 'intimate', 'serene', 'reverent', 'content', 'loving'],
+  'Light':            ['playful', 'mischievous', 'joyous', 'whimsical', 'buoyant', 'celebratory'],
+  'Heavy':            ['melancholy', 'elegiac', 'weary', 'haunted', 'bruised', 'ashen'],
+  'Trance':           ['hypnotic', 'dreamy', 'floating', 'mystical', 'meditative', 'hallucinated', 'ritual', 'astral'],
+  'Fire':             ['defiant', 'fierce', 'driven', 'triumphant', 'vengeful', 'urgent'],
+  "Gene's world":     ['sun-bleached', 'bourbon-warm', 'highway-hypnosis', 'motel-neon', 'slow-sunday',
+                        'dawn-patrol', 'riptide', 'cactus-bloom', 'last-ferry', 'summer-squall',
+                        'red-rock', 'siesta', 'after-party', 'porch-swing', 'palm-shade',
+                        'saltwater', 'fogbank', 'gold-hour', 'backroad', 'agave-sun'],
+  'Cosmic':           ['vast', 'oceanic', 'interstellar', 'sublime', 'luminous', 'gravitational'],
+  'Edge':             ['anxious', 'restless', 'electric', 'paranoid'],
+  'Cold':             ['icy', 'aloof', 'clinical', 'alienated'],
+  'Grit':             ['smoldering', 'sensual', 'weathered', 'repressed', 'stoic'],
 };
-const MOOD_FLAT = Object.values(MOOD_LIBRARY).flat(); // 25 moods total
+const MOOD_FLAT = Object.values(MOOD_LIBRARY).flat();
 
 const OBLIQUE_MODIFIERS = [
   { id: 'honorError', name: 'Honor Thy Error', desc: 'If you play a "wrong" note, build on it — make it the start of something new. Mistakes are doorways.' },
@@ -708,13 +923,29 @@ function getDimensionsForTier(tier) {
 }
 
 // ─── Scale weights by tier ───
+// Phase F: simplified to two real branches — tier 1 (Scales mode) and tier 4
+// (everything else). The old tier 2/3 branches were dead code — no UI exposed them.
+const SCALES_MODE_WHITELIST = new Set([
+  'minor-pentatonic', 'major-pentatonic', 'blues', 'major', 'natural-minor',
+]);
+const EXOTIC_SCALES = new Set([
+  'phrygian', 'phrygian-dominant', 'locrian', 'whole-tone',
+  'hungarian-minor', 'double-harmonic', 'hirajoshi',
+]);
 function getScaleWeights(tier) {
   return Object.keys(SCALE_TYPES).map(k => {
-    if (tier <= 2 && (k === 'dorian' || k === 'mixolydian' || k === 'phrygian')) return 0;
-    if (tier <= 3 && k === 'phrygian') return 0;
-    if (k === 'minor-pentatonic' || k === 'major-pentatonic') return tier <= 2 ? 4 : 2;
+    if (tier <= 1) {
+      // Scales mode: conservative set only
+      if (!SCALES_MODE_WHITELIST.has(k)) return 0;
+      if (k === 'minor-pentatonic' || k === 'major-pentatonic') return 4;
+      if (k === 'blues') return 3;
+      return 2; // major, natural-minor
+    }
+    // Focus/Combo/Matrix (tier 4): all 17 available, weighted
+    if (k === 'minor-pentatonic' || k === 'major-pentatonic') return 3;
     if (k === 'blues') return 3;
-    return 2;
+    if (EXOTIC_SCALES.has(k)) return 1;
+    return 2; // dorian, mixolydian, major, natural-minor, lydian, harmonic-minor, melodic-minor
   });
 }
 
@@ -783,13 +1014,13 @@ function enrichDynamicConstraint(chosen, card, scaleNotes) {
 }
 
 // Pass 1: musical context (key, scale, tempo). Always set.
-function drawContext(card, activeDimensions, lockedDimensions, tier) {
+function drawContext(card, activeDimensions, lockedDimensions, tier, mood) {
   if (activeDimensions.includes('key')) {
     if (lockedDimensions.key !== undefined) {
       card.constraints.key = lockedDimensions.key;
     } else {
       const keys = CHROMATIC;
-      const weights = keys.map(k => KEY_WEIGHTS[k] || 1);
+      const weights = resolveKeyWeights(mood);
       card.constraints.key = weightedPick(keys, weights);
     }
   } else {
@@ -801,7 +1032,7 @@ function drawContext(card, activeDimensions, lockedDimensions, tier) {
       card.constraints.scale = lockedDimensions.scale;
     } else {
       const scaleKeys = Object.keys(SCALE_TYPES);
-      const weights = getScaleWeights(tier);
+      const weights = resolveScaleWeights(mood, tier);
       card.constraints.scale = weightedPick(scaleKeys, weights);
     }
   } else {
@@ -812,7 +1043,8 @@ function drawContext(card, activeDimensions, lockedDimensions, tier) {
     if (lockedDimensions.tempo !== undefined) {
       card.constraints.tempo = lockedDimensions.tempo;
     } else {
-      card.constraints.tempo = gaussianRange(60, 140, 85, 120);
+      const { min, max, sweetMin, sweetMax } = resolveTempoRange(mood);
+      card.constraints.tempo = gaussianRange(min, max, sweetMin, sweetMax);
     }
   } else {
     card.constraints.tempo = 90;
@@ -906,7 +1138,7 @@ class LockConflictError extends Error {
 // so this set is minimal for now. Expand if/when chromatic or non-Western
 // scales are added to SCALE_TYPES.
 const ATONAL_SCALES = new Set([
-  // 'chromatic', // not currently in SCALE_TYPES but reserved for future
+  'whole-tone', // no perfect 5th, no stable tonic triad
 ]);
 
 function validateAndRepair(card, lockedDimensions, constraintWeights, instrument) {
@@ -967,7 +1199,7 @@ function validateAndRepair(card, lockedDimensions, constraintWeights, instrument
 // argument must already include musical context + foundational + the random
 // pool for the target instrument (the derived `activeDimensions` useMemo in
 // the main component handles this).
-function generateCard(activeDimensions, lockedDimensions, history, constraintWeights, tier, _retryCount = 0, maxConstraints = 3, mode = 'matrix', instrument = 'voice') {
+function generateCard(activeDimensions, lockedDimensions, history, constraintWeights, tier, _retryCount = 0, maxConstraints = 3, mode = 'matrix', instrument = 'voice', mood = null) {
   const card = {
     id: generateId(),
     timestamp: Date.now(),
@@ -976,10 +1208,11 @@ function generateCard(activeDimensions, lockedDimensions, history, constraintWei
     instrument,
     tier,
     mode, // 'scales' | 'focus' | 'combo' | 'matrix' — drives guidance lookup
+    mood, // Phase F: drawn mood for this card (biases key/scale/tempo)
   };
 
-  // Pass 1: musical context.
-  drawContext(card, activeDimensions, lockedDimensions, tier);
+  // Pass 1: musical context (mood biases key/scale/tempo via MOOD_AFFINITY).
+  drawContext(card, activeDimensions, lockedDimensions, tier, mood);
   const scaleData = generateScale(card.constraints.key, card.constraints.scale);
   const scaleNotes = scaleData.notes || [];
 
@@ -1040,7 +1273,7 @@ function generateCard(activeDimensions, lockedDimensions, history, constraintWei
       if (a !== b) { sameConstraints = false; break; }
     }
     if (sameKey && sameScale && sameConstraints) {
-      return generateCard(activeDimensions, lockedDimensions, history, constraintWeights, tier, _retryCount + 1, maxConstraints, mode, instrument);
+      return generateCard(activeDimensions, lockedDimensions, history, constraintWeights, tier, _retryCount + 1, maxConstraints, mode, instrument, mood);
     }
   }
 
@@ -1155,14 +1388,17 @@ if (typeof window !== 'undefined') {
 }
 
 // ─── Session generation ───
-function generateSession(count, activeDimensions, lockedDimensions, constraintWeights, tier, maxConstraints = 3, mode = 'matrix', instrument = 'voice') {
+function generateSession(count, activeDimensions, lockedDimensions, constraintWeights, tier, maxConstraints = 3, mode = 'matrix', instrument = 'voice', lockedMood = null) {
   const cards = [];
   const keyCount = {};
   for (let i = 0; i < count; i++) {
+    // Phase F: draw mood per card with coherence bias
+    const previousMood = i > 0 ? cards[i - 1].mood : null;
+    const cardMood = drawMood(previousMood, lockedMood);
     let card;
     let attempts = 0;
     do {
-      card = generateCard(activeDimensions, lockedDimensions, cards, constraintWeights, tier, 0, maxConstraints, mode, instrument);
+      card = generateCard(activeDimensions, lockedDimensions, cards, constraintWeights, tier, 0, maxConstraints, mode, instrument, cardMood);
       attempts++;
     } while ((keyCount[card.constraints.key] || 0) >= 2 && attempts < 10);
     keyCount[card.constraints.key] = (keyCount[card.constraints.key] || 0) + 1;
@@ -1545,7 +1781,7 @@ function ChallengeCard({
   onToggleFullGuidance,
   mood = null,
 }) {
-  const moodOverlay = lookupMoodOverlay(mood);
+  const moodOverlay = lookupMoodOverlay(card.mood || mood);
   const phaseECombos = lookupPhaseECombo(card);
   const keyColor = getColorForNote(card.constraints.key) || T.gold;
   const scaleName = SCALE_TYPES[card.constraints.scale]?.name || card.constraints.scale;
@@ -2341,8 +2577,8 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
   const tierToMode = (t) => (t === 1 ? 'scales' : t === 2 ? 'matrix' : 'combo');
   const [mode, setMode] = useState(() => forgeData.settings?.mode ?? tierToMode(legacyTier));
   const [instrument, setInstrument] = useState(() => forgeData.settings?.instrument ?? 'voice');
-  // Session-level mood overlay. NOT randomized — picked once per round and
-  // colors every card's guidance with a single emotional intent. Null = no mood set.
+  // Phase F: mood is auto-drawn per card (see drawMood). When non-null here,
+  // it acts as a LOCK — the user pinned a mood via the picker. Null = auto-draw.
   const [mood, setMood] = useState(() => forgeData.settings?.mood ?? null);
   const [moodPickerOpen, setMoodPickerOpen] = useState(false);
   // Timer duration: 0 means UNLIMITED (stopwatch, user ends manually). This is the default now —
@@ -2499,7 +2735,7 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
   // is rendered until they resolve the conflict.
   const [lockConflict, setLockConflict] = useState(null);
 
-  // Draw a new card
+  // Draw a new card — Phase F: mood is auto-drawn per card with coherence bias
   const drawCard = useCallback(() => {
     setShowRating(false);
     setTimerRunning(false);
@@ -2507,13 +2743,18 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
 
     try {
       if (sessionCardCount > 1) {
-        const cards = generateSession(sessionCardCount, effectiveActiveDimensions, lockedDimensions, forgeData.constraintWeights, tier, maxConstraints, mode, instrument);
+        // generateSession handles per-card mood draw with coherence internally
+        const cards = generateSession(sessionCardCount, effectiveActiveDimensions, lockedDimensions, forgeData.constraintWeights, tier, maxConstraints, mode, instrument, mood);
         setSessionCards(cards);
         setSessionIndex(0);
         setCurrentCard(cards[0]);
       } else {
+        // Single card: draw mood from previous card (coherence) or fresh
+        const lastCards = forgeData.sessions.flatMap(s => s.cards || []);
+        const previousMood = sessionCards.length > 0 ? sessionCards[sessionCards.length - 1]?.mood : null;
+        const cardMood = drawMood(previousMood, mood);
         const card = generateCard(effectiveActiveDimensions, lockedDimensions,
-          forgeData.sessions.flatMap(s => s.cards || []), forgeData.constraintWeights, tier, 0, maxConstraints, mode, instrument);
+          lastCards, forgeData.constraintWeights, tier, 0, maxConstraints, mode, instrument, cardMood);
         setCurrentCard(card);
         setSessionCards([card]);
         setSessionIndex(0);
@@ -2530,7 +2771,7 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
         throw err;
       }
     }
-  }, [effectiveActiveDimensions, lockedDimensions, forgeData, tier, sessionCardCount, maxConstraints, mode, instrument]);
+  }, [effectiveActiveDimensions, lockedDimensions, forgeData, tier, sessionCardCount, maxConstraints, mode, instrument, mood, sessionCards]);
 
   // Sync metro BPM when card changes
   useEffect(() => {
