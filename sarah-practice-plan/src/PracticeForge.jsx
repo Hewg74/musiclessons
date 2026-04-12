@@ -912,6 +912,21 @@ const FOUNDATIONAL_DIMS = {
 // Musical context dims — always set, auto-generated, not in the random pool.
 const MUSICAL_CONTEXT_DIMS = ['key', 'scale', 'tempo'];
 
+// Default exclusion sets per instrument — on reset (or fresh user), only core
+// dims (Pitch, Rhythm, Dynamics) are active. Advanced shared dims and
+// instrument-branch dims start excluded. Foundational dims (texture, register,
+// vowel) are always drawn regardless and aren't affected by exclusions.
+const DEFAULT_EXCLUDED = {
+  guitar: new Set([
+    'harmonicTarget', 'articulation', 'phraseLength', 'phraseStructure',
+    'pickingHand', 'neckZone', 'noteTransition', 'vibrato',
+  ]),
+  voice: new Set([
+    'harmonicTarget', 'articulation', 'phraseLength', 'phraseStructure',
+    'onset',
+  ]),
+};
+
 // Oblique modifiers are creative breakthrough prompts, NOT skill-building constraints.
 // They're applied as an optional spice on top of any drawn card, not part of the
 // random draw. Use them when you want to break out of a habit, not when you're
@@ -1834,6 +1849,17 @@ function ChallengeCard({
   const guidance = lookupGuidance(card);
   const scaleChar = lookupScaleCharacter(card.constraints.scale);
 
+  // Per-constraint focus guidance for combo/matrix — lets users drill each component in isolation.
+  // Looks up each drawn constraint's individual focus entry from the guidance cache.
+  const perConstraintFocus = (card.mode === 'combo' || card.mode === 'matrix')
+    ? Object.fromEntries(
+        constraintLines
+          .map(({ dim, constraint }) => [dim.id, GUIDANCE_CACHE.focus?.[`${dim.id}:${constraint.id}`] || null])
+          .filter(([, v]) => v)
+      )
+    : {};
+  const [expandedFocus, setExpandedFocus] = useState({});
+
   // Lock chip: small pill at the end of header rows. onToggleLock is a parent callback
   // that adds/removes from lockedDimensions. Tapping an unlocked chip locks the CURRENT
   // drawn value; tapping a locked chip unlocks it.
@@ -2077,6 +2103,108 @@ function ChallengeCard({
                     {exampleText}
                   </div>
                 )}
+                {/* Collapsible focus guidance — combo/matrix only. Shows the individual
+                    focus-mode guidance for this constraint so users can work on it in isolation. */}
+                {perConstraintFocus[dim.id] && (() => {
+                  const fg = perConstraintFocus[dim.id];
+                  const isOpen = !!expandedFocus[dim.id];
+                  return (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => setExpandedFocus(prev => ({ ...prev, [dim.id]: !prev[dim.id] }))}
+                        aria-expanded={isOpen}
+                        style={{
+                          display: 'inline-flex', alignItems: 'center', gap: 5,
+                          marginTop: 8, padding: '5px 10px', borderRadius: 8,
+                          background: isOpen ? `${dim.color}12` : 'transparent',
+                          border: `1px solid ${isOpen ? `${dim.color}40` : T.border}`,
+                          color: isOpen ? dim.color : T.textLight,
+                          fontSize: 11, fontWeight: 600, fontFamily: T.sans,
+                          cursor: 'pointer', transition: 'all 0.15s',
+                        }}
+                      >
+                        <ChevronDown size={12} style={{
+                          transform: isOpen ? 'rotate(180deg)' : '',
+                          transition: 'transform 0.2s',
+                        }} />
+                        Focus on this alone
+                      </button>
+                      {isOpen && (
+                        <div style={{
+                          marginTop: 10, padding: '14px 16px',
+                          background: T.bgSoft,
+                          border: `1px solid ${T.borderSoft || T.border}`,
+                          borderLeft: `3px solid ${dim.color}`,
+                          borderRadius: '0 8px 8px 0',
+                          display: 'flex', flexDirection: 'column', gap: 14,
+                          animation: 'forgeGuidanceExpand 0.3s ease-out both',
+                        }}>
+                          <div>
+                            <div style={{ fontSize: 10, fontWeight: 700, color: T.goldDark, textTransform: 'uppercase', letterSpacing: 1.2, fontFamily: T.sans, marginBottom: 6 }}>Character</div>
+                            <div style={{ fontFamily: T.sans, fontSize: 13.5, color: T.textDark, lineHeight: 1.6 }}>{fg.character}</div>
+                          </div>
+                          <div>
+                            <div style={{ fontSize: 10, fontWeight: 700, color: T.goldDark, textTransform: 'uppercase', letterSpacing: 1.2, fontFamily: T.sans, marginBottom: 6 }}>Why practice this</div>
+                            <div style={{ fontFamily: T.sans, fontSize: 13.5, color: T.textDark, lineHeight: 1.6 }}>{fg.whyPractice}</div>
+                          </div>
+                          {fg.steps && fg.steps.length > 0 && (
+                            <div>
+                              <div style={{ fontSize: 10, fontWeight: 700, color: T.goldDark, textTransform: 'uppercase', letterSpacing: 1.2, fontFamily: T.sans, marginBottom: 6 }}>Steps</div>
+                              <ol style={{ margin: 0, paddingLeft: 20, fontFamily: T.sans, fontSize: 13, color: T.textMed, lineHeight: 1.65 }}>
+                                {fg.steps.map((s, i) => <li key={i} style={{ marginBottom: 4 }}>{s}</li>)}
+                              </ol>
+                            </div>
+                          )}
+                          {fg.progression && fg.progression.length > 0 && (
+                            <div>
+                              <div style={{ fontSize: 10, fontWeight: 700, color: T.goldDark, textTransform: 'uppercase', letterSpacing: 1.2, fontFamily: T.sans, marginBottom: 6 }}>Progression</div>
+                              <ol style={{ margin: 0, paddingLeft: 20, fontFamily: T.sans, fontSize: 13, color: T.textMed, lineHeight: 1.65 }}>
+                                {fg.progression.map((p, i) => <li key={i} style={{ marginBottom: 4 }}>{p}</li>)}
+                              </ol>
+                            </div>
+                          )}
+                          {fg.examples && fg.examples.length > 0 && (
+                            <div>
+                              <div style={{ fontSize: 10, fontWeight: 700, color: T.goldDark, textTransform: 'uppercase', letterSpacing: 1.2, fontFamily: T.sans, marginBottom: 6 }}>Try these phrases</div>
+                              <ul style={{ margin: 0, paddingLeft: 0, listStyleType: 'none', fontFamily: T.sans, fontSize: 13, color: T.textMed, lineHeight: 1.65 }}>
+                                {fg.examples.map((e, i) => (
+                                  <li key={i} style={{ marginBottom: 4, paddingLeft: 16, position: 'relative' }}>
+                                    <span style={{ position: 'absolute', left: 0, color: T.gold, fontSize: 12 }}>♪</span>
+                                    {e}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                          {fg.etude && (
+                            <div>
+                              <div style={{ fontSize: 10, fontWeight: 700, color: T.goldDark, textTransform: 'uppercase', letterSpacing: 1.2, fontFamily: T.sans, marginBottom: 6 }}>Etude</div>
+                              <div style={{ fontFamily: T.serif, fontSize: 13, fontStyle: 'italic', color: T.textMed, lineHeight: 1.6 }}>{fg.etude}</div>
+                            </div>
+                          )}
+                          {fg.watchOut && (
+                            <div>
+                              <div style={{ fontSize: 10, fontWeight: 700, color: T.warm, textTransform: 'uppercase', letterSpacing: 1.2, fontFamily: T.sans, marginBottom: 6 }}>Watch out</div>
+                              <div style={{ fontFamily: T.sans, fontSize: 13, color: T.textMed, lineHeight: 1.6 }}>{fg.watchOut}</div>
+                            </div>
+                          )}
+                          {fg.listenTo && (
+                            <div style={{ borderTop: `1px dashed ${T.border}`, paddingTop: 12, fontFamily: T.sans, fontSize: 12, color: T.textLight }}>
+                              <span style={{ fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, fontSize: 10, color: T.goldDark, marginRight: 8 }}>Listen to</span>
+                              {fg.listenTo}
+                            </div>
+                          )}
+                          {fg.deeperInsight && (
+                            <div style={{ borderTop: `1px dashed ${T.border}`, paddingTop: 12, fontFamily: T.serif, fontSize: 13, fontStyle: 'italic', color: T.textLight, lineHeight: 1.65 }}>
+                              {fg.deeperInsight}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </>
+                  );
+                })()}
               </div>
             </div>
           );
@@ -2603,9 +2731,11 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
   // overflow menu. Clicking a chip removes that dim from the random pool; clicking
   // again restores it. Persisted across sessions. The toggle handler prevents
   // disabling below the current mode's maxConstraints so generation can't fail.
-  const [excludedDimensions, setExcludedDimensions] = useState(() =>
-    new Set(forgeData.settings?.excludedDimensions ?? [])
-  );
+  const [excludedDimensions, setExcludedDimensions] = useState(() => {
+    const saved = forgeData.settings?.excludedDimensions;
+    if (saved && saved.length > 0) return new Set(saved);
+    return new Set(DEFAULT_EXCLUDED[instrument] || []);
+  });
 
   // Derived: tier, maxConstraints, activeDimensions all come from mode + instrument.
   //
@@ -3528,11 +3658,11 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
             {DIMENSIONS.some(d => d.type === 'qualitative' && activeDimensions.includes(d.id)) && (
               <div style={{ fontSize: 11, color: T.textMuted, marginTop: 6, lineHeight: 1.5 }}>
                 Tap a chip to exclude it from random draws.
-                {Array.from(excludedDimensions).some(id => activeDimensions.includes(id)) && (
+                {(() => { const dflt = DEFAULT_EXCLUDED[instrument] || new Set(); return excludedDimensions.size !== dflt.size || Array.from(excludedDimensions).some(id => !dflt.has(id)); })() && (
                   <>
                     {' '}
                     <button
-                      onClick={() => setExcludedDimensions(new Set())}
+                      onClick={() => setExcludedDimensions(new Set(DEFAULT_EXCLUDED[instrument] || []))}
                       style={{
                         background: 'none', border: 'none', padding: 0,
                         color: T.gold, fontSize: 11, fontFamily: T.sans,
