@@ -1410,13 +1410,23 @@ function generateSession(count, activeDimensions, lockedDimensions, constraintWe
 // ─── localStorage ───
 const STORAGE_KEY = 'practiceforge-data';
 const V1_BACKUP_KEY = 'practiceforge-data-v1-backup';
-const CURRENT_SCHEMA_VERSION = 4;
+const CURRENT_SCHEMA_VERSION = 5;
 
 // v3 → v4 migration. Renames two value ids that collided with existing
 // v1 register values:
 //   guitar:texture:mixed   → guitar:texture:mixedTextures
 //   voice:onset:breathy    → voice:onset:breathyOnset
 // The guidance cache is keyed on value id only, so `leaps_mixed` would
+// v4 → v5: Phase F — mood is now auto-drawn per card. Clear any legacy
+// user-selected mood so they get the new random-draw experience by default.
+function migrateForgeDataV4ToV5(v4Data) {
+  if (!v4Data || typeof v4Data !== 'object') return v4Data;
+  if ((v4Data.version || 0) >= 5) return v4Data;
+  if (v4Data.settings) v4Data.settings.mood = null;
+  v4Data.version = 5;
+  return v4Data;
+}
+
 // hit the v1 register:mixed entry when the card actually drew texture:mixed.
 // Renaming the new ids to unique strings removes the collision. The
 // register:mixed and register:breathy values are untouched — those still
@@ -1716,6 +1726,7 @@ function migrateForgeData(data) {
   if ((cur.version || 0) < 2) cur = migrateForgeDataV1ToV2(cur);
   if ((cur.version || 0) < 3) cur = migrateForgeDataV2ToV3(cur);
   if ((cur.version || 0) < 4) cur = migrateForgeDataV3ToV4(cur);
+  if ((cur.version || 0) < 5) cur = migrateForgeDataV4ToV5(cur);
   return cur;
 }
 
@@ -3082,14 +3093,14 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
             ))}
           </div>
 
-          {/* Mood selector — session-level overlay, picked once per round.
-              Closed state shows current mood (or "Mood"). Click opens a
-              family-organized picker. Not a randomized dim. */}
+          {/* Mood — auto-drawn per card (Phase F). Pill shows drawn mood.
+              Picker is an optional lock: pick a mood to pin it across draws.
+              Clear to return to auto-draw mode. */}
           <button
             onClick={() => setMoodPickerOpen(o => !o)}
             aria-label="Session mood"
             aria-expanded={moodPickerOpen}
-            title={mood ? `Mood: ${mood} (click to change)` : 'Set a session mood'}
+            title={mood ? `Mood locked: ${mood} (click to change or clear)` : 'Auto-drawing mood — click to lock one'}
             style={{
               padding: '6px 12px', borderRadius: 8,
               background: mood ? T.goldSoft : 'transparent',
@@ -3101,7 +3112,7 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
               maxWidth: 140, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
             }}
           >
-            {mood || 'Mood'}
+            {currentCard?.mood || mood || 'Mood'}
           </button>
 
           <button
@@ -3210,12 +3221,13 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
             fontSize: 11, color: T.textLight, fontStyle: 'italic',
             fontFamily: T.sans, marginBottom: 12, lineHeight: 1.5,
           }}>
-            Pick a single emotional intent for this round. It colors every card's brief without changing the mechanical constraints.
+            Mood is auto-drawn each shuffle. Pin one here to lock it across all draws. Clear to return to random.
           </div>
           <div style={{
             display: 'grid',
             gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
             gap: 14,
+            maxHeight: '60vh', overflowY: 'auto',
           }}>
             {Object.entries(MOOD_LIBRARY).map(([family, moods]) => (
               <div key={family}>

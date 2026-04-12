@@ -31,6 +31,16 @@ export const SCALE_TYPES = {
   'dorian':           { name: 'Dorian',       intervals: [0, 2, 3, 5, 7, 9, 10], desc: 'Minor with a bright 6th. Jazz, funk, soul.' },
   'mixolydian':       { name: 'Mixolydian',   intervals: [0, 2, 4, 5, 7, 9, 10], desc: 'Major with flat 7. Laid-back, bluesy.' },
   'phrygian':         { name: 'Phrygian',     intervals: [0, 1, 3, 5, 7, 8, 10], desc: 'Dark and exotic. Desert and flamenco.' },
+  // Phase F additions (9 scales)
+  'lydian':           { name: 'Lydian',       intervals: [0, 2, 4, 6, 7, 9, 11], desc: 'Major with sharp 4th. Dreamlike shimmer.' },
+  'locrian':          { name: 'Locrian',      intervals: [0, 1, 3, 5, 6, 8, 10], desc: 'Half-diminished. Darkest mode.' },
+  'harmonic-minor':   { name: 'Harm Min',     intervals: [0, 2, 3, 5, 7, 8, 11], desc: 'Classical drama. Big leading tone.' },
+  'melodic-minor':    { name: 'Mel Min',      intervals: [0, 2, 3, 5, 7, 9, 11], desc: 'Jazz workhorse. Bright top, minor bottom.' },
+  'phrygian-dominant':{ name: 'Phrygian Dom', intervals: [0, 1, 4, 5, 7, 8, 10], desc: 'Spanish/Middle-Eastern. Dick Dale, Khruangbin.' },
+  'whole-tone':       { name: 'Whole Tone',   intervals: [0, 2, 4, 6, 8, 10],    desc: '6-note symmetric. Dreamy ambiguity. Debussy.' },
+  'hirajoshi':        { name: 'Hirajoshi',    intervals: [0, 2, 3, 7, 8],         desc: '5-note Japanese minor. Spacious, psych-surf.' },
+  'hungarian-minor':  { name: 'Hungarian Min',intervals: [0, 2, 3, 6, 7, 8, 11], desc: 'Gypsy minor. Augmented 4th + leading tone.' },
+  'double-harmonic':  { name: 'Double Harm',  intervals: [0, 1, 4, 5, 7, 8, 11], desc: 'Byzantine. Two augmented 2nds. Middle Eastern.' },
 };
 
 const MODES = [

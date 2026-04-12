@@ -2,11 +2,11 @@
   "_meta": {
     "generatedAt": "2026-04-10T17:59:31.276Z",
     "model": "claude-opus-4-6",
-    "totalEntries": 2442,
+    "totalEntries": 2459,
     "matrixCount": 210,
     "focusCount": 76,
     "combosCount": 2156,
-    "scalesCount": 8,
+    "scalesCount": 17,
     "keyFormat": "dim:value",
     "namespacedAt": "2026-04-11",
     "lastMergedAt": "2026-04-11"
@@ -39509,6 +39509,51 @@
       "name": "Phrygian",
       "character": "A minor scale with a flat 2nd — dark, Spanish, and instantly exotic because the note right above the root is only a half-step away. You hear it in flamenco, metal riffs, and anything that wants a Middle Eastern or menacing flavor.",
       "watchPoint": "Hammer the half-step above the root — that flat 2nd scale degree is the whole personality of the scale, and squeezing it against the root is what makes Phrygian sound like Phrygian."
+    },
+    "lydian": {
+      "name": "Lydian",
+      "character": "The major scale with a raised 4th — dreamy, floating, and slightly otherworldly. The sharp 4th lifts every phrase off the ground, making even simple melodies feel like they're hovering. Film scores, Radiohead, and Debussy live here. It's major but never quite settles.",
+      "watchPoint": "Lean into the raised 4th scale degree — it's a tritone above the root and the single note that separates lydian from plain major. Let it hang unresolved."
+    },
+    "locrian": {
+      "name": "Locrian",
+      "character": "The darkest of all seven modes — a minor scale with BOTH a flat 2nd and a flat 5th, removing the one stable interval most scales rely on. The diminished tonic triad means nothing feels like home. Metal, Björk, and noir soundscapes. Not for comfort — for dread.",
+      "watchPoint": "The flat 5th scale degree eliminates the perfect fifth — your ear wants it and never gets it. That permanent instability IS the locrian sound."
+    },
+    "harmonic-minor": {
+      "name": "Harm Min",
+      "character": "Natural minor with a raised 7th — creating a dramatic leading tone that PULLS to the root. The gap between the flat 6th and raised 7th is an augmented 2nd, giving it a classical or Middle-Eastern intensity. Flamenco guitar, Bach, film villain themes. Every resolution hits harder.",
+      "watchPoint": "The augmented 2nd between the flat 6th and raised 7th scale degrees is the scale's signature sound — a wide exotic leap that nothing else in Western music produces."
+    },
+    "melodic-minor": {
+      "name": "Mel Min",
+      "character": "A minor scale with a bright upper half — the raised 6th and 7th smooth out the climb to the root, giving it the pull of major with the depth of minor. The jazz workhorse: Coltrane, Wayne Shorter, and every altered dominant chord lives here. Sophisticated and restless.",
+      "watchPoint": "The raised 6th scale degree is the dividing line — it lifts the scale out of natural-minor darkness into something warmer and more ambiguous. Target it to feel the difference."
+    },
+    "phrygian-dominant": {
+      "name": "Phrygian Dom",
+      "character": "Phrygian with a raised 3rd — the flat 2nd gives it the exotic darkness, but the major 3rd adds unexpected brightness. This is the sound of Dick Dale's surf guitar, Tinariwen's desert hypnosis, and Khruangbin's Middle-Eastern side. The tension between the flat 2nd and major 3rd is electric.",
+      "watchPoint": "The half-step between the root and flat 2nd combined with the major 3rd creates two tightly packed half-steps at the bottom of the scale — that chromatic cluster is the entire personality."
+    },
+    "whole-tone": {
+      "name": "Whole Tone",
+      "character": "Six notes, all whole steps apart — no half-steps means no pull toward any particular note. Perfectly symmetrical and permanently suspended. Debussy's impressionist haze, Stevie Wonder's bridge sections, and dream sequences in film. Nothing resolves, nothing rests, everything floats.",
+      "watchPoint": "There is no perfect 5th and no leading tone — every note is equally distant from its neighbors. The scale has no gravity, so YOUR phrasing must create all the direction."
+    },
+    "hirajoshi": {
+      "name": "Hirajoshi",
+      "character": "A five-note Japanese scale with a haunting, spacious quality — minor pentatonic's dark cousin with two half-steps that add tension the pentatonic avoids. Koto music, psych-rock atmospherics, and shoegaze guitar. The gaps between notes are wide enough to feel the silence.",
+      "watchPoint": "The half-step between the flat 3rd and the 5th scale degree creates a stark, almost vocal cry — bend into it slowly and let the dissonance speak before resolving."
+    },
+    "hungarian-minor": {
+      "name": "Hungarian Min",
+      "character": "Harmonic minor with a raised 4th — two augmented 2nds create a double dose of exotic tension. Romani music, Liszt's rhapsodies, and Tinariwen's desert-trance guitar. The raised 4th against the flat 3rd produces a uniquely Eastern European darkness that's both mournful and fierce.",
+      "watchPoint": "The augmented 4th scale degree (a tritone above root) combined with the flat 3rd creates an interval cluster that sounds like a cry — that three-note zone is the scale's emotional core."
+    },
+    "double-harmonic": {
+      "name": "Double Harm",
+      "character": "Two augmented 2nds — between the root and flat 2nd AND between the flat 6th and major 7th — give this scale a hypnotic, Byzantine intensity. Middle-Eastern classical music, surf-rock exotica, and Khruangbin's deepest grooves. Despite having a major 3rd, it sounds dark because of the two chromatic clusters.",
+      "watchPoint": "The flat 2nd against the major 3rd creates a three-semitone leap — the widest gap in the lower half of the scale. Landing on the major 3rd after the flat 2nd is the double-harmonic's most distinctive move."
     }
   }
 }
