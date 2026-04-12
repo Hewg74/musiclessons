@@ -57,6 +57,7 @@ const DIM_ORDER = [
 function lookupGuidance(card) {
   const c = card.constraints;
   const mode = card.mode || 'matrix'; // default to matrix for legacy cards
+  const inst = card.instrument || 'voice';
 
   // Foundational dims (texture/register/vowel) are ALWAYS on every v3 card.
   // Exclude them from the guidance-lookup count — the cache was generated for
@@ -65,12 +66,36 @@ function lookupGuidance(card) {
   const _FSET = new Set(['texture', 'register', 'vowel']);
   const randomDrawn = () => DIM_ORDER.filter(d => c[d] && typeof c[d] === 'object' && c[d].id && !_FSET.has(d));
 
+  // Guitar-keyed entries take precedence when instrument is guitar.
+  // Falls back to the default (voice) entry if no guitar-specific one exists.
+  const focusLookup = (key) => {
+    if (inst === 'guitar') {
+      const gEntry = GUIDANCE_CACHE.focus?.[`guitar:${key}`];
+      if (gEntry) return gEntry;
+    }
+    return GUIDANCE_CACHE.focus?.[key] || null;
+  };
+  const comboLookup = (key) => {
+    if (inst === 'guitar') {
+      const gEntry = GUIDANCE_CACHE.combos?.[`guitar:${key}`];
+      if (gEntry) return gEntry;
+    }
+    return GUIDANCE_CACHE.combos?.[key] || null;
+  };
+  const matrixLookup = (key) => {
+    if (inst === 'guitar') {
+      const gEntry = GUIDANCE_CACHE.matrix?.[`guitar:${key}`];
+      if (gEntry) return gEntry;
+    }
+    return GUIDANCE_CACHE.matrix?.[key] || null;
+  };
+
   if (mode === 'focus') {
     const drawnIds = randomDrawn();
     if (drawnIds.length !== 1) return null;
     const dimId = drawnIds[0];
     const valId = c[dimId].id;
-    return GUIDANCE_CACHE.focus?.[`${dimId}:${valId}`] || null;
+    return focusLookup(`${dimId}:${valId}`);
   }
 
   if (mode === 'combo') {
@@ -78,7 +103,7 @@ function lookupGuidance(card) {
     if (drawnIds.length !== 2) return null;
     const dim1 = drawnIds[0], dim2 = drawnIds[1];
     const id1 = c[dim1].id, id2 = c[dim2].id;
-    return GUIDANCE_CACHE.combos?.[`${dim1}:${id1}_${dim2}:${id2}`] || null;
+    return comboLookup(`${dim1}:${id1}_${dim2}:${id2}`);
   }
 
   if (mode === 'matrix') {
@@ -97,7 +122,7 @@ function lookupGuidance(card) {
         `pitchConstraint:${c.pitchConstraint.id}` +
         `_rhythmConstraint:${c.rhythmConstraint.id}` +
         `_dynamics:${c.dynamics.id}`;
-      const entry = GUIDANCE_CACHE.matrix?.[key];
+      const entry = matrixLookup(key);
       if (entry) return entry;
     }
 
@@ -124,7 +149,7 @@ function lookupGuidance(card) {
       for (let j = i + 1; j < drawnIds.length; j++) {
         const dimA = drawnIds[i], dimB = drawnIds[j];
         const idA = c[dimA].id, idB = c[dimB].id;
-        const entry = GUIDANCE_CACHE.combos?.[`${dimA}:${idA}_${dimB}:${idB}`];
+        const entry = comboLookup(`${dimA}:${idA}_${dimB}:${idB}`);
         if (entry) {
           pairs.push({ labelA: labelFor(dimA), labelB: labelFor(dimB), entry });
         }
@@ -328,18 +353,18 @@ const MOOD_AFFINITY = {
   // ── Outward longing ──
   'longing':     { keyWeights: { A: 4, E: 3, D: 3, 'F#': 2 }, scaleWeights: { 'minor-pentatonic': 4, 'natural-minor': 3, dorian: 3, 'harmonic-minor': 2 }, tempoRange: { min: 65, max: 100, sweetMin: 72, sweetMax: 90 } },
   'yearning':    { keyWeights: { E: 4, A: 3, B: 3, 'F#': 2 }, scaleWeights: { 'natural-minor': 4, 'harmonic-minor': 3, 'melodic-minor': 3, dorian: 2 }, tempoRange: { min: 60, max: 95, sweetMin: 70, sweetMax: 85 } },
-  'nostalgic':   { keyWeights: { G: 4, D: 3, A: 3, C: 2 }, scaleWeights: { 'major-pentatonic': 4, major: 3, mixolydian: 3, dorian: 2 }, tempoRange: { min: 70, max: 100, sweetMin: 78, sweetMax: 92 } },
+  'nostalgic':   { keyWeights: { G: 4, D: 3, A: 3, C: 2 }, scaleWeights: { dorian: 4, 'major-pentatonic': 3, mixolydian: 3, 'minor-pentatonic': 2 }, tempoRange: { min: 68, max: 98, sweetMin: 75, sweetMax: 90 } },
   'wistful':     { keyWeights: { D: 4, G: 3, A: 3, E: 2 }, scaleWeights: { dorian: 4, 'minor-pentatonic': 3, 'natural-minor': 3, mixolydian: 2 }, tempoRange: { min: 65, max: 95, sweetMin: 75, sweetMax: 88 } },
   'homesick':    { keyWeights: { A: 4, D: 3, G: 3, E: 2 }, scaleWeights: { 'minor-pentatonic': 4, 'natural-minor': 3, dorian: 2, blues: 2 }, tempoRange: { min: 60, max: 90, sweetMin: 68, sweetMax: 82 } },
-  'searching':   { keyWeights: { E: 4, A: 3, 'F#': 3, B: 2 }, scaleWeights: { dorian: 4, 'melodic-minor': 3, 'natural-minor': 3, mixolydian: 2 }, tempoRange: { min: 75, max: 110, sweetMin: 82, sweetMax: 98 } },
+  'searching':   { keyWeights: { E: 4, A: 3, 'F#': 3, B: 2 }, scaleWeights: { dorian: 4, 'melodic-minor': 3, 'natural-minor': 3, mixolydian: 2 }, tempoRange: { min: 65, max: 98, sweetMin: 72, sweetMax: 88 } },
   'unrequited':  { keyWeights: { D: 4, A: 3, F: 3, 'B♭': 2 }, scaleWeights: { 'natural-minor': 4, 'harmonic-minor': 3, 'minor-pentatonic': 3, phrygian: 2 }, tempoRange: { min: 55, max: 85, sweetMin: 62, sweetMax: 78 } },
   // ── Inward warmth ──
   'tender':      { keyWeights: { A: 4, E: 4, D: 3, G: 2 }, scaleWeights: { 'minor-pentatonic': 4, dorian: 3, 'natural-minor': 3, 'major-pentatonic': 2 }, tempoRange: { min: 60, max: 88, sweetMin: 68, sweetMax: 80 } },
   'intimate':    { keyWeights: { E: 4, A: 3, D: 3, 'F#': 2 }, scaleWeights: { 'minor-pentatonic': 4, dorian: 3, blues: 3, 'natural-minor': 2 }, tempoRange: { min: 55, max: 85, sweetMin: 65, sweetMax: 78 } },
   'serene':      { keyWeights: { G: 4, D: 4, C: 3, A: 2 }, scaleWeights: { 'major-pentatonic': 4, major: 3, lydian: 3, dorian: 2 }, tempoRange: { min: 55, max: 82, sweetMin: 62, sweetMax: 75 } },
   'reverent':    { keyWeights: { D: 4, G: 3, A: 3, E: 2 }, scaleWeights: { major: 4, lydian: 3, 'major-pentatonic': 3, 'natural-minor': 2 }, tempoRange: { min: 50, max: 78, sweetMin: 58, sweetMax: 72 } },
-  'content':     { keyWeights: { G: 4, D: 4, A: 3, C: 2 }, scaleWeights: { 'major-pentatonic': 4, major: 3, mixolydian: 3, dorian: 2 }, tempoRange: { min: 65, max: 95, sweetMin: 75, sweetMax: 88 } },
-  'loving':      { keyWeights: { A: 4, E: 3, D: 3, G: 2 }, scaleWeights: { 'major-pentatonic': 4, major: 3, dorian: 3, 'minor-pentatonic': 2 }, tempoRange: { min: 60, max: 90, sweetMin: 70, sweetMax: 82 } },
+  'content':     { keyWeights: { A: 4, D: 3, G: 3, E: 2 }, scaleWeights: { 'major-pentatonic': 4, dorian: 3, major: 3, lydian: 2 }, tempoRange: { min: 72, max: 100, sweetMin: 80, sweetMax: 92 } },
+  'loving':      { keyWeights: { A: 4, E: 3, D: 3, G: 2 }, scaleWeights: { 'major-pentatonic': 4, major: 3, dorian: 3, lydian: 2 }, tempoRange: { min: 60, max: 90, sweetMin: 70, sweetMax: 82 } },
   // ── Light ──
   'playful':     { keyWeights: { G: 4, D: 4, A: 3, C: 3 }, scaleWeights: { 'major-pentatonic': 4, major: 4, lydian: 2, mixolydian: 2 }, tempoRange: { min: 100, max: 130, sweetMin: 108, sweetMax: 122 } },
   'mischievous': { keyWeights: { A: 4, D: 3, G: 3, E: 2 }, scaleWeights: { mixolydian: 4, blues: 3, 'major-pentatonic': 3, dorian: 2 }, tempoRange: { min: 95, max: 130, sweetMin: 105, sweetMax: 120 } },
@@ -356,8 +381,8 @@ const MOOD_AFFINITY = {
   'ashen':       { keyWeights: { B: 4, 'E♭': 3, 'C#': 3, F: 2 }, scaleWeights: { phrygian: 4, locrian: 3, 'natural-minor': 3, 'whole-tone': 2 }, tempoRange: { min: 45, max: 72, sweetMin: 52, sweetMax: 65 } },
   // ── Trance ──
   'hypnotic':    { keyWeights: { E: 4, A: 3, D: 3 }, scaleWeights: { dorian: 4, 'phrygian-dominant': 3, 'whole-tone': 3, phrygian: 2 }, tempoRange: { min: 75, max: 100, sweetMin: 80, sweetMax: 92 } },
-  'dreamy':      { keyWeights: { D: 4, G: 3, A: 3, 'E♭': 2 }, scaleWeights: { lydian: 4, 'whole-tone': 3, 'major-pentatonic': 3, dorian: 2 }, tempoRange: { min: 60, max: 90, sweetMin: 68, sweetMax: 82 } },
-  'floating':    { keyWeights: { G: 4, D: 3, 'E♭': 3, A: 2 }, scaleWeights: { lydian: 4, 'whole-tone': 4, 'major-pentatonic': 2, dorian: 2 }, tempoRange: { min: 55, max: 85, sweetMin: 65, sweetMax: 78 } },
+  'dreamy':      { keyWeights: { D: 4, G: 3, A: 3, E: 2 }, scaleWeights: { 'major-pentatonic': 4, lydian: 3, dorian: 3, mixolydian: 2 }, tempoRange: { min: 60, max: 88, sweetMin: 68, sweetMax: 80 } },
+  'floating':    { keyWeights: { 'E♭': 4, 'B♭': 3, 'F#': 3, D: 2 }, scaleWeights: { 'whole-tone': 4, lydian: 3, hirajoshi: 3, 'melodic-minor': 2 }, tempoRange: { min: 50, max: 78, sweetMin: 58, sweetMax: 70 } },
   'mystical':    { keyWeights: { E: 4, 'C#': 3, 'A♭': 3, B: 2 }, scaleWeights: { 'harmonic-minor': 4, 'phrygian-dominant': 3, hirajoshi: 3, 'double-harmonic': 2 }, tempoRange: { min: 60, max: 90, sweetMin: 68, sweetMax: 82 } },
   'meditative':  { keyWeights: { D: 4, A: 4, E: 3, G: 2 }, scaleWeights: { 'minor-pentatonic': 4, dorian: 3, hirajoshi: 3, 'major-pentatonic': 2 }, tempoRange: { min: 50, max: 78, sweetMin: 58, sweetMax: 70 } },
   'hallucinated':{ keyWeights: { 'E♭': 4, 'F#': 3, 'B♭': 3, 'C#': 2 }, scaleWeights: { 'whole-tone': 4, lydian: 3, 'phrygian-dominant': 3, 'harmonic-minor': 2 }, tempoRange: { min: 58, max: 88, sweetMin: 65, sweetMax: 80 } },
@@ -375,8 +400,8 @@ const MOOD_AFFINITY = {
   'bourbon-warm':     { keyWeights: { A: 4, E: 4, G: 3, D: 2 }, scaleWeights: { 'minor-pentatonic': 4, blues: 4, dorian: 2, 'natural-minor': 2 }, tempoRange: { min: 70, max: 95, sweetMin: 75, sweetMax: 88 } },
   'highway-hypnosis': { keyWeights: { E: 4, A: 4, D: 3 }, scaleWeights: { dorian: 4, 'minor-pentatonic': 3, mixolydian: 3, 'phrygian-dominant': 2 }, tempoRange: { min: 78, max: 105, sweetMin: 85, sweetMax: 98 } },
   'motel-neon':       { keyWeights: { 'C#': 3, 'E♭': 3, 'B♭': 3, F: 2 }, scaleWeights: { dorian: 4, phrygian: 3, 'natural-minor': 3, 'harmonic-minor': 2 }, tempoRange: { min: 80, max: 105, sweetMin: 85, sweetMax: 98 } },
-  'slow-sunday':      { keyWeights: { G: 4, D: 4, A: 3, C: 2 }, scaleWeights: { 'major-pentatonic': 4, major: 3, dorian: 3, mixolydian: 2 }, tempoRange: { min: 62, max: 88, sweetMin: 70, sweetMax: 82 } },
-  'dawn-patrol':      { keyWeights: { A: 4, E: 4, G: 3 }, scaleWeights: { 'minor-pentatonic': 4, dorian: 3, 'major-pentatonic': 3, mixolydian: 2 }, tempoRange: { min: 75, max: 100, sweetMin: 82, sweetMax: 95 } },
+  'slow-sunday':      { keyWeights: { G: 4, D: 4, C: 3, A: 2 }, scaleWeights: { 'major-pentatonic': 4, blues: 3, mixolydian: 3, dorian: 2 }, tempoRange: { min: 55, max: 78, sweetMin: 62, sweetMax: 72 } },
+  'dawn-patrol':      { keyWeights: { E: 4, A: 3, D: 3, B: 2 }, scaleWeights: { 'minor-pentatonic': 4, hirajoshi: 3, dorian: 3, 'natural-minor': 2 }, tempoRange: { min: 68, max: 92, sweetMin: 75, sweetMax: 85 } },
   'riptide':          { keyWeights: { E: 4, A: 4, D: 3, G: 2 }, scaleWeights: { 'minor-pentatonic': 4, blues: 3, mixolydian: 3, dorian: 2 }, tempoRange: { min: 85, max: 115, sweetMin: 92, sweetMax: 108 } },
   'cactus-bloom':     { keyWeights: { A: 4, E: 3, G: 3, D: 2 }, scaleWeights: { 'major-pentatonic': 4, mixolydian: 3, dorian: 3, lydian: 2 }, tempoRange: { min: 78, max: 105, sweetMin: 85, sweetMax: 98 } },
   'last-ferry':       { keyWeights: { D: 4, A: 3, G: 3, E: 2 }, scaleWeights: { dorian: 4, 'minor-pentatonic': 3, 'natural-minor': 3, blues: 2 }, tempoRange: { min: 72, max: 98, sweetMin: 80, sweetMax: 92 } },
@@ -389,7 +414,7 @@ const MOOD_AFFINITY = {
   'saltwater':        { keyWeights: { E: 4, A: 4, G: 3, D: 2 }, scaleWeights: { 'minor-pentatonic': 4, mixolydian: 3, dorian: 3, hirajoshi: 2 }, tempoRange: { min: 82, max: 112, sweetMin: 90, sweetMax: 105 } },
   'fogbank':          { keyWeights: { D: 4, G: 3, 'E♭': 3, A: 2 }, scaleWeights: { dorian: 4, 'whole-tone': 3, lydian: 3, hirajoshi: 2 }, tempoRange: { min: 58, max: 85, sweetMin: 65, sweetMax: 78 } },
   'gold-hour':        { keyWeights: { A: 4, E: 4, G: 3, D: 2 }, scaleWeights: { 'major-pentatonic': 4, mixolydian: 3, dorian: 3, major: 2 }, tempoRange: { min: 75, max: 100, sweetMin: 82, sweetMax: 95 } },
-  'backroad':         { keyWeights: { E: 4, A: 4, D: 3, G: 2 }, scaleWeights: { 'minor-pentatonic': 4, blues: 3, mixolydian: 3, dorian: 2 }, tempoRange: { min: 75, max: 100, sweetMin: 82, sweetMax: 95 } },
+  'backroad':         { keyWeights: { D: 4, G: 4, A: 3, E: 2 }, scaleWeights: { mixolydian: 4, 'major-pentatonic': 3, blues: 3, dorian: 2 }, tempoRange: { min: 72, max: 95, sweetMin: 78, sweetMax: 88 } },
   'agave-sun':        { keyWeights: { A: 4, E: 3, D: 3, G: 2 }, scaleWeights: { mixolydian: 4, 'major-pentatonic': 3, dorian: 3, 'minor-pentatonic': 2 }, tempoRange: { min: 72, max: 98, sweetMin: 80, sweetMax: 92 } },
   // ── Cosmic ──
   'vast':         { keyWeights: { 'E♭': 4, 'B♭': 3, 'F#': 3, A: 2 }, scaleWeights: { lydian: 4, 'whole-tone': 3, 'melodic-minor': 3, major: 2 }, tempoRange: { min: 55, max: 82, sweetMin: 62, sweetMax: 75 } },
@@ -637,9 +662,11 @@ function resolveTempoRange(mood) {
 // v1 cards with `questionAnswer` migrate to `phraseStructure:question-answer`
 // via migrateForgeDataV1ToV2.
 const PITCH_CONSTRAINTS = [
-  { id: 'leaps', name: 'Leaps Only', desc: 'Never sing two neighboring notes in a row. Always skip at least one note in the scale when moving. This forces big, dramatic jumps instead of smooth walking.', icon: '↗',
+  { id: 'leaps', name: 'Leaps Only', desc: 'Never sing two neighboring notes in a row. Always skip at least one note in the scale when moving. This forces big, dramatic jumps instead of smooth walking.',
+    descGuitar: 'Never play two neighboring notes in a row. Always skip at least one note in the scale when moving. This forces big, dramatic jumps instead of smooth walking.', icon: '↗',
     example: (notes) => notes.length >= 5 ? `Your notes: ${notes.join(', ')}. Try: ${notes[0]}→${notes[2]}→${notes[4]}→${notes[1]} (skipping at least one each time)` : '' },
-  { id: 'stepwise', name: 'Stepwise Only', desc: 'Always move to a neighboring note in the scale — never skip. Walking melodies, no jumps allowed. Trains the smooth voice-leading every great melody depends on.', icon: '↘',
+  { id: 'stepwise', name: 'Stepwise Only', desc: 'Always move to a neighboring note in the scale — never skip. Walking melodies, no jumps allowed. Trains the smooth voice-leading every great melody depends on.',
+    descGuitar: 'Always move to a neighboring note in the scale — never skip. Walking melodies, no jumps allowed. Trains smooth stepwise motion every great melody depends on.', icon: '↘',
     example: (notes) => notes.length >= 5 ? `Your notes: ${notes.join(', ')}. Try: ${notes[0]}→${notes[1]}→${notes[2]}→${notes[1]}→${notes[0]} (only neighbors)` : '' },
   { id: 'arch', name: 'Arch Contour', desc: 'Every phrase must climb up to a peak note and then come back down. The shape is a hill — go up, come down. No flat or downward-only phrases.', icon: '⌢',
     example: (notes) => notes.length >= 5 ? `Try: ${notes[0]}→${notes[2]}→${notes[4]}→${notes[2]}→${notes[0]} (up to ${notes[4]}, back to ${notes[0]})` : '' },
@@ -661,9 +688,9 @@ const RHYTHM_CONSTRAINTS = [
   { id: 'burst', name: 'Burst', desc: 'Pack 4-6 quick notes at the start of each phrase, then leave 2-3 beats of silence.', icon: '💥',
     example: (notes, tempo) => `At ${tempo} BPM: burst 4 eighth-notes in ~${(2*60/tempo).toFixed(1)}s, then rest ~${(3*60/tempo).toFixed(1)}s.` },
   { id: 'space', name: 'Space', desc: 'At least half of every bar is rest. Each note is precious because there are so few.', icon: '🏝',
-    example: (notes, tempo) => `At ${tempo} BPM: 1 bar = ${(4*60/tempo).toFixed(1)}s. Sing for 2 beats, rest for 2+ beats.` },
+    example: (notes, tempo, instrument) => `At ${tempo} BPM: 1 bar = ${(4*60/tempo).toFixed(1)}s. ${instrument === 'guitar' ? 'Play' : 'Sing'} for 2 beats, rest for 2+ beats.` },
   { id: 'offbeat', name: 'Offbeat', desc: 'Notes land between the beats, never on 1 or 3. Feel the groove push and pull against the metronome.', icon: '⚡',
-    example: (notes, tempo) => `At ${tempo} BPM: metronome clicks on 1,2,3,4 — you sing on the "&" between each click (every ${(30/tempo).toFixed(2)}s offset).` },
+    example: (notes, tempo, instrument) => `At ${tempo} BPM: metronome clicks on 1,2,3,4 — you ${instrument === 'guitar' ? 'play' : 'sing'} on the "&" between each click (every ${(30/tempo).toFixed(2)}s offset).` },
   { id: 'rhythmSeed', name: 'Rhythmic Seed', desc: 'Pick a short cell (long-short-short or short-long-rest) and repeat it, varying the pitches each time.', icon: '🔄',
     example: (notes, tempo) => `Seed: quarter-eighth-eighth (${(60/tempo).toFixed(2)}s + ${(30/tempo).toFixed(2)}s + ${(30/tempo).toFixed(2)}s). Keep the rhythm, change the notes.` },
   { id: 'triplets', name: 'Triplets Only', desc: 'Three notes per beat instead of the usual two or four. Forces a different internal pulse — the swung, rolling feel of triplet subdivision instead of the straight square of duple time.', icon: '⋯',
@@ -673,18 +700,23 @@ const RHYTHM_CONSTRAINTS = [
 ];
 
 const DYNAMICS_CONSTRAINTS = [
-  { id: 'swell', name: 'The Swell', desc: 'Start barely audible, slowly grow to full voice, then drop instantly to silence. Like a wave: build, crest, vanish.', icon: '🌊',
+  { id: 'swell', name: 'The Swell', desc: 'Start barely audible, slowly grow to full voice, then drop instantly to silence. Like a wave: build, crest, vanish.',
+    descGuitar: 'Start barely audible, slowly grow to full volume, then drop instantly to silence. Like a wave: build, crest, vanish.', icon: '🌊',
     example: (notes, tempo) => `At ${tempo} BPM: 4 bars = ${(16*60/tempo).toFixed(0)}s. Build for ${(12*60/tempo).toFixed(0)}s, hold peak 1 beat, then silence.` },
   { id: 'terraces', name: 'Terraces', desc: 'Jump suddenly between volume levels — quiet for 2 bars, then medium, then loud. No fading between, just hard switches like climbing stairs.', icon: '🪜',
     example: (notes, tempo) => `Each plateau is 2 bars = ${(8*60/tempo).toFixed(0)}s. Switch dynamic instantly on the downbeat — no fades.` },
-  { id: 'whisper', name: 'Whisper', desc: 'Sing the entire round at the quietest volume you can manage — almost inaudible, like telling a secret. Requires MORE breath control, not less.', icon: '🤫' },
-  { id: 'accentMap', name: 'Accent Map', desc: 'Sing quietly, but punch one note per bar suddenly loud — then back to quiet. The loud note stands out like a highlighted word.', icon: '🎯',
+  { id: 'whisper', name: 'Whisper', desc: 'Sing the entire round at the quietest volume you can manage — almost inaudible, like telling a secret. Requires MORE breath control, not less.',
+    descGuitar: 'Play the entire round at the quietest volume you can manage — almost inaudible, like telling a secret. Requires MORE touch control, not less.', icon: '🤫' },
+  { id: 'accentMap', name: 'Accent Map', desc: 'Sing quietly, but punch one note per bar suddenly loud — then back to quiet. The loud note stands out like a highlighted word.',
+    descGuitar: 'Play quietly, but punch one note per bar suddenly loud — then back to quiet. The loud note stands out like a highlighted word.', icon: '🎯',
     example: (notes, tempo) => `1 accent per bar (${(4*60/tempo).toFixed(1)}s window). Try: bar 1 accent on beat 1, bar 2 on beat 3, bar 3 on the "&" of 2.` },
-  { id: 'forte', name: 'Constant Forte', desc: 'Sing at full volume throughout — fill the room. No holding back, no quiet moments. Pure power.', icon: '🔊' },
+  { id: 'forte', name: 'Constant Forte', desc: 'Sing at full volume throughout — fill the room. No holding back, no quiet moments. Pure power.',
+    descGuitar: 'Play at full volume throughout — fill the room. No holding back, no quiet moments. Pure power.', icon: '🔊' },
 ];
 
 const ARTICULATION_CONSTRAINTS = [
-  { id: 'legato', name: 'All Legato', desc: 'Smooth and connected — each note flows into the next with no gap between them. One continuous breath of sound, like singing on a single sustained vowel.', icon: '〰️' },
+  { id: 'legato', name: 'All Legato', desc: 'Smooth and connected — each note flows into the next with no gap between them. One continuous breath of sound, like singing on a single sustained vowel.',
+    descGuitar: 'Smooth and connected — each note flows into the next with no gap between them. One continuous legato phrase with hammer-ons and pull-offs connecting each note.', icon: '〰️' },
   { id: 'staccato', name: 'All Staccato', desc: 'Short and detached — every note bounces with clear space after it. Like speaking in single syllables with little pauses between each one.', icon: '·' },
   { id: 'slurredPairs', name: 'Slurred Pairs', desc: 'Group every two notes together as a smooth pair, then leave a tiny gap before the next pair. Da-DA, da-DA. Creates a swinging, lilted feel.', icon: '⌒' },
   { id: 'tenuto', name: 'Tenuto', desc: 'Hold every note for its full value — no clipping, no early release. Each note gets its complete time slice, slightly emphasized but still distinct from the next.', icon: '—' },
@@ -1437,7 +1469,10 @@ const CURRENT_SCHEMA_VERSION = 5;
 function migrateForgeDataV4ToV5(v4Data) {
   if (!v4Data || typeof v4Data !== 'object') return v4Data;
   if ((v4Data.version || 0) >= 5) return v4Data;
-  if (v4Data.settings) v4Data.settings.mood = null;
+  if (v4Data.settings) {
+    v4Data.settings.mood = null; // Phase F: mood is now auto-drawn
+    v4Data.settings.excludedDimensions = []; // Reset draw pool — all dims enabled
+  }
   v4Data.version = 5;
   return v4Data;
 }
@@ -2006,7 +2041,7 @@ function ChallengeCard({
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             {foundationalLines.map(({ dim, constraint }) => {
-              const exampleText = constraint.dynamicExample || (constraint.example ? constraint.example(scaleNotes, card.constraints.tempo) : null);
+              const exampleText = constraint.dynamicExample || (constraint.example ? constraint.example(scaleNotes, card.constraints.tempo, card.instrument) : null);
               return (
                 <div key={dim.id} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
                   <div style={{
@@ -2037,7 +2072,7 @@ function ChallengeCard({
                     <div style={{
                       fontFamily: T.sans, fontSize: 12.5, color: T.textMed, lineHeight: 1.55,
                     }}>
-                      {constraint.desc}
+                      {(card.instrument === 'guitar' && constraint.descGuitar) || constraint.desc}
                     </div>
                     {exampleText && (
                       <div style={{
@@ -2060,22 +2095,24 @@ function ChallengeCard({
         <div style={{ height: 1, background: T.border, margin: '20px 0', opacity: 0.6 }} />
       )}
 
-      {/* Constraint lines */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-        {constraintLines.map(({ dim, constraint }) => {
-          // Dynamic example: either a pre-computed one from generateCard (forbidden, targetLanding)
-          // or computed here from the example() function (uses scaleNotes + tempo where relevant)
-          const exampleText = constraint.dynamicExample || (constraint.example ? constraint.example(scaleNotes, card.constraints.tempo) : null);
-          return (
-            <div key={dim.id} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
-              {/* Left color bar */}
-              <div style={{
-                width: 3, alignSelf: 'stretch', borderRadius: 4,
-                background: dim.color, opacity: 0.8, flexShrink: 0,
-              }} />
-              {/* Content */}
-              <div style={{ flex: 1 }}>
+      {/* Constraint lines — grouped with a single left accent */}
+      {constraintLines.length > 0 && (
+        <div style={{
+          borderLeft: `3px solid ${constraintLines.length === 1
+            ? constraintLines[0].dim.color
+            : `${T.gold}80`}`,
+          paddingLeft: 16,
+          display: 'flex', flexDirection: 'column', gap: 20,
+        }}>
+          {constraintLines.map(({ dim, constraint }) => {
+            const exampleText = constraint.dynamicExample || (constraint.example ? constraint.example(scaleNotes, card.constraints.tempo, card.instrument) : null);
+            return (
+              <div key={dim.id}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                  <span style={{
+                    width: 8, height: 8, borderRadius: '50%',
+                    background: dim.color, flexShrink: 0,
+                  }} />
                   {constraint.icon && <span style={{ fontSize: 15 }}>{constraint.icon}</span>}
                   <span style={{
                     fontFamily: T.serif, fontSize: 17, fontWeight: 400, color: T.textDark,
@@ -2093,7 +2130,7 @@ function ChallengeCard({
                 <div style={{
                   fontFamily: T.sans, fontSize: 13, color: T.textMed, lineHeight: 1.6,
                 }}>
-                  {constraint.desc}
+                  {(card.instrument === 'guitar' && constraint.descGuitar) || constraint.desc}
                 </div>
                 {exampleText && (
                   <div style={{
@@ -2206,10 +2243,10 @@ function ChallengeCard({
                   );
                 })()}
               </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
 
       {/* Phase E: Pairwise combo overlays for Phase B–D dims. Rendered as
           highlighted tips above the main LLM guidance block. Only shows if
@@ -3208,7 +3245,7 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
                 key={inst}
                 role="tab"
                 aria-selected={instrument === inst}
-                onClick={() => setInstrument(inst)}
+                onClick={() => { setInstrument(inst); setExcludedDimensions(new Set()); }}
                 style={{
                   padding: '6px 12px', borderRadius: 6, border: 'none',
                   background: instrument === inst ? T.goldSoft : 'transparent',
