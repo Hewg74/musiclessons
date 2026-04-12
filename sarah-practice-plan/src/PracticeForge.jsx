@@ -37,10 +37,23 @@ const DIM_ORDER = [
 ];
 
 // Route a card's guidance lookup by its mode.
+//
+// Cache keys are NAMESPACED by dim:value to prevent value-id collisions
+// across dims. Examples:
+//   focus['pitchConstraint:leaps']
+//   combos['pitchConstraint:leaps_rhythmConstraint:river']
+//   matrix['pitchConstraint:leaps_rhythmConstraint:river_dynamics:swell']
+//
+// The bare-value-id format used in v1 (e.g. `leaps_river`, `mixed`) was
+// silently broken once Phase A added new dims with overlapping value IDs:
+// `texture:mixed` would collide with v1 `register:mixed`, returning the
+// wrong content. The cache file was migrated to namespaced keys via
+// namespace_cache.py — _meta.keyFormat === "dim:value" indicates v3 format.
+//
 //   scales → null (no guidance)
-//   focus  → GUIDANCE_CACHE.focus[constraintId]
-//   combo  → GUIDANCE_CACHE.combos[dim1id_dim2id] (canonically ordered)
-//   matrix → GUIDANCE_CACHE.matrix[pitch_rhythm_dynamics]
+//   focus  → GUIDANCE_CACHE.focus[`${dimId}:${valueId}`]
+//   combo  → GUIDANCE_CACHE.combos[`${dimA}:${valA}_${dimB}:${valB}`] (canon order)
+//   matrix → GUIDANCE_CACHE.matrix[`${dimA}:${valA}_${dimB}:${valB}_${dimC}:${valC}`]
 function lookupGuidance(card) {
   const c = card.constraints;
   const mode = card.mode || 'matrix'; // default to matrix for legacy cards
@@ -49,15 +62,17 @@ function lookupGuidance(card) {
     // Find the single qualitative constraint that was actually drawn
     const drawnIds = DIM_ORDER.filter(d => c[d] && typeof c[d] === 'object' && c[d].id);
     if (drawnIds.length !== 1) return null;
-    return GUIDANCE_CACHE.focus?.[c[drawnIds[0]].id] || null;
+    const dimId = drawnIds[0];
+    const valId = c[dimId].id;
+    return GUIDANCE_CACHE.focus?.[`${dimId}:${valId}`] || null;
   }
 
   if (mode === 'combo') {
     const drawnIds = DIM_ORDER.filter(d => c[d] && typeof c[d] === 'object' && c[d].id);
     if (drawnIds.length !== 2) return null;
-    const id1 = c[drawnIds[0]].id;
-    const id2 = c[drawnIds[1]].id;
-    return GUIDANCE_CACHE.combos?.[`${id1}_${id2}`] || null;
+    const dim1 = drawnIds[0], dim2 = drawnIds[1];
+    const id1 = c[dim1].id, id2 = c[dim2].id;
+    return GUIDANCE_CACHE.combos?.[`${dim1}:${id1}_${dim2}:${id2}`] || null;
   }
 
   if (mode === 'matrix') {
@@ -66,14 +81,16 @@ function lookupGuidance(card) {
     if (drawnIds.length < 2) return null;
 
     // Classic pitch × rhythm × dynamics trio → use the bespoke 210-entry matrix cache
-    // Returns the raw entry so rendering is identical to combo mode.
     const isClassicTrio =
       drawnIds.length === 3 &&
       drawnIds.includes('pitchConstraint') &&
       drawnIds.includes('rhythmConstraint') &&
       drawnIds.includes('dynamics');
     if (isClassicTrio) {
-      const key = `${c.pitchConstraint.id}_${c.rhythmConstraint.id}_${c.dynamics.id}`;
+      const key =
+        `pitchConstraint:${c.pitchConstraint.id}` +
+        `_rhythmConstraint:${c.rhythmConstraint.id}` +
+        `_dynamics:${c.dynamics.id}`;
       const entry = GUIDANCE_CACHE.matrix?.[key];
       if (entry) return entry;
     }
@@ -101,7 +118,7 @@ function lookupGuidance(card) {
       for (let j = i + 1; j < drawnIds.length; j++) {
         const dimA = drawnIds[i], dimB = drawnIds[j];
         const idA = c[dimA].id, idB = c[dimB].id;
-        const entry = GUIDANCE_CACHE.combos?.[`${idA}_${idB}`];
+        const entry = GUIDANCE_CACHE.combos?.[`${dimA}:${idA}_${dimB}:${idB}`];
         if (entry) {
           pairs.push({ labelA: labelFor(dimA), labelB: labelFor(dimB), entry });
         }
@@ -242,7 +259,7 @@ const PHASE_E_COMBO_OVERLAYS = {
   'harmonicTarget:arpeggio135|texture:fullChord':    'Play the triad as a block voicing on the downbeat, then arpeggiate through 1-3-5 on the upbeats. The chord and the arpeggio are the same three notes — this drills your ability to hear them as one thing.',
   'harmonicTarget:arpeggio135|texture:triadPartial': 'Use upper-register 3-string partials (top three strings) — the triad IS the texture. Each strum is the full arpeggio. No wasted motion.',
   'harmonicTarget:arpeggio135|texture:doubleStops':  'Play thirds and sixths — any two of root/3rd/5th at a time. 3rds are tight, 6ths are open; alternating them is how you build harmonized lines.',
-  'harmonicTarget:chordToneLanding|texture:mixed':   'Stab a chord, then land a single-note fill on the 3rd or 5th of whatever chord is sounding. The chord stab is your reminder of WHERE to aim the fill.',
+  'harmonicTarget:chordToneLanding|texture:mixedTextures': 'Stab a chord, then land a single-note fill on the 3rd or 5th of whatever chord is sounding. The chord stab is your reminder of WHERE to aim the fill.',
   'harmonicTarget:colorTone79|texture:fullChord':    'Build voicings that include the 7th and/or 9th — no plain triads. Jazz and bossa territory. Let the extension be the loudest note in the voicing.',
   'harmonicTarget:colorTone79|texture:triadPartial': 'Play upper-string partials that hit a 7th or 9th against the root on a lower string. The classic Khruangbin/jazz comping sound — small voicings, wide harmony.',
   // Texture × Note transition
@@ -253,7 +270,7 @@ const PHASE_E_COMBO_OVERLAYS = {
   'pickingHand:alternate|texture:fullChord':         'Alternating down-up strums. The "and" between each beat gets an upstroke. Standard rock, punk, ska rhythm guitar.',
   'pickingHand:downstrokes|texture:triadPartial':    'Downstroke-only partial voicings — reggae skank territory. The accent lands on 2 and 4, never on 1 or 3. Let the space between hits do most of the work.',
   // Vowel × Onset — voice-specific pedagogically rich combos
-  'onset:breathy|vowel:ee':                          '/ee/ is the tightest vowel — forcing a breathy onset on it trains glottal release. Start with air, let pitch arrive second.',
+  'onset:breathyOnset|vowel:ee':                     '/ee/ is the tightest vowel — forcing a breathy onset on it trains glottal release. Start with air, let pitch arrive second.',
   'onset:slideIn|vowel:ah':                          'Slide up into an open /ah/ from a half-step below. The mouth is already in the right shape; only pitch has to travel.',
   // Vibrato × Note transition
   'noteTransition:bendTarget|vibrato:lateEntry':     'Bend to the target, land, hold straight for one beat, then let vibrato bloom in. The classic blues/rock lead vocabulary.',
@@ -507,7 +524,10 @@ const TEXTURE_CONSTRAINTS = [
   { id: 'doubleStops', name: 'Double Stops', desc: 'Two notes at once — harmonized lines. Thirds, sixths, octaves. Forces harmonic awareness while still playing a line.', icon: '║' },
   { id: 'triadPartial', name: 'Triad Partials', desc: 'Three-string partial voicings (typically top 3 strings). Reggae skanks, pop comping, upper-register jazz voicings. Small, mobile, and rhythmic.', icon: '⫶' },
   { id: 'fullChord', name: 'Full Chord', desc: 'Four or more notes — full voicings. Strumming, arpeggiating chord shapes, comping with changes. The rhythm guitarist\'s mode.', icon: '▦' },
-  { id: 'mixed', name: 'Mixed Textures', desc: 'Alternate between chord stabs and single-note fills within the phrase. Khruangbin, surf-rock, reggae-rock, psych territory. Rhythm and lead in one part.', icon: '◫' },
+  // NOTE: value id is `mixedTextures` (not just `mixed`) to avoid collision
+  // with register:mixed — the guidance cache is keyed on value ids only, so
+  // both would hit the same entry. Unique ids everywhere, always.
+  { id: 'mixedTextures', name: 'Mixed Textures', desc: 'Alternate between chord stabs and single-note fills within the phrase. Khruangbin, surf-rock, reggae-rock, psych territory. Rhythm and lead in one part.', icon: '◫' },
 ];
 
 // Harmonic target = which notes you're aiming for. Shared dim — singers
@@ -580,7 +600,9 @@ const NOTE_TRANSITION_CONSTRAINTS = [
 const ONSET_CONSTRAINTS = [
   { id: 'hardAttack', name: 'Hard Attack', desc: 'Clean, immediate onset — the note begins at full intended pitch and volume with no warmup. Assertive, declamatory, rock/pop idiom.', icon: '!' },
   { id: 'soft', name: 'Soft Onset', desc: 'Gentle rise into the note over a beat or so — breath first, then pitch, then full tone. The classical/art-song default.', icon: '◡' },
-  { id: 'breathy', name: 'Breathy Onset', desc: 'Start with more air than tone — a whisper that resolves into pitch. Intimate, confessional, close-mic aesthetic.', icon: '∽' },
+  // NOTE: value id is `breathyOnset` (not just `breathy`) to avoid collision
+  // with register:breathy — guidance cache is keyed on value ids only.
+  { id: 'breathyOnset', name: 'Breathy Onset', desc: 'Start with more air than tone — a whisper that resolves into pitch. Intimate, confessional, close-mic aesthetic.', icon: '∽' },
   { id: 'slideIn', name: 'Slide In', desc: 'Start the note a half-step or more below the target and slide up into it. Vocal expressiveness borrowed from blues, R&B, country.', icon: '↗' },
 ];
 
@@ -1152,7 +1174,77 @@ function generateSession(count, activeDimensions, lockedDimensions, constraintWe
 // ─── localStorage ───
 const STORAGE_KEY = 'practiceforge-data';
 const V1_BACKUP_KEY = 'practiceforge-data-v1-backup';
-const CURRENT_SCHEMA_VERSION = 3;
+const CURRENT_SCHEMA_VERSION = 4;
+
+// v3 → v4 migration. Renames two value ids that collided with existing
+// v1 register values:
+//   guitar:texture:mixed   → guitar:texture:mixedTextures
+//   voice:onset:breathy    → voice:onset:breathyOnset
+// The guidance cache is keyed on value id only, so `leaps_mixed` would
+// hit the v1 register:mixed entry when the card actually drew texture:mixed.
+// Renaming the new ids to unique strings removes the collision. The
+// register:mixed and register:breathy values are untouched — those still
+// own their short ids. Idempotent; a v4 blob passes through unchanged.
+function migrateForgeDataV3ToV4(v3Data) {
+  if (!v3Data || typeof v3Data !== 'object') return v3Data;
+  if ((v3Data.version || 0) >= 4) return v3Data;
+
+  const VALUE_REMAP = {
+    // [instrument, dim, oldValue] → newValue
+    'guitar:texture:mixed':   'mixedTextures',
+    'voice:onset:breathy':    'breathyOnset',
+  };
+
+  // 1. Weights — rewrite matching keys, merge counts if target already exists.
+  const oldWeights = v3Data.constraintWeights || {};
+  const newWeights = { ...oldWeights };
+  for (const [key, weights] of Object.entries(oldWeights)) {
+    const parts = key.split(':');
+    if (parts.length !== 3) continue;
+    const [inst, dim, val] = parts;
+    const lookupKey = `${inst}:${dim}:${val}`;
+    const newVal = VALUE_REMAP[lookupKey];
+    if (!newVal) continue;
+    const newKey = `${inst}:${dim}:${newVal}`;
+    delete newWeights[key];
+    const existing = newWeights[newKey];
+    if (existing) {
+      newWeights[newKey] = {
+        easy: (existing.easy || 0) + (weights.easy || 0),
+        good: (existing.good || 0) + (weights.good || 0),
+        hard: (existing.hard || 0) + (weights.hard || 0),
+      };
+    } else {
+      newWeights[newKey] = { ...weights };
+    }
+  }
+
+  // 2. Locks — rewrite the value object if the old id was pinned.
+  const oldLocks = (v3Data.settings && v3Data.settings.lockedDimensions) || {};
+  const newLocks = { ...oldLocks };
+  const textureLock = oldLocks.texture;
+  if (textureLock && textureLock.id === 'mixed') {
+    const dimDef = DIMENSIONS.find(d => d.id === 'texture');
+    const valObj = dimDef && dimDef.options.find(o => o.id === 'mixedTextures');
+    newLocks.texture = valObj ? { ...valObj } : { id: 'mixedTextures', name: 'Mixed Textures' };
+  }
+  const onsetLock = oldLocks.onset;
+  if (onsetLock && onsetLock.id === 'breathy') {
+    const dimDef = DIMENSIONS.find(d => d.id === 'onset');
+    const valObj = dimDef && dimDef.options.find(o => o.id === 'breathyOnset');
+    newLocks.onset = valObj ? { ...valObj } : { id: 'breathyOnset', name: 'Breathy Onset' };
+  }
+
+  return {
+    ...v3Data,
+    version: 4,
+    constraintWeights: newWeights,
+    settings: {
+      ...(v3Data.settings || {}),
+      lockedDimensions: newLocks,
+    },
+  };
+}
 
 // v2 → v3 migration (Phase C). Remaps deprecated picking-hand values that
 // were compressed out of the dim:
@@ -1387,6 +1479,7 @@ function migrateForgeData(data) {
   let cur = data;
   if ((cur.version || 0) < 2) cur = migrateForgeDataV1ToV2(cur);
   if ((cur.version || 0) < 3) cur = migrateForgeDataV2ToV3(cur);
+  if ((cur.version || 0) < 4) cur = migrateForgeDataV3ToV4(cur);
   return cur;
 }
 
