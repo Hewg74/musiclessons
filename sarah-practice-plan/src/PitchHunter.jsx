@@ -441,28 +441,32 @@ export function PitchHunter({ theme: T, metro, onBack }) {
     roundStartRef.current = Date.now();
     silenceGapRef.current = false;
 
-    // Play the target(s) — mute mic during playback + 800ms deaf period after
+    // Play the target(s) — mute mic during playback + 2s deaf period
+    // Voice synth release = 1.4s, PluckSynth resonance decays ~1.5s.
+    // Mic must stay muted until the sound fully dies in the room.
+    const DEAF_MS = 2000;
     setTimeout(() => {
       setPlaybackPaused(true);
       if (ldef.type === 'match') {
         gen.targets.forEach((t, i) => {
           setTimeout(() => playWarmNote(t.full, '2n', data.instrument), i * 600);
         });
-        const totalMs = gen.targets.length * 600 + 300;
-        muteMic(totalMs + 800); // Mute for playback + 800ms deaf period
-        setTimeout(() => setPlaybackPaused(false), totalMs + 800);
+        const totalMs = gen.targets.length * 600 + 1000 + DEAF_MS; // note scheduling + note duration + deaf
+        muteMic(totalMs);
+        setTimeout(() => setPlaybackPaused(false), totalMs);
       } else if (ldef.type === 'broken') {
         const speed = ldef.arpSpeed || 800;
         gen.targets.forEach((t, i) => {
           setTimeout(() => playWarmNote(t.full, '4n', data.instrument), i * speed);
         });
-        const totalMs = gen.targets.length * speed + 300;
-        muteMic(totalMs + 800);
-        setTimeout(() => setPlaybackPaused(false), totalMs + 800);
+        const totalMs = gen.targets.length * speed + 800 + DEAF_MS;
+        muteMic(totalMs);
+        setTimeout(() => setPlaybackPaused(false), totalMs);
       } else if (ldef.type === 'recognize' || ldef.type === 'harmonized') {
         playChord(gen.chordNotes, '2n');
-        muteMic(2300);
-        setTimeout(() => setPlaybackPaused(false), 2300);
+        const totalMs = 1000 + DEAF_MS;
+        muteMic(totalMs);
+        setTimeout(() => setPlaybackPaused(false), totalMs);
       }
     }, 200);
   }, [currentLevel, baseOctave, ldef]);
@@ -525,14 +529,15 @@ export function PitchHunter({ theme: T, metro, onBack }) {
   const replay = useCallback(() => {
     if (!targets) return;
     setPlaybackPaused(true);
-    muteMic(2000); // Mute mic for playback + deaf period
+    const deafMs = 1000 + 2000; // note duration + deaf period
+    muteMic(deafMs);
     if (ldef.type === 'match' || ldef.type === 'broken') {
       const t = targets.targets[currentTargetIdx];
       if (t) playWarmNote(t.full, '2n', data.instrument);
     } else if (targets.chordNotes) {
       playChord(targets.chordNotes, '2n');
     }
-    setTimeout(() => setPlaybackPaused(false), 2000);
+    setTimeout(() => setPlaybackPaused(false), deafMs);
   }, [targets, ldef, currentTargetIdx, muteMic]);
 
   // ─── Pitch detection callback (Gate 2-4) ───
@@ -581,15 +586,15 @@ export function PitchHunter({ theme: T, metro, onBack }) {
               setCentsOffset(0);
               lockStartRef.current = null;
               silenceGapRef.current = true;
-              // Gate 4: silence gap
+              // Gate 4: silence gap, then play next target with deaf period
               setTimeout(() => {
                 silenceGapRef.current = false;
-                // Play next target note
                 const nextTarget = targets.targets[currentTargetIdx + 1];
                 if (nextTarget) {
                   setPlaybackPaused(true);
+                  muteMic(3000); // note + release + deaf
                   playWarmNote(nextTarget.full, '2n', data.instrument);
-                  setTimeout(() => setPlaybackPaused(false), 1000);
+                  setTimeout(() => setPlaybackPaused(false), 3000);
                 }
               }, diff.silenceGapMs);
             }, 300);
