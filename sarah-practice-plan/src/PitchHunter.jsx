@@ -1104,10 +1104,11 @@ export function PitchHunter({ theme: T, metro, onBack }) {
             </div>
           )}
 
-          {/* Real LivePitchDetector — headless, auto-starts when playing */}
+          {/* Real LivePitchDetector — headless with pitch contour graph */}
           <LivePitchDetector
             theme={T}
             headless={true}
+            pitchContour={true}
             autoStart={micShouldRun && !micMuted}
             onPitchDetected={micMuted ? null : (p => pitchCallbackRef.current?.(p))}
           />

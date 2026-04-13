@@ -1993,7 +1993,63 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
   const borderTint = pitchState.active ? statusColor + "30" : T.border;
 
   // Headless mode — no UI, just pitch detection via onPitchDetected callback
-  if (headless) return null;
+  if (headless && !pitchContour) return null;
+
+  // Contour-only mode — skip note display, just show the graph
+  if (headless && pitchContour) {
+    return pitchContour && isActive ? (() => {
+      const W = 300, H = 180, PAD_TOP = 6, PAD_BOT = 6, PAD_L = 32, PAD_R = 6;
+      const noteNames = ["C", "C#", "D", "E♭", "E", "F", "F#", "G", "A♭", "A", "B♭", "B"];
+      const midiVals = contourData.filter(p => p.midi !== null).map(p => p.midi);
+      const MIN_RANGE = 12, PADDING = 3, SMOOTH_EXPAND = 0.15, SMOOTH_CONTRACT = 0.04;
+      let targetMin, targetMax;
+      if (midiVals.length === 0) { targetMin = 48; targetMax = 60; }
+      else {
+        const rawMin = Math.min(...midiVals) - PADDING, rawMax = Math.max(...midiVals) + PADDING;
+        const rawRange = rawMax - rawMin;
+        if (rawRange < MIN_RANGE) { const c = (rawMin + rawMax) / 2; targetMin = c - MIN_RANGE / 2; targetMax = c + MIN_RANGE / 2; }
+        else { targetMin = rawMin; targetMax = rawMax; }
+      }
+      const cr = contourRangeRef.current;
+      if (cr.min === null) { cr.min = targetMin; cr.max = targetMax; }
+      else { cr.min += (targetMin - cr.min) * (targetMin < cr.min ? SMOOTH_EXPAND : SMOOTH_CONTRACT); cr.max += (targetMax - cr.max) * (targetMax > cr.max ? SMOOTH_EXPAND : SMOOTH_CONTRACT); }
+      const minM = Math.floor(cr.min), maxM = Math.ceil(cr.max), rangeM = maxM - minM || 1;
+      const now = Date.now();
+      const toY = (m) => H - PAD_BOT - ((m - minM) / rangeM) * (H - PAD_TOP - PAD_BOT);
+      const segments = []; let currentSeg = [];
+      contourData.forEach(p => {
+        if (p.midi === null) { if (currentSeg.length > 1) segments.push(currentSeg); currentSeg = []; }
+        else { currentSeg.push(`${PAD_L + ((p.t - (now - 10000)) / 10000) * (W - PAD_L - PAD_R)},${toY(p.midi)}`); }
+      });
+      if (currentSeg.length > 1) segments.push(currentSeg);
+      const gridLines = []; for (let m = minM; m <= maxM; m++) gridLines.push(m);
+      return (
+        <div style={{ marginTop: 12 }}>
+          <svg viewBox={`0 0 ${W} ${H}`} style={{
+            width: "100%", height: 180,
+            background: `linear-gradient(180deg, ${T.bgSoft || T.bg} 0%, ${T.bgCard || T.bg} 100%)`,
+            borderRadius: 12, border: `1px solid ${T.border}`, overflow: "hidden",
+          }}>
+            {gridLines.map(m => {
+              const name = noteNames[((m % 12) + 12) % 12];
+              const oct = Math.floor(m / 12) - 1;
+              const isC = name === "C";
+              const isNatural = !name.includes("#") && !name.includes("♭");
+              return (
+                <g key={`g${m}`}>
+                  <line x1={PAD_L} y1={toY(m)} x2={W - PAD_R} y2={toY(m)} stroke={isC ? (T.textMuted || T.textMed) + "40" : T.border} strokeWidth={isC ? "0.6" : "0.3"} />
+                  {/* No note labels in contour-only mode */}
+                </g>
+              );
+            })}
+            {segments.map((seg, i) => (
+              <polyline key={i} points={seg.join(" ")} fill="none" stroke={statusColor} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" filter={`drop-shadow(0 2px 6px ${statusColor}60)`} opacity={0.9} />
+            ))}
+          </svg>
+        </div>
+      );
+    })() : null;
+  }
 
   if (!isActive) {
     return (
