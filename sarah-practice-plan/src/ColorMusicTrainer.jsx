@@ -235,17 +235,20 @@ export function generateScale(root, scaleType) {
   // Root fret on the low E string (standard tuning)
   const lowEFrets = { 'E': 0, 'F': 1, 'F#': 2, 'G': 3, 'A♭': 4, 'A': 5, 'B♭': 6, 'B': 7, 'C': 8, 'C#': 9, 'D': 10, 'E♭': 11 };
   const rootFret = lowEFrets[normalizeNote(root)] || 5;
-  // Positions wrap around fret 12 (octave) back to low frets
-  // e.g. C (fret 8): pos 1=[8,11], pos 2=[10,13], pos 3=[0,3], pos 4=[2,5], pos 5=[5,8]
-  const wrap = (v) => v > 14 ? v - 12 : v; // wrap frets past 14 back to low frets
+  // Positions wrap around fret 12 (octave) back to low frets.
+  // Wraps the PAIR together so the span stays tight — never wrap endpoints independently.
+  // e.g. A (fret 5): pos 4=[12,15]; C (fret 8): pos 4=[3,6]
   const clamp = (v) => Math.max(0, Math.min(15, v));
-  const pos = (lo, hi) => { const l = wrap(lo), h = wrap(hi); return [clamp(Math.min(l,h)), clamp(Math.max(l,h))]; };
+  const makePos = (rawLo, rawHi) => {
+    if (rawHi <= 15) return [clamp(rawLo), rawHi];
+    return [clamp(rawLo - 12), clamp(rawHi - 12)];
+  };
   const positions = {
-    1: pos(rootFret, rootFret + 3),
-    2: pos(rootFret + 2, rootFret + 5),
-    3: pos(rootFret + 4, rootFret + 7),
-    4: pos(rootFret + 7, rootFret + 10),
-    5: pos(rootFret > 3 ? rootFret - 3 : rootFret + 9, rootFret > 3 ? rootFret : rootFret + 12),
+    1: makePos(rootFret, rootFret + 3),
+    2: makePos(rootFret + 2, rootFret + 5),
+    3: makePos(rootFret + 4, rootFret + 7),
+    4: makePos(rootFret + 7, rootFret + 10),
+    5: rootFret > 3 ? makePos(rootFret - 3, rootFret) : makePos(rootFret + 9, rootFret + 12),
   };
   return { name: `${root} ${type.name}`, root: normalizeNote(root), notes, positions };
 }

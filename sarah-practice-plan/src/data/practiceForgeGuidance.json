@@ -2,14 +2,15 @@
   "_meta": {
     "generatedAt": "2026-04-10T17:59:31.276Z",
     "model": "claude-opus-4-6",
-    "totalEntries": 2459,
+    "totalEntries": 2494,
     "matrixCount": 210,
-    "focusCount": 76,
+    "focusCount": 111,
     "combosCount": 2156,
     "scalesCount": 17,
     "keyFormat": "dim:value",
     "namespacedAt": "2026-04-11",
-    "lastMergedAt": "2026-04-11"
+    "lastMergedAt": "2026-04-13",
+    "guitarFocusCount": 35
   },
   "focus": {
     "pitchConstraint:leaps": {
@@ -2236,6 +2237,951 @@
       "etude": "Click at 72 BPM. Bar one: slide up from a half-step below the third into the third, landing on beat 1 and sustaining through beat 4 — the slide itself happens in the last eighth of the previous bar, so the target is clean on the downbeat. Bar two: slide from the fourth up to the fifth the same way, sustained. Bar three: slide from the flat-seventh up to the root an octave above (a bluesy reach), sustained. Bar four: slide from below into the third again, but this time let the whole bar breathe with gentle vibrato on the sustained target. Every slide must LAND — the target pitch must be unmistakable, not drifting. Palm on sternum feeling the pitch move through the chest.",
       "watchOut": "The biggest failure is never actually arriving at the target pitch — the slide keeps drifting and the note is never clearly landed. Commit to the target. The other failure is sliding into every note until the style becomes schmaltzy; use it deliberately, not reflexively.",
       "listenTo": "Otis Redding 'These Arms of Mine' — nearly every phrase begins with a blues slide-in, each one unmistakably landed."
+    },
+    "guitar:harmonicTarget:scaleShape": {
+      "character": "This is pure freedom on the fretboard — you're painting with the whole palette. Every note in the scale is fair game, so your job is to explore the shape under your fingers and let your ear guide you through it. Think of it as learning the geography of a new neighborhood by wandering every street.",
+      "whyPractice": "Knowing your scale shapes cold is the foundation of everything else. When you can move through a position without thinking about which fret comes next, your ear takes over and music starts to happen. This is where fretboard fluency begins.",
+      "steps": [
+        "Set your drone and metronome. Place your fretting hand in one position so you can reach the full scale shape without shifting.",
+        "Play through the scale shape slowly, low string to high string and back. Feel each fret under your fingertip.",
+        "Now break away from the linear climb — skip strings. Play the low string, jump to the third string, come back to the second.",
+        "Try groups of three notes ascending, then three descending, moving through the shape like a wave.",
+        "Experiment with different picking patterns — alternate picking, economy picking, even try legato (hammer-ons and pull-offs) through the same shape.",
+        "Close your eyes and play. Let your fingers find notes by feel and your ear decide what sounds good.",
+        "Gradually increase tempo. The shape should start to feel like home — automatic, comfortable, musical."
+      ],
+      "progression": [
+        "Beginner: Stay in one position (e.g., frets 5-8). Play the scale up and down each string pair slowly, naming the intervals as you go — root, second, third, and so on.",
+        "Intermediate: Connect two adjacent positions by shifting up or down during a phrase. Mix string skipping with legato runs so you're covering more fretboard real estate.",
+        "Advanced: Play freely across the entire neck, shifting positions mid-phrase. Combine slides, hammer-ons, pull-offs, and position shifts so the scale shape becomes a single unified landscape."
+      ],
+      "examples": [
+        "Root on low string, walk up to the fifth, slide up two frets and descend back through the fourth and third to root.",
+        "Start on the third (second string), skip to the root on the fourth string, climb up to the sixth and resolve to the fifth.",
+        "Descending run from the high root down through the seventh, sixth, fifth — all on one string using slides.",
+        "Zigzag: root (sixth string), third (fifth string), second (sixth string), fourth (fifth string) — weaving across two strings.",
+        "Play the full shape on just the top two strings, then mirror the same intervals on the bottom two strings."
+      ],
+      "etude": "In one position: pick the root on the low string, hammer-on to the second, pull-off back to root. Slide up to the third on the next string, pick the fourth, hammer-on to the fifth. Now descend: pick the fifth, pull-off to the fourth, slide down to the third. Cross back to the low string, pick the second, pull-off to root. Let the root ring over the drone. Repeat the whole cycle, gradually adding speed, keeping your fretting hand relaxed and your pick attack even.",
+      "watchOut": "The most common trap is running the scale like a ladder — straight up, straight down, on autopilot. That is not music, that is a finger exercise. The moment it sounds like a drill, stop, take a breath, and play just three notes that sound beautiful together. Quality of sound beats quantity of notes every time."
+    },
+    "guitar:harmonicTarget:arpeggio135": {
+      "character": "This is the skeleton of harmony under your fingers. When you outline root, third, and fifth, you are spelling out the chord with single notes — it sounds intentional, strong, and melodically clear. On guitar, these triad shapes live in compact little clusters across the strings, and once you see them, they are everywhere.",
+      "whyPractice": "Arpeggios are how you make your improvisation sound like it belongs to the chord. Players who only think in scales often sound like they are floating above the music. Players who think in arpeggios sound like they are inside it. This is the difference between noodling and storytelling.",
+      "steps": [
+        "Find the root on the low string in your position. Now locate the third and fifth on the next two strings. That compact three-note shape is your home base.",
+        "Play root-third-fifth ascending, then fifth-third-root descending. Use strict alternate picking at a slow tempo.",
+        "Now spread the arpeggio across more strings — play root on the fifth string, third on the third string, fifth on the first string. Feel the wide interval leap.",
+        "Try sweep picking through the compact triad shape: one smooth downstroke across three strings, then reverse it coming back up.",
+        "Add a rhythmic pattern — play the arpeggio as quarter notes, then as eighth-note triplets, then as sixteenths. Keep the drone grounding you.",
+        "Invert the shape: start on the third instead of the root, then start on the fifth. Each inversion has its own color.",
+        "Connect two triad shapes in different positions by sliding from one root to the next, letting the arpeggios chain together up the neck."
+      ],
+      "progression": [
+        "Beginner: Play root-third-fifth in one position on adjacent strings. Get the shape memorized so your fingers find it without looking. Whole notes and half notes only.",
+        "Intermediate: Play all three inversions (root position, first inversion, second inversion) and connect them by shifting up the neck. Add eighth-note rhythms and mix in one passing scale tone between chord tones.",
+        "Advanced: Sweep or economy-pick through triad shapes across all six strings. Chain inversions across multiple octaves in one fluid phrase. Add slides and hammer-ons between positions so the arpeggios sing."
+      ],
+      "examples": [
+        "Root on the fifth string, third on the fourth string, fifth on the third string — compact shape, one fret span. Pick each note cleanly.",
+        "Wide spread: root on the sixth string, skip to the third on the fourth string, skip to the fifth on the second string. Big intervallic sound.",
+        "Descending from the high fifth: fifth on the first string, third on the second string, root on the third string — first-inversion shape rolling downward.",
+        "Sweep pattern: root-third-fifth ascending across three strings in one pick stroke, then pull-off back down.",
+        "Pedal tone: keep picking the root on an open or fretted low string while alternating the third and fifth on higher strings above it."
+      ],
+      "etude": "Start on the root (fifth string). Pick it firmly, then sweep up through the third (fourth string) and fifth (third string) in one fluid downstroke. At the top, pull-off from the fifth back to the third, then slide down to the root. Rest for one beat — let the drone fill the space. Now shift up to the next inversion: third on the fifth string, fifth on the fourth string, root on the third string. Sweep up again, pull-off down, slide to the new root. Repeat through all three inversions ascending the neck. Keep your fretting hand light and your sweep motion smooth — it should feel like one gesture, not three separate picks.",
+      "watchOut": "The biggest mistake is treating arpeggios as a speed exercise. If you are blasting through root-third-fifth-third-root at top speed, you are missing the point. Each note of the triad has a different emotional weight — the root is home, the third is the color, the fifth is the strength. Play slowly enough to hear each one land."
+    },
+    "guitar:harmonicTarget:chordToneLanding": {
+      "character": "This is about sticking the landing. You can wander anywhere during a phrase — scale tones, passing tones, chromatic approach notes — but when the phrase ends, your last note must be a chord tone. It is like a gymnast who can flip and twist however they want, as long as they land on their feet. On guitar, this means knowing exactly where your chord tones live so you can aim for them from any direction.",
+      "whyPractice": "This is what separates aimless noodling from purposeful soloing. When your phrases resolve to chord tones, the listener feels satisfaction and forward motion. It trains your ear to hear the harmony while you play, which is the core skill of a mature improviser.",
+      "steps": [
+        "Before you start playing, find all the chord tones (root, third, fifth) in your current position. Visualize them as anchor points on the fretboard.",
+        "Play a short phrase of three to five notes using any scale tones, but deliberately end on the root. Do this several times until it feels natural to steer toward that note.",
+        "Now do the same but land on the third. Notice how the emotional color changes — the landing feels different even though the approach was similar.",
+        "Try landing on the fifth. Compare how each chord tone feels as a resolution point.",
+        "Start adding approach notes: play a scale tone one fret below a chord tone, then slide or hammer-on into it. This chromatic approach makes the landing feel even more intentional.",
+        "Over the backing track, play four-bar phrases. Let yourself wander freely for three bars, but in the fourth bar, steer toward a chord tone and land on it right on beat one.",
+        "Practice landing on different strings — a root landing on the thick strings feels warm and grounded, while a third landing on the thin strings feels bright and vocal."
+      ],
+      "progression": [
+        "Beginner: Play simple three-note phrases that always end on the root. Use one position, stay on two or three strings. Get comfortable with the feeling of resolution.",
+        "Intermediate: Extend phrases to five or seven notes, land on any chord tone (root, third, or fifth), and use chromatic approach notes (one fret below the target) to set up the landing. Practice over a backing track with chord changes.",
+        "Advanced: Over a chord progression, track the changing chord tones in real time. Land on the third of one chord, then voice-lead to the nearest chord tone of the next chord. Your landings should outline the harmony even without the backing track."
+      ],
+      "examples": [
+        "Climb from the second up through the fourth and fifth, then resolve down to the root with a slight slide into it.",
+        "Descend from the sixth through the fifth and fourth, land on the third with a gentle vibrato. Let it sing.",
+        "Approach the fifth from one fret below — that chromatic half-step squeeze into the chord tone sounds intentional and jazzy.",
+        "Play a flurry of sixteenth notes across two strings, then land on the root on a strong beat with a firm pick attack. Contrast between motion and arrival.",
+        "Bend up from a scale tone to reach the third — the bend itself becomes the resolution gesture."
+      ],
+      "etude": "Over the drone, play a wandering phrase: start on the second, climb to the fourth, skip up to the sixth on the next string, then the seventh. Now steer home — descend to the fifth and let it ring for two beats. Start your next phrase from that fifth, climb through the sixth and seventh, approach the root from one fret below with a slide, and land on the root on beat one. Let it sustain with vibrato. For the final phrase, start on the root, ascend to the second and fourth, skip to the sixth, then descend and land on the third. Each phrase explored freely but ended with purpose. That is the skill.",
+      "watchOut": "The trap is landing on chord tones mechanically — stopping abruptly on the target note like you hit a wall. A good landing needs a musical gesture: a slide into it, a vibrato, a bend, a slight dynamic swell. Practice the arrival, not just the destination. The last two notes of every phrase matter more than everything before them."
+    },
+    "guitar:harmonicTarget:colorTone79": {
+      "character": "This is where you step outside the basic triad and reach for the richer, more complex tones — the seventh, ninth, eleventh. On guitar, these upper-structure notes often live just one or two frets away from the chord tones you already know, but they add a shimmer, a tension, a sophistication that transforms your sound. It feels like adding spice to a dish you already love.",
+      "whyPractice": "If triads are the nouns of music, extensions are the adjectives. They are what make the difference between a solo that sounds correct and one that sounds beautiful. Jazz, neo-soul, and modern R&B guitar all live in this territory. Learning to reach for these tones gives you an entirely new expressive vocabulary on the neck.",
+      "steps": [
+        "Start by finding your root-third-fifth triad shape in position. Now locate the seventh — it is typically two frets below the root (for a major seventh) or one fret below (for a dominant seventh). Find it on each string.",
+        "Play root-third-fifth-seventh as a four-note arpeggio. Notice how the seventh adds longing or tension depending on the chord quality.",
+        "Now find the ninth — it is the same note as the second of the scale, but played an octave above the root. On guitar, it often lives on the next higher string from your root. Play root-third-fifth-seventh-ninth ascending.",
+        "Try landing phrases on the seventh instead of the root. Feel how it creates an unresolved, floating quality.",
+        "Play a phrase that targets the ninth on a high string — approach it from the root below, slide up two frets. That two-fret slide into the ninth is one of the most beautiful sounds on guitar.",
+        "Explore the eleventh: it sits between the third and the fifth in the scale. On guitar, try sustaining it over the drone — it has a suspended, open quality.",
+        "Mix color tones into your regular scale playing. Instead of always targeting root-third-fifth, let some phrases end on the seventh or ninth. Notice how it changes the emotional temperature."
+      ],
+      "progression": [
+        "Beginner: Add just the seventh to your triad shape. Play root-third-fifth-seventh ascending and descending until the four-note shape is memorized. Land phrases on the seventh and listen to the tension.",
+        "Intermediate: Incorporate the ninth and eleventh into your vocabulary. Practice approach patterns — slide into the ninth from a whole step below, hammer-on to the seventh from the sixth. Over a backing track, alternate between landing on chord tones and landing on extensions.",
+        "Advanced: Voice-lead through extensions over chord changes. When the chord moves, find the nearest color tone of the new chord — a seventh might become a ninth, a ninth might become an eleventh. Let the extensions connect the harmony smoothly across the neck."
+      ],
+      "examples": [
+        "From the fifth, climb to the sixth, then land on the seventh. Hold it with vibrato — that seventh hanging over the drone is pure emotion.",
+        "Play root on the fourth string, skip to the ninth on the second string. The wide interval leap sounds modern and open.",
+        "Hammer-on from the sixth to the seventh on the same string, then slide up to the root. The color tone becomes a passing tension that resolves beautifully.",
+        "Descend from the eleventh through the third down to the root — the eleventh-to-third motion has a floating-to-grounded quality.",
+        "Bend the second up a half step toward the flat-third area, then release back — even just bending near a color tone region adds expressive nuance."
+      ],
+      "etude": "Start on the root (fourth string), pick it cleanly, then slide up to the ninth on the same string. Cross to the third string and play the seventh, then pull-off to the sixth and hammer-on back to the seventh — let it wobble between those two notes. Now ascend to the root, skip a string to the eleventh above, and let it ring against the drone for two beats. Resolve by descending: eleventh to the third, third to the root. The whole etude should feel like you are decorating a simple melody with jewel-like extension tones. Keep your fretting hand relaxed — these stretches can be wide, so let your thumb drop behind the neck for reach.",
+      "watchOut": "The most common failure is treating color tones like wrong notes and rushing past them. If you slide through the seventh at top speed, the ear never registers it. The whole point is to let these tones breathe — sustain them, add vibrato, give the listener time to hear the color. Also watch your intonation on bends near these tones; a ninth that is ten cents flat sounds like a mistake, not an extension."
+    },
+    "guitar:phraseStructure:question-answer": {
+      "character": "This is musical conversation with yourself. The first phrase rises, leans forward, leaves something unresolved — it is the question. The second phrase descends, settles, resolves — it is the answer. On guitar, you can feel this physically: the question climbs up the neck or rises to a higher string, and the answer comes back down to home base. It is one of the oldest and most satisfying shapes in music.",
+      "whyPractice": "Question and answer is the foundation of musical storytelling. Without it, solos become a stream of notes with no shape. When you internalize this back-and-forth structure, your playing starts to breathe — it has tension and release, expectation and satisfaction. Listeners lean in during the question and exhale during the answer, even if they do not know why.",
+      "steps": [
+        "Set your drone and metronome. Play a simple ascending phrase of four or five notes, ending on a non-root tone (the second, fourth, or sixth). Let it hang — do not resolve. That is your question.",
+        "Now play an answering phrase of similar length that descends and ends on the root or another strong chord tone. Feel the resolution in your body.",
+        "Practice the pair several times. Make the question and answer the same length — symmetry helps at first.",
+        "Experiment with what makes a phrase feel like a question: ending on a higher string, landing on a tension note, using an upward slide at the end, or leaving a slight rhythmic gap.",
+        "Experiment with what makes a phrase feel like an answer: descending motion, landing on a low string, ending with vibrato on a chord tone, or a slight ritardando.",
+        "Try making the answer a variation of the question — same rhythm but descending, or same notes in reverse order. This creates a satisfying mirror effect.",
+        "Over the backing track, play continuous question-answer pairs. Every two phrases should feel like a complete thought — a mini-conversation."
+      ],
+      "progression": [
+        "Beginner: Play a three-note ascending phrase ending on the fifth, pause for one beat, then play a three-note descending phrase ending on the root. Keep it simple and symmetrical. Focus on the feeling of tension-then-release.",
+        "Intermediate: Extend to five or seven notes per phrase. Let the question use rhythmic anticipation (start on an upbeat) and the answer use strong downbeats. Vary the string pairs and positions for each question-answer cycle.",
+        "Advanced: Play questions and answers that span different positions on the neck — question in the lower frets, answer in the upper frets, or vice versa. Let the questions get more complex and the answers more concise, like a conversation where the response distills the question into its essence."
+      ],
+      "examples": [
+        "Question: root, second, third, slide up to the fifth on the next string — leave it ringing. Answer: fifth, fourth, third, second, land on the root with vibrato.",
+        "Question: jump from root to sixth on a high string, add a quick hammer-on to the seventh. Answer: descend seventh, sixth, fifth, third, root across two strings.",
+        "Question: play a syncopated three-note figure ending on the fourth (tension). Answer: same rhythm but ending on the third (resolution).",
+        "Question: ascending bend from the second up toward the third, hold the bend (unresolved). Answer: release the bend slowly, descend to the root.",
+        "Question: rapid scale run climbing three strings. Answer: a single sustained root note with slow vibrato. Silence is a valid answer."
+      ],
+      "etude": "Play the question: pick the root on the fourth string, hammer-on to the second, slide up to the third on the third string, then pick the fifth and let it ring — that is your open question hanging in the air. Pause for one beat. Now the answer: pick the fifth again, pull-off to the fourth, cross to the fourth string and pick the third, slide down to the second, and land on the root with gentle vibrato. Let the root sustain over the drone for two full beats. Repeat the cycle but start the question one position higher on the neck, so each pair explores a new area of the fretboard. The question always lifts, the answer always comes home.",
+      "watchOut": "The biggest mistake is making both phrases sound the same — two phrases that both ascend and resolve are two answers without a question. Before you play each phrase, decide in advance whether it is rising or falling, tense or resolved. If your answer does not feel like it resolves the question, you probably landed on a tension note instead of a chord tone. Check your landing note."
+    },
+    "guitar:phraseStructure:call-response": {
+      "character": "This is the sound of two voices on one guitar. You play a bold statement — the call — and then echo or answer it with a response that acknowledges what came before. It is the blues tradition, the gospel tradition, the campfire singalong. On guitar, you can create the illusion of two players by changing your position, your tone, your register, or your dynamics between the call and the response.",
+      "whyPractice": "Call and response trains your musical memory in real time. You have to remember what you just played well enough to respond to it, which builds the ear-to-hand connection faster than almost any other exercise. It also teaches you to listen to yourself — a skill that separates good improvisers from great ones.",
+      "steps": [
+        "Start with the simplest call: play three notes in the low register. Now respond with the same three notes an octave higher. Same melody, different register — instant two-voice effect.",
+        "Make the response a variation: play the call low, then respond with the same rhythm but different notes in a higher position. The rhythm connects them, the notes add interest.",
+        "Try changing your pick attack between call and response. Call with a firm downstroke near the bridge (bright, assertive). Respond with a softer touch near the neck (warm, gentle).",
+        "Experiment with dynamics: call loud and full, respond quiet and delicate. Or vice versa — the contrast creates drama.",
+        "Add space between call and response. Leave a full beat of silence so the call can breathe before you answer it. Silence makes both parts more powerful.",
+        "Over the backing track, play four-bar cycles: two bars of call, two bars of response. The call can be adventurous; the response should feel like a thoughtful reply.",
+        "Challenge yourself: after each call, try to make the response feel surprising but inevitable — something the listener did not expect but immediately accepts."
+      ],
+      "progression": [
+        "Beginner: Play a simple two-note call on the low strings, then repeat the same two notes on the high strings. Focus on making the register shift feel like two separate voices having a conversation.",
+        "Intermediate: Make the call a four or five-note phrase with a distinct rhythm. Respond with the same rhythm but alter the melody — different notes, different direction, maybe a different string set. Keep the rhythmic DNA so the listener hears the connection.",
+        "Advanced: Let the call be fully improvised. Then respond in real time with something that relates to it — same rhythm in diminution, same contour inverted, same notes with added embellishments. This trains real-time musical thinking at a high level."
+      ],
+      "examples": [
+        "Call: root-third-fifth on the fifth and fourth strings. Response: same pattern on the second and first strings, one octave up.",
+        "Call: slide from root up to fifth, aggressive pick attack. Response: slide from fifth down to root, soft and smooth.",
+        "Call: rhythmic muted strum on the low strings (percussive). Response: clean melodic phrase on the high strings (lyrical). Texture contrast.",
+        "Call: a single bent note held for two beats, raw and expressive. Response: a quick descending run that resolves to the root. Sustained vs. active.",
+        "Call: play on the neck pickup area for warmth. Response: play near the bridge for bite. Same phrase, different tonal color."
+      ],
+      "etude": "Call: pick the root firmly on the fifth string, slide up to the third, and hammer-on to the fifth. Let it ring with authority — that is your statement. Pause for one beat. Response: start on the same fifth but an octave higher (second string), play it softly, pull-off to the third, and slide gently down to the root. Same notes, opposite energy — loud becomes soft, ascending becomes descending. For the second cycle, play a new call: a quick rhythmic figure on muted low strings (chunk-chunk-chunk). Response: an airy melodic phrase on the high strings that answers the rhythm with melody. Alternate between melodic calls and rhythmic calls to keep the conversation varied.",
+      "watchOut": "The most common mistake is making the response completely unrelated to the call — it should sound like an answer, not a new topic. Before you play the response, ask yourself: what did the call say, and what is the right reply? If you cannot remember what you just played, slow down and simplify the call until you can hold it in your mind while responding."
+    },
+    "guitar:phraseStructure:theme-variation": {
+      "character": "This is the art of saying the same thing in different ways. You start with a clear, memorable theme — a short melodic idea that you could hum — and then you keep it alive by changing one element at a time: the rhythm, the octave, the dynamics, the embellishments. On guitar, you have extraordinary tools for variation — bends, slides, harmonics, position shifts, tonal changes — without ever leaving the basic shape of your theme.",
+      "whyPractice": "Theme and variation is what separates a solo with a story from a random collection of licks. Great guitar solos — think of any iconic solo you love — almost always introduce an idea and then develop it. This skill teaches you to build tension gradually rather than blowing all your ideas in the first four bars.",
+      "steps": [
+        "Create your theme: a simple phrase of four to six notes that fits in one position. It should be singable — if you cannot hum it, it is too complex. Play it twice to establish it.",
+        "First variation — change the rhythm only. Keep the same notes and the same frets, but play the theme as triplets instead of straight eighths, or add syncopation. The melody is the same; the feel is different.",
+        "Second variation — change the octave. Shift your theme up twelve frets (or to the equivalent shape on higher strings). Same melody, different register — instant freshness.",
+        "Third variation — add ornamentation. Play the theme again in the original position but add hammer-ons, pull-offs, or slides between the notes. The skeleton is the same; the surface is decorated.",
+        "Fourth variation — subtract. Strip the theme down to just its most important two or three notes. Play those with space and vibrato. Sometimes less is the most powerful variation.",
+        "Fifth variation — change the dynamics. Play the theme pianissimo with your picking hand barely touching the strings. Then play it fortissimo with aggressive attack. Same notes, completely different emotional impact.",
+        "End by returning to the original theme, played exactly as it was. The return home feels deeply satisfying after the journey."
+      ],
+      "progression": [
+        "Beginner: Write a three-note theme on two strings. Play it four times, changing one thing each time: rhythm, then volume, then adding a single slide. Keep the changes small and deliberate.",
+        "Intermediate: Create a five-note theme and develop it through six or seven variations. Include at least one position shift, one rhythmic transformation, and one textural change (e.g., switching from picked to legato). Let each variation grow naturally from the previous one.",
+        "Advanced: Improvise a theme on the spot and develop it in real time over a full chorus. Each variation should be more complex or intense than the last, building to a climax before returning to the simple original. This is real-time composition."
+      ],
+      "examples": [
+        "Theme: root, third, fifth, third (four notes, simple arc). Variation 1: same notes as triplets. Variation 2: same notes with a slide into the third. Variation 3: same notes but the fifth is bent up from the fourth.",
+        "Theme: descending fifth, third, root on one string. Variation: same descent but across three strings, spreading the intervals wide.",
+        "Theme played with clean tone and even dynamics. Variation: same phrase with muted, percussive ghost notes between each real note.",
+        "Theme on the low strings (dark, heavy). Variation: same melody using natural harmonics on the high frets (crystalline, ethereal).",
+        "Theme at full speed. Variation: half-tempo, every note sustained with vibrato. The slow version reveals the beauty hidden in the fast one."
+      ],
+      "etude": "Theme: pick the root on the third string, hammer-on to the second, slide to the third on the second string, and pull-off back to the second. Four notes, one compact shape. Play it twice cleanly. Variation 1: same four notes but as swing eighths — long-short, long-short. Variation 2: shift the entire shape up twelve frets and play it with a lighter touch, letting the higher register add brightness. Variation 3: back in the original position, but add a grace-note slide into each note from one fret below. Variation 4: play only the root and third — the two strongest notes — with long sustain and vibrato. Variation 5: full speed, all four notes with hammer-ons and pull-offs only, no picking. Finale: return to the original, picked cleanly at the original tempo. You have told a complete story with four notes.",
+      "watchOut": "The most common failure is abandoning the theme after the first variation and accidentally inventing a new melody. Each variation must be recognizably the same idea in a different outfit. If a listener could not connect your variation back to the original theme, you have gone too far. When in doubt, keep one element constant — usually the rhythm or the first note — so the thread is never lost."
+    },
+    "guitar:phraseStructure:ostinato": {
+      "character": "This is the hypnotic power of repetition. You choose a short phrase — two to four notes, maybe a whole riff — and you play it over and over, letting it lock into the groove like a gear clicking into place. On guitar, this is the world of Khruangbin, of surf-rock tremolo lines, of reggae offbeat skanks, of desert-blues single-note riffs that spin like a mantra. The magic is not in the notes themselves but in what happens when you commit to them.",
+      "whyPractice": "Repetition is the most underrated skill in guitar playing. It teaches you to find the groove, to lock in with the rhythm section, and to discover micro-variations — tiny changes in dynamics, timing, and tone that keep a repeated figure alive. It also builds the discipline to resist the urge to show off with more notes. Sometimes the most musical thing you can do is play the same four notes for sixty seconds straight.",
+      "steps": [
+        "Choose a short figure: two to four notes on one or two strings. It should feel good to play — physically comfortable, rhythmically satisfying.",
+        "Play it on a loop with the metronome. Your goal is to lock in so tightly that the phrase and the click become one sound. This might take twenty or thirty repetitions before it clicks.",
+        "Once locked in, start exploring micro-dynamics. Make one note in the pattern slightly louder than the others. Shift the accent to different beats. The pattern is the same but the emphasis dances around.",
+        "Try ghost notes: between your real notes, lightly touch the strings without fretting to create muted percussive sounds. The ostinato becomes more rhythmic without adding new pitches.",
+        "Explore tonal variation: play the same phrase near the bridge (bright and cutting) then near the neck (warm and round). Move your picking hand position slightly every few bars.",
+        "Let other elements change around you — the drone sustains, the metronome clicks — while you stay locked on your pattern. You are the anchor.",
+        "After a full minute of repetition, allow yourself one small variation: add a slide, change one note, shift the octave. Then go back to the original. That contrast makes the variation electric."
+      ],
+      "progression": [
+        "Beginner: Choose a two-note ostinato on one string — root and fifth, alternating, in eighth notes. Lock in with the metronome for a full minute without stopping or changing anything. Focus on pick consistency and timing.",
+        "Intermediate: Create a four-note riff across two strings. Play it on a loop and add micro-variations — accent shifts, ghost notes, slight timing pushes (playing just ahead of the beat for urgency, or behind it for laid-back feel). Every fourth or eighth repetition, add one embellishment and then return.",
+        "Advanced: Build a Khruangbin-style layered ostinato: start with a single-note line, add muted string percussion between notes, introduce natural harmonics as an occasional color, and slowly shift the tonal center by moving your fretting hand position up by one fret every eight bars. The ostinato evolves imperceptibly over two minutes."
+      ],
+      "examples": [
+        "Root and fifth alternating on one string in steady eighth notes — the simplest ostinato, but devastating when locked into a deep groove.",
+        "A three-note pentatonic fragment on the top two strings — root, flat-third, root down an octave — with a surf-tremolo picking pattern.",
+        "Reggae skank: muted chord stab on the offbeat, same voicing every time, letting the rhythm and dynamics do all the work.",
+        "Desert-blues pattern: root on the fourth string, hammer-on to the second, pull-off back, open string drone below. Circular and hypnotic.",
+        "Single note on one string with different rhythmic subdivisions: four bars of eighth notes, four bars of triplets, four bars of sixteenths — same pitch, the rhythm is the variation."
+      ],
+      "etude": "Pick a two-note figure: root on the fourth string, pull-off to the open string below it (or the seventh below if no open string works). Play this in steady eighth notes and lock in with the metronome. After eight bars, add a ghost note — lightly mute the string between each real note so you get pick-mute-note-mute-note-mute. After eight more bars, accent every third note instead of every first, creating a 3-over-4 polyrhythmic feel against the metronome. After eight more bars, add a slide up two frets on the last note of every fourth repetition — a tiny variation that your ear will anticipate and celebrate. After eight more bars, return to the original two notes with no embellishment. Notice how rich and alive those two simple notes feel after the journey. That is the power of ostinato.",
+      "watchOut": "The failure mode is getting bored and bailing out too early. If you abandon the pattern after ten seconds because it feels repetitive, you have missed the entire point. The magic of ostinato lives on the other side of boredom — around repetition thirty, something shifts, your body relaxes into the groove, and tiny beautiful variations start happening naturally. Trust the process. Stay with it."
+    },
+    "guitar:rhythmConstraint:3-3-2": {
+      "character": "This is the heartbeat of Latin and Afro-Cuban music — three, three, two. Eight eighth notes divided unevenly so the rhythm swings and lurches forward instead of marching in straight fours. On guitar, you feel it in your picking hand: strong-soft-soft, strong-soft-soft, strong-soft. Once it gets into your body, you hear it everywhere — in reggaeton, in Afrobeat, in the Bo Diddley beat, in half the songs on the radio. It is asymmetrical and it is alive.",
+      "whyPractice": "The tresillo frees you from the tyranny of straight fours. Most guitar players accent beats one and three their entire lives and never realize there is a whole world of rhythmic feels built on odd groupings. Learning 3-3-2 gives you access to Latin, African, Caribbean, and global fusion styles — and it makes your regular playing more rhythmically interesting because you start hearing the spaces between the beats.",
+      "steps": [
+        "Set your metronome to a moderate tempo and count eighth notes: 1-and-2-and-3-and-4-and. Now accent the tresillo: ONE-and-two-AND-three-and-FOUR-and. The accents fall on 1, the 'and' of 2, and 4. That is 3-3-2.",
+        "Mute all strings with your fretting hand and strum the tresillo pattern with your picking hand. Just rhythm, no pitch. Get the accents into your arm before your fingers get involved.",
+        "Now add a single fretted note — the root. Play the tresillo pattern on that one note. Let the accents do all the musical work.",
+        "Add a second note: alternate between the root and fifth in the tresillo rhythm. Root on the accents, fifth on the unaccented notes (or try the reverse).",
+        "Apply the tresillo to a scale run: play three ascending notes (group of 3), three more ascending notes (group of 3), then two descending notes (group of 2). The rhythm shapes the melody.",
+        "Over the backing track, play single-note lines where your pick accents always follow the 3-3-2 grouping, even as your note choices change freely. The rhythm is the constant; the melody is the variable.",
+        "Try the reverse — 2-3-3 — and notice how flipping the pattern changes the feel from forward-leaning to back-leaning. Both are useful."
+      ],
+      "progression": [
+        "Beginner: Muted string strums only in 3-3-2. No notes, just rhythm. Tap your foot on the quarter notes while your picking hand plays the tresillo. When the two layers feel independent and comfortable, add one fretted note.",
+        "Intermediate: Play a five-note scale fragment organized in 3-3-2 groups. Three notes ascending, three continuing up, two coming back down. Shift to different positions every two bars. Mix picked notes with hammer-ons to create a more flowing tresillo feel.",
+        "Advanced: Improvise freely over a Latin or Afrobeat groove, letting the tresillo accent pattern drive your phrasing even through complex melodic ideas. Layer the 3-3-2 in your picking hand while your fretting hand plays legato lines that cross the accent boundaries. The groove should feel effortless and deeply locked in."
+      ],
+      "examples": [
+        "Root-root-root (3) fifth-fifth-fifth (3) root-root (2) — all on one string, accents creating the whole musical shape from a two-note vocabulary.",
+        "Ascending: root-second-third (3) fourth-fifth-sixth (3) fifth-root (2 descending). The 3-3-2 groups become three-note scale segments plus a two-note turnaround.",
+        "Chord stab pattern: full chord on beat 1, mute-mute, full chord on the 'and' of 2, mute-mute, full chord on beat 4, mute. Classic Latin comping rhythm.",
+        "Single string: slide up three frets (group of 3), slide up three more (group of 3), pull-off down two frets (group of 2). The physical gesture mirrors the rhythmic grouping.",
+        "Combine with ghost notes: accented real notes on the 3-3-2 hits, ghost-note muted scratches on everything else. Your picking hand never stops moving but the accents pop out."
+      ],
+      "etude": "Set the metronome to a comfortable tempo. Mute all strings and strum the tresillo ten times until it is automatic in your picking arm: DOWN-up-down-DOWN-up-down-DOWN-up (accents on 1, and-of-2, 4). Now fret the root on the fifth string. Play the tresillo on that single note — accented strokes are firm downstrokes, unaccented are lighter. After four bars, add the fifth above the root: play root on the accented notes, fifth on the unaccented. After four more bars, expand to root-third-fifth in the rhythm: root (1), third (and-of-2), fifth (4), filling the gaps with ghost-note mutes. After four more bars, start a scale run organized in 3-3-2 groups: pick three ascending notes, three more, then two descending — repeat and shift up one scale degree each cycle. By the end, the tresillo should feel like a groove in your body rather than a pattern you are counting.",
+      "watchOut": "The most common failure is letting the 3-3-2 collapse back into straight eighths. Your ear is so trained to hear groups of two and four that the asymmetrical grouping will try to straighten itself out, especially as you add melodic complexity. The fix is your foot: keep tapping quarter notes and make sure the tresillo accents land where they should relative to your foot. If the accents start drifting onto the beat, stop, go back to muted strums, and rebuild the feel before adding notes back."
+    },
+    "guitar:pitchConstraint:leaps": {
+      "character": "Leaps feel like your fretting hand is vaulting across strings — skipping frets, jumping from the low E to the B string in one motion. There is a thrill in it, like the wide intervals you hear in surf-rock melodies or Wes Montgomery octave runs. Your pick hand has to commit fully because hesitation between distant strings kills the phrase dead.",
+      "whyPractice": "Leaps force you to internalize the fretboard as a grid, not just a linear ladder. You build the muscle memory for string skipping and position jumps that separate campfire strumming from real melodic playing. Over time, your fretting hand starts to see intervals as shapes rather than counting frets.",
+      "steps": [
+        "Set the drone and metronome at a comfortable tempo. Play any scale note, then skip at least one scale degree before playing the next.",
+        "Start with leaps on adjacent strings — for example, root on the fifth string to the fifth on the third string. Feel the diagonal movement across the fretboard.",
+        "Gradually widen the leaps: try jumping from a low root to a high fifth, crossing three or four strings in one move.",
+        "Use your pick hand deliberately — practice the string skip with a clean downstroke on each landing note. No sloppy in-between string noise.",
+        "Mute unused strings with your fretting hand palm or unused fingers to keep the leaps clean against the drone.",
+        "Vary the direction: leap up, then leap down. Avoid always jumping in the same direction.",
+        "Once comfortable, try landing each leap on a strong beat so the jumps feel intentional, not chaotic."
+      ],
+      "progression": [
+        "Beginner: Leap between two strings only (fifth string to third string), staying in one position. Focus on clean string skips with no buzzing.",
+        "Intermediate: Leap across three or more strings and shift positions between leaps. Mix ascending and descending leaps within one phrase.",
+        "Advanced: Combine leaps with slides or hammer-ons at the landing note. Play leaps at faster tempos while keeping every note ring clearly against the drone."
+      ],
+      "examples": [
+        "Root on the sixth string to fifth on the third string, sliding into it from one fret below.",
+        "Third on the fourth string to root an octave higher on the second string — a big diagonal jump.",
+        "Fifth high up on the first string to root down on the fifth string, letting the low note ring into the drone.",
+        "Second on the third string to seventh on the first string, using a position shift to reach it.",
+        "Root on the fifth string to sixth on the second string to root on the first string — a zigzag climbing the fretboard."
+      ],
+      "etude": "Over the drone at a slow tempo: play the root on the fifth string (let it ring one beat), leap to the fifth on the third string (one beat), leap down to the third on the fourth string (one beat), rest one beat. Next phrase: play the second on the fifth string, leap to the seventh on the second string with a slide into it, leap to the high root on the first string, rest. Repeat the sequence, varying which scale degrees you land on but always skipping at least one degree between notes.",
+      "watchOut": "The most common failure is ghost notes — accidentally catching a string between your start and landing during the skip. Anchor your pick hand and practice the skip motion slowly until you can cross strings cleanly. If you hear unwanted ringing, your muting hand is asleep."
+    },
+    "guitar:pitchConstraint:stepwise": {
+      "character": "Stepwise motion on guitar feels like your fingers are walking along the fretboard in small, deliberate steps — one fret or one string at a time, never jumping. It is the smooth, snaking quality you hear in Mark Knopfler melodic lines or a slow Khruangbin bass run. Each note hands off to the next like a bead on a string.",
+      "whyPractice": "Stepwise playing builds the linear fretboard map that most guitarists skip. It trains your fingers to know exactly where the next scale degree lives in any position — the foundation for smooth legato runs and confident position playing.",
+      "steps": [
+        "Start on any scale note in one position. Move only to the note directly above or below it in the scale — never skip.",
+        "Keep your fretting hand relaxed and close to the fretboard. Each finger should hover right over its assigned fret.",
+        "When you reach the highest note available in your position, reverse direction.",
+        "Experiment with legato: use hammer-ons going up and pull-offs going down instead of picking every note.",
+        "Try the same stepwise motion on a single string, sliding between frets, to feel the horizontal geography of the scale.",
+        "Now try it across strings in one position — feel how the scale wraps from string to string vertically.",
+        "Vary your phrasing: play three steps up, one step down. Create little waves within the stepwise constraint."
+      ],
+      "progression": [
+        "Beginner: Stay in one position (four-fret span). Walk up and down the scale on two or three strings using alternate picking.",
+        "Intermediate: Connect two positions by sliding on one note to shift. Maintain stepwise motion through the position change.",
+        "Advanced: Play stepwise across the full range of the fretboard using slides and position shifts, mixing legato and picked notes."
+      ],
+      "examples": [
+        "Root, second, third, second, root — all within a four-fret box on the middle strings. Pure walking motion.",
+        "Fifth, sixth, seventh, root (octave) — climbing across two strings with one note per string crossing.",
+        "Third, second, root, seventh (below), root — a gentle dip and return on a single string using slides.",
+        "Root, second, third, fourth, fifth — played entirely on one string, sliding up the neck one scale degree at a time.",
+        "High root, seventh, sixth, fifth, fourth, third — a long descending walk across four strings in one position."
+      ],
+      "etude": "Over the drone, start on the root in a low position. Walk up the scale one degree at a time across two strings using alternate picking. When you reach the fifth, pause for one beat, then reverse and walk back down to the root. Next phrase: start on the third, walk up to the seventh using hammer-ons only, pause, then walk back down using pull-offs.",
+      "watchOut": "The trap is monotony — walking up and down in a straight line like a scale exercise. Remember you can reverse direction at any point and repeat notes. The constraint is adjacent notes only, not play the scale ascending then descending. Make phrases, not drills."
+    },
+    "guitar:pitchConstraint:arch": {
+      "character": "Arch contour on guitar feels like your hand is drawing a hill on the fretboard — climbing up the strings or up the neck to a peak note, then gracefully descending. It is the shape of a classic David Gilmour solo phrase or a surf guitar melody cresting and falling like a wave.",
+      "whyPractice": "Arch phrasing teaches you to think in shapes rather than individual notes. On guitar, this means learning to plan fretboard routes — which position to start in, where the peak lives, and how to descend without retracing the exact same path.",
+      "steps": [
+        "Choose a starting note in a low-to-mid range of your current position. This is the base of your arch.",
+        "Climb upward through the scale — you can use steps, small leaps, or a mix.",
+        "Land on your peak note with intention. Give it vibrato or a bend to mark it as the top.",
+        "Descend back down, but vary the path — take a different string route or use slides.",
+        "End the phrase at or near your starting pitch. Let the last note decay into the drone.",
+        "Practice making the peak land on a strong beat for maximum musical impact.",
+        "Try arches of different sizes: a small arch across three notes, a grand arch spanning two octaves."
+      ],
+      "progression": [
+        "Beginner: Build arches within one position using five or six notes — three climbing, one peak, two descending.",
+        "Intermediate: Extend arches across two positions, using a slide or shift to reach the peak.",
+        "Advanced: Create arches spanning the full neck — start low, peak near the twelfth fret or higher, descend through a different position."
+      ],
+      "examples": [
+        "Root, third, fifth (peak with vibrato), third, root. Simple symmetric arch in one position.",
+        "Second, third, fifth, seventh, high root (peak, hold two beats), sixth, fourth, second. Wide arch crossing four strings.",
+        "Root, second, third (slide up), fifth, sixth (peak with half-step bend), fifth, third, root. Arch with a position shift.",
+        "Fifth, sixth, root, third (peak on the first string), root, sixth, fifth. Compact arch on the top two strings.",
+        "Low root, third, fifth, seventh, high third (peak near twelfth fret), root, seventh, fifth, third, low root. Grand two-octave arch."
+      ],
+      "etude": "Over the drone at moderate tempo: begin on the root, fifth string. Ascend stepwise — root, second, third — then leap to the fifth on the third string. Continue climbing: sixth, seventh, land on the high root on the second string as your peak. Give it vibrato for two beats. Now descend: seventh on the second string, fifth on the third string (skipping the sixth), third, second, back to root. Rest two beats.",
+      "watchOut": "The biggest pitfall is the mountain range — hitting multiple peaks in one phrase instead of one clear summit. Commit to one peak per phrase."
+    },
+    "guitar:pitchConstraint:seed": {
+      "character": "Seed playing on guitar feels like you have found a little three-note motif somewhere on the fretboard and you are turning it over and over — like Nile Rodgers worrying a funk riff or John Frusciante orbiting a pentatonic cell. Your fingers settle into a small cluster of frets and the variations bloom from that tiny home base.",
+      "whyPractice": "This builds motivic development — the ability to take a small idea and make it evolve. On guitar, it trains you to see multiple fingering options for the same three notes and to vary articulation rather than always reaching for new notes.",
+      "steps": [
+        "Pick any three scale notes that sit comfortably under your fingers. This is your seed.",
+        "Play the seed simply — just the three notes in order, picked cleanly. Repeat twice to establish the motif.",
+        "Now vary ONE element: change the order of the three notes.",
+        "Next variation: keep the same three notes but change the rhythm.",
+        "Next: swap out one of the three notes for a neighboring scale degree.",
+        "Try articulation variations: hammer-on the second note, or slide into the first note.",
+        "After four or five variations, let the seed grow — add a fourth note, then return to the three-note core."
+      ],
+      "progression": [
+        "Beginner: Choose three notes on two adjacent strings. Vary only order and rhythm.",
+        "Intermediate: Allow one note substitution per variation. Explore the same seed in a different octave.",
+        "Advanced: Develop the seed across multiple positions using slides. Layer in bends, harmonics, and dynamic shifts."
+      ],
+      "examples": [
+        "Seed: root, third, fifth. Variation 1: fifth, third, root. Variation 2: root, fifth, third.",
+        "Seed: fifth, sixth, root. Variation: replace sixth with seventh — motif rises higher but keeps its shape.",
+        "Seed: root, second, third. Play with all hammer-ons, then all pull-offs, then picked staccato — same notes, three characters.",
+        "Seed: third, fifth, root. Slide up to a higher position and replay the same intervals on different strings.",
+        "Seed: root, fourth, fifth. Add a bend: pick the fourth and bend toward the fifth, then release and land on root."
+      ],
+      "etude": "Choose a seed: root on the fourth string, third on the third string, fifth on the third string. Play it straight, two beats per note, rest two beats. Repeat reversed: fifth, third, root. Now play it fast — all three notes in one beat, rest three beats. Next: replace the fifth with the sixth. Now slide the original seed shape up one position and play it there. Return to original and play the seed one final time, slowly.",
+      "watchOut": "The failure mode is abandoning the seed too quickly. If you swap out two of the three notes, you have a new idea, not a variation. Keep at least two of the original three notes for every variation."
+    },
+    "guitar:pitchConstraint:forbidden": {
+      "character": "Forbidden notes turn your fretboard into a minefield — certain scale degrees are off limits, and your fingers have to navigate around the gaps. It is the angular, unexpected quality you hear in post-punk guitar lines. Your hand learns new pathways because the familiar ones are blocked.",
+      "whyPractice": "This forces fretboard awareness at a deep level — you cannot rely on muscle memory patterns because some of the usual landing spots are gone. It builds real-time interval visualization and helps you discover fresh melodic colors hiding in scale degrees you normally skip.",
+      "steps": [
+        "Identify which scale degrees are forbidden. Visualize where those notes sit in your current position — picture those frets as dead zones.",
+        "Play slowly at first. Before each note, check: is this fret one of the forbidden degrees?",
+        "Notice the new intervals this creates. Removing the third forces you into fourths and fifths.",
+        "Use the forbidden frets as physical landmarks. Your fingers can touch them for muting, but never let them sound.",
+        "Practice phrases that approach a forbidden note and redirect at the last moment.",
+        "Try the same forbidden set in a different position on the neck."
+      ],
+      "progression": [
+        "Beginner: One forbidden note. Stay in one position and simply skip that degree.",
+        "Intermediate: Two forbidden notes. Navigate across multiple strings, noticing the unusual interval jumps.",
+        "Advanced: Three forbidden notes. Move across positions while tracking which frets are off-limits in each new area."
+      ],
+      "examples": [
+        "Forbidden: third. Play root, second, skip third, fourth, fifth. The missing third gives a suspended, open quality.",
+        "Forbidden: root. Play second, third, fifth, sixth, seventh, never resolving to home. Feels restless.",
+        "Forbidden: fifth and seventh. Play root, second, third, fourth, sixth. The usual strong tones are gone.",
+        "Forbidden: second. Leap from root to third, then step to fourth, fifth. The opening leap becomes a signature.",
+        "Forbidden: fourth and sixth. Root, second, third, fifth, seventh. Only the strong scale tones remain — bold and skeletal."
+      ],
+      "etude": "Set forbidden notes: third and seventh. Over the drone, play root on the fifth string, step to the second, skip the forbidden third and land on the fourth. Continue to fifth, play sixth then skip to root. Descend: high root, sixth, fifth, fourth, second, root. Play four phrases, each starting on a different available degree.",
+      "watchOut": "The classic mistake is overcorrecting by avoiding the area around the forbidden note entirely. If the third is forbidden, you can still play the second and fourth — you just cannot land on the third. Stay close to the danger zones; the tension of near-misses makes better music."
+    },
+    "guitar:pitchConstraint:targetLanding": {
+      "character": "Target landing feels like every phrase is a road trip with one non-negotiable destination — you can take any route, wander through any fretboard neighborhood, but you always end up on that one target note. It is the gravitational pull you hear in blues guitar. Your fretting hand can roam, but it always knows where home is.",
+      "whyPractice": "This builds phrase resolution — the ability to create tension and release it to a specific point. It trains your fretboard navigation to be goal-oriented: you start seeing routes TO a target note from any position.",
+      "steps": [
+        "Identify your target note and find it in at least two places in your current position.",
+        "Start a phrase anywhere in the scale. Wander freely for three or four notes.",
+        "As you approach the phrase ending, steer toward your target. Slide, step, or leap to it.",
+        "Land on the target with conviction — vibrato, sustain, or a slight bend and release.",
+        "Rest for a beat or two, then launch a new phrase from a different starting point.",
+        "Experiment with approaching from above (descending) and from below (ascending).",
+        "Try landing on the target in a different octave each phrase."
+      ],
+      "progression": [
+        "Beginner: Target is the root. Wander within one position and end every phrase on it.",
+        "Intermediate: Target is a non-root degree (fifth or third). Wander across two positions.",
+        "Advanced: Target is a tension note (second or seventh). Use bends, slides, or harmonics to resolve to it."
+      ],
+      "examples": [
+        "Wander: fifth, sixth, fourth, third, second — slide into root (target).",
+        "Wander: root, third, fifth, seventh, sixth — land on fifth (target) with vibrato.",
+        "Wander: high root, seventh, fifth — leap down to low third (target).",
+        "Wander: second, fourth, sixth, fifth — bend the fourth up toward the third (target).",
+        "Wander across two positions: start near the nut, slide up, play three notes, slide down to land on the target root."
+      ],
+      "etude": "Target note: the fifth. Over the drone, begin on the root in a low position. Climb: root, second, third — pause — then fourth, land on fifth with vibrato. Hold two beats. New phrase: start on the high root, descend seventh, sixth, skip to fourth, slide up into fifth (target). Third phrase: start on the third, leap to the seventh, step down sixth, fifth — arrive from above. Final phrase: play the fourth, bend it slowly toward the fifth, release, pick the fifth cleanly.",
+      "watchOut": "The danger is making the target landing predictable by always approaching from the same direction. Vary the approach direction, the number of notes before landing, and the technique you use to arrive."
+    },
+    "guitar:pitchConstraint:questionAnswer": {
+      "character": "Question and answer on guitar feels like a conversation between two sides of your fretboard — the question phrase reaches upward with unresolved tension, the answer brings it back down to earth. Think of B.B. King call-and-response with his own guitar: one phrase asks, the next replies.",
+      "whyPractice": "This builds phrase structure and melodic storytelling. It trains you to think in pairs — to leave space for a response and create contrasting phrase shapes. It develops your sense of tension and resolution across the fretboard.",
+      "steps": [
+        "Play a question phrase: start low, move upward, end on an unresolved note (second, fourth, or sixth).",
+        "Pause for one or two beats. Let the question hang over the drone.",
+        "Play an answer phrase: start near where the question ended and descend, landing on a resolved note (root, fifth, or third).",
+        "Make the two phrases roughly the same length.",
+        "Vary the starting point of each question.",
+        "Try adding a bend at the top of the question — it emphasizes the upward reaching quality.",
+        "Make the answer phrase final note ring out with confidence."
+      ],
+      "progression": [
+        "Beginner: Questions go up in one position, answers come down in the same position. Three to five notes each.",
+        "Intermediate: Questions can shift up the neck, answers shift back down. Vary length and rhythm.",
+        "Advanced: Questions use one timbral area (wound strings, lower frets), answers use another (unwound strings, higher frets)."
+      ],
+      "examples": [
+        "Question: root, second, third, fourth (hang). Answer: fourth, third, second, root (walk home).",
+        "Question: third, fifth, sixth, seventh (climbing, slight bend on seventh). Answer: seventh, fifth, third, root (descending firm landing).",
+        "Question: root, third, fifth, high root (leap up, sustain). Answer: high root, seventh, fifth, third, root (long cascade down).",
+        "Question: second, fourth, sixth (staccato, rising). Answer: fifth, third, root (legato, falling — mirror image).",
+        "Question: root on low string, slide up to fifth in higher position (suspended). Answer: fifth, fourth, third, second, root descending back."
+      ],
+      "etude": "Over the drone at a laid-back tempo. Question 1: pick root on the fifth string, hammer-on to second, pick third on the fourth string, slide up to fifth. Hold two beats. Answer 1: from fifth, step to fourth, third, second, land on root with vibrato. Rest two beats. Question 2: start on third, climb to fifth, sixth, bend into seventh. Let the bend ring. Answer 2: release bend to sixth, pull-off to fifth, step to third, resolve on root an octave lower.",
+      "watchOut": "The most common failure is making questions and answers that sound the same — both running up and down the scale. Questions MUST end higher than they start, answers MUST end lower. If both phrases have the same shape, you are playing two statements, not a conversation."
+    },
+    "guitar:rhythmConstraint:river": {
+      "character": "River rhythm on guitar feels like a steady flowing stream of quarter notes — your pick hand falls into a hypnotic, even pulse, one note per beat, no gaps, no rushes. It is the meditative quality of a Tommy Guerrero instrumental or a Tinariwen desert groove where the guitar just flows.",
+      "whyPractice": "Even quarter-note flow trains your internal clock and exposes timing inconsistencies in your picking. It builds alternate picking discipline and teaches you to separate rhythm (locked) from melody (free).",
+      "steps": [
+        "Set your metronome. Pick one note per beat — downstroke on every beat. No extra notes, no rests.",
+        "Focus on making every note the same duration and volume.",
+        "Move through the scale slowly, one note per beat.",
+        "Switch to alternate picking: down on beats 1 and 3, up on 2 and 4.",
+        "Add melodic interest — change direction, skip degrees — but NEVER change the rhythm.",
+        "Try the river flow on a single string, sliding between notes.",
+        "Practice over four bars without stopping or hesitating."
+      ],
+      "progression": [
+        "Beginner: All downstrokes, one position, stepwise motion. Lock each pick to the metronome click.",
+        "Intermediate: Alternate picking, moving across positions with slides. Melodic choices get adventurous, rhythm stays locked.",
+        "Advanced: Mix picked notes with legato while maintaining the quarter-note pulse."
+      ],
+      "examples": [
+        "Root, second, third, fifth — each on its own beat. Four notes, four beats, perfectly even.",
+        "Fifth, fourth, third, root on one string with slides, one per beat.",
+        "Root, fifth, third, root (octave higher) — steady quarters with string crossings.",
+        "Third, fourth, sixth, seventh — alternate picked, crossing strings, one note per beat.",
+        "Long descending line: high root, seventh, sixth, fifth, fourth, third, second, root — eight beats of even quarters."
+      ],
+      "etude": "Metronome at moderate tempo. Begin on root, fifth string. Alternate picking. Ascend: root, second, third, fourth (four beats). Continue: fifth, sixth, seventh, high root (four beats). Descend a different way: high root, sixth, fifth, third (four beats). Continue: second, root, seventh below, root (four beats). Sixteen beats of continuous, even quarter notes.",
+      "watchOut": "The sneaky failure mode is micro-rushes on string crossings. When your pick crosses strings, there is a natural tendency to speed up. Slow down, isolate crossings, make sure the new-string note lands exactly on the beat."
+    },
+    "guitar:rhythmConstraint:burst": {
+      "character": "Burst rhythm on guitar is pure explosive energy — a fast flurry of four to six notes crammed into a beat or two, then absolute silence. It is the machine-gun lick that punk and surf guitarists fire off before dropping back to nothing.",
+      "whyPractice": "Bursts train fast picking under pressure AND the discipline to STOP. Most guitarists can play fast but cannot stop cleanly. Bursts also build rhythmic contrast.",
+      "steps": [
+        "Set the metronome. Play four to six notes as fast as you can within one or two beats, then rest.",
+        "Start with four-note bursts: sixteenth notes filling one beat, then three beats of silence.",
+        "Use alternate picking — down-up-down-up, fast and tight.",
+        "The silence must be REAL silence. Palm mute or lift your fretting hand to kill vibration.",
+        "Vary where in the bar the burst lands.",
+        "Make each burst a mini-phrase with direction.",
+        "Gradually increase the speed within the burst."
+      ],
+      "progression": [
+        "Beginner: Four-note bursts on one string, all picked, with three beats of silence.",
+        "Intermediate: Five or six-note bursts crossing two strings, mixing picked and hammered notes.",
+        "Advanced: Rapid bursts using legato runs across three strings, landing on a target note that rings into the silence."
+      ],
+      "examples": [
+        "Burst: root-second-third-fifth (four fast notes), then three beats of silence.",
+        "Burst: seventh-sixth-fifth-third-root (five-note descending cascade), silence.",
+        "Burst: root-third-root-fifth (four notes, two string crossings), silence.",
+        "Burst on top string: fifth-sixth-seventh-root-seventh (five fast notes with turnaround), cut to silence.",
+        "Syncopated burst: rest on beat 1, burst starts on the and-of-1."
+      ],
+      "etude": "Bar 1: beat 1, four-note ascending burst (root-second-third-fifth), palm mute — silence for beats 2, 3, 4. Bar 2: rest beats 1-2, burst on beat 3 (high root-seventh-sixth-fifth, descending), silence beat 4. Bar 3: burst on the and-of-2 (third-fifth-sixth-fifth), silence. Bar 4: full silence. The empty bar makes the next burst hit harder.",
+      "watchOut": "The dying burst — notes trail off gradually instead of cutting to silence sharply. After your last note, immediately flatten your fretting fingers to mute everything. Sound to silence like flipping a switch."
+    },
+    "guitar:rhythmConstraint:space": {
+      "character": "Space is about what you do not play. At least half of every bar is silence, which means your notes become rare and precious. It is the Miles Davis approach applied to guitar: the long pauses, the way a note sits alone and means something.",
+      "whyPractice": "Space is the hardest constraint for guitarists because the instrument is always right there under your fingers. Learning to rest builds phrase maturity and the confidence to let the drone carry the music while you wait.",
+      "steps": [
+        "Count four beats per bar. You may only play notes during two beats (or fewer).",
+        "Start by playing on beats 1 and 2, resting on 3 and 4.",
+        "Now reverse: rest on 1 and 2, play on 3 and 4.",
+        "Play a single note on beat 1, then rest for the entire remaining bar.",
+        "Vary which beats you fill across consecutive bars.",
+        "Use the silence actively: listen to the drone, feel the metronome.",
+        "When you do play, make each note count — vibrato, a bend, a slide."
+      ],
+      "progression": [
+        "Beginner: Play on beats 1 and 2 only, rest on 3 and 4.",
+        "Intermediate: Vary which two beats you use each bar. Add expression to played notes.",
+        "Advanced: Play just one note per bar, placed on a different beat each time."
+      ],
+      "examples": [
+        "Root on beat 1 with vibrato, rest, rest, rest.",
+        "Rest, rest, fifth on beat 3 (slide into it), third on beat 4.",
+        "Third on beat 1, rest, rest, root on beat 4. Two notes framing silence.",
+        "Rest, second on beat 2 (gentle bend), rest, rest.",
+        "Two bars: bar 1 entirely silent. Bar 2: root on beat 1, fifth on beat 2."
+      ],
+      "etude": "Bar 1: root on beat 1 with firm downstroke and vibrato. Rest beats 2-4. Bar 2: full silence. Bar 3: rest, rest, fifth on beat 3 with a slide from below. Bar 4: third on beat 1, let it decay, rest. Bar 5: rest, second on beat 2 with slight bend, rest, rest. Bar 6: full silence.",
+      "watchOut": "Nervous filling — you rest for a beat, get uncomfortable, and sneak in an extra note. Trust the space. Count out loud if needed."
+    },
+    "guitar:rhythmConstraint:offbeat": {
+      "character": "Offbeat playing on guitar has that reggae skank energy — your pick hand lifts off the downbeat and lands between the clicks, on the ands. It feels syncopated and buoyant. It is the rhythmic engine of ska, reggae, and funk guitar.",
+      "whyPractice": "Offbeats train rhythmic independence — the ability to feel the beat internally while playing against it. Essential for reggae upstrokes, funk scratches, and any syncopated rhythm part.",
+      "steps": [
+        "Set the metronome. Tap your foot on every click but play ONLY between the clicks — on the and of each beat.",
+        "Start with upstrokes only — the natural motion for reggae and ska guitar.",
+        "Count out loud: 1-AND-2-AND-3-AND-4-AND. Only play on the ANDs.",
+        "Play one note per offbeat at first. Same note, four offbeats per bar.",
+        "Once solid, start changing notes — move through the scale but keep every note between beats.",
+        "Try accenting different offbeats: the and-of-2 and and-of-4 louder.",
+        "Practice stopping on an offbeat — three offbeats, leave the fourth empty."
+      ],
+      "progression": [
+        "Beginner: One note per offbeat, all upstrokes, one position.",
+        "Intermediate: Vary notes and use both up and downstrokes on offbeats. Leave some offbeats empty.",
+        "Advanced: Mix offbeat single notes with offbeat chord stabs. Add ghost notes on the downbeats."
+      ],
+      "examples": [
+        "All four offbeats: (rest)-root-(rest)-third-(rest)-fifth-(rest)-root.",
+        "Selective offbeats: only and-of-2 and and-of-4. Classic reggae.",
+        "Offbeat scale run: (rest)-root-(rest)-second-(rest)-third-(rest)-fourth.",
+        "Ghost note groove: muted scratch on downbeats, melodic notes on offbeats.",
+        "Offbeat with space: only two offbeats filled, the rest empty."
+      ],
+      "etude": "Bar 1: mute strings and scratch on beats 1-4. Add: root on and-of-2 with upstroke, fifth on and-of-4 with upstroke. Bar 2: same scratches, third on and-of-1, root on and-of-3. Bar 3: drop scratches. Play only on offbeats: root, third, fifth, third. Bar 4: pick just one offbeat — and-of-4 — play root and let it ring.",
+      "watchOut": "Drifting onto the downbeat — you start on the offbeat but gradually creep forward until you play right on the click. Keep your foot tapping on the clicks and deliberately delay your pick stroke."
+    },
+    "guitar:rhythmConstraint:rhythmSeed": {
+      "character": "Rhythmic seed on guitar is like a groove riff burned into your picking hand — a short rhythmic pattern that repeats over and over while your fretting hand changes the notes underneath. It is the foundation of riff-based guitar playing: think Nile Rodgers funk or surf-rock tremolo patterns.",
+      "whyPractice": "This separates your rhythm hand from your pitch hand — a critical guitar skill. Most players let picking rhythm follow note choices, which makes playing shapeless. By locking in a rhythmic cell and varying only notes, you build groove consistency.",
+      "steps": [
+        "Choose a short rhythmic cell — three or four beats.",
+        "Play this cell on a single note first. Repeat four times. Lock the rhythm into your picking hand.",
+        "Now keep the exact same picking pattern but change the fretting hand notes.",
+        "Try the cell starting on different beats of the bar.",
+        "Vary only the pitches: ascend, descend, leap — but the rhythmic cell never changes.",
+        "After eight to twelve repetitions, introduce one small rhythmic variation, then return.",
+        "Try the cell with different articulations: all downstrokes, alternate picking, palm-muted."
+      ],
+      "progression": [
+        "Beginner: A simple two-beat cell repeated with different scale notes in one position.",
+        "Intermediate: A three-beat or syncopated cell across two positions.",
+        "Advanced: A complex cell with ties or rests, applied across the full fretboard."
+      ],
+      "examples": [
+        "Cell: eighth-eighth-quarter-rest. Apply: root-second-third (rest), fifth-sixth-seventh (rest).",
+        "Cell: dotted quarter-eighth-half. A lilting long-short-long groove.",
+        "Cell: sixteenth-sixteenth-eighth-quarter rest. Quick ba-da-BUM (rest).",
+        "Cell: quarter-eighth rest-eighth-quarter. A groove with a gap in the middle.",
+        "Cell: triplet-quarter-rest. Three fast notes then one sustained."
+      ],
+      "etude": "Cell: eighth-eighth-quarter-half rest. Play four times: root-second-third, rest. Third-fifth-sixth, rest. Sixth-fifth-third, rest (descending). Fifth-third-root, rest. Same rhythm every time. Then play eight more rounds freely but keep the da-da-DAH-rest cell intact.",
+      "watchOut": "Letting the rhythmic cell morph without noticing. Record yourself: does the cell sound identical on repetition 1 and repetition 8? The rhythm is a CONSTANT."
+    },
+    "guitar:rhythmConstraint:triplets": {
+      "character": "Triplets on guitar have a rolling, galloping energy — three notes per beat creating a da-da-da pulse that is somewhere between straight and swung. It is the rhythmic engine behind shuffle blues, Irish jig-style picking, and rolling Dire Straits fingerpicked passages.",
+      "whyPractice": "Triplets train a subdivision most guitarists avoid. Mastering them unlocks shuffle feel, 6/8 grooves, and the ability to switch between straight and swing at will. It also develops grouping notes in threes across strings — fundamental for sweep arpeggios.",
+      "steps": [
+        "Set metronome to a slow tempo. Count trip-let-trip-let (three syllables per beat).",
+        "Start on a single note. Pick in triplets: down-up-down (beat 1), up-down-up (beat 2).",
+        "Add notes: one scale degree per triplet group.",
+        "Next: change the note on every stroke — three different notes per beat.",
+        "Practice triplets on adjacent strings: one note per string, rolling across three strings per beat.",
+        "Accent the first note of each triplet group.",
+        "Once comfortable, mix triplet beats with straight quarter-note beats."
+      ],
+      "progression": [
+        "Beginner: Same note triplets, all on one string. Focus on even spacing.",
+        "Intermediate: Changing notes within each triplet, crossing two strings per beat.",
+        "Advanced: Rolling triplets across three strings, mixed with legato triplets for speed."
+      ],
+      "examples": [
+        "Single-note triplets: root-root-root, second-second-second, third-third-third. One pitch per beat, three attacks.",
+        "Scalar triplets: root-second-third (beat 1), fourth-fifth-sixth (beat 2), seventh-root-seventh (beat 3).",
+        "Rolling triplets across strings: root (sixth string), fifth (fifth string), root (fourth string) — three per beat.",
+        "Triplets with repeated tones: root-third-root, root-fifth-root, root-sixth-root.",
+        "Legato triplets on one string: pick-hammer-pull — three notes, one beat."
+      ],
+      "etude": "Bar 1: root-root-root, second-second-second, third-third-third, fifth-fifth-fifth — triplets, one note per beat repeated three times. Bar 2: root-second-third, fifth-third-second, root-second-third, fifth-sixth-seventh — scalar triplets. Bar 3: rolling triplets across strings, shifting starting note each beat. Bar 4: just the first note of each triplet, rest for the other two — quarter-note feel echoing the triplet groove.",
+      "watchOut": "Letting triplets morph into straight sixteenth notes or a dotted-eighth swing. True triplets are three EVEN notes per beat. Record yourself: groups of three or groups of four?"
+    },
+    "guitar:dynamics:swell": {
+      "character": "A swell on guitar feels like turning a volume knob from zero to ten and back — a slow bloom of sound rising from the faintest whisper of the pick barely grazing the string to a full, ringing attack that fills the room. The right hand controls everything: the distance of the pick from the bridge, the angle of attack, the pressure. The cut to silence at the end is the whole trick — damp the strings with your palm and let the room ring.",
+      "whyPractice": "Most guitarists have one default picking intensity and never leave it. The swell builds TRUE dynamic range in your picking hand — the ability to go from near-inaudible to commanding and back in a controlled arc. Without this skill, your solos and improvisations flatline at one volume level, and you lose one of the guitar's most expressive tools.",
+      "steps": [
+        "Start with your pick barely touching the string — so light that only a ghostly harmonic comes through. This is your floor.",
+        "Grow the picking intensity smoothly over 4 bars. Each note should be slightly louder than the last — think dimmer knob, not light switch.",
+        "As you get louder, move your picking position closer to the bridge — this adds brightness and bite to the crescendo naturally.",
+        "Aim the crest at the highest or most exposed note in the phrase — the fifth or the peak of the arc.",
+        "At the crest, stop cleanly — palm-mute the strings on a beat. Silence is the back half of the gesture.",
+        "Listen to the room after you stop. That decay is part of the musical statement.",
+        "Repeat and make the starting volume EVEN quieter — use less pick, more angle, brush the string with the edge."
+      ],
+      "progression": [
+        "Start by swelling a single repeated root note over 4 bars — pick pressure only, same fret, same string. Master the volume contour before adding pitch movement.",
+        "Swell across a scale ascent — root, second, third, fourth, fifth — each note picked slightly harder, cresting on the fifth with a full ring-out.",
+        "Reverse swell: start with a hard downstroke on the root, decay to barely audible by the fifth, then snap back to a forte accent note and palm-mute to silence."
+      ],
+      "examples": [
+        "Root on the low string, repeated 8 times with gradually increasing pick attack, palm-mute on the last beat.",
+        "Root → third → fifth ascending on one string, each note picked harder, fifth rings out at full volume, then cut.",
+        "Scale run from root up to fifth and back — swell up on the ascent, crest at the top, sustain the descent at forte, palm-mute on the final root.",
+        "Root → fifth leap on adjacent strings — start the root at ghost-note quiet, land the fifth with full pick attack, hold 2 beats, damp.",
+        "Two-bar arc: bar 1 barely audible on root and second, bar 2 crescendo through third and fourth, crest on fifth, cut."
+      ],
+      "etude": "Bars 1-2: root, second, third, fourth as quarter notes picked with the lightest possible touch — the pick should barely engage the string, each note fractionally harder than the last. Bars 3-4: fifth (held 2 beats at full pick attack — this is the crest, let it ring), fourth, third, second as quarter notes continuing at forte. Beat 1 of bar 5: root, palm-mute immediately to silence. Bar 5 beats 2-4: rest and listen to the room. Repeat, pushing the opening quieter each pass.",
+      "watchOut": "The most common failure is starting too loud. If your opening note is at a comfortable picking volume instead of near-silence, you have nowhere to grow and the swell becomes a mild bump. The fix is to start with the pick at such a shallow angle that you genuinely wonder if the note came out — trust that the crescendo will build from there. The second failure is a gradual decay instead of a clean cut at the end: use your palm to kill all string vibration decisively."
+    },
+    "guitar:dynamics:terraces": {
+      "character": "Terraces on guitar feel like stepping between three completely different rooms — a whisper room, a conversation room, and a concert hall. Each level is locked in and flat; the edges between them are hard switches in your picking hand. There is no ramp. The effect is architectural.",
+      "whyPractice": "This constraint breaks the habit of unconsciously picking harder as you climb the fretboard or softer as a phrase dies. It builds dynamic MEMORY in the picking hand — the ability to return to an exact attack intensity after leaving it.",
+      "steps": [
+        "Before you start, physically define three picking intensities — light brush, medium stroke, full attack — and test each on the root.",
+        "Play the first 2 bars at light brush intensity. Lock it. Do not drift louder even as the melody rises.",
+        "On the downbeat of bar 3, switch HARD to medium stroke. The jump must be audible and deliberate, not a fade.",
+        "Hold medium stroke intensity for its full duration.",
+        "On the next terrace change, switch to full attack (or back down to light brush).",
+        "Listen specifically for the 'click' at each edge — if you hear any smoothing, you have crescendoed unconsciously.",
+        "Between rounds, change the order: ascending one round, then scrambled the next."
+      ],
+      "progression": [
+        "Two terraces only — light picking for 2 bars, full attack for 2 bars. Master the hard switch.",
+        "Three terraces ascending — light, medium, full — over 6 bars.",
+        "Non-ascending terraces — medium, light, full, light in a jagged pattern."
+      ],
+      "examples": [
+        "2 bars light brush on root and second, 2 bars full attack on third and fourth, 2 bars light brush on fifth.",
+        "Light root, medium third, forte fifth — one note per bar, three hard dynamic levels.",
+        "Alternating light and full attack every bar on a rocking root-third pattern.",
+        "Four terraces across 8 bars: pp root, mf third, ff fifth sustained, p fourth-third-second-root.",
+        "Forte root up one octave, light fifth, medium third, light root — scrambled dynamics."
+      ],
+      "etude": "Bar 1-2: root, second as half notes at light brush picking. Bar 3-4: third, fourth as half notes at medium stroke (hard switch). Bar 5: fifth as whole note at full attack (hard switch). Bar 6: fifth to fourth at full attack. Bar 7-8: third, second, root at light brush (subito drop). Zero drift between terraces.",
+      "watchOut": "The near-universal failure is letting the light-picking section creep louder as the phrase progresses. The fix is to CONSCIOUSLY back off at the end of each terrace — aim to end the light section even softer than you started it."
+    },
+    "guitar:dynamics:whisper": {
+      "character": "Whisper guitar is the sound of a conversation you have to lean in to hear — each note barely there, hanging in the air like smoke. The paradox is that it demands MORE control from both hands, not less: the pick must be precise, the fretting hand clean, every note centered, because at this volume any buzz or rattle is exposed.",
+      "whyPractice": "Whisper-quiet playing is the deepest picking-hand control exercise. When volume drops, any sloppiness in pick angle, fret buzz, or muted strings becomes instantly audible — so you are forced to refine your pick grip, attack angle, and fretting-hand pressure simultaneously.",
+      "steps": [
+        "Sit in a quiet room — whisper dynamics get lost in ambient noise.",
+        "Hold the pick with a very light grip — the pick should almost float.",
+        "Start the first note with the pick barely engaging the string.",
+        "Keep your fretting hand precise — at this volume, fret buzz is magnified.",
+        "Put your attention on tone clarity — aim for a clean, bell-like tone on each note.",
+        "Listen for any scratchiness from the pick. If you hear it, angle the pick and lighten the attack.",
+        "If a note dies out, you have pressed too lightly with the fretting hand."
+      ],
+      "progression": [
+        "Sustained root at the quietest pick attack you can manage, 4 beats, clean tone.",
+        "Root → third → fifth → third → root at whisper volume, listening for pitch clarity on string crossings.",
+        "Full round at whisper dynamics climbing to the highest position and returning."
+      ],
+      "examples": [
+        "Root sustained at the softest pick attack, clean tone, 4 beats. Repeat 3 times.",
+        "Root → third → fifth → third → root, all whispered, each note clean.",
+        "Scale ascent root to fifth at whisper, careful on string crossings.",
+        "Two-bar phrase whispered arc with the fifth as the quiet peak.",
+        "Whisper a repeated root over the drone — test pick attack consistency."
+      ],
+      "etude": "Bars 1-2: root sustained for 8 beats at the absolute quietest pick attack with clean tone. Bars 3-4: root, second, third, fourth as quarter notes, still whispered. Bars 5-6: fifth sustained for 8 beats. Bars 7-8: fifth, fourth, third, second, root — descending and still whispered.",
+      "watchOut": "Guitarists confuse quiet playing with careless playing and let the fretting hand get sloppy — producing fret buzz and finger squeaks hidden at normal volume. The fix is to treat whisper volume as a magnifying glass on your technique."
+    },
+    "guitar:dynamics:accentMap": {
+      "character": "Accent mapping on guitar feels like a spotlight moving across a dim stage — your picking hand moves quietly through the line, then one note per bar gets a sharp, bright downstroke that cuts through. The accented note jumps out like a word in bold.",
+      "whyPractice": "This is the fundamental funk, blues, and improvisation skill of weighting notes unequally with your picking hand. Most beginners pick every note with identical force, which turns a melody into a list. Accent mapping builds the muscle to DECIDE which single note carries the meaning.",
+      "steps": [
+        "Before you start, decide WHICH note in each bar gets the accent.",
+        "Play the quiet surrounding notes with a light, angled pick stroke.",
+        "When the accent note arrives, dig in with a firm downstroke from the wrist.",
+        "The accent should be 2-3 dynamic levels louder than the surroundings.",
+        "Immediately AFTER the accent, return to the light pick attack.",
+        "The rhythm of the accents becomes its own inner pulse.",
+        "Experiment with moving the accent off beat 1."
+      ],
+      "progression": [
+        "Accent only on beat 1 of every bar — the strong beat.",
+        "Accent on the highest scale degree in each bar, wherever it falls rhythmically.",
+        "Accent on the 'and' of beat 2 — off-beat accents create funk or reggae feel."
+      ],
+      "examples": [
+        "Quiet root-second-third-fourth with the THIRD accented by a sharp downstroke.",
+        "Quiet fifth sustained for 3 beats, accent on the sixth on beat 4.",
+        "Four-bar phrase where the accent WALKS across the meter.",
+        "Quiet descending scale with an accent on the second scale degree.",
+        "Quiet root-third-fifth-third arpeggio with the accent on the fifth."
+      ],
+      "etude": "Bar 1: root, second, third, fourth — accent HARD on the third (beat 3). Bar 2: fifth, fourth, third, second — accent HARD on the fifth (beat 1). Bar 3: third, fourth, fifth, fourth — accent HARD on the fourth (beat 2). Bar 4: third, second, root, root — accent on the final root (beat 3).",
+      "watchOut": "The quiet notes drift louder so the accent loses contrast. The fix is to CONSCIOUSLY under-pick the unaccented notes. Also watch for tensing the whole arm — the dig-in should come from a wrist snap."
+    },
+    "guitar:dynamics:forte": {
+      "character": "Constant forte on guitar feels like filling the room with every note — each pick stroke committed, each string ringing at full resonance. The body stays loose, the wrist drives from a relaxed position, and the tone is big but not harsh.",
+      "whyPractice": "Most guitarists either cannot find real forte or produce it by strangling the pick and tensing the arm. This constraint builds SUSTAINABLE loud playing — wrist-driven attack, resonance awareness, and the confidence to take up sonic space.",
+      "steps": [
+        "Check your pick grip — firm but not death-grip. Forte comes from wrist speed, not squeeze pressure.",
+        "Start the first note at full volume immediately — no slow attack.",
+        "Keep the wrist RELAXED and fluid.",
+        "Listen to the guitar's resonance.",
+        "Keep the volume LOCKED across the whole phrase.",
+        "On higher frets and thinner strings, compensate consciously.",
+        "Breathe. Guitarists hold their breath at forte and tense up."
+      ],
+      "progression": [
+        "Sustained root for 4 beats at forte — full pick attack, relaxed grip.",
+        "Full scale ascent root to fifth at constant forte, attention to string crossings.",
+        "Extended phrase with a leap at constant forte — the string crossing at the leap is the test."
+      ],
+      "examples": [
+        "Sustained root for 4 beats at forte — no wavering.",
+        "Root, third, fifth arpeggio at constant forte — no volume bump or dip.",
+        "Scale ascent root to fifth with held fifth, then descent — every note equally present.",
+        "Leap from root to fifth, both at forte, identical volume.",
+        "Full-round arc, every note loud, every note ringing."
+      ],
+      "etude": "Bar 1: root held 4 beats at full attack. Bar 2: root, third, fifth, third at identical forte. Bar 3: fifth held 4 beats. Bar 4: fifth, fourth, third, second at forte. Bar 5: root one octave up held 2 beats, then descend. Bar 6: second, root, rest — palm-mute cleanly.",
+      "watchOut": "Guitarists confuse forte with tension and start death-gripping the pick. The tell is harsh tone and tired forearm. Forte comes from wrist speed against a relaxed hand, not brute force."
+    },
+    "guitar:articulation:legato": {
+      "character": "Legato on guitar is the sound of notes melting into each other — hammer-ons, pull-offs, and slides replacing the pick so that the melody flows like water across the fretboard. Each note dissolves into the next with no gap, no re-attack, no percussive click from the pick.",
+      "whyPractice": "Legato forces your fretting hand to generate volume and sustain on its own — hammer-ons must be firm, pull-offs must snap, slides must maintain energy. Without legato command, you are tethered to the pick for every note.",
+      "steps": [
+        "Pick the first note of each phrase, then use ONLY hammer-ons, pull-offs, and slides for the rest.",
+        "Hammer firmly right behind the fret wire.",
+        "Pull off with a slight sideways snap of the finger.",
+        "For slides, maintain even fretting pressure throughout.",
+        "Listen for any gap between notes — zero dead space.",
+        "On ascending runs, chain hammer-ons. On descending, chain pull-offs.",
+        "End each phrase with a slow slide or sustained note."
+      ],
+      "progression": [
+        "Two-note legato — hammer from root to second and pull back. Master the connection.",
+        "Full scale ascent using only one initial pick and all hammer-ons.",
+        "Large-interval legato — slide from root to fifth, hammer to sixth, pull off, slide back."
+      ],
+      "examples": [
+        "Root → second → third → fourth → fifth ascending, pick only the root, hammer everything else.",
+        "Root → fifth via slide, then descend using pull-offs only.",
+        "Undulating line: root, third, second, fourth, third, fifth — pick root, hammer and pull the rest.",
+        "Sustained root, slide into third, slide into fifth — true legato with no re-articulation.",
+        "Descending scale from fifth to root using pull-offs on every note."
+      ],
+      "etude": "Bar 1: pick root, hammer second (2 beats), hammer third (2 beats). Bar 2: hammer fourth (2 beats), slide to fifth (2 beats). Bar 3: fifth sustained 4 beats. Bar 4: pull off fifth to fourth, third, second, root as quarter notes. One initial pick stroke for the entire etude.",
+      "watchOut": "Weak hammer-ons that produce ghost notes instead of full-volume tones. The fix is to hammer with conviction, landing right behind the fret."
+    },
+    "guitar:articulation:staccato": {
+      "character": "Staccato on guitar feels like bouncing a ball — each note has a sharp attack and an immediate cutoff, with clear silence in between. The picking hand strikes and the fretting hand lifts almost simultaneously. Bright, percussive, rhythmically precise.",
+      "whyPractice": "Staccato trains right-hand and left-hand coordination — the ability to start and stop notes cleanly on command. Essential for funk rhythms, chicken-picking, and tight muted grooves.",
+      "steps": [
+        "Pick each note with a crisp downstroke.",
+        "Immediately lift your fretting finger to kill the sustain.",
+        "Alternatively, use a light palm mute from the picking hand.",
+        "The silence between notes is part of the music.",
+        "Keep the pitch CENTERED — staccato does not mean sloppy.",
+        "Use fretting-hand lift for single lines, palm-mute for chords.",
+        "Keep the overall line musical — crisp words in a sentence."
+      ],
+      "progression": [
+        "Staccato quarter notes on a single pitch, crisp and even.",
+        "Staccato scale ascent, one note per beat, each cut short.",
+        "Staccato eighth notes — faster, tighter coordination."
+      ],
+      "examples": [
+        "Root repeated 8 times as bounced quarter notes.",
+        "Root, third, fifth, third arpeggio — each picked and immediately damped.",
+        "Scale from root to fifth, one bounced note per beat.",
+        "Quick root-second-root-second staccato pattern.",
+        "Descending staccato from fifth to root in eighth notes."
+      ],
+      "etude": "Bar 1: root, root, root, root as staccato quarters. Bar 2: root, third, fifth, third bounced. Bar 3: fifth, fourth, third, second bounced. Bar 4: root, root, rest, root — two bounced, silence, one final bounce.",
+      "watchOut": "Using too much palm mute turns staccato into a muffled thud with no pitch. Let the note ring for a split second with full tone BEFORE cutting it off."
+    },
+    "guitar:articulation:slurredPairs": {
+      "character": "Slurred pairs on guitar have a lilting, rocking quality — each pair is a hammer-on or pull-off: two notes connected as one smooth gesture, with a brief silence before the next pair. It feels like a rhythmic pulse that turns a scale into a dance.",
+      "whyPractice": "This drills the musical unit of TWO through the hammer-on/pull-off pair — the foundation of all guitar ornamentation. It breaks the habit of picking every single note with equal weight.",
+      "steps": [
+        "Group notes mentally into pairs before you start.",
+        "Pick the first note of each pair.",
+        "Hammer-on (ascending) or pull-off (descending) to the second note.",
+        "After the second note, lift briefly to create a tiny silence before the next pair.",
+        "Feel each two-note unit as one gesture.",
+        "Keep the lilted, rocking feel consistent.",
+        "If pairs blur into continuous legato, you have lost the gaps."
+      ],
+      "progression": [
+        "Repeating root-second pairs on one string.",
+        "Ascending scale in pairs — pick root hammer second, pick third hammer fourth.",
+        "Wider-interval pairs — pick root slide to third, pick third slide to fifth."
+      ],
+      "examples": [
+        "Root-second pairs, rocking on one string.",
+        "Root-third, third-fifth, fifth-third, third-root — arpeggio in pairs.",
+        "Ascending scale as pairs: root-second, third-fourth, fifth-sixth.",
+        "Descending: upper root-seventh, sixth-fifth, fourth-third, second-root.",
+        "Mixed pairs with different techniques each time."
+      ],
+      "etude": "Bar 1: pick root → hammer second, gap, pick third → hammer fourth. Bar 2: pick fifth → pull-off fourth, gap, pick third → pull-off second. Bar 3: pick root → slide to third, gap, pick third → hammer fifth. Bar 4: pick fifth → pull-off third, gap, pick second → pull-off root.",
+      "watchOut": "Losing the slur (both notes get picked) or losing the gap (continuous legato). You need BOTH — the pair connected AND the space between pairs preserved."
+    },
+    "guitar:articulation:tenuto": {
+      "character": "Tenuto on guitar feels like pressing each note into the fretboard and holding it there — letting every note ring for its absolute full value. There is a stately, deliberate quality, like each note deserves its complete moment.",
+      "whyPractice": "Tenuto breaks the common habit of lifting the fretting finger too early. It trains HOLDING a note until the mathematically correct moment — the foundation of rhythmic integrity and sustain control.",
+      "steps": [
+        "Mentally divide each beat into subdivisions.",
+        "Pick with a small initial emphasis — a gentle lean.",
+        "Hold the fretting finger DOWN for the note's COMPLETE value.",
+        "At the exact moment the note should end, pick and fret the next note.",
+        "Each note gets that same small pick-attack lean.",
+        "Listen for premature string death on weak beats.",
+        "On string crossings, keep the previous string ringing until the exact moment you pick the new string."
+      ],
+      "progression": [
+        "Whole notes at tenuto — root held for 4 full beats, then second for 4.",
+        "Half notes — scale ascent with each note held its full two beats.",
+        "Quarter notes — faster, requires accurate subdivision."
+      ],
+      "examples": [
+        "Root held for 4 full beats with gentle pick lean.",
+        "Scale from root to fifth in half notes, each held full duration.",
+        "Quarter note arpeggio: root, third, fifth, third — each held exactly one beat.",
+        "Root (2 beats), second (2 beats), third (4 beats) — every note to its boundary.",
+        "Dotted rhythm: root 1.5 beats, third 0.5 beats, fifth 1.5 beats, third 0.5 beats."
+      ],
+      "etude": "Bar 1: root as half note (full 2 beats), third as half note (full 2 beats). Bar 2: fifth as whole note (all 4 beats). Bar 3: fifth half note, fourth half note. Bar 4: third quarter, second quarter, root half note held to bar line.",
+      "watchOut": "Lifting the fretting finger a sixteenth note early, especially before string crossings. Count subdivisions and keep the finger pressed until the exact moment the next note arrives."
+    },
+    "guitar:phraseLength:1bar": {
+      "character": "One-bar phrases on guitar feel like short declarative statements — play one idea, damp the strings, let the silence land. Nothing extra, no noodling, one fretboard idea at a time.",
+      "whyPractice": "Short phrases teach you to COMMIT to a single fretboard idea and let it breathe. If you cannot make a one-bar phrase musical on its own, you are relying on length to carry meaning.",
+      "steps": [
+        "Plan the fragment before you pick.",
+        "Play one bar of musical idea — a complete small gesture.",
+        "STOP. Damp the strings.",
+        "During the silence, listen to the room.",
+        "Take a mental breath and play another one-bar idea.",
+        "Feel each fragment as a complete sentence.",
+        "Resist connecting fragments into longer runs."
+      ],
+      "progression": [
+        "Identical fragment repeated — master the rest before varying content.",
+        "Two alternating fragments — call and response.",
+        "Every fragment is different — improvise a new complete idea each bar."
+      ],
+      "examples": [
+        "Root, second, third, second — damp. Rest. Repeat.",
+        "Root held 2 beats, hammer to third held 2 beats — damp.",
+        "Quick figure: root, third, fifth, third in eighths then palm-mute.",
+        "Single sustained fifth for 4 beats — damp. One note IS the thought.",
+        "Syncopated fragment with rests inside the bar."
+      ],
+      "etude": "Bar 1: root, second, third, second as quarters. Bar 2: full rest. Bar 3: third, fourth, fifth, fourth. Bar 4: full rest. Bar 5: fifth, sixth, fifth, third. Bar 6: full rest. Bar 7: root, third, fifth, root. Bar 8: full rest.",
+      "watchOut": "Running fragments together — either starting too early or letting the last note ring through the rest undamped."
+    },
+    "guitar:phraseLength:2bar": {
+      "character": "Two-bar phrases feel like complete sentences — a setup and a payoff. Enough room to develop a gesture: a question in bar 1, an answer in bar 2. The natural breath length for most guitar melodies.",
+      "whyPractice": "Two bars is the most common phrase length in Western song. It teaches you to THINK in sentences — pacing on the fretboard, knowing when to climb and when to resolve.",
+      "steps": [
+        "Plan a two-bar arc — where does bar 1 go, how does bar 2 complete it?",
+        "Play bar 1 as the SETUP.",
+        "Play bar 2 as the ANSWER.",
+        "Let the two bars feel like a SINGLE GESTURE.",
+        "Land the final note with intention.",
+        "Rest briefly between phrases.",
+        "Shape the arc: rise toward bar 1 end, peak in bar 2, resolve."
+      ],
+      "progression": [
+        "Symmetric — bar 1 ascends root to fifth, bar 2 descends back.",
+        "Call-and-answer — bar 1 rising question, bar 2 falling answer.",
+        "Asymmetric weight — bar 1 a held note, bar 2 active melodic line."
+      ],
+      "examples": [
+        "Bar 1: root, second, third, fourth. Bar 2: fifth, fourth, third, root.",
+        "Bar 1: root held 4 beats. Bar 2: root, third, fifth, third.",
+        "Bar 1: fifth, fourth, third, second. Bar 2: third, second, root, root.",
+        "Bar 1: root, fifth, third, fifth. Bar 2: fourth, third, second, root.",
+        "Bar 1: floating third, fifth, fourth, sixth. Bar 2: fifth, third, second, root."
+      ],
+      "etude": "Bar 1: root, second, third, fourth ascending. Bar 2: fifth as half note (peak), fourth, third as quarters (descending). Rest 2 beats. Bar 3: third, fourth, fifth, sixth. Bar 4: upper root as half note, fifth, third as quarters, root on last beat.",
+      "watchOut": "Treating the two bars as separate fragments instead of one connected gesture. Plan your fretboard path to flow smoothly across the bar line."
+    },
+    "guitar:phraseLength:4bar": {
+      "character": "Four-bar phrases feel like paragraphs — room for a full narrative arc across the fretboard. Bars 1-2 set the scene, bar 3 develops or peaks, bar 4 resolves. The length at which improvisation starts to feel composed.",
+      "whyPractice": "Four bars trains LONG-FORM melodic shaping — the ability to plan a rise, peak, and fall across a bigger fretboard canvas. It builds stamina to maintain a musical idea over 16 beats.",
+      "steps": [
+        "Plan the arc: where is the peak? Where does it resolve?",
+        "Bars 1-2 as SETUP — rising toward tension.",
+        "Bar 3 as PEAK — melodic high point.",
+        "Bar 4 as RESOLUTION — descend toward home.",
+        "Pace so bar 4 still has direction.",
+        "Feel all 16 beats as ONE thought.",
+        "Mix techniques — picked, hammered, slid — to keep it varied."
+      ],
+      "progression": [
+        "Symmetric arch — bars 1-2 ascend, bar 3 peaks, bar 4 descends.",
+        "Delayed peak — bars 1-2 circle low, bar 3 leaps, bar 4 resolves.",
+        "Early peak with long decay — bar 1 leaps, bars 2-3 descend, bar 4 lands."
+      ],
+      "examples": [
+        "Bars 1-2: scale ascent. Bar 3: fifth and sixth as half notes. Bar 4: fifth, third, second, root.",
+        "Bar 1: root held. Bar 2: developing. Bar 3: peak near upper root. Bar 4: resolution via pull-offs.",
+        "Bars 1-2: oscillation root-third. Bar 3: slide to fifth, hold. Bar 4: descent.",
+        "Bar 1: opening declaration. Bars 2-3: developing. Bar 4: return to root.",
+        "Bars 1-2: legato rise. Bar 3: upper root with bend. Bar 4: stepwise descent."
+      ],
+      "etude": "Bar 1: root, second, third, fourth ascending. Bar 2: fifth, fourth, fifth, sixth continuing. Bar 3: upper root as half note with vibrato, seventh as half note (peak). Bar 4: sixth, fifth, third, root resolving.",
+      "watchOut": "Peaking too early (in bar 2) or never peaking at all. CONSCIOUSLY plan which bar is the peak before you start."
+    },
+    "guitar:phraseLength:8bar": {
+      "character": "Eight-bar phrases feel like telling a full short story across the fretboard — exposition, rising action, climax, falling action, conclusion. The fretting hand covers real distance, and the ear holds the opening idea while following the arc to resolution.",
+      "whyPractice": "Eight bars is the ultimate test of long-form phrasing, fretboard navigation, and musical memory on guitar. It teaches you to develop ideas rather than just state them.",
+      "steps": [
+        "Plan the shape: opening, development, climax, resolution. Peak usually bar 5 or 6.",
+        "Bars 1-2 as OPENING STATEMENT.",
+        "Bars 3-4 as DEVELOPMENT — vary the opening, explore adjacent positions.",
+        "Bars 5-6 as CLIMAX — highest position, most intense.",
+        "Bars 7-8 as RESOLUTION — descend, simplify, land on root.",
+        "Pace your energy — save something for the peak.",
+        "Use variety of techniques across all 8 bars.",
+        "Feel the entire 8-bar span as ONE gesture."
+      ],
+      "progression": [
+        "Classic AABA shape — motif, repeat with variation, contrasting climax, return and resolve.",
+        "Continuous arc — single rising line to peak, held, rapid descent.",
+        "Blues-form 8-bar with root, fifth, and turnaround areas."
+      ],
+      "examples": [
+        "Bars 1-2: opening motif. 3-4: repeat ending on fifth. 5-6: climax with vibrato. 7-8: resolution descent.",
+        "Bars 1-4: slowly climbing. 5-6: peak held. 7-8: rapid descent.",
+        "Bars 1-2: simple opening. 3-4: development. 5-6: climax. 7-8: descent home.",
+        "Bars 1-2: question. 3-4: parallel question higher. 5-6: answer from top. 7-8: final resolution.",
+        "Bars 1-4: avoiding root. 5-6: climax release to upper root. 7-8: long stepwise homecoming."
+      ],
+      "etude": "Bar 1: root, second, third, fourth (opening). Bar 2: fifth, fourth, third, second (answering). Bar 3: root, third, fifth, third (developing). Bar 4: fifth, sixth, fifth, fourth (reaching higher). Bar 5: sixth, upper root, seventh, upper root (CLIMAX). Bar 6: upper root held 2 beats, seventh held 2 beats. Bar 7: sixth, fifth, fourth, third (descent). Bar 8: second, root, root, rest (landing).",
+      "watchOut": "Running out of ideas by bar 5. The fix is to SAVE something — play the opening at moderate intensity so the climax has somewhere to grow."
     }
   },
   "combos": {
