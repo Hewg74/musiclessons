@@ -203,11 +203,10 @@ const DIFFICULTIES = {
   strict:    { label: 'Strict',    cents: 8,  sustainMs: 700, silenceGapMs: 400 },
 };
 
-// Instrument ranges
+// Instrument ranges — Gene's vocal sweet spot E3-A4, guitar 12-fret E2-E5
 const RANGES = {
-  voice:  { low: 2, high: 5, label: 'Voice (E2–C5)' },
+  voice:  { low: 3, high: 4, label: 'Voice (E3–A4)' },
   guitar: { low: 2, high: 5, label: 'Guitar (E2–E5)' },
-  any:    { low: 2, high: 5, label: 'Any' },
 };
 
 // State machine states
@@ -433,13 +432,13 @@ export function PitchHunter({ theme: T, metro, onBack }) {
       if (ldef.type === 'match') {
         // Play notes in sequence
         gen.targets.forEach((t, i) => {
-          setTimeout(() => playWarmNote(t.full, '2n'), i * 600);
+          setTimeout(() => playWarmNote(t.full, '2n', data.instrument), i * 600);
         });
         setTimeout(() => setPlaybackPaused(false), gen.targets.length * 600 + 300);
       } else if (ldef.type === 'broken') {
         const speed = ldef.arpSpeed || 800;
         gen.targets.forEach((t, i) => {
-          setTimeout(() => playWarmNote(t.full, '4n'), i * speed);
+          setTimeout(() => playWarmNote(t.full, '4n', data.instrument), i * speed);
         });
         setTimeout(() => setPlaybackPaused(false), gen.targets.length * speed + 300);
       } else if (ldef.type === 'recognize' || ldef.type === 'harmonized') {
@@ -509,7 +508,7 @@ export function PitchHunter({ theme: T, metro, onBack }) {
     setPlaybackPaused(true);
     if (ldef.type === 'match' || ldef.type === 'broken') {
       const t = targets.targets[currentTargetIdx];
-      if (t) playWarmNote(t.full, '2n');
+      if (t) playWarmNote(t.full, '2n', data.instrument);
     } else if (targets.chordNotes) {
       playChord(targets.chordNotes, '2n');
     }
@@ -569,7 +568,7 @@ export function PitchHunter({ theme: T, metro, onBack }) {
                 const nextTarget = targets.targets[currentTargetIdx + 1];
                 if (nextTarget) {
                   setPlaybackPaused(true);
-                  playWarmNote(nextTarget.full, '2n');
+                  playWarmNote(nextTarget.full, '2n', data.instrument);
                   setTimeout(() => setPlaybackPaused(false), 1000);
                 }
               }, diff.silenceGapMs);

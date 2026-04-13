@@ -2297,7 +2297,7 @@ export const COLOR_MUSIC = {
 };
 export const getColorForNote = (n) => COLOR_MUSIC[normalizeNote(n)] || '#888';
 
-// ─── ColorMusic: Pooled warm guitar synth ───
+// ─── ColorMusic: Pooled warm synth (default / legacy) ───
 // Persistent chain (triangle + sine harmonic + delay reverb), retriggered per note.
 // Avoids creating/disposing nodes per tap — handles rapid tapping in Scale Runner.
 let warmChain = null;
@@ -2320,9 +2320,80 @@ function getWarmChain() {
   warmChain = { s1, s2 };
   return warmChain;
 }
-export const playWarmNote = async (noteStr, duration = '2n') => {
+
+// ─── Instrument-specific tones ───
+// Guitar: Karplus-Strong plucked string via Tone.PluckSynth
+// Voice: Additive synthesis — fundamental + harmonics + slight vibrato
+let guitarChain = null;
+function getGuitarChain() {
+  if (guitarChain?.synth && !guitarChain.synth.disposed) return guitarChain;
+  const synth = new Tone.PluckSynth({
+    attackNoise: 2,
+    resonance: 0.96,
+    dampening: 4000,
+    release: 1.5,
+  });
+  const lp = new Tone.Filter(3500, 'lowpass');
+  const delay = new Tone.FeedbackDelay({ delayTime: 0.035, feedback: 0.15, wet: 0.12 });
+  const gain = new Tone.Gain(0.85);
+  synth.connect(lp); lp.connect(delay); delay.connect(gain); lp.connect(gain); gain.toDestination();
+  synth.volume.value = -4;
+  guitarChain = { synth };
+  return guitarChain;
+}
+
+let voiceChain = null;
+function getVoiceChain() {
+  if (voiceChain?.s1 && !voiceChain.s1.disposed) return voiceChain;
+  // Fundamental — warm sine with slow attack (mimics vocal onset)
+  const s1 = new Tone.Synth({
+    oscillator: { type: 'sine' },
+    envelope: { attack: 0.08, decay: 0.3, sustain: 0.5, release: 1.4 }
+  });
+  // 2nd harmonic (octave) — subtle
+  const s2 = new Tone.Synth({
+    oscillator: { type: 'sine' },
+    envelope: { attack: 0.1, decay: 0.25, sustain: 0.3, release: 1.0 }
+  });
+  // 3rd harmonic (octave + fifth) — very subtle
+  const s3 = new Tone.Synth({
+    oscillator: { type: 'sine' },
+    envelope: { attack: 0.12, decay: 0.2, sustain: 0.15, release: 0.8 }
+  });
+  // Slight vibrato via LFO on the fundamental
+  const vibrato = new Tone.Vibrato({ frequency: 4.5, depth: 0.04 });
+  const lp = new Tone.Filter(2800, 'lowpass');
+  const gain = new Tone.Gain(0.75);
+  s1.connect(vibrato); vibrato.connect(lp);
+  s2.connect(lp); s3.connect(lp);
+  lp.connect(gain); gain.toDestination();
+  s1.volume.value = -6; s2.volume.value = -16; s3.volume.value = -24;
+  voiceChain = { s1, s2, s3 };
+  return voiceChain;
+}
+
+// playWarmNote — instrument-aware tone generation
+// instrument: 'guitar' | 'voice' | undefined (default = legacy warm chain)
+export const playWarmNote = async (noteStr, duration = '2n', instrument) => {
   if (Tone.context.state !== 'running') await Tone.context.resume();
   const n = noteStr.replace('♭', 'b');
+
+  if (instrument === 'guitar') {
+    const { synth } = getGuitarChain();
+    synth.triggerAttack(n);
+    return;
+  }
+
+  if (instrument === 'voice') {
+    const { s1, s2, s3 } = getVoiceChain();
+    const freq = Tone.Frequency(n).toFrequency();
+    s1.triggerAttackRelease(n, duration);
+    s2.triggerAttackRelease(Tone.Frequency(freq * 2).toNote(), duration);
+    s3.triggerAttackRelease(Tone.Frequency(freq * 3).toNote(), duration);
+    return;
+  }
+
+  // Default: legacy warm chain (backward compatible)
   const { s1, s2 } = getWarmChain();
   s1.triggerAttackRelease(n, duration);
   s2.triggerAttackRelease(Tone.Frequency(n).transpose(12).toNote(), duration);
