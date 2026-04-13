@@ -89,6 +89,7 @@ function usePitchDetection(active, onPitch) {
   const stableRef = useRef(null);
   const lastUpdateRef = useRef(Date.now());
   const silenceStartRef = useRef(null);
+  const mutedUntilRef = useRef(0); // Timestamp — ignore all pitch data until this time
   const onPitchRef = useRef(onPitch);
   useEffect(() => { onPitchRef.current = onPitch; });
 
@@ -103,6 +104,12 @@ function usePitchDetection(active, onPitch) {
       emaRef.current = null; stableRef.current = null; freqBufRef.current = [];
       const detect = () => {
         if (!analyserRef.current) return;
+        // Mute gate — ignore all data until the mute period expires, then flush EMA
+        if (Date.now() < mutedUntilRef.current) {
+          emaRef.current = null; stableRef.current = null; freqBufRef.current = [];
+          rafRef.current = requestAnimationFrame(detect);
+          return;
+        }
         const fft = analyserRef.current.fftSize;
         if (!bufRef.current || bufRef.current.length !== fft) bufRef.current = new Float32Array(fft);
         const buf = bufRef.current;
@@ -151,10 +158,18 @@ function usePitchDetection(active, onPitch) {
     analyserRef.current = null; bufRef.current = null;
   }, []);
 
+  // Mute the detector for `ms` milliseconds — flushes EMA so speaker bleed doesn't carry over
+  const mute = useCallback((ms) => {
+    mutedUntilRef.current = Date.now() + ms;
+    emaRef.current = null; stableRef.current = null; freqBufRef.current = [];
+  }, []);
+
   useEffect(() => {
     if (active) start(); else stop();
     return stop;
   }, [active, start, stop]);
+
+  return mute;
 }
 
 // ─── Constants ───
@@ -400,7 +415,7 @@ export function PitchHunter({ theme: T, metro, onBack }) {
   // ─── Pitch callback ref (set after handlePitch is defined below) ───
   const pitchCallbackRef = useRef(null);
   const micShouldRun = phase === 'playing' && (ldef.type === 'match' || ldef.type === 'broken');
-  usePitchDetection(micShouldRun, (...args) => pitchCallbackRef.current?.(...args));
+  const muteMic = usePitchDetection(micShouldRun, (...args) => pitchCallbackRef.current?.(...args));
   useEffect(() => { setMicActive(micShouldRun); }, [micShouldRun]);
 
   // ─── Cleanup on unmount ───
@@ -426,24 +441,28 @@ export function PitchHunter({ theme: T, metro, onBack }) {
     roundStartRef.current = Date.now();
     silenceGapRef.current = false;
 
-    // Play the target(s)
+    // Play the target(s) — mute mic during playback + 800ms deaf period after
     setTimeout(() => {
       setPlaybackPaused(true);
       if (ldef.type === 'match') {
-        // Play notes in sequence
         gen.targets.forEach((t, i) => {
           setTimeout(() => playWarmNote(t.full, '2n', data.instrument), i * 600);
         });
-        setTimeout(() => setPlaybackPaused(false), gen.targets.length * 600 + 300);
+        const totalMs = gen.targets.length * 600 + 300;
+        muteMic(totalMs + 800); // Mute for playback + 800ms deaf period
+        setTimeout(() => setPlaybackPaused(false), totalMs + 800);
       } else if (ldef.type === 'broken') {
         const speed = ldef.arpSpeed || 800;
         gen.targets.forEach((t, i) => {
           setTimeout(() => playWarmNote(t.full, '4n', data.instrument), i * speed);
         });
-        setTimeout(() => setPlaybackPaused(false), gen.targets.length * speed + 300);
+        const totalMs = gen.targets.length * speed + 300;
+        muteMic(totalMs + 800);
+        setTimeout(() => setPlaybackPaused(false), totalMs + 800);
       } else if (ldef.type === 'recognize' || ldef.type === 'harmonized') {
         playChord(gen.chordNotes, '2n');
-        setTimeout(() => setPlaybackPaused(false), 1500);
+        muteMic(2300);
+        setTimeout(() => setPlaybackPaused(false), 2300);
       }
     }, 200);
   }, [currentLevel, baseOctave, ldef]);
@@ -506,14 +525,15 @@ export function PitchHunter({ theme: T, metro, onBack }) {
   const replay = useCallback(() => {
     if (!targets) return;
     setPlaybackPaused(true);
+    muteMic(2000); // Mute mic for playback + deaf period
     if (ldef.type === 'match' || ldef.type === 'broken') {
       const t = targets.targets[currentTargetIdx];
       if (t) playWarmNote(t.full, '2n', data.instrument);
     } else if (targets.chordNotes) {
       playChord(targets.chordNotes, '2n');
     }
-    setTimeout(() => setPlaybackPaused(false), 1200);
-  }, [targets, ldef, currentTargetIdx]);
+    setTimeout(() => setPlaybackPaused(false), 2000);
+  }, [targets, ldef, currentTargetIdx, muteMic]);
 
   // ─── Pitch detection callback (Gate 2-4) ───
   const handlePitch = useCallback(({ note, cents, freq }) => {
@@ -635,7 +655,12 @@ export function PitchHunter({ theme: T, metro, onBack }) {
   }, [centsOffset]);
 
   // ─── Needle color ───
-  const needleColor = state === S.LOCKED ? T.gold : state === S.CONVERGING ? T.textMed : T.textDark;
+  // Color feedback: green when locked (hitting the note), red-ish when far, gold when converging
+  const needleColor = state === S.LOCKED ? '#4CAF50'
+    : state === S.SUCCESS ? '#4CAF50'
+    : state === S.CONVERGING ? T.gold
+    : Math.abs(centsOffset) > 50 ? '#D4615E'
+    : T.textDark;
   const activeColor = getColorForNote(targets?.targets?.[currentTargetIdx]?.note || 'A') || T.gold;
 
   // ═══════════════════════════════════════════════════════════════════════
@@ -999,7 +1024,7 @@ export function PitchHunter({ theme: T, metro, onBack }) {
 
                   {/* Lock ring */}
                   <circle cx="200" cy="190" r="18" fill="none" stroke={T.border} strokeWidth="3" opacity="0.15" />
-                  <circle cx="200" cy="190" r="18" fill="none" stroke={state === S.LOCKED ? T.gold : T.textMed}
+                  <circle cx="200" cy="190" r="18" fill="none" stroke={needleColor}
                     strokeWidth="3" strokeLinecap="round"
                     strokeDasharray={`${Math.PI * 36}`}
                     strokeDashoffset={`${Math.PI * 36 * (1 - lockProgress / 100)}`}
@@ -1008,7 +1033,7 @@ export function PitchHunter({ theme: T, metro, onBack }) {
                   />
 
                   {/* Pivot dot */}
-                  <circle cx="200" cy="190" r="6" fill={state === S.LOCKED ? T.gold : T.textDark}
+                  <circle cx="200" cy="190" r="6" fill={needleColor}
                     style={{ transition: 'fill 0.3s ease' }} />
                 </svg>
               </div>

@@ -4851,22 +4851,23 @@ export default function App() {
                 {/* Screws */}
                 <div aria-hidden style={{ position: 'absolute', top: 10, left: 10, width: 5, height: 5, borderRadius: '50%', background: '#B0A898', boxShadow: 'inset 0 1px 2px rgba(44,40,37,0.15), 0 1px 0 rgba(255,255,255,0.6)' }} />
                 <div aria-hidden style={{ position: 'absolute', top: 10, right: 10, width: 5, height: 5, borderRadius: '50%', background: '#B0A898', boxShadow: 'inset 0 1px 2px rgba(44,40,37,0.15), 0 1px 0 rgba(255,255,255,0.6)' }} />
-                {/* Icon — rainbow color wheel */}
+                {/* Icon — fretboard with color-coded dots */}
                 <div style={{ margin: '8px auto 16px', width: 64, height: 64, position: 'relative' }}>
-                  <svg viewBox="0 0 64 64" width="64" height="64">
-                    {['#E83A30','#F59A1E','#E8C840','#4CAF50','#2196F3','#5B3FA0','#9C27B0','#E83A30'].map((c, i, a) => {
-                      const startAngle = (i / (a.length - 1)) * 360 - 90;
-                      const endAngle = ((i + 1) / (a.length - 1)) * 360 - 90;
-                      const r = 24;
-                      const sx = 32 + r * Math.cos(startAngle * Math.PI / 180);
-                      const sy = 32 + r * Math.sin(startAngle * Math.PI / 180);
-                      const ex = 32 + r * Math.cos(endAngle * Math.PI / 180);
-                      const ey = 32 + r * Math.sin(endAngle * Math.PI / 180);
-                      if (i >= a.length - 1) return null;
-                      return <path key={i} d={`M 32 32 L ${sx} ${sy} A ${r} ${r} 0 0 1 ${ex} ${ey} Z`} fill={c} opacity="0.85" />;
-                    })}
-                    <circle cx="32" cy="32" r="10" fill={T.bgCard || '#FAF5EE'} />
-                    <circle cx="32" cy="32" r="3" fill={T.textMed} opacity="0.3" />
+                  <svg viewBox="0 0 64 64" width="64" height="64" fill="none">
+                    {/* Fret lines */}
+                    {[16, 28, 40, 52].map(x => <line key={x} x1={x} y1="10" x2={x} y2="54" stroke="#B0A898" strokeWidth="1" opacity="0.3" />)}
+                    {/* Strings */}
+                    {[18, 26, 34, 42, 50].map(y => <line key={y} x1="8" y1={y} x2="56" y2={y} stroke="#B0A898" strokeWidth="0.8" opacity="0.4" />)}
+                    {/* Color dots on frets */}
+                    <circle cx="22" cy="18" r="5" fill="#E83A30" opacity="0.9" />{/* C red */}
+                    <circle cx="34" cy="26" r="5" fill="#F59A1E" opacity="0.9" />{/* D orange */}
+                    <circle cx="46" cy="34" r="5" fill="#4CAF50" opacity="0.9" />{/* E green */}
+                    <circle cx="22" cy="42" r="5" fill="#2196F3" opacity="0.9" />{/* G blue */}
+                    <circle cx="40" cy="50" r="5" fill="#5B3FA0" opacity="0.9" />{/* Eb purple */}
+                    {/* Note labels */}
+                    <text x="22" y="21" fontSize="6" fill="#fff" textAnchor="middle" fontWeight="700" fontFamily="Lato, sans-serif">C</text>
+                    <text x="34" y="29" fontSize="6" fill="#fff" textAnchor="middle" fontWeight="700" fontFamily="Lato, sans-serif">D</text>
+                    <text x="46" y="37" fontSize="6" fill="#fff" textAnchor="middle" fontWeight="700" fontFamily="Lato, sans-serif">E</text>
                   </svg>
                 </div>
                 <div style={{ fontFamily: T.serif, fontSize: 16, fontWeight: 500, color: T.textDark, marginBottom: 4 }}>Color Music</div>
@@ -4885,13 +4886,21 @@ export default function App() {
               >
                 <div aria-hidden style={{ position: 'absolute', top: 10, left: 10, width: 5, height: 5, borderRadius: '50%', background: '#B0A898', boxShadow: 'inset 0 1px 2px rgba(44,40,37,0.15), 0 1px 0 rgba(255,255,255,0.6)' }} />
                 <div aria-hidden style={{ position: 'absolute', top: 10, right: 10, width: 5, height: 5, borderRadius: '50%', background: '#B0A898', boxShadow: 'inset 0 1px 2px rgba(44,40,37,0.15), 0 1px 0 rgba(255,255,255,0.6)' }} />
-                {/* Icon — ear with sound waves */}
+                {/* Icon — tuning fork with Hz waves */}
                 <div style={{ margin: '8px auto 16px', width: 64, height: 64 }}>
-                  <svg viewBox="0 0 64 64" width="64" height="64" fill="none" stroke="#D4615E" strokeWidth="2" strokeLinecap="round">
-                    <path d="M24 20c6-6 16-6 16 4s-6 10-6 16c0 4-2 6-5 8" strokeWidth="2.5" />
-                    <path d="M28 26c3-3 8-2 8 3s-3 6-3 9" strokeWidth="2" opacity="0.7" />
-                    <path d="M42 22c2 3 3 7 3 10s-1 7-3 10" opacity="0.5" />
-                    <path d="M46 18c3 4 5 10 5 14s-2 10-5 14" opacity="0.3" />
+                  <svg viewBox="0 0 64 64" width="64" height="64" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                    {/* Tuning fork */}
+                    <path d="M26 12 L26 32 Q26 38 32 38 Q38 38 38 32 L38 12" stroke="#D4615E" strokeWidth="2.5" fill="none" />
+                    <line x1="32" y1="38" x2="32" y2="54" stroke="#D4615E" strokeWidth="2.5" />
+                    <circle cx="32" cy="56" r="3" fill="#D4615E" opacity="0.3" />
+                    {/* Sound waves */}
+                    <path d="M18 22 Q14 28 18 34" stroke="#D4615E" strokeWidth="1.5" opacity="0.4" />
+                    <path d="M13 18 Q7 28 13 38" stroke="#D4615E" strokeWidth="1.5" opacity="0.2" />
+                    <path d="M46 22 Q50 28 46 34" stroke="#D4615E" strokeWidth="1.5" opacity="0.4" />
+                    <path d="M51 18 Q57 28 51 38" stroke="#D4615E" strokeWidth="1.5" opacity="0.2" />
+                    {/* Cent markers */}
+                    <text x="20" y="48" fontSize="7" fill="#D4615E" opacity="0.5" fontFamily="Lato, sans-serif" fontWeight="700">♭</text>
+                    <text x="42" y="48" fontSize="7" fill="#D4615E" opacity="0.5" fontFamily="Lato, sans-serif" fontWeight="700">♯</text>
                   </svg>
                 </div>
                 <div style={{ fontFamily: T.serif, fontSize: 16, fontWeight: 500, color: T.textDark, marginBottom: 4 }}>Pitch Ear</div>
@@ -4910,14 +4919,21 @@ export default function App() {
               >
                 <div aria-hidden style={{ position: 'absolute', top: 10, left: 10, width: 5, height: 5, borderRadius: '50%', background: '#B0A898', boxShadow: 'inset 0 1px 2px rgba(44,40,37,0.15), 0 1px 0 rgba(255,255,255,0.6)' }} />
                 <div aria-hidden style={{ position: 'absolute', top: 10, right: 10, width: 5, height: 5, borderRadius: '50%', background: '#B0A898', boxShadow: 'inset 0 1px 2px rgba(44,40,37,0.15), 0 1px 0 rgba(255,255,255,0.6)' }} />
-                {/* Icon — anvil / flame */}
+                {/* Icon — constraint cards / dice-like randomizer */}
                 <div style={{ margin: '8px auto 16px', width: 64, height: 64 }}>
                   <svg viewBox="0 0 64 64" width="64" height="64" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M32 8c-2 6-8 10-8 18c0 8 6 12 8 12s8-4 8-12c0-8-6-12-8-18z" fill="#F59A1E" opacity="0.2" stroke="#E8890A" strokeWidth="2" />
-                    <path d="M32 14c-1 4-5 7-5 12c0 5 3 8 5 8s5-3 5-8c0-5-4-8-5-12z" fill="#F59A1E" opacity="0.4" stroke="#E8890A" strokeWidth="1.5" />
-                    <path d="M28 38c0 0-1 2-1 4c0 2 2 3 5 3s5-1 5-3c0-2-1-4-1-4" stroke="#B0A898" strokeWidth="2" />
-                    <rect x="20" y="46" width="24" height="4" rx="2" fill="#B0A898" opacity="0.6" />
-                    <rect x="24" y="50" width="16" height="8" rx="1" fill="#B0A898" opacity="0.4" />
+                    {/* Back card */}
+                    <rect x="18" y="8" width="32" height="42" rx="4" fill="#F59A1E" opacity="0.15" stroke="#E8890A" strokeWidth="1.5" transform="rotate(-6, 34, 29)" />
+                    {/* Front card */}
+                    <rect x="14" y="10" width="32" height="42" rx="4" fill={T.bgCard || '#FAF5EE'} stroke="#E8890A" strokeWidth="2" />
+                    {/* Card content — constraint symbols */}
+                    <circle cx="22" cy="22" r="3" fill="#E8890A" opacity="0.7" />
+                    <circle cx="38" cy="22" r="3" fill="#E8890A" opacity="0.5" />
+                    <circle cx="22" cy="34" r="3" fill="#E8890A" opacity="0.3" />
+                    <line x1="18" y1="42" x2="42" y2="42" stroke="#E8890A" strokeWidth="1" opacity="0.3" />
+                    <line x1="18" y1="46" x2="36" y2="46" stroke="#E8890A" strokeWidth="1" opacity="0.2" />
+                    {/* Shuffle spark */}
+                    <path d="M44 8 L48 4 L46 10 L52 8 L48 12" stroke="#F59A1E" strokeWidth="1.5" fill="none" opacity="0.6" />
                   </svg>
                 </div>
                 <div style={{ fontFamily: T.serif, fontSize: 16, fontWeight: 500, color: T.textDark, marginBottom: 4 }}>Practice Forge</div>
@@ -4936,19 +4952,19 @@ export default function App() {
               >
                 <div aria-hidden style={{ position: 'absolute', top: 10, left: 10, width: 5, height: 5, borderRadius: '50%', background: '#B0A898', boxShadow: 'inset 0 1px 2px rgba(44,40,37,0.15), 0 1px 0 rgba(255,255,255,0.6)' }} />
                 <div aria-hidden style={{ position: 'absolute', top: 10, right: 10, width: 5, height: 5, borderRadius: '50%', background: '#B0A898', boxShadow: 'inset 0 1px 2px rgba(44,40,37,0.15), 0 1px 0 rgba(255,255,255,0.6)' }} />
-                {/* Icon — tuner needle / crosshair */}
+                {/* Icon — ear with target crosshair */}
                 <div style={{ margin: '8px auto 16px', width: 64, height: 64 }}>
                   <svg viewBox="0 0 64 64" width="64" height="64" fill="none" strokeLinecap="round">
-                    <path d="M 12 48 A 24 24 0 0 1 52 48" stroke={T.textMed || '#6B6B6B'} strokeWidth="2" opacity="0.3" />
-                    <line x1="32" y1="48" x2="32" y2="18" stroke={T.gold || '#C8A951'} strokeWidth="2.5" />
-                    <circle cx="32" cy="48" r="4" fill={T.gold || '#C8A951'} />
-                    <circle cx="32" cy="48" r="10" stroke={T.gold || '#C8A951'} strokeWidth="2" opacity="0.4" strokeDasharray="4 3" />
-                    {[-40, -20, 0, 20, 40].map(deg => {
-                      const rad = (deg - 90) * Math.PI / 180;
-                      const x1 = 32 + 22 * Math.cos(rad), y1 = 48 + 22 * Math.sin(rad);
-                      const x2 = 32 + 26 * Math.cos(rad), y2 = 48 + 26 * Math.sin(rad);
-                      return <line key={deg} x1={x1} y1={y1} x2={x2} y2={y2} stroke={T.textMed || '#6B6B6B'} strokeWidth="1.5" opacity={deg === 0 ? 0.8 : 0.3} />;
-                    })}
+                    {/* Ear outline */}
+                    <path d="M22 18c8-10 22-6 22 8c0 10-8 12-8 20c0 4-3 6-6 6s-5-2-5-5" stroke={T.gold || '#C8A951'} strokeWidth="2.5" fill="none" />
+                    <path d="M27 26c4-4 10-2 10 4s-4 7-4 11" stroke={T.gold || '#C8A951'} strokeWidth="1.8" opacity="0.6" />
+                    {/* Target crosshair in ear canal */}
+                    <circle cx="35" cy="30" r="6" stroke={T.gold || '#C8A951'} strokeWidth="1.5" opacity="0.4" />
+                    <circle cx="35" cy="30" r="2" fill={T.gold || '#C8A951'} opacity="0.7" />
+                    <line x1="35" y1="22" x2="35" y2="26" stroke={T.gold || '#C8A951'} strokeWidth="1" opacity="0.4" />
+                    <line x1="35" y1="34" x2="35" y2="38" stroke={T.gold || '#C8A951'} strokeWidth="1" opacity="0.4" />
+                    <line x1="27" y1="30" x2="31" y2="30" stroke={T.gold || '#C8A951'} strokeWidth="1" opacity="0.4" />
+                    <line x1="39" y1="30" x2="43" y2="30" stroke={T.gold || '#C8A951'} strokeWidth="1" opacity="0.4" />
                   </svg>
                 </div>
                 <div style={{ fontFamily: T.serif, fontSize: 16, fontWeight: 500, color: T.textDark, marginBottom: 4 }}>Pitch Hunter</div>
