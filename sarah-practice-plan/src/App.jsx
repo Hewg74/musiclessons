@@ -4795,7 +4795,7 @@ export default function App() {
       {tab === "practice" && (
         <div style={{ background: T.bgCard, borderBottom: `1px solid ${T.border}`, display: "flex", flexDirection: "column", alignItems: "center" }}>
           <div style={{ padding: "36px 24px 24px", width: "100%", maxWidth: 640, display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-            <div style={{ fontSize: 44, fontWeight: 400, fontFamily: T.serif, color: T.textDark, lineHeight: 1.1 }}>Practice Plan</div>
+            <div style={{ fontSize: 44, fontWeight: 400, fontFamily: T.serif, color: T.textDark, lineHeight: 1.1 }}>Practice</div>
             <button className="interactive-btn" onClick={toggleTheme} style={{
               background: isDark ? T.bgSoft : T.goldSoft, border: `1px solid ${isDark ? T.border : T.gold}15`,
               color: isDark ? T.gold : T.goldDark, padding: "8px", borderRadius: T.radiusMd,
@@ -4830,104 +4830,130 @@ export default function App() {
       </div>
 
       <div style={{ maxWidth: tab === "charts" ? 900 : 560, margin: "0 auto", padding: `${tab === "practice" ? 0 : 20}px 16px 90px` }}>
-        {/* PRACTICE TAB — Week plan + Lessons archive + Lesson notes */}
+        {/* PRACTICE TAB — 4 ear training mini-app launchers */}
         {tab === "practice" && (
-          <div>
-            {/* Day pill tabs — horizontal scroll with fade hint */}
-            <ScrollFadeWrapper fadeColor={isDark ? "rgba(28, 25, 23, 0.95)" : "rgba(251, 248, 244, 0.95)"}>
-            <div className="hide-scrollbar sticky-pill-bar" style={{
-              display: "flex", gap: 0, overflowX: "auto", padding: "16px 0 0",
-              background: isDark ? "rgba(28, 25, 23, 0.45)" : "rgba(251, 248, 244, 0.55)",
-              backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
-              WebkitOverflowScrolling: "touch", scrollSnapType: "x mandatory",
-              msOverflowStyle: "none", scrollbarWidth: "none",
-              borderBottom: `1px solid ${T.border}`,
+          <div style={{ paddingTop: 24 }}>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              gap: 16,
             }}>
-              {DAYS.map((day, idx) => {
-                const c = DAY_COLORS[idx % DAY_COLORS.length];
-                const done = day.exercises.filter(e => completed.has(e.id)).length;
-                const total = day.exercises.length;
-                const pct = Math.round((done / total) * 100);
-                const active = selectedDay.num === day.num;
-                return (
-                  <button key={day.num} onClick={() => setSelectedDay(day)} style={{
-                    flex: "0 0 auto", scrollSnapAlign: "start",
-                    background: active ? c : T.bgCard,
-                    border: `1px solid ${active ? c : T.border}`,
-                    borderRadius: 24, padding: "8px 20px", margin: "4px 8px 12px 0px",
-                    cursor: "pointer", textAlign: "center", transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-                    opacity: active ? 1 : 0.8,
-                    boxShadow: active ? `0 8px 16px ${c}40, 0 2px 4px ${c}20` : "none",
-                    transform: active ? "translateY(-1px) scale(1.02)" : "scale(1)"
-                  }}>
-                    <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", color: active ? "#fff" : c, fontFamily: T.sans }}>
-                      DAY {day.num}
-                    </div>
-                    <div style={{ fontSize: 13, fontWeight: active ? 600 : 400, color: active ? "#fff" : T.textDark, fontFamily: T.serif, marginTop: 2, whiteSpace: "nowrap" }}>
-                      {day.name}
-                    </div>
-                    {pct > 0 && (
-                      <div style={{ fontSize: 9, color: active ? "rgba(255,255,255,0.8)" : (pct === 100 ? T.success : c), fontFamily: T.sans, fontWeight: 600, marginTop: 2 }}>
-                        {pct === 100 ? "done" : `${done}/${total}`}
-                      </div>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-            </ScrollFadeWrapper>
-
-            {/* Selected day exercises */}
-            <div style={{ marginTop: 28 }}>
-              <DayView day={selectedDay} completed={completed} onComplete={toggleComplete} metro={metro} onOpenTapMatch={setTapMatchBpm} onStartFlow={startFlow}
-                getLatestJournalEntry={getLatestJournalEntry} />
-            </div>
-
-            {/* Practice Journal */}
-            <PracticeJournal journal={journal} />
-
-            {/* Past Weeks — history of completed weekly plans */}
-            {WEEKLY_PLANS.length > 1 && (
-              <div style={{ marginTop: 40, borderTop: `1px solid ${T.border}`, paddingTop: 24 }}>
-                <PastWeeksView completed={completed} />
-              </div>
-            )}
-
-            {/* Archive — exercises from LESSON_POOL by skill branch */}
-            <div style={{ marginTop: 40, borderTop: `1px solid ${T.border}`, paddingTop: 24 }}>
-              <div style={{ textAlign: "center", marginBottom: 20 }}>
-                <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 4, textTransform: "uppercase", color: T.textMuted, fontFamily: T.sans, marginBottom: 6 }}>
-                  Exercise Archive
+              {/* ── Color Music Trainer ── */}
+              <button onClick={() => setColorMusicOpen(true)} style={{
+                background: T.bgCard || T.bg, border: `1px solid ${T.border}`, borderRadius: 28,
+                padding: 24, cursor: 'pointer', position: 'relative', overflow: 'hidden', textAlign: 'center',
+                boxShadow: `0 24px 48px -12px rgba(44, 40, 37, 0.08), 0 0 0 1px ${T.border}`,
+                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+              }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px) scale(1.01)'; e.currentTarget.style.boxShadow = `0 28px 56px -12px rgba(44, 40, 37, 0.12), 0 0 0 1px ${T.border}`; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = `0 24px 48px -12px rgba(44, 40, 37, 0.08), 0 0 0 1px ${T.border}`; }}
+              >
+                {/* Screws */}
+                <div aria-hidden style={{ position: 'absolute', top: 10, left: 10, width: 5, height: 5, borderRadius: '50%', background: '#B0A898', boxShadow: 'inset 0 1px 2px rgba(44,40,37,0.15), 0 1px 0 rgba(255,255,255,0.6)' }} />
+                <div aria-hidden style={{ position: 'absolute', top: 10, right: 10, width: 5, height: 5, borderRadius: '50%', background: '#B0A898', boxShadow: 'inset 0 1px 2px rgba(44,40,37,0.15), 0 1px 0 rgba(255,255,255,0.6)' }} />
+                {/* Icon — rainbow color wheel */}
+                <div style={{ margin: '8px auto 16px', width: 64, height: 64, position: 'relative' }}>
+                  <svg viewBox="0 0 64 64" width="64" height="64">
+                    {['#E83A30','#F59A1E','#E8C840','#4CAF50','#2196F3','#5B3FA0','#9C27B0','#E83A30'].map((c, i, a) => {
+                      const startAngle = (i / (a.length - 1)) * 360 - 90;
+                      const endAngle = ((i + 1) / (a.length - 1)) * 360 - 90;
+                      const r = 24;
+                      const sx = 32 + r * Math.cos(startAngle * Math.PI / 180);
+                      const sy = 32 + r * Math.sin(startAngle * Math.PI / 180);
+                      const ex = 32 + r * Math.cos(endAngle * Math.PI / 180);
+                      const ey = 32 + r * Math.sin(endAngle * Math.PI / 180);
+                      if (i >= a.length - 1) return null;
+                      return <path key={i} d={`M 32 32 L ${sx} ${sy} A ${r} ${r} 0 0 1 ${ex} ${ey} Z`} fill={c} opacity="0.85" />;
+                    })}
+                    <circle cx="32" cy="32" r="10" fill={T.bgCard || '#FAF5EE'} />
+                    <circle cx="32" cy="32" r="3" fill={T.textMed} opacity="0.3" />
+                  </svg>
                 </div>
-                <div style={{ fontSize: 13, color: T.textLight, fontFamily: T.sans, lineHeight: 1.6 }}>
-                  All exercises from {LESSON_POOL.length} lesson{LESSON_POOL.length !== 1 ? "s" : ""}
-                </div>
-              </div>
-              {(() => {
-                // Group all LESSON_POOL exercises by type
-                const branches = {};
-                const activePlanIds = new Set(DAYS.flatMap(d => d.exercises.map(e => e.id)));
-                LESSON_POOL.forEach(lesson => {
-                  lesson.exercises.forEach(ex => {
-                    const branch = ex.type || "other";
-                    if (!branches[branch]) branches[branch] = [];
-                    branches[branch].push({ ...ex, _lessonTitle: lesson.title, _lessonDate: lesson.date, _inPlan: activePlanIds.has(ex.id) });
-                  });
-                });
-                const branchOrder = ["rhythm", "guitar", "vocal", "listen", "song", "record", "play"];
-                const sortedBranches = Object.entries(branches).sort(([a], [b]) => {
-                  const ai = branchOrder.indexOf(a), bi = branchOrder.indexOf(b);
-                  return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
-                });
-                return sortedBranches.map(([type, exercises]) => (
-                  <ArchiveBranch key={type} type={type} exercises={exercises} completed={completed} onComplete={toggleComplete} metro={metro} onOpenTapMatch={setTapMatchBpm} />
-                ));
-              })()}
-            </div>
+                <div style={{ fontFamily: T.serif, fontSize: 16, fontWeight: 500, color: T.textDark, marginBottom: 4 }}>Color Music</div>
+                <div style={{ fontSize: 11, color: T.textMed, fontFamily: T.sans, lineHeight: 1.4 }}>See the music — color-coded fretboard</div>
+              </button>
 
-            {/* Lesson Notes */}
-            <div style={{ marginTop: 40, borderTop: `1px solid ${T.border}`, paddingTop: 24 }}>
-              <LessonNotesView />
+              {/* ── Pitch Discrimination ── */}
+              <button onClick={() => setPitchDiscrimOpen(true)} style={{
+                background: T.bgCard || T.bg, border: `1px solid ${T.border}`, borderRadius: 28,
+                padding: 24, cursor: 'pointer', position: 'relative', overflow: 'hidden', textAlign: 'center',
+                boxShadow: `0 24px 48px -12px rgba(44, 40, 37, 0.08), 0 0 0 1px ${T.border}`,
+                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+              }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px) scale(1.01)'; e.currentTarget.style.boxShadow = `0 28px 56px -12px rgba(44, 40, 37, 0.12), 0 0 0 1px ${T.border}`; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = `0 24px 48px -12px rgba(44, 40, 37, 0.08), 0 0 0 1px ${T.border}`; }}
+              >
+                <div aria-hidden style={{ position: 'absolute', top: 10, left: 10, width: 5, height: 5, borderRadius: '50%', background: '#B0A898', boxShadow: 'inset 0 1px 2px rgba(44,40,37,0.15), 0 1px 0 rgba(255,255,255,0.6)' }} />
+                <div aria-hidden style={{ position: 'absolute', top: 10, right: 10, width: 5, height: 5, borderRadius: '50%', background: '#B0A898', boxShadow: 'inset 0 1px 2px rgba(44,40,37,0.15), 0 1px 0 rgba(255,255,255,0.6)' }} />
+                {/* Icon — ear with sound waves */}
+                <div style={{ margin: '8px auto 16px', width: 64, height: 64 }}>
+                  <svg viewBox="0 0 64 64" width="64" height="64" fill="none" stroke="#D4615E" strokeWidth="2" strokeLinecap="round">
+                    <path d="M24 20c6-6 16-6 16 4s-6 10-6 16c0 4-2 6-5 8" strokeWidth="2.5" />
+                    <path d="M28 26c3-3 8-2 8 3s-3 6-3 9" strokeWidth="2" opacity="0.7" />
+                    <path d="M42 22c2 3 3 7 3 10s-1 7-3 10" opacity="0.5" />
+                    <path d="M46 18c3 4 5 10 5 14s-2 10-5 14" opacity="0.3" />
+                  </svg>
+                </div>
+                <div style={{ fontFamily: T.serif, fontSize: 16, fontWeight: 500, color: T.textDark, marginBottom: 4 }}>Pitch Ear</div>
+                <div style={{ fontSize: 11, color: T.textMed, fontFamily: T.sans, lineHeight: 1.4 }}>Detect micro-tuning differences</div>
+              </button>
+
+              {/* ── Practice Forge ── */}
+              <button onClick={() => setPracticeForgeOpen(true)} style={{
+                background: T.bgCard || T.bg, border: `1px solid ${T.border}`, borderRadius: 28,
+                padding: 24, cursor: 'pointer', position: 'relative', overflow: 'hidden', textAlign: 'center',
+                boxShadow: `0 24px 48px -12px rgba(44, 40, 37, 0.08), 0 0 0 1px ${T.border}`,
+                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+              }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px) scale(1.01)'; e.currentTarget.style.boxShadow = `0 28px 56px -12px rgba(44, 40, 37, 0.12), 0 0 0 1px ${T.border}`; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = `0 24px 48px -12px rgba(44, 40, 37, 0.08), 0 0 0 1px ${T.border}`; }}
+              >
+                <div aria-hidden style={{ position: 'absolute', top: 10, left: 10, width: 5, height: 5, borderRadius: '50%', background: '#B0A898', boxShadow: 'inset 0 1px 2px rgba(44,40,37,0.15), 0 1px 0 rgba(255,255,255,0.6)' }} />
+                <div aria-hidden style={{ position: 'absolute', top: 10, right: 10, width: 5, height: 5, borderRadius: '50%', background: '#B0A898', boxShadow: 'inset 0 1px 2px rgba(44,40,37,0.15), 0 1px 0 rgba(255,255,255,0.6)' }} />
+                {/* Icon — anvil / flame */}
+                <div style={{ margin: '8px auto 16px', width: 64, height: 64 }}>
+                  <svg viewBox="0 0 64 64" width="64" height="64" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M32 8c-2 6-8 10-8 18c0 8 6 12 8 12s8-4 8-12c0-8-6-12-8-18z" fill="#F59A1E" opacity="0.2" stroke="#E8890A" strokeWidth="2" />
+                    <path d="M32 14c-1 4-5 7-5 12c0 5 3 8 5 8s5-3 5-8c0-5-4-8-5-12z" fill="#F59A1E" opacity="0.4" stroke="#E8890A" strokeWidth="1.5" />
+                    <path d="M28 38c0 0-1 2-1 4c0 2 2 3 5 3s5-1 5-3c0-2-1-4-1-4" stroke="#B0A898" strokeWidth="2" />
+                    <rect x="20" y="46" width="24" height="4" rx="2" fill="#B0A898" opacity="0.6" />
+                    <rect x="24" y="50" width="16" height="8" rx="1" fill="#B0A898" opacity="0.4" />
+                  </svg>
+                </div>
+                <div style={{ fontFamily: T.serif, fontSize: 16, fontWeight: 500, color: T.textDark, marginBottom: 4 }}>Practice Forge</div>
+                <div style={{ fontSize: 11, color: T.textMed, fontFamily: T.sans, lineHeight: 1.4 }}>Constraint-based challenge cards</div>
+              </button>
+
+              {/* ── Pitch Hunter ── */}
+              <button onClick={() => setPitchHunterOpen(true)} style={{
+                background: T.bgCard || T.bg, border: `1px solid ${T.border}`, borderRadius: 28,
+                padding: 24, cursor: 'pointer', position: 'relative', overflow: 'hidden', textAlign: 'center',
+                boxShadow: `0 24px 48px -12px rgba(44, 40, 37, 0.08), 0 0 0 1px ${T.border}`,
+                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+              }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px) scale(1.01)'; e.currentTarget.style.boxShadow = `0 28px 56px -12px rgba(44, 40, 37, 0.12), 0 0 0 1px ${T.border}`; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = `0 24px 48px -12px rgba(44, 40, 37, 0.08), 0 0 0 1px ${T.border}`; }}
+              >
+                <div aria-hidden style={{ position: 'absolute', top: 10, left: 10, width: 5, height: 5, borderRadius: '50%', background: '#B0A898', boxShadow: 'inset 0 1px 2px rgba(44,40,37,0.15), 0 1px 0 rgba(255,255,255,0.6)' }} />
+                <div aria-hidden style={{ position: 'absolute', top: 10, right: 10, width: 5, height: 5, borderRadius: '50%', background: '#B0A898', boxShadow: 'inset 0 1px 2px rgba(44,40,37,0.15), 0 1px 0 rgba(255,255,255,0.6)' }} />
+                {/* Icon — tuner needle / crosshair */}
+                <div style={{ margin: '8px auto 16px', width: 64, height: 64 }}>
+                  <svg viewBox="0 0 64 64" width="64" height="64" fill="none" strokeLinecap="round">
+                    <path d="M 12 48 A 24 24 0 0 1 52 48" stroke={T.textMed || '#6B6B6B'} strokeWidth="2" opacity="0.3" />
+                    <line x1="32" y1="48" x2="32" y2="18" stroke={T.gold || '#C8A951'} strokeWidth="2.5" />
+                    <circle cx="32" cy="48" r="4" fill={T.gold || '#C8A951'} />
+                    <circle cx="32" cy="48" r="10" stroke={T.gold || '#C8A951'} strokeWidth="2" opacity="0.4" strokeDasharray="4 3" />
+                    {[-40, -20, 0, 20, 40].map(deg => {
+                      const rad = (deg - 90) * Math.PI / 180;
+                      const x1 = 32 + 22 * Math.cos(rad), y1 = 48 + 22 * Math.sin(rad);
+                      const x2 = 32 + 26 * Math.cos(rad), y2 = 48 + 26 * Math.sin(rad);
+                      return <line key={deg} x1={x1} y1={y1} x2={x2} y2={y2} stroke={T.textMed || '#6B6B6B'} strokeWidth="1.5" opacity={deg === 0 ? 0.8 : 0.3} />;
+                    })}
+                  </svg>
+                </div>
+                <div style={{ fontFamily: T.serif, fontSize: 16, fontWeight: 500, color: T.textDark, marginBottom: 4 }}>Pitch Hunter</div>
+                <div style={{ fontSize: 11, color: T.textMed, fontFamily: T.sans, lineHeight: 1.4 }}>Match notes by ear — Al's method</div>
+              </button>
             </div>
           </div>
         )}
@@ -4996,68 +5022,6 @@ export default function App() {
                 {isDark ? <Sun size={18} strokeWidth={2.5} /> : <Moon size={18} strokeWidth={2.5} />}
               </button>
             </div>
-
-            <SectionHeader label="Ear Training" />
-
-            <ToolCard icon="🎨" title="Color Music Trainer" subtitle="Visual ear training with color-coded fretboard">
-              <div style={{ padding: 12, textAlign: 'center' }}>
-                <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, marginBottom: 12, lineHeight: 1.6 }}>
-                  Color-coded fretboard, ear training games, and guided exercises.
-                  Each pitch has a color — learn to see the music.
-                </div>
-                <button onClick={() => setColorMusicOpen(true)} style={{
-                  padding: '10px 24px', borderRadius: T.radius,
-                  background: T.gold, color: '#fff', border: 'none',
-                  fontSize: 13, fontWeight: 600, fontFamily: T.sans, cursor: 'pointer',
-                  transition: 'all 0.2s',
-                }}>Open Color Music Trainer</button>
-              </div>
-            </ToolCard>
-
-            <ToolCard icon="🎯" title="Pitch Discrimination" subtitle="Detect sharp vs flat micro-tuning differences">
-              <div style={{ padding: 12, textAlign: 'center' }}>
-                <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, marginBottom: 12, lineHeight: 1.6 }}>
-                  Can you hear the difference? Train to detect increasingly small tuning offsets.
-                  Find your threshold and track your improvement over time.
-                </div>
-                <button onClick={() => setPitchDiscrimOpen(true)} style={{
-                  padding: '10px 24px', borderRadius: T.radius,
-                  background: T.gold, color: '#fff', border: 'none',
-                  fontSize: 13, fontWeight: 600, fontFamily: T.sans, cursor: 'pointer',
-                  transition: 'all 0.2s',
-                }}>Open Pitch Trainer</button>
-              </div>
-            </ToolCard>
-
-            <ToolCard icon="🔥" title="Practice Forge" subtitle="Constraint-based challenge cards">
-              <div style={{ padding: 12, textAlign: 'center' }}>
-                <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, marginBottom: 12, lineHeight: 1.6 }}>
-                  Draw randomized constraint cards that combine pitch, rhythm, dynamics, and more.
-                  Each card wires your practice tools automatically.
-                </div>
-                <button onClick={() => setPracticeForgeOpen(true)} style={{
-                  padding: '10px 24px', borderRadius: T.radius,
-                  background: T.gold, color: '#fff', border: 'none',
-                  fontSize: 13, fontWeight: 600, fontFamily: T.sans, cursor: 'pointer',
-                  transition: 'all 0.2s',
-                }}>Open Practice Forge</button>
-              </div>
-            </ToolCard>
-
-            <ToolCard icon="🎯" title="Pitch Hunter" subtitle="Match random notes by ear — Al's method">
-              <div style={{ padding: 12, textAlign: 'center' }}>
-                <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, marginBottom: 12, lineHeight: 1.6 }}>
-                  Close your eyes. A note plays. Slide to match it.
-                  9 levels from pentatonic to harmonized scale chord recognition.
-                </div>
-                <button onClick={() => setPitchHunterOpen(true)} style={{
-                  padding: '10px 24px', borderRadius: T.radius,
-                  background: T.gold, color: '#fff', border: 'none',
-                  fontSize: 13, fontWeight: 600, fontFamily: T.sans, cursor: 'pointer',
-                  transition: 'all 0.2s',
-                }}>Open Pitch Hunter</button>
-              </div>
-            </ToolCard>
 
             <SectionHeader label="Session" />
 
