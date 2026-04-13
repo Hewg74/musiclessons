@@ -16,6 +16,9 @@ import { CompactDroneWheel } from './CompactDroneWheel.jsx';
 const PracticeForge = React.lazy(() =>
   import('./PracticeForge.jsx').then(m => ({ default: m.PracticeForge }))
 );
+const PitchHunter = React.lazy(() =>
+  import('./PitchHunter.jsx').then(m => ({ default: m.PitchHunter }))
+);
 import { acquireKeepalive, releaseKeepalive, setMediaSession, clearMediaSession } from './audioKeepalive.js';
 import { DAYS, KEYBOARD_LEVELS, LOOPER_LEVELS, LESSON_POOL, ALL_NOTES, getPitchRange } from './data/appData.js';
 import { WEEKLY_PLANS, CURRENT_WEEK } from './data/weeklyPlans/index.js';
@@ -4557,6 +4560,7 @@ export default function App() {
   const [colorMusicOpen, setColorMusicOpen] = useState(false);
   const [pitchDiscrimOpen, setPitchDiscrimOpen] = useState(false);
   const [practiceForgeOpen, setPracticeForgeOpen] = useState(false);
+  const [pitchHunterOpen, setPitchHunterOpen] = useState(false);
   const metro = useMetronome();
 
   const [flowStartIndex, setFlowStartIndex] = useState(0);
@@ -4706,6 +4710,23 @@ export default function App() {
           </div>
         }>
           <PracticeForge theme={T} metro={metro} onBack={() => setPracticeForgeOpen(false)} />
+        </React.Suspense>
+        {metro.playing && <FloatingMetronome metro={metro} setTab={() => {}} isDark={isDark} theme={T} />}
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;600;700&display=swap" rel="stylesheet" />
+      </div>
+    );
+  }
+
+  // Pitch Hunter overlay — Al's ear training method
+  if (pitchHunterOpen) {
+    return (
+      <div className="no-bottom-nav" style={{ background: T.bg, minHeight: "100vh", color: T.textDark, fontFamily: T.sans, paddingBottom: metro.playing ? 80 : 0 }}>
+        <React.Suspense fallback={
+          <div style={{ padding: 40, textAlign: 'center', color: T.textMed, fontFamily: T.serif, fontSize: 15 }}>
+            Loading Pitch Hunter…
+          </div>
+        }>
+          <PitchHunter theme={T} metro={metro} onBack={() => setPitchHunterOpen(false)} />
         </React.Suspense>
         {metro.playing && <FloatingMetronome metro={metro} setTab={() => {}} isDark={isDark} theme={T} />}
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;600;700&display=swap" rel="stylesheet" />
@@ -5020,6 +5041,21 @@ export default function App() {
                   fontSize: 13, fontWeight: 600, fontFamily: T.sans, cursor: 'pointer',
                   transition: 'all 0.2s',
                 }}>Open Practice Forge</button>
+              </div>
+            </ToolCard>
+
+            <ToolCard icon="🎯" title="Pitch Hunter" subtitle="Match random notes by ear — Al's method">
+              <div style={{ padding: 12, textAlign: 'center' }}>
+                <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, marginBottom: 12, lineHeight: 1.6 }}>
+                  Close your eyes. A note plays. Slide to match it.
+                  9 levels from pentatonic to harmonized scale chord recognition.
+                </div>
+                <button onClick={() => setPitchHunterOpen(true)} style={{
+                  padding: '10px 24px', borderRadius: T.radius,
+                  background: T.gold, color: '#fff', border: 'none',
+                  fontSize: 13, fontWeight: 600, fontFamily: T.sans, cursor: 'pointer',
+                  transition: 'all 0.2s',
+                }}>Open Pitch Hunter</button>
               </div>
             </ToolCard>
 
