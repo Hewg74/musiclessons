@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import * as Tone from 'tone';
 import {
@@ -2508,12 +2508,22 @@ export function FretboardDiagram({
   oneNoteFilter = null, scaleData: externalScaleData = null, richTone = false,
   chordToneNotes = null, // array of pitch classes to highlight with ring (e.g. ['A','C','E'])
 }) {
-  const [selectedPos, setSelectedPos] = useState(position || 1);
+  const [selectedPositions, setSelectedPositions] = useState(() => new Set([position || 1]));
   const [viewMode, setViewMode] = useState(colorMode ? "colors" : "notes"); // 'notes', 'intervals', or 'colors'
   const [fullNeck, setFullNeck] = useState(false);
   const scaleData = externalScaleData || SCALES[scale] || SCALES["am-pentatonic"];
   const positionsConfig = scaleData.positions || { 1: [5, 8], 2: [7, 10], 3: [9, 12], 4: [12, 15], 5: [0, 3] };
-  const [lo, hi] = fullNeck ? [0, 15] : (positionsConfig[selectedPos] || positionsConfig[1]);
+  const [lo, hi] = useMemo(() => {
+    if (fullNeck) return [0, 15];
+    if (selectedPositions.size === 0) return positionsConfig[1] || [0, 4];
+    let unionLo = 15, unionHi = 0;
+    for (const p of selectedPositions) {
+      const [pLo, pHi] = positionsConfig[p] || positionsConfig[1];
+      unionLo = Math.min(unionLo, pLo);
+      unionHi = Math.max(unionHi, pHi);
+    }
+    return [unionLo, unionHi];
+  }, [fullNeck, selectedPositions, positionsConfig]);
 
   // In full neck mode, render everything; otherwise expand by 1 fret for dot rendering
   const renderLo = fullNeck ? 0 : Math.max(0, lo - 1);
@@ -2601,7 +2611,9 @@ export function FretboardDiagram({
             {scaleData.name}
           </span>
           <span style={{ fontSize: 11, color: T.textMed, letterSpacing: 1, textTransform: 'uppercase' }}>
-            {fullNeck ? "Full Neck \u00B7 All Frets" : `Pos ${selectedPos} \u00B7 Frets ${lo}\u2013${hi}`}
+            {fullNeck ? "Full Neck \u00B7 All Frets" : selectedPositions.size === 1
+              ? `Pos ${[...selectedPositions][0]} \u00B7 Frets ${lo}\u2013${hi}`
+              : `Pos ${[...selectedPositions].sort().join('+')} \u00B7 Frets ${lo}\u2013${hi}`}
           </span>
         </div>
         <div style={{ display: 'flex', gap: 4 }}>
@@ -2641,11 +2653,22 @@ export function FretboardDiagram({
           {[1, 2, 3, 4, 5].map(p => (
             <button
               key={p}
-              onClick={() => { setSelectedPos(p); setFullNeck(false); }}
+              onClick={() => {
+                setSelectedPositions(prev => {
+                  const next = new Set(prev);
+                  if (next.has(p)) {
+                    if (next.size > 1) next.delete(p);
+                  } else {
+                    next.add(p);
+                  }
+                  return next;
+                });
+                setFullNeck(false);
+              }}
               style={{
-                background: !fullNeck && selectedPos === p ? T.gold : "transparent",
-                color: !fullNeck && selectedPos === p ? "#fff" : T.textMed,
-                border: `1px solid ${!fullNeck && selectedPos === p ? T.gold : T.borderSoft}`,
+                background: !fullNeck && selectedPositions.has(p) ? T.gold : "transparent",
+                color: !fullNeck && selectedPositions.has(p) ? "#fff" : T.textMed,
+                border: `1px solid ${!fullNeck && selectedPositions.has(p) ? T.gold : T.borderSoft}`,
                 width: 28, height: 28, borderRadius: T.radius,
                 fontFamily: T.sans, fontSize: 12, fontWeight: 600,
                 cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
@@ -2703,16 +2726,22 @@ export function FretboardDiagram({
             <stop offset="100%" stopColor="#d6c6b3" />
           </radialGradient>
         </defs>
-        {/* Position highlight rectangle (hidden in full-neck mode) */}
-        {!fullNeck && <rect
-          x={leftPad + lo * fretSpacing}
-          y={topPad - 12}
-          width={(hi - lo + 1) * fretSpacing}
-          height={(numStrings - 1) * stringSpacing + 24}
-          rx={6}
-          fill={T.gold}
-          opacity={0.08}
-        />}
+        {/* Position highlight rectangles (one per selected position, hidden in full-neck mode) */}
+        {!fullNeck && [...selectedPositions].map(p => {
+          const [pLo, pHi] = positionsConfig[p] || positionsConfig[1];
+          return (
+            <rect
+              key={`pos-hl-${p}`}
+              x={leftPad + pLo * fretSpacing}
+              y={topPad - 12}
+              width={(pHi - pLo + 1) * fretSpacing}
+              height={(numStrings - 1) * stringSpacing + 24}
+              rx={6}
+              fill={T.gold}
+              opacity={0.08}
+            />
+          );
+        })}
 
         {/* Fret lines (vertical) & Stylized Nut */}
         {Array.from({ length: totalFrets + 1 }, (_, i) => {
@@ -2758,8 +2787,8 @@ export function FretboardDiagram({
             textAnchor="middle"
             fontSize={10}
             fontFamily={T.sans}
-            fill={fullNeck ? T.textDark : (i >= lo && i <= hi ? T.textDark : T.textLight)}
-            fontWeight={fullNeck ? 600 : (i >= lo && i <= hi ? 700 : 500)}
+            fill={fullNeck ? T.textDark : (i >= lo && i <= hi ? T.textDark : T.textMuted)}
+            fontWeight={fullNeck ? 600 : (i >= lo && i <= hi ? 700 : 400)}
           >
             {i}
           </text>
