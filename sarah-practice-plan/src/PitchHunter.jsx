@@ -878,64 +878,112 @@ export function PitchHunter({ theme: T, metro, onBack }) {
                 </div>
               )}
 
-              {/* SVG Needle + Lock Ring */}
-              <div style={{ position: 'relative', width: '100%', maxWidth: 320, margin: '0 auto', aspectRatio: '2/1', zIndex: 1 }}>
-                <svg viewBox="0 0 400 200" width="100%" height="100%" style={{ overflow: 'visible' }}>
-                  {/* Arc background */}
-                  <path d="M 40 190 A 170 170 0 0 1 360 190" fill="none" stroke={T.border} strokeWidth="2" opacity="0.3" />
+              {/* Pitch Gauge — same style as LivePitchDetector */}
+              {(() => {
+                const absCents = Math.abs(centsOffset);
+                const gaugeColor = state === S.LOCKED || state === S.SUCCESS ? '#4CAF50'
+                  : state === S.CONVERGING ? T.gold
+                  : absCents > 50 ? (T.coral || '#D4615E')
+                  : (T.textMed || '#6B6B6B');
+                const isActive = state !== S.IDLE && state !== S.SUCCESS && !playbackPaused && !micMuted;
+                // Map centsOffset (-100..+100) to dot position (0%..100%)
+                const clampedCents = Math.max(-50, Math.min(50, centsOffset));
+                const dotPos = `${50 + clampedCents}%`;
+                return (
+                  <div style={{ position: 'relative', zIndex: 1, padding: '0 8px' }}>
+                    {/* Lock progress ring */}
+                    {lockProgress > 0 && (
+                      <div style={{
+                        width: 48, height: 48, borderRadius: '50%', margin: '0 auto 16px',
+                        border: `3px solid ${T.border}20`,
+                        position: 'relative',
+                      }}>
+                        <svg viewBox="0 0 48 48" width="48" height="48" style={{ position: 'absolute', inset: 0, transform: 'rotate(-90deg)' }}>
+                          <circle cx="24" cy="24" r="20" fill="none" stroke={gaugeColor} strokeWidth="3" strokeLinecap="round"
+                            strokeDasharray={`${Math.PI * 40}`}
+                            strokeDashoffset={`${Math.PI * 40 * (1 - lockProgress / 100)}`}
+                            style={{ transition: 'stroke-dashoffset 0.15s ease-out' }}
+                          />
+                        </svg>
+                        <div style={{
+                          position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          fontSize: 11, fontWeight: 700, color: gaugeColor, fontFamily: T.sans,
+                        }}>
+                          {Math.round(lockProgress)}%
+                        </div>
+                      </div>
+                    )}
 
-                  {/* Tick marks */}
-                  {[-60, -45, -30, -15, 0, 15, 30, 45, 60].map(deg => {
-                    const rad = (deg - 90) * Math.PI / 180;
-                    const cx = 200, cy = 190;
-                    const r1 = 155, r2 = deg === 0 ? 140 : 148;
-                    const x1 = cx + r1 * Math.cos(rad), y1 = cy + r1 * Math.sin(rad);
-                    const x2 = cx + r2 * Math.cos(rad), y2 = cy + r2 * Math.sin(rad);
-                    return <line key={deg} x1={x1} y1={y1} x2={x2} y2={y2} stroke={deg === 0 ? T.textDark : T.textMed} strokeWidth={deg === 0 ? 2.5 : 1.5} opacity={deg === 0 ? 1 : 0.4} />;
-                  })}
+                    {/* Flat / 0 / Sharp labels */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: T.textMuted || T.textMed, fontFamily: T.sans, marginBottom: 6 }}>
+                      <span style={{ letterSpacing: 0.5 }}>♭ Flat</span>
+                      <span style={{
+                        color: isActive && absCents <= 10 ? '#4CAF50' : (T.textMuted || T.textMed),
+                        fontWeight: 700, fontSize: 11, transition: 'color 0.3s',
+                      }}>0</span>
+                      <span style={{ letterSpacing: 0.5 }}>Sharp ♯</span>
+                    </div>
 
-                  {/* Labels */}
-                  <text x="55" y="185" fontSize="11" fontFamily={T.sans} fill={T.textMed} fontWeight="600" textAnchor="middle">♭</text>
-                  <text x="345" y="185" fontSize="11" fontFamily={T.sans} fill={T.textMed} fontWeight="600" textAnchor="middle">♯</text>
+                    {/* Gauge track */}
+                    <div style={{
+                      height: 6, borderRadius: 3, position: 'relative', overflow: 'visible',
+                      background: `linear-gradient(90deg, ${T.coral || '#D4615E'}20 0%, #4CAF5020 45%, #4CAF5030 50%, #4CAF5020 55%, ${T.coral || '#D4615E'}20 100%)`,
+                    }}>
+                      {/* Tick marks */}
+                      {[0, 25, 50, 75, 100].map(pct => (
+                        <div key={pct} style={{
+                          position: 'absolute', left: `${pct}%`, top: pct === 50 ? -5 : -3,
+                          width: pct === 50 ? 2 : 1,
+                          height: pct === 50 ? 16 : 12,
+                          background: pct === 50 ? (T.textMed || '#6B6B6B') : (T.textMuted || '#999') + '60',
+                          transform: 'translateX(-50%)', borderRadius: 1,
+                        }} />
+                      ))}
 
-                  {/* Needle */}
-                  <g transform={`rotate(${needleAngle}, 200, 190)`} style={{ transition: 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)' }}>
-                    <line x1="200" y1="190" x2="200" y2="50" stroke={needleColor} strokeWidth="2.5" strokeLinecap="round"
-                      style={{ transition: 'stroke 0.3s ease', filter: state === S.LOCKED ? `drop-shadow(0 0 6px ${T.gold}88)` : 'none' }} />
-                  </g>
+                      {/* Gauge dot */}
+                      <div style={{
+                        position: 'absolute', top: -8, left: dotPos,
+                        width: 22, height: 22, borderRadius: '50%',
+                        background: isActive ? gaugeColor : (T.bgCard || '#FAF5EE'),
+                        border: isActive ? `2px solid ${T.bgCard || '#FAF5EE'}` : `2px solid ${T.textMuted || '#999'}`,
+                        transform: 'translateX(-50%)',
+                        transition: 'left 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.4s ease, opacity 0.3s ease, box-shadow 0.4s ease',
+                        opacity: isActive ? 1 : 0.3,
+                        zIndex: 2,
+                        boxShadow: isActive && absCents <= 10
+                          ? `0 0 14px #4CAF5050, 0 2px 4px rgba(0,0,0,0.12)`
+                          : '0 2px 4px rgba(0,0,0,0.12)',
+                      }} />
+                    </div>
 
-                  {/* Lock ring */}
-                  <circle cx="200" cy="190" r="18" fill="none" stroke={T.border} strokeWidth="3" opacity="0.15" />
-                  <circle cx="200" cy="190" r="18" fill="none" stroke={needleColor}
-                    strokeWidth="3" strokeLinecap="round"
-                    strokeDasharray={`${Math.PI * 36}`}
-                    strokeDashoffset={`${Math.PI * 36 * (1 - lockProgress / 100)}`}
-                    style={{ transition: 'stroke-dashoffset 0.2s ease-out, stroke 0.3s ease' }}
-                    opacity={lockProgress > 0 ? 1 : 0.3}
-                  />
+                    {/* Cents readout */}
+                    <div style={{
+                      textAlign: 'center', fontSize: 13, fontFamily: T.sans, fontWeight: 700,
+                      color: isActive ? gaugeColor : (T.textMuted || T.textMed),
+                      minHeight: 20, marginTop: 8, transition: 'color 0.3s', letterSpacing: 0.5,
+                    }}>
+                      {isActive ? `${centsOffset > 0 ? '+' : ''}${centsOffset} ¢` : micMuted ? 'Listen…' : ''}
+                    </div>
 
-                  {/* Pivot dot */}
-                  <circle cx="200" cy="190" r="6" fill={needleColor}
-                    style={{ transition: 'fill 0.3s ease' }} />
-                </svg>
-              </div>
-
-              {/* Note name (hidden in blind mode) */}
-              <div style={{ textAlign: 'center', marginTop: 12, position: 'relative', zIndex: 1 }}>
-                {data.blindMode ? (
-                  <div style={{
-                    fontFamily: T.serif, fontStyle: 'italic', fontSize: 14, color: T.textLight || T.textMed,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                  }}>
-                    <EyeOff size={14} /> Blind Mode
+                    {/* Blind mode / note name */}
+                    <div style={{ textAlign: 'center', marginTop: 8 }}>
+                      {data.blindMode ? (
+                        <div style={{
+                          fontFamily: T.serif, fontStyle: 'italic', fontSize: 13, color: T.textLight || T.textMed,
+                          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                        }}>
+                          <EyeOff size={13} /> Blind Mode
+                        </div>
+                      ) : (
+                        <div style={{ fontFamily: T.serif, fontSize: 32, fontWeight: 500, color: T.textDark, letterSpacing: -1 }}>
+                          {targets?.targets?.[currentTargetIdx]?.note || '—'}
+                          <span style={{ fontSize: 16, color: T.textMed }}>{targets?.targets?.[currentTargetIdx]?.octave || ''}</span>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                ) : (
-                  <div style={{ fontFamily: T.serif, fontSize: 36, fontWeight: 500, color: T.textDark, letterSpacing: -1 }}>
-                    {targets?.targets?.[currentTargetIdx]?.note || '—'}
-                    <span style={{ fontSize: 18, color: T.textMed }}>{targets?.targets?.[currentTargetIdx]?.octave || ''}</span>
-                  </div>
-                )}
-              </div>
+                );
+              })()}
 
               {/* Success / Wrong flash */}
               {showResult && (
@@ -1104,11 +1152,10 @@ export function PitchHunter({ theme: T, metro, onBack }) {
             </div>
           )}
 
-          {/* Real LivePitchDetector — headless with pitch contour graph */}
+          {/* Real LivePitchDetector — headless, auto-starts when playing */}
           <LivePitchDetector
             theme={T}
             headless={true}
-            pitchContour={true}
             autoStart={micShouldRun && !micMuted}
             onPitchDetected={micMuted ? null : (p => pitchCallbackRef.current?.(p))}
           />
