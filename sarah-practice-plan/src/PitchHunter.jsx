@@ -398,9 +398,10 @@ export function PitchHunter({ theme: T, metro, onBack }) {
   const diff = DIFFICULTIES[data.difficulty];
   const baseOctave = RANGES[data.instrument].low + 1; // Start octave for note generation
 
-  // ─── Auto-start mic when playing matching levels ───
+  // ─── Pitch callback ref (set after handlePitch is defined below) ───
+  const pitchCallbackRef = useRef(null);
   const micShouldRun = phase === 'playing' && (ldef.type === 'match' || ldef.type === 'broken');
-  usePitchDetection(micShouldRun, handlePitch);
+  usePitchDetection(micShouldRun, (...args) => pitchCallbackRef.current?.(...args));
   useEffect(() => { setMicActive(micShouldRun); }, [micShouldRun]);
 
   // ─── Cleanup on unmount ───
@@ -595,6 +596,7 @@ export function PitchHunter({ theme: T, metro, onBack }) {
       }
     }
   }, [phase, targets, currentTargetIdx, state, ldef, diff, playbackPaused, advanceRound]);
+  pitchCallbackRef.current = handlePitch;
 
   // ─── Chord quality guess (L8) ───
   const handleChordGuess = useCallback((type) => {
