@@ -44,7 +44,7 @@ function useIsMobile(bp = 640) {
 }
 
 // ─── Built-in pitch detection (auto-starts, no button needed) ───
-const MIN_FREQ = 60, MAX_FREQ = 3000, RMS_THRESHOLD = 0.01, YIN_THRESHOLD = 0.12, CONFIDENCE_GATE = 0.38;
+const MIN_FREQ = 60, MAX_FREQ = 3000, RMS_THRESHOLD = 0.004, YIN_THRESHOLD = 0.15, CONFIDENCE_GATE = 0.42;
 
 function yinAutoCorrelate(buffer, sampleRate) {
   const W = Math.floor(buffer.length / 2);

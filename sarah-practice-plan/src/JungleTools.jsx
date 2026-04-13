@@ -2328,10 +2328,10 @@ let guitarChain = null;
 function getGuitarChain() {
   if (guitarChain?.synth && !guitarChain.synth.disposed) return guitarChain;
   const synth = new Tone.PluckSynth({
-    attackNoise: 2,
-    resonance: 0.96,
-    dampening: 4000,
-    release: 1.5,
+    attackNoise: 1.8,
+    resonance: 0.99,
+    dampening: 6000,
+    release: 2.5,
   });
   const lp = new Tone.Filter(3500, 'lowpass');
   const delay = new Tone.FeedbackDelay({ delayTime: 0.035, feedback: 0.15, wet: 0.12 });
