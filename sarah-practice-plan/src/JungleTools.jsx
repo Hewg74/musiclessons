@@ -1619,7 +1619,7 @@ function getCentsOffset(freq, midi) {
   return Math.round(cents / 5) * 5;
 }
 
-export function LivePitchDetector({ theme: T, referencePitches = [], inline = false, pitchContour = false, onPitchDetected = null }) {
+export function LivePitchDetector({ theme: T, referencePitches = [], inline = false, pitchContour = false, onPitchDetected = null, autoStart = false, headless = false }) {
   const [isActive, setIsActive] = useState(false);
   const [audioPaused, setAudioPaused] = useState(false);
   const [pitchState, setPitchState] = useState({
@@ -1759,6 +1759,19 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
   useEffect(() => {
     return stopDetection; // Cleanup on unmount
   }, []);
+
+  // Auto-start when autoStart prop is true (requires user gesture upstream)
+  const autoStartedRef = useRef(false);
+  useEffect(() => {
+    if (autoStart && !isActive && !autoStartedRef.current) {
+      autoStartedRef.current = true;
+      startDetection();
+    }
+    if (!autoStart && isActive && autoStartedRef.current) {
+      autoStartedRef.current = false;
+      stopDetection();
+    }
+  }, [autoStart]);
 
   // Stop mic when app goes to background — mic has no reason to run in background,
   // and leaving it open causes audio subsystem corruption on resume
@@ -1978,6 +1991,9 @@ export function LivePitchDetector({ theme: T, referencePitches = [], inline = fa
 
   const bgTint = pitchState.active ? statusColor + "05" : T.bgSoft;
   const borderTint = pitchState.active ? statusColor + "30" : T.border;
+
+  // Headless mode — no UI, just pitch detection via onPitchDetected callback
+  if (headless) return null;
 
   if (!isActive) {
     return (

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import * as Tone from 'tone';
 import { ArrowLeft, Play, Pause, Volume2, Eye, EyeOff, Settings, RotateCcw, ChevronDown, ChevronUp, Ear, Lock, Check, X } from 'lucide-react';
-import { playWarmNote, normalizeNote, getColorForNote } from './JungleTools.jsx';
+import { playWarmNote, normalizeNote, getColorForNote, LivePitchDetector } from './JungleTools.jsx';
 import { CHROMATIC, generateScale } from './ColorMusicTrainer.jsx';
 import { CompactDroneWheel } from './CompactDroneWheel.jsx';
 
@@ -41,135 +41,6 @@ function useIsMobile(bp = 640) {
     return () => mq.removeEventListener('change', h);
   }, [bp]);
   return m;
-}
-
-// ─── Built-in pitch detection (auto-starts, no button needed) ───
-const MIN_FREQ = 60, MAX_FREQ = 3000, RMS_THRESHOLD = 0.004, YIN_THRESHOLD = 0.15, CONFIDENCE_GATE = 0.42;
-
-function yinAutoCorrelate(buffer, sampleRate) {
-  const W = Math.floor(buffer.length / 2);
-  const maxLag = Math.min(Math.floor(sampleRate / MIN_FREQ), W - 1);
-  const minLag = Math.floor(sampleRate / MAX_FREQ);
-  const d = new Float32Array(maxLag + 1);
-  for (let tau = 1; tau <= maxLag; tau++) {
-    let sum = 0;
-    for (let n = 0; n < W - tau; n++) { const diff = buffer[n] - buffer[n + tau]; sum += diff * diff; }
-    d[tau] = sum;
-  }
-  const dp = new Float32Array(maxLag + 1); dp[0] = 1; let rs = 0;
-  for (let tau = 1; tau <= maxLag; tau++) { rs += d[tau]; dp[tau] = rs > 0 ? d[tau] / (rs / tau) : 1; }
-  let bestTau = -1;
-  for (let tau = minLag; tau <= maxLag; tau++) {
-    if (dp[tau] < YIN_THRESHOLD) { while (tau + 1 <= maxLag && dp[tau + 1] < dp[tau]) tau++; bestTau = tau; break; }
-  }
-  if (bestTau < 0 || dp[bestTau] > CONFIDENCE_GATE) return null;
-  let T0 = bestTau;
-  if (bestTau > 0 && bestTau < maxLag) {
-    const x1 = dp[bestTau - 1], x2 = dp[bestTau], x3 = dp[bestTau + 1];
-    const a = (x1 + x3 - 2 * x2) / 2, b = (x3 - x1) / 2;
-    if (a) T0 = bestTau - b / (2 * a);
-  }
-  const freq = sampleRate / T0;
-  return (freq >= MIN_FREQ && freq <= MAX_FREQ) ? freq : null;
-}
-
-const NOTE_NAMES_DETECT = ['C', 'C#', 'D', 'E♭', 'E', 'F', 'F#', 'G', 'A♭', 'A', 'B♭', 'B'];
-function freqToMidiPH(f) { return Math.round(69 + 12 * Math.log2(f / 440)); }
-function midiToNoteStrPH(m) { return `${NOTE_NAMES_DETECT[m % 12]}${Math.floor(m / 12) - 1}`; }
-function getCentsOffsetPH(f, m) { return Math.round(1200 * Math.log2(f / (440 * Math.pow(2, (m - 69) / 12)))); }
-
-function usePitchDetection(active, onPitch) {
-  const ctxRef = useRef(null);
-  const analyserRef = useRef(null);
-  const streamRef = useRef(null);
-  const rafRef = useRef(null);
-  const bufRef = useRef(null);
-  const emaRef = useRef(null);
-  const freqBufRef = useRef([]);
-  const stableRef = useRef(null);
-  const lastUpdateRef = useRef(Date.now());
-  const silenceStartRef = useRef(null);
-  const mutedUntilRef = useRef(0); // Timestamp — ignore all pitch data until this time
-  const onPitchRef = useRef(onPitch);
-  useEffect(() => { onPitchRef.current = onPitch; });
-
-  const start = useCallback(async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, autoGainControl: false, noiseSuppression: false } });
-      streamRef.current = stream;
-      const ctx = new AudioContext(); ctxRef.current = ctx;
-      const analyser = ctx.createAnalyser(); analyser.fftSize = 2048; analyserRef.current = analyser;
-      const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 60; hp.Q.value = 0.7071;
-      const src = ctx.createMediaStreamSource(stream); src.connect(hp); hp.connect(analyser);
-      emaRef.current = null; stableRef.current = null; freqBufRef.current = [];
-      const detect = () => {
-        if (!analyserRef.current) return;
-        // Mute gate — ignore all data until the mute period expires, then flush EMA
-        if (Date.now() < mutedUntilRef.current) {
-          emaRef.current = null; stableRef.current = null; freqBufRef.current = [];
-          rafRef.current = requestAnimationFrame(detect);
-          return;
-        }
-        const fft = analyserRef.current.fftSize;
-        if (!bufRef.current || bufRef.current.length !== fft) bufRef.current = new Float32Array(fft);
-        const buf = bufRef.current;
-        analyserRef.current.getFloatTimeDomainData(buf);
-        let rms = 0; for (let i = 0; i < buf.length; i++) rms += buf[i] * buf[i];
-        rms = Math.sqrt(rms / buf.length);
-        if (rms > RMS_THRESHOLD) {
-          const freq = yinAutoCorrelate(buf, ctx.sampleRate);
-          if (freq) {
-            silenceStartRef.current = null;
-            freqBufRef.current.push(freq);
-            if (freqBufRef.current.length > 5) freqBufRef.current.shift();
-            const sorted = [...freqBufRef.current].sort((a, b) => a - b);
-            const median = sorted[Math.floor(sorted.length / 2)];
-            const dev = Math.abs(12 * Math.log2(freq / median));
-            const clean = dev > 1.5 ? median : freq;
-            let corr = clean;
-            if (emaRef.current) { const r = clean / emaRef.current; if (r > 1.8 && r < 2.2) corr = clean / 2; else if (r > 0.45 && r < 0.55) corr = clean * 2; }
-            const jump = emaRef.current ? Math.abs(12 * Math.log2(corr / emaRef.current)) : Infinity;
-            emaRef.current = !emaRef.current || jump > 3 ? corr : 0.28 * corr + 0.72 * emaRef.current;
-            const midi = freqToMidiPH(emaRef.current);
-            const cents = getCentsOffsetPH(emaRef.current, midi);
-            const now = Date.now();
-            if (midi !== stableRef.current && now - lastUpdateRef.current > 180) { stableRef.current = midi; lastUpdateRef.current = now; }
-            else if (midi === stableRef.current) lastUpdateRef.current = now;
-            const noteStr = midiToNoteStrPH(stableRef.current || midi);
-            if (onPitchRef.current) onPitchRef.current({ note: noteStr, cents, freq: emaRef.current });
-          } else {
-            if (!silenceStartRef.current) silenceStartRef.current = Date.now();
-            if (Date.now() - silenceStartRef.current > 300) { emaRef.current = null; stableRef.current = null; }
-          }
-        } else {
-          if (!silenceStartRef.current) silenceStartRef.current = Date.now();
-          if (Date.now() - silenceStartRef.current > 300) { emaRef.current = null; stableRef.current = null; }
-        }
-        rafRef.current = requestAnimationFrame(detect);
-      };
-      detect();
-    } catch (e) { console.error('Mic error:', e); }
-  }, []);
-
-  const stop = useCallback(() => {
-    if (rafRef.current) cancelAnimationFrame(rafRef.current); rafRef.current = null;
-    if (streamRef.current) { streamRef.current.getTracks().forEach(t => t.stop()); streamRef.current = null; }
-    if (ctxRef.current) { try { ctxRef.current.close(); } catch {} ctxRef.current = null; }
-    analyserRef.current = null; bufRef.current = null;
-  }, []);
-
-  // Mute the detector for `ms` milliseconds — flushes EMA so speaker bleed doesn't carry over
-  const mute = useCallback((ms) => {
-    mutedUntilRef.current = Date.now() + ms;
-    emaRef.current = null; stableRef.current = null; freqBufRef.current = [];
-  }, []);
-
-  useEffect(() => {
-    if (active) start(); else stop();
-    return stop;
-  }, [active, start, stop]);
-
-  return mute;
 }
 
 // ─── Constants ───
@@ -412,11 +283,17 @@ export function PitchHunter({ theme: T, metro, onBack }) {
   const diff = DIFFICULTIES[data.difficulty];
   const baseOctave = RANGES[data.instrument].low + 1; // Start octave for note generation
 
-  // ─── Pitch callback ref (set after handlePitch is defined below) ───
+  // ─── Mic control ───
   const pitchCallbackRef = useRef(null);
   const micShouldRun = phase === 'playing' && (ldef.type === 'match' || ldef.type === 'broken');
-  const muteMic = usePitchDetection(micShouldRun, (...args) => pitchCallbackRef.current?.(...args));
-  useEffect(() => { setMicActive(micShouldRun); }, [micShouldRun]);
+  const [micMuted, setMicMuted] = useState(false);
+  const micMuteTimerRef = useRef(null);
+  const muteMic = useCallback((ms) => {
+    setMicMuted(true);
+    if (micMuteTimerRef.current) clearTimeout(micMuteTimerRef.current);
+    micMuteTimerRef.current = setTimeout(() => setMicMuted(false), ms);
+  }, []);
+  useEffect(() => { setMicActive(micShouldRun && !micMuted); }, [micShouldRun, micMuted]);
 
   // ─── Cleanup on unmount ───
   useEffect(() => {
@@ -1227,7 +1104,13 @@ export function PitchHunter({ theme: T, metro, onBack }) {
             </div>
           )}
 
-          {/* Mic detection handled by usePitchDetection hook — auto-starts */}
+          {/* Real LivePitchDetector — headless, auto-starts when playing */}
+          <LivePitchDetector
+            theme={T}
+            headless={true}
+            autoStart={micShouldRun && !micMuted}
+            onPitchDetected={micMuted ? null : (p => pitchCallbackRef.current?.(p))}
+          />
 
           {/* Drone (optional) */}
           {data.droneEnabled && targets && (
