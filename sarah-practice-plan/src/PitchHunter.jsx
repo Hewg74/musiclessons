@@ -146,11 +146,18 @@ function generateTargets(level, range) {
   if (ldef.type === 'broken') return generateBrokenChordTarget(level, range);
 
   const pool = ldef.notePool === 'pentatonic' ? PENTATONIC : ALL_CHROMATIC;
-  // For narrow levels (octaves=1), restrict to lower octave of range; wide (octaves=2) uses full range
+  // For narrow levels (octaves=1), use the MIDDLE octave of the range for a pleasant register.
+  // Wide levels (octaves=2) use the full range.
   const fullRange = range.maxMidi - range.minMidi;
   const narrow = ldef.octaves === 1 && fullRange > 12;
-  const minMidi = range.minMidi;
-  const maxMidi = narrow ? range.minMidi + 12 : range.maxMidi;
+  let minMidi = range.minMidi;
+  let maxMidi = range.maxMidi;
+  if (narrow) {
+    // Center a 1-octave window inside the full range
+    const center = Math.round((range.minMidi + range.maxMidi) / 2);
+    minMidi = center - 6;
+    maxMidi = center + 6;
+  }
 
   const targets = [];
   for (let i = 0; i < ldef.noteCount; i++) {
@@ -345,11 +352,11 @@ export function PitchHunter({ theme: T, metro, onBack }) {
     setTimeout(() => {
       setPlaybackPaused(true);
       if (ldef.type === 'match') {
-        // Notes play at 0, 600, 1200... last note duration is ~1s
+        // Notes play at 0, 900, 1800... last note duration is ~1s
         gen.targets.forEach((t, i) => {
-          setTimeout(() => playWarmNote(t.full, '2n', data.instrument), i * 600);
+          setTimeout(() => playWarmNote(t.full, '2n', data.instrument), i * 900);
         });
-        const lastNoteEnds = (gen.targets.length - 1) * 600 + 1000;
+        const lastNoteEnds = (gen.targets.length - 1) * 900 + 1000;
         const totalMs = lastNoteEnds + DEAF_MS;
         muteMic(totalMs);
         setTimeout(() => setPlaybackPaused(false), totalMs);
@@ -425,20 +432,34 @@ export function PitchHunter({ theme: T, metro, onBack }) {
     }, correct ? 800 : 1200);
   }, [round, ldef, score, targets, currentLevel, startRound, updateData]);
 
-  // ─── Replay target ───
+  // ─── Replay target(s) ───
+  // For multi-note levels, replay the ENTIRE sequence so the user can hear the
+  // relationship between notes. Single-note levels just replay the one target.
   const replay = useCallback(() => {
     if (!targets) return;
     setPlaybackPaused(true);
-    const deafMs = 1900; // note (1s) + deaf (900ms)
-    muteMic(deafMs);
-    if (ldef.type === 'match' || ldef.type === 'broken') {
-      const t = targets.targets[currentTargetIdx];
-      if (t) playWarmNote(t.full, '2n', data.instrument);
+    if (ldef.type === 'match') {
+      const notes = targets.targets;
+      notes.forEach((t, i) => {
+        setTimeout(() => playWarmNote(t.full, '2n', data.instrument), i * 900);
+      });
+      const totalMs = (notes.length - 1) * 900 + 1000 + 900;
+      muteMic(totalMs);
+      setTimeout(() => setPlaybackPaused(false), totalMs);
+    } else if (ldef.type === 'broken') {
+      const speed = ldef.arpSpeed || 800;
+      targets.targets.forEach((t, i) => {
+        setTimeout(() => playWarmNote(t.full, '4n', data.instrument), i * speed);
+      });
+      const totalMs = (targets.targets.length - 1) * speed + 500 + 900;
+      muteMic(totalMs);
+      setTimeout(() => setPlaybackPaused(false), totalMs);
     } else if (targets.chordNotes) {
       playChord(targets.chordNotes, '2n');
+      muteMic(1900);
+      setTimeout(() => setPlaybackPaused(false), 1900);
     }
-    setTimeout(() => setPlaybackPaused(false), deafMs);
-  }, [targets, ldef, currentTargetIdx, data.instrument, muteMic]);
+  }, [targets, ldef, data.instrument, muteMic]);
 
   // ─── Pitch detection callback (Gate 2-4) ───
   const handlePitch = useCallback(({ note, cents, freq }) => {
