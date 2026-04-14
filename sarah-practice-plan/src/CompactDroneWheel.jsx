@@ -1757,11 +1757,15 @@ export function CompactDroneWheel({
       </div>
 
       {/* ─── MODE TABS — MANUAL / SINGLE / SEQUENCE ───
-          Shown in standalone (full Tools tab drone) and in embedded mode when
-          the exercise signals sequence intent (defaultMode !== manual,
-          defaultPreset, or defaultProgression). Simple "hold an A drone"
-          exercises stay clean because they never set those props. */}
-      {(standalone || hasSequenceIntent) && (
+          Standalone shows all three. Embedded always shows Manual + Single
+          (so practice exercises can flip chord ↔ pedal tone on the fly) and
+          adds Sequence only when the exercise signals sequence intent
+          (defaultMode === 'sequence', defaultPreset, or defaultProgression). */}
+      {(() => {
+        const modes = standalone || hasSequenceIntent
+          ? ['manual', 'single', 'sequence']
+          : ['manual', 'single'];
+        return (
         <div style={{ marginTop: isMobile ? 24 : 36, textAlign: 'center' }}>
           <div
             role="tablist"
@@ -1775,7 +1779,7 @@ export function CompactDroneWheel({
               gap: 2,
             }}
           >
-            {['manual', 'single', 'sequence'].map(m => {
+            {modes.map(m => {
               const active = mode === m;
               return (
                 <button
@@ -1811,7 +1815,8 @@ export function CompactDroneWheel({
             })}
           </div>
         </div>
-      )}
+        );
+      })()}
 
       {/* ─── MANUAL MODE: extensions row ─── */}
       {mode === 'manual' && (
