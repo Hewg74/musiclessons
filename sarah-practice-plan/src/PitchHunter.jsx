@@ -497,30 +497,32 @@ export function PitchHunter({ theme: T, metro, onBack }) {
           // SUCCESS — note matched!
           setState(S.SUCCESS);
           setLockProgress(100);
+          // Immediately mute mic so we don't accept any more input during transition
+          muteMic(diff.silenceGapMs + 2000);
 
-          // Multi-note: advance to next target
-          if (currentTargetIdx < targets.targets.length - 1) {
+          // Multi-note: advance to next target. Capture the next idx NOW to avoid
+          // closure staleness.
+          const nextIdx = currentTargetIdx + 1;
+          const nextTarget = targets.targets[nextIdx];
+          if (nextTarget) {
             setTimeout(() => {
-              setCurrentTargetIdx(prev => prev + 1);
+              setCurrentTargetIdx(nextIdx);
               setState(S.LISTENING);
               setLockProgress(0);
               setCentsOffset(0);
               lockStartRef.current = null;
               silenceGapRef.current = true;
-              // Gate 4: silence gap, then play next target with deaf period
+              // Silence gap, then play the next target
               setTimeout(() => {
                 silenceGapRef.current = false;
-                const nextTarget = targets.targets[currentTargetIdx + 1];
-                if (nextTarget) {
-                  setPlaybackPaused(true);
-                  muteMic(1900); // note (1s) + deaf (900ms)
-                  playWarmNote(nextTarget.full, '2n', data.instrument);
-                  setTimeout(() => setPlaybackPaused(false), 1900);
-                }
+                setPlaybackPaused(true);
+                muteMic(1900);
+                playWarmNote(nextTarget.full, '2n', data.instrument);
+                setTimeout(() => setPlaybackPaused(false), 1900);
               }, diff.silenceGapMs);
-            }, 300);
+            }, 500);
           } else {
-            // All notes matched
+            // All notes matched — finish the round
             advanceRound(true);
           }
         }

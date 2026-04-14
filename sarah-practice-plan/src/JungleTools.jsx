@@ -2394,47 +2394,47 @@ function getWarmChain() {
 }
 
 // ─── Instrument-specific tones ───
-// Guitar: Layered acoustic guitar — PluckSynth (string) + warm body tone + reverb.
-// Pool of 4 PluckSynth voices so sequential notes don't cut each other off.
+// Guitar: Real acoustic nylon guitar samples (MP3) via Tone.Sampler.
+// Samples are loaded async — PluckSynth fallback covers the load window.
 // Voice: Additive synthesis — fundamental + harmonics + slight vibrato
 let guitarChain = null;
 function getGuitarChain() {
-  if (guitarChain?.synths?.[0] && !guitarChain.synths[0].disposed) return guitarChain;
+  if (guitarChain?.sampler && !guitarChain.sampler.disposed) return guitarChain;
 
-  // Reverb simulates guitar body + small room — gives acoustic warmth
-  const reverb = new Tone.Reverb({ decay: 1.8, wet: 0.22, preDelay: 0.01 });
-  // Lowpass shapes high-end harshness out of the pluck
-  const lp = new Tone.Filter(4000, 'lowpass');
-  lp.Q.value = 0.7;
-  // Subtle body EQ — boost low-mids for wood warmth
-  const bodyEq = new Tone.Filter({ type: 'peaking', frequency: 350, Q: 1.2, gain: 3 });
+  const reverb = new Tone.Reverb({ decay: 1.4, wet: 0.18, preDelay: 0.01 });
   const gain = new Tone.Gain(0.9);
+  reverb.connect(gain); gain.toDestination();
 
-  // Chain: synth → body EQ → lowpass → reverb → gain → out
-  bodyEq.connect(lp); lp.connect(reverb); reverb.connect(gain); gain.toDestination();
-
-  // Body warmth — subtle sine wave layered under the pluck for wood resonance
-  const bodySynth = new Tone.PolySynth(Tone.Synth, {
-    oscillator: { type: 'sine' },
-    envelope: { attack: 0.005, decay: 0.4, sustain: 0.05, release: 1.2 },
+  // Acoustic guitar samples from nbrosowsky/tonejs-instruments CDN (jsdelivr).
+  // Nylon guitar pack — ~15 samples covering the fretboard range.
+  const guitarLoaded = { value: false };
+  // Sparse but well-distributed set — Sampler interpolates between.
+  // Note: pack uses "s" suffix for sharps (As = A#, Cs = C#, etc.)
+  const sampler = new Tone.Sampler({
+    urls: {
+      'E2': 'E2.mp3',  'G2': 'G2.mp3',  'A2': 'A2.mp3',  'C3': 'C3.mp3',
+      'E3': 'E3.mp3',  'G3': 'G3.mp3',  'A3': 'A3.mp3',  'C4': 'C4.mp3',
+      'E4': 'E4.mp3',  'G4': 'G4.mp3',  'A4': 'A4.mp3',  'B4': 'B4.mp3',
+      'C5': 'C5.mp3',
+    },
+    release: 1.2,
+    baseUrl: 'https://cdn.jsdelivr.net/gh/nbrosowsky/tonejs-instruments/samples/guitar-acoustic/',
+    onload: () => { guitarLoaded.value = true; console.log('[Guitar] Real samples loaded'); },
+    onerror: (err) => { console.warn('[Guitar] Samples failed, using synth:', err); },
   });
-  bodySynth.connect(bodyEq);
-  bodySynth.volume.value = -20; // Very subtle — just adds body
+  sampler.connect(reverb);
+  sampler.volume.value = -2;
 
-  // Pool of 4 PluckSynth voices — the main string character
-  const synths = [];
+  // Fallback voice pool — used while samples load OR if CDN fails
+  const fallbackSynths = [];
   for (let i = 0; i < 4; i++) {
-    const s = new Tone.PluckSynth({
-      attackNoise: 0.8,   // Softer fingerpick, less click
-      resonance: 0.97,    // Natural decay, not endless ring
-      dampening: 3800,    // Warmer top end (less buzz)
-      release: 1.8,
-    });
-    s.connect(bodyEq);
+    const s = new Tone.PluckSynth({ attackNoise: 0.8, resonance: 0.97, dampening: 3800, release: 1.8 });
+    s.connect(reverb);
     s.volume.value = -2;
-    synths.push(s);
+    fallbackSynths.push(s);
   }
-  guitarChain = { synths, nextIdx: 0, bodySynth };
+
+  guitarChain = { sampler, guitarLoaded, fallbackSynths, nextIdx: 0 };
   return guitarChain;
 }
 
@@ -2476,11 +2476,14 @@ export const playWarmNote = async (noteStr, duration = '2n', instrument) => {
 
   if (instrument === 'guitar') {
     const chain = getGuitarChain();
-    const voice = chain.synths[chain.nextIdx];
-    chain.nextIdx = (chain.nextIdx + 1) % chain.synths.length;
-    voice.triggerAttack(n);
-    // Body resonance — sine at same pitch adds wood warmth
-    chain.bodySynth.triggerAttackRelease(n, duration);
+    // Use real samples if loaded; otherwise fall back to PluckSynth pool
+    if (chain.guitarLoaded?.value && chain.sampler.loaded) {
+      chain.sampler.triggerAttackRelease(n, duration);
+    } else {
+      const voice = chain.fallbackSynths[chain.nextIdx];
+      chain.nextIdx = (chain.nextIdx + 1) % chain.fallbackSynths.length;
+      voice.triggerAttack(n);
+    }
     return;
   }
 
