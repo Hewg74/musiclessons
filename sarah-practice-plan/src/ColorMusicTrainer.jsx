@@ -332,8 +332,8 @@ function ColorWheel({ theme: T, root, scaleNotes = [], voiceNote = null, activeN
           return (
             <g key={note} style={{ cursor: onRootChange || inScale ? 'pointer' : 'default', transition: 'all 0.4s ease' }}
               onClick={() => {
-                if (onRootChange) { onRootChange(note); playWarmNote(note + '4'); }
-                else if (inScale) playWarmNote(note + '4');
+                if (onRootChange) { onRootChange(note); playWarmNote(note + '4', '2n', 'guitar'); }
+                else if (inScale) playWarmNote(note + '4', '2n', 'guitar');
               }}>
               <circle cx={x} cy={y} r={dotSize} fill={color}
                 opacity={inScale ? 1 : (onRootChange ? 0.25 : 0.08)}
@@ -582,13 +582,13 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     if (hfAudiateMode) {
       // Audiation mode: hear → internal hold → then find
       setHfAudiatePhase('listen');
-      playWarmNote(note + oct, '2n');
+      playWarmNote(note + oct, '2n', 'guitar');
       setTimeout(() => {
         setHfAudiatePhase('audiate'); // Silence — hold internally
         setTimeout(() => setHfAudiatePhase('find'), 3000); // 3s internal hold, then find
       }, 1500);
     } else {
-      playWarmNote(note + oct, '2n');
+      playWarmNote(note + oct, '2n', 'guitar');
     }
   }, [scaleData, hfAudiateMode]);
 
@@ -664,7 +664,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     phrase.forEach((note, i) => {
       const r = rhythm[i] || { dur: '4n', gap: 300, rest: 0 };
       time += r.rest;
-      setTimeout(() => playWarmNote(withOctaves[i], r.dur), time);
+      setTimeout(() => playWarmNote(withOctaves[i], r.dur, 'guitar'), time);
       time += r.gap;
     });
   }, []);
@@ -755,11 +755,11 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     // Trigger first step's action
     const step = GUIDED_EXERCISES[idx].steps[0];
     const rootIdx = CHROMATIC.indexOf(normalizeNote(root));
-    if (step.action === 'play_root') setTimeout(() => playWarmNote(root + '3', '2n'), 300);
-    if (step.action === 'play_fifth') setTimeout(() => playWarmNote(CHROMATIC[(rootIdx + 7) % 12] + '3', '2n'), 300);
+    if (step.action === 'play_root') setTimeout(() => playWarmNote(root + '3', '2n', 'guitar'), 300);
+    if (step.action === 'play_fifth') setTimeout(() => playWarmNote(CHROMATIC[(rootIdx + 7) % 12] + '3', '2n', 'guitar'), 300);
     if (step.action === 'play_scale') {
       const withOct = assignGuitarOctaves(scaleData.notes, root);
-      withOct.forEach((n, i) => setTimeout(() => playWarmNote(n, '4n'), 300 + i * 500));
+      withOct.forEach((n, i) => setTimeout(() => playWarmNote(n, '4n', 'guitar'), 300 + i * 500));
     }
     if (step.action === 'stop_drone') drone.stop();
     if (step.action === 'start_drone') drone.start(root);
@@ -774,17 +774,17 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     const step = ex.steps[next];
     const rootIdx = CHROMATIC.indexOf(normalizeNote(root));
     const rootFreqNote = root + '3';
-    if (step.action === 'play_root') playWarmNote(rootFreqNote, '2n');
-    if (step.action === 'play_fifth') { const fifth = CHROMATIC[(rootIdx + 7) % 12]; playWarmNote(fifth + '3', '2n'); }
-    if (step.action === 'play_third') { const third = CHROMATIC[(rootIdx + 3) % 12]; playWarmNote(third + '3', '2n'); }
-    if (step.action === 'play_fourth') { const fourth = CHROMATIC[(rootIdx + 5) % 12]; playWarmNote(fourth + '3', '2n'); }
+    if (step.action === 'play_root') playWarmNote(rootFreqNote, '2n', 'guitar');
+    if (step.action === 'play_fifth') { const fifth = CHROMATIC[(rootIdx + 7) % 12]; playWarmNote(fifth + '3', '2n', 'guitar'); }
+    if (step.action === 'play_third') { const third = CHROMATIC[(rootIdx + 3) % 12]; playWarmNote(third + '3', '2n', 'guitar'); }
+    if (step.action === 'play_fourth') { const fourth = CHROMATIC[(rootIdx + 5) % 12]; playWarmNote(fourth + '3', '2n', 'guitar'); }
     if (step.action === 'play_scale') {
       const withOct = assignGuitarOctaves(scaleData.notes, root);
-      withOct.forEach((n, i) => setTimeout(() => playWarmNote(n, '4n'), i * 500));
+      withOct.forEach((n, i) => setTimeout(() => playWarmNote(n, '4n', 'guitar'), i * 500));
     }
     if (step.action === 'play_scale_slow') {
       const withOct = assignGuitarOctaves(scaleData.notes, root);
-      withOct.forEach((n, i) => setTimeout(() => playWarmNote(n, '2n'), i * 900));
+      withOct.forEach((n, i) => setTimeout(() => playWarmNote(n, '2n', 'guitar'), i * 900));
     }
     if (step.action === 'stop_drone') drone.stop();
     if (step.action === 'start_drone') drone.start(root);
@@ -806,8 +806,8 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     const oct2 = (idx2 > idx1) ? oct1 : oct1 + 1; // if chromatic index wraps, go up an octave
     setIntTarget({ note1: n1, note2: n2, semitones, intervalName: INTERVAL_NAMES[semitones] || `${semitones}st`, oct1, oct2 });
     setIntRevealed(false); setIntFeedback(null);
-    playWarmNote(n1 + oct1, '4n');
-    setTimeout(() => playWarmNote(n2 + oct2, '4n'), 500);
+    playWarmNote(n1 + oct1, '4n', 'guitar');
+    setTimeout(() => playWarmNote(n2 + oct2, '4n', 'guitar'), 500);
   }, [scaleData, root]);
 
   const checkInterval = useCallback((guessedSemitones) => {
@@ -824,8 +824,8 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
         setTimeout(() => {
           setIntFeedback(null);
           if (intTarget) {
-            playWarmNote(intTarget.note1 + (intTarget.oct1 || 3), '4n');
-            setTimeout(() => playWarmNote(intTarget.note2 + (intTarget.oct2 || 4), '4n'), 500);
+            playWarmNote(intTarget.note1 + (intTarget.oct1 || 3), '4n', 'guitar');
+            setTimeout(() => playWarmNote(intTarget.note2 + (intTarget.oct2 || 4), '4n', 'guitar'), 500);
           }
         }, 1500 * autoDelay);
       } else {
@@ -868,7 +868,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
 
   const startScaleRunner = useCallback(() => {
     setSrActive(true); setSrIdx(0);
-    playWarmNote(srWithOctaves[0], '8n');
+    playWarmNote(srWithOctaves[0], '8n', 'guitar');
   }, [srWithOctaves]);
 
   const stopScaleRunner = useCallback(() => {
@@ -880,7 +880,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
   useEffect(() => {
     if (!srActive) return;
     // Play first note when starting/restarting
-    if (srIdx === 0 && srWithOctaves.length) playWarmNote(srWithOctaves[0], '8n');
+    if (srIdx === 0 && srWithOctaves.length) playWarmNote(srWithOctaves[0], '8n', 'guitar');
     const ms = 60000 / srBpm;
     srTimerRef.current = setInterval(() => {
       setSrIdx(prev => {
@@ -897,7 +897,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
           }, 1500);
           return -1;
         }
-        playWarmNote(srWithOctaves[next] || srSequence[next] + '4', '8n');
+        playWarmNote(srWithOctaves[next] || srSequence[next] + '4', '8n', 'guitar');
         return next;
       });
     }, ms);
@@ -914,7 +914,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
     phrase.forEach((n, i) => {
       const r = rhythm[i] || { dur: '4n', gap: 300, rest: 0 };
       time += r.rest;
-      setTimeout(() => playWarmNote(withOctaves[i], r.dur), time);
+      setTimeout(() => playWarmNote(withOctaves[i], r.dur, 'guitar'), time);
       time += r.gap;
     });
     return time;
@@ -1188,7 +1188,7 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
           <div>
             <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap', marginBottom: 8 }}>
               <button onClick={newChallenge} style={btnStyle(true, rootColor)}>New Note</button>
-              <button onClick={() => hfTarget && playWarmNote(hfTarget.full, '2n')} style={btnStyle(false, rootColor)}>Replay</button>
+              <button onClick={() => hfTarget && playWarmNote(hfTarget.full, '2n', 'guitar')} style={btnStyle(false, rootColor)}>Replay</button>
               <button onClick={() => setHfRevealed(true)} style={{ ...btnStyle(false, T.textMuted), fontSize: 10 }}>Reveal</button>
               <div style={{ marginLeft: 'auto', fontFamily: 'monospace', fontSize: 13 }}>
                 <span style={{ color: rootColor, fontWeight: 700 }}>{hfScore.hit}</span>
@@ -1378,8 +1378,8 @@ export function ColorMusicTrainer({ theme: T, defaultRoot, defaultScale, default
             <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap', marginBottom: 10 }}>
               <button onClick={newInterval} style={btnStyle(true, rootColor)}>New Interval</button>
               <button onClick={() => intTarget && (() => {
-                playWarmNote(intTarget.note1 + (intTarget.oct1 || 3), '4n');
-                setTimeout(() => playWarmNote(intTarget.note2 + (intTarget.oct2 || 4), '4n'), 500);
+                playWarmNote(intTarget.note1 + (intTarget.oct1 || 3), '4n', 'guitar');
+                setTimeout(() => playWarmNote(intTarget.note2 + (intTarget.oct2 || 4), '4n', 'guitar'), 500);
               })()} style={btnStyle(false, rootColor)}>Replay</button>
               <div style={{ marginLeft: 'auto', fontFamily: 'monospace', fontSize: 13 }}>
                 <span style={{ color: rootColor, fontWeight: 700 }}>{intScore.hit}</span>

@@ -2681,6 +2681,7 @@ export function FretboardDiagram({
   colorMode = false, voiceNote = null, onNoteTap = null,
   oneNoteFilter = null, scaleData: externalScaleData = null, richTone = false,
   chordToneNotes = null, // array of pitch classes to highlight with ring (e.g. ['A','C','E'])
+  instrument = 'guitar', // default: use real guitar samples for fretboard taps
 }) {
   const [selectedPositions, setSelectedPositions] = useState(() => new Set([position || 1]));
   const [viewMode, setViewMode] = useState(colorMode ? "colors" : "notes"); // 'notes', 'intervals', or 'colors'
@@ -2733,6 +2734,8 @@ export function FretboardDiagram({
   const stringWidths = [1, 1.2, 1.6, 2, 2.5, 3];
 
   const playNoteBasic = async (noteStr) => {
+    // If instrument is explicitly 'guitar', always use real samples
+    if (instrument === 'guitar') { playWarmNote(noteStr, '2n', 'guitar'); return; }
     if (Tone.context.state !== 'running') await Tone.context.resume();
     const synth = new Tone.Synth({
       oscillator: { type: 'triangle' },
@@ -2742,7 +2745,7 @@ export function FretboardDiagram({
     synth.triggerAttackRelease(noteStr.replace('♭', 'b'), "2n");
     setTimeout(() => { try { synth.dispose(); } catch {} }, 2000);
   };
-  const playNote = richTone ? playWarmNote : playNoteBasic;
+  const playNote = richTone ? ((n) => playWarmNote(n, '2n', instrument)) : playNoteBasic;
 
   // Build dots: for each string, for each fret in renderLo..renderHi, check if it's a scale note
   const dots = [];
