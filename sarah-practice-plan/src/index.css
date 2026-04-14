@@ -281,6 +281,7 @@ button {
 
 /* Print styles — .print-active is added to <body> when print overlay is open */
 @media print {
+  @page { size: letter; margin: 0.4in; }
   .no-print { display: none !important; }
   body.print-active { background: #fff !important; overflow: visible !important; margin: 0; padding: 0; }
   body.print-active > #root { display: none !important; }
@@ -289,5 +290,14 @@ button {
     overflow: visible !important;
     height: auto !important;
     background: #fff !important;
+  }
+  .print-overlay .print-content {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .print-overlay .print-row {
+    page-break-inside: avoid;
+    break-inside: avoid;
   }
 }

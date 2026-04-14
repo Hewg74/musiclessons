@@ -2444,7 +2444,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
           </div>
 
           {/* Chart content */}
-          <div style={{ maxWidth: 880, margin: "0 auto", padding: "32px 24px 48px" }}>
+          <div className="print-content" style={{ maxWidth: 880, margin: "0 auto", padding: "32px 24px 48px" }}>
             {/* Header */}
             <div style={{ textAlign: "center", marginBottom: 28, borderBottom: "1px solid #eae1d9", paddingBottom: 16 }}>
               <h1 style={{ fontFamily: T.serif, fontSize: 28, fontWeight: 700, margin: "0 0 6px", color: "#2c2825", letterSpacing: 0.5 }}>
@@ -2462,7 +2462,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
               const sectionLabel = row[0].sectionLabel;
               const isNewSection = sectionLabel && (globalStart === 0 || chart.measures[globalStart - 1]?.sectionLabel !== sectionLabel);
               return (
-                <div key={rIdx} style={{ marginBottom: 20 }}>
+                <div key={rIdx} className="print-row" style={{ marginBottom: 20 }}>
                   {isNewSection && (
                     <div style={{
                       fontSize: 10, fontWeight: 700, fontFamily: T.sans, textTransform: "uppercase",
@@ -2534,7 +2534,7 @@ export function StrumChartBuilder({ theme: T, metro, initialChart, onBack, onSav
                             {anyLyrics && measure.cells.map((cell, ci) => (
                               <div key={`l${ci}`} style={{
                                 textAlign: "center", fontSize: 9, color: cell.lyric ? "#59534e" : "transparent",
-                                fontFamily: T.serif, fontStyle: "italic", minHeight: 14, lineHeight: "14px",
+                                fontFamily: T.serif, fontStyle: "normal", minHeight: 14, lineHeight: "14px",
                               }}>{cell.lyric || ""}</div>
                             ))}
                           </div>
