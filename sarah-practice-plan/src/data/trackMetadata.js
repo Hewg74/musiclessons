@@ -177,23 +177,23 @@ const TRACK_METADATA = {
   },
 
   'reggae-one-drop-85': {
-    bpm: 85,
-    pulseBpm: 170,
-    beatStability: 0.972,
-    grooveStartSec: 4.48,
+    bpm: 87,
+    pulseBpm: 87,
+    beatStability: 0.99,
+    grooveStartSec: 0,
     drumsOnly: true,
-    loops: false,
-    notes: 'Drums only. Pulse 170, half-time 85 matches filename exactly. 4.5s count-in.',
+    loops: true,
+    notes: 'Drums only. Real reggae one-drop pattern at 87 BPM (replaced 2026-04-13 — old AI-generated file was kick on 1-2, not a one-drop). Source: Looperman #367942 by DJIMBEATS, royalty-free. 11s loop repeated to ~5 min.',
   },
 
   'drums-reggae-85': {
-    bpm: 85,
-    pulseBpm: 170,
-    beatStability: 0.972,
-    grooveStartSec: 4.48,
+    bpm: 87,
+    pulseBpm: 87,
+    beatStability: 0.99,
+    grooveStartSec: 0,
     drumsOnly: true,
-    loops: false,
-    notes: 'Drums only. Same pattern as reggae-one-drop-85.',
+    loops: true,
+    notes: 'Drums only. Same file as reggae-one-drop-85 (real one-drop at 87 BPM, Looperman #367942 by DJIMBEATS).',
   },
 
   'a-major-reggae-85': {
