@@ -2394,31 +2394,47 @@ function getWarmChain() {
 }
 
 // ─── Instrument-specific tones ───
-// Guitar: Voice-pool of PluckSynth instances rotated round-robin so sequential
-// notes don't cut each other off (PluckSynth is monophonic, PolySynth wrapper
-// doesn't route Karplus-Strong correctly).
+// Guitar: Layered acoustic guitar — PluckSynth (string) + warm body tone + reverb.
+// Pool of 4 PluckSynth voices so sequential notes don't cut each other off.
 // Voice: Additive synthesis — fundamental + harmonics + slight vibrato
 let guitarChain = null;
 function getGuitarChain() {
   if (guitarChain?.synths?.[0] && !guitarChain.synths[0].disposed) return guitarChain;
-  const lp = new Tone.Filter(3500, 'lowpass');
-  const delay = new Tone.FeedbackDelay({ delayTime: 0.035, feedback: 0.15, wet: 0.12 });
-  const gain = new Tone.Gain(0.85);
-  lp.connect(delay); delay.connect(gain); lp.connect(gain); gain.toDestination();
-  // Pool of 4 PluckSynths — enough for 3-note sequences with headroom
+
+  // Reverb simulates guitar body + small room — gives acoustic warmth
+  const reverb = new Tone.Reverb({ decay: 1.8, wet: 0.22, preDelay: 0.01 });
+  // Lowpass shapes high-end harshness out of the pluck
+  const lp = new Tone.Filter(4000, 'lowpass');
+  lp.Q.value = 0.7;
+  // Subtle body EQ — boost low-mids for wood warmth
+  const bodyEq = new Tone.Filter({ type: 'peaking', frequency: 350, Q: 1.2, gain: 3 });
+  const gain = new Tone.Gain(0.9);
+
+  // Chain: synth → body EQ → lowpass → reverb → gain → out
+  bodyEq.connect(lp); lp.connect(reverb); reverb.connect(gain); gain.toDestination();
+
+  // Body warmth — subtle sine wave layered under the pluck for wood resonance
+  const bodySynth = new Tone.PolySynth(Tone.Synth, {
+    oscillator: { type: 'sine' },
+    envelope: { attack: 0.005, decay: 0.4, sustain: 0.05, release: 1.2 },
+  });
+  bodySynth.connect(bodyEq);
+  bodySynth.volume.value = -20; // Very subtle — just adds body
+
+  // Pool of 4 PluckSynth voices — the main string character
   const synths = [];
   for (let i = 0; i < 4; i++) {
     const s = new Tone.PluckSynth({
-      attackNoise: 1.8,
-      resonance: 0.99,
-      dampening: 6000,
-      release: 2.5,
+      attackNoise: 0.8,   // Softer fingerpick, less click
+      resonance: 0.97,    // Natural decay, not endless ring
+      dampening: 3800,    // Warmer top end (less buzz)
+      release: 1.8,
     });
-    s.connect(lp);
-    s.volume.value = -4;
+    s.connect(bodyEq);
+    s.volume.value = -2;
     synths.push(s);
   }
-  guitarChain = { synths, nextIdx: 0 };
+  guitarChain = { synths, nextIdx: 0, bodySynth };
   return guitarChain;
 }
 
@@ -2463,6 +2479,8 @@ export const playWarmNote = async (noteStr, duration = '2n', instrument) => {
     const voice = chain.synths[chain.nextIdx];
     chain.nextIdx = (chain.nextIdx + 1) % chain.synths.length;
     voice.triggerAttack(n);
+    // Body resonance — sine at same pitch adds wood warmth
+    chain.bodySynth.triggerAttackRelease(n, duration);
     return;
   }
 
