@@ -2394,24 +2394,31 @@ function getWarmChain() {
 }
 
 // ─── Instrument-specific tones ───
-// Guitar: Polyphonic Karplus-Strong — each note gets its own PluckSynth voice
-// so sequential notes ring simultaneously (monophonic PluckSynth cuts off prev note)
+// Guitar: Voice-pool of PluckSynth instances rotated round-robin so sequential
+// notes don't cut each other off (PluckSynth is monophonic, PolySynth wrapper
+// doesn't route Karplus-Strong correctly).
 // Voice: Additive synthesis — fundamental + harmonics + slight vibrato
 let guitarChain = null;
 function getGuitarChain() {
-  if (guitarChain?.synth && !guitarChain.synth.disposed) return guitarChain;
-  const synth = new Tone.PolySynth(Tone.PluckSynth, {
-    attackNoise: 1.8,
-    resonance: 0.99,
-    dampening: 6000,
-    release: 2.5,
-  });
+  if (guitarChain?.synths?.[0] && !guitarChain.synths[0].disposed) return guitarChain;
   const lp = new Tone.Filter(3500, 'lowpass');
   const delay = new Tone.FeedbackDelay({ delayTime: 0.035, feedback: 0.15, wet: 0.12 });
   const gain = new Tone.Gain(0.85);
-  synth.connect(lp); lp.connect(delay); delay.connect(gain); lp.connect(gain); gain.toDestination();
-  synth.volume.value = -4;
-  guitarChain = { synth };
+  lp.connect(delay); delay.connect(gain); lp.connect(gain); gain.toDestination();
+  // Pool of 4 PluckSynths — enough for 3-note sequences with headroom
+  const synths = [];
+  for (let i = 0; i < 4; i++) {
+    const s = new Tone.PluckSynth({
+      attackNoise: 1.8,
+      resonance: 0.99,
+      dampening: 6000,
+      release: 2.5,
+    });
+    s.connect(lp);
+    s.volume.value = -4;
+    synths.push(s);
+  }
+  guitarChain = { synths, nextIdx: 0 };
   return guitarChain;
 }
 
@@ -2452,8 +2459,10 @@ export const playWarmNote = async (noteStr, duration = '2n', instrument) => {
   const n = noteStr.replace('♭', 'b');
 
   if (instrument === 'guitar') {
-    const { synth } = getGuitarChain();
-    synth.triggerAttackRelease(n, duration);
+    const chain = getGuitarChain();
+    const voice = chain.synths[chain.nextIdx];
+    chain.nextIdx = (chain.nextIdx + 1) % chain.synths.length;
+    voice.triggerAttack(n);
     return;
   }
 
