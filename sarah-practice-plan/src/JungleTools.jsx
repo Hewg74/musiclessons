@@ -2394,12 +2394,13 @@ function getWarmChain() {
 }
 
 // ─── Instrument-specific tones ───
-// Guitar: Karplus-Strong plucked string via Tone.PluckSynth
+// Guitar: Polyphonic Karplus-Strong — each note gets its own PluckSynth voice
+// so sequential notes ring simultaneously (monophonic PluckSynth cuts off prev note)
 // Voice: Additive synthesis — fundamental + harmonics + slight vibrato
 let guitarChain = null;
 function getGuitarChain() {
   if (guitarChain?.synth && !guitarChain.synth.disposed) return guitarChain;
-  const synth = new Tone.PluckSynth({
+  const synth = new Tone.PolySynth(Tone.PluckSynth, {
     attackNoise: 1.8,
     resonance: 0.99,
     dampening: 6000,
@@ -2452,7 +2453,7 @@ export const playWarmNote = async (noteStr, duration = '2n', instrument) => {
 
   if (instrument === 'guitar') {
     const { synth } = getGuitarChain();
-    synth.triggerAttack(n);
+    synth.triggerAttackRelease(n, duration);
     return;
   }
 

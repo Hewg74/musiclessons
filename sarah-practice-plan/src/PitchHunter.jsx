@@ -89,10 +89,12 @@ const DIFFICULTIES = {
   strict:    { label: 'Strict',    cents: 8,  sustainMs: 700, silenceGapMs: 400 },
 };
 
-// Instrument ranges — Gene's vocal sweet spot E3-A4, guitar 12-fret E2-E5
+// Instrument ranges — by MIDI number to respect true pitch boundaries
+// Voice: E3 (52) - A4 (69) — Gene's tenor sweet spot
+// Guitar: E2 (40) - E5 (76) — standard 12-fret range
 const RANGES = {
-  voice:  { low: 3, high: 4, label: 'Voice (E3–A4)' },
-  guitar: { low: 2, high: 5, label: 'Guitar (E2–E5)' },
+  voice:  { minMidi: 52, maxMidi: 69, label: 'Voice (E3–A4)' },
+  guitar: { minMidi: 40, maxMidi: 76, label: 'Guitar (E2–E5)' },
 };
 
 // State machine states
@@ -123,30 +125,49 @@ function defaultData() {
 }
 
 // ─── Note generation helpers ───
-function randomNote(pool, octaves, baseOctave) {
-  const note = pool[Math.floor(Math.random() * pool.length)];
-  const oct = baseOctave + Math.floor(Math.random() * octaves);
-  return { note, octave: oct, full: `${note}${oct}` };
+// Generate a random note within a MIDI range, respecting the instrument's actual pitch bounds
+function randomNoteInRange(pool, minMidi, maxMidi) {
+  // Narrow levels (1 octave scope) pick from first half of range; wide levels use full range
+  // Build list of valid MIDI numbers whose pitch class is in pool
+  const poolMidiClasses = new Set(pool.map(n => noteToMidi(n, 0) % 12));
+  const candidates = [];
+  for (let m = minMidi; m <= maxMidi; m++) {
+    if (poolMidiClasses.has(m % 12)) candidates.push(m);
+  }
+  if (candidates.length === 0) return null;
+  const midi = candidates[Math.floor(Math.random() * candidates.length)];
+  const n = midiToNote(midi);
+  return { note: n.note, octave: n.octave, full: n.full };
 }
 
-function generateTargets(level, baseOctave) {
+function generateTargets(level, range) {
   const ldef = LEVELS[level - 1];
-  if (ldef.type === 'recognize' || ldef.type === 'harmonized') return generateChordTarget(level, baseOctave);
-  if (ldef.type === 'broken') return generateBrokenChordTarget(level, baseOctave);
+  if (ldef.type === 'recognize' || ldef.type === 'harmonized') return generateChordTarget(level, range);
+  if (ldef.type === 'broken') return generateBrokenChordTarget(level, range);
 
   const pool = ldef.notePool === 'pentatonic' ? PENTATONIC : ALL_CHROMATIC;
+  // For narrow levels (octaves=1), restrict to lower octave of range; wide (octaves=2) uses full range
+  const fullRange = range.maxMidi - range.minMidi;
+  const narrow = ldef.octaves === 1 && fullRange > 12;
+  const minMidi = range.minMidi;
+  const maxMidi = narrow ? range.minMidi + 12 : range.maxMidi;
+
   const targets = [];
   for (let i = 0; i < ldef.noteCount; i++) {
-    targets.push(randomNote(pool, ldef.octaves, baseOctave));
+    const t = randomNoteInRange(pool, minMidi, maxMidi);
+    if (t) targets.push(t);
   }
   return { targets, chordType: null, degree: null };
 }
 
-function generateBrokenChordTarget(level, baseOctave) {
+function generateBrokenChordTarget(level, range) {
   const types = ['major', 'minor'];
   const type = types[Math.floor(Math.random() * types.length)];
   const root = ALL_CHROMATIC[Math.floor(Math.random() * ALL_CHROMATIC.length)];
-  const oct = baseOctave + Math.floor(Math.random() * 1);
+  // Pick root octave so full chord (root + 7 semitones above) fits in range
+  const minOct = Math.max(0, Math.floor(range.minMidi / 12) - 1);
+  const maxOct = Math.max(minOct, Math.floor((range.maxMidi - 7) / 12) - 1);
+  const oct = minOct + Math.floor(Math.random() * Math.max(1, maxOct - minOct + 1));
   const intervals = CHORD_TYPES[type].intervals;
   const rootMidi = noteToMidi(root, oct);
   const targets = intervals.map(iv => {
@@ -157,13 +178,14 @@ function generateBrokenChordTarget(level, baseOctave) {
   return { targets, chordType: type, degree: null };
 }
 
-function generateChordTarget(level, baseOctave) {
+function generateChordTarget(level, range) {
+  const chordOct = Math.max(3, Math.floor(range.minMidi / 12) - 1); // Keep chord in mid register
   if (level === 9) {
     // Harmonized scale — pick random degree
     const key = ALL_CHROMATIC[Math.floor(Math.random() * ALL_CHROMATIC.length)];
     const degIdx = Math.floor(Math.random() * 7);
     const deg = HARMONIZED_SCALE[degIdx];
-    const rootMidi = noteToMidi(key, baseOctave) + [0, 2, 4, 5, 7, 9, 11][degIdx];
+    const rootMidi = noteToMidi(key, chordOct) + [0, 2, 4, 5, 7, 9, 11][degIdx];
     const intervals = CHORD_TYPES[deg.quality].intervals;
     const notes = intervals.map(iv => midiToNote(rootMidi + iv).full);
     return { targets: [], chordNotes: notes, chordType: deg.quality, degree: deg.degree, key };
@@ -172,7 +194,7 @@ function generateChordTarget(level, baseOctave) {
   const types = Object.keys(CHORD_TYPES);
   const type = types[Math.floor(Math.random() * types.length)];
   const root = ALL_CHROMATIC[Math.floor(Math.random() * ALL_CHROMATIC.length)];
-  const oct = baseOctave + Math.floor(Math.random() * 1);
+  const oct = chordOct;
   const rootMidi = noteToMidi(root, oct);
   const intervals = CHORD_TYPES[type].intervals;
   const notes = intervals.map(iv => midiToNote(rootMidi + iv).full);
@@ -281,7 +303,7 @@ export function PitchHunter({ theme: T, metro, onBack }) {
 
   const ldef = LEVELS[currentLevel - 1];
   const diff = DIFFICULTIES[data.difficulty];
-  const baseOctave = RANGES[data.instrument].low + 1; // Start octave for note generation
+  const range = RANGES[data.instrument]; // { minMidi, maxMidi, label }
 
   // ─── Mic control ───
   const pitchCallbackRef = useRef(null);
@@ -305,7 +327,7 @@ export function PitchHunter({ theme: T, metro, onBack }) {
 
   // ─── Start a round ───
   const startRound = useCallback(() => {
-    const gen = generateTargets(currentLevel, baseOctave);
+    const gen = generateTargets(currentLevel, range);
     setTargets(gen);
     setCurrentTargetIdx(0);
     setState(S.LISTENING);
@@ -318,17 +340,17 @@ export function PitchHunter({ theme: T, metro, onBack }) {
     roundStartRef.current = Date.now();
     silenceGapRef.current = false;
 
-    // Play the target(s) — mute mic during playback + 2s deaf period
-    // Voice synth release = 1.4s, PluckSynth resonance decays ~1.5s.
-    // Mic must stay muted until the sound fully dies in the room.
-    const DEAF_MS = 2000;
+    // Play the target(s) — mute mic during playback + deaf period after
+    const DEAF_MS = 900; // Enough for release tail to fade before mic activates
     setTimeout(() => {
       setPlaybackPaused(true);
       if (ldef.type === 'match') {
+        // Notes play at 0, 600, 1200... last note duration is ~1s
         gen.targets.forEach((t, i) => {
           setTimeout(() => playWarmNote(t.full, '2n', data.instrument), i * 600);
         });
-        const totalMs = gen.targets.length * 600 + 1000 + DEAF_MS; // note scheduling + note duration + deaf
+        const lastNoteEnds = (gen.targets.length - 1) * 600 + 1000;
+        const totalMs = lastNoteEnds + DEAF_MS;
         muteMic(totalMs);
         setTimeout(() => setPlaybackPaused(false), totalMs);
       } else if (ldef.type === 'broken') {
@@ -336,7 +358,8 @@ export function PitchHunter({ theme: T, metro, onBack }) {
         gen.targets.forEach((t, i) => {
           setTimeout(() => playWarmNote(t.full, '4n', data.instrument), i * speed);
         });
-        const totalMs = gen.targets.length * speed + 800 + DEAF_MS;
+        const lastNoteEnds = (gen.targets.length - 1) * speed + 500;
+        const totalMs = lastNoteEnds + DEAF_MS;
         muteMic(totalMs);
         setTimeout(() => setPlaybackPaused(false), totalMs);
       } else if (ldef.type === 'recognize' || ldef.type === 'harmonized') {
@@ -346,7 +369,7 @@ export function PitchHunter({ theme: T, metro, onBack }) {
         setTimeout(() => setPlaybackPaused(false), totalMs);
       }
     }, 200);
-  }, [currentLevel, baseOctave, ldef]);
+  }, [currentLevel, range, ldef]);
 
   // ─── Start session ───
   const startSession = useCallback(() => {
@@ -406,7 +429,7 @@ export function PitchHunter({ theme: T, metro, onBack }) {
   const replay = useCallback(() => {
     if (!targets) return;
     setPlaybackPaused(true);
-    const deafMs = 1000 + 2000; // note duration + deaf period
+    const deafMs = 1900; // note (1s) + deaf (900ms)
     muteMic(deafMs);
     if (ldef.type === 'match' || ldef.type === 'broken') {
       const t = targets.targets[currentTargetIdx];
@@ -415,7 +438,7 @@ export function PitchHunter({ theme: T, metro, onBack }) {
       playChord(targets.chordNotes, '2n');
     }
     setTimeout(() => setPlaybackPaused(false), deafMs);
-  }, [targets, ldef, currentTargetIdx, muteMic]);
+  }, [targets, ldef, currentTargetIdx, data.instrument, muteMic]);
 
   // ─── Pitch detection callback (Gate 2-4) ───
   const handlePitch = useCallback(({ note, cents, freq }) => {
@@ -469,9 +492,9 @@ export function PitchHunter({ theme: T, metro, onBack }) {
                 const nextTarget = targets.targets[currentTargetIdx + 1];
                 if (nextTarget) {
                   setPlaybackPaused(true);
-                  muteMic(3000); // note + release + deaf
+                  muteMic(1900); // note (1s) + deaf (900ms)
                   playWarmNote(nextTarget.full, '2n', data.instrument);
-                  setTimeout(() => setPlaybackPaused(false), 3000);
+                  setTimeout(() => setPlaybackPaused(false), 1900);
                 }
               }, diff.silenceGapMs);
             }, 300);
