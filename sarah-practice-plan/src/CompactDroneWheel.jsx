@@ -876,21 +876,33 @@ export function CompactDroneWheel({
 
   // Trigger the current chord on the existing synth. Also fires the parent
   // onActiveNotesChange callback so the exercise card's piano keys can light up.
+  //
+  // Smooth voice-leading: release only the pitches we're leaving, attack only
+  // the pitches we're adding, let shared pitches sustain untouched. This avoids
+  // a nasty bug where releaseAll + setTimeout(triggerAttack, 20ms) would drop
+  // voices when consecutive chords shared pitches (e.g. D → Bm both contain
+  // F#4). releaseAll killed the shared voice and the 20ms-later reattack
+  // raced the synth's voice allocator while 5 old voices were still in their
+  // 2.5-second release tail — at maxPolyphony: 10 some new voices got stolen
+  // before they could sound, and the drone would go silent.
   const triggerCurrentChord = useCallback(() => {
     if (!synthRef.current || synthRef.current.disposed) return;
     const notes = computeCurrentVoicing();
     const label = computeCurrentLabel();
     if (notes.length === 0) return;
+    const oldNotes = previousNotesRef.current || [];
     previousNotesRef.current = notes;
     try {
-      synthRef.current.releaseAll();
-      setTimeout(() => {
-        try {
-          if (synthRef.current && !synthRef.current.disposed) {
-            synthRef.current.triggerAttack(notes);
-          }
-        } catch {}
-      }, 20);
+      const newSet = new Set(notes);
+      const oldSet = new Set(oldNotes);
+      const releasing = oldNotes.filter(n => !newSet.has(n));
+      const attacking = notes.filter(n => !oldSet.has(n));
+      if (releasing.length > 0) {
+        try { synthRef.current.triggerRelease(releasing); } catch {}
+      }
+      if (attacking.length > 0) {
+        synthRef.current.triggerAttack(attacking);
+      }
     } catch {}
     try { onActiveNotesChangeRef.current?.({ notes, label }); } catch {}
   // eslint-disable-next-line react-hooks/exhaustive-deps

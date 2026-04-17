@@ -6579,6 +6579,24 @@ export function ChordVoicingViewer({ theme: T, chords = [], defaultChord }) {
 }
 
 // ─── ChordDiagram ───────────────────────────────────────────────────────────
+// Standard guitar tuning — MIDI value of each open string, ordered left-to-right
+// as chord notation writes them: low E (6th string) first, high E (1st string) last.
+const CHORD_DIAGRAM_OPEN_MIDI = [40, 45, 50, 55, 59, 64]; // E2 A2 D3 G3 B3 E4
+
+// Parse the root pitch class out of a chord name like "Am", "Cmaj7", "F#m7",
+// "B♭maj7". Used to highlight the root note with a dark outline ring —
+// matching the fretboard diagram convention.
+function parseChordRoot(name) {
+  if (!name) return null;
+  const m = String(name).match(/^([A-G])([#b♭])?/);
+  if (!m) return null;
+  let root = m[1];
+  const acc = m[2];
+  if (acc === '#') root += '#';
+  else if (acc === 'b' || acc === '♭') root += '♭';
+  return normalizeNote(root);
+}
+
 export function ChordDiagram({ theme: T, frets, name, onClose }) {
   if (!frets) return null;
   const f = frets.split("").map(c => c === "x" ? -1 : parseInt(c, 16)); // hex: 0-9 + a=10 b=11 etc.
@@ -6587,9 +6605,13 @@ export function ChordDiagram({ theme: T, frets, name, onClose }) {
   const maxFret = playable.length ? Math.max(...playable) : 1;
   const startFret = maxFret <= 4 ? 1 : minFret;
   const numFrets = 4;
+  const rootPC = parseChordRoot(name);
 
-  const w = 120, h = 140;
-  const left = 28, top = 30, strGap = 14, fretGap = 22;
+  // Slightly larger dot + label — the color-music color carries more meaning
+  // than the old flat gold fill, so notes need to read clearly at chip size.
+  const w = 128, h = 148;
+  const left = 30, top = 32, strGap = 14, fretGap = 22;
+  const dotR = 6.5;
 
   return (
     <div style={{
@@ -6602,12 +6624,15 @@ export function ChordDiagram({ theme: T, frets, name, onClose }) {
           cursor: "pointer", color: T.textMuted, padding: 4,
         }}><X size={12} /></button>
       )}
-      {name && (
-        <div style={{
-          textAlign: "center", fontFamily: T.serif, fontWeight: 700, fontSize: 14,
-          color: T.gold, marginBottom: 4,
-        }}>{name}</div>
-      )}
+      {name && (() => {
+        const rootColor = rootPC ? getColorForNote(rootPC) : T.gold;
+        return (
+          <div style={{
+            textAlign: "center", fontFamily: T.serif, fontWeight: 600, fontSize: 15,
+            color: rootColor, marginBottom: 6, letterSpacing: 0.3,
+          }}>{name}</div>
+        );
+      })()}
       <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`}>
         {/* Fret lines */}
         {Array.from({ length: numFrets + 1 }, (_, i) => (
@@ -6631,20 +6656,52 @@ export function ChordDiagram({ theme: T, frets, name, onClose }) {
           <text x={left - 8} y={top + fretGap * 0.6} textAnchor="end"
             fontSize={9} fill={T.textMed} fontFamily={T.sans}>{startFret}</text>
         )}
-        {/* Dots + X/O markers */}
+        {/* Dots + X/O markers, color-music coded per note */}
         {f.map((fretNum, strIdx) => {
           const sx = left + strIdx * strGap;
           if (fretNum === -1) {
-            return <text key={strIdx} x={sx} y={top - 8} textAnchor="middle"
+            return <text key={strIdx} x={sx} y={top - 10} textAnchor="middle"
               fontSize={10} fill={T.textMuted} fontFamily={T.sans}>×</text>;
           }
+          // Derive the sounding pitch from open-string MIDI + fret offset,
+          // then look up its color-music hue. Root of the chord gets a dark
+          // outline ring (matches FretboardDiagram's root treatment).
+          const midi = CHORD_DIAGRAM_OPEN_MIDI[strIdx] + fretNum;
+          const pc = CHROMATIC[midi % 12];
+          const noteColor = getColorForNote(pc);
+          const isRoot = rootPC && normalizeNote(pc) === rootPC;
+
+          // Open strings render as a ring above the nut, still color-coded.
           if (fretNum === 0) {
-            return <circle key={strIdx} cx={sx} cy={top - 8} r={4}
-              fill="none" stroke={T.textMed} strokeWidth={1.5} />;
+            return (
+              <g key={strIdx} style={{ filter: `drop-shadow(0 0 3px ${noteColor}55)` }}>
+                <circle cx={sx} cy={top - 10} r={5}
+                  fill="none" stroke={noteColor} strokeWidth={2} />
+                {isRoot && (
+                  <circle cx={sx} cy={top - 10} r={6.5}
+                    fill="none" stroke={T.textDark} strokeWidth={1.5} opacity={0.5} />
+                )}
+              </g>
+            );
           }
+
+          // Fretted note: filled dot in the note's color-music hue, with a
+          // soft glow. Root gets a dark outline ring. Tiny white letter
+          // inside the dot so the note reads at a glance.
           const fy = top + (fretNum - startFret + 0.5) * fretGap;
-          return <circle key={strIdx} cx={sx} cy={fy} r={5}
-            fill={T.gold} stroke="none" />;
+          return (
+            <g key={strIdx} style={{ filter: `drop-shadow(0 0 ${isRoot ? 6 : 3}px ${noteColor}${isRoot ? '90' : '55'})` }}>
+              <circle cx={sx} cy={fy} r={dotR} fill={noteColor} />
+              {isRoot && (
+                <circle cx={sx} cy={fy} r={dotR + 1.5}
+                  fill="none" stroke={T.textDark} strokeWidth={1.5} opacity={0.55} />
+              )}
+              <text
+                x={sx} y={fy + 0.5} textAnchor="middle" dominantBaseline="central"
+                fontSize={7.5} fontWeight={700} fontFamily={T.sans} fill="#fff"
+              >{pc.replace('♭', 'b')}</text>
+            </g>
+          );
         })}
       </svg>
     </div>
