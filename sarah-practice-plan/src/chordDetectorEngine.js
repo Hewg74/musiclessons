@@ -508,7 +508,7 @@ class AudioEngine {
   /** Must be called from a user-gesture handler (click/touch). */
   async start() {
     if (this.status === 'starting' || this.status === 'running') {
-      console.warn('[ChordEngine] start() called while', this.status);
+      if (import.meta.env.DEV) console.warn('[ChordEngine] start() called while', this.status);
       return;
     }
     if (this.status === 'error') this.status = 'idle';
@@ -557,7 +557,7 @@ class AudioEngine {
         signalDb: -Infinity,
       });
       this.runLoop();
-      console.info(`[ChordEngine] Started. Sample rate ${this.ctx.sampleRate}Hz`);
+      if (import.meta.env.DEV) console.info(`[ChordEngine] Started. Sample rate ${this.ctx.sampleRate}Hz`);
     } catch (err) {
       const error = err instanceof Error ? err : new Error(String(err));
       console.error('[ChordEngine] Failed to start:', error);
@@ -610,7 +610,7 @@ class AudioEngine {
       signalLevel: 0,
       signalDb: -Infinity,
     });
-    if (wasRunning) console.info('[ChordEngine] Stopped');
+    if (wasRunning && import.meta.env.DEV) console.info('[ChordEngine] Stopped');
   }
 
   getRecorderStream() {

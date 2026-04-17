@@ -23,6 +23,7 @@ const ChordDetectorPanel = React.lazy(() =>
   import('./ChordDetectorPanel.jsx').then(m => ({ default: m.ChordDetectorPanel }))
 );
 import { acquireKeepalive, releaseKeepalive, setMediaSession, clearMediaSession } from './audioKeepalive.js';
+import { useChordEngine, useChordTargetChecklist } from './chordDetectorReact.js';
 import { DAYS, KEYBOARD_LEVELS, LOOPER_LEVELS, LESSON_POOL, ALL_NOTES, getPitchRange } from './data/appData.js';
 import { WEEKLY_PLANS, CURRENT_WEEK } from './data/weeklyPlans/index.js';
 import { VOCAL_LEVELS } from './data/vocalLevels/index.js';
@@ -1901,111 +1902,13 @@ function StartFlowButton({ onClick, accentColor }) {
 //   listenForChords: true            → live chord display + signal meter
 //   listenForChords: ['G','C','D']   → checklist of target chords with auto-tick
 //                                      (600 ms continuous sustain at ≥0.7 confidence)
-// The engine module is dynamic-imported on first render so non-chord exercises
-// stay out of the engine's chunk. The engine itself is a refcounted singleton —
-// last unsubscribe stops the mic.
-
-const _CHORD_TARGET_CONFIRM_MS = 600;
-const _CHORD_TARGET_MIN_CONF = 0.7;
-
-// Quality buckets — kept in sync with ChordDetectorPanel.jsx. Bare-letter
-// targets ("G", "Am") match only the corresponding tonal-center bucket; dim
-// and aug NEVER tick a bare-letter target so transient noise doesn't credit
-// the user falsely.
-const _MINOR_QUALITIES = new Set(['min', 'm7', 'mMaj7', 'mMaj7no5', 'm7no5', 'm6', 'mAdd9', 'm9', 'm9no5', 'm7b5']);
-const _DIM_QUALITIES = new Set(['dim', 'dim7']);
-const _AUG_QUALITIES = new Set(['aug', '7#5', '7b5']);
-
-function _matchTargetChord(target, chord) {
-  if (!chord || !chord.name) return false;
-  if (target === chord.name) return true;
-  const targetRoot = target.match(/^[A-G][#b]?/)?.[0];
-  if (!targetRoot || targetRoot !== chord.root) return false;
-  // Explicit qualities (m7, sus4, 7, etc.) must match name exactly.
-  if (/\d|sus|dim|aug|maj/.test(target)) return false;
-  // Bare-letter "G" matches G, G7, Gmaj7, G6, etc. (major bucket only).
-  // "Am" matches Am, Am7, Am9, etc. (minor bucket only).
-  // Dim/aug variants don't tick a bare-letter target — they're rare enough
-  // that ambiguous transients shouldn't be credited.
-  if (_DIM_QUALITIES.has(chord.quality) || _AUG_QUALITIES.has(chord.quality)) return false;
-  const targetIsMinor = /^[A-G][#b]?m$/.test(target);
-  return targetIsMinor ? _MINOR_QUALITIES.has(chord.quality) : !_MINOR_QUALITIES.has(chord.quality);
-}
+// All engine plumbing + match logic lives in chordDetectorReact.js so the
+// panel, ExerciseCard, and PracticeForge listeners share one implementation.
 
 function ExerciseChordListener({ listenForChords }) {
   const targets = Array.isArray(listenForChords) ? listenForChords : null;
-  const [chord, setChord] = useState(null);
-  const [listening, setListening] = useState(false);
-  const [signalLevel, setSignalLevel] = useState(0);
-  const [error, setError] = useState(null);
-  const [confirmed, setConfirmed] = useState({});
-  const sustainStartRef = useRef({});
-  const engineModRef = useRef(null);
-
-  // Lazy-load engine module on mount; subscribe; unsub on unmount (refcount auto-stops).
-  useEffect(() => {
-    let unsub = null;
-    let cancelled = false;
-    import('./chordDetectorEngine.js').then(mod => {
-      if (cancelled) return;
-      engineModRef.current = mod;
-      unsub = mod.subscribeToChord(u => {
-        setChord(u.currentChord);
-        setListening(u.isListening);
-        setSignalLevel(u.signalLevel || 0);
-        setError(u.error?.message || null);
-      });
-    }).catch(e => {
-      if (!cancelled) setError(`engine load failed: ${e.message || e}`);
-    });
-    return () => {
-      cancelled = true;
-      if (unsub) unsub();
-    };
-  }, []);
-
-  // Auto-tick state machine: per-target sustain start; confirm at 600 ms continuous match.
-  useEffect(() => {
-    if (!targets || !chord || chord.confidence < _CHORD_TARGET_MIN_CONF) return;
-    // Try explicit chord names first (e.g. Am7 before Am) so the chord the player
-    // actually voiced gets credit instead of an over-eager bare-letter target.
-    const sorted = [...targets].sort((a, b) => {
-      const aExplicit = /\d|sus|dim|aug|maj/.test(a) ? 0 : 1;
-      const bExplicit = /\d|sus|dim|aug|maj/.test(b) ? 0 : 1;
-      return aExplicit - bExplicit;
-    });
-    const matchKey = sorted.find(t => _matchTargetChord(t, chord));
-    if (!matchKey) {
-      sustainStartRef.current = {};
-      return;
-    }
-    if (confirmed[matchKey]) return;
-    const now = performance.now();
-    if (!sustainStartRef.current[matchKey]) {
-      sustainStartRef.current[matchKey] = now;
-    } else if (now - sustainStartRef.current[matchKey] >= _CHORD_TARGET_CONFIRM_MS) {
-      // Time-driven transition: candidate → confirmed when sustained ≥600 ms.
-      // Guarded by the confirmed[matchKey] early-return above so this fires once per target.
-      setConfirmed(prev => ({ ...prev, [matchKey]: true }));
-    }
-  }, [chord, targets, confirmed]);
-
-  const handleToggle = useCallback(async () => {
-    const mod = engineModRef.current;
-    if (!mod) return;
-    setError(null);
-    try {
-      if (mod.isEngineRunning()) await mod.stopEngine();
-      else await mod.startEngine();
-    } catch (e) {
-      setError(e?.message || String(e));
-    }
-  }, []);
-
-  const handleReset = useCallback(() => {
-    setConfirmed({});
-    sustainStartRef.current = {};
-  }, []);
+  const { chord, listening, signalLevel, error, isReady, toggle: handleToggle } = useChordEngine();
+  const { confirmed, reset: handleReset } = useChordTargetChecklist(targets, chord);
 
   const allConfirmed = targets && targets.length > 0 && targets.every(t => confirmed[t]);
   const meterPct = Math.max(0, Math.min(100, signalLevel * 100));
@@ -2031,11 +1934,11 @@ function ExerciseChordListener({ listenForChords }) {
               fontFamily: T.sans, fontSize: 9, color: T.textMed, cursor: 'pointer', textTransform: 'uppercase', letterSpacing: 0.5,
             }}>reset</button>
           )}
-          <button onClick={handleToggle} disabled={!engineModRef.current} style={{
+          <button onClick={handleToggle} disabled={!isReady} style={{
             background: listening ? T.gold : 'transparent', color: listening ? '#fff' : T.goldDark,
             border: `1.5px solid ${T.gold}`, borderRadius: T.radius, padding: '6px 14px',
             fontFamily: T.sans, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1.2,
-            cursor: engineModRef.current ? 'pointer' : 'wait',
+            cursor: isReady ? 'pointer' : 'wait',
           }}>{listening ? 'Listening' : 'Listen'}</button>
         </div>
       </div>

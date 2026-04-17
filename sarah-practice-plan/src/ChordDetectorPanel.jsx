@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { ArrowLeft, Mic, MicOff, ChevronRight, ChevronDown } from 'lucide-react';
-import { COLOR_MUSIC, getColorForNote, normalizeNote, FretboardDiagram, CHORD_VOICINGS_MULTI } from './JungleTools.jsx';
-import { subscribeToChord, startEngine, stopEngine, isEngineRunning } from './chordDetectorEngine.js';
+import { getColorForNote, normalizeNote, FretboardDiagram, CHORD_VOICINGS_MULTI } from './JungleTools.jsx';
+import { qualityBucket, useChordEngine, useChordTargetChecklist } from './chordDetectorReact.js';
 
 // ─── Music helpers ──────────────────────────────────────────────────────────
 const CHROMATIC_SHARP = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
@@ -33,19 +33,6 @@ function parseFretString(frets) {
     out.push(isNaN(n) ? -1 : n);
   }
   return out;
-}
-
-// Quality buckets for downstream display + suggestion.
-const MAJOR_QUALITIES = new Set(['maj', '7', 'maj7', 'maj7no5', '7no5', '6', 'add9', '9', 'maj9', '9no5', 'maj9no5', '6/9', 'sus2', 'sus4', '7sus4']);
-const MINOR_QUALITIES = new Set(['min', 'm7', 'mMaj7', 'mMaj7no5', 'm7no5', 'm6', 'mAdd9', 'm9', 'm9no5', 'm7b5']);
-const DIM_QUALITIES = new Set(['dim', 'dim7']);
-const AUG_QUALITIES = new Set(['aug', '7#5', '7b5']);
-
-function qualityBucket(quality) {
-  if (MINOR_QUALITIES.has(quality)) return 'min';
-  if (DIM_QUALITIES.has(quality)) return 'dim';
-  if (AUG_QUALITIES.has(quality)) return 'aug';
-  return 'maj';
 }
 
 // Triad intervals from root, used for the NOTES chip row.
@@ -390,107 +377,26 @@ function useIsWideViewport(breakpoint = 768) {
   return isWide;
 }
 
-// ─── Auto-tick state machine for CHORDS TO PLAY chip row ────────────────────
-// Per-chord states: pending → confirmed (sustained ≥600ms continuous at ≥0.7 confidence).
-// Once confirmed, sticks. Resets only when caller clears.
-const CONFIRM_MS = 600;
-const CONFIRM_CONF = 0.7;
-function useChordChecklist(targetChords, currentChord) {
-  const [confirmed, setConfirmed] = useState({});
-  const sustainStartRef = useRef({});
-
-  useEffect(() => {
-    if (!targetChords || targetChords.length === 0) return;
-    if (!currentChord || !currentChord.name) return;
-    if (currentChord.confidence < CONFIRM_CONF) return;
-    const matchKey = targetChords.find(t => matchesChord(t, currentChord));
-    if (!matchKey) {
-      // Different chord — reset sustain timers for unconfirmed targets
-      sustainStartRef.current = {};
-      return;
-    }
-    if (confirmed[matchKey]) return;
-    const now = performance.now();
-    if (!sustainStartRef.current[matchKey]) {
-      sustainStartRef.current[matchKey] = now;
-    } else if (now - sustainStartRef.current[matchKey] >= CONFIRM_MS) {
-      // Time-driven transition: candidate → confirmed when sustained ≥600ms.
-      // Guarded by the confirmed[matchKey] check above so this fires exactly once per target.
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setConfirmed(prev => ({ ...prev, [matchKey]: true }));
-    }
-  }, [currentChord, targetChords, confirmed]);
-
-  const reset = useCallback(() => {
-    setConfirmed({});
-    sustainStartRef.current = {};
-  }, []);
-  return { confirmed, reset };
-}
-
-// Returns true if a target chord (e.g. "G", "Am", "C7") matches the detected chord name.
-function matchesChord(target, chord) {
-  if (!chord || !chord.name) return false;
-  if (target === chord.name) return true;
-  // Engine returns plain root for major (e.g. "G"); accept the same target form
-  // For minor: target "Am" matches name "Am"
-  // For 7ths: target "G7" matches name "G7"
-  // Allow tolerance: target "G" also matches "Gmaj7", "G7", "G6" (same root, major bucket)
-  // and target "Am" matches "Am7", "Am9" (same root, minor bucket)
-  const targetRoot = target.match(/^[A-G][#b]?/)?.[0];
-  if (!targetRoot || targetRoot !== chord.root) return false;
-  const targetIsMinor = /^[A-G][#b]?m(?!aj)/.test(target);
-  const targetIsExplicit = /\d|sus|dim|aug|maj/.test(target);
-  if (targetIsExplicit) return false; // explicit 7/9/sus must match exactly
-  const chordBucket = qualityBucket(chord.quality);
-  // Bare-letter targets ignore dim/aug — those rare qualities show up on
-  // transient noise and shouldn't credit the player. Major bucket only.
-  if (chordBucket === 'dim' || chordBucket === 'aug') return false;
-  if (targetIsMinor) return chordBucket === 'min';
-  return chordBucket === 'maj';
-}
-
 // ─── Main panel ─────────────────────────────────────────────────────────────
 export function ChordDetectorPanel({ theme: T, onBack, targetChords = null }) {
-  const [engineState, setEngineState] = useState({
-    isListening: false, currentChord: null, signalLevel: 0, signalDb: -Infinity,
-  });
-  const [error, setError] = useState(null);
+  const { chord, listening, signalLevel, signalDb, error, toggle: handleToggle } = useChordEngine();
   const [heroVoicingIdx, setHeroVoicingIdx] = useState(0);
   const [recent, setRecent] = useState([]);
   const lastChordNameRef = useRef(null);
   const [expanded, setExpanded] = useState({ neck: false, wheel: false, function: false, recent: false });
   const isWide = useIsWideViewport(768);
 
+  // Recent-chord history + hero voicing reset on chord change. The setState
+  // here is gated by a ref-equality check so it only fires once per actual
+  // chord transition, not on every engine push of the same chord.
   useEffect(() => {
-    const unsub = subscribeToChord((u) => {
-      setEngineState(u);
-      if (u.error) setError(u.error.message || String(u.error));
-      else setError(null);
-      // Track recent chords (dedup consecutive)
-      if (u.currentChord && u.currentChord.name !== lastChordNameRef.current) {
-        lastChordNameRef.current = u.currentChord.name;
-        setRecent(prev => {
-          const next = [u.currentChord.name, ...prev.filter(n => n !== u.currentChord.name)];
-          return next.slice(0, 6);
-        });
-        setHeroVoicingIdx(0); // reset voicing when chord changes
-      }
-    });
-    return unsub;
-  }, []);
+    if (!chord || chord.name === lastChordNameRef.current) return;
+    lastChordNameRef.current = chord.name;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setRecent(prev => [chord.name, ...prev.filter(n => n !== chord.name)].slice(0, 6));
+    setHeroVoicingIdx(0);
+  }, [chord]);
 
-  const handleToggle = useCallback(async () => {
-    setError(null);
-    try {
-      if (isEngineRunning()) await stopEngine();
-      else await startEngine();
-    } catch (e) {
-      setError(e?.message || String(e));
-    }
-  }, []);
-
-  const chord = engineState.currentChord;
   const root = chord?.root || 'G';
   const quality = chord?.quality || 'maj';
   const name = chord?.name || 'G';
@@ -502,7 +408,8 @@ export function ChordDetectorPanel({ theme: T, onBack, targetChords = null }) {
   const suggestions = useMemo(() => suggestNext(root, quality), [root, quality]);
   const functions = useMemo(() => functionRoles(root, quality), [root, quality]);
 
-  const checklist = useChordChecklist(targetChords, chord);
+  const checklist = useChordTargetChecklist(targetChords, chord);
+  const engineState = { isListening: listening, currentChord: chord, signalLevel, signalDb };
 
   // ── Reusable section blocks ─────────────────────────────────────────────
   const StickyTop = (

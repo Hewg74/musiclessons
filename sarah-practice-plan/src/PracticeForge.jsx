@@ -8,6 +8,7 @@ import {
 import { CHROMATIC, CIRCLE_OF_FIFTHS, SCALE_TYPES, generateScale } from './ColorMusicTrainer.jsx';
 import GUIDANCE_CACHE from './data/practiceForgeGuidance.json';
 import { CompactDroneWheel } from './CompactDroneWheel.jsx';
+import { useChordEngine, CONFIRM_MS as CHORD_CONFIRM_MS, MIN_CONFIDENCE as CHORD_MIN_CONF } from './chordDetectorReact.js';
 
 // Canonical order used to build combo-mode keys so lookups are deterministic
 // regardless of draw order. Positions of the legacy dims (pitch, rhythm,
@@ -2730,57 +2731,29 @@ function CompactTimerStrip({ duration, running, onComplete, onToggle, onReset, o
 // ═══════════════════════════════════════════
 // ─── Forge chord listener (Phase 6) ───
 // ═══════════════════════════════════════════
-// Sixth auto-wired tool: subscribe to the chord-detector engine and surface
-// the detected chord live, plus a one-shot "matches the card key" verification
-// signal that the player can use to inform their post-round Easy/Good/Hard
-// rating. The engine module is dynamic-imported so PracticeForge bundles do
-// not gain a new eager dependency. The engine is a refcounted singleton —
-// the panel + the in-exercise listener + this listener can all coexist.
-
-const _PF_CONFIRM_MS = 600;
-const _PF_MIN_CONF = 0.7;
+// Sixth auto-wired tool. Surfaces the detected chord live plus a one-shot
+// "matches the card key" verification signal the player can use to inform
+// their Easy/Good/Hard rating. Engine plumbing lives in chordDetectorReact.js
+// — the engine is a refcounted singleton shared by the Tools panel, the
+// in-exercise listener, and this listener.
 
 function ForgeChordListener({ T, keyRoot }) {
-  const [chord, setChord] = useState(null);
-  const [listening, setListening] = useState(false);
-  const [signalLevel, setSignalLevel] = useState(0);
-  const [signalDb, setSignalDb] = useState(-Infinity);
-  const [error, setError] = useState(null);
+  const { chord, listening, signalLevel, signalDb, error, isReady, toggle: handleToggle } = useChordEngine();
   const [keyMatchConfirmed, setKeyMatchConfirmed] = useState(false);
   const sustainStartRef = useRef(0);
-  const engineModRef = useRef(null);
-
-  useEffect(() => {
-    let unsub = null;
-    let cancelled = false;
-    import('./chordDetectorEngine.js').then(mod => {
-      if (cancelled) return;
-      engineModRef.current = mod;
-      unsub = mod.subscribeToChord(u => {
-        setChord(u.currentChord);
-        setListening(u.isListening);
-        setSignalLevel(u.signalLevel || 0);
-        setSignalDb(u.signalDb);
-        setError(u.error?.message || null);
-      });
-    }).catch(e => {
-      if (!cancelled) setError(`engine load failed: ${e.message || e}`);
-    });
-    return () => {
-      cancelled = true;
-      if (unsub) unsub();
-    };
-  }, []);
 
   // Reset key-match confirmation whenever the card's key changes.
   useEffect(() => {
+    // Card-key transition; we deliberately reset state in this effect because
+    // it's the cleanest way to gate verification on the new card.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setKeyMatchConfirmed(false);
     sustainStartRef.current = 0;
   }, [keyRoot]);
 
   // Sustain-driven verification: detected chord root matches card key root for ≥600 ms.
   useEffect(() => {
-    if (!chord || !keyRoot || chord.confidence < _PF_MIN_CONF) {
+    if (!chord || !keyRoot || chord.confidence < CHORD_MIN_CONF) {
       sustainStartRef.current = 0;
       return;
     }
@@ -2791,22 +2764,14 @@ function ForgeChordListener({ T, keyRoot }) {
     if (keyMatchConfirmed) return;
     const now = performance.now();
     if (sustainStartRef.current === 0) sustainStartRef.current = now;
-    else if (now - sustainStartRef.current >= _PF_CONFIRM_MS) {
+    else if (now - sustainStartRef.current >= CHORD_CONFIRM_MS) {
+      // Time-driven transition guarded by keyMatchConfirmed above so this
+      // fires once per card. The lint rule's general guidance about
+      // setState-in-effect doesn't fit time-thresholded confirmations.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setKeyMatchConfirmed(true);
     }
   }, [chord, keyRoot, keyMatchConfirmed]);
-
-  const handleToggle = useCallback(async () => {
-    const mod = engineModRef.current;
-    if (!mod) return;
-    setError(null);
-    try {
-      if (mod.isEngineRunning()) await mod.stopEngine();
-      else await mod.startEngine();
-    } catch (e) {
-      setError(e?.message || String(e));
-    }
-  }, []);
 
   const meterPct = Math.max(0, Math.min(100, signalLevel * 100));
   const dbLabel = signalDb && isFinite(signalDb) ? `${Math.round(signalDb)} dB` : '— dB';
@@ -2839,11 +2804,11 @@ function ForgeChordListener({ T, keyRoot }) {
             {listening ? 'LIVE' : 'IDLE'}
           </span>
         </div>
-        <button onClick={handleToggle} disabled={!engineModRef.current} style={{
+        <button onClick={handleToggle} disabled={!isReady} style={{
           background: listening ? T.gold : 'transparent', color: listening ? '#fff' : T.goldDark,
           border: `1.5px solid ${T.gold}`, borderRadius: 8, padding: '7px 14px',
           fontFamily: T.sans, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1.2,
-          cursor: engineModRef.current ? 'pointer' : 'wait', whiteSpace: 'nowrap',
+          cursor: isReady ? 'pointer' : 'wait', whiteSpace: 'nowrap',
         }}>{listening ? 'Listening' : 'Listen'}</button>
       </div>
 
