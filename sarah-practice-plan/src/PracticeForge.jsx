@@ -8,7 +8,9 @@ import {
 import { CHROMATIC, CIRCLE_OF_FIFTHS, SCALE_TYPES, generateScale } from './ColorMusicTrainer.jsx';
 import GUIDANCE_CACHE from './data/practiceForgeGuidance.json';
 import { CompactDroneWheel } from './CompactDroneWheel.jsx';
-import { useChordEngine, CONFIRM_MS as CHORD_CONFIRM_MS, MIN_CONFIDENCE as CHORD_MIN_CONF } from './chordDetectorReact.js';
+import { useChordEngine, useChordTargetChecklist, CONFIRM_MS as CHORD_CONFIRM_MS, MIN_CONFIDENCE as CHORD_MIN_CONF } from './chordDetectorReact.js';
+import { CHORD_PROGRESSIONS, SCALES_WITHOUT_PROGRESSIONS } from './data/chordProgressions.js';
+import { resolveProgression, uniqueChordNames } from './chordProgressionResolver.js';
 
 // Canonical order used to build combo-mode keys so lookups are deterministic
 // regardless of draw order. Positions of the legacy dims (pitch, rhythm,
@@ -789,6 +791,24 @@ const HARMONIC_TARGET_CONSTRAINTS = [
   { id: 'colorTone79', name: 'Color Tones 7/9/11', desc: 'Emphasize chord extensions — 7ths, 9ths, 11ths — instead of the plain triad. The sound of jazz, bossa, Khruangbin-mellow, and modal color playing.', icon: '✦' },
 ];
 
+// Chord progression = a cycle of chord changes to play over. Generated from
+// the CHORD_PROGRESSIONS library, each entry stores scale-degree Roman
+// numerals (I, bVII, iim7, V7, ...) that resolve to concrete chord names
+// per-card against the active key + scale. When drawn alongside other dims
+// (texture, harmonicTarget, picking), those dims compose ON TOP of the
+// progression — "fingerpick double-stops over the Andalusian, landing on
+// chord tones of each chord as it passes".
+const CHORD_PROGRESSION_CONSTRAINTS = CHORD_PROGRESSIONS.map(p => ({
+  id: p.id,
+  name: p.name,
+  desc: `${p.vibe}. ${p.bars} bar${p.bars === 1 ? '' : 's'} — cycle through the changes. Other constraints on this card (texture, picking, harmonic target) apply OVER the progression, not instead of it.`,
+  icon: '⟳',
+  degrees: p.degrees,
+  scales: p.scales,
+  bars: p.bars,
+  vibe: p.vibe,
+}));
+
 // Phrase structure = how phrases relate to each other across time. Added in
 // Phase B. Absorbs the `questionAnswer` value from v1's pitchConstraint dim
 // (which was always a phrase-level form, not a note-level contour). Soft-gated
@@ -922,6 +942,7 @@ const DIMENSIONS = [
   { id: 'rhythmConstraint', label: 'Rhythm',       tier: 2, type: 'qualitative',  options: RHYTHM_CONSTRAINTS,       color: '#d97d54' },
   { id: 'dynamics',         label: 'Dynamics',     tier: 2, type: 'qualitative',  options: DYNAMICS_CONSTRAINTS,     color: '#6b8e9f' },
   { id: 'harmonicTarget',   label: 'Harmonic',     tier: 2, type: 'qualitative',  options: HARMONIC_TARGET_CONSTRAINTS, color: '#a59e6b' },
+  { id: 'chordProgression', label: 'Progression',  tier: 2, type: 'qualitative',  options: CHORD_PROGRESSION_CONSTRAINTS, color: '#8b6db5' },
   // Shared randomizable pool — tier 3 (ideal mode and up)
   { id: 'articulation',     label: 'Articulation', tier: 3, type: 'qualitative',  options: ARTICULATION_CONSTRAINTS, color: '#5b9e8f' },
   { id: 'phraseLength',     label: 'Phrase',       tier: 3, type: 'qualitative',  options: PHRASE_CONSTRAINTS,       color: '#9e829c' },
@@ -1133,11 +1154,24 @@ function drawRandom(card, activeDimensions, lockedDimensions, constraintWeights,
   const foundationalSet = new Set(FOUNDATIONAL_DIMS[instrument] || []);
   const lockedQualDims = [];
   const availableQualDims = [];
+
+  // chordProgression compatibility gate: the scale must be one that supports
+  // diatonic progressions, AND at least one progression in the library must
+  // declare this scale as compatible. If not, the dim is silently removed
+  // from the random pool — cards on pentatonic / whole-tone / locrian
+  // scales draw one fewer random dim rather than forcing a progression that
+  // wouldn't resolve.
+  const scale = card.constraints.scale;
+  const progCompatOptions = scale && !SCALES_WITHOUT_PROGRESSIONS.has(scale)
+    ? CHORD_PROGRESSION_CONSTRAINTS.filter(o => o.scales.includes(scale))
+    : [];
+
   for (const dimId of activeDimensions) {
     if (foundationalSet.has(dimId)) continue; // foundational already drawn
     const dim = DIMENSIONS.find(d => d.id === dimId);
     if (!dim || dim.type === 'quantitative') continue;
     if (!dim.options || dim.options.length === 0) continue;
+    if (dimId === 'chordProgression' && progCompatOptions.length === 0) continue;
     if (lockedDimensions[dimId] !== undefined) {
       lockedQualDims.push(dimId);
     } else {
@@ -1159,7 +1193,12 @@ function drawRandom(card, activeDimensions, lockedDimensions, constraintWeights,
 
   for (const dimId of selectedDims) {
     const dim = DIMENSIONS.find(d => d.id === dimId);
-    const chosen = srsWeightedPick(dim, constraintWeights, instrument);
+    // chordProgression: narrow options to scale-compatible entries only so
+    // the weighted pick can never return an incompatible progression.
+    const effectiveDim = dimId === 'chordProgression'
+      ? { ...dim, options: progCompatOptions }
+      : dim;
+    const chosen = srsWeightedPick(effectiveDim, constraintWeights, instrument);
     enrichDynamicConstraint(chosen, card, scaleNotes);
     card.constraints[dimId] = chosen;
   }
@@ -1301,8 +1340,27 @@ function generateCard(activeDimensions, lockedDimensions, history, constraintWei
   // and is expected not to call generateCard again until the user adjusts.
   validateAndRepair(card, lockedDimensions, constraintWeights, instrument);
 
-  // Track which qualitative dims were drawn (foundational + random).
-  card.drawnConstraints = [...foundationalDrawn, ...randomDrawn];
+  // Pass 5: resolve chord progression degrees → concrete chord names against
+  // the FINAL key + scale (validateAndRepair may have redrawn the scale). If
+  // the resolver returns an empty list — e.g. the repaired scale is a
+  // pentatonic — drop the dim cleanly. Track which qualitative dims were
+  // drawn (foundational + random) for downstream guidance + coherence checks.
+  let drawnList = [...foundationalDrawn, ...randomDrawn];
+  if (card.constraints.chordProgression) {
+    const cp = card.constraints.chordProgression;
+    const resolved = resolveProgression(cp, card.constraints.key, card.constraints.scale);
+    if (!resolved.length) {
+      delete card.constraints.chordProgression;
+      drawnList = drawnList.filter(id => id !== 'chordProgression');
+    } else {
+      card.constraints.chordProgression = {
+        ...cp,
+        resolvedChords: resolved,
+        chordTargets: uniqueChordNames(resolved),
+      };
+    }
+  }
+  card.drawnConstraints = drawnList;
 
   // Derive drone root (unchanged from v1).
   card.droneRoot = droneRootFromCard(card.constraints.key, card.constraints.scale);
@@ -1345,7 +1403,7 @@ function runOrthogonalityTest({ perInstrument = 500 } = {}) {
 
   const SHARED_RANDOM = [
     'pitchConstraint', 'rhythmConstraint', 'dynamics',
-    'harmonicTarget',
+    'harmonicTarget', 'chordProgression',
     'articulation', 'phraseLength',
     'phraseStructure',
   ];
@@ -1857,7 +1915,7 @@ function ChallengeCard({
   const FOUNDATIONAL_DIM_IDS = ['texture', 'register', 'vowel'];
   const RANDOM_DIM_IDS = [
     'pitchConstraint', 'rhythmConstraint', 'dynamics',
-    'harmonicTarget',
+    'harmonicTarget', 'chordProgression',
     'articulation', 'phraseLength',
     'phraseStructure',
     'onset',
@@ -2925,7 +2983,7 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
     // Phase C adds neckZone/noteTransition/vibrato to the guitar branch.
     const SHARED_RANDOM = [
       'pitchConstraint', 'rhythmConstraint', 'dynamics',
-      'harmonicTarget',
+      'harmonicTarget', 'chordProgression',
       'articulation', 'phraseLength',
       'phraseStructure',
     ];
