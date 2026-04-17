@@ -158,6 +158,13 @@ export const CHORD_PROGRESSIONS = [
   { id: 'khruangbin_m9',    name: 'Khruangbin (im9–bVIImaj7)',        degrees: ['im9','bVIImaj7'],           scales: ['dorian'],                              vibe: 'Khruangbin modal — dorian m9 bass-line trance', bars: 2 },
   { id: 'bossa_add9',       name: 'Bossa sway (Iadd9–V7)',            degrees: ['Iadd9','V7'],               scales: ['major'],                               vibe: 'Bossa sway — João Gilberto, warm add9 shimmer', bars: 2 },
 
+  // ─── Whole-tone (symmetric scale — augmented chords are its natural home) ───
+  // Whole-tone has no perfect 5th, so major/minor triads don't fit. Augmented
+  // chords (R-3-#5) are made entirely of whole-tones and fit natively. Two aug
+  // chords a whole step apart cover all 6 scale notes between them.
+  { id: 'whole_tone_aug',   name: 'Whole-tone (Iaug–IIaug)',          degrees: ['Iaug','IIaug'],             scales: ['whole-tone'],                          vibe: 'Debussy, dream sequence — floating ambiguity',  bars: 2 },
+  { id: 'whole_tone_vamp',  name: 'Whole-tone vamp (Iaug)',           degrees: ['Iaug'],                     scales: ['whole-tone'],                          vibe: 'Single-chord whole-tone drone — impressionist', bars: 1 },
+
   // ─── Aesthetic favorites (beautiful over exotic — user brief) ───
   // Sunny two-chord vamps that never get old.
   { id: 'sunshine_i_iv',    name: 'Sunshine (I–IV–I)',                degrees: ['I','IV','I'],               scales: ['major','lydian'],                      vibe: '"Here Comes the Sun", "Three Little Birds"',    bars: 3 },
@@ -184,10 +191,9 @@ export const CHORD_PROGRESSIONS = [
   { id: 'psych_soul',       name: 'Psych-soul (i–bVI–v)',             degrees: ['i','bVI','v'],              scales: ['natural-minor'],                       vibe: 'BALTHVS, Khruangbin — psych-soul heat',         bars: 3 },
 ];
 
-// Scales where progressions genuinely can't work — whole-tone is symmetric
-// with no tonic triad (no major/minor root distinction). Pentatonics, locrian,
-// and hirajoshi now have dedicated progressions (accidentals-only for the
-// 5-note scales since bare Romans don't line up with their interval sets).
-export const SCALES_WITHOUT_PROGRESSIONS = new Set([
-  'whole-tone',
-]);
+// Every scale now has progressions. Pentatonics, locrian, hirajoshi, and
+// whole-tone use accidentals + quality pins since their interval sets don't
+// line up with bare Roman-numeral degrees. Whole-tone leans on augmented
+// triads (the only triad shape that fits its symmetric structure). Kept as
+// an empty Set for backward compat with places that still check it.
+export const SCALES_WITHOUT_PROGRESSIONS = new Set([]);

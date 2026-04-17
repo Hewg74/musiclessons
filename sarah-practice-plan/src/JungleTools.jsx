@@ -6258,6 +6258,18 @@ const CHORD_VOICINGS_MULTI = {
   "Gaug": [{ frets: "321003", name: "Gaug", pos: "Open" }],
   "Aaug": [{ frets: "x03221", name: "Aaug", pos: "Open" }],
   "Baug": [{ frets: "x21003", name: "Baug", pos: "Open" }],
+  // Sharp-root augs — F-shape movable barre, root on 6th string.
+  // Pattern: R (R+3) (R+2) (R+1) (R+1) R
+  "C#aug": [{ frets: "9cbaa9", name: "C#aug", pos: "9th" }],
+  "Dbaug": [{ frets: "9cbaa9", name: "Dbaug", pos: "9th" }],
+  "D#aug": [{ frets: "bedccb", name: "D#aug", pos: "11th" }],
+  "Ebaug": [{ frets: "bedccb", name: "Ebaug", pos: "11th" }],
+  "F#aug": [{ frets: "254332", name: "F#aug", pos: "2nd" }],
+  "Gbaug": [{ frets: "254332", name: "Gbaug", pos: "2nd" }],
+  "G#aug": [{ frets: "476554", name: "G#aug", pos: "4th" }],
+  "Abaug": [{ frets: "476554", name: "Abaug", pos: "4th" }],
+  "A#aug": [{ frets: "698776", name: "A#aug", pos: "6th" }],
+  "Bbaug": [{ frets: "698776", name: "Bbaug", pos: "6th" }],
   // ─── Power chords ───
   "A5":  [{ frets: "x022xx", name: "A5", pos: "Open" }, { frets: "577xxx", name: "A5", pos: "5th" }],
   "D5":  [{ frets: "xx023x", name: "D5", pos: "Open" }, { frets: "x577xx", name: "D5", pos: "5th" }],
