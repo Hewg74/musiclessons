@@ -451,6 +451,7 @@ class ChordDetector {
         this.currentChord = {
           name: chosen.name,
           root: chosen.root,
+          quality: chosen.quality,
           confidence: (scoreComp + ratioComp) / 2,
           rawScore: chosenScore,
         };
