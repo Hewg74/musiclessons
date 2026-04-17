@@ -420,7 +420,12 @@ export const level11 = {
       ],
       feel: "Parasitic songwriting should feel liberating — you're not starting from nothing. You have a harmonic framework. All your creative energy goes into melody and lyrics.",
       wrong: "If you're worrying about 'copying,' remember: chord progressions are not copyrightable. The melody and lyrics are what make a song unique. Focus your originality there.",
-      sarah: "Gene, every song on your playlists uses chord progressions that other songs also use. DOPE LEMON, Skinshape, Allah-Las — same progressions, totally different songs. The melody is what matters.",
+      sarah: "Gene, every song on your playlists uses chord progressions that other songs also use. DOPE LEMON, Skinshape, Allah-Las — same progressions, totally different songs. The melody is what matters. The widget below IS your progression-picker for this exercise. Tap 'Draw new' to borrow a different harmonic foundation each time: a pop axis, a minor descent, a dorian groove. Write melody over whatever lands. You're not stealing — you're doing what every songwriter has ever done.",
+      chordProgression: {
+        key: "A",
+        scale: "natural-minor",
+        pool: ["minor_three", "minor_descent", "minor_uplift", "minor_cyclic", "rock_minor", "jazz_minor_ii_v"],
+      },
       metronome: 85,
       referencePitches: getPitchRange("E3", "A4"),
       tracks: [{ name: "Khruangbin Style 80", src: "/khruangbin-style-80.mp3" }],

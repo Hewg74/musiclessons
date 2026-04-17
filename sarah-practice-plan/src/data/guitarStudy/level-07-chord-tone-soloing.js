@@ -43,7 +43,7 @@ export const level7 = {
       ],
       feel: "This should feel meditative \u2014 like breathing. One note, four beats, total presence. There's nowhere to hide in a whole note. If your tone is clean and your timing is locked, one note per chord sounds BETTER than a flurry of scale notes. Constraints breed musicality, as Jens Larsen says. When the root locks with the bass, you should feel a physical click \u2014 the resonance of playing the right note at the right time.",
       wrong: "If you're bored, you're doing it right \u2014 boredom with the constraint means your ear is ready for more. That comes in exercise 2. If you're rushing to the next root before the chord changes, slow down \u2014 the whole note must FILL all 4 beats. If the roots sound disconnected from the backing track, check your timing against the metronome \u2014 you might be landing a beat late on each change.",
-      sarah: "Gene, this is the simplest possible solo \u2014 one note per chord, nothing else. And it works. Mark Speer starts here when building a solo over a new progression: find the roots, lock to the bass, let the harmony do the work. The root is your anchor. Everything you play in this entire level grows from these four notes. If you can make four whole notes sound musical over a backing track, you can make forty notes sound musical too. The discipline is in the patience.",
+      sarah: "Gene, this is the simplest possible solo \u2014 one note per chord, nothing else. And it works. Mark Speer starts here when building a solo over a new progression: find the roots, lock to the bass, let the harmony do the work. The root is your anchor. Everything you play in this entire level grows from these four notes. If you can make four whole notes sound musical over a backing track, you can make forty notes sound musical too. The discipline is in the patience. NOTE: stay on Am-C-Em-D through exercises 1\u20134. The layer isolation (roots here, 3rds next, 5ths after) only teaches its lesson when the chord set stays identical across the three passes. After you finish all 8 exercises in this level, come back to exercise 1 and re-run root targeting against a PF-drawn progression (Tools tab \u2192 Practice Forge). Different test.",
       levelUp: "Play the root of each chord (A, C, E, D) as whole notes over the Am-C-Em-D progression for 4 full cycles at 60 BPM, locked to the chord changes with no hesitation between roots."
     },
 
@@ -68,7 +68,7 @@ export const level7 = {
       ],
       feel: "The 3rds should feel more emotionally loaded than the roots. Each one carries the chord's personality \u2014 playing C over Am should feel like stepping into shade, while F# over D should feel like a beam of warm light. If the 3rds sound 'just like other notes' to you, you're moving too fast. Sit on each one for the full 4 beats and let the color sink in.",
       wrong: "If the 3rds sound wrong or clashing, double-check your note locations \u2014 the most common mistake is playing the 3rd of the WRONG chord (playing E when Am is still sounding). If F# over D sounds jarring, that's partly expected \u2014 F# is outside the key of Am, so it creates a momentary brightness that resolves when Am returns. That tension-resolution IS the music.",
-      sarah: "Gene, every jazz teacher on earth agrees \u2014 3rds are the most important chord tones. They're the DNA of harmony. When Mark Speer plays a solo over a chord change and you can HEAR the chord shift through his single-note line, it's because he's targeting the 3rd. The root tells you where you are; the 3rd tells you how it feels. Your Level 6 major-vs-minor exercise (gs-6-7) showed you that one fret changes everything \u2014 now you're USING that knowledge melodically. The 3rd is your emotional steering wheel.",
+      sarah: "Gene, every jazz teacher on earth agrees \u2014 3rds are the most important chord tones. They're the DNA of harmony. When Mark Speer plays a solo over a chord change and you can HEAR the chord shift through his single-note line, it's because he's targeting the 3rd. The root tells you where you are; the 3rd tells you how it feels. Your Level 6 major-vs-minor exercise (gs-6-7) showed you that one fret changes everything \u2014 now you're USING that knowledge melodically. The 3rd is your emotional steering wheel. Stay on Am-C-Em-D for exercises 1\u20134 \u2014 the layer isolation only works when the chord set stays identical. After all 8 level exercises, come back and run 3rds-only against a PF-drawn progression (Tools \u2192 Practice Forge). Same 3rd-targeting skill, fresh harmonies.",
       levelUp: "Play the 3rd of each chord (C, E, G, F#) as whole notes over Am-C-Em-D for 4 cycles, correctly naming each as minor 3rd or major 3rd before playing. The emotional color of each 3rd should be audible."
     },
 
@@ -92,7 +92,7 @@ export const level7 = {
       ],
       feel: "5ths should feel like the quiet friend in the group \u2014 reliable, always there, never demanding attention. They provide support without drama. When you notice that A is both D's 5th and Am's root, it should feel like a small revelation \u2014 the chords are more connected than they appear, and the same note is a chameleon changing roles as the harmony shifts.",
       wrong: "If the 5ths sound identical to the roots, listen more carefully to the backing track \u2014 the bass note defines the root, and your 5th should sound like it's 'above' the bass, supporting it. If the overlapping functions (A as D's 5th vs Am's root) don't register, play D major as a chord, then play A over it. Now play Am as a chord, then play A over it. Hear how A sounds 'arrived' over Am (it IS the chord) but 'supportive' over D (it's reinforcing D).",
-      sarah: "Gene, the 5th is the note you overlook until you understand what it's doing. It's the structural steel in the building \u2014 invisible but essential. And those overlapping notes \u2014 A being both D's 5th and Am's root, E being both Am's 5th and Em's root \u2014 are the seams where chords connect. When Khruangbin's bass sits on a 5th while the guitar shifts the chord above it, that shared note IS the glue holding the progression together. You're hearing the architecture now.",
+      sarah: "Gene, the 5th is the note you overlook until you understand what it's doing. It's the structural steel in the building \u2014 invisible but essential. And those overlapping notes \u2014 A being both D's 5th and Am's root, E being both Am's 5th and Em's root \u2014 are the seams where chords connect. When Khruangbin's bass sits on a 5th while the guitar shifts the chord above it, that shared note IS the glue holding the progression together. You're hearing the architecture now. Keep Am-C-Em-D here \u2014 hearing root/3rd/5th as three layers of the SAME chord set is what makes the triad click. After all 8 level exercises, come back and run 5ths-only against a PF-drawn progression (Tools \u2192 Practice Forge) to find NEW overlap notes in unfamiliar territory.",
       levelUp: "Play the 5th of each chord (E, G, B, A) as whole notes over Am-C-Em-D for 4 cycles. Identify at least two notes that serve as both a 5th in one chord and a root in another."
     },
 
@@ -117,7 +117,7 @@ export const level7 = {
       ],
       feel: "This should feel like solving a puzzle with your fingers \u2014 each chord change is a small adjustment within a tight space. The constraint should feel liberating, not restrictive. With only two strings to navigate, your musical decisions become clearer and your ears open up. When the Am-C transition happens and your fingers barely move, that's the feeling of voice leading clicking into place.",
       wrong: "If you find yourself jumping to distant frets for each chord change, you're overriding the constraint. Stay in frets 5-8 on the B and G strings ONLY. If you run out of chord tones on two strings, that's okay \u2014 repeat notes with different rhythms. If the quarter notes feel robotic, add slight accents on beats 1 and 3 to create forward motion. Don't expand to other strings yet \u2014 the limitation is the teacher.",
-      sarah: "Gene, Sound Guitar Lessons nailed it: 'those kinds of limitations ultimately set us free.' Two strings, 4 frets, and you're soloing through chord changes with smooth voice leading. You're not thinking about theory \u2014 you're navigating by proximity. This is how Mark Speer thinks about the neck: small shapes, minimal movement, maximum musicality. The constraint isn't holding you back; it's showing you what your fingers already know.",
+      sarah: "Gene, Sound Guitar Lessons nailed it: 'those kinds of limitations ultimately set us free.' Two strings, 4 frets, and you're soloing through chord changes with smooth voice leading. You're not thinking about theory \u2014 you're navigating by proximity. This is how Mark Speer thinks about the neck: small shapes, minimal movement, maximum musicality. The constraint isn't holding you back; it's showing you what your fingers already know. Keep the position-5 constraint on Am-C-Em-D \u2014 the voice-leading lesson only lands when the chord set stays put. After all 8 exercises, come back and try the 2-string constraint against a PF-drawn progression (Tools \u2192 Practice Forge). You'll discover new overlap notes at new frets.",
       levelUp: "Play chord tones as quarter notes through Am-C-Em-D on ONLY the B and G strings (frets 5-8) for 4 cycles at 70 BPM. Each chord change uses the nearest available chord tone \u2014 no jumping to distant positions."
     },
 
@@ -142,7 +142,13 @@ export const level7 = {
       ],
       feel: "This should feel like flowing water finding the path of least resistance \u2014 your fingers seek the nearest chord tone at every change, following gravity instead of forcing jumps. When the Am-to-C transition happens and your finger slides one fret to the nearest C chord tone, it should feel inevitable. Voice leading is the art of making chord changes feel effortless.",
       wrong: "If your line sounds like disconnected arpeggios (root-3rd-5th, root-3rd-5th, root-3rd-5th), you're restarting each chord from the root instead of continuing from where you are. The fix: FORGET the root. Go to whatever chord tone is physically closest. If the melody sounds aimless, strengthen your awareness of which beats are strong (1 and 3) and try to land chord tones there. If one transition is consistently awkward (say Em to D), isolate it and drill it 10 times.",
-      sarah: "Gene, voice leading is the secret ingredient that separates mechanical arpeggio players from musical soloists. Mark Speer does this instinctively \u2014 he doesn't jump to the root of every new chord. He slides to the nearest tone, and that minimal movement creates the smooth, flowing quality that makes Khruangbin solos sound effortless. You're building the same instinct. When you listen back to your recording and hear the chord changes THROUGH the melody, that's the sound of someone who understands harmony from the inside.",
+      sarah: "Gene, voice leading is the secret ingredient that separates mechanical arpeggio players from musical soloists. Mark Speer does this instinctively \u2014 he doesn't jump to the root of every new chord. He slides to the nearest tone, and that minimal movement creates the smooth, flowing quality that makes Khruangbin solos sound effortless. You're building the same instinct. When you listen back to your recording and hear the chord changes THROUGH the melody, that's the sound of someone who understands harmony from the inside. Tap 'Draw new progression' below after Am-C-Em-D feels automatic \u2014 voice-leading isn't a progression-specific skill, it's an instinct. A minor descent, a cyclic minor, a minor uplift. Prove the skill transferred.",
+      chordProgression: {
+        key: "A",
+        scale: "natural-minor",
+        pool: ["minor_three", "minor_descent", "minor_uplift", "minor_cyclic"],
+        instrument: "guitar",
+      },
       levelUp: "Record a 2-minute chord-tone solo over Am-C-Em-D at 70 BPM where every chord change uses the nearest available chord tone. The chord progression should be audible through the single-note melody."
     },
 
@@ -193,7 +199,13 @@ export const level7 = {
       ],
       feel: "The continuous stream should feel like a river \u2014 always flowing, never stopping. Mistakes are rocks in the river; the water flows around them without pausing. The rhythmic shift from 8ths to triplets to 16ths should feel like changing gears in a car: the engine (your picking hand) adapts, the direction (chord-tone targeting) stays the same. When the groove locks, your head should be nodding involuntarily.",
       wrong: "If you keep stopping after mistakes, make the rule physical: set a timer for 2 minutes and do NOT lift your picking hand off the strings until it rings. Every silence is a broken rule. If 16th notes fall apart completely, spend more time on 8th notes \u2014 16ths are a stretch goal, not a requirement. If the groove feels stiff and robotic, you're thinking too hard about note choice. Let some notes be 'wrong' \u2014 the rhythm matters more than perfect pitch targeting at this stage.",
-      sarah: "Gene, Jake Lizzio calls rhythm the single most underpracticed skill for intermediate guitarists. This exercise proves him right. Your fingers know where to go from exercises 1-6. Now make them arrive on time. The no-stopping rule is the hardest part \u2014 it goes against every instinct to pause and fix a mistake. But in live music, there is no pause button. The drummer keeps going, the bass keeps going, and you keep going. Playing through mistakes with a locked groove sounds 100x better than perfect notes with a broken rhythm. That's the truth of live music.",
+      sarah: "Gene, Jake Lizzio calls rhythm the single most underpracticed skill for intermediate guitarists. This exercise proves him right. Your fingers know where to go from exercises 1-6. Now make them arrive on time. The no-stopping rule is the hardest part \u2014 it goes against every instinct to pause and fix a mistake. But in live music, there is no pause button. The drummer keeps going, the bass keeps going, and you keep going. Playing through mistakes with a locked groove sounds 100x better than perfect notes with a broken rhythm. That's the truth of live music. After you lock the groove on Am-C-Em-D, tap 'Draw new progression' and run the same subdivision ladder against a Rock Minor or Surf Minor. The rhythm discipline shouldn't care which progression you're over.",
+      chordProgression: {
+        key: "A",
+        scale: "natural-minor",
+        pool: ["minor_three", "minor_uplift", "rock_minor", "surf_minor"],
+        instrument: "guitar",
+      },
       levelUp: "Play continuous 8th notes through Am-C-Em-D for 16 bars at 70 BPM without stopping, targeting chord tones on downbeats. Then repeat with triplets. Record your speed ladder edge tempo for tracking."
     },
 
@@ -224,8 +236,56 @@ export const level7 = {
       ],
       feel: "This should feel like coming home to a song you know intimately \u2014 but seeing it with new eyes. Am-D is where your guitar journey started. Now you're inside those chords, playing their DNA as melody. The solo should feel lazy and warm, like the song itself \u2014 behind the beat, drenched in reverb, no urgency. When F# appears over D major, it should feel like a beam of sunlight through the Am haze.",
       wrong: "If the solo sounds like a scale exercise instead of music, you're playing too many notes. Pull back. Leave space. Let the backing track breathe. If you can't hear the Am-D change in your solo, you're not targeting chord tones on the downbeats \u2014 exaggerate the targeting (hold the 3rd for a full beat at each chord change) until the harmony is clear. If comparing to your baseline is discouraging instead of motivating, you're being too hard on yourself \u2014 any musician who heard both recordings would confirm massive growth.",
-      sarah: "Gene, you played this song on day one with open chords and a constant arm motion. You strummed Am and D back and forth while learning what a chord transition even was. Now you're soloing over those same two chords with chord-tone awareness, scalar resolution, and voice-leading instincts. THAT is growth. Listen to both recordings back to back \u2014 you won't believe it's the same person. Angus Stone from DOPE LEMON would hear that solo and nod, because it's built on the same principle he uses: know the harmony, target the important notes, let the groove do the rest. Level 8 opens up jangle and shimmer \u2014 arpeggiated patterns, chorus and reverb textures, the bright side of the fretboard. But first, sit with this. You earned it.",
+      sarah: "Gene, you played this song on day one with open chords and a constant arm motion. You strummed Am and D back and forth while learning what a chord transition even was. Now you're soloing over those same two chords with chord-tone awareness, scalar resolution, and voice-leading instincts. THAT is growth. Listen to both recordings back to back \u2014 you won't believe it's the same person. Angus Stone from DOPE LEMON would hear that solo and nod, because it's built on the same principle he uses: know the harmony, target the important notes, let the groove do the rest. Level 8 opens up jangle and shimmer \u2014 arpeggiated patterns, chorus and reverb textures, the bright side of the fretboard. But first, sit with this. You earned it. One more thing: after recording Dope & Smoke, tap 'Draw new progression' below and solo over 3 PF-drawn 2-chord vamps. A Khruangbin im-bVIImaj7, a dorian i-IV, a desert vamp. Compare how your instinct adapts. That's the framework in action.",
+      chordProgression: {
+        key: "A",
+        scale: "dorian",
+        pool: ["khruangbin_im_bvii", "dorian_groove", "i_iv_only", "desert_vamp"],
+        instrument: "guitar",
+      },
       levelUp: "Can solo over the Am-D progression targeting chord tones with scalar connections, recorded and reviewed. The chord changes are audible through the melody. Comparison to the Level 1 baseline recording shows clear growth in harmonic awareness, fretboard navigation, and musical expression."
+    },
+
+    // ═══════════════════════════════════════════════════════════════════
+    // PROGRESSION ROULETTE — Level 7 Capstone
+    // Prove the chord-tone framework works OVER ANY PROGRESSION, not just
+    // the Am–C–Em–D scaffold. Student draws from a wide pool, must derive
+    // chord tones in real time, and solos through 3 progressions per session.
+    // ═══════════════════════════════════════════════════════════════════
+
+    {
+      id: "gs-7-9",
+      time: 10,
+      title: "Progression Roulette — Chord Tones Over Anything",
+      type: "guitar",
+      chordProgression: {
+        key: "A",
+        scale: "natural-minor",
+        pool: [
+          "minor_three", "minor_descent", "minor_uplift", "minor_cyclic",
+          "rock_minor", "surf_minor", "desert_vamp", "jazz_minor_ii_v",
+        ],
+        instrument: "guitar",
+      },
+      drone: { root: "A", octave: 2, texture: "analog" },
+      fretboard: { scale: "a-natural-minor", position: 1 },
+      tracks: [{ name: "Groove Beat 90", src: "/groove-beat-90.mp3" }],
+      recorder: true,
+      metronome: 70,
+      what: "You've mastered chord-tone soloing over Am–C–Em–D. Time to prove the skill isn't pattern-locked. The widget below draws a new minor progression every tap. Apply Level 7's full toolkit — roots, 3rds, 5ths, scalar resolution, voice leading, rhythmic variation — without advance prep. Do 3 progressions per session.",
+      setup: "Guitar. Clean tone, neck pickup. Drone on A. Metronome at 70 BPM. Widget on the card.",
+      steps: [
+        { text: "Tap 'Draw new progression' until you get one you don't recognize (or keep the first draw — randomness is the point). Read the chip row. For each chord, name root, 3rd, 5th OUT LOUD before playing. Don't start soloing until you've voiced the three chord tones for every chord in the progression.", why: "Vocal pre-cueing is the Edwin Gordon audiation principle from gs-7-1. Saying the chord tones out loud locks them into procedural memory BEFORE your fingers have to find them. The widget forces real-time chord-tone derivation — you can't rehearse because you don't know the progression in advance." },
+        { text: "Cycle 1 — Roots only (like gs-7-1). Play the root of each chord as whole notes. 2 full cycles through the progression. No 3rds. No 5ths. Just anchor.", why: "Starting with roots reveals whether you can LOCATE the chord tones on the fly. If you struggle with roots, don't move on — go back to gs-7-1 and re-run the layer isolation until root-finding is automatic over any key." },
+        { text: "Cycle 2 — 3rds only (like gs-7-2). Target only the 3rd of each chord. Feel the emotional color of each one. Minor 3rd? Major 3rd? Identify it as you play.", why: "The 3rd is the emotional DNA. If you can land 3rds on 3 unfamiliar progressions in one session, the 3rd-awareness skill has transferred. That's the Level 7 promise." },
+        { text: "Cycle 3 — Free with scalar resolution (like gs-7-6). Chord tones on strong beats, scale-note pathways between. Voice-lead to the NEAREST chord tone at each change. Let the solo BREATHE — leave space.", why: "Scalar resolution is where L7's pieces converge. When you can do it over a progression you'd never seen 10 minutes ago, Level 7 is truly yours." },
+        { text: "Tap 'Draw new progression.' Repeat cycles 1-3 with the new draw. Do a total of 3 progressions in one session. Record one of them.", why: "Three progressions per session is the minimum viable proof of transfer. Under three, you might just be lucky with a familiar-shaped draw. Three unfamiliar draws + successful soloing = the skill is real." },
+        { text: "Listen back to your recording. Can you hear the chord changes through your melody? If yes, Level 7 is complete. If no, identify which transition hid the harmony and drill it next session.", why: "Voice-leading audibility is the L7 litmus test from gs-7-5. The recording is evidence — if the chord progression is visible through a single-note melody, you've internalized the whole level." }
+      ],
+      feel: "This is the moment L7 stops being about Am–C–Em–D and becomes about chord-tone soloing as a general framework. When your hands find the right notes over a progression you've never played, you're no longer practicing — you're playing music. The feeling is freedom, not struggle. If it feels like struggle on every draw, the baseline isn't solid yet; go back to gs-7-5 and rebuild.",
+      wrong: "If you can't derive chord tones for an unfamiliar progression in real time, you memorized L7 instead of internalizing it. No shame — go back to gs-7-2 and rebuild with awareness of WHY the 3rd matters, not just WHERE it lives on Am–C–Em–D. The widget is merciless; it exposes shortcuts. That's its gift.",
+      sarah: "Gene, if you can solo through chord tones over any progression PF hands you, you've moved from 'exercise' to 'musician.' Mark Speer doesn't have a favorite progression — he has a FRAMEWORK that works anywhere. That's you now. Level 8 opens up jangle and shimmer — but first, prove this. Three progressions per session. If you can't do it over three random draws, L7 isn't done yet. Stay here until it is.",
+      levelUp: "Can solo through 3 random PF-drawn progressions in one session, hitting chord tones on strong beats and resolving scalar passages to the next chord tone. Recording shows chord changes audible through the melody. Sustained over 3 consecutive practice sessions."
     }
   ]
 };

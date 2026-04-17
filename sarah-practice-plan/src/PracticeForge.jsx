@@ -4,14 +4,15 @@ import { ArrowLeft, RotateCcw, SkipForward, Lock, Unlock, Shuffle, ChevronDown, 
 import {
   normalizeNote, COLOR_MUSIC, getColorForNote, playWarmNote,
   FretboardDiagram, VolumeMeter, MiniAudioPlayer, AudioRecorder,
-  ChordDiagram, CHORD_VOICINGS_MULTI,
 } from './JungleTools.jsx';
 import { CHROMATIC, CIRCLE_OF_FIFTHS, SCALE_TYPES, generateScale } from './ColorMusicTrainer.jsx';
 import GUIDANCE_CACHE from './data/practiceForgeGuidance.json';
 import { CompactDroneWheel } from './CompactDroneWheel.jsx';
-import { useChordEngine, useChordTargetChecklist, CONFIRM_MS as CHORD_CONFIRM_MS, MIN_CONFIDENCE as CHORD_MIN_CONF } from './chordDetectorReact.js';
+import { useChordEngine, CONFIRM_MS as CHORD_CONFIRM_MS, MIN_CONFIDENCE as CHORD_MIN_CONF } from './chordDetectorReact.js';
 import { CHORD_PROGRESSIONS, SCALES_WITHOUT_PROGRESSIONS } from './data/chordProgressions.js';
 import { resolveProgression, uniqueChordNames } from './chordProgressionResolver.js';
+import { ChordProgressionDisplay } from './ChordProgressionDisplay.jsx';
+import { ChordProgressionChecklist } from './ChordProgressionChecklist.jsx';
 
 // Canonical order used to build combo-mode keys so lookups are deterministic
 // regardless of draw order. Positions of the legacy dims (pitch, rhythm,
@@ -2372,189 +2373,23 @@ function ChallengeCard({
           line composes progression × texture/picking × harmonic target into
           one coherent prompt so the card reads as a practice instruction,
           not a stack of disconnected stickers. */}
-      {progressionLine && (() => {
-        const prog = progressionLine.constraint;
-        const allChords = prog.resolvedChords || [];
-        const uniqueChords = [];
-        const seen = new Set();
-        for (const c of allChords) {
-          if (seen.has(c.name)) continue;
-          seen.add(c.name);
-          uniqueChords.push(c);
-        }
-        const showForm = allChords.length > 5;
-        const progColor = progressionLine.dim.color;
-        const synthesis = composeProgressionSynthesis(card);
-        const practiceTip = composeProgressionPracticeTip(card);
-        const modalCallout = MODAL_CHARACTER_CALLOUTS[card.constraints.scale];
-
-        // Strip quality-pin suffixes (Vmaj → V, ivmin → iv) from degree
-        // labels since those are resolver hints, not performer-facing notation.
-        // Keep explicit jazz notation (V7, iim7, Imaj7, iim7b5) — they carry a digit.
-        const displayRoman = (r) => r && !/\d/.test(r)
-          ? r.replace(/(maj|min|dim|aug)$/, '')
-          : r;
-
-        // Guitar fingerings: look up each unique chord's voicing, with an
-        // enharmonic fallback (A# → Bb, D# → Eb, G# → Ab) because the
-        // voicing library uses mixed sharp/flat spellings.
-        const ENHARMONIC_FLAT = { 'A#': 'Bb', 'D#': 'Eb', 'G#': 'Ab' };
-        const lookupVoicing = (name) => {
-          if (CHORD_VOICINGS_MULTI[name]) return CHORD_VOICINGS_MULTI[name][0];
-          const root = name.match(/^[A-G][#b]?/)?.[0];
-          const rest = name.slice(root?.length || 0);
-          const flat = ENHARMONIC_FLAT[root];
-          if (flat && CHORD_VOICINGS_MULTI[flat + rest]) return CHORD_VOICINGS_MULTI[flat + rest][0];
-          return null;
-        };
-        const showFingerings = card.instrument === 'guitar';
-        return (
-          <div style={{
-            marginTop: 18,
-            padding: '14px 16px 16px',
-            background: `${progColor}0f`,
-            border: `1px solid ${progColor}40`,
-            borderRadius: 10,
-          }}>
-            <div style={{
-              display: 'flex', alignItems: 'baseline', gap: 8,
-              fontSize: 9, fontWeight: 800, letterSpacing: 1.6, textTransform: 'uppercase',
-              color: progColor, marginBottom: 10, fontFamily: T.sans,
-            }}>
-              <span>Progression</span>
-              <span style={{ color: T.textLight, fontWeight: 500, letterSpacing: 0.4, textTransform: 'none' }}>
-                · {prog.name}
-              </span>
-              <span style={{ flex: 1 }} />
-              {onToggleLock && (
-                <LockChip dimId="chordProgression" currentValue={prog} label="Progression" />
-              )}
-            </div>
-            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'flex-start' }}>
-              {uniqueChords.map((c, i) => {
-                const cc = getColorForNote(normalizeNote(c.root)) || progColor;
-                const roman = displayRoman(c.roman);
-                return (
-                  <React.Fragment key={c.name}>
-                    {i > 0 && (
-                      <span style={{ color: T.textLight, fontFamily: T.sans, fontSize: 13, opacity: 0.6, paddingTop: 9 }}>→</span>
-                    )}
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-                      <span style={{
-                        padding: '5px 12px', borderRadius: 6,
-                        border: `1.5px solid ${cc}`,
-                        color: cc, background: `${cc}10`,
-                        fontFamily: T.serif, fontWeight: 600, fontSize: 17,
-                        lineHeight: 1, letterSpacing: 0.3,
-                      }}>{c.name}</span>
-                      {roman && (
-                        <span style={{
-                          fontFamily: T.sans, fontSize: 9, fontWeight: 600,
-                          color: T.textLight, letterSpacing: 0.5,
-                        }}>{roman}</span>
-                      )}
-                    </div>
-                  </React.Fragment>
-                );
-              })}
-            </div>
-
-            {/* Chord fingerings — guitar only. Mini-diagrams show the
-                canonical voicing for each unique chord so a player who's
-                never seen "Gmaj7" or "F#m" can play it without leaving the
-                card. Voicings missing from the library are silently omitted
-                (e.g. dim/aug/extension chords like "C#dim" may not resolve). */}
-            {showFingerings && uniqueChords.length > 0 && (() => {
-              const shapes = uniqueChords
-                .map(c => ({ name: c.name, voicing: lookupVoicing(c.name) }))
-                .filter(s => s.voicing);
-              if (shapes.length === 0) return null;
-              return (
-                <div style={{
-                  display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 14,
-                  paddingTop: 12, borderTop: `1px dashed ${progColor}20`,
-                }}>
-                  {shapes.map(s => (
-                    <div key={s.name} style={{
-                      display: 'flex', flexDirection: 'column', alignItems: 'center',
-                    }}>
-                      <ChordDiagram T={T} frets={s.voicing.frets} name={s.name} />
-                      {s.voicing.pos && s.voicing.pos !== 'Open' && (
-                        <span style={{
-                          fontFamily: T.sans, fontSize: 9, color: T.textLight,
-                          marginTop: -4, letterSpacing: 0.3,
-                        }}>{s.voicing.pos}</span>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              );
-            })()}
-            {showForm && (() => {
-              // Compress consecutive repeats so 12-bar blues reads
-              // "I7 ×4 · IV7 ×2 · I7 ×2 · V7 · IV7 · I7 · V7" instead of
-              // dragging the player through twelve identical-looking entries.
-              // Uses Roman numerals — the abstract form is what's useful at
-              // this density; the concrete chord names are already above.
-              const runs = [];
-              for (const c of allChords) {
-                const label = c.roman || c.name;
-                if (runs.length && runs[runs.length - 1].label === label) {
-                  runs[runs.length - 1].count += 1;
-                } else {
-                  runs.push({ label, count: 1 });
-                }
-              }
-              return (
-                <div style={{
-                  marginTop: 10, fontSize: 11, color: T.textMed,
-                  fontFamily: T.sans, lineHeight: 1.5,
-                }}>
-                  <span style={{ color: T.textLight, fontWeight: 600, marginRight: 6 }}>Form:</span>
-                  {runs.map(r => r.count > 1 ? `${r.label} ×${r.count}` : r.label).join(' · ')}
-                </div>
-              );
-            })()}
-            {synthesis && (
-              <div style={{
-                marginTop: 12, paddingTop: 10,
-                borderTop: `1px dashed ${progColor}30`,
-                fontFamily: T.serif, fontSize: 14, color: T.textDark,
-                lineHeight: 1.55,
-              }}>
-                {synthesis}
-              </div>
-            )}
-            {practiceTip && (
-              <div style={{
-                marginTop: 8, padding: '8px 10px',
-                background: `${progColor}08`,
-                borderLeft: `2.5px solid ${progColor}80`,
-                borderRadius: 3,
-                fontFamily: T.sans, fontSize: 12, color: T.textDark,
-                lineHeight: 1.55,
-              }}>
-                {practiceTip}
-              </div>
-            )}
-            {modalCallout && (
-              <div style={{
-                marginTop: 8, fontSize: 11, color: T.textMed,
-                fontFamily: T.sans, lineHeight: 1.5,
-              }}>
-                <span style={{ fontSize: 10, fontWeight: 700, color: T.goldDark, letterSpacing: 0.8, textTransform: 'uppercase', marginRight: 6 }}>Ear:</span>
-                {modalCallout}
-              </div>
-            )}
-            <div style={{
-              marginTop: 8, fontSize: 11.5, color: T.textMed,
-              fontFamily: T.sans, fontStyle: 'italic', lineHeight: 1.5,
-            }}>
-              {prog.vibe} · {prog.bars} bar{prog.bars === 1 ? '' : 's'} — cycle through the changes.
-            </div>
-          </div>
-        );
-      })()}
+      {progressionLine && (
+        <ChordProgressionDisplay
+          T={T}
+          resolvedChords={progressionLine.constraint.resolvedChords || []}
+          name={progressionLine.constraint.name}
+          vibe={progressionLine.constraint.vibe}
+          bars={progressionLine.constraint.bars}
+          instrument={card.instrument}
+          progColor={progressionLine.dim.color}
+          synthesisLine={composeProgressionSynthesis(card)}
+          practiceTip={composeProgressionPracticeTip(card)}
+          modalCallout={MODAL_CHARACTER_CALLOUTS[card.constraints.scale]}
+          lockChipSlot={onToggleLock && (
+            <LockChip dimId="chordProgression" currentValue={progressionLine.constraint} label="Progression" />
+          )}
+        />
+      )}
 
       {/* Divider */}
       {(constraintLines.length > 0 || progressionLine) && (
@@ -3196,42 +3031,40 @@ function CompactTimerStrip({ duration, running, onComplete, onToggle, onReset, o
 // ═══════════════════════════════════════════
 // ─── Forge chord listener (Phase 6) ───
 // ═══════════════════════════════════════════
-// Sixth auto-wired tool. Surfaces the detected chord live plus a one-shot
-// "matches the card key" verification signal the player can use to inform
-// their Easy/Good/Hard rating. Engine plumbing lives in chordDetectorReact.js
-// — the engine is a refcounted singleton shared by the Tools panel, the
-// in-exercise listener, and this listener.
+// Dispatcher: when a progression is drawn on the card, delegate to the
+// extracted ChordProgressionChecklist (shared with embedded exercise cards).
+// Otherwise, render the narrow key-match fallback inline — that UI is PF-only
+// and preserves pre-Phase-4 behavior for cards that didn't draw a progression.
 
 function ForgeChordListener({ T, keyRoot, progressionTargets, progressionName, cardId }) {
-  const { chord, listening, signalLevel, signalDb, error, isReady, toggle: handleToggle } = useChordEngine();
   const hasProgression = !!(progressionTargets && progressionTargets.length);
+  if (hasProgression) {
+    return (
+      <ChordProgressionChecklist
+        T={T}
+        progressionTargets={progressionTargets}
+        progressionName={progressionName}
+        instanceId={cardId}
+      />
+    );
+  }
+  return <ForgeKeyMatchListener T={T} keyRoot={keyRoot} cardId={cardId} />;
+}
 
-  // Progression-aware checklist. Hook is always called so the hook order stays
-  // stable; it's a no-op when targets is null/empty (no matches will tick).
-  const { confirmed, reset: resetChecklist } = useChordTargetChecklist(
-    hasProgression ? progressionTargets : null,
-    chord
-  );
-
-  // Reset checklist when the card changes — confirmed state is sticky across
-  // target-list changes inside the hook, so a new card with different chords
-  // must explicitly clear the old ticks.
-  useEffect(() => {
-    resetChecklist();
-  }, [cardId, resetChecklist]);
-
-  // Fallback narrow key-match verification — only used when the card has NO
-  // progression drawn. Preserves the pre-Phase-4 behavior (play the tonic
-  // chord for ≥600 ms to confirm) for every card that doesn't pin a cycle.
+// Narrow key-match verification — player holds the tonic chord for ≥600 ms to
+// confirm. Only used when no progression is drawn. PF-internal.
+function ForgeKeyMatchListener({ T, keyRoot, cardId }) {
+  const { chord, listening, signalLevel, signalDb, error, isReady, toggle: handleToggle } = useChordEngine();
   const [keyMatchConfirmed, setKeyMatchConfirmed] = useState(false);
   const sustainStartRef = useRef(0);
+
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setKeyMatchConfirmed(false);
     sustainStartRef.current = 0;
-  }, [keyRoot, hasProgression, cardId]);
+  }, [keyRoot, cardId]);
+
   useEffect(() => {
-    if (hasProgression) return; // progression mode handles its own verification
     if (!chord || !keyRoot || chord.confidence < CHORD_MIN_CONF) {
       sustainStartRef.current = 0;
       return;
@@ -3247,20 +3080,14 @@ function ForgeChordListener({ T, keyRoot, progressionTargets, progressionName, c
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setKeyMatchConfirmed(true);
     }
-  }, [chord, keyRoot, keyMatchConfirmed, hasProgression]);
+  }, [chord, keyRoot, keyMatchConfirmed]);
 
   const meterPct = Math.max(0, Math.min(100, signalLevel * 100));
   const dbLabel = signalDb && isFinite(signalDb) ? `${Math.round(signalDb)} dB` : '— dB';
   const chordColor = chord ? getColorForNote(chord.root) : T.textMuted;
 
-  const progressionConfirmedCount = hasProgression
-    ? progressionTargets.filter(t => confirmed[t]).length
-    : 0;
-  const progressionComplete = hasProgression && progressionConfirmedCount === progressionTargets.length;
-
   return (
     <div>
-      {/* Top: live chord readout + listen button */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 12 }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flex: 1, minWidth: 0 }}>
           <span style={{ fontFamily: T.serif, fontSize: 32, lineHeight: 1, color: chordColor, fontWeight: 600 }}>
@@ -3293,7 +3120,6 @@ function ForgeChordListener({ T, keyRoot, progressionTargets, progressionName, c
         }}>{listening ? 'Listening' : 'Listen'}</button>
       </div>
 
-      {/* Signal meter */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
         <div style={{ flex: 1, height: 5, background: T.goldSoft, borderRadius: 999, overflow: 'hidden' }}>
           <div style={{ height: '100%', width: `${meterPct}%`, background: T.gold, transition: 'width 80ms linear' }} />
@@ -3301,74 +3127,7 @@ function ForgeChordListener({ T, keyRoot, progressionTargets, progressionName, c
         <span style={{ fontFamily: T.sans, fontSize: 9, color: T.textMed, whiteSpace: 'nowrap', minWidth: 38, textAlign: 'right' }}>{dbLabel}</span>
       </div>
 
-      {/* Verification: progression-aware checklist if a progression is drawn,
-          narrow key-match strip otherwise. The checklist reuses
-          useChordTargetChecklist's 600ms sustain + 200ms drift-grace logic so
-          brief detection blips don't reset in-flight chord timers. */}
-      {hasProgression ? (
-        <div style={{
-          padding: '10px 12px 12px',
-          background: progressionComplete ? T.successSoft : T.bgSoft,
-          border: `1px solid ${progressionComplete ? T.success + '40' : T.borderSoft}`,
-          borderRadius: 8,
-        }}>
-          <div style={{
-            display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 8,
-            fontSize: 10, fontWeight: 700, color: T.textDark,
-            fontFamily: T.sans, letterSpacing: 0.4,
-          }}>
-            <strong style={{ letterSpacing: 1.0, textTransform: 'uppercase', fontSize: 9, color: T.goldDark }}>
-              Progression check
-            </strong>
-            {progressionName && (
-              <span style={{ color: T.textMed, fontWeight: 500 }}>
-                {progressionName}
-              </span>
-            )}
-            <span style={{ flex: 1 }} />
-            <span style={{
-              fontSize: 9, fontWeight: 700, letterSpacing: 0.5, textTransform: 'uppercase',
-              color: progressionComplete ? T.success : T.textMed,
-            }}>
-              {progressionConfirmedCount} / {progressionTargets.length} confirmed
-            </span>
-          </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-            {progressionTargets.map(name => {
-              const root = name.match(/^[A-G][#b]?/)?.[0];
-              const cc = (root && getColorForNote(normalizeNote(root))) || T.textMuted;
-              const isConfirmed = !!confirmed[name];
-              return (
-                <span key={name} style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 5,
-                  padding: '3px 9px', borderRadius: 6,
-                  border: `1.5px solid ${isConfirmed ? cc : `${cc}55`}`,
-                  background: isConfirmed ? `${cc}1f` : 'transparent',
-                  color: isConfirmed ? cc : T.textMed,
-                  fontFamily: T.serif, fontWeight: 600, fontSize: 13,
-                  opacity: isConfirmed ? 1 : 0.75,
-                  transition: 'all 0.2s',
-                }}>
-                  <span style={{
-                    width: 6, height: 6, borderRadius: '50%',
-                    background: isConfirmed ? cc : 'transparent',
-                    border: isConfirmed ? 'none' : `1.2px solid ${cc}80`,
-                    boxShadow: isConfirmed ? `0 0 4px ${cc}80` : 'none',
-                    flexShrink: 0,
-                  }} />
-                  {name}
-                </span>
-              );
-            })}
-          </div>
-          <div style={{
-            marginTop: 8, fontSize: 10.5, color: T.textLight,
-            fontFamily: T.sans, fontStyle: 'italic', lineHeight: 1.4,
-          }}>
-            Play each chord for ≥600 ms to tick it off. Bare letters accept any quality (G matches G, G7, Gmaj7). Explicit targets (G7) demand exact match.
-          </div>
-        </div>
-      ) : keyRoot && (
+      {keyRoot && (
         <div style={{
           display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px',
           background: keyMatchConfirmed ? T.successSoft : T.bgSoft,

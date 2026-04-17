@@ -11,6 +11,11 @@ import { MiniAudioPlayer, AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, 
 import { ColorMusicTrainer } from './ColorMusicTrainer.jsx';
 import { PitchDiscriminationTrainer } from './PitchDiscriminationTrainer.jsx';
 import { CompactDroneWheel } from './CompactDroneWheel.jsx';
+import { ChordProgressionDisplay } from './ChordProgressionDisplay.jsx';
+import { ChordProgressionChecklist } from './ChordProgressionChecklist.jsx';
+import { drawProgressionFromPool, compatibleFromPool } from './chordProgressionPool.js';
+import { CHORD_PROGRESSIONS } from './data/chordProgressions.js';
+import { resolveProgression } from './chordProgressionResolver.js';
 // PracticeForge is code-split — it pulls in a 280 KB guidance JSON that only users who
 // open the Ear Training → Practice Forge overlay should pay for on initial load.
 const PracticeForge = React.lazy(() =>
@@ -1189,6 +1194,13 @@ function FlowExerciseBody({ ex, completed, onComplete, metro, accentColor, onOpe
             </div>
           )}
 
+          {/* Chord Progression widget (embedded) */}
+          {ex.chordProgression && (
+            <div style={{ marginBottom: 24 }}>
+              <EmbeddedChordProgression T={T} spec={ex.chordProgression} />
+            </div>
+          )}
+
           {/* Piano Keys */}
           {(ex.pianoKeys || droneActiveNotes.notes.length > 0) && (
             <div style={{ marginBottom: 24 }}>
@@ -1992,6 +2004,121 @@ function ExerciseChordListener({ listenForChords }) {
       {error && (
         <div style={{ marginTop: 10, fontSize: 11, color: T.coral, fontFamily: T.sans }}>
           ⚠ {error}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── EMBEDDED CHORD PROGRESSION WIDGET ──────────────────────────────
+// Thin wrapper that turns `ex.chordProgression = { key, scale, pool, pinned?,
+// enableListener? }` into an inline widget on the exercise card. Owns the
+// tiny bit of state (currentId + instanceId) needed to cycle through a pool
+// and reset the listener on "Draw new." Delegates rendering to the extracted
+// ChordProgressionDisplay + ChordProgressionChecklist components (also used
+// by PracticeForge).
+//
+// Behavior:
+//   - Mount: pick pinned id OR random-from-pool as initial progression
+//   - "Draw new progression": redraw from pool (excluding current) + bump
+//     instanceId → ChordProgressionChecklist resets its tick state
+//   - pinned set: hides Draw-new button
+//   - pool compatible with scale has <=1 option: hides Draw-new button
+//   - pool has zero scale-compatible options: renders "no compatible
+//     progression" fallback instead of the widget
+//   - Navigate away / remount: fresh draw (no persistence)
+
+function EmbeddedChordProgression({ T, spec }) {
+  const { key: keyRoot, scale, pool, pinned, enableListener = false, instrument = null } = spec || {};
+  const compatible = useMemo(() => compatibleFromPool(pool, scale), [pool, scale]);
+
+  // Pinned must be compatible with the scale to win — otherwise fall through to
+  // random draw or the "no compatible progression" fallback. Prevents silent
+  // rendering of wrong-quality chords when authoring data pins an incompatible id.
+  const [currentId, setCurrentId] = useState(() => {
+    if (pinned && compatible.includes(pinned)) return pinned;
+    return drawProgressionFromPool(pool, scale);
+  });
+  const [instanceId, setInstanceId] = useState(0);
+
+  const progression = currentId
+    ? CHORD_PROGRESSIONS.find(p => p.id === currentId)
+    : null;
+  const resolved = useMemo(
+    () => progression ? resolveProgression(progression, keyRoot, scale) : [],
+    [progression, keyRoot, scale]
+  );
+
+  // Stabilize + dedup the target name list so useChordTargetChecklist's
+  // [targets] effect doesn't reset the sustain ref every render. Without this,
+  // audio-tick re-renders wipe in-flight sustains faster than the 600ms
+  // confirmation threshold — auto-tick never fires in embedded mode.
+  const targetNames = useMemo(() => {
+    const seen = new Set();
+    const out = [];
+    for (const c of resolved) {
+      if (seen.has(c.name)) continue;
+      seen.add(c.name);
+      out.push(c.name);
+    }
+    return out;
+  }, [resolved]);
+
+  const canDrawNew = !pinned && compatible.length > 1;
+  const handleDrawNew = () => {
+    if (!canDrawNew) return;
+    const next = drawProgressionFromPool(pool, scale, currentId);
+    if (next) {
+      setCurrentId(next);
+      setInstanceId(i => i + 1);
+    }
+  };
+
+  if (!progression || resolved.length === 0) {
+    return (
+      <div style={{
+        marginTop: 12, padding: '12px 14px',
+        background: T.goldSoft, border: `1px dashed ${T.gold}60`, borderRadius: 8,
+        fontFamily: T.sans, fontSize: 12, color: T.textMed, lineHeight: 1.5,
+      }}>
+        No compatible progression for {keyRoot} {scale}. Widen the pool or pick a different scale.
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <ChordProgressionDisplay
+        T={T}
+        resolvedChords={resolved}
+        name={progression.name}
+        vibe={progression.vibe}
+        bars={progression.bars}
+        instrument={instrument}
+      />
+      {canDrawNew && (
+        <div style={{ marginTop: 10, display: 'flex', justifyContent: 'flex-end' }}>
+          <button
+            onClick={handleDrawNew}
+            style={{
+              background: 'transparent', color: T.goldDark,
+              border: `1.5px solid ${T.gold}`, borderRadius: 8, padding: '7px 14px',
+              fontFamily: T.sans, fontSize: 10, fontWeight: 700,
+              textTransform: 'uppercase', letterSpacing: 1.2, cursor: 'pointer',
+            }}
+          >
+            Draw new progression
+          </button>
+        </div>
+      )}
+      {enableListener && (
+        <div style={{ marginTop: 14 }}>
+          <ChordProgressionChecklist
+            T={T}
+            progressionTargets={targetNames}
+            progressionName={progression.name}
+            instanceId={instanceId}
+          />
         </div>
       )}
     </div>

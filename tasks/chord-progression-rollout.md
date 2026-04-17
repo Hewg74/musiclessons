@@ -1,9 +1,20 @@
 # Chord Progression Dimension — Implementation Handoff
 
 **For:** A fresh Claude session continuing this work.
-**Status:** Design locked. Architecture decided. Library outlined. Ready to implement.
-**Last commit on master:** `7925e3b` (chord detector M2/M3/n3 fixes — refactor to shared hook).
+**Status (2026-04-16 update):** **Phases 1–4 shipped to master.** Phase 5 (card text / synthesis polish) partially addressed via `composeProgressionSynthesis` at PF.jsx:552-647. Phase 6 (drone wheel pulse) deferred/optional. **Next work**: component extraction per `tasks/curriculum-progression-integration-proposal.md` — extract banner chip row + listener tick-off as reusable components, embed in exercise cards via `ex.chordProgression` field.
+**Last commit on master:** `7925e3b` (chord detector M2/M3/n3 fixes — refactor to shared hook). Subsequent commits shipped Phases 1–4.
 **Repo:** `C:\Users\hewg7\Documents\GitHub\musiclessons\sarah-practice-plan\`
+
+## Phase-by-phase status
+
+| Phase | Status | Evidence |
+|---|---|---|
+| Phase 1 — Resolver + library | ✅ Shipped | `src/chordProgressionResolver.js`, `src/data/chordProgressions.js` exist |
+| Phase 2 — Wire `chordProgression` as dim | ✅ Shipped | PF.jsx:1051 (DIMENSIONS registration), :1541, :2053 (RANDOM_DIM_IDS) |
+| Phase 3 — Card UI chip row | ✅ Shipped | PF.jsx:2375-2472 (banner render + dedup + form compression) |
+| Phase 4 — ForgeChordListener progression targets | ✅ Shipped | PF.jsx:3120-3284 (`ForgeChordListener` takes `progressionTargets`, uses `useChordTargetChecklist`, renders interactive checklist) |
+| Phase 5 — Card text composition | ⚠️ Partial | `composeProgressionSynthesis` at PF.jsx:552-647 composes progression × other dims; `composeProgressionPracticeTip` at :654+ |
+| Phase 6 — Drone wheel pulse | ⏸️ Deferred | Optional polish; not prioritized |
 
 ## TL;DR
 

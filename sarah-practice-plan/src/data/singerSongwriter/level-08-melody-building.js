@@ -259,7 +259,12 @@ export const level8 = {
       ],
       feel: "Two-melody contrast should feel like two characters in a conversation — the verse whispers, the chorus declares. The contrast is physical: verse melody sits in chest resonance with shallow breath and intimate body posture; chorus melody lifts the resonance toward the mask, the breath deepens, the body opens. You should feel the transition as a whole-body shift — not just a range change but a posture change, a breath change, an emotional change. When the shift feels inevitable and satisfying, your body has learned the architecture of a song.",
       wrong: "If both melodies sound the same, you haven't pushed the contrast hard enough. Try this: sing the verse melody, then sing the chorus an octave higher than feels comfortable. Now back off slightly. That's your chorus range.",
-      sarah: "Gene, every song you love does this. BALTHVS verses murmur in the low register; choruses bloom upward. Skinshape stays low and intimate, then the chorus melody opens like a window. You're learning the architecture of songs.",
+      sarah: "Gene, every song you love does this. BALTHVS verses murmur in the low register; choruses bloom upward. Skinshape stays low and intimate, then the chorus melody opens like a window. You're learning the architecture of songs. Tap 'Draw new progression' below — the verse/chorus contrast isn't harmony-locked. Prove it on a minor descent, a rock minor, a cyclic minor. Your two-melody instinct should adapt to any harmonic terrain.",
+      chordProgression: {
+        key: "A",
+        scale: "natural-minor",
+        pool: ["minor_three", "minor_descent", "minor_cyclic", "rock_minor"],
+      },
       referencePitches: getPitchRange("E3", "G4"),
       pitchContour: true,
       volumeMeter: true,
@@ -438,7 +443,12 @@ export const level8 = {
       ],
       feel: "Hook-building should feel like engineering — you're deliberately constructing something designed to stick in a listener's mind. The 60-second silence test should feel exciting: either the hook comes back (triumph!) or it doesn't (useful information). The multiple attempts should feel like iteration, not failure. Each version teaches you something about what makes YOUR melodies memorable.",
       wrong: "If none of your hooks stick after 60 seconds, the phrase is too complex. Simplify: fewer notes, simpler rhythm, bigger leap. The most memorable hooks in music history are shockingly simple — 3-5 notes with one distinctive feature. If you're overcomplicating, strip everything back to 3 notes and one rhythmic trick. If your hooks all sound the same, vary the LEAP location — try it at the beginning, middle, and end of the phrase. The leap's position changes the hook's character dramatically. VOCAL TIP: Hooks need DELIVERY as much as construction. Try singing the same hook with Gene's lazy porch register (Angus Stone drawl) vs. crisp articulation. The delivery that feels most natural in your body is the one that'll sound most authentic.",
-      sarah: "Gene, every hook you've ever loved was built with these exact tools. The opening riff of an Allah-Las song: repetition + distinctive rhythm + one surprising interval. DOPE LEMON's vocal hooks: simple phrases repeated with a rhythmic swagger and one unexpected melodic move. Khruangbin's bass hooks: 3 notes, a syncopated rhythm, one leap. You're reverse-engineering what your favorite artists do instinctively. Now you can do it on purpose."
+      sarah: "Gene, every hook you've ever loved was built with these exact tools. The opening riff of an Allah-Las song: repetition + distinctive rhythm + one surprising interval. DOPE LEMON's vocal hooks: simple phrases repeated with a rhythmic swagger and one unexpected melodic move. Khruangbin's bass hooks: 3 notes, a syncopated rhythm, one leap. You're reverse-engineering what your favorite artists do instinctively. Now you can do it on purpose. Tap 'Draw new progression' below — a hook that sticks over pop axis might die over a minor descent. Stickiness is harmony-dependent, not just melody-dependent. Test yours over 3 different progressions and find out which harmonic world it lives in.",
+      chordProgression: {
+        key: "A",
+        scale: "natural-minor",
+        pool: ["minor_three", "minor_descent", "minor_uplift", "minor_cyclic", "rock_minor"],
+      },
     },
     {
       id: "ss-8-20",

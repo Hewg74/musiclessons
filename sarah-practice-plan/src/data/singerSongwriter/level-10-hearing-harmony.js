@@ -25,7 +25,12 @@ export const level10 = {
       ],
       feel: "Each interval should carry a distinct emotional weight — and a distinct body location. The minor 2nd tightens your jaw. The perfect 5th grounds your feet. The minor 7th pulls you forward at the sternum. When you can feel the interval in your body before you name it, the hear-feel-choose cycle is operating on harmony.",
       wrong: "If all intervals sound the same, don't worry — this is a new skill. Use the guitar as a reference: play the interval on the strings, then match it with your voice. Ear training is gradual.",
-      sarah: "Gene, interval recognition is what separates 'playing by ear' from 'guessing by ear.' Every great improviser hears intervals instinctively. This exercise builds that hearing.",
+      sarah: "Gene, interval recognition is what separates 'playing by ear' from 'guessing by ear.' Every great improviser hears intervals instinctively. This exercise builds that hearing. Once A root feels steady, tap 'Draw new progression' below — hear each interval from a different harmonic context each round. A 3rd over a Minor Three cycle feels different than the same 3rd over a Minor Descent. That's your body learning interval personality AND context.",
+      chordProgression: {
+        key: "A",
+        scale: "natural-minor",
+        pool: ["minor_three", "minor_descent", "minor_uplift", "jazz_minor_ii_v"],
+      },
       metronome: 60,
       referencePitches: getPitchRange("A3", "A4"),
       pianoKeys: { notes: ["A3", "B3", "C4", "C#4", "D4", "E4", "F4", "G4", "A4"], label: "Intervals from A", range: ["A3", "A4"] },
@@ -66,7 +71,12 @@ export const level10 = {
       ],
       feel: "Harmonic tension and resolution should feel like a physical experience — the V chord leans your whole body forward at the chest, the I chord settles your weight back into the chair. The IV chord lifts you slightly, like looking up. These aren't metaphors; your body literally responds to harmonic function (PMC5608010). The hear-feel-choose cycle now tracks harmonic rhythm: you feel the next chord's pull in your body before it arrives.",
       wrong: "If all chords feel the same, sustain the V chord for a long time. Let the tension build. Then play I. The relief is the resolution. If you don't feel it, try playing V seven times then I once.",
-      sarah: "Gene, every song you love has this tension-resolution engine. Now you can feel it while playing. This changes how you write — you'll use tension and resolution intentionally. For a more sophisticated version: Skinshape's 'I Didn't Know' uses Gm-C-A7-Dm — a iv-bVII-V-i cycle where Gm and C pull you toward Bb, but A7 redirects back to Dm. The A7 creates the dominant tension that resolves home. This is what makes Skinshape sound 'sophisticated but not jazz.' Replacing triads with 7ths changes the vibe from 'campfire' to 'golden hour studio.'",
+      sarah: "Gene, every song you love has this tension-resolution engine. Now you can feel it while playing. This changes how you write — you'll use tension and resolution intentionally. For a more sophisticated version: Skinshape's 'I Didn't Know' uses Gm-C-A7-Dm — a iv-bVII-V-i cycle where Gm and C pull you toward Bb, but A7 redirects back to Dm. The A7 creates the dominant tension that resolves home. This is what makes Skinshape sound 'sophisticated but not jazz.' Replacing triads with 7ths changes the vibe from 'campfire' to 'golden hour studio.' Tap 'Draw new progression' — feel how a jazz ii-V-I explodes with tension vs. a 12-bar blues that sits in low-level push-pull vs. a pop axis that resolves gently. Same key, different tension profiles.",
+      chordProgression: {
+        key: "G",
+        scale: "major",
+        pool: ["jazz_ii_v_i", "pop_axis", "folk_i_v_iv_v", "pachelbel"],
+      },
       metronome: 80,
       referencePitches: getPitchRange("G3", "D4"),
       pianoKeys: { notes: ["G3", "B3", "D4"], label: "G Major (I - Home)", range: ["G3", "D4"] },
@@ -106,7 +116,12 @@ export const level10 = {
       ],
       feel: "Each mode should feel like a different season — same landscape, different light. Dorian is autumn: warmth settling into the chest with a gentle ache. Mixolydian is late summer: brightness in the mask with a grounding pull in the belly. Notice where each mode lives in your body. The hear-feel-choose cycle now has modal colors: you feel the mode's body signature, and that feeling guides your note choices before your theory brain catches up.",
       wrong: "If the modes all sound the same as natural minor or major, focus on the ONE note that's different. In Dorian, it's the raised 6th. Emphasize that note — play it loud and often — until you hear the color shift.",
-      sarah: "Gene, modes are the advanced toolkit. You don't need them for every song — but when you want a specific mood that major/minor can't capture, modes are the answer. Here's a real-world example: Allah-Las' signature sound is two major 7th chords a whole step apart — Cmaj7 to Dmaj7. The open high E string rings as the maj7 in BOTH chords — that's the jangle. These chords don't resolve anywhere. They just float, dreamy and suspended. Adding one note (the maj7) transforms a chord from 'happy' to 'dreamy.' That non-resolving shimmer is Mixolydian territory — the dreamy side of modes.",
+      sarah: "Gene, modes are the advanced toolkit. You don't need them for every song — but when you want a specific mood that major/minor can't capture, modes are the answer. Here's a real-world example: Allah-Las' signature sound is two major 7th chords a whole step apart — Cmaj7 to Dmaj7. The open high E string rings as the maj7 in BOTH chords — that's the jangle. These chords don't resolve anywhere. They just float, dreamy and suspended. Adding one note (the maj7) transforms a chord from 'happy' to 'dreamy.' That non-resolving shimmer is Mixolydian territory — the dreamy side of modes. The widget below is locked to A Dorian — tap 'Draw new' to cycle Khruangbin-style im-bVII, a dorian i-IV, and longer dorian cycles. Same mode, different textures.",
+      chordProgression: {
+        key: "A",
+        scale: "dorian",
+        pool: ["dorian_groove", "dorian_iv_v", "modal_dorian_long", "khruangbin_im_bvii"],
+      },
       metronome: 80,
       fretboard: { scale: "a-dorian", position: 1 },
       referencePitches: getPitchRange("A3", "G4"),
@@ -126,7 +141,12 @@ export const level10 = {
       ],
       feel: "Numbers should start replacing chord names in your head. When someone says 'go to the four chord,' you should feel the departure energy before your fingers even move.",
       wrong: "If you keep thinking in chord names, slow down. Say the numbers out loud every time you change chords. It takes repetition to rewire your brain from names to functions.",
-      sarah: "Gene, Nashville numbers are the shortcut every pro uses. When you jam with other musicians, numbers are how you communicate. This skill makes you fluent in the universal language of harmony.",
+      sarah: "Gene, Nashville numbers are the shortcut every pro uses. When you jam with other musicians, numbers are how you communicate. This skill makes you fluent in the universal language of harmony. The widget below shows each progression's Roman numerals UNDER the chord names — read the numbers first, then the chord. Tap 'Draw new' and try to guess the numbers before looking. That instinct is the Nashville ear.",
+      chordProgression: {
+        key: "G",
+        scale: "major",
+        pool: ["pop_axis", "pop_vi_iv_i_v", "fifties_doowop", "jazz_ii_v_i", "folk_i_v_iv_v", "three_chord_major"],
+      },
       pianoKeys: { notes: ["A3", "C4", "E3", "G3"], label: "Nashville Roots", range: ["E3", "C4"] },
       recorder: true,
       metronome: 80
@@ -146,7 +166,12 @@ export const level10 = {
       ],
       feel: "Each borrowed chord should hit like an unexpected emotion — a pang of nostalgia in the chest (iv), a swell of cinematic wonder that lifts behind your eyes (bVI), a triumphant opening across the shoulders (bVII). Borrowed chords bypass the analytical mind and speak directly to the body. When the bVI lands, notice: your breath catches. That catch IS the chord's body signature. The embodiment cycle registers harmonic surprise as a physical event before your theory brain names it.",
       wrong: "If the borrowed chords just sound 'wrong,' you haven't established the key firmly enough. Play I-IV-V-I several times first to set up G major as home. Then introduce the borrowed chord — the contrast is what creates the effect.",
-      sarah: "Gene, borrowed chords are the secret sauce of your favorite artists. Hermanos Gutiérrez's entire sound is built on bVI. Allah-Las use bVII constantly — their 'Long Journey' (A-C-G-D) borrows both the C (bIII) and G (bVII) from A minor to create that floating, modal quality. And that descending minor progression you hear everywhere — Am-G-F-E — uses the bVII (G) and bVI (F) borrowed from natural minor, with the E (V) pulled from harmonic minor for the resolution back to Am. That progression IS the psych-surf sound, and now you know why it works. Here's another borrowed chord masterclass: Sol Del Sur's C#m-B-F# has a secret — the F# is MAJOR, not minor. It's borrowed from the parallel major key (C# major). This creates 'modal ambiguity' — the progression sounds simultaneously dark and open, neither purely sad nor purely happy. This IS your golden hour surf sound.",
+      sarah: "Gene, borrowed chords are the secret sauce of your favorite artists. Hermanos Gutiérrez's entire sound is built on bVI. Allah-Las use bVII constantly — their 'Long Journey' (A-C-G-D) borrows both the C (bIII) and G (bVII) from A minor to create that floating, modal quality. And that descending minor progression you hear everywhere — Am-G-F-E — uses the bVII (G) and bVI (F) borrowed from natural minor, with the E (V) pulled from harmonic minor for the resolution back to Am. That progression IS the psych-surf sound, and now you know why it works. Here's another borrowed chord masterclass: Sol Del Sur's C#m-B-F# has a secret — the F# is MAJOR, not minor. It's borrowed from the parallel major key (C# major). This creates 'modal ambiguity' — the progression sounds simultaneously dark and open, neither purely sad nor purely happy. This IS your golden hour surf sound. The widget below draws mixolydian progressions — the mode that LIVES in bVII territory. Mixo_swing is literally I-bVII-IV. Tap 'Draw new' to feel that flat-7 pull in motion.",
+      chordProgression: {
+        key: "G",
+        scale: "mixolydian",
+        pool: ["mixo_swing", "three_chord_major", "blues_12bar", "i_iv_only"],
+      },
       referencePitches: getPitchRange("G3", "D4"),
       pianoKeys: { notes: ["G3", "Ab3", "Bb3", "B3", "C4", "D4"], label: "G + Borrowed Chords", range: ["G3", "D4"] },
       recorder: true
@@ -202,7 +227,13 @@ export const level10 = {
       ],
       feel: "You should start hearing the invisible lines connecting chord tones across changes. When a melody feels 'right' over a progression, it's because it's following these hidden paths.",
       wrong: "If you can't hear the 3rd or 5th of a chord, play the chord and sing up from the root: root-3rd-5th. Arpeggiate it. Then isolate just the 3rd. It takes practice to hear chord tones independently.",
-      sarah: "Gene, chord tone targeting is what makes the difference between melodies that wander and melodies that tell a story. Your voice will start finding these paths naturally once you've practiced hearing them.",
+      sarah: "Gene, chord tone targeting is what makes the difference between melodies that wander and melodies that tell a story. Your voice will start finding these paths naturally once you've practiced hearing them. Once this feels natural over Am-C-G-Em, tap 'Draw new progression' below — Pop Axis one pass, doo-wop the next, a jazz ii–V–I after that. The skill isn't 'chord tones over I–V–vi–IV' — it's chord-tone instinct. Mark Speer doesn't have a favorite progression. He has the framework.",
+      chordProgression: {
+        key: "G",
+        scale: "major",
+        pool: ["pop_axis", "fifties_doowop", "jazz_ii_v_i", "pachelbel"],
+        enableListener: false,
+      },
       pitchContour: true,
       referencePitches: getPitchRange("G3", "E4"),
       recorder: true,
@@ -263,7 +294,12 @@ export const level10 = {
       ],
       feel: "Navigating new harmony should feel like exploring a new city — unfamiliar but exciting, your body the compass. Over unknown chords, the hear-feel-choose cycle becomes your navigation system: hear the chord's color, feel its body signature (tension, warmth, ache, lift), choose a note that matches what the body wants to express. When this cycle runs smoothly over chords you've never rehearsed, you're not thinking about harmony — you're living inside it.",
       wrong: "If every note sounds wrong, you're overthinking. Simplify: sing just the root of each chord as it passes. Then add chord tones. Build from safe notes outward.",
-      sarah: "Gene, this is the skill that lets you jam with anyone, play any song, and write over any chord progression. Your ear is becoming your most reliable instrument.",
+      sarah: "Gene, this is the skill that lets you jam with anyone, play any song, and write over any chord progression. Your ear is becoming your most reliable instrument. The widget below draws 8 different progressions — tap 'Draw new' and improvise over whatever lands. No prep, no safety net, just ears. This is the exercise's exact point, made concrete.",
+      chordProgression: {
+        key: "C",
+        scale: "major",
+        pool: ["pop_axis", "fifties_doowop", "jazz_ii_v_i", "pachelbel", "folk_i_v_iv_v", "mixo_swing", "jangle", "pop_vi_iv_i_v"],
+      },
       metronome: 85,
       referencePitches: getPitchRange("C3", "A4"),
       recorder: true
@@ -396,6 +432,38 @@ export const level10 = {
       pitchContour: true,
       recorder: true,
       levelUp: "Can hear and sing intervals, feel major/minor/modal colors, navigate tension-resolution, think in Nashville numbers for instant transposition, use borrowed chords (bVI, bVII, iv) for emotional color with embodied body signatures, control harmonic rhythm as a structural tool, hear bass motion as harmonic drive and sing bass lines while strumming, target chord tones through changes, create surprise with deceptive cadences, access dark modal colors (Phrygian, harmonic minor), improvise melodies over unfamiliar chord progressions by ear, navigate D major as a bridge between key families, sustain fluent pentatonic improvisation across five key centers (Am, Em, G, E, A), distinguish Dorian/Mixolydian/Phrygian modes by body signature, and audiate multi-layered harmony (bass + melody) with genuine key-independent musicianship."
+    },
+    {
+      id: "ss-10-19",
+      time: 8,
+      title: "Sing the Numbers — Progression Roulette",
+      type: "vocal",
+      chordProgression: {
+        key: "G",
+        scale: "major",
+        pool: [
+          "pop_axis", "pop_vi_iv_i_v", "fifties_doowop", "three_chord_major",
+          "jangle", "pachelbel", "jazz_ii_v_i", "folk_i_v_iv_v",
+          "mixo_swing", "blues_8bar",
+        ],
+      },
+      drone: { root: "G", octave: 2, texture: "pure" },
+      referencePitches: getPitchRange("G3", "G4"),
+      recorder: true,
+      metronome: 80,
+      what: "The widget below draws a new progression every tap. Your job: hear the chord changes first, guess the Roman numerals by ear BEFORE looking at the chip row, then sing the root of each chord as it passes. This is Nashville-number ear training with training wheels — you hear first, label after.",
+      setup: "Guitar (optional). Drone on G (your key). Widget on the card — tap 'Draw new progression' to cycle. Close your eyes during the listen step.",
+      steps: [
+        { text: "Start with whatever progression the widget drew. Look AWAY from the chip row. Either play the chords on guitar or imagine them from the drone. Listen for 1 full cycle.", why: "Look-away forces the ear to lead. Theory brain can't read the chip row, so it has to do the hearing work itself." },
+        { text: "Before revealing the chips, guess: is this a I–V–vi–IV (pop axis)? A vi–IV–I–V? A jazz ii–V–I? A doo-wop I–vi–IV–V? Say your guess out loud.", why: "Saying it out loud commits you. Silent guessing is too easy to fudge — speaking makes the guess falsifiable. Right or wrong, you now have a baseline." },
+        { text: "Reveal the chips. Check your guess. Whether you nailed it or missed, sit with the actual Roman numerals for 1 cycle — sing the roots as chord tones pass (G, D, Em, C if it's pop axis in G major).", why: "Singing the roots while seeing the numbers builds the scale-degree-to-body map. 'I' becomes 'settled in the belly.' 'V' becomes 'tension in the chest.' The numbers start having physical addresses." },
+        { text: "Tap 'Draw new progression.' Repeat steps 1-3 with the new draw. Do at least 4 rounds in a session. Track your hit rate: how many did you guess correctly on first listen?", why: "Tracking beats vibes. If you nail 2 of 4 this session, 3 of 4 next week, 4 of 4 the week after — you see the ear growing. Most musicians never measure this and never know if they're improving." },
+        { text: "Advanced: after guessing the progression, sing the TOP melody you'd write over it. Don't noodle — imagine the song, then sing the first 4-bar melody that fits. Record it.", why: "Hearing progressions as I-V-vi-IV (not G-D-Em-C) is the superpower. Once that switch flips, every song you hear gets decoded by function, not by key. Transposition becomes automatic. You're not memorizing songs — you're memorizing harmonic shapes." }
+      ],
+      feel: "You're training the meta-skill Nashville session singers use: hearing changes as NUMBERS, not as specific chord names. When you hear Pop Axis and immediately think 'I–V–vi–IV' — not 'G–D–Em–C' — the transpose-to-any-key superpower activates. Every song becomes transposable on demand.",
+      wrong: "If you're peeking at the chips before listening, you're defeating the whole exercise. Look AWAY from the screen during step 1 — ideally close your eyes. If you can't identify ANY of 4 in 3 consecutive sessions, go back to ss-10-6 (Nashville Numbers) and rebuild the foundation. Don't skip that — this exercise assumes you've got the baseline.",
+      sarah: "Gene, this is the meta-skill. Once you hear progressions as I–V–vi–IV instead of G–D–Em–C, every song you learn transposes automatically. That's what separates working musicians from people who memorized one version of their songs. Mark Speer can hear a song in any key because he hears numbers, not notes. You're building the same instinct, one draw at a time.",
+      levelUp: "Correctly identify the Roman numerals of 3 out of 5 random PF-drawn progressions by ear (before looking at the chip row) — sustained over 3 consecutive practice sessions."
     }
   ]
 };

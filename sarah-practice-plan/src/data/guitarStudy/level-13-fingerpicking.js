@@ -81,7 +81,13 @@ export const level13 = {
       ],
       feel: "The roll should feel like a river flowing over changing terrain — the water (right hand) never stops, even as the landscape (chords) shifts underneath. Each chord change adds a new color to the shimmering roll. When it flows, it feels meditative.",
       wrong: "If you stop the roll during chord changes, you're prioritizing clean chords over continuous flow. Flip that priority — keep the roll going and accept a brief buzz during transitions. The buzz will disappear with practice; a broken roll never fixes itself. If the thumb keeps hitting the wrong bass string, practice just the bass notes (no roll) through the progression until the string changes are automatic.",
-      sarah: "Gene, this Am→C→G→Em progression is the same chord family as half the songs in your playlist. Fingerpicked, it sounds completely different from strummed — intimate, flowing, nocturnal. Jack Johnson built an entire career on this kind of simple fingerpicked progression. The magic isn't the chords — it's the unbroken flow of the roll.",
+      sarah: "Gene, this Am→C→G→Em progression is the same chord family as half the songs in your playlist. Fingerpicked, it sounds completely different from strummed — intimate, flowing, nocturnal. Jack Johnson built an entire career on this kind of simple fingerpicked progression. The magic isn't the chords — it's the unbroken flow of the roll. Once the roll holds through Am-C-G-Em, tap 'Draw new progression' below. The six-note pattern is the skill; the chord shapes just change beneath it. Prove it on a folk I-V-IV-V, a country I-V-V-I, a minor descent.",
+      chordProgression: {
+        key: "A",
+        scale: "natural-minor",
+        pool: ["minor_three", "minor_descent", "minor_uplift", "minor_cyclic"],
+        instrument: "guitar",
+      },
       metronome: 50,
       levelUp: "Play Am→C→G→Em with continuous P-i-m-a-m-i roll at 60 BPM for 3 full loops without breaking the roll during any chord change."
     },
@@ -137,7 +143,13 @@ export const level13 = {
       ],
       feel: "When Travis picking clicks, it feels like your thumb is a separate musician — a bass player who happens to share your hand. You stop thinking about the thumb and it just... goes. The melody floats on top like a singer riding a bass line. It's profoundly satisfying and a little surreal.",
       wrong: "The #1 mistake is trying to learn thumb and fingers simultaneously. Always start with THUMB ONLY for at least 30 seconds before adding fingers. If the thumb falters when you add fingers, the thumb isn't automatic yet — go back to thumb alone. The #2 mistake is going too fast. 40 BPM is not a suggestion — it's a prescription. Speed kills Travis picking practice.",
-      sarah: "Gene, this is the exercise where a lot of guitarists plateau — and where the ones who break through gain a superpower. Jack Johnson, Tommy Emmanuel, John Mayer — they all had to grind this exact thumb independence. It took each of them weeks. Be patient. When the thumb goes on autopilot and the melody floats on top, you'll feel like you've unlocked a cheat code. One guitar, two voices. It's why fingerpickers smile when they play.",
+      sarah: "Gene, this is the exercise where a lot of guitarists plateau — and where the ones who break through gain a superpower. Jack Johnson, Tommy Emmanuel, John Mayer — they all had to grind this exact thumb independence. It took each of them weeks. Be patient. When the thumb goes on autopilot and the melody floats on top, you'll feel like you've unlocked a cheat code. One guitar, two voices. It's why fingerpickers smile when they play. Once Travis picking is automatic on C→G→Am→Em, tap 'Draw new progression' below. The alternating-thumb pattern isn't locked to those chords — it's a motor program that applies to any key. Prove it on a folk I-V-IV-V, a country I-V-V-I, a pop axis. Each chord still has its own thumb pair; the interlock stays.",
+      chordProgression: {
+        key: "G",
+        scale: "major",
+        pool: ["folk_i_v_iv_v", "country_i_v_v_i", "pop_axis", "jangle"],
+        instrument: "guitar",
+      },
       metronome: 40,
       speedLadder: { start: 40, end: 80, increment: 10, bars: 4 },
       levelUp: "Play the full Travis pattern (P-alternating-bass + i-m treble) over C for 30 seconds at 50 BPM without the thumb losing its alternation. Then play C→G→Am→Em with Travis pattern at 50 BPM without breaking."
@@ -244,7 +256,13 @@ export const level13 = {
       ],
       feel: "This should feel like you're two musicians — a bassist and a melodic player who happen to share one guitar. When the independence clicks, your awareness splits: you hear the bass as one voice and the melody as another. It's a meditative, almost trance-like feeling.",
       wrong: "If the bass pattern changes when the melody enters, the bass isn't automatic yet — go back to Step 1 and loop it longer. If the melody sounds random (not singable), simplify to 2-3 notes and make a real phrase before expanding. If your right hand tenses up, shake it out — duo thinking requires relaxation, not effort.",
-      sarah: "Gene, this is Tommy Guerrero's entire approach — he told an interviewer that he thinks of his guitar as 'a bass player and a horn player.' His melodies on Soul Food Taqueria and Loose Grooves are vocal lines — you could sing every one. The bass underneath is hypnotic repetition. Two simple voices, one deep result. That's duo thinking.",
+      sarah: "Gene, this is Tommy Guerrero's entire approach — he told an interviewer that he thinks of his guitar as 'a bass player and a horn player.' His melodies on Soul Food Taqueria and Loose Grooves are vocal lines — you could sing every one. The bass underneath is hypnotic repetition. Two simple voices, one deep result. That's duo thinking. Tap 'Draw new progression' below — the bass walks different roots per progression, but the 'simple repeating bass + improvised melody' duo formula stays. Cycle through a few and you'll hear Guerrero's whole discography in the widget.",
+      chordProgression: {
+        key: "A",
+        scale: "natural-minor",
+        pool: ["minor_three", "desert_vamp", "minor_cyclic", "rock_minor"],
+        instrument: "guitar",
+      },
       metronome: 60,
       recorder: true,
       levelUp: "Improvise a melody over a repeating bass pattern in Am for 2 minutes at 60 BPM. The bass pattern stays consistent throughout while the melody varies. Both voices are clearly audible as separate lines."
@@ -320,7 +338,13 @@ export const level13 = {
       ],
       feel: "This should feel like a complete musical statement — a fingerpicked journey with a beginning, middle, and end. Not an exercise, not a jam, but a PIECE. Something you could play for someone and say 'I wrote this.' Even if every chord and technique is borrowed, the arrangement is yours.",
       wrong: "If the piece feels flat (same energy throughout), increase the contrast between sections. Make the intro whisper-quiet. Make the chorus confident. Make the bridge dramatic. Dynamic contrast creates narrative. If you can't get through the full piece without stopping, shorten it — a clean 2-minute piece beats a fumbled 4-minute one. Final 2 minutes: weave in a technique from earlier levels — a behind-the-beat strum section, a palm-muted passage. Mixing old skills with fingerpicking strengthens both. Close on a phrase that made you smile — even just a clean Am chord ringing out.",
-      sarah: "Gene, this is the moment where technique becomes music. Everything you learned in this level — PIMA, the roll, Travis picking, the slap, duo thinking, the pick tuck — they're all tools. This piece is where you USE the tools to build something. Hermanos Gutiérrez's albums are just this: fingerpicked pieces with structure, contrast, and atmosphere. Jack Johnson's Between Dreams is just this. Tommy Guerrero's Soul Food Taqueria is just this. Simple techniques. Intentional arrangement. Musical storytelling.",
+      sarah: "Gene, this is the moment where technique becomes music. Everything you learned in this level — PIMA, the roll, Travis picking, the slap, duo thinking, the pick tuck — they're all tools. This piece is where you USE the tools to build something. Hermanos Gutiérrez's albums are just this: fingerpicked pieces with structure, contrast, and atmosphere. Jack Johnson's Between Dreams is just this. Tommy Guerrero's Soul Food Taqueria is just this. Simple techniques. Intentional arrangement. Musical storytelling. The widget below IS your compositional picker — tap 'Draw new progression' to borrow a harmonic foundation, then build your piece around it. Fingerpicked over whatever lands. That's how Hermanos Gutiérrez wrote every track on their last record.",
+      chordProgression: {
+        key: "A",
+        scale: "natural-minor",
+        pool: ["minor_three", "minor_descent", "minor_uplift", "minor_cyclic", "rock_minor", "surf_minor", "desert_vamp"],
+        instrument: "guitar",
+      },
       metronome: 70,
       levelUp: "Record a complete 3-4 minute fingerpicked piece with at least 3 distinct sections (e.g., intro/verse/chorus), at least 2 different fingerpicking techniques (e.g., roll + Travis, or roll + percussive slap), and audible dynamic contrast between sections."
     }
