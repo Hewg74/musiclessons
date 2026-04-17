@@ -1908,6 +1908,14 @@ function StartFlowButton({ onClick, accentColor }) {
 const _CHORD_TARGET_CONFIRM_MS = 600;
 const _CHORD_TARGET_MIN_CONF = 0.7;
 
+// Quality buckets — kept in sync with ChordDetectorPanel.jsx. Bare-letter
+// targets ("G", "Am") match only the corresponding tonal-center bucket; dim
+// and aug NEVER tick a bare-letter target so transient noise doesn't credit
+// the user falsely.
+const _MINOR_QUALITIES = new Set(['min', 'm7', 'mMaj7', 'mMaj7no5', 'm7no5', 'm6', 'mAdd9', 'm9', 'm9no5', 'm7b5']);
+const _DIM_QUALITIES = new Set(['dim', 'dim7']);
+const _AUG_QUALITIES = new Set(['aug', '7#5', '7b5']);
+
 function _matchTargetChord(target, chord) {
   if (!chord || !chord.name) return false;
   if (target === chord.name) return true;
@@ -1915,11 +1923,13 @@ function _matchTargetChord(target, chord) {
   if (!targetRoot || targetRoot !== chord.root) return false;
   // Explicit qualities (m7, sus4, 7, etc.) must match name exactly.
   if (/\d|sus|dim|aug|maj/.test(target)) return false;
-  // Bare-letter "G" matches G, G7, Gmaj7, G6, etc.
-  // "Am" matches Am, Am7, Am9, etc.
+  // Bare-letter "G" matches G, G7, Gmaj7, G6, etc. (major bucket only).
+  // "Am" matches Am, Am7, Am9, etc. (minor bucket only).
+  // Dim/aug variants don't tick a bare-letter target — they're rare enough
+  // that ambiguous transients shouldn't be credited.
+  if (_DIM_QUALITIES.has(chord.quality) || _AUG_QUALITIES.has(chord.quality)) return false;
   const targetIsMinor = /^[A-G][#b]?m$/.test(target);
-  const isMinorChord = (chord.quality || '').startsWith('m') && !chord.quality?.startsWith('maj');
-  return targetIsMinor ? isMinorChord : !isMinorChord;
+  return targetIsMinor ? _MINOR_QUALITIES.has(chord.quality) : !_MINOR_QUALITIES.has(chord.quality);
 }
 
 function ExerciseChordListener({ listenForChords }) {

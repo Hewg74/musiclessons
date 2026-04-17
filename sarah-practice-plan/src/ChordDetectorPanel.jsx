@@ -443,8 +443,11 @@ function matchesChord(target, chord) {
   const targetIsExplicit = /\d|sus|dim|aug|maj/.test(target);
   if (targetIsExplicit) return false; // explicit 7/9/sus must match exactly
   const chordBucket = qualityBucket(chord.quality);
+  // Bare-letter targets ignore dim/aug — those rare qualities show up on
+  // transient noise and shouldn't credit the player. Major bucket only.
+  if (chordBucket === 'dim' || chordBucket === 'aug') return false;
   if (targetIsMinor) return chordBucket === 'min';
-  return chordBucket === 'maj' || chordBucket === 'aug';
+  return chordBucket === 'maj';
 }
 
 // ─── Main panel ─────────────────────────────────────────────────────────────
@@ -617,7 +620,7 @@ export function ChordDetectorPanel({ theme: T, onBack, targetChords = null }) {
     <section style={{ padding: '0 16px', marginTop: 24 }}>
       <AccordionRow T={T} label="ON THE NECK" summary={notes.slice(0, 3).join(' · ') + ' lit'} expanded={expanded.neck} onToggle={() => setExpanded(s => ({ ...s, neck: !s.neck }))}>
         <div style={{ paddingTop: 12 }}>
-          <FretboardDiagram theme={T} chordToneNotes={notes} oneNoteFilter={null} colorMode="rainbow" instrument="guitar" />
+          <FretboardDiagram theme={T} chordToneNotes={notes} oneNoteFilter={null} colorMode={true} instrument="guitar" />
         </div>
       </AccordionRow>
       <AccordionRow T={T} label="WHEEL" summary={`${root}${displaySuffix(quality)}`} expanded={expanded.wheel} onToggle={() => setExpanded(s => ({ ...s, wheel: !s.wheel }))}>

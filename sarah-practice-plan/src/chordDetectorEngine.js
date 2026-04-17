@@ -697,16 +697,21 @@ function getEngine() {
 }
 
 /** Subscribe to chord detection updates. Returns unsubscribe function.
- * Engine must be started separately via startEngine() from a user gesture. */
+ * Engine must be started separately via startEngine() from a user gesture.
+ *
+ * IMPORTANT: unsubscribing does NOT stop the engine. The mic stays alive
+ * across navigation as long as the user has it on, and only stops when they
+ * explicitly tap Listening (which calls stopEngine) or close the tab. This
+ * decouples subscriber lifetime from engine lifetime so transient unmounts
+ * during navigation (Tools tab → Practice Forge → guitar exercise) don't
+ * surprise-kill an active listening session. The RAF loop keeps running with
+ * zero subscribers — pushUpdate is a cheap no-op when the Set is empty. */
 export function subscribeToChord(callback) {
   subscribers.add(callback);
   // Replay last known state immediately so new subscribers don't see stale UI
   try { callback(lastUpdate); } catch { /* subscriber threw on replay — swallow */ }
   return () => {
     subscribers.delete(callback);
-    if (subscribers.size === 0 && engineInstance && engineInstance.isRunning) {
-      engineInstance.stop();
-    }
   };
 }
 

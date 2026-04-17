@@ -2737,7 +2737,6 @@ function CompactTimerStrip({ duration, running, onComplete, onToggle, onReset, o
 // not gain a new eager dependency. The engine is a refcounted singleton —
 // the panel + the in-exercise listener + this listener can all coexist.
 
-const _PF_ENGINE_PATH = './chordDetectorEngine.js';
 const _PF_CONFIRM_MS = 600;
 const _PF_MIN_CONF = 0.7;
 
@@ -2754,7 +2753,7 @@ function ForgeChordListener({ T, keyRoot }) {
   useEffect(() => {
     let unsub = null;
     let cancelled = false;
-    import(/* @vite-ignore */ _PF_ENGINE_PATH).then(mod => {
+    import('./chordDetectorEngine.js').then(mod => {
       if (cancelled) return;
       engineModRef.current = mod;
       unsub = mod.subscribeToChord(u => {
