@@ -2728,6 +2728,175 @@ function CompactTimerStrip({ duration, running, onComplete, onToggle, onReset, o
 
 
 // ═══════════════════════════════════════════
+// ─── Forge chord listener (Phase 6) ───
+// ═══════════════════════════════════════════
+// Sixth auto-wired tool: subscribe to the chord-detector engine and surface
+// the detected chord live, plus a one-shot "matches the card key" verification
+// signal that the player can use to inform their post-round Easy/Good/Hard
+// rating. The engine module is dynamic-imported so PracticeForge bundles do
+// not gain a new eager dependency. The engine is a refcounted singleton —
+// the panel + the in-exercise listener + this listener can all coexist.
+
+const _PF_ENGINE_PATH = './chordDetectorEngine.js';
+const _PF_CONFIRM_MS = 600;
+const _PF_MIN_CONF = 0.7;
+
+function ForgeChordListener({ T, keyRoot }) {
+  const [chord, setChord] = useState(null);
+  const [listening, setListening] = useState(false);
+  const [signalLevel, setSignalLevel] = useState(0);
+  const [signalDb, setSignalDb] = useState(-Infinity);
+  const [error, setError] = useState(null);
+  const [keyMatchConfirmed, setKeyMatchConfirmed] = useState(false);
+  const sustainStartRef = useRef(0);
+  const engineModRef = useRef(null);
+
+  useEffect(() => {
+    let unsub = null;
+    let cancelled = false;
+    import(/* @vite-ignore */ _PF_ENGINE_PATH).then(mod => {
+      if (cancelled) return;
+      engineModRef.current = mod;
+      unsub = mod.subscribeToChord(u => {
+        setChord(u.currentChord);
+        setListening(u.isListening);
+        setSignalLevel(u.signalLevel || 0);
+        setSignalDb(u.signalDb);
+        setError(u.error?.message || null);
+      });
+    }).catch(e => {
+      if (!cancelled) setError(`engine load failed: ${e.message || e}`);
+    });
+    return () => {
+      cancelled = true;
+      if (unsub) unsub();
+    };
+  }, []);
+
+  // Reset key-match confirmation whenever the card's key changes.
+  useEffect(() => {
+    setKeyMatchConfirmed(false);
+    sustainStartRef.current = 0;
+  }, [keyRoot]);
+
+  // Sustain-driven verification: detected chord root matches card key root for ≥600 ms.
+  useEffect(() => {
+    if (!chord || !keyRoot || chord.confidence < _PF_MIN_CONF) {
+      sustainStartRef.current = 0;
+      return;
+    }
+    if (normalizeNote(chord.root) !== normalizeNote(keyRoot)) {
+      sustainStartRef.current = 0;
+      return;
+    }
+    if (keyMatchConfirmed) return;
+    const now = performance.now();
+    if (sustainStartRef.current === 0) sustainStartRef.current = now;
+    else if (now - sustainStartRef.current >= _PF_CONFIRM_MS) {
+      setKeyMatchConfirmed(true);
+    }
+  }, [chord, keyRoot, keyMatchConfirmed]);
+
+  const handleToggle = useCallback(async () => {
+    const mod = engineModRef.current;
+    if (!mod) return;
+    setError(null);
+    try {
+      if (mod.isEngineRunning()) await mod.stopEngine();
+      else await mod.startEngine();
+    } catch (e) {
+      setError(e?.message || String(e));
+    }
+  }, []);
+
+  const meterPct = Math.max(0, Math.min(100, signalLevel * 100));
+  const dbLabel = signalDb && isFinite(signalDb) ? `${Math.round(signalDb)} dB` : '— dB';
+  const chordColor = chord ? getColorForNote(chord.root) : T.textMuted;
+
+  return (
+    <div>
+      {/* Top: live chord readout + listen button */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 12 }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flex: 1, minWidth: 0 }}>
+          <span style={{ fontFamily: T.serif, fontSize: 32, lineHeight: 1, color: chordColor, fontWeight: 600 }}>
+            {chord ? chord.name : '—'}
+          </span>
+          {chord && (
+            <span style={{ fontFamily: T.sans, fontSize: 11, color: T.textMed }}>
+              {Math.round(chord.confidence * 100)}%
+            </span>
+          )}
+          <span style={{ flex: 1 }} />
+          <span style={{
+            display: 'inline-flex', alignItems: 'center', gap: 6,
+            fontFamily: T.sans, fontSize: 9, fontWeight: 700, letterSpacing: 1.2, textTransform: 'uppercase',
+            color: listening ? T.textDark : T.textMuted,
+          }}>
+            <span style={{
+              width: 7, height: 7, borderRadius: '50%',
+              background: listening ? '#22c55e' : T.textMuted,
+              boxShadow: listening ? '0 0 5px #22c55e' : 'none',
+            }} />
+            {listening ? 'LIVE' : 'IDLE'}
+          </span>
+        </div>
+        <button onClick={handleToggle} disabled={!engineModRef.current} style={{
+          background: listening ? T.gold : 'transparent', color: listening ? '#fff' : T.goldDark,
+          border: `1.5px solid ${T.gold}`, borderRadius: 8, padding: '7px 14px',
+          fontFamily: T.sans, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1.2,
+          cursor: engineModRef.current ? 'pointer' : 'wait', whiteSpace: 'nowrap',
+        }}>{listening ? 'Listening' : 'Listen'}</button>
+      </div>
+
+      {/* Signal meter */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+        <div style={{ flex: 1, height: 5, background: T.goldSoft, borderRadius: 999, overflow: 'hidden' }}>
+          <div style={{ height: '100%', width: `${meterPct}%`, background: T.gold, transition: 'width 80ms linear' }} />
+        </div>
+        <span style={{ fontFamily: T.sans, fontSize: 9, color: T.textMed, whiteSpace: 'nowrap', minWidth: 38, textAlign: 'right' }}>{dbLabel}</span>
+      </div>
+
+      {/* Verification strip — opt-in dimensions light up as satisfied */}
+      {keyRoot && (
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px',
+          background: keyMatchConfirmed ? T.successSoft : T.bgSoft,
+          border: `1px solid ${keyMatchConfirmed ? T.success + '40' : T.borderSoft}`,
+          borderRadius: 8,
+        }}>
+          <span style={{
+            width: 10, height: 10, borderRadius: '50%',
+            background: keyMatchConfirmed ? T.success : T.textMuted,
+            boxShadow: keyMatchConfirmed ? `0 0 6px ${T.success}80` : 'none',
+            flexShrink: 0,
+          }} />
+          <span style={{ fontFamily: T.sans, fontSize: 11, color: T.textDark, flex: 1 }}>
+            <strong>Key match:</strong> {keyMatchConfirmed
+              ? `${keyRoot} confirmed (held ≥600 ms)`
+              : `play ${keyRoot} (any quality) for ≥600 ms to confirm`}
+          </span>
+          {keyMatchConfirmed && (
+            <span style={{
+              fontFamily: T.sans, fontSize: 9, fontWeight: 700, letterSpacing: 0.5,
+              textTransform: 'uppercase', color: T.success,
+            }}>verified</span>
+          )}
+        </div>
+      )}
+
+      {error && (
+        <div style={{ marginTop: 10, fontSize: 11, color: T.coral, fontFamily: T.sans }}>
+          ⚠ {error}
+        </div>
+      )}
+      <div style={{ marginTop: 10, fontSize: 10, color: T.textMuted, fontFamily: T.sans, fontStyle: 'italic', lineHeight: 1.5 }}>
+        Strums + open chords detect best. Single-note phrases will read as the dominant chord they imply.
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════
 // ─── Main Component ───
 // ═══════════════════════════════════════════
 export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
@@ -2869,6 +3038,7 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
     volumeMeter: false,
     recorder: false,
     backingTrack: false,
+    chordDetector: false,
   });
   const toggleTool = useCallback((toolId) => {
     setExpandedTools(prev => ({ ...prev, [toolId]: !prev[toolId] }));
@@ -3156,10 +3326,11 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
   // Note: the color wheel is no longer a separate tool — it's merged into the
   // CompactDroneWheel row (premium inline object, one of the Tier-1 controls).
   const advancedTools = [
-    { id: 'fretboard',    label: 'Fretboard',  icon: '⛶',  available: !!scaleData },
-    { id: 'volumeMeter',  label: 'Meter',      icon: '◉',  available: true },
-    { id: 'backingTrack', label: 'Track',      icon: '♫',  available: !!currentCard?.suggestedTrack },
-    { id: 'recorder',     label: 'Record',     icon: '●',  available: true },
+    { id: 'fretboard',     label: 'Fretboard',  icon: '⛶',  available: !!scaleData },
+    { id: 'volumeMeter',   label: 'Meter',      icon: '◉',  available: true },
+    { id: 'chordDetector', label: 'Chord',      icon: '♭',  available: instrument === 'guitar' },
+    { id: 'backingTrack',  label: 'Track',      icon: '♫',  available: !!currentCard?.suggestedTrack },
+    { id: 'recorder',      label: 'Record',     icon: '●',  available: true },
   ];
 
   return (
@@ -4062,6 +4233,24 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
                   </div>
                 )}
                 <VolumeMeter theme={T} inline={true} />
+              </div>
+            )}
+            {expandedTools.chordDetector && instrument === 'guitar' && (
+              <div style={{
+                marginTop: 10, background: T.bgCard,
+                border: `1px solid ${T.border}`, borderRadius: 10, padding: 14,
+                animation: 'forgeToolExpand 0.25s ease-out both',
+              }}>
+                <div style={{
+                  fontSize: 10, fontWeight: 700, color: T.goldDark, letterSpacing: 1.2,
+                  textTransform: 'uppercase', marginBottom: 6,
+                }}>
+                  Chord Detector
+                </div>
+                <div style={{ fontSize: 11, color: T.textMuted, marginBottom: 10, fontStyle: 'italic' }}>
+                  Strum any chord — the engine names it and confirms when you land on the card&apos;s key.
+                </div>
+                <ForgeChordListener T={T} keyRoot={currentCard.constraints.key} />
               </div>
             )}
             {expandedTools.backingTrack && currentCard.suggestedTrack && (
