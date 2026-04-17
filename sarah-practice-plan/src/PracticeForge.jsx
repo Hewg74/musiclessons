@@ -1932,9 +1932,17 @@ function ChallengeCard({
   for (const dimId of RANDOM_DIM_IDS) {
     const c = card.constraints[dimId];
     if (!c) continue;
+    // chordProgression gets its own banner below the foundation rather than
+    // a generic constraint line — it's a cycle of chords, not a single
+    // technique value, so rendering it with the same chrome as the other
+    // dims would flatten its musical role.
+    if (dimId === 'chordProgression') continue;
     const dim = DIMENSIONS.find(d => d.id === dimId);
     constraintLines.push({ dim, constraint: c });
   }
+  const progressionLine = card.constraints.chordProgression?.resolvedChords?.length
+    ? { dim: DIMENSIONS.find(d => d.id === 'chordProgression'), constraint: card.constraints.chordProgression }
+    : null;
 
   // Oblique modifier is rendered separately with italic styling — it's a creative spice, not a constraint
   const oblique = card.constraints.obliqueModifier;
@@ -2149,8 +2157,84 @@ function ChallengeCard({
         </div>
       )}
 
+      {/* Chord progression banner — the harmonic cycle other constraints play
+          over. Unique chord chips read as discrete targets (matches the chord
+          detector's checklist granularity). If the progression has >5 chords
+          (e.g. 12-bar blues), a subtitle shows the full form. */}
+      {progressionLine && (() => {
+        const prog = progressionLine.constraint;
+        const allChords = prog.resolvedChords || [];
+        const uniqueChords = [];
+        const seen = new Set();
+        for (const c of allChords) {
+          if (seen.has(c.name)) continue;
+          seen.add(c.name);
+          uniqueChords.push(c);
+        }
+        const showForm = allChords.length > 5;
+        const progColor = progressionLine.dim.color;
+        return (
+          <div style={{
+            marginTop: 18,
+            padding: '14px 16px 16px',
+            background: `${progColor}0f`,
+            border: `1px solid ${progColor}40`,
+            borderRadius: 10,
+          }}>
+            <div style={{
+              display: 'flex', alignItems: 'baseline', gap: 8,
+              fontSize: 9, fontWeight: 800, letterSpacing: 1.6, textTransform: 'uppercase',
+              color: progColor, marginBottom: 10, fontFamily: T.sans,
+            }}>
+              <span>Progression</span>
+              <span style={{ color: T.textLight, fontWeight: 500, letterSpacing: 0.4, textTransform: 'none' }}>
+                · {prog.name}
+              </span>
+              <span style={{ flex: 1 }} />
+              {onToggleLock && (
+                <LockChip dimId="chordProgression" currentValue={prog} label="Progression" />
+              )}
+            </div>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+              {uniqueChords.map((c, i) => {
+                const cc = getColorForNote(normalizeNote(c.root)) || progColor;
+                return (
+                  <React.Fragment key={c.name}>
+                    {i > 0 && (
+                      <span style={{ color: T.textLight, fontFamily: T.sans, fontSize: 13, opacity: 0.6 }}>→</span>
+                    )}
+                    <span style={{
+                      padding: '5px 12px', borderRadius: 6,
+                      border: `1.5px solid ${cc}`,
+                      color: cc, background: `${cc}10`,
+                      fontFamily: T.serif, fontWeight: 600, fontSize: 17,
+                      lineHeight: 1, letterSpacing: 0.3,
+                    }}>{c.name}</span>
+                  </React.Fragment>
+                );
+              })}
+            </div>
+            {showForm && (
+              <div style={{
+                marginTop: 10, fontSize: 11, color: T.textMed,
+                fontFamily: T.sans, lineHeight: 1.5,
+              }}>
+                <span style={{ color: T.textLight, fontWeight: 600, marginRight: 6 }}>Form:</span>
+                {allChords.map(c => c.name).join(' → ')}
+              </div>
+            )}
+            <div style={{
+              marginTop: 8, fontSize: 11.5, color: T.textMed,
+              fontFamily: T.sans, fontStyle: 'italic', lineHeight: 1.5,
+            }}>
+              {prog.vibe} · {prog.bars} bar{prog.bars === 1 ? '' : 's'} — cycle through the changes.
+            </div>
+          </div>
+        );
+      })()}
+
       {/* Divider */}
-      {constraintLines.length > 0 && (
+      {(constraintLines.length > 0 || progressionLine) && (
         <div style={{ height: 1, background: T.border, margin: '20px 0', opacity: 0.6 }} />
       )}
 
