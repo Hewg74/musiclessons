@@ -1349,6 +1349,7 @@ function drawRandom(card, activeDimensions, lockedDimensions, constraintWeights,
 
   for (const dimId of activeDimensions) {
     if (foundationalSet.has(dimId)) continue; // foundational already drawn
+    if (card.constraints[dimId]) continue;     // already drawn in an earlier pass (e.g. chordProgression from Pass 2.5)
     const dim = DIMENSIONS.find(d => d.id === dimId);
     if (!dim || dim.type === 'quantitative') continue;
     if (!dim.options || dim.options.length === 0) continue;
@@ -1514,7 +1515,39 @@ function generateCard(activeDimensions, lockedDimensions, history, constraintWei
   // Pass 2: foundational dims (always drawn).
   const foundationalDrawn = drawFoundational(card, instrument, lockedDimensions, constraintWeights, scaleNotes);
 
-  // Pass 3: random pool draws (up to maxConstraints).
+  // Pass 2.5: always-draw the chord progression when the scale supports it.
+  // Progressions are the highest-visibility dim on the card — they drive the
+  // banner, the Chords tool, and the synthesis line — so they should appear
+  // on every compatible card rather than competing for a random-pool slot
+  // (where in focus/combo modes they'd only land ~10-20% of draws). The draw
+  // is filtered to scale-compatible options so resolution always succeeds.
+  // Skipped silently for scales without progressions (whole-tone) or when
+  // the user has locked a value.
+  const progScale = card.constraints.scale;
+  if (progScale
+      && !SCALES_WITHOUT_PROGRESSIONS.has(progScale)
+      && lockedDimensions.chordProgression === undefined
+      && activeDimensions.includes('chordProgression')) {
+    const progDim = DIMENSIONS.find(d => d.id === 'chordProgression');
+    if (progDim) {
+      const compatible = progDim.options.filter(o => o.scales.includes(progScale));
+      if (compatible.length > 0) {
+        const chosen = srsWeightedPick({ ...progDim, options: compatible }, constraintWeights, instrument);
+        enrichDynamicConstraint(chosen, card, scaleNotes);
+        card.constraints.chordProgression = chosen;
+        foundationalDrawn.push('chordProgression');
+      }
+    }
+  } else if (lockedDimensions.chordProgression !== undefined) {
+    // Lock honored — drawFoundational-style path for consistency.
+    const chosen = { ...lockedDimensions.chordProgression };
+    enrichDynamicConstraint(chosen, card, scaleNotes);
+    card.constraints.chordProgression = chosen;
+    foundationalDrawn.push('chordProgression');
+  }
+
+  // Pass 3: random pool draws (up to maxConstraints). Skips chordProgression
+  // since Pass 2.5 handled it.
   const randomDrawn = drawRandom(card, activeDimensions, lockedDimensions, constraintWeights, instrument, maxConstraints, scaleNotes);
 
   // Pass 3.5: suggest backing track early so Pass 4 can consult it for
