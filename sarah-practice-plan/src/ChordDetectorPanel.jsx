@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { ArrowLeft, Mic, MicOff, ChevronRight, ChevronDown } from 'lucide-react';
 import { COLOR_MUSIC, getColorForNote, normalizeNote, FretboardDiagram, CHORD_VOICINGS_MULTI } from './JungleTools.jsx';
-import { subscribeToChord, startEngine, stopEngine, isEngineRunning, getEngineStatus } from './chordDetectorEngine.js';
+import { subscribeToChord, startEngine, stopEngine, isEngineRunning } from './chordDetectorEngine.js';
 
 // ─── Music helpers ──────────────────────────────────────────────────────────
 const CHROMATIC_SHARP = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
@@ -414,6 +414,9 @@ function useChordChecklist(targetChords, currentChord) {
     if (!sustainStartRef.current[matchKey]) {
       sustainStartRef.current[matchKey] = now;
     } else if (now - sustainStartRef.current[matchKey] >= CONFIRM_MS) {
+      // Time-driven transition: candidate → confirmed when sustained ≥600ms.
+      // Guarded by the confirmed[matchKey] check above so this fires exactly once per target.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setConfirmed(prev => ({ ...prev, [matchKey]: true }));
     }
   }, [currentChord, targetChords, confirmed]);

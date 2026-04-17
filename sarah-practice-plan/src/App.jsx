@@ -1974,6 +1974,8 @@ function ExerciseChordListener({ listenForChords }) {
     if (!sustainStartRef.current[matchKey]) {
       sustainStartRef.current[matchKey] = now;
     } else if (now - sustainStartRef.current[matchKey] >= _CHORD_TARGET_CONFIRM_MS) {
+      // Time-driven transition: candidate → confirmed when sustained ≥600 ms.
+      // Guarded by the confirmed[matchKey] early-return above so this fires once per target.
       setConfirmed(prev => ({ ...prev, [matchKey]: true }));
     }
   }, [chord, targets, confirmed]);
