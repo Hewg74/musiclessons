@@ -6616,7 +6616,12 @@ export function ChordDiagram({ theme: T, frets, name, onClose }) {
   return (
     <div style={{
       background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: T.radiusMd,
-      padding: 12, boxShadow: T.md, position: "relative", width: w + 24,
+      padding: 10, boxShadow: T.md, position: "relative",
+      // Fluid: fill the parent (grid cell, flex item) up to the natural diagram
+      // width. Callers that want the original fixed-width behavior can wrap this
+      // in a container of the desired width.
+      width: '100%', maxWidth: w + 20,
+      boxSizing: 'border-box',
     }} onClick={e => e.stopPropagation()}>
       {onClose && (
         <button onClick={onClose} style={{
@@ -6633,7 +6638,9 @@ export function ChordDiagram({ theme: T, frets, name, onClose }) {
           }}>{name}</div>
         );
       })()}
-      <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`}>
+      {/* SVG scales fluidly via viewBox while preserving its internal layout. */}
+      <svg width="100%" height="auto" viewBox={`0 0 ${w} ${h}`}
+        preserveAspectRatio="xMidYMid meet" style={{ display: 'block' }}>
         {/* Fret lines */}
         {Array.from({ length: numFrets + 1 }, (_, i) => (
           <line key={`f${i}`}

@@ -184,18 +184,26 @@ export function ChordProgressionDisplay({
         if (shapes.length === 0) return null;
         return (
           <div style={{
-            display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 14,
+            display: 'grid',
+            // Exactly 3 per row on mobile, every viewport. Each cell is 1fr so
+            // ChordDiagram (fluid width: 100%) fills its cell. Row gap > column
+            // gap so multi-row progressions (Desert Blues = 6 chords) read as
+            // two clean rows, not a wall of boxes.
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            columnGap: 8, rowGap: 14,
+            marginTop: 14,
             paddingTop: 12, borderTop: `1px dashed ${accent}20`,
           }}>
             {shapes.map(s => (
               <div key={s.name} style={{
                 display: 'flex', flexDirection: 'column', alignItems: 'center',
+                minWidth: 0, // allow grid cell to shrink below content's natural width
               }}>
                 <ChordDiagram theme={T} frets={s.voicing.frets} name={s.name} />
                 {s.voicing.pos && s.voicing.pos !== 'Open' && (
                   <span style={{
                     fontFamily: T.sans, fontSize: 9, color: T.textLight,
-                    marginTop: -4, letterSpacing: 0.3,
+                    marginTop: 2, letterSpacing: 0.3,
                   }}>{s.voicing.pos}</span>
                 )}
               </div>
