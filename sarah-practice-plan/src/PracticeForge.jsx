@@ -2378,6 +2378,8 @@ function ChallengeCard({
           T={T}
           resolvedChords={progressionLine.constraint.resolvedChords || []}
           name={progressionLine.constraint.name}
+          keyRoot={card.constraints.key}
+          scale={card.constraints.scale}
           vibe={progressionLine.constraint.vibe}
           bars={progressionLine.constraint.bars}
           instrument={card.instrument}

@@ -41,10 +41,19 @@ function lookupVoicing(name) {
   return null;
 }
 
+// Pretty-print the scale id for the banner subtitle: "natural-minor" →
+// "Natural Minor", "phrygian-dominant" → "Phrygian Dominant".
+function formatScale(scale) {
+  if (!scale) return '';
+  return scale.split('-').map(w => w[0].toUpperCase() + w.slice(1)).join(' ');
+}
+
 export function ChordProgressionDisplay({
   T,
   resolvedChords,             // [{ name: 'Am', root: 'A', roman: 'i' }, ...]
   name,                       // "Andalusian cadence"
+  keyRoot = null,             // "A" — displayed as "A Natural Minor" context header
+  scale = null,               // "natural-minor" → prettified
   vibe = null,                // "Flamenco, Sultans of Swing, Hit the Road Jack"
   bars = null,                // 4 — used in footer line
   instrument = null,          // 'guitar' → show fingerings
@@ -94,7 +103,7 @@ export function ChordProgressionDisplay({
       borderRadius: 10,
     }}>
       <div style={{
-        display: 'flex', alignItems: 'baseline', gap: 8,
+        display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap',
         fontSize: 9, fontWeight: 800, letterSpacing: 1.6, textTransform: 'uppercase',
         color: accent, marginBottom: 10, fontFamily: T.sans,
       }}>
@@ -102,6 +111,14 @@ export function ChordProgressionDisplay({
         <span style={{ color: T.textLight, fontWeight: 500, letterSpacing: 0.4, textTransform: 'none' }}>
           · {name}
         </span>
+        {keyRoot && scale && (
+          <span style={{
+            color: T.textMed, fontWeight: 600, letterSpacing: 0.4,
+            textTransform: 'none', fontSize: 11,
+          }}>
+            · in {keyRoot} {formatScale(scale)}
+          </span>
+        )}
         <span style={{ flex: 1 }} />
         {lockChipSlot}
       </div>

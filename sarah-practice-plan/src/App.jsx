@@ -2029,7 +2029,11 @@ function ExerciseChordListener({ listenForChords }) {
 //   - Navigate away / remount: fresh draw (no persistence)
 
 function EmbeddedChordProgression({ T, spec }) {
-  const { key: keyRoot, scale, pool, pinned, enableListener = false, instrument = null } = spec || {};
+  // Default instrument to 'guitar' so fingering diagrams show — voice-only
+  // exercises in this curriculum still have the user accompanying themselves
+  // on guitar, so the chord shapes are useful context. Specs can pass
+  // `instrument: null` explicitly to hide fingerings.
+  const { key: keyRoot, scale, pool, pinned, enableListener = false, instrument = 'guitar' } = spec || {};
   const compatible = useMemo(() => compatibleFromPool(pool, scale), [pool, scale]);
 
   // Pinned must be compatible with the scale to win — otherwise fall through to
@@ -2092,6 +2096,8 @@ function EmbeddedChordProgression({ T, spec }) {
         T={T}
         resolvedChords={resolved}
         name={progression.name}
+        keyRoot={keyRoot}
+        scale={scale}
         vibe={progression.vibe}
         bars={progression.bars}
         instrument={instrument}

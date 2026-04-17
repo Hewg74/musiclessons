@@ -6192,6 +6192,28 @@ const CHORD_VOICINGS_MULTI = {
   "G#m7": [{ frets: "464444", name: "G#m7", pos: "4th" }, { frets: "xx4444", name: "G#m7", pos: "Partial" }],
   "Fm7":  [{ frets: "131111", name: "Fm7", pos: "1st" }, { frets: "x8a898", name: "Fm7", pos: "8th" }],
   "Bbm7": [{ frets: "x13121", name: "Bbm7", pos: "1st" }, { frets: "686666", name: "Bbm7", pos: "6th" }],
+  // ─── Half-diminished (m7b5) chords ───
+  // Derivation: with root on D string at fret N, the canonical top-4-string
+  // voicing is (xx N N+1 N+1 N+1) — gives root, b5, b7, b3 top-to-bottom,
+  // playable as a single-bar shape. Non-D-string voicings derived per-root.
+  // Needed for jazz minor ii-V-i: A-min iim7b5 = Bm7b5, D-min iim7b5 = Em7b5.
+  "Am7b5":  [{ frets: "x01213", name: "Am7b5", pos: "Open" }],
+  "Bm7b5":  [{ frets: "x2323x", name: "Bm7b5", pos: "2nd" }],
+  "Cm7b5":  [{ frets: "x3434x", name: "Cm7b5", pos: "3rd" }],
+  "C#m7b5": [{ frets: "x4545x", name: "C#m7b5", pos: "4th" }],
+  "Dbm7b5": [{ frets: "x4545x", name: "Dbm7b5", pos: "4th" }],
+  "Dm7b5":  [{ frets: "xx0111", name: "Dm7b5", pos: "Open" }],
+  "D#m7b5": [{ frets: "xx1222", name: "D#m7b5", pos: "1st" }],
+  "Ebm7b5": [{ frets: "xx1222", name: "Ebm7b5", pos: "1st" }],
+  "Em7b5":  [{ frets: "xx2333", name: "Em7b5", pos: "2nd" }, { frets: "x7878x", name: "Em7b5", pos: "7th" }],
+  "Fm7b5":  [{ frets: "xx3444", name: "Fm7b5", pos: "3rd" }],
+  "F#m7b5": [{ frets: "xx4555", name: "F#m7b5", pos: "4th" }],
+  "Gbm7b5": [{ frets: "xx4555", name: "Gbm7b5", pos: "4th" }],
+  "Gm7b5":  [{ frets: "xx5666", name: "Gm7b5", pos: "5th" }],
+  "G#m7b5": [{ frets: "xx6777", name: "G#m7b5", pos: "6th" }],
+  "Abm7b5": [{ frets: "xx6777", name: "Abm7b5", pos: "6th" }],
+  "A#m7b5": [{ frets: "xx8999", name: "A#m7b5", pos: "8th" }],
+  "Bbm7b5": [{ frets: "xx8999", name: "Bbm7b5", pos: "8th" }],
   // ─── Sus chords ───
   "Dsus2": [{ frets: "xx0230", name: "Dsus2", pos: "Open" }, { frets: "x57755", name: "Dsus2", pos: "5th" }],
   "Dsus4": [{ frets: "xx0233", name: "Dsus4", pos: "Open" }, { frets: "x57785", name: "Dsus4", pos: "5th" }],

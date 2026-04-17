@@ -169,7 +169,7 @@ export const level6 = {
       chordProgression: {
         key: "A",
         scale: "natural-minor",
-        pool: ["minor_three", "minor_descent", "minor_uplift", "three_chord_major"],
+        pool: ["minor_three", "minor_descent", "minor_uplift", "minor_cyclic"],
       },
       metronome: 90,
       referencePitches: getPitchRange("E3", "D4"),
