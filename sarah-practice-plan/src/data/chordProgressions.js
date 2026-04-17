@@ -21,7 +21,9 @@
 
 export const CHORD_PROGRESSIONS = [
   // ─── Pop / rock major ───
-  { id: 'pop_axis',         name: 'Pop axis (I–V–vi–IV)',             degrees: ['I','V','vi','IV'],          scales: ['major','lydian'],                      vibe: 'Coldplay, Journey, Axis of Awesome',            bars: 4 },
+  // Pop axis is major-only — lydian's IV lands on the #4 (diminished) and
+  // breaks the sunny I-V-vi-IV vibe that's the whole point of the cycle.
+  { id: 'pop_axis',         name: 'Pop axis (I–V–vi–IV)',             degrees: ['I','V','vi','IV'],          scales: ['major'],                               vibe: 'Coldplay, Journey, Axis of Awesome',            bars: 4 },
   { id: 'pop_vi_iv_i_v',    name: 'vi–IV–I–V',                        degrees: ['vi','IV','I','V'],          scales: ['major'],                               vibe: 'Anthemic indie pop',                            bars: 4 },
   { id: 'fifties_doowop',   name: '50s doo-wop (I–vi–IV–V)',          degrees: ['I','vi','IV','V'],          scales: ['major'],                               vibe: '"Stand by Me", early rock & roll',              bars: 4 },
   { id: 'three_chord_major',name: '3-chord (I–IV–V)',                 degrees: ['I','IV','V'],               scales: ['major','mixolydian'],                  vibe: 'Folk, country, punk — the universal',           bars: 3 },
@@ -38,7 +40,9 @@ export const CHORD_PROGRESSIONS = [
   { id: 'dorian_iv_v',      name: 'Dorian (i–IV–v)',                  degrees: ['i','IV','v'],               scales: ['dorian'],                              vibe: 'Funk, soul, Khruangbin',                        bars: 3 },
 
   // ─── Minor (natural / harmonic) ───
-  { id: 'minor_three',      name: 'Minor 3-chord (i–iv–v)',           degrees: ['i','iv','v'],               scales: ['natural-minor','dorian'],              vibe: 'Folk minor, sea shanty',                        bars: 3 },
+  // Natural-minor only — dorian's native iv is major (breaks the all-minor
+  // sound implied by lowercase i/iv/v). Dorian users should draw dorian_iv_v.
+  { id: 'minor_three',      name: 'Minor 3-chord (i–iv–v)',           degrees: ['i','iv','v'],               scales: ['natural-minor'],                       vibe: 'Folk minor, sea shanty',                        bars: 3 },
   { id: 'minor_descent',    name: 'Minor descent (i–VII–VI–VII)',     degrees: ['i','VII','VI','VII'],       scales: ['natural-minor'],                       vibe: '"Stairway to Heaven", "All Along the Watchtower"', bars: 4 },
   { id: 'minor_uplift',     name: 'i–VI–III–VII',                     degrees: ['i','VI','III','VII'],       scales: ['natural-minor'],                       vibe: 'Sad-pop in minor — hopeful resolution',         bars: 4 },
   // V is explicit to keep it major across BOTH compatible scales. harmonic-minor's
@@ -69,7 +73,10 @@ export const CHORD_PROGRESSIONS = [
   { id: 'desert_blues',     name: 'Desert blues (i–VI–iv–i)',         degrees: ['i','VI','iv','i'],          scales: ['natural-minor'],                       vibe: 'Ali Farka Touré, Bombino',                      bars: 4 },
 
   // ─── Reggae / surf ───
-  { id: 'reggae_offbeat',   name: 'Reggae I–IV–V',                    degrees: ['I','IV','V'],               scales: ['major','mixolydian'],                  vibe: 'One-drop reggae, ska',                          bars: 3 },
+  // Major-only — mixolydian turns V into a minor chord and breaks the
+  // reggae I-IV-V foundation (reggae wants a dominant V). Use three_chord_major
+  // for the mixolydian version if wanted.
+  { id: 'reggae_offbeat',   name: 'Reggae I–IV–V',                    degrees: ['I','IV','V'],               scales: ['major'],                               vibe: 'One-drop reggae, ska',                          bars: 3 },
   { id: 'surf_minor',       name: 'Surf (i–bVI–bVII–i)',              degrees: ['i','bVI','bVII','i'],       scales: ['natural-minor'],                       vibe: 'Misirlou, Pulp Fiction, Dick Dale',             bars: 4 },
   { id: 'reggae_one_chord', name: 'Reggae one-chord vamp (I)',        degrees: ['I'],                        scales: ['major','mixolydian'],                  vibe: 'Bob Marley meditation grooves',                 bars: 1 },
 
@@ -83,6 +90,21 @@ export const CHORD_PROGRESSIONS = [
   // diminished; the idiomatic Spanish/flamenco cadence uses a major
   // dominant inherited from the parent harmonic-minor scale.
   { id: 'spanish_descent',  name: 'Spanish descent (i–bVII–bVI–V)',   degrees: ['i','bVII','bVI','Vmaj'],    scales: ['phrygian-dominant'],                   vibe: 'Spanish guitar — descent to leading tone',      bars: 4 },
+
+  // ─── Gypsy / Eastern European ───
+  // Gypsy cadence is canonically a harmonic-minor progression — iv lands on
+  // natural-4th Dm (not hungarian-minor's raised-4th D#dim). V pinned major
+  // via the leading tone inherited from harmonic-minor.
+  { id: 'gypsy_cadence',    name: 'Gypsy cadence (i–iv–V–i)',         degrees: ['i','iv','Vmaj','i'],        scales: ['harmonic-minor'],                      vibe: 'Eastern European — the leading-tone dominant',  bars: 4 },
+  // Hungarian-specific — this one DOES use the raised 4th (D#dim in A
+  // hungarian) as the iv chord, leaning into the aug-2nd tension between
+  // iv and V. Different sound from the harmonic-minor gypsy cadence.
+  { id: 'hungarian_dim_iv', name: 'Hungarian dim-iv (i–iv°–Vmaj–i)',  degrees: ['i','iv','Vmaj','i'],        scales: ['hungarian-minor'],                     vibe: 'Raised-4th diminished iv pulling hard to V',    bars: 4 },
+
+  // ─── Double-harmonic / Byzantine ───
+  // Double-harmonic has flat 2 and raised 7 — classic Middle Eastern.
+  { id: 'byzantine_cadence',name: 'Byzantine (I–bII–I)',              degrees: ['I','bII','I'],              scales: ['double-harmonic'],                     vibe: 'Middle Eastern — flat 2 pulling to tonic',      bars: 3 },
+  { id: 'byzantine_turn',   name: 'Byzantine turn (I–iv–bII–I)',      degrees: ['I','iv','bII','I'],         scales: ['double-harmonic'],                     vibe: 'Byzantine 4-chord — aug 2nd between iv and bII',bars: 4 },
 ];
 
 // Scales where progressions don't make musical sense — pentatonics lack a

@@ -4,6 +4,7 @@ import { ArrowLeft, RotateCcw, SkipForward, Lock, Unlock, Shuffle, ChevronDown, 
 import {
   normalizeNote, COLOR_MUSIC, getColorForNote, playWarmNote,
   FretboardDiagram, VolumeMeter, MiniAudioPlayer, AudioRecorder,
+  ChordDiagram, CHORD_VOICINGS_MULTI,
 } from './JungleTools.jsx';
 import { CHROMATIC, CIRCLE_OF_FIFTHS, SCALE_TYPES, generateScale } from './ColorMusicTrainer.jsx';
 import GUIDANCE_CACHE from './data/practiceForgeGuidance.json';
@@ -644,6 +645,79 @@ function composeProgressionSynthesis(card) {
   if (parts.length === 0) return null;
   return parts.join(' ');
 }
+
+// A short "how to actually practice this" nudge that appears below the
+// synthesis line. Combo-aware — picks the tip whose dim combo is on the
+// card so the player gets a concrete rep suggestion, not generic advice.
+// Returns null if the combo is uninteresting (card relies on the vibe
+// subtitle's "cycle through the changes" default).
+function composeProgressionPracticeTip(card) {
+  const cp = card?.constraints?.chordProgression;
+  if (!cp?.resolvedChords?.length) return null;
+  const c = card.constraints;
+  const texture = c.texture?.id;
+  const picking = c.pickingHand?.id;
+  const ht = c.harmonicTarget?.id;
+  const hasBlues = /^blues/.test(cp.id);
+  const barCount = cp.bars || cp.resolvedChords.length;
+
+  // Most specific combos first.
+  if (texture === 'singleLine' && ht === 'chordToneLanding') {
+    return 'Pro tip: use the BAR BEFORE a chord change to announce the next chord\'s target note. That anticipation is the whole skill here.';
+  }
+  if (texture === 'singleLine' && ht === 'arpeggio135') {
+    return 'Pro tip: arpeggiate the CURRENT chord — your triad shifts every bar, so the phrase shape rotates with it.';
+  }
+  if (texture === 'singleLine' && ht === 'colorTone79') {
+    return 'Pro tip: hit the 7th or 9th of each chord on the downbeat of that chord\'s bar — color tones are strongest when they land on a change.';
+  }
+  if (texture === 'triadPartial') {
+    return 'Pro tip: find the SMALLEST motion between chord shapes (top three strings on the same frets whenever possible). Tight voice-leading is the sound of pro comping.';
+  }
+  if (texture === 'fullChord') {
+    return 'Pro tip: don\'t rush chord changes — place each change on the downbeat with intention. The groove lives in HOW you land each one.';
+  }
+  if (texture === 'doubleStops') {
+    return 'Pro tip: pick pairs that share one note between chords — that common tone keeps the line connected across changes.';
+  }
+  if (texture === 'mixedTextures') {
+    return 'Pro tip: stabs on the chord change, fills in the space between. The chord is the anchor; the fill is the sentence.';
+  }
+  if (picking === 'fingerpick') {
+    return 'Pro tip: let the thumb trace the root of whichever chord is sounding. Fingers handle the triad above, thumb narrates the progression underneath.';
+  }
+  if (ht === 'chordToneLanding') {
+    return 'Pro tip: if your phrase lands on a root it feels grounded, on a 3rd it feels bright, on a 5th it feels open. Mix the landings.';
+  }
+  if (ht === 'arpeggio135') {
+    return 'Pro tip: the same 1-3-5 shape shifts up and down the neck as chords change — find the shape, then just move it.';
+  }
+  // Big cycles (blues + 8+ chord forms) benefit from timing practice over engagement tips.
+  if (hasBlues || barCount >= 8) {
+    return 'Pro tip: loop it first at half tempo, locked to the metronome, until every change feels automatic. Then turn the loop into music.';
+  }
+  if (card.instrument === 'voice') {
+    return 'Pro tip: hum the root of each chord before singing over it — your body needs to HEAR the change to phrase naturally across it.';
+  }
+  return 'Pro tip: play the progression once as chord stabs to feel the changes, then once with your target texture on top. Two passes = one learning round.';
+}
+
+// Surface the characteristic interval(s) that make a mode sound like
+// itself. Shown below the synthesis so the player knows WHICH note to
+// actively listen for — "modal sound" is always just a few specific
+// color tones. Returns null for non-distinctive scales.
+const MODAL_CHARACTER_CALLOUTS = {
+  'dorian':            'Dorian color: the natural 6. Major-6 against a minor tonic — that\'s the whole sound.',
+  'mixolydian':        'Mixolydian color: the flat 7. It turns V minor and makes bVII a native chord — not borrowed.',
+  'lydian':            'Lydian color: the raised 4. The "lift" that makes Lydian sound brighter than major.',
+  'phrygian':          'Phrygian color: the flat 2. That half-step above the tonic is the Spanish/metal signature.',
+  'phrygian-dominant': 'Phrygian-dominant color: flat 2 + major 3. Aug-2nd between them = flamenco fire.',
+  'harmonic-minor':    'Harmonic-minor color: the raised 7 (leading tone). The pull into the tonic that makes this NOT natural minor.',
+  'melodic-minor':     'Melodic-minor color: major 6 AND 7. Jazz\'s sweetest minor — minor root, major top.',
+  'hungarian-minor':   'Hungarian-minor color: raised 4 AND raised 7 — two augmented-2nd jumps, full gypsy bite.',
+  'double-harmonic':   'Double-harmonic color: flat 2 AND raised 7 — Byzantine signature, two aug 2nds.',
+  'locrian':           'Locrian color: flat 2 AND flat 5. The only diminished-tonic mode — unstable by design.',
+};
 
 function droneRootFromCard(key, scale) {
   const minorScales = [
@@ -1380,6 +1454,33 @@ function validateAndRepair(card, lockedDimensions, constraintWeights, instrument
       }
     }
 
+    // Rule 2: chordProgression × harmonicTarget:scaleShape → upgrade the
+    // harmonic target to chordToneLanding (or arpeggio135 as a gentler
+    // fallback). Rationale: if the card draws a real chord cycle AND the
+    // melodic target is "just stay in the scale", the progression becomes
+    // visual wallpaper — the player runs scale notes oblivious to the
+    // changes. Nudging to chord-tone landing makes the cycle load-bearing
+    // for the phrase without over-constraining. Locked HT is respected —
+    // if the user explicitly pinned scaleShape, we leave it.
+    // NOTE: validateAndRepair runs BEFORE Pass 5 resolution, so the
+    // progression has .degrees but not yet .resolvedChords. Check presence
+    // via .degrees.
+    const prog = card.constraints.chordProgression;
+    const ht2 = card.constraints.harmonicTarget;
+    if (prog && prog.degrees?.length && ht2?.id === 'scaleShape'
+        && lockedDimensions.harmonicTarget === undefined) {
+      const htDim = DIMENSIONS.find(d => d.id === 'harmonicTarget');
+      // 70% land on chordToneLanding (the "strong" engagement), 30% arpeggio135
+      // (outline each chord's triad). Keeps some variance in how players
+      // engage the progression without ever going back to scaleShape.
+      const upgradeId = Math.random() < 0.7 ? 'chordToneLanding' : 'arpeggio135';
+      const upgrade = htDim.options.find(o => o.id === upgradeId);
+      if (upgrade) {
+        card.constraints.harmonicTarget = { ...upgrade, _upgradedFromScaleShape: true };
+        didRepair = true;
+      }
+    }
+
     if (!didRepair) break;
     repairs++;
   }
@@ -1429,8 +1530,10 @@ function generateCard(activeDimensions, lockedDimensions, history, constraintWei
   // pinned chordToneLanding we leave it alone and trust them to pick a
   // track manually.
   const ht = card.constraints.harmonicTarget;
+  const hasProgression = !!card.constraints.chordProgression?.degrees?.length;
   if (ht && ht.id === 'chordToneLanding'
       && !trackHasProgression(card.suggestedTrack)
+      && !hasProgression  // chordProgression IS the chord metadata — no fallback needed
       && lockedDimensions.harmonicTarget === undefined) {
     const htDim = DIMENSIONS.find(d => d.id === 'harmonicTarget');
     const fallback = htDim.options.find(o => o.id === 'arpeggio135');
@@ -2282,6 +2385,29 @@ function ChallengeCard({
         const showForm = allChords.length > 5;
         const progColor = progressionLine.dim.color;
         const synthesis = composeProgressionSynthesis(card);
+        const practiceTip = composeProgressionPracticeTip(card);
+        const modalCallout = MODAL_CHARACTER_CALLOUTS[card.constraints.scale];
+
+        // Strip quality-pin suffixes (Vmaj → V, ivmin → iv) from degree
+        // labels since those are resolver hints, not performer-facing notation.
+        // Keep explicit jazz notation (V7, iim7, Imaj7, iim7b5) — they carry a digit.
+        const displayRoman = (r) => r && !/\d/.test(r)
+          ? r.replace(/(maj|min|dim|aug)$/, '')
+          : r;
+
+        // Guitar fingerings: look up each unique chord's voicing, with an
+        // enharmonic fallback (A# → Bb, D# → Eb, G# → Ab) because the
+        // voicing library uses mixed sharp/flat spellings.
+        const ENHARMONIC_FLAT = { 'A#': 'Bb', 'D#': 'Eb', 'G#': 'Ab' };
+        const lookupVoicing = (name) => {
+          if (CHORD_VOICINGS_MULTI[name]) return CHORD_VOICINGS_MULTI[name][0];
+          const root = name.match(/^[A-G][#b]?/)?.[0];
+          const rest = name.slice(root?.length || 0);
+          const flat = ENHARMONIC_FLAT[root];
+          if (flat && CHORD_VOICINGS_MULTI[flat + rest]) return CHORD_VOICINGS_MULTI[flat + rest][0];
+          return null;
+        };
+        const showFingerings = card.instrument === 'guitar';
         return (
           <div style={{
             marginTop: 18,
@@ -2304,25 +2430,66 @@ function ChallengeCard({
                 <LockChip dimId="chordProgression" currentValue={prog} label="Progression" />
               )}
             </div>
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'flex-start' }}>
               {uniqueChords.map((c, i) => {
                 const cc = getColorForNote(normalizeNote(c.root)) || progColor;
+                const roman = displayRoman(c.roman);
                 return (
                   <React.Fragment key={c.name}>
                     {i > 0 && (
-                      <span style={{ color: T.textLight, fontFamily: T.sans, fontSize: 13, opacity: 0.6 }}>→</span>
+                      <span style={{ color: T.textLight, fontFamily: T.sans, fontSize: 13, opacity: 0.6, paddingTop: 9 }}>→</span>
                     )}
-                    <span style={{
-                      padding: '5px 12px', borderRadius: 6,
-                      border: `1.5px solid ${cc}`,
-                      color: cc, background: `${cc}10`,
-                      fontFamily: T.serif, fontWeight: 600, fontSize: 17,
-                      lineHeight: 1, letterSpacing: 0.3,
-                    }}>{c.name}</span>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                      <span style={{
+                        padding: '5px 12px', borderRadius: 6,
+                        border: `1.5px solid ${cc}`,
+                        color: cc, background: `${cc}10`,
+                        fontFamily: T.serif, fontWeight: 600, fontSize: 17,
+                        lineHeight: 1, letterSpacing: 0.3,
+                      }}>{c.name}</span>
+                      {roman && (
+                        <span style={{
+                          fontFamily: T.sans, fontSize: 9, fontWeight: 600,
+                          color: T.textLight, letterSpacing: 0.5,
+                        }}>{roman}</span>
+                      )}
+                    </div>
                   </React.Fragment>
                 );
               })}
             </div>
+
+            {/* Chord fingerings — guitar only. Mini-diagrams show the
+                canonical voicing for each unique chord so a player who's
+                never seen "Gmaj7" or "F#m" can play it without leaving the
+                card. Voicings missing from the library are silently omitted
+                (e.g. dim/aug/extension chords like "C#dim" may not resolve). */}
+            {showFingerings && uniqueChords.length > 0 && (() => {
+              const shapes = uniqueChords
+                .map(c => ({ name: c.name, voicing: lookupVoicing(c.name) }))
+                .filter(s => s.voicing);
+              if (shapes.length === 0) return null;
+              return (
+                <div style={{
+                  display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 14,
+                  paddingTop: 12, borderTop: `1px dashed ${progColor}20`,
+                }}>
+                  {shapes.map(s => (
+                    <div key={s.name} style={{
+                      display: 'flex', flexDirection: 'column', alignItems: 'center',
+                    }}>
+                      <ChordDiagram T={T} frets={s.voicing.frets} name={s.name} />
+                      {s.voicing.pos && s.voicing.pos !== 'Open' && (
+                        <span style={{
+                          fontFamily: T.sans, fontSize: 9, color: T.textLight,
+                          marginTop: -4, letterSpacing: 0.3,
+                        }}>{s.voicing.pos}</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
             {showForm && (() => {
               // Compress consecutive repeats so 12-bar blues reads
               // "I7 ×4 · IV7 ×2 · I7 ×2 · V7 · IV7 · I7 · V7" instead of
@@ -2356,6 +2523,27 @@ function ChallengeCard({
                 lineHeight: 1.55,
               }}>
                 {synthesis}
+              </div>
+            )}
+            {practiceTip && (
+              <div style={{
+                marginTop: 8, padding: '8px 10px',
+                background: `${progColor}08`,
+                borderLeft: `2.5px solid ${progColor}80`,
+                borderRadius: 3,
+                fontFamily: T.sans, fontSize: 12, color: T.textDark,
+                lineHeight: 1.55,
+              }}>
+                {practiceTip}
+              </div>
+            )}
+            {modalCallout && (
+              <div style={{
+                marginTop: 8, fontSize: 11, color: T.textMed,
+                fontFamily: T.sans, lineHeight: 1.5,
+              }}>
+                <span style={{ fontSize: 10, fontWeight: 700, color: T.goldDark, letterSpacing: 0.8, textTransform: 'uppercase', marginRight: 6 }}>Ear:</span>
+                {modalCallout}
               </div>
             )}
             <div style={{
