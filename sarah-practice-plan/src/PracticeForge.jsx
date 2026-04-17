@@ -540,6 +540,111 @@ function generateId() {
 }
 
 // Derive drone chord root from key + scale (Am vs A)
+// Compose a single-sentence practice prompt that synthesizes the chord
+// progression with the other drawn dims (texture/picking on guitar,
+// register/vowel on voice, harmonicTarget everywhere). Renders inside the
+// progression banner so the reader gets a coherent instruction —
+// "fingerpick double-stops over the Andalusian, landing on chord tones
+// of each chord as it passes" — instead of four disconnected stickers.
+// Returns null if no progression is on the card or nothing meaningful to
+// compose with.
+function composeProgressionSynthesis(card) {
+  const cp = card?.constraints?.chordProgression;
+  if (!cp?.resolvedChords?.length) return null;
+
+  // Short-name strips the parenthetical notation from the progression label
+  // so "Pop axis (I–V–vi–IV)" reads as "Pop axis" in running prose.
+  const progShort = cp.name.replace(/\s*\([^)]*\)\s*/, '').trim();
+
+  const GUITAR_TEXTURE_WORDS = {
+    singleLine: 'single-note lines',
+    doubleStops: 'double-stops',
+    triadPartial: 'triad partials',
+    fullChord: 'full chord voicings',
+    mixedTextures: 'mixed textures — chord stabs with single-note fills',
+  };
+  const GUITAR_PICKING_WORDS = {
+    downstrokes: ', all downstrokes,',
+    alternate: ', alternate-picked,',
+    fingerpick: ', fingerpicked,',
+    hybrid: ', hybrid-picked,',
+  };
+  const VOICE_REGISTER_WORDS = {
+    chest: 'chest voice',
+    head: 'head voice',
+    mixed: 'mixed voice',
+    falsetto: 'falsetto',
+    breathy: 'breathy voice',
+  };
+  const VOICE_VOWEL_WORDS = {
+    ah: 'open /ah/',
+    eh: '/eh/',
+    ee: '/ee/',
+    oh: '/oh/',
+    oo: '/oo/',
+    hum: 'a hum',
+    scatSyllables: 'scat syllables',
+    realLyrics: 'real lyrics',
+  };
+
+  const c = card.constraints;
+  const parts = [];
+  let hasLead = false;
+
+  // Opening: "Do X over the [progName]."
+  if (card.instrument === 'guitar') {
+    const textureWord = GUITAR_TEXTURE_WORDS[c.texture?.id];
+    const pickingWord = GUITAR_PICKING_WORDS[c.pickingHand?.id] || '';
+    if (textureWord) {
+      parts.push(`Play ${textureWord}${pickingWord} over the ${progShort}.`);
+      hasLead = true;
+    } else if (pickingWord) {
+      const pickingOpener = pickingWord.replace(/,/g, '').trim();
+      parts.push(`Play ${pickingOpener} over the ${progShort}.`);
+      hasLead = true;
+    }
+  } else {
+    const registerWord = VOICE_REGISTER_WORDS[c.register?.id];
+    const vowelWord = VOICE_VOWEL_WORDS[c.vowel?.id];
+    if (registerWord || vowelWord) {
+      const regPart = registerWord || 'your voice';
+      const vowelPart = vowelWord ? ` on ${vowelWord}` : '';
+      parts.push(`Sing in ${regPart}${vowelPart} over the ${progShort}.`);
+      hasLead = true;
+    }
+  }
+
+  // Harmonic target × progression — the main "how to compose with the
+  // changes" directive. The standalone harmonicTarget desc talks about a
+  // backing track or the tonic triad, which reads stale once a progression
+  // is the live harmonic context; this line restates the target against
+  // the cycle.
+  switch (c.harmonicTarget?.id) {
+    case 'chordToneLanding':
+      parts.push('Land each phrase on a chord tone (root, 3rd, or 5th) of whichever chord of the cycle is sounding.');
+      break;
+    case 'arpeggio135':
+      parts.push('Outline the 1-3-5 of the current chord as each one passes — the arpeggio follows the changes.');
+      break;
+    case 'colorTone79':
+      parts.push('Reach for 7ths, 9ths, and 11ths of whichever chord is active — extensions, not just the tonic.');
+      break;
+    case 'scaleShape':
+      // scaleShape is the default "no harmonic target" — skip unless we
+      // otherwise have nothing to say.
+      if (!hasLead) parts.push(`Improvise freely through the ${progShort}, staying inside the scale.`);
+      break;
+    default:
+      break;
+  }
+
+  // If nothing composable fired (no texture/picking/register/vowel/harmonic),
+  // the banner's own subtitle already tells the player the vibe + bars —
+  // returning null lets the banner stay compact.
+  if (parts.length === 0) return null;
+  return parts.join(' ');
+}
+
 function droneRootFromCard(key, scale) {
   const minorScales = [
     'minor-pentatonic', 'natural-minor', 'blues', 'dorian', 'phrygian',
@@ -2160,7 +2265,10 @@ function ChallengeCard({
       {/* Chord progression banner — the harmonic cycle other constraints play
           over. Unique chord chips read as discrete targets (matches the chord
           detector's checklist granularity). If the progression has >5 chords
-          (e.g. 12-bar blues), a subtitle shows the full form. */}
+          (e.g. 12-bar blues), a subtitle shows the full form. A synthesis
+          line composes progression × texture/picking × harmonic target into
+          one coherent prompt so the card reads as a practice instruction,
+          not a stack of disconnected stickers. */}
       {progressionLine && (() => {
         const prog = progressionLine.constraint;
         const allChords = prog.resolvedChords || [];
@@ -2173,6 +2281,7 @@ function ChallengeCard({
         }
         const showForm = allChords.length > 5;
         const progColor = progressionLine.dim.color;
+        const synthesis = composeProgressionSynthesis(card);
         return (
           <div style={{
             marginTop: 18,
@@ -2214,13 +2323,39 @@ function ChallengeCard({
                 );
               })}
             </div>
-            {showForm && (
+            {showForm && (() => {
+              // Compress consecutive repeats so 12-bar blues reads
+              // "I7 ×4 · IV7 ×2 · I7 ×2 · V7 · IV7 · I7 · V7" instead of
+              // dragging the player through twelve identical-looking entries.
+              // Uses Roman numerals — the abstract form is what's useful at
+              // this density; the concrete chord names are already above.
+              const runs = [];
+              for (const c of allChords) {
+                const label = c.roman || c.name;
+                if (runs.length && runs[runs.length - 1].label === label) {
+                  runs[runs.length - 1].count += 1;
+                } else {
+                  runs.push({ label, count: 1 });
+                }
+              }
+              return (
+                <div style={{
+                  marginTop: 10, fontSize: 11, color: T.textMed,
+                  fontFamily: T.sans, lineHeight: 1.5,
+                }}>
+                  <span style={{ color: T.textLight, fontWeight: 600, marginRight: 6 }}>Form:</span>
+                  {runs.map(r => r.count > 1 ? `${r.label} ×${r.count}` : r.label).join(' · ')}
+                </div>
+              );
+            })()}
+            {synthesis && (
               <div style={{
-                marginTop: 10, fontSize: 11, color: T.textMed,
-                fontFamily: T.sans, lineHeight: 1.5,
+                marginTop: 12, paddingTop: 10,
+                borderTop: `1px dashed ${progColor}30`,
+                fontFamily: T.serif, fontSize: 14, color: T.textDark,
+                lineHeight: 1.55,
               }}>
-                <span style={{ color: T.textLight, fontWeight: 600, marginRight: 6 }}>Form:</span>
-                {allChords.map(c => c.name).join(' → ')}
+                {synthesis}
               </div>
             )}
             <div style={{
@@ -3325,12 +3460,15 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
 
   // Auto-expand chord detector in guitar mode when a chord progression is
   // drawn — the per-chord checklist is the primary feedback surface for the
-  // progression, so landing it under the fold hides the point.
+  // progression, so landing it under the fold hides the point. Keyed on the
+  // progression id so it only re-fires across distinct progressions, not on
+  // every card-level re-render.
   useEffect(() => {
     if (instrument !== 'guitar') return;
     if (currentCard?.constraints?.chordProgression?.chordTargets?.length) {
       setExpandedTools(prev => ({ ...prev, chordDetector: true }));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentCard?.constraints?.chordProgression?.id, instrument]);
 
   // Phase C: auto-expand fretboard in guitar mode when any dim that benefits
