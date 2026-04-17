@@ -7,7 +7,7 @@ import {
   Mic, Headphones, Info, AlertCircle, Quote, ArrowRight, Check,
   Volume2, Sun, Moon, Zap, TrendingUp
 } from 'lucide-react';
-import { MiniAudioPlayer, AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, ChordVoicingViewer, extractChordsFromExercise, VolumeMeter, ChordTransitionTimer, GenreMetronome, SilenceScore, TAB_CONTENT, InlineKeyboard, RhythmCellCards, PhraseFormGuide, StrumChartBuilder, ChartListView, makeTemplateChart } from './JungleTools.jsx';
+import { MiniAudioPlayer, AudioPlayer, FlightCheck, OfflineTabs, AudioRecorder, PitchPipe, LivePitchDetector, FretboardDiagram, ChordVoicingViewer, extractChordsFromExercise, VolumeMeter, ChordTransitionTimer, GenreMetronome, SilenceScore, TAB_CONTENT, InlineKeyboard, RhythmCellCards, PhraseFormGuide, StrumChartBuilder, ChartListView, makeTemplateChart, getColorForNote } from './JungleTools.jsx';
 import { ColorMusicTrainer } from './ColorMusicTrainer.jsx';
 import { PitchDiscriminationTrainer } from './PitchDiscriminationTrainer.jsx';
 import { CompactDroneWheel } from './CompactDroneWheel.jsx';
@@ -1895,6 +1895,194 @@ function StartFlowButton({ onClick, accentColor }) {
   );
 }
 
+// ─── EXERCISE CHORD LISTENER ────────────────────────────────────────
+// Inline live chord detector for guitar exercises that opt in via
+// `listenForChords`. Two shapes:
+//   listenForChords: true            → live chord display + signal meter
+//   listenForChords: ['G','C','D']   → checklist of target chords with auto-tick
+//                                      (600 ms continuous sustain at ≥0.7 confidence)
+// The engine module is dynamic-imported on first render so non-chord exercises
+// stay out of the engine's chunk. The engine itself is a refcounted singleton —
+// last unsubscribe stops the mic.
+
+const _CHORD_TARGET_CONFIRM_MS = 600;
+const _CHORD_TARGET_MIN_CONF = 0.7;
+
+function _matchTargetChord(target, chord) {
+  if (!chord || !chord.name) return false;
+  if (target === chord.name) return true;
+  const targetRoot = target.match(/^[A-G][#b]?/)?.[0];
+  if (!targetRoot || targetRoot !== chord.root) return false;
+  // Explicit qualities (m7, sus4, 7, etc.) must match name exactly.
+  if (/\d|sus|dim|aug|maj/.test(target)) return false;
+  // Bare-letter "G" matches G, G7, Gmaj7, G6, etc.
+  // "Am" matches Am, Am7, Am9, etc.
+  const targetIsMinor = /^[A-G][#b]?m$/.test(target);
+  const isMinorChord = (chord.quality || '').startsWith('m') && !chord.quality?.startsWith('maj');
+  return targetIsMinor ? isMinorChord : !isMinorChord;
+}
+
+function ExerciseChordListener({ listenForChords }) {
+  const targets = Array.isArray(listenForChords) ? listenForChords : null;
+  const [chord, setChord] = useState(null);
+  const [listening, setListening] = useState(false);
+  const [signalLevel, setSignalLevel] = useState(0);
+  const [error, setError] = useState(null);
+  const [confirmed, setConfirmed] = useState({});
+  const sustainStartRef = useRef({});
+  const engineModRef = useRef(null);
+
+  // Lazy-load engine module on mount; subscribe; unsub on unmount (refcount auto-stops).
+  useEffect(() => {
+    let unsub = null;
+    let cancelled = false;
+    import('./chordDetectorEngine.js').then(mod => {
+      if (cancelled) return;
+      engineModRef.current = mod;
+      unsub = mod.subscribeToChord(u => {
+        setChord(u.currentChord);
+        setListening(u.isListening);
+        setSignalLevel(u.signalLevel || 0);
+        setError(u.error?.message || null);
+      });
+    }).catch(e => {
+      if (!cancelled) setError(`engine load failed: ${e.message || e}`);
+    });
+    return () => {
+      cancelled = true;
+      if (unsub) unsub();
+    };
+  }, []);
+
+  // Auto-tick state machine: per-target sustain start; confirm at 600 ms continuous match.
+  useEffect(() => {
+    if (!targets || !chord || chord.confidence < _CHORD_TARGET_MIN_CONF) return;
+    // Try explicit chord names first (e.g. Am7 before Am) so the chord the player
+    // actually voiced gets credit instead of an over-eager bare-letter target.
+    const sorted = [...targets].sort((a, b) => {
+      const aExplicit = /\d|sus|dim|aug|maj/.test(a) ? 0 : 1;
+      const bExplicit = /\d|sus|dim|aug|maj/.test(b) ? 0 : 1;
+      return aExplicit - bExplicit;
+    });
+    const matchKey = sorted.find(t => _matchTargetChord(t, chord));
+    if (!matchKey) {
+      sustainStartRef.current = {};
+      return;
+    }
+    if (confirmed[matchKey]) return;
+    const now = performance.now();
+    if (!sustainStartRef.current[matchKey]) {
+      sustainStartRef.current[matchKey] = now;
+    } else if (now - sustainStartRef.current[matchKey] >= _CHORD_TARGET_CONFIRM_MS) {
+      setConfirmed(prev => ({ ...prev, [matchKey]: true }));
+    }
+  }, [chord, targets, confirmed]);
+
+  const handleToggle = useCallback(async () => {
+    const mod = engineModRef.current;
+    if (!mod) return;
+    setError(null);
+    try {
+      if (mod.isEngineRunning()) await mod.stopEngine();
+      else await mod.startEngine();
+    } catch (e) {
+      setError(e?.message || String(e));
+    }
+  }, []);
+
+  const handleReset = useCallback(() => {
+    setConfirmed({});
+    sustainStartRef.current = {};
+  }, []);
+
+  const allConfirmed = targets && targets.length > 0 && targets.every(t => confirmed[t]);
+  const meterPct = Math.max(0, Math.min(100, signalLevel * 100));
+
+  return (
+    <div style={{
+      background: T.getTint(T.gold, 0.025), border: `1px solid ${T.gold}30`,
+      borderRadius: T.radius, padding: '14px 16px', marginBottom: 20,
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10, gap: 12 }}>
+        <div style={{ fontSize: 9, fontWeight: 800, letterSpacing: 1.5, textTransform: 'uppercase', color: T.goldDark, fontFamily: T.sans, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{
+            width: 7, height: 7, borderRadius: '50%',
+            background: listening ? '#22c55e' : T.textMuted,
+            boxShadow: listening ? '0 0 5px #22c55e' : 'none',
+          }} />
+          {targets ? 'Chords to play' : 'Live chord'}
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          {targets && Object.keys(confirmed).length > 0 && (
+            <button onClick={handleReset} style={{
+              background: 'none', border: `1px solid ${T.borderSoft}`, padding: '3px 8px', borderRadius: 10,
+              fontFamily: T.sans, fontSize: 9, color: T.textMed, cursor: 'pointer', textTransform: 'uppercase', letterSpacing: 0.5,
+            }}>reset</button>
+          )}
+          <button onClick={handleToggle} disabled={!engineModRef.current} style={{
+            background: listening ? T.gold : 'transparent', color: listening ? '#fff' : T.goldDark,
+            border: `1.5px solid ${T.gold}`, borderRadius: T.radius, padding: '6px 14px',
+            fontFamily: T.sans, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1.2,
+            cursor: engineModRef.current ? 'pointer' : 'wait',
+          }}>{listening ? 'Listening' : 'Listen'}</button>
+        </div>
+      </div>
+
+      {/* Signal meter */}
+      <div style={{ height: 4, background: T.goldSoft, borderRadius: 999, overflow: 'hidden', marginBottom: 12 }}>
+        <div style={{ height: '100%', width: `${meterPct}%`, background: T.gold, transition: 'width 80ms linear' }} />
+      </div>
+
+      {/* Target chord chips */}
+      {targets ? (
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          {targets.map(t => {
+            const isOk = !!confirmed[t];
+            const tintColor = getColorForNote(t.match(/^[A-G][#b]?/)?.[0] || 'C');
+            return (
+              <div key={t} style={{
+                minWidth: 72, height: 44, background: isOk ? T.gold : T.bgCard,
+                border: `1.5px solid ${T.gold}`, borderRadius: T.radius,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, padding: '0 12px',
+              }}>
+                <span style={{ fontFamily: T.serif, fontSize: 18, color: isOk ? '#fff' : tintColor, fontWeight: 600 }}>{t}</span>
+                {isOk ? (
+                  <svg width={12} height={12} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                ) : (
+                  <span style={{ width: 10, height: 10, borderRadius: '50%', border: `1.5px solid ${T.gold}` }} />
+                )}
+              </div>
+            );
+          })}
+          {allConfirmed && (
+            <div style={{ alignSelf: 'center', fontSize: 11, color: T.success, fontFamily: T.sans, fontWeight: 700, letterSpacing: 0.5 }}>
+              all chords played ✓
+            </div>
+          )}
+        </div>
+      ) : (
+        // Plain live-chord display
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 12 }}>
+          <span style={{ fontFamily: T.serif, fontSize: 36, lineHeight: 1, color: chord ? getColorForNote(chord.root) : T.textMuted }}>
+            {chord ? chord.name : '—'}
+          </span>
+          {chord && (
+            <span style={{ fontFamily: T.sans, fontSize: 12, color: T.textMed }}>
+              {Math.round(chord.confidence * 100)}% confidence
+            </span>
+          )}
+        </div>
+      )}
+
+      {error && (
+        <div style={{ marginTop: 10, fontSize: 11, color: T.coral, fontFamily: T.sans }}>
+          ⚠ {error}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── EXERCISE CARD ──────────────────────────────────────────────────
 
 function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMatch, onStartFlow, levelExercises, journalEntry }) {
@@ -2023,6 +2211,9 @@ function ExerciseCard({ ex, completed, onComplete, metro, dayColor, onOpenTapMat
               </div>
             )}
           </div>
+
+          {/* CHORD LISTENER (opt-in) — for guitar exercises that ask the player to play chords */}
+          {ex.listenForChords && <ExerciseChordListener listenForChords={ex.listenForChords} />}
 
           {/* PRACTICE TOOLS (was two panels — unified so the eye stops pingponging between
               "Tools & Accompaniment" and "Guide & Reference". Grouped visually by sub-eyebrows:

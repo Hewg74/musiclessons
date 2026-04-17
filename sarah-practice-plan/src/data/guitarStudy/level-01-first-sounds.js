@@ -240,6 +240,7 @@ export const level1 = {
       type: "guitar",
       metronome: 90,
       chordVoicings: { chords: ["Am", "D", "Am7", "D7"], defaultChord: "Am" },
+      listenForChords: ["Am", "D", "Am7", "D7"],
       songRef: {
         title: "Dope & Smoke — DOPE LEMON",
         src: "/dope-and-smoke.mp3",
