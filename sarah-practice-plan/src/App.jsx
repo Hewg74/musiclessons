@@ -19,8 +19,10 @@ const PracticeForge = React.lazy(() =>
 const PitchHunter = React.lazy(() =>
   import('./PitchHunter.jsx').then(m => ({ default: m.PitchHunter }))
 );
+const ChordDetectorPanel = React.lazy(() =>
+  import('./ChordDetectorPanel.jsx').then(m => ({ default: m.ChordDetectorPanel }))
+);
 import { acquireKeepalive, releaseKeepalive, setMediaSession, clearMediaSession } from './audioKeepalive.js';
-import { subscribeToChord, startEngine, stopEngine, isEngineRunning } from './chordDetectorEngine.js';
 import { DAYS, KEYBOARD_LEVELS, LOOPER_LEVELS, LESSON_POOL, ALL_NOTES, getPitchRange } from './data/appData.js';
 import { WEEKLY_PLANS, CURRENT_WEEK } from './data/weeklyPlans/index.js';
 import { VOCAL_LEVELS } from './data/vocalLevels/index.js';
@@ -4427,102 +4429,6 @@ function BottomNav({ tab, setTab, isDark, theme: T }) {
   );
 }
 
-// ─── PHASE 0 SPIKE: temporary debug button for chord detection ──────
-// Floating bottom-right pill that toggles the chord detector and shows
-// the currently detected chord. Also writes chord name to document.title
-// so the browser tab title becomes a live chord readout.
-// REMOVE this component after Phase 2 ships the real ChordDetectorPanel.
-function ChordDebugButton({ T }) {
-  const [chord, setChord] = useState(null);
-  const [listening, setListening] = useState(false);
-  const [signalLevel, setSignalLevel] = useState(0);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const unsub = subscribeToChord((update) => {
-      setChord(update.currentChord);
-      setListening(update.isListening);
-      setSignalLevel(update.signalLevel || 0);
-      if (update.error) setError(update.error.message);
-      // Live readout in browser tab title
-      const name = update.currentChord ? update.currentChord.name : (update.isListening ? '— listening' : '');
-      document.title = name ? `[${name}] sarah glass music` : 'sarah glass music';
-    });
-    return () => {
-      unsub();
-      document.title = 'sarah glass music';
-    };
-  }, []);
-
-  const toggle = async () => {
-    setError(null);
-    try {
-      if (isEngineRunning()) {
-        await stopEngine();
-      } else {
-        await startEngine();
-      }
-    } catch (e) {
-      setError(e.message || String(e));
-    }
-  };
-
-  const bg = listening ? T.gold : T.bgCard;
-  const fg = listening ? '#fff' : T.textDark;
-  const label = error
-    ? `Mic: ${error.slice(0, 40)}`
-    : (chord ? chord.name : (listening ? 'Listening…' : 'Listen for chord'));
-  const conf = chord ? `${Math.round(chord.confidence * 100)}%` : '';
-
-  return (
-    <button
-      onClick={toggle}
-      style={{
-        position: 'fixed',
-        right: 16,
-        bottom: 16,
-        zIndex: 9999,
-        background: bg,
-        color: fg,
-        border: `1px solid ${T.gold}`,
-        borderRadius: 999,
-        padding: '10px 16px',
-        fontFamily: T.sans,
-        fontSize: 13,
-        fontWeight: 600,
-        letterSpacing: 0.5,
-        cursor: 'pointer',
-        boxShadow: T.sm,
-        display: 'flex',
-        alignItems: 'center',
-        gap: 8,
-        minWidth: 160,
-      }}
-      title="Phase 0 spike: chord detection debug"
-    >
-      <span style={{
-        display: 'inline-block', width: 8, height: 8, borderRadius: 999,
-        background: listening ? '#7f9e88' : T.textLight,
-        boxShadow: listening ? '0 0 6px #7f9e88' : 'none',
-      }} />
-      <span style={{ flex: 1, textAlign: 'left' }}>{label}</span>
-      {conf && <span style={{ fontSize: 11, opacity: 0.85 }}>{conf}</span>}
-      {listening && (
-        <span style={{
-          display: 'inline-block', width: 24, height: 4, borderRadius: 2,
-          background: 'rgba(255,255,255,0.25)', position: 'relative', overflow: 'hidden',
-        }}>
-          <span style={{
-            position: 'absolute', left: 0, top: 0, bottom: 0,
-            width: `${Math.round(signalLevel * 100)}%`,
-            background: '#fff', transition: 'width 80ms linear',
-          }} />
-        </span>
-      )}
-    </button>
-  );
-}
-
 // ─── MAIN APP ───────────────────────────────────────────────────────
 export default function App() {
   const [isDark, setIsDark] = useState(() => {
@@ -4737,6 +4643,7 @@ export default function App() {
   const [pitchDiscrimOpen, setPitchDiscrimOpen] = useState(false);
   const [practiceForgeOpen, setPracticeForgeOpen] = useState(false);
   const [pitchHunterOpen, setPitchHunterOpen] = useState(false);
+  const [chordDetectorOpen, setChordDetectorOpen] = useState(false);
   const metro = useMetronome();
 
   const [flowStartIndex, setFlowStartIndex] = useState(0);
@@ -4910,6 +4817,23 @@ export default function App() {
     );
   }
 
+  // Live Chord Detector overlay — listens to mic, names the chord
+  if (chordDetectorOpen) {
+    return (
+      <div className="no-bottom-nav" style={{ background: T.bg, minHeight: "100vh", color: T.textDark, fontFamily: T.sans, paddingBottom: metro.playing ? 80 : 0 }}>
+        <React.Suspense fallback={
+          <div style={{ padding: 40, textAlign: 'center', color: T.textMed, fontFamily: T.serif, fontSize: 15 }}>
+            Loading Chord Detector…
+          </div>
+        }>
+          <ChordDetectorPanel theme={T} onBack={() => setChordDetectorOpen(false)} />
+        </React.Suspense>
+        {metro.playing && <FloatingMetronome metro={metro} setTab={() => {}} isDark={isDark} theme={T} />}
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;600;700&display=swap" rel="stylesheet" />
+      </div>
+    );
+  }
+
   // Flow Mode overlay — renders above everything
   if (flowActive && flowExercises.length > 0) {
     return (
@@ -4937,7 +4861,6 @@ export default function App() {
 
   return (
     <div style={{ background: T.bg, minHeight: "100vh", color: T.textDark, fontFamily: T.sans }}>
-      <ChordDebugButton T={T} />
       <style>{`
         @keyframes fade-in-up {
           from { opacity: 0; transform: translateY(10px); }
@@ -5146,6 +5069,43 @@ export default function App() {
                 </div>
                 <div style={{ fontFamily: T.serif, fontSize: 16, fontWeight: 500, color: T.textDark, marginBottom: 4 }}>Pitch Hunter</div>
                 <div style={{ fontSize: 11, color: T.textMed, fontFamily: T.sans, lineHeight: 1.4 }}>Match notes by ear — Al's method</div>
+              </button>
+
+              {/* ── Live Chord Detector ── */}
+              <button onClick={() => setChordDetectorOpen(true)} style={{
+                background: T.bgCard || T.bg, border: `1px solid ${T.border}`, borderRadius: 28,
+                padding: 24, cursor: 'pointer', position: 'relative', overflow: 'hidden', textAlign: 'center',
+                boxShadow: `0 24px 48px -12px rgba(44, 40, 37, 0.08), 0 0 0 1px ${T.border}`,
+                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+              }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px) scale(1.01)'; e.currentTarget.style.boxShadow = `0 28px 56px -12px rgba(44, 40, 37, 0.12), 0 0 0 1px ${T.border}`; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = `0 24px 48px -12px rgba(44, 40, 37, 0.08), 0 0 0 1px ${T.border}`; }}
+              >
+                <div aria-hidden style={{ position: 'absolute', top: 10, left: 10, width: 5, height: 5, borderRadius: '50%', background: '#B0A898', boxShadow: 'inset 0 1px 2px rgba(44,40,37,0.15), 0 1px 0 rgba(255,255,255,0.6)' }} />
+                <div aria-hidden style={{ position: 'absolute', top: 10, right: 10, width: 5, height: 5, borderRadius: '50%', background: '#B0A898', boxShadow: 'inset 0 1px 2px rgba(44,40,37,0.15), 0 1px 0 rgba(255,255,255,0.6)' }} />
+                {/* Icon — mini chord-box with color dots + mic radiator */}
+                <div style={{ margin: '8px auto 16px', width: 64, height: 64 }}>
+                  <svg viewBox="0 0 64 64" width="64" height="64" fill="none">
+                    {/* Mini chord box (G shape) */}
+                    <line x1="14" y1="20" x2="14" y2="50" stroke="#2c2825" strokeWidth="1" />
+                    <line x1="22" y1="20" x2="22" y2="50" stroke="#2c2825" strokeWidth="1" />
+                    <line x1="30" y1="20" x2="30" y2="50" stroke="#2c2825" strokeWidth="1" />
+                    <line x1="38" y1="20" x2="38" y2="50" stroke="#2c2825" strokeWidth="1" />
+                    <line x1="46" y1="20" x2="46" y2="50" stroke="#2c2825" strokeWidth="1" />
+                    <line x1="54" y1="20" x2="54" y2="50" stroke="#2c2825" strokeWidth="1" />
+                    <line x1="13" y1="20" x2="55" y2="20" stroke="#2c2825" strokeWidth="2" />
+                    <line x1="14" y1="32" x2="54" y2="32" stroke="#8c867f" strokeWidth="0.5" opacity="0.6" />
+                    <line x1="14" y1="44" x2="54" y2="44" stroke="#8c867f" strokeWidth="0.5" opacity="0.6" />
+                    {/* Color-coded dots — G chord */}
+                    <circle cx="14" cy="38" r="3.5" fill="#F06520" />
+                    <circle cx="22" cy="26" r="3.5" fill="#8FBF35" />
+                    <circle cx="54" cy="38" r="3.5" fill="#F06520" />
+                    {/* Pulse ring around for "live listening" */}
+                    <circle cx="32" cy="35" r="22" stroke="#22c55e" strokeWidth="1" opacity="0.25" fill="none" />
+                  </svg>
+                </div>
+                <div style={{ fontFamily: T.serif, fontSize: 16, fontWeight: 500, color: T.textDark, marginBottom: 4 }}>Live Chord Detector</div>
+                <div style={{ fontSize: 11, color: T.textMed, fontFamily: T.sans, lineHeight: 1.4 }}>Listens to your guitar and names the chord</div>
               </button>
             </div>
           </div>
