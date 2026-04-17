@@ -2879,22 +2879,36 @@ function CompactTimerStrip({ duration, running, onComplete, onToggle, onReset, o
 // — the engine is a refcounted singleton shared by the Tools panel, the
 // in-exercise listener, and this listener.
 
-function ForgeChordListener({ T, keyRoot }) {
+function ForgeChordListener({ T, keyRoot, progressionTargets, progressionName, cardId }) {
   const { chord, listening, signalLevel, signalDb, error, isReady, toggle: handleToggle } = useChordEngine();
+  const hasProgression = !!(progressionTargets && progressionTargets.length);
+
+  // Progression-aware checklist. Hook is always called so the hook order stays
+  // stable; it's a no-op when targets is null/empty (no matches will tick).
+  const { confirmed, reset: resetChecklist } = useChordTargetChecklist(
+    hasProgression ? progressionTargets : null,
+    chord
+  );
+
+  // Reset checklist when the card changes — confirmed state is sticky across
+  // target-list changes inside the hook, so a new card with different chords
+  // must explicitly clear the old ticks.
+  useEffect(() => {
+    resetChecklist();
+  }, [cardId, resetChecklist]);
+
+  // Fallback narrow key-match verification — only used when the card has NO
+  // progression drawn. Preserves the pre-Phase-4 behavior (play the tonic
+  // chord for ≥600 ms to confirm) for every card that doesn't pin a cycle.
   const [keyMatchConfirmed, setKeyMatchConfirmed] = useState(false);
   const sustainStartRef = useRef(0);
-
-  // Reset key-match confirmation whenever the card's key changes.
   useEffect(() => {
-    // Card-key transition; we deliberately reset state in this effect because
-    // it's the cleanest way to gate verification on the new card.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setKeyMatchConfirmed(false);
     sustainStartRef.current = 0;
-  }, [keyRoot]);
-
-  // Sustain-driven verification: detected chord root matches card key root for ≥600 ms.
+  }, [keyRoot, hasProgression]);
   useEffect(() => {
+    if (hasProgression) return; // progression mode handles its own verification
     if (!chord || !keyRoot || chord.confidence < CHORD_MIN_CONF) {
       sustainStartRef.current = 0;
       return;
@@ -2907,17 +2921,19 @@ function ForgeChordListener({ T, keyRoot }) {
     const now = performance.now();
     if (sustainStartRef.current === 0) sustainStartRef.current = now;
     else if (now - sustainStartRef.current >= CHORD_CONFIRM_MS) {
-      // Time-driven transition guarded by keyMatchConfirmed above so this
-      // fires once per card. The lint rule's general guidance about
-      // setState-in-effect doesn't fit time-thresholded confirmations.
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setKeyMatchConfirmed(true);
     }
-  }, [chord, keyRoot, keyMatchConfirmed]);
+  }, [chord, keyRoot, keyMatchConfirmed, hasProgression]);
 
   const meterPct = Math.max(0, Math.min(100, signalLevel * 100));
   const dbLabel = signalDb && isFinite(signalDb) ? `${Math.round(signalDb)} dB` : '— dB';
   const chordColor = chord ? getColorForNote(chord.root) : T.textMuted;
+
+  const progressionConfirmedCount = hasProgression
+    ? progressionTargets.filter(t => confirmed[t]).length
+    : 0;
+  const progressionComplete = hasProgression && progressionConfirmedCount === progressionTargets.length;
 
   return (
     <div>
@@ -2962,8 +2978,74 @@ function ForgeChordListener({ T, keyRoot }) {
         <span style={{ fontFamily: T.sans, fontSize: 9, color: T.textMed, whiteSpace: 'nowrap', minWidth: 38, textAlign: 'right' }}>{dbLabel}</span>
       </div>
 
-      {/* Verification strip — opt-in dimensions light up as satisfied */}
-      {keyRoot && (
+      {/* Verification: progression-aware checklist if a progression is drawn,
+          narrow key-match strip otherwise. The checklist reuses
+          useChordTargetChecklist's 600ms sustain + 200ms drift-grace logic so
+          brief detection blips don't reset in-flight chord timers. */}
+      {hasProgression ? (
+        <div style={{
+          padding: '10px 12px 12px',
+          background: progressionComplete ? T.successSoft : T.bgSoft,
+          border: `1px solid ${progressionComplete ? T.success + '40' : T.borderSoft}`,
+          borderRadius: 8,
+        }}>
+          <div style={{
+            display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 8,
+            fontSize: 10, fontWeight: 700, color: T.textDark,
+            fontFamily: T.sans, letterSpacing: 0.4,
+          }}>
+            <strong style={{ letterSpacing: 1.0, textTransform: 'uppercase', fontSize: 9, color: T.goldDark }}>
+              Progression check
+            </strong>
+            {progressionName && (
+              <span style={{ color: T.textMed, fontWeight: 500 }}>
+                {progressionName}
+              </span>
+            )}
+            <span style={{ flex: 1 }} />
+            <span style={{
+              fontSize: 9, fontWeight: 700, letterSpacing: 0.5, textTransform: 'uppercase',
+              color: progressionComplete ? T.success : T.textMed,
+            }}>
+              {progressionConfirmedCount} / {progressionTargets.length} confirmed
+            </span>
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+            {progressionTargets.map(name => {
+              const root = name.match(/^[A-G][#b]?/)?.[0];
+              const cc = (root && getColorForNote(normalizeNote(root))) || T.textMuted;
+              const isConfirmed = !!confirmed[name];
+              return (
+                <span key={name} style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 5,
+                  padding: '3px 9px', borderRadius: 6,
+                  border: `1.5px solid ${isConfirmed ? cc : `${cc}55`}`,
+                  background: isConfirmed ? `${cc}1f` : 'transparent',
+                  color: isConfirmed ? cc : T.textMed,
+                  fontFamily: T.serif, fontWeight: 600, fontSize: 13,
+                  opacity: isConfirmed ? 1 : 0.75,
+                  transition: 'all 0.2s',
+                }}>
+                  <span style={{
+                    width: 6, height: 6, borderRadius: '50%',
+                    background: isConfirmed ? cc : 'transparent',
+                    border: isConfirmed ? 'none' : `1.2px solid ${cc}80`,
+                    boxShadow: isConfirmed ? `0 0 4px ${cc}80` : 'none',
+                    flexShrink: 0,
+                  }} />
+                  {name}
+                </span>
+              );
+            })}
+          </div>
+          <div style={{
+            marginTop: 8, fontSize: 10.5, color: T.textLight,
+            fontFamily: T.sans, fontStyle: 'italic', lineHeight: 1.4,
+          }}>
+            Play each chord for ≥600 ms to tick it off. Bare letters accept any quality (G matches G, G7, Gmaj7). Explicit targets (G7) demand exact match.
+          </div>
+        </div>
+      ) : keyRoot && (
         <div style={{
           display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px',
           background: keyMatchConfirmed ? T.successSoft : T.bgSoft,
@@ -3240,6 +3322,16 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
       setExpandedTools(prev => ({ ...prev, volumeMeter: true }));
     }
   }, [currentCard?.constraints?.dynamics]);
+
+  // Auto-expand chord detector in guitar mode when a chord progression is
+  // drawn — the per-chord checklist is the primary feedback surface for the
+  // progression, so landing it under the fold hides the point.
+  useEffect(() => {
+    if (instrument !== 'guitar') return;
+    if (currentCard?.constraints?.chordProgression?.chordTargets?.length) {
+      setExpandedTools(prev => ({ ...prev, chordDetector: true }));
+    }
+  }, [currentCard?.constraints?.chordProgression?.id, instrument]);
 
   // Phase C: auto-expand fretboard in guitar mode when any dim that benefits
   // from visual neck context is drawn — texture (especially chord/triad/pair),
@@ -4356,7 +4448,13 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
                 <div style={{ fontSize: 11, color: T.textMuted, marginBottom: 10, fontStyle: 'italic' }}>
                   Strum any chord — the engine names it and confirms when you land on the card&apos;s key.
                 </div>
-                <ForgeChordListener T={T} keyRoot={currentCard.constraints.key} />
+                <ForgeChordListener
+                  T={T}
+                  keyRoot={currentCard.constraints.key}
+                  progressionTargets={currentCard.constraints.chordProgression?.chordTargets || null}
+                  progressionName={currentCard.constraints.chordProgression?.name || null}
+                  cardId={currentCard.id}
+                />
               </div>
             )}
             {expandedTools.backingTrack && currentCard.suggestedTrack && (
