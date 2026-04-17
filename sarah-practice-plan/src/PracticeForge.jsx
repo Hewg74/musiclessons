@@ -4,6 +4,7 @@ import { ArrowLeft, RotateCcw, SkipForward, Lock, Unlock, Shuffle, ChevronDown, 
 import {
   normalizeNote, COLOR_MUSIC, getColorForNote, playWarmNote,
   FretboardDiagram, VolumeMeter, MiniAudioPlayer, AudioRecorder,
+  ChordDiagram, CHORD_VOICINGS_MULTI,
 } from './JungleTools.jsx';
 import { CHROMATIC, CIRCLE_OF_FIFTHS, SCALE_TYPES, generateScale } from './ColorMusicTrainer.jsx';
 import GUIDANCE_CACHE from './data/practiceForgeGuidance.json';
@@ -3307,10 +3308,10 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
   // Volume meter auto-expands when dynamics constraint is present.
   const [expandedTools, setExpandedTools] = useState({
     fretboard: false,
+    chords: false,
     volumeMeter: false,
     recorder: false,
     backingTrack: false,
-    chordDetector: false,
   });
   const toggleTool = useCallback((toolId) => {
     setExpandedTools(prev => ({ ...prev, [toolId]: !prev[toolId] }));
@@ -3411,11 +3412,13 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
   // drawn — the per-chord checklist is the primary feedback surface for the
   // progression, so landing it under the fold hides the point. Keyed on the
   // progression id so it only re-fires across distinct progressions, not on
-  // every card-level re-render.
+  // Auto-expand Chords tool in guitar mode when the card has a progression.
+  // Symmetric with the fretboard auto-expand below — the things a guitarist
+  // needs to see to play the card should open themselves.
   useEffect(() => {
     if (instrument !== 'guitar') return;
-    if (currentCard?.constraints?.chordProgression?.chordTargets?.length) {
-      setExpandedTools(prev => ({ ...prev, chordDetector: true }));
+    if (currentCard?.constraints?.chordProgression?.resolvedChords?.length) {
+      setExpandedTools(prev => ({ ...prev, chords: true }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentCard?.constraints?.chordProgression?.id, instrument]);
@@ -3610,10 +3613,17 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
   // Advanced tool descriptors for the expand-on-demand bar.
   // Note: the color wheel is no longer a separate tool — it's merged into the
   // CompactDroneWheel row (premium inline object, one of the Tier-1 controls).
+  // Chord detector replaced 2026-04-17 with a purpose-built "Chords" tool
+  // that renders the current progression's fingerings in a dedicated panel.
+  // The detect-and-confirm UX wasn't delivering value; what the user actually
+  // wanted was always-visible chord shapes to play. Available only when a
+  // progression is drawn AND the active instrument is guitar (shapes are
+  // guitar-specific).
+  const hasProgression = !!currentCard?.constraints?.chordProgression?.resolvedChords?.length;
   const advancedTools = [
     { id: 'fretboard',     label: 'Fretboard',  icon: '⛶',  available: !!scaleData },
+    { id: 'chords',        label: 'Chords',     icon: '♪',  available: instrument === 'guitar' && hasProgression },
     { id: 'volumeMeter',   label: 'Meter',      icon: '◉',  available: true },
-    { id: 'chordDetector', label: 'Chord',      icon: '♭',  available: instrument === 'guitar' },
     { id: 'backingTrack',  label: 'Track',      icon: '♫',  available: !!currentCard?.suggestedTrack },
     { id: 'recorder',      label: 'Record',     icon: '●',  available: true },
   ];
@@ -4520,30 +4530,101 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
                 <VolumeMeter theme={T} inline={true} />
               </div>
             )}
-            {expandedTools.chordDetector && instrument === 'guitar' && (
-              <div style={{
-                marginTop: 10, background: T.bgCard,
-                border: `1px solid ${T.border}`, borderRadius: 10, padding: 14,
-                animation: 'forgeToolExpand 0.25s ease-out both',
-              }}>
+            {expandedTools.chords && hasProgression && (() => {
+              const cp = currentCard.constraints.chordProgression;
+              const uniqueChords = [];
+              const seen = new Set();
+              for (const c of cp.resolvedChords) {
+                if (seen.has(c.name)) continue;
+                seen.add(c.name);
+                uniqueChords.push(c);
+              }
+              // Local voicing lookup — matches ChordProgressionDisplay's logic.
+              // Enharmonic pair + extension-strip fallback so every chord gets a
+              // diagram even if the exact extension voicing isn't in the library.
+              const ENH_FLAT = { 'A#':'Bb','D#':'Eb','G#':'Ab','C#':'Db','F#':'Gb' };
+              const ENH_SHARP = { 'Bb':'A#','Eb':'D#','Ab':'G#','Db':'C#','Gb':'F#' };
+              const FALLBACKS = ['m7b5','m7','maj7','sus4','sus2','7','dim','aug','m',''];
+              const lookup = (name) => {
+                const root = name.match(/^[A-G][#b]?/)?.[0];
+                if (!root) return null;
+                const rest = name.slice(root.length);
+                const alt = ENH_FLAT[root] || ENH_SHARP[root];
+                const exact = CHORD_VOICINGS_MULTI[root + rest]?.[0]
+                           || (alt && CHORD_VOICINGS_MULTI[alt + rest]?.[0]);
+                if (exact) return { voicing: exact, approx: false };
+                for (const q of FALLBACKS) {
+                  if (q === rest) continue;
+                  const v = CHORD_VOICINGS_MULTI[root + q]?.[0]
+                         || (alt && CHORD_VOICINGS_MULTI[alt + q]?.[0]);
+                  if (v) return { voicing: v, approx: true };
+                }
+                return null;
+              };
+              return (
                 <div style={{
-                  fontSize: 10, fontWeight: 700, color: T.goldDark, letterSpacing: 1.2,
-                  textTransform: 'uppercase', marginBottom: 6,
+                  marginTop: 10, background: T.bgCard,
+                  border: `1px solid ${T.border}`, borderRadius: 10, padding: 14,
+                  animation: 'forgeToolExpand 0.25s ease-out both',
                 }}>
-                  Chord Detector
+                  <div style={{
+                    fontSize: 10, fontWeight: 700, color: T.goldDark, letterSpacing: 1.2,
+                    textTransform: 'uppercase', marginBottom: 4,
+                  }}>
+                    Chord Shapes — {cp.name}
+                  </div>
+                  <div style={{ fontSize: 11, color: T.textMuted, marginBottom: 14, fontStyle: 'italic' }}>
+                    {cp.resolvedChords.map(c => c.name).join(' → ')} · cycle through while you play.
+                  </div>
+                  <div style={{
+                    display: 'flex', flexWrap: 'wrap', gap: 18, alignItems: 'flex-start',
+                  }}>
+                    {uniqueChords.map(c => {
+                      const found = lookup(c.name);
+                      return (
+                        <div key={c.name} style={{
+                          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
+                          minWidth: 100,
+                        }}>
+                          <div style={{
+                            fontFamily: T.serif, fontSize: 16, fontWeight: 700,
+                            color: T.textDark, letterSpacing: 0.3,
+                          }}>{c.name}</div>
+                          {c.roman && (
+                            <div style={{
+                              fontFamily: T.sans, fontSize: 9, fontWeight: 600,
+                              color: T.textLight, letterSpacing: 0.5,
+                              textTransform: 'uppercase',
+                            }}>
+                              {String(c.roman).replace(/(maj|min|dim|aug)$/, '')}
+                            </div>
+                          )}
+                          {found ? (
+                            <>
+                              <ChordDiagram theme={T} frets={found.voicing.frets} name={c.name} />
+                              <div style={{
+                                fontFamily: T.sans, fontSize: 9, color: T.textLight,
+                                marginTop: -4, letterSpacing: 0.3, textAlign: 'center',
+                              }}>
+                                {found.voicing.pos || 'Open'}
+                                {found.approx && ' · ≈ shape'}
+                              </div>
+                            </>
+                          ) : (
+                            <div style={{
+                              fontFamily: T.sans, fontSize: 10, color: T.textMuted,
+                              padding: '20px 10px', fontStyle: 'italic',
+                            }}>
+                              No shape in library
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-                <div style={{ fontSize: 11, color: T.textMuted, marginBottom: 10, fontStyle: 'italic' }}>
-                  Strum any chord — the engine names it and confirms when you land on the card&apos;s key.
-                </div>
-                <ForgeChordListener
-                  T={T}
-                  keyRoot={currentCard.constraints.key}
-                  progressionTargets={currentCard.constraints.chordProgression?.chordTargets || null}
-                  progressionName={currentCard.constraints.chordProgression?.name || null}
-                  cardId={currentCard.id}
-                />
-              </div>
-            )}
+              );
+            })()}
             {expandedTools.backingTrack && currentCard.suggestedTrack && (
               <div style={{
                 marginTop: 10, background: T.bgCard,
