@@ -561,14 +561,6 @@ export function CompactDroneWheel({
   // "cycle", the old DroneGenerator's name for sequence mode.
   const normalizeMode = (m) => (m === 'cycle' ? 'sequence' : m);
 
-  // Any signal from the exercise that it wants sequence-capable UI. When true,
-  // mode tabs become available in embedded mode so the user can flip between
-  // manual/single/sequence on cards that ship with progression content.
-  const hasSequenceIntent =
-    normalizeMode(defaultMode) === 'sequence' ||
-    !!defaultPreset ||
-    (Array.isArray(defaultProgression) && defaultProgression.length > 0);
-
   const initial = useMemo(() => {
     if (standalone) {
       if (prefs.rootLetter) return { root: prefs.rootLetter, isMinor: prefs.isMinor ?? false };
@@ -1757,14 +1749,12 @@ export function CompactDroneWheel({
       </div>
 
       {/* ─── MODE TABS — MANUAL / SINGLE / SEQUENCE ───
-          Standalone shows all three. Embedded always shows Manual + Single
-          (so practice exercises can flip chord ↔ pedal tone on the fly) and
-          adds Sequence only when the exercise signals sequence intent
-          (defaultMode === 'sequence', defaultPreset, or defaultProgression). */}
+          Always shows all three modes so every drone — standalone or embedded
+          in a practice exercise — is a unified tool. If the exercise didn't
+          pre-declare a progression, sequence mode falls back to the user's
+          saved preset or Am-G-F-E (see sequenceChords initializer). */}
       {(() => {
-        const modes = standalone || hasSequenceIntent
-          ? ['manual', 'single', 'sequence']
-          : ['manual', 'single'];
+        const modes = ['manual', 'single', 'sequence'];
         return (
         <div style={{ marginTop: isMobile ? 24 : 36, textAlign: 'center' }}>
           <div
