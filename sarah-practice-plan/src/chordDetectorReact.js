@@ -84,6 +84,17 @@ export function useChordTargetChecklist(targets, chord) {
     });
   }, [targets]);
 
+  // Clear in-flight sustain timers whenever the target list identity changes —
+  // otherwise a stale sustain timestamp from the previous card can trip the
+  // `now - start >= CONFIRM_MS` check on the first frame of a new card,
+  // producing a visible one-frame tick flash before the consumer's reset
+  // effect fires. Confirmed state is reset by consumers via the `reset`
+  // callback (so post-card-change confirmations flow from a clean slate).
+  useEffect(() => {
+    sustainStartRef.current = {};
+    driftStartRef.current = 0;
+  }, [targets]);
+
   useEffect(() => {
     if (!targets || !targets.length || !chord || chord.confidence < MIN_CONFIDENCE) return;
     const now = performance.now();

@@ -41,7 +41,11 @@ export const CHORD_PROGRESSIONS = [
   { id: 'minor_three',      name: 'Minor 3-chord (i–iv–v)',           degrees: ['i','iv','v'],               scales: ['natural-minor','dorian'],              vibe: 'Folk minor, sea shanty',                        bars: 3 },
   { id: 'minor_descent',    name: 'Minor descent (i–VII–VI–VII)',     degrees: ['i','VII','VI','VII'],       scales: ['natural-minor'],                       vibe: '"Stairway to Heaven", "All Along the Watchtower"', bars: 4 },
   { id: 'minor_uplift',     name: 'i–VI–III–VII',                     degrees: ['i','VI','III','VII'],       scales: ['natural-minor'],                       vibe: 'Sad-pop in minor — hopeful resolution',         bars: 4 },
-  { id: 'andalusian',       name: 'Andalusian cadence',               degrees: ['i','bVII','bVI','V'],       scales: ['harmonic-minor','phrygian-dominant'],  vibe: 'Flamenco, Sultans of Swing, Hit the Road Jack', bars: 4 },
+  // V is explicit to keep it major across BOTH compatible scales. harmonic-minor's
+  // native V is already major at position 4; phrygian-dominant's native V is dim,
+  // so bare V would resolve to Edim in A PD — wrong for flamenco. Explicit V pins
+  // the quality to major regardless of parent scale.
+  { id: 'andalusian',       name: 'Andalusian cadence',               degrees: ['i','bVII','bVI','Vmaj'],    scales: ['harmonic-minor','phrygian-dominant'],  vibe: 'Flamenco, Sultans of Swing, Hit the Road Jack', bars: 4 },
   { id: 'minor_cyclic',     name: 'i–iv–VII–III',                     degrees: ['i','iv','VII','III'],       scales: ['natural-minor'],                       vibe: 'Cyclical minor — moody, propulsive',            bars: 4 },
   { id: 'rock_minor',       name: 'Rock minor (i–bVI–bVII–i)',        degrees: ['i','bVI','bVII','i'],       scales: ['natural-minor'],                       vibe: 'Black Sabbath, doom, drive',                    bars: 4 },
 
@@ -75,7 +79,10 @@ export const CHORD_PROGRESSIONS = [
 
   // ─── Modal extras ───
   { id: 'modal_dorian_long',name: 'Dorian (i–bIII–bVII–IV)',          degrees: ['i','bIII','bVII','IV'],     scales: ['dorian'],                              vibe: 'Dorian rock — Pink Floyd, Steely Dan',          bars: 4 },
-  { id: 'spanish_descent',  name: 'Spanish descent (i–bVII–bVI–V)',   degrees: ['i','bVII','bVI','V'],       scales: ['phrygian-dominant'],                   vibe: 'Spanish guitar — descent to leading tone',      bars: 4 },
+  // V is pinned to major (Vmaj) because phrygian-dominant's native V is
+  // diminished; the idiomatic Spanish/flamenco cadence uses a major
+  // dominant inherited from the parent harmonic-minor scale.
+  { id: 'spanish_descent',  name: 'Spanish descent (i–bVII–bVI–V)',   degrees: ['i','bVII','bVI','Vmaj'],    scales: ['phrygian-dominant'],                   vibe: 'Spanish guitar — descent to leading tone',      bars: 4 },
 ];
 
 // Scales where progressions don't make musical sense — pentatonics lack a

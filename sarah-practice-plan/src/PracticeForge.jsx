@@ -3041,7 +3041,7 @@ function ForgeChordListener({ T, keyRoot, progressionTargets, progressionName, c
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setKeyMatchConfirmed(false);
     sustainStartRef.current = 0;
-  }, [keyRoot, hasProgression]);
+  }, [keyRoot, hasProgression, cardId]);
   useEffect(() => {
     if (hasProgression) return; // progression mode handles its own verification
     if (!chord || !keyRoot || chord.confidence < CHORD_MIN_CONF) {

@@ -64,6 +64,11 @@ const ROMAN_POSITION = {
   i: 0, ii: 1, iii: 2, iv: 3, v: 4, vi: 5, vii: 6,
 };
 
+// Override strings that pin triad quality without appending to the chord
+// name. Used when a progression must force a quality that differs from the
+// scale-native lookup (e.g. flamenco V over phrygian-dominant).
+const QUALITY_PINS = new Set(['maj', 'min', 'dim', 'aug']);
+
 export function parseDegree(deg) {
   const m = String(deg).match(/^([b#]?)([IiVv]+)(.*)$/);
   if (!m) return null;
@@ -122,6 +127,17 @@ export function resolveDegree(deg, key, scale) {
   }
   const root = pcAdd(key, semitones);
   if (override) {
+    // Quality-pin overrides ('maj', 'min', 'dim', 'aug') let a progression
+    // force a triad quality that the scale-native lookup would otherwise
+    // compute differently — e.g. V in phrygian-dominant is natively dim, but
+    // flamenco progressions play a V major chord (inherited from parent
+    // harmonic minor). 'Vmaj' in the library resolves to bare 'E', not
+    // 'Emaj' (which isn't a valid chord name).
+    if (QUALITY_PINS.has(override)) {
+      return { name: bareNameFor(root, override), root, roman: deg, quality: override };
+    }
+    // Everything else is appended verbatim as an engine-vocabulary quality
+    // string: 'm7', 'maj7', '7', 'sus4', 'm7b5', '7b5', '6', 'add9', etc.
     return { name: root + override, root, roman: deg };
   }
 
