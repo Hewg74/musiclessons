@@ -169,6 +169,60 @@ export const CHORD_PROGRESSIONS = [
   { id: 'khruangbin_m9',    name: 'Khruangbin (im9–bVIImaj7)',        degrees: ['im9','bVIImaj7'],           scales: ['dorian'],                              vibe: 'Khruangbin modal — dorian m9 bass-line trance', bars: 2 },
   { id: 'bossa_add9',       name: 'Bossa sway (Iadd9–V7)',            degrees: ['Iadd9','V7'],               scales: ['major'],                               vibe: 'Bossa sway — João Gilberto, warm add9 shimmer', bars: 2 },
 
+  // ─── Beautiful additions across all scales (round 2) ───
+  // User request: more aesthetic progressions for every scale, not just major/minor.
+
+  // Dorian — psych-soul / neo-soul / Khruangbin warmth
+  { id: 'dorian_psych',     name: 'Dorian psych (i–bIII–IV)',         degrees: ['i','bIII','IV'],            scales: ['dorian'],                              vibe: 'Warm modal — Khruangbin "Cómo Me Quieres"',     bars: 3 },
+  { id: 'dorian_loop',      name: 'Dorian loop (i–IV–bVII–IV)',       degrees: ['i','IV','bVII','IV'],       scales: ['dorian'],                              vibe: 'Neo-soul loop — D\'Angelo, Erykah Badu',        bars: 4 },
+  { id: 'dorian_miles',     name: 'Dorian modal (i–ii)',              degrees: ['i','ii'],                   scales: ['dorian'],                              vibe: 'Miles Davis modal — "Milestones", "So What"',   bars: 2 },
+  { id: 'dorian_lullaby',   name: 'Dorian lullaby (i–v–IV)',          degrees: ['i','v','IV'],               scales: ['dorian'],                              vibe: 'Dorian lullaby — hazy bridge, Mac DeMarco',     bars: 3 },
+
+  // Natural minor — shoegaze / alt-pop additions
+  { id: 'alt_pop_minor',    name: 'Alt-pop (i–bVII–IV–v)',            degrees: ['i','bVII','IV','v'],        scales: ['natural-minor'],                       vibe: 'Radiohead, The War on Drugs — moody 4-chord',   bars: 4 },
+  { id: 'mazzy_star',       name: 'Mazzy Star (i–VI)',                degrees: ['i','VI'],                   scales: ['natural-minor'],                       vibe: 'Mazzy Star "Fade Into You" — two-chord haze',   bars: 2 },
+  { id: 'minor_pop_lift',   name: 'Minor pop lift (i–VI–III–v)',      degrees: ['i','VI','III','v'],         scales: ['natural-minor'],                       vibe: 'Sad-pop minor — Lana Del Rey, Cigarettes After Sex', bars: 4 },
+
+  // Phrygian — Spanish / psychedelic beautiful
+  { id: 'phrygian_romance', name: 'Phrygian romance (i–bII–bVI)',     degrees: ['i','bII','bVI'],            scales: ['phrygian'],                            vibe: 'Dark romantic — Spanish gothic, Camarón',       bars: 3 },
+  { id: 'phrygian_descent', name: 'Phrygian descent (bIII–bII–i)',    degrees: ['bIII','bII','i'],           scales: ['phrygian'],                            vibe: 'Andalusian descent — classical Spanish folk',   bars: 3 },
+
+  // Lydian — dreamy additions (Metheny/ambient/cinema territory)
+  { id: 'lydian_metheny',   name: 'Lydian Metheny (I–II–iii)',        degrees: ['I','II','iii'],             scales: ['lydian'],                              vibe: 'Pat Metheny, "Imaginary Day" — shimmering lift',bars: 3 },
+  { id: 'lydian_ambient',   name: 'Lydian ambient (Imaj7–II)',        degrees: ['Imaj7','II'],               scales: ['lydian'],                              vibe: 'Brian Eno, Hiroshi Yoshimura — ambient lift',   bars: 2 },
+  { id: 'lydian_film',      name: 'Lydian film (I–iii–II–I)',         degrees: ['I','iii','II','I'],         scales: ['lydian'],                              vibe: 'Film-score lift — Thomas Newman, magical',      bars: 4 },
+
+  // Locrian — the inherently unstable — add one more usable entry
+  { id: 'locrian_chamber',  name: 'Locrian chamber (i°–bIII)',        degrees: ['idim','bIII'],              scales: ['locrian'],                             vibe: 'Chamber menace — Björk "Hyperballad" half-dim', bars: 2 },
+  { id: 'locrian_tremolo',  name: 'Locrian tremolo (i°–bV–i°)',       degrees: ['idim','bV','idim'],         scales: ['locrian'],                             vibe: 'Tritone tremolo — prog metal, Tool',            bars: 3 },
+
+  // Harmonic minor — more flamenco/classical beautiful
+  { id: 'harmonic_classic', name: 'Harmonic classical (i–iv–V7–i)',   degrees: ['i','iv','V7','i'],          scales: ['harmonic-minor'],                      vibe: 'Bach, Paganini — classical minor cadence',      bars: 4 },
+  { id: 'harmonic_romance', name: 'Harmonic romance (i–bVI–V)',       degrees: ['i','bVI','Vmaj'],           scales: ['harmonic-minor'],                      vibe: 'Eastern romantic — pull to leading tone',       bars: 3 },
+
+  // Phrygian-dominant — more flamenco beautiful
+  { id: 'flamenco_vamp',    name: 'Flamenco (I–bII)',                 degrees: ['I','bII'],                  scales: ['phrygian-dominant'],                   vibe: 'Flamenco one-step — Paco de Lucía, gypsy clave',bars: 2 },
+  { id: 'flamenco_min_maj', name: 'Flamenco (i–IV–Vmaj)',             degrees: ['i','IV','Vmaj'],            scales: ['phrygian-dominant'],                   vibe: 'Flamenco minor-major — Camarón, gitano swagger', bars: 3 },
+
+  // Hungarian-minor — more gypsy romantic
+  { id: 'hungarian_romance',name: 'Hungarian romance (i–bII–Vmaj)',   degrees: ['i','bII','Vmaj'],           scales: ['hungarian-minor'],                     vibe: 'Romani romance — strong pull through flat-2',   bars: 3 },
+  { id: 'hungarian_classical',name:'Hungarian classical (iv–Vmaj–i)', degrees: ['iv','Vmaj','i'],            scales: ['hungarian-minor'],                     vibe: 'Liszt, Bartók — aug-2nd Eastern elegance',      bars: 3 },
+
+  // Double-harmonic — more Byzantine beautiful
+  { id: 'byzantine_float',  name: 'Byzantine float (I–bII–bVII)',     degrees: ['I','bII','bVII'],           scales: ['double-harmonic'],                     vibe: 'Arabian float — Umm Kulthum, desert caravan',   bars: 3 },
+  { id: 'byzantine_minor_turn',name:'Byzantine minor (I–iv–bII–iv)',  degrees: ['I','iv','bII','iv'],        scales: ['double-harmonic'],                     vibe: 'Minor byzantine loop — Middle Eastern trance',  bars: 4 },
+
+  // Hirajoshi — more Japanese
+  { id: 'hirajoshi_koto',   name: 'Hirajoshi koto (bIII–i–bVI)',      degrees: ['bIII','imin','bVI'],        scales: ['hirajoshi'],                           vibe: 'Koto meditation — Ryuichi Sakamoto, Toru Takemitsu', bars: 3 },
+  { id: 'hirajoshi_drone',  name: 'Hirajoshi drone (imin)',           degrees: ['imin'],                     scales: ['hirajoshi'],                           vibe: 'Japanese drone — one-chord shakuhachi meditation', bars: 1 },
+
+  // Major pentatonic — more rock/pop pent riffs (accidentals only)
+  { id: 'pent_major_bVI',   name: 'Maj pent (I–bVI)',                 degrees: ['I','bVI'],                  scales: ['major-pentatonic'],                    vibe: 'Pent with flat-6 warmth — Beatles "Blackbird"', bars: 2 },
+  { id: 'pent_major_bIII',  name: 'Maj pent (I–bIII–I)',              degrees: ['I','bIII','I'],             scales: ['major-pentatonic'],                    vibe: 'Pent rock lift — Zeppelin, Stones chromatic',   bars: 3 },
+
+  // Mixolydian — one more psych-soul entry
+  { id: 'mixo_psych',       name: 'Mixo psych (I–v–IV)',              degrees: ['I','v','IV'],               scales: ['mixolydian'],                          vibe: 'Psych-mixo — Allah-Las, Tame Impala sway',      bars: 3 },
+
   // ─── Whole-tone (symmetric scale — augmented chords are its natural home) ───
   // Whole-tone has no perfect 5th, so major/minor triads don't fit. Augmented
   // chords (R-3-#5) are made entirely of whole-tones and fit natively. Two aug

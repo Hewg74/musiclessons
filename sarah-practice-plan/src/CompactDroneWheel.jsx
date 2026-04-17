@@ -1303,8 +1303,12 @@ export function CompactDroneWheel({
   // ─── Animations ───
   const styleBlock = `
     @keyframes cdwPulseRing {
-      0%   { transform: translate(-50%, -50%) scale(0.82); opacity: 0.75; }
-      100% { transform: translate(-50%, -50%) scale(2.1);  opacity: 0;    }
+      0%   { transform: translate(-50%, -50%) scale(0.9); opacity: 0.9; }
+      100% { transform: translate(-50%, -50%) scale(2.2); opacity: 0;   }
+    }
+    @keyframes cdwBreathAperture {
+      0%   { transform: translate(-50%, -50%) scale(1);   opacity: 0.8; }
+      100% { transform: translate(-50%, -50%) scale(2.4); opacity: 0.1; }
     }
     @keyframes cdwDotBreathe {
       0%, 100% { filter: drop-shadow(0 0 6px currentColor) drop-shadow(0 0 14px currentColor); }
@@ -1315,9 +1319,10 @@ export function CompactDroneWheel({
       50%      { opacity: 0.85; }
     }
     @media (prefers-reduced-motion: reduce) {
-      @keyframes cdwPulseRing   { from { opacity: 0; } to { opacity: 0; } }
-      @keyframes cdwDotBreathe  { from {} to {} }
-      @keyframes cdwAuraBreathe { from {} to {} }
+      @keyframes cdwPulseRing      { from { opacity: 0; } to { opacity: 0; } }
+      @keyframes cdwBreathAperture { from { opacity: 0; } to { opacity: 0; } }
+      @keyframes cdwDotBreathe     { from {} to {} }
+      @keyframes cdwAuraBreathe    { from {} to {} }
     }
   `;
 
@@ -1715,6 +1720,33 @@ export function CompactDroneWheel({
 
           {playing && !reducedMotion && (
             <>
+              {/* Breath aperture — slow soft halo emanating from the hub.
+                  Runs at a different cadence (4s alternating) than the
+                  wavefront rings (3s one-way) so breath + pulse layer as
+                  two distinct rhythms. */}
+              <div
+                aria-hidden="true"
+                style={{
+                  position: 'absolute',
+                  left: '50%', top: '50%',
+                  width: PLAY_SIZE * 0.55,
+                  height: PLAY_SIZE * 0.55,
+                  borderRadius: '50%',
+                  background: `radial-gradient(circle,
+                    ${activeColor}cc 0%,
+                    ${activeColor}55 40%,
+                    ${activeColor}00 72%
+                  )`,
+                  transform: 'translate(-50%, -50%) scale(1)',
+                  animation: 'cdwBreathAperture 4s cubic-bezier(0.215, 0.61, 0.355, 1) infinite alternate',
+                  pointerEvents: 'none',
+                }}
+              />
+              {/* Wavefront pulse rings — feathered radial bands, not hard
+                  strokes. A soft gradient concentrates color at the crest
+                  radius and fades on both sides, so the ring rides outward
+                  like a pond ripple. Two rings at 1.5s offset keep one
+                  always mid-flight. */}
               <div
                 aria-hidden="true"
                 style={{
@@ -1723,8 +1755,13 @@ export function CompactDroneWheel({
                   width: PLAY_SIZE,
                   height: PLAY_SIZE,
                   borderRadius: '50%',
-                  border: `2px solid ${activeColor}`,
-                  transform: 'translate(-50%, -50%) scale(0.82)',
+                  background: `radial-gradient(circle,
+                    transparent 40%,
+                    ${activeColor}66 50%,
+                    transparent 62%
+                  )`,
+                  filter: 'blur(1.5px)',
+                  transform: 'translate(-50%, -50%) scale(0.9)',
                   animation: 'cdwPulseRing 3s cubic-bezier(0.215, 0.61, 0.355, 1) infinite',
                   pointerEvents: 'none',
                 }}
@@ -1737,8 +1774,13 @@ export function CompactDroneWheel({
                   width: PLAY_SIZE,
                   height: PLAY_SIZE,
                   borderRadius: '50%',
-                  border: `2px solid ${activeColor}`,
-                  transform: 'translate(-50%, -50%) scale(0.82)',
+                  background: `radial-gradient(circle,
+                    transparent 40%,
+                    ${activeColor}66 50%,
+                    transparent 62%
+                  )`,
+                  filter: 'blur(1.5px)',
+                  transform: 'translate(-50%, -50%) scale(0.9)',
                   animation: 'cdwPulseRing 3s cubic-bezier(0.215, 0.61, 0.355, 1) 1.5s infinite',
                   pointerEvents: 'none',
                 }}

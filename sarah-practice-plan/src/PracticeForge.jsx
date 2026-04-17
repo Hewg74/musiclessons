@@ -3862,77 +3862,92 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
         }
       `}</style>
 
-      {/* ═══ Header: back arrow + title + ⋮ overflow ═══ */}
+      {/* ═══ Header: back arrow + title + ⋮ overflow ═══
+          Editorial masthead: bigger Playfair title, typographic Voice/Guitar
+          toggle (two words separated by a thin divider instead of a pill
+          cluster), subtle Mood chip when empty, prominent ⋮ when settings
+          are open. */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        marginBottom: 14,
+        marginBottom: 18, gap: 8,
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
           <button
             onClick={handleBack}
             aria-label="Back to tools"
             style={{
               background: 'none', border: 'none', cursor: 'pointer',
-              padding: 6, color: T.textMed, display: 'flex', alignItems: 'center',
+              padding: 4, color: T.textMed, display: 'flex', alignItems: 'center',
+              flexShrink: 0,
             }}
           >
             <ArrowLeft size={20} />
           </button>
           <h1 style={{
-            fontFamily: T.serif, fontSize: isMobile ? 20 : 24, fontWeight: 500,
-            color: T.textDark, margin: 0, letterSpacing: -0.5,
+            fontFamily: T.serif, fontSize: isMobile ? 22 : 26, fontWeight: 500,
+            color: T.textDark, margin: 0, letterSpacing: -0.6, lineHeight: 1.1,
+            whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
           }}>
             Practice Forge
           </h1>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          {/* Instrument toggle — voice/guitar pill */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
+          {/* Instrument — typographic toggle. Active = serif + goldDark,
+              inactive = sans uppercase + textLight. A thin bullet separates
+              the two words. Reads as a section tag, not a UI pill cluster. */}
           <div
             role="tablist"
             aria-label="Instrument"
-            style={{
-              display: 'flex', padding: 3, borderRadius: 8,
-              background: T.bgSoft, border: `1px solid ${T.border}`,
-            }}
+            style={{ display: 'flex', alignItems: 'center', gap: 8, marginRight: 4 }}
           >
-            {['voice', 'guitar'].map(inst => (
-              <button
-                key={inst}
-                role="tab"
-                aria-selected={instrument === inst}
-                onClick={() => { setInstrument(inst); setExcludedDimensions(new Set()); }}
-                style={{
-                  padding: '6px 12px', borderRadius: 6, border: 'none',
-                  background: instrument === inst ? T.goldSoft : 'transparent',
-                  color: instrument === inst ? T.goldDark : T.textMed,
-                  fontSize: 11, fontWeight: 600, fontFamily: T.sans,
-                  textTransform: 'capitalize', cursor: 'pointer',
-                  letterSpacing: 0.3, transition: 'all 0.15s',
-                }}
-              >
-                {inst}
-              </button>
+            {['voice', 'guitar'].map((inst, i) => (
+              <React.Fragment key={inst}>
+                {i > 0 && (
+                  <span aria-hidden="true" style={{
+                    width: 3, height: 3, borderRadius: '50%',
+                    background: T.textMuted, opacity: 0.5,
+                  }} />
+                )}
+                <button
+                  role="tab"
+                  aria-selected={instrument === inst}
+                  onClick={() => { setInstrument(inst); setExcludedDimensions(new Set()); }}
+                  style={{
+                    padding: '4px 2px', border: 'none', background: 'transparent',
+                    color: instrument === inst ? T.goldDark : T.textMuted,
+                    fontFamily: instrument === inst ? T.serif : T.sans,
+                    fontSize: instrument === inst ? 14 : 10,
+                    fontWeight: instrument === inst ? 500 : 700,
+                    textTransform: instrument === inst ? 'capitalize' : 'uppercase',
+                    letterSpacing: instrument === inst ? 0 : 1.6,
+                    fontStyle: instrument === inst ? 'italic' : 'normal',
+                    cursor: 'pointer', transition: 'all 0.15s',
+                  }}
+                >
+                  {inst}
+                </button>
+              </React.Fragment>
             ))}
           </div>
 
-          {/* Mood — auto-drawn per card (Phase F). Pill shows drawn mood.
-              Picker is an optional lock: pick a mood to pin it across draws.
-              Clear to return to auto-draw mode. */}
+          {/* Mood — small chip. When empty, reads as a hint; when locked,
+              becomes prominent with gold tint. Smaller than before so it
+              doesn't compete with the instrument toggle. */}
           <button
             onClick={() => setMoodPickerOpen(o => !o)}
             aria-label="Session mood"
             aria-expanded={moodPickerOpen}
             title={mood ? `Mood locked: ${mood} (click to change or clear)` : 'Auto-drawing mood — click to lock one'}
             style={{
-              padding: '6px 12px', borderRadius: 8,
+              padding: '5px 10px', borderRadius: 12,
               background: mood ? T.goldSoft : 'transparent',
-              border: `1px solid ${mood ? T.gold : T.border}`,
-              color: mood ? T.goldDark : T.textMed,
-              fontSize: 11, fontWeight: 600, fontFamily: T.sans,
-              textTransform: 'capitalize', cursor: 'pointer',
-              letterSpacing: 0.3, transition: 'all 0.15s',
-              maxWidth: 140, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+              border: `1px solid ${mood ? T.gold : T.borderSoft || T.border}`,
+              color: mood ? T.goldDark : T.textMuted,
+              fontSize: 10, fontWeight: 700, fontFamily: T.sans,
+              textTransform: 'uppercase', letterSpacing: 1.2,
+              cursor: 'pointer', transition: 'all 0.15s',
+              maxWidth: 120, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
             }}
           >
             {currentCard?.mood || mood || 'Mood'}
@@ -3944,25 +3959,28 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
             aria-expanded={settingsOpen}
             style={{
               background: settingsOpen ? T.goldSoft : 'transparent',
-              border: `1px solid ${settingsOpen ? T.gold : T.border}`,
-              borderRadius: 8, width: 36, height: 36,
+              border: `1px solid ${settingsOpen ? T.gold : 'transparent'}`,
+              borderRadius: 8, width: 32, height: 32,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               cursor: 'pointer', color: settingsOpen ? T.goldDark : T.textMed,
               transition: 'all 0.15s',
             }}
           >
-            {/* Three-dot overflow glyph */}
             <span style={{ fontSize: 20, letterSpacing: 1, lineHeight: 0.5 }}>⋮</span>
           </button>
         </div>
       </div>
 
-      {/* ═══ Mode chip row (Tier 1 — always visible) ═══ */}
+      {/* ═══ Mode chip row (Tier 1 — always visible) ═══
+          Editorial tab pattern: inactive chips are transparent with no
+          border so the active Combo reads as the committed choice via
+          goldSoft + gold border. Less "row of equal-weight buttons",
+          more "selected option stands out". */}
       <div
         role="tablist"
         aria-label="Practice mode"
         style={{
-          display: 'flex', gap: isMobile ? 4 : 6, marginBottom: 8,
+          display: 'flex', gap: isMobile ? 2 : 4, marginBottom: 10,
         }}
       >
         {MODES.map(m => {
@@ -3977,16 +3995,14 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
                 flex: 1,
                 padding: isMobile ? '10px 4px' : '12px 8px',
                 borderRadius: 10,
-                border: `1px solid ${active ? T.gold : T.border}`,
-                background: active ? T.goldSoft : T.bgCard,
-                color: active ? T.goldDark : T.textMed,
+                border: `1px solid ${active ? T.gold : 'transparent'}`,
+                background: active ? T.goldSoft : 'transparent',
+                color: active ? T.goldDark : T.textLight,
                 fontSize: isMobile ? 12 : 13,
                 fontWeight: active ? 700 : 500,
                 fontFamily: T.sans, cursor: 'pointer',
-                letterSpacing: 0.3,
+                letterSpacing: active ? 0.4 : 0.3,
                 transition: 'all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1)',
-                transform: active ? 'translateY(-1px)' : 'translateY(0)',
-                boxShadow: active ? `0 3px 10px rgba(212, 163, 115, 0.22)` : 'none',
               }}
             >
               {MODE_LABELS[m]}
@@ -3995,11 +4011,13 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
         })}
       </div>
 
-      {/* Mode hint — always visible, one-line contextual explainer */}
+      {/* Mode hint — italic serif, centered. Matches the editorial rhythm
+          used for the scale description on the hero card. */}
       <div style={{
-        fontSize: isMobile ? 11 : 12, color: T.textLight, lineHeight: 1.5,
-        fontFamily: T.sans, marginBottom: 18,
-        padding: '0 2px',
+        fontSize: isMobile ? 12 : 13, color: T.textLight,
+        fontFamily: T.serif, fontStyle: 'italic',
+        lineHeight: 1.5, marginBottom: 22, textAlign: 'center',
+        maxWidth: 420, margin: '0 auto 22px',
       }}>
         {MODE_DESCRIPTIONS[mode]}
       </div>
@@ -4147,60 +4165,78 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
               pin specific values to isolate a skill focus. Filters by the
               active instrument so only guitar presets show in guitar mode
               and vice versa. */}
-          <div style={{ marginBottom: 28 }}>
+          <div style={{ marginBottom: 32 }}>
             <Kicker T={T}>Drill Day Presets</Kicker>
             <div style={{
               fontSize: 11, color: T.textLight, fontStyle: 'italic',
-              fontFamily: T.sans, marginBottom: 10, lineHeight: 1.4, textAlign: 'center',
+              fontFamily: T.serif, marginBottom: 14, lineHeight: 1.5, textAlign: 'center',
             }}>
-              One-click lock sets. Tap a preset to pin its values; tap the matching preset again to clear.
+              One-click lock sets. Tap a preset to pin its values; tap it again to clear.
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {LOCK_PRESETS.filter(p => p.instrument === instrument).map(preset => {
-                // Detect "active" by checking whether every lock in the preset
-                // currently matches the user's lockedDimensions state.
+            {/* Flat list — each preset is a row separated by a thin divider,
+                not a nested bordered card. Matches the hero card pattern. */}
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              {LOCK_PRESETS.filter(p => p.instrument === instrument).map((preset, i, arr) => {
                 const active = Object.entries(preset.locks).every(([dimId, val]) => {
                   const cur = lockedDimensions[dimId];
                   return cur && cur.id === val.id;
                 });
+                const isLast = i === arr.length - 1;
                 return (
                   <button
                     key={preset.id}
                     onClick={() => {
                       if (active) {
-                        // Toggle off: clear the locks this preset sets
                         setLockedDimensions(prev => {
                           const next = { ...prev };
                           for (const dimId of Object.keys(preset.locks)) delete next[dimId];
                           return next;
                         });
                       } else {
-                        // Apply: merge the preset locks on top of existing
                         setLockedDimensions(prev => ({ ...prev, ...preset.locks }));
                       }
                     }}
                     style={{
-                      textAlign: 'left', padding: '10px 14px',
-                      borderRadius: 8,
-                      background: active ? T.goldSoft : T.bgCard,
-                      border: `1px solid ${active ? T.gold : T.border}`,
-                      color: active ? T.goldDark : T.textDark,
+                      textAlign: 'left',
+                      padding: '14px 2px',
+                      background: 'transparent', border: 'none',
+                      borderBottom: isLast ? 'none' : `1px solid ${T.borderSoft || T.border}`,
+                      color: T.textDark,
                       cursor: 'pointer',
                       transition: 'all 0.15s',
                       fontFamily: T.sans,
+                      display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12,
                     }}
                   >
-                    <div style={{
-                      fontSize: 13, fontWeight: 700, marginBottom: 3,
-                    }}>
-                      {preset.label}{active && ' ·  active'}
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{
+                        fontFamily: T.serif,
+                        fontSize: 16, fontWeight: 500,
+                        color: active ? T.goldDark : T.textDark,
+                        marginBottom: 3, letterSpacing: -0.2,
+                      }}>
+                        {preset.label}
+                      </div>
+                      <div style={{
+                        fontSize: 11.5, color: T.textLight,
+                        fontFamily: T.sans, fontStyle: 'italic',
+                        lineHeight: 1.5,
+                      }}>
+                        {preset.desc}
+                      </div>
                     </div>
-                    <div style={{
-                      fontSize: 11, color: active ? T.goldDark : T.textMed,
-                      lineHeight: 1.45, opacity: 0.85,
-                    }}>
-                      {preset.desc}
-                    </div>
+                    {active && (
+                      <span style={{
+                        flexShrink: 0,
+                        padding: '3px 8px', borderRadius: 10,
+                        background: T.goldSoft, border: `1px solid ${T.gold}`,
+                        color: T.goldDark,
+                        fontSize: 9, fontWeight: 700, letterSpacing: 1.2,
+                        textTransform: 'uppercase', fontFamily: T.sans,
+                      }}>
+                        Active
+                      </span>
+                    )}
                   </button>
                 );
               })}
