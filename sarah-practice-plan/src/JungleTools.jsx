@@ -6238,6 +6238,18 @@ const CHORD_VOICINGS_MULTI = {
   "Gdim": [{ frets: "3453xx", name: "Gdim", pos: "3rd" }],
   "Adim": [{ frets: "x0121x", name: "Adim", pos: "Open" }],
   "Bdim": [{ frets: "x2343x", name: "Bdim", pos: "2nd" }],
+  // Sharp-root diminisheds — canonical movable dim shape x R (R+1) (R-1) (R+1) x,
+  // rooted on A string. Each pitch has both #/♭ spellings so enharmonic lookups hit.
+  "C#dim": [{ frets: "x4535x", name: "C#dim", pos: "4th" }],
+  "Dbdim": [{ frets: "x4535x", name: "Dbdim", pos: "4th" }],
+  "D#dim": [{ frets: "x6757x", name: "D#dim", pos: "6th" }],
+  "Ebdim": [{ frets: "x6757x", name: "Ebdim", pos: "6th" }],
+  "F#dim": [{ frets: "x9a8ax", name: "F#dim", pos: "9th" }],
+  "Gbdim": [{ frets: "x9a8ax", name: "Gbdim", pos: "9th" }],
+  "G#dim": [{ frets: "xbcacx", name: "G#dim", pos: "11th" }],
+  "Abdim": [{ frets: "xbcacx", name: "Abdim", pos: "11th" }],
+  "A#dim": [{ frets: "x1202x", name: "A#dim", pos: "1st" }],
+  "Bbdim": [{ frets: "x1202x", name: "Bbdim", pos: "1st" }],
   // ─── Augmented chords ───
   "Caug": [{ frets: "x32110", name: "Caug", pos: "Open" }],
   "Daug": [{ frets: "xx0332", name: "Daug", pos: "Open" }],

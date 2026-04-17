@@ -29,15 +29,40 @@ function displayRoman(r) {
   return r.replace(/(maj|min|dim|aug)$/, '');
 }
 
-// Guitar fingering lookup with enharmonic fallback (A# → Bb, D# → Eb, G# → Ab)
-// because the voicing library uses mixed sharp/flat spellings.
-const ENHARMONIC_FLAT = { 'A#': 'Bb', 'D#': 'Eb', 'G#': 'Ab' };
+// Guitar fingering lookup with two fallback layers:
+//   1. Enharmonic spelling (A# ↔ Bb, D# ↔ Eb, G# ↔ Ab, C# ↔ Db, F# ↔ Gb).
+//   2. Extension-strip to base triad — e.g. Cm9 → Cm, Cadd9 → C, Dmaj9 → Dmaj7
+//      → D. This lets beautiful-extension progressions (Khruangbin m9, bossa
+//      add9, dream-pop maj9) still show a playable fingering even when the
+//      exact extension voicing isn't in the library. The chord NAME at the top
+//      of the banner stays accurate — only the diagram approximates.
+const ENHARMONIC_FLAT = { 'A#': 'Bb', 'D#': 'Eb', 'G#': 'Ab', 'C#': 'Db', 'F#': 'Gb' };
+const ENHARMONIC_SHARP = { 'Bb': 'A#', 'Eb': 'D#', 'Ab': 'G#', 'Db': 'C#', 'Gb': 'F#' };
+
+function _tryLookup(root, rest) {
+  return CHORD_VOICINGS_MULTI[root + rest]?.[0] || null;
+}
+
 function lookupVoicing(name) {
-  if (CHORD_VOICINGS_MULTI[name]) return CHORD_VOICINGS_MULTI[name][0];
   const root = name.match(/^[A-G][#b]?/)?.[0];
-  const rest = name.slice(root?.length || 0);
-  const flat = ENHARMONIC_FLAT[root];
-  if (flat && CHORD_VOICINGS_MULTI[flat + rest]) return CHORD_VOICINGS_MULTI[flat + rest][0];
+  if (!root) return null;
+  const rest = name.slice(root.length);
+  const altRoot = ENHARMONIC_FLAT[root] || ENHARMONIC_SHARP[root];
+
+  // Try exact + enharmonic first.
+  const exact = _tryLookup(root, rest) || (altRoot && _tryLookup(altRoot, rest));
+  if (exact) return exact;
+
+  // Extension-strip fallback. Try progressively shorter quality suffixes.
+  // Order matters: longer/more-specific first so m7b5 stays m7b5 (not stripped to m).
+  // Keep the base quality (m, maj7, dim, aug, sus2, sus4) so the fingering
+  // matches the chord's basic color.
+  const fallbackQualities = ['m7b5', 'm7', 'maj7', 'sus4', 'sus2', '7', 'dim', 'aug', 'm', ''];
+  for (const q of fallbackQualities) {
+    if (q === rest) continue; // already tried as exact
+    const match = _tryLookup(root, q) || (altRoot && _tryLookup(altRoot, q));
+    if (match) return { ...match, pos: `${match.pos || ''} (≈ ${rest || 'triad'})`.trim() };
+  }
   return null;
 }
 

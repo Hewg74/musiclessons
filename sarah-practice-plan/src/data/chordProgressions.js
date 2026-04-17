@@ -61,11 +61,11 @@ export const CHORD_PROGRESSIONS = [
   { id: 'bossa_minor',      name: 'Bossa minor (im6–iim7♭5–V7–i)',    degrees: ['im6','iim7b5','V7','i'],    scales: ['melodic-minor','harmonic-minor'],      vibe: 'Bossa minor, Antônio Carlos Jobim',             bars: 4 },
 
   // ─── Blues ───
-  { id: 'blues_12bar',      name: '12-bar blues',                     degrees: ['I7','I7','I7','I7','IV7','IV7','I7','I7','V7','IV7','I7','V7'], scales: ['major','mixolydian'], vibe: '12-bar blues', bars: 12 },
-  { id: 'blues_quick4',     name: '12-bar quick-change',              degrees: ['I7','IV7','I7','I7','IV7','IV7','I7','I7','V7','IV7','I7','V7'], scales: ['major','mixolydian'], vibe: 'Blues with quick IV in bar 2', bars: 12 },
-  { id: 'blues_minor',      name: 'Minor blues',                      degrees: ['im7','im7','im7','im7','ivm7','ivm7','im7','im7','V7','ivm7','im7','im7'], scales: ['natural-minor'], vibe: 'Minor blues', bars: 12 },
-  { id: 'blues_jazz',       name: 'Jazz blues (with II–V)',           degrees: ['I7','IV7','I7','I7','IV7','IV7','I7','iiim7','VI7','iim7','V7','I7'], scales: ['major','mixolydian'], vibe: 'Charlie Parker blues', bars: 12 },
-  { id: 'blues_8bar',       name: '8-bar blues',                      degrees: ['I7','V7','IV7','IV7','I7','V7','I7','V7'], scales: ['major','mixolydian'], vibe: 'Key to the Highway, Heartbreak Hotel', bars: 8 },
+  { id: 'blues_12bar',      name: '12-bar blues',                     degrees: ['I7','I7','I7','I7','IV7','IV7','I7','I7','V7','IV7','I7','V7'], scales: ['major','mixolydian','blues'], vibe: '12-bar blues', bars: 12 },
+  { id: 'blues_quick4',     name: '12-bar quick-change',              degrees: ['I7','IV7','I7','I7','IV7','IV7','I7','I7','V7','IV7','I7','V7'], scales: ['major','mixolydian','blues'], vibe: 'Blues with quick IV in bar 2', bars: 12 },
+  { id: 'blues_minor',      name: 'Minor blues',                      degrees: ['im7','im7','im7','im7','ivm7','ivm7','im7','im7','V7','ivm7','im7','im7'], scales: ['natural-minor','blues'], vibe: 'Minor blues', bars: 12 },
+  { id: 'blues_jazz',       name: 'Jazz blues (with II–V)',           degrees: ['I7','IV7','I7','I7','IV7','IV7','I7','iiim7','VI7','iim7','V7','I7'], scales: ['major','mixolydian','blues'], vibe: 'Charlie Parker blues', bars: 12 },
+  { id: 'blues_8bar',       name: '8-bar blues',                      degrees: ['I7','V7','IV7','IV7','I7','V7','I7','V7'], scales: ['major','mixolydian','blues'], vibe: 'Key to the Highway, Heartbreak Hotel', bars: 8 },
 
   // ─── World / Khruangbin / Tinariwen / desert ───
   { id: 'desert_vamp',      name: 'Desert vamp (i–bVII)',             degrees: ['i','bVII'],                 scales: ['dorian','natural-minor','phrygian-dominant'], vibe: 'Tinariwen, Mdou Moctar',            bars: 2 },
