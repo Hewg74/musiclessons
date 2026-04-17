@@ -121,16 +121,14 @@ export function ChordProgressionDisplay({
 
   return (
     <div style={{
-      marginTop: 18,
-      padding: '14px 16px 16px',
-      background: `${accent}0f`,
-      border: `1px solid ${accent}40`,
-      borderRadius: 10,
+      marginTop: 28,
+      paddingTop: 18,
+      borderTop: `1px solid ${T.border}`,
     }}>
       <div style={{
         display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap',
         fontSize: 9, fontWeight: 800, letterSpacing: 1.6, textTransform: 'uppercase',
-        color: accent, marginBottom: 10, fontFamily: T.sans,
+        color: accent, marginBottom: 14, fontFamily: T.sans,
       }}>
         <span>Progression</span>
         <span style={{ color: T.textLight, fontWeight: 500, letterSpacing: 0.4, textTransform: 'none' }}>
@@ -229,13 +227,14 @@ export function ChordProgressionDisplay({
 
       {practiceTip && (
         <div style={{
-          marginTop: 8, padding: '8px 10px',
-          background: `${accent}08`,
-          borderLeft: `2.5px solid ${accent}80`,
-          borderRadius: 3,
-          fontFamily: T.sans, fontSize: 12, color: T.textDark,
-          lineHeight: 1.55,
+          marginTop: 10,
+          fontFamily: T.sans, fontSize: 12, color: T.textMed,
+          lineHeight: 1.6, fontStyle: 'italic',
         }}>
+          <span style={{
+            fontSize: 9, fontWeight: 700, color: accent, letterSpacing: 1.2,
+            textTransform: 'uppercase', marginRight: 8, fontStyle: 'normal',
+          }}>Pro tip</span>
           {practiceTip}
         </div>
       )}

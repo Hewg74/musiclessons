@@ -82,6 +82,77 @@ function Screw({ T, top, right, bottom, left, size = 4 }) {
   );
 }
 
+// ChordFingeringStack — one chord column in the Chords tool. Renders the
+// chord name + Roman numeral at top, a position-tab row (if multiple
+// voicings), the active ChordDiagram, and the position label beneath.
+// Keeps its own active-index state so each chord's position is independent.
+function ChordFingeringStack({ T, chordName, roman, voicings, approx }) {
+  const [activeIdx, setActiveIdx] = useState(0);
+  // Reset index when the chord changes (different card draw).
+  useEffect(() => { setActiveIdx(0); }, [chordName]);
+  const safeIdx = Math.min(activeIdx, Math.max(0, voicings.length - 1));
+  const active = voicings[safeIdx];
+  const romanDisplay = roman ? String(roman).replace(/(maj|min|dim|aug)$/, '') : null;
+  return (
+    <div style={{
+      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
+      minWidth: 110,
+    }}>
+      <div style={{
+        fontFamily: T.serif, fontSize: 17, fontWeight: 700,
+        color: T.textDark, letterSpacing: 0.3,
+      }}>{chordName}</div>
+      {romanDisplay && (
+        <div style={{
+          fontFamily: T.sans, fontSize: 9, fontWeight: 700,
+          color: T.textLight, letterSpacing: 0.7,
+          textTransform: 'uppercase', marginBottom: 2,
+        }}>{romanDisplay}</div>
+      )}
+      {voicings.length > 1 && (
+        <div style={{
+          display: 'flex', gap: 4, marginBottom: 6, flexWrap: 'wrap',
+          justifyContent: 'center',
+        }}>
+          {voicings.map((v, i) => (
+            <button
+              key={i}
+              onClick={() => setActiveIdx(i)}
+              style={{
+                padding: '3px 9px', borderRadius: 10,
+                border: `1px solid ${i === safeIdx ? T.gold : T.border}`,
+                background: i === safeIdx ? T.goldSoft : T.bgCard,
+                color: i === safeIdx ? T.goldDark : T.textMed,
+                fontFamily: T.sans, fontSize: 10, fontWeight: 600,
+                cursor: 'pointer', transition: 'all 0.12s',
+              }}
+            >{v.pos || `Pos ${i + 1}`}</button>
+          ))}
+        </div>
+      )}
+      {active ? (
+        <>
+          <ChordDiagram theme={T} frets={active.frets} name={chordName} />
+          <div style={{
+            fontFamily: T.sans, fontSize: 9, color: T.textLight,
+            marginTop: -4, letterSpacing: 0.3, textAlign: 'center',
+          }}>
+            {voicings.length === 1 ? (active.pos || 'Open') : null}
+            {approx && (voicings.length === 1 ? ' · ' : '') + '≈ shape'}
+          </div>
+        </>
+      ) : (
+        <div style={{
+          fontFamily: T.sans, fontSize: 10, color: T.textMuted,
+          padding: '20px 10px', fontStyle: 'italic',
+        }}>
+          No shape in library
+        </div>
+      )}
+    </div>
+  );
+}
+
 // Canonical order used to build combo-mode keys so lookups are deterministic
 // regardless of draw order. Positions of the legacy dims (pitch, rhythm,
 // dynamics, articulation, phrase, register, pickingHand) are preserved so
@@ -2345,128 +2416,137 @@ function ChallengeCard({
         </div>
       )}
 
-      {/* Header: Key + Scale */}
-      <div style={{ marginBottom: 6 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-          <div style={{
-            width: 12, height: 12, borderRadius: '50%', background: keyColor,
+      {/* Header: Key + Scale — centered, editorial composition matching the
+          mockup vibe. Title sits with a tiny colored keyColor dot prefix,
+          description + note chips + BPM stack centered below, then a subtle
+          rule + centered PIN lock row. */}
+      <div style={{ textAlign: 'center', marginBottom: 8 }}>
+        <div style={{
+          display: 'inline-flex', alignItems: 'center', gap: 10,
+          marginBottom: 6,
+        }}>
+          <span style={{
+            width: 10, height: 10, borderRadius: '50%', background: keyColor,
             boxShadow: `0 0 8px ${keyColor}40`,
           }} />
-          <span style={{ fontFamily: T.serif, fontSize: 24, fontWeight: 500, color: T.textDark, letterSpacing: -0.5 }}>
+          <span style={{
+            fontFamily: T.serif, fontSize: 28, fontWeight: 500,
+            color: T.textDark, letterSpacing: -0.5, lineHeight: 1.1,
+          }}>
             {card.constraints.key} {scaleName}
           </span>
         </div>
-        {/* Scale description + notes */}
-        <div style={{ paddingLeft: 20, marginBottom: 4 }}>
-          <div style={{ fontSize: 13, color: T.textMed, fontFamily: T.sans, lineHeight: 1.5, marginBottom: 6 }}>
+        {scaleDesc && (
+          <div style={{
+            fontSize: 12.5, color: T.textLight, fontFamily: T.serif,
+            fontStyle: 'italic', lineHeight: 1.5, marginBottom: 12,
+            maxWidth: 360, margin: '0 auto 12px',
+          }}>
             {scaleDesc}
           </div>
-          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-            {scaleNotes.map((note, i) => {
-              const nc = getColorForNote(note) || T.textMed;
-              return (
-                <span key={i} style={{
-                  fontSize: 12, fontWeight: 600, fontFamily: T.sans,
-                  padding: '2px 8px', borderRadius: 10,
-                  background: `${nc}18`, color: nc,
-                  border: `1px solid ${nc}30`,
-                }}>
-                  {note}
-                </span>
-              );
-            })}
-          </div>
+        )}
+        <div style={{
+          display: 'flex', gap: 6, flexWrap: 'wrap',
+          justifyContent: 'center', marginBottom: 12,
+        }}>
+          {scaleNotes.map((note, i) => {
+            const nc = getColorForNote(note) || T.textMed;
+            return (
+              <span key={i} style={{
+                fontSize: 12, fontWeight: 600, fontFamily: T.sans,
+                padding: '2px 8px', borderRadius: 10,
+                background: `${nc}18`, color: nc,
+                border: `1px solid ${nc}30`,
+              }}>
+                {note}
+              </span>
+            );
+          })}
+        </div>
+        <div style={{
+          display: 'inline-flex', alignItems: 'center', gap: 6,
+          fontSize: 12, color: T.textLight, fontFamily: T.sans, fontWeight: 500,
+          letterSpacing: 0.3,
+        }}>
+          <Music size={13} />
+          <span>{card.constraints.tempo} BPM</span>
         </div>
       </div>
 
-      {/* Tempo + lock cluster */}
-      <div style={{
-        display: 'flex', alignItems: 'center', gap: 12, paddingLeft: 20,
-        color: T.textLight, fontSize: 14, marginBottom: 4, flexWrap: 'wrap',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <Music size={14} />
-          <span style={{ fontFamily: T.sans, fontWeight: 500 }}>{card.constraints.tempo} BPM</span>
-        </div>
-        {onToggleLock && (
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: 5, marginLeft: 'auto',
-            paddingLeft: 8,
+      {/* PIN row — centered, subordinate to the title block above via a
+          short centered rule. The previous layout tucked 3 lock chips onto
+          the right end of the BPM row which created a lopsided "heavy-right"
+          feeling. */}
+      {onToggleLock && (
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          gap: 8, marginTop: 12, marginBottom: 4, flexWrap: 'wrap',
+        }}>
+          <span style={{
+            fontSize: 9, color: T.textMuted, fontFamily: T.sans,
+            letterSpacing: 1.6, textTransform: 'uppercase', fontWeight: 700,
           }}>
-            <span style={{ fontSize: 10, color: T.textMuted, fontFamily: T.sans, letterSpacing: 0.4 }}>
-              PIN
-            </span>
-            <LockChip dimId="key"   currentValue={card.constraints.key}   label="Key" />
-            <LockChip dimId="scale" currentValue={card.constraints.scale} label="Scale" />
-            <LockChip dimId="tempo" currentValue={card.constraints.tempo} label="Tempo" />
-          </div>
-        )}
-      </div>
+            Pin
+          </span>
+          <LockChip dimId="key"   currentValue={card.constraints.key}   label="Key" />
+          <LockChip dimId="scale" currentValue={card.constraints.scale} label="Scale" />
+          <LockChip dimId="tempo" currentValue={card.constraints.tempo} label="Tempo" />
+        </div>
+      )}
 
       {/* Foundational dim zone — "the ground" the random constraints rest on.
           Texture for guitar; register + vowel for voice. Always present on
           every card regardless of mode/N. Visually distinct: subtle gold tint
           background, labeled as FOUNDATION, sitting above the random draws. */}
       {foundationalLines.length > 0 && (
-        <div style={{
-          marginTop: 18,
-          padding: '14px 16px',
-          background: `${T.goldSoft || 'rgba(212, 163, 115, 0.08)'}`,
-          border: `1px solid ${T.border}`,
-          borderRadius: 10,
-          opacity: 0.98,
-        }}>
-          <div style={{
-            fontSize: 9, fontWeight: 700, color: T.goldDark || T.textMuted,
-            textTransform: 'uppercase', letterSpacing: 1.6, fontFamily: T.sans,
-            marginBottom: 10,
-          }}>
+        <div style={{ marginTop: 28 }}>
+          <Kicker T={T} accent={T.goldDark || T.textMuted}>
             Foundation
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          </Kicker>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 22, marginTop: 14 }}>
             {foundationalLines.map(({ dim, constraint }) => {
               const exampleText = constraint.dynamicExample || (constraint.example ? constraint.example(scaleNotes, card.constraints.tempo, card.instrument) : null);
               return (
-                <div key={dim.id} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+                <div key={dim.id}>
+                  {/* Kicker row: dim label on the left, lock chip on the right.
+                      Flat layout — no nested box, no colored bar. The dim label
+                      color + serif title + description do the heavy lifting. */}
                   <div style={{
-                    width: 3, alignSelf: 'stretch', borderRadius: 4,
-                    background: dim.color, opacity: 0.9, flexShrink: 0,
-                  }} />
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3 }}>
-                      {constraint.icon && <span style={{ fontSize: 14 }}>{constraint.icon}</span>}
-                      <span style={{
-                        fontFamily: T.serif, fontSize: 16, fontWeight: 500, color: T.textDark,
-                        lineHeight: 1.3,
-                      }}>
-                        {constraint.name}
-                      </span>
-                      <span style={{
-                        fontSize: 9, fontWeight: 700, color: dim.color, textTransform: 'uppercase',
-                        letterSpacing: 0.8, fontFamily: T.sans, opacity: 0.75,
-                      }}>
-                        {dim.label}
-                      </span>
-                      {onToggleLock && (
-                        <span style={{ marginLeft: 'auto' }}>
-                          <LockChip dimId={dim.id} currentValue={constraint} label={dim.label} />
-                        </span>
-                      )}
-                    </div>
-                    <div style={{
-                      fontFamily: T.sans, fontSize: 12.5, color: T.textMed, lineHeight: 1.55,
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    gap: 8, marginBottom: 4,
+                  }}>
+                    <span style={{
+                      fontSize: 9, fontWeight: 700, color: dim.color,
+                      textTransform: 'uppercase', letterSpacing: 1.6, fontFamily: T.sans,
                     }}>
-                      {(card.instrument === 'guitar' && constraint.descGuitar) || constraint.desc}
-                    </div>
-                    {exampleText && (
-                      <div style={{
-                        fontFamily: T.sans, fontSize: 11.5, color: T.textLight, lineHeight: 1.5,
-                        marginTop: 3, fontStyle: 'italic',
-                      }}>
-                        {exampleText}
-                      </div>
+                      {dim.label}
+                    </span>
+                    {onToggleLock && (
+                      <LockChip dimId={dim.id} currentValue={constraint} label={dim.label} />
                     )}
                   </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+                    {constraint.icon && <span style={{ fontSize: 16, lineHeight: 1 }}>{constraint.icon}</span>}
+                    <span style={{
+                      fontFamily: T.serif, fontSize: 20, fontWeight: 500, color: T.textDark,
+                      lineHeight: 1.2, letterSpacing: -0.2,
+                    }}>
+                      {constraint.name}
+                    </span>
+                  </div>
+                  <div style={{
+                    fontFamily: T.sans, fontSize: 13, color: T.textMed, lineHeight: 1.55,
+                  }}>
+                    {(card.instrument === 'guitar' && constraint.descGuitar) || constraint.desc}
+                  </div>
+                  {exampleText && (
+                    <div style={{
+                      fontFamily: T.sans, fontSize: 11.5, color: T.textLight, lineHeight: 1.5,
+                      marginTop: 4, fontStyle: 'italic',
+                    }}>
+                      {exampleText}
+                    </div>
+                  )}
                 </div>
               );
             })}
@@ -2501,41 +2581,44 @@ function ChallengeCard({
         />
       )}
 
-      {/* Divider */}
+      {/* Divider — separates foundation/progression zone from the random constraints */}
       {(constraintLines.length > 0 || progressionLine) && (
-        <div style={{ height: 1, background: T.border, margin: '20px 0', opacity: 0.6 }} />
+        <div style={{ height: 1, background: T.border, margin: '32px 0 28px', opacity: 0.6 }} />
       )}
 
-      {/* Constraint lines — grouped with a single left accent */}
+      {/* Constraint lines — flat section, no outer accent bar. The per-row
+          colored kicker provides enough dim identity; the outer stripe was
+          creating a third nested-container feel. */}
       {constraintLines.length > 0 && (
         <div style={{
-          borderLeft: `3px solid ${constraintLines.length === 1
-            ? constraintLines[0].dim.color
-            : `${T.gold}80`}`,
-          paddingLeft: 16,
-          display: 'flex', flexDirection: 'column', gap: 20,
+          display: 'flex', flexDirection: 'column', gap: 26,
         }}>
           {constraintLines.map(({ dim, constraint }) => {
             const exampleText = constraint.dynamicExample || (constraint.example ? constraint.example(scaleNotes, card.constraints.tempo, card.instrument) : null);
             return (
               <div key={dim.id}>
+                {/* Kicker row: small colored dot + dim label as uppercase micro-header.
+                    Moved out of the serif title row to stop competing with it. */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
                   <span style={{
-                    width: 8, height: 8, borderRadius: '50%',
+                    width: 6, height: 6, borderRadius: '50%',
                     background: dim.color, flexShrink: 0,
                   }} />
-                  {constraint.icon && <span style={{ fontSize: 15 }}>{constraint.icon}</span>}
                   <span style={{
-                    fontFamily: T.serif, fontSize: 17, fontWeight: 400, color: T.textDark,
-                    lineHeight: 1.3,
-                  }}>
-                    {constraint.name}
-                  </span>
-                  <span style={{
-                    fontSize: 10, fontWeight: 600, color: dim.color, textTransform: 'uppercase',
-                    letterSpacing: 0.8, fontFamily: T.sans, opacity: 0.7,
+                    fontSize: 9, fontWeight: 700, color: dim.color, textTransform: 'uppercase',
+                    letterSpacing: 1.6, fontFamily: T.sans,
                   }}>
                     {dim.label}
+                  </span>
+                </div>
+                {/* Title row: icon + serif name, clean and large */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+                  {constraint.icon && <span style={{ fontSize: 17, lineHeight: 1 }}>{constraint.icon}</span>}
+                  <span style={{
+                    fontFamily: T.serif, fontSize: 20, fontWeight: 500, color: T.textDark,
+                    lineHeight: 1.2, letterSpacing: -0.2,
+                  }}>
+                    {constraint.name}
                   </span>
                 </div>
                 <div style={{
@@ -2564,15 +2647,15 @@ function ChallengeCard({
                         aria-expanded={isOpen}
                         style={{
                           display: 'inline-flex', alignItems: 'center', gap: 5,
-                          marginTop: 8, padding: '5px 10px', borderRadius: 8,
-                          background: isOpen ? `${dim.color}12` : 'transparent',
-                          border: `1px solid ${isOpen ? `${dim.color}40` : T.border}`,
+                          marginTop: 10, padding: 0,
+                          background: 'transparent', border: 'none',
                           color: isOpen ? dim.color : T.textLight,
-                          fontSize: 11, fontWeight: 600, fontFamily: T.sans,
-                          cursor: 'pointer', transition: 'all 0.15s',
+                          fontSize: 10, fontWeight: 700, fontFamily: T.sans,
+                          textTransform: 'uppercase', letterSpacing: 1.4,
+                          cursor: 'pointer', transition: 'color 0.15s',
                         }}
                       >
-                        <ChevronDown size={12} style={{
+                        <ChevronDown size={11} style={{
                           transform: isOpen ? 'rotate(180deg)' : '',
                           transition: 'transform 0.2s',
                         }} />
@@ -4626,27 +4709,27 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
                 seen.add(c.name);
                 uniqueChords.push(c);
               }
-              // Local voicing lookup — matches ChordProgressionDisplay's logic.
-              // Enharmonic pair + extension-strip fallback so every chord gets a
-              // diagram even if the exact extension voicing isn't in the library.
+              // Voicing lookup returning the FULL array of positions (not just
+              // the first), so users can cycle 3-5 shapes per chord via tabs.
+              // Enharmonic pair + extension-strip fallback preserved.
               const ENH_FLAT = { 'A#':'Bb','D#':'Eb','G#':'Ab','C#':'Db','F#':'Gb' };
               const ENH_SHARP = { 'Bb':'A#','Eb':'D#','Ab':'G#','Db':'C#','Gb':'F#' };
               const FALLBACKS = ['m7b5','m7','maj7','sus4','sus2','7','dim','aug','m',''];
-              const lookup = (name) => {
+              const lookupAll = (name) => {
                 const root = name.match(/^[A-G][#b]?/)?.[0];
-                if (!root) return null;
+                if (!root) return { voicings: [], approx: false };
                 const rest = name.slice(root.length);
                 const alt = ENH_FLAT[root] || ENH_SHARP[root];
-                const exact = CHORD_VOICINGS_MULTI[root + rest]?.[0]
-                           || (alt && CHORD_VOICINGS_MULTI[alt + rest]?.[0]);
-                if (exact) return { voicing: exact, approx: false };
+                const exact = CHORD_VOICINGS_MULTI[root + rest]
+                           || (alt && CHORD_VOICINGS_MULTI[alt + rest]);
+                if (exact && exact.length) return { voicings: exact, approx: false };
                 for (const q of FALLBACKS) {
                   if (q === rest) continue;
-                  const v = CHORD_VOICINGS_MULTI[root + q]?.[0]
-                         || (alt && CHORD_VOICINGS_MULTI[alt + q]?.[0]);
-                  if (v) return { voicing: v, approx: true };
+                  const v = CHORD_VOICINGS_MULTI[root + q]
+                         || (alt && CHORD_VOICINGS_MULTI[alt + q]);
+                  if (v && v.length) return { voicings: v, approx: true };
                 }
-                return null;
+                return { voicings: [], approx: false };
               };
               return (
                 <div style={{
@@ -4661,51 +4744,22 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
                     Chord Shapes — {cp.name}
                   </div>
                   <div style={{ fontSize: 11, color: T.textMuted, marginBottom: 14, fontStyle: 'italic' }}>
-                    {cp.resolvedChords.map(c => c.name).join(' → ')} · cycle through while you play.
+                    {cp.resolvedChords.map(c => c.name).join(' → ')} · tap a position to switch shapes.
                   </div>
                   <div style={{
-                    display: 'flex', flexWrap: 'wrap', gap: 18, alignItems: 'flex-start',
+                    display: 'flex', flexWrap: 'wrap', gap: 20, alignItems: 'flex-start',
                   }}>
                     {uniqueChords.map(c => {
-                      const found = lookup(c.name);
+                      const { voicings, approx } = lookupAll(c.name);
                       return (
-                        <div key={c.name} style={{
-                          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
-                          minWidth: 100,
-                        }}>
-                          <div style={{
-                            fontFamily: T.serif, fontSize: 16, fontWeight: 700,
-                            color: T.textDark, letterSpacing: 0.3,
-                          }}>{c.name}</div>
-                          {c.roman && (
-                            <div style={{
-                              fontFamily: T.sans, fontSize: 9, fontWeight: 600,
-                              color: T.textLight, letterSpacing: 0.5,
-                              textTransform: 'uppercase',
-                            }}>
-                              {String(c.roman).replace(/(maj|min|dim|aug)$/, '')}
-                            </div>
-                          )}
-                          {found ? (
-                            <>
-                              <ChordDiagram theme={T} frets={found.voicing.frets} name={c.name} />
-                              <div style={{
-                                fontFamily: T.sans, fontSize: 9, color: T.textLight,
-                                marginTop: -4, letterSpacing: 0.3, textAlign: 'center',
-                              }}>
-                                {found.voicing.pos || 'Open'}
-                                {found.approx && ' · ≈ shape'}
-                              </div>
-                            </>
-                          ) : (
-                            <div style={{
-                              fontFamily: T.sans, fontSize: 10, color: T.textMuted,
-                              padding: '20px 10px', fontStyle: 'italic',
-                            }}>
-                              No shape in library
-                            </div>
-                          )}
-                        </div>
+                        <ChordFingeringStack
+                          key={c.name}
+                          T={T}
+                          chordName={c.name}
+                          roman={c.roman}
+                          voicings={voicings}
+                          approx={approx}
+                        />
                       );
                     })}
                   </div>

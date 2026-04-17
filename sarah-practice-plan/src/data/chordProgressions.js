@@ -123,6 +123,17 @@ export const CHORD_PROGRESSIONS = [
   // ─── Melodic-minor additions (keep it beautiful per Gene's taste — bossa leaning) ───
   { id: 'melodic_i_iv',     name: 'Melodic minor (i–IV)',             degrees: ['i','IV'],                   scales: ['melodic-minor'],                       vibe: 'Jazz-minor vamp — raised-6 lifts a minor i',    bars: 2 },
   { id: 'melodic_bossa_vamp',name:'Bossa-minor vamp (i–V7)',          degrees: ['i','V7'],                   scales: ['melodic-minor'],                       vibe: 'Bossa vamp — two-chord Jobim drift',            bars: 2 },
+  // Minor-line cliché — descending top voice i → im7 → im6 (the Bond/Stairway
+  // family, simplified to work with available voicings).
+  { id: 'minor_line_cliche',name: 'Minor line (i–im7–im6–V7)',        degrees: ['i','im7','im6','V7'],       scales: ['melodic-minor','harmonic-minor'],      vibe: 'Noir descent — "Stairway", Bond, "My Funny Valentine"', bars: 4 },
+  // Full jazz-minor cadence — the sound of Coltrane, Kenny Garrett minor.
+  { id: 'jazz_minor_full',  name: 'Jazz minor (i–iim7b5–V7–i)',       degrees: ['i','iim7b5','V7','i'],      scales: ['melodic-minor'],                       vibe: 'Jazz minor cadence — Coltrane, Kenny Garrett',  bars: 4 },
+  // Lydian dominant sound (IV7 in melodic minor) — rich, tropical.
+  { id: 'melodic_lydom',    name: 'Lydian dominant (i–IV7)',          degrees: ['i','IV7'],                  scales: ['melodic-minor'],                       vibe: 'Lydian dominant warmth — Steely Dan minor',     bars: 2 },
+  // Four-chord minor ballad with the lifted #6 → full cycle.
+  { id: 'melodic_cycle',    name: 'Melodic cycle (i–IV–V7–i)',        degrees: ['i','IV','V7','i'],          scales: ['melodic-minor'],                       vibe: 'Minor ballad with lifted 6 — film noir',        bars: 4 },
+  // Minor bossa — im6 tonic + iim7b5 + V7 is the Jobim sound.
+  { id: 'bossa_jobim',      name: 'Jobim minor (im6–iim7b5–V7)',      degrees: ['im6','iim7b5','V7'],        scales: ['melodic-minor'],                       vibe: 'Jobim minor — "Insensatez" jazz samba',         bars: 3 },
 
   // ─── Phrygian additions (beyond bII cadence + walk) ───
   { id: 'phrygian_metal',   name: 'Phrygian (i–iv–bIII–bII)',         degrees: ['i','iv','bIII','bII'],      scales: ['phrygian'],                            vibe: 'Metal phrygian — Metallica "Wherever I May Roam"',bars: 4 },
