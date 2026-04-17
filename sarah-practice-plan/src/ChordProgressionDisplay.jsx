@@ -148,7 +148,7 @@ export function ChordProgressionDisplay({
               <div key={s.name} style={{
                 display: 'flex', flexDirection: 'column', alignItems: 'center',
               }}>
-                <ChordDiagram T={T} frets={s.voicing.frets} name={s.name} />
+                <ChordDiagram theme={T} frets={s.voicing.frets} name={s.name} />
                 {s.voicing.pos && s.voicing.pos !== 'Open' && (
                   <span style={{
                     fontFamily: T.sans, fontSize: 9, color: T.textLight,
