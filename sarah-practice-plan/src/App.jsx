@@ -20,6 +20,7 @@ const PitchHunter = React.lazy(() =>
   import('./PitchHunter.jsx').then(m => ({ default: m.PitchHunter }))
 );
 import { acquireKeepalive, releaseKeepalive, setMediaSession, clearMediaSession } from './audioKeepalive.js';
+import { subscribeToChord, startEngine, stopEngine, isEngineRunning } from './chordDetectorEngine.js';
 import { DAYS, KEYBOARD_LEVELS, LOOPER_LEVELS, LESSON_POOL, ALL_NOTES, getPitchRange } from './data/appData.js';
 import { WEEKLY_PLANS, CURRENT_WEEK } from './data/weeklyPlans/index.js';
 import { VOCAL_LEVELS } from './data/vocalLevels/index.js';
@@ -278,6 +279,9 @@ function useMetronome() {
   const [gapClickActive, setGapClickActive] = useState(false);
   const [gapClickPlay, setGapClickPlay] = useState(3);
   const [gapClickMute, setGapClickMute] = useState(1);
+  const [gapClickRandomize, setGapClickRandomize] = useState(false);
+  const [gapClickPlaySet, setGapClickPlaySet] = useState([3]);
+  const [gapClickMuteSet, setGapClickMuteSet] = useState([1]);
   const [subdivision, setSubdivision] = useState("4n"); // "4n", "8n", "16n", "8t"
   const [speedBuilder, setSpeedBuilder] = useState(false);
   const [speedIncrement, setSpeedIncrement] = useState(5); // BPM added each cycle
@@ -301,6 +305,12 @@ function useMetronome() {
   const gapClickActiveRef = useRef(gapClickActive);
   const gapClickPlayRef = useRef(gapClickPlay);
   const gapClickMuteRef = useRef(gapClickMute);
+  const gapClickRandomizeRef = useRef(gapClickRandomize);
+  const gapClickPlaySetRef = useRef(gapClickPlaySet);
+  const gapClickMuteSetRef = useRef(gapClickMuteSet);
+  const gcCycleStartBarRef = useRef(null);
+  const gcCurPlayRef = useRef(3);
+  const gcCurMuteRef = useRef(1);
   const subdivisionRef = useRef(subdivision);
   const speedBuilderRef = useRef(speedBuilder);
   const speedIncrementRef = useRef(speedIncrement);
@@ -312,9 +322,12 @@ function useMetronome() {
   useEffect(() => { soundKitRef.current = soundKit; }, [soundKit]);
   useEffect(() => { beatsRef.current = beatsPerBar; }, [beatsPerBar]);
   useEffect(() => { bpmRef.current = bpm; }, [bpm]);
-  useEffect(() => { gapClickActiveRef.current = gapClickActive; }, [gapClickActive]);
+  useEffect(() => { gapClickActiveRef.current = gapClickActive; gcCycleStartBarRef.current = null; }, [gapClickActive]);
   useEffect(() => { gapClickPlayRef.current = gapClickPlay; }, [gapClickPlay]);
   useEffect(() => { gapClickMuteRef.current = gapClickMute; }, [gapClickMute]);
+  useEffect(() => { gapClickRandomizeRef.current = gapClickRandomize; gcCycleStartBarRef.current = null; }, [gapClickRandomize]);
+  useEffect(() => { gapClickPlaySetRef.current = gapClickPlaySet; }, [gapClickPlaySet]);
+  useEffect(() => { gapClickMuteSetRef.current = gapClickMuteSet; }, [gapClickMuteSet]);
   useEffect(() => { subdivisionRef.current = subdivision; }, [subdivision]);
   useEffect(() => { speedBuilderRef.current = speedBuilder; }, [speedBuilder]);
   useEffect(() => { speedIncrementRef.current = speedIncrement; }, [speedIncrement]);
@@ -372,11 +385,21 @@ function useMetronome() {
       const gcActive = gapClickActiveRef.current;
       let isMute = bc.accent === "mute";
       if (gcActive) {
-        const play = gapClickPlayRef.current;
-        const mute = gapClickMuteRef.current;
-        const cycle = play + mute;
-        const pos = bar % cycle;
-        if (pos >= play) {
+        const randomize = gapClickRandomizeRef.current;
+        const pickFrom = (arr, fallback) => {
+          if (randomize && arr && arr.length > 0) return arr[Math.floor(Math.random() * arr.length)];
+          return fallback;
+        };
+        if (
+          gcCycleStartBarRef.current === null ||
+          bar - gcCycleStartBarRef.current >= gcCurPlayRef.current + gcCurMuteRef.current
+        ) {
+          gcCycleStartBarRef.current = bar;
+          gcCurPlayRef.current = pickFrom(gapClickPlaySetRef.current, gapClickPlayRef.current);
+          gcCurMuteRef.current = pickFrom(gapClickMuteSetRef.current, gapClickMuteRef.current);
+        }
+        const pos = bar - gcCycleStartBarRef.current;
+        if (pos >= gcCurPlayRef.current) {
           isMute = true;
         }
       }
@@ -425,6 +448,7 @@ function useMetronome() {
   const stop = useCallback(() => {
     loopRef.current?.stop(); loopRef.current?.dispose();
     Tone.Transport.stop(); Tone.Transport.position = 0;
+    gcCycleStartBarRef.current = null;
     playingRef.current = false;
     setPlaying(false);
     releaseKeepalive();
@@ -496,9 +520,28 @@ function useMetronome() {
     setSpeedBuilder(on);
   }, []);
 
+  const toggleGapClickPlayChip = useCallback((n) => {
+    setGapClickPlaySet(prev => {
+      const has = prev.includes(n);
+      if (has && prev.length === 1) return prev; // keep at least one
+      return has ? prev.filter(x => x !== n) : [...prev, n].sort((a, b) => a - b);
+    });
+  }, []);
+
+  const toggleGapClickMuteChip = useCallback((n) => {
+    setGapClickMuteSet(prev => {
+      const has = prev.includes(n);
+      if (has && prev.length === 1) return prev;
+      return has ? prev.filter(x => x !== n) : [...prev, n].sort((a, b) => a - b);
+    });
+  }, []);
+
   return {
-    bpm, playing, beat, beatsPerBar, soundKit, beatConfig, gapClickActive, gapClickPlay, gapClickMute, speedBuilder, speedIncrement, speedBars, speedCeiling, subdivision,
+    bpm, playing, beat, beatsPerBar, soundKit, beatConfig, gapClickActive, gapClickPlay, gapClickMute,
+    gapClickRandomize, gapClickPlaySet, gapClickMuteSet,
+    speedBuilder, speedIncrement, speedBars, speedCeiling, subdivision,
     start, stop, changeBpm, changeBeats, setSoundKit, cycleAccent, setBeatKit, setGapClickActive, setGapClickPlay, setGapClickMute, setSubdivision,
+    setGapClickRandomize, toggleGapClickPlayChip, toggleGapClickMuteChip,
     setSpeedBuilder: toggleSpeedBuilder, setSpeedIncrement, setSpeedBars, setSpeedCeiling
   };
 }
@@ -2845,38 +2888,58 @@ function MetronomePanel({ metro, onOpenTapMatch }) {
 
         {metro.gapClickActive && (
           <div style={{ marginTop: 12, padding: "10px 14px", background: T.bgSoft, border: `1px solid ${T.border}`, borderRadius: T.radiusMd }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+              <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans }}>
+                {metro.gapClickRandomize ? "Pick the bar-counts to randomize across." : "Fixed cycle."}
+              </div>
+              <button onClick={() => metro.setGapClickRandomize(!metro.gapClickRandomize)} style={{
+                background: metro.gapClickRandomize ? T.gold : "transparent",
+                border: `1px solid ${metro.gapClickRandomize ? T.gold : T.borderSoft}`,
+                color: metro.gapClickRandomize ? "#fff" : T.textMed, borderRadius: T.radius,
+                padding: "4px 10px", fontSize: 11, fontWeight: 700, cursor: "pointer", fontFamily: T.sans,
+                textTransform: "uppercase", letterSpacing: 1
+              }}>Randomize</button>
+            </div>
             <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: 10, fontWeight: 600, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>Play Bars</div>
                 <div style={{ display: "flex", gap: 4 }}>
-                  {[1, 2, 3, 4, 8].map(n => (
-                    <button key={n} onClick={() => metro.setGapClickPlay(n)} style={{
-                      background: metro.gapClickPlay === n ? T.gold : "transparent",
-                      border: `1px solid ${metro.gapClickPlay === n ? T.gold : T.borderSoft}`,
-                      color: metro.gapClickPlay === n ? "#fff" : T.textMed,
-                      borderRadius: T.radius, padding: "4px 8px", fontSize: 12, fontWeight: 600,
-                      cursor: "pointer", fontFamily: T.sans, minWidth: 32
-                    }}>{n}</button>
-                  ))}
+                  {[1, 2, 3, 4, 8].map(n => {
+                    const active = metro.gapClickRandomize ? metro.gapClickPlaySet.includes(n) : metro.gapClickPlay === n;
+                    return (
+                      <button key={n} onClick={() => metro.gapClickRandomize ? metro.toggleGapClickPlayChip(n) : metro.setGapClickPlay(n)} style={{
+                        background: active ? T.gold : "transparent",
+                        border: `1px solid ${active ? T.gold : T.borderSoft}`,
+                        color: active ? "#fff" : T.textMed,
+                        borderRadius: T.radius, padding: "4px 8px", fontSize: 12, fontWeight: 600,
+                        cursor: "pointer", fontFamily: T.sans, minWidth: 32
+                      }}>{n}</button>
+                    );
+                  })}
                 </div>
               </div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: 10, fontWeight: 600, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>Mute Bars</div>
                 <div style={{ display: "flex", gap: 4 }}>
-                  {[1, 2, 3, 4, 8].map(n => (
-                    <button key={n} onClick={() => metro.setGapClickMute(n)} style={{
-                      background: metro.gapClickMute === n ? T.gold : "transparent",
-                      border: `1px solid ${metro.gapClickMute === n ? T.gold : T.borderSoft}`,
-                      color: metro.gapClickMute === n ? "#fff" : T.textMed,
-                      borderRadius: T.radius, padding: "4px 8px", fontSize: 12, fontWeight: 600,
-                      cursor: "pointer", fontFamily: T.sans, minWidth: 32
-                    }}>{n}</button>
-                  ))}
+                  {[1, 2, 3, 4, 8].map(n => {
+                    const active = metro.gapClickRandomize ? metro.gapClickMuteSet.includes(n) : metro.gapClickMute === n;
+                    return (
+                      <button key={n} onClick={() => metro.gapClickRandomize ? metro.toggleGapClickMuteChip(n) : metro.setGapClickMute(n)} style={{
+                        background: active ? T.gold : "transparent",
+                        border: `1px solid ${active ? T.gold : T.borderSoft}`,
+                        color: active ? "#fff" : T.textMed,
+                        borderRadius: T.radius, padding: "4px 8px", fontSize: 12, fontWeight: 600,
+                        cursor: "pointer", fontFamily: T.sans, minWidth: 32
+                      }}>{n}</button>
+                    );
+                  })}
                 </div>
               </div>
             </div>
             <div style={{ fontSize: 11, color: T.textLight, fontFamily: T.sans, marginTop: 8 }}>
-              Plays for {metro.gapClickPlay} bar{metro.gapClickPlay > 1 ? "s" : ""}, then goes silent for {metro.gapClickMute} bar{metro.gapClickMute > 1 ? "s" : ""} to test your internal timing.
+              {metro.gapClickRandomize
+                ? `Each cycle picks randomly: play ${metro.gapClickPlaySet.join("/")} bar${metro.gapClickPlaySet.length > 1 || metro.gapClickPlaySet[0] > 1 ? "s" : ""}, then mute ${metro.gapClickMuteSet.join("/")} bar${metro.gapClickMuteSet.length > 1 || metro.gapClickMuteSet[0] > 1 ? "s" : ""}. You won't know when the click returns.`
+                : `Plays for ${metro.gapClickPlay} bar${metro.gapClickPlay > 1 ? "s" : ""}, then goes silent for ${metro.gapClickMute} bar${metro.gapClickMute > 1 ? "s" : ""} to test your internal timing.`}
             </div>
           </div>
         )}
@@ -3129,36 +3192,53 @@ function CompactMetronomeControls({ metro, theme: T }) {
 
         {metro.gapClickActive && (
           <div style={{ marginTop: 8, padding: "10px", background: "rgba(0,0,0,0.03)", border: `1px solid rgba(150,150,150,0.1)`, borderRadius: 6 }}>
+            <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 6 }}>
+              <button onClick={() => metro.setGapClickRandomize(!metro.gapClickRandomize)} style={{
+                background: metro.gapClickRandomize ? T.gold : "transparent",
+                border: `1px solid ${metro.gapClickRandomize ? T.gold : "rgba(150,150,150,0.2)"}`,
+                color: metro.gapClickRandomize ? "#fff" : T.textMed, borderRadius: 4,
+                padding: "3px 8px", fontSize: 10, fontWeight: 600, cursor: "pointer", fontFamily: T.sans,
+                textTransform: "uppercase", letterSpacing: 0.5
+              }}>Randomize</button>
+            </div>
             <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: 9, fontWeight: 600, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 4 }}>Play Bars</div>
                 <div style={{ display: "flex", gap: 2 }}>
-                  {[1, 2, 3, 4, 8].map(n => (
-                    <button key={n} onClick={() => metro.setGapClickPlay(n)} style={{
-                      flex: 1, background: metro.gapClickPlay === n ? T.gold : "transparent",
-                      border: `1px solid ${metro.gapClickPlay === n ? T.gold : "rgba(150,150,150,0.2)"}`,
-                      color: metro.gapClickPlay === n ? "#fff" : T.textMed,
-                      borderRadius: 4, padding: "4px 0", fontSize: 11, fontWeight: 500, cursor: "pointer", fontFamily: T.sans
-                    }}>{n}</button>
-                  ))}
+                  {[1, 2, 3, 4, 8].map(n => {
+                    const active = metro.gapClickRandomize ? metro.gapClickPlaySet.includes(n) : metro.gapClickPlay === n;
+                    return (
+                      <button key={n} onClick={() => metro.gapClickRandomize ? metro.toggleGapClickPlayChip(n) : metro.setGapClickPlay(n)} style={{
+                        flex: 1, background: active ? T.gold : "transparent",
+                        border: `1px solid ${active ? T.gold : "rgba(150,150,150,0.2)"}`,
+                        color: active ? "#fff" : T.textMed,
+                        borderRadius: 4, padding: "4px 0", fontSize: 11, fontWeight: 500, cursor: "pointer", fontFamily: T.sans
+                      }}>{n}</button>
+                    );
+                  })}
                 </div>
               </div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: 9, fontWeight: 600, color: T.textMuted, fontFamily: T.sans, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 4 }}>Mute Bars</div>
                 <div style={{ display: "flex", gap: 2 }}>
-                  {[1, 2, 3, 4, 8].map(n => (
-                    <button key={n} onClick={() => metro.setGapClickMute(n)} style={{
-                      flex: 1, background: metro.gapClickMute === n ? T.gold : "transparent",
-                      border: `1px solid ${metro.gapClickMute === n ? T.gold : "rgba(150,150,150,0.2)"}`,
-                      color: metro.gapClickMute === n ? "#fff" : T.textMed,
-                      borderRadius: 4, padding: "4px 0", fontSize: 11, fontWeight: 500, cursor: "pointer", fontFamily: T.sans
-                    }}>{n}</button>
-                  ))}
+                  {[1, 2, 3, 4, 8].map(n => {
+                    const active = metro.gapClickRandomize ? metro.gapClickMuteSet.includes(n) : metro.gapClickMute === n;
+                    return (
+                      <button key={n} onClick={() => metro.gapClickRandomize ? metro.toggleGapClickMuteChip(n) : metro.setGapClickMute(n)} style={{
+                        flex: 1, background: active ? T.gold : "transparent",
+                        border: `1px solid ${active ? T.gold : "rgba(150,150,150,0.2)"}`,
+                        color: active ? "#fff" : T.textMed,
+                        borderRadius: 4, padding: "4px 0", fontSize: 11, fontWeight: 500, cursor: "pointer", fontFamily: T.sans
+                      }}>{n}</button>
+                    );
+                  })}
                 </div>
               </div>
             </div>
             <div style={{ fontSize: 10, color: T.textLight, fontFamily: T.sans, marginTop: 8 }}>
-              Plays for {metro.gapClickPlay} bar{metro.gapClickPlay > 1 ? "s" : ""}, then goes silent for {metro.gapClickMute} bar{metro.gapClickMute > 1 ? "s" : ""} to test your internal timing.
+              {metro.gapClickRandomize
+                ? `Each cycle picks randomly: play ${metro.gapClickPlaySet.join("/")} · mute ${metro.gapClickMuteSet.join("/")} bars.`
+                : `Plays for ${metro.gapClickPlay} bar${metro.gapClickPlay > 1 ? "s" : ""}, then goes silent for ${metro.gapClickMute} bar${metro.gapClickMute > 1 ? "s" : ""} to test your internal timing.`}
             </div>
           </div>
         )}
@@ -4347,6 +4427,102 @@ function BottomNav({ tab, setTab, isDark, theme: T }) {
   );
 }
 
+// ─── PHASE 0 SPIKE: temporary debug button for chord detection ──────
+// Floating bottom-right pill that toggles the chord detector and shows
+// the currently detected chord. Also writes chord name to document.title
+// so the browser tab title becomes a live chord readout.
+// REMOVE this component after Phase 2 ships the real ChordDetectorPanel.
+function ChordDebugButton({ T }) {
+  const [chord, setChord] = useState(null);
+  const [listening, setListening] = useState(false);
+  const [signalLevel, setSignalLevel] = useState(0);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const unsub = subscribeToChord((update) => {
+      setChord(update.currentChord);
+      setListening(update.isListening);
+      setSignalLevel(update.signalLevel || 0);
+      if (update.error) setError(update.error.message);
+      // Live readout in browser tab title
+      const name = update.currentChord ? update.currentChord.name : (update.isListening ? '— listening' : '');
+      document.title = name ? `[${name}] sarah glass music` : 'sarah glass music';
+    });
+    return () => {
+      unsub();
+      document.title = 'sarah glass music';
+    };
+  }, []);
+
+  const toggle = async () => {
+    setError(null);
+    try {
+      if (isEngineRunning()) {
+        await stopEngine();
+      } else {
+        await startEngine();
+      }
+    } catch (e) {
+      setError(e.message || String(e));
+    }
+  };
+
+  const bg = listening ? T.gold : T.bgCard;
+  const fg = listening ? '#fff' : T.textDark;
+  const label = error
+    ? `Mic: ${error.slice(0, 40)}`
+    : (chord ? chord.name : (listening ? 'Listening…' : 'Listen for chord'));
+  const conf = chord ? `${Math.round(chord.confidence * 100)}%` : '';
+
+  return (
+    <button
+      onClick={toggle}
+      style={{
+        position: 'fixed',
+        right: 16,
+        bottom: 16,
+        zIndex: 9999,
+        background: bg,
+        color: fg,
+        border: `1px solid ${T.gold}`,
+        borderRadius: 999,
+        padding: '10px 16px',
+        fontFamily: T.sans,
+        fontSize: 13,
+        fontWeight: 600,
+        letterSpacing: 0.5,
+        cursor: 'pointer',
+        boxShadow: T.sm,
+        display: 'flex',
+        alignItems: 'center',
+        gap: 8,
+        minWidth: 160,
+      }}
+      title="Phase 0 spike: chord detection debug"
+    >
+      <span style={{
+        display: 'inline-block', width: 8, height: 8, borderRadius: 999,
+        background: listening ? '#7f9e88' : T.textLight,
+        boxShadow: listening ? '0 0 6px #7f9e88' : 'none',
+      }} />
+      <span style={{ flex: 1, textAlign: 'left' }}>{label}</span>
+      {conf && <span style={{ fontSize: 11, opacity: 0.85 }}>{conf}</span>}
+      {listening && (
+        <span style={{
+          display: 'inline-block', width: 24, height: 4, borderRadius: 2,
+          background: 'rgba(255,255,255,0.25)', position: 'relative', overflow: 'hidden',
+        }}>
+          <span style={{
+            position: 'absolute', left: 0, top: 0, bottom: 0,
+            width: `${Math.round(signalLevel * 100)}%`,
+            background: '#fff', transition: 'width 80ms linear',
+          }} />
+        </span>
+      )}
+    </button>
+  );
+}
+
 // ─── MAIN APP ───────────────────────────────────────────────────────
 export default function App() {
   const [isDark, setIsDark] = useState(() => {
@@ -4761,6 +4937,7 @@ export default function App() {
 
   return (
     <div style={{ background: T.bg, minHeight: "100vh", color: T.textDark, fontFamily: T.sans }}>
+      <ChordDebugButton T={T} />
       <style>{`
         @keyframes fade-in-up {
           from { opacity: 0; transform: translateY(10px); }

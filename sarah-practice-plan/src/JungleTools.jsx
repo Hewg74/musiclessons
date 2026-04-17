@@ -19,7 +19,8 @@ import { splitSyllables, chipText, chipGroup, chipOrigin, normalizeAndTokenize }
 //
 // The key to avoiding the old bugs: close the mic context IMMEDIATELY and
 // SYNCHRONOUSLY when stopping — don't defer, don't try resume-then-close.
-function createMicContext() {
+// eslint-disable-next-line react-refresh/only-export-components
+export function createMicContext() {
   return new (window.AudioContext || window.webkitAudioContext)();
 }
 
@@ -27,9 +28,10 @@ function createMicContext() {
 // to recover from OS-level ducking. The 'micReleased' event tells the drone
 // to cycle Tone.js's context (suspend→resume) so the OS exits "play-and-record"
 // mode and restores full playback volume on Bluetooth/speakers.
-function closeMicContext(ctx) {
+// eslint-disable-next-line react-refresh/only-export-components
+export function closeMicContext(ctx) {
   if (!ctx || ctx.state === 'closed') return;
-  try { ctx.close(); } catch {}
+  try { ctx.close(); } catch { /* already closed or browser quirk */ }
   // Fire after a tick so the context.close() has begun processing
   setTimeout(() => window.dispatchEvent(new CustomEvent('micReleased')), 50);
 }
