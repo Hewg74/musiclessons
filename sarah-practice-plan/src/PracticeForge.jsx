@@ -15,6 +15,73 @@ import { resolveProgression, uniqueChordNames } from './chordProgressionResolver
 import { ChordProgressionDisplay } from './ChordProgressionDisplay.jsx';
 import { ChordProgressionChecklist } from './ChordProgressionChecklist.jsx';
 
+// ═══════════════════════════════════════════════════════════════════════════
+// Visual atoms — the astrolabe aesthetic signature
+// ═══════════════════════════════════════════════════════════════════════════
+// Kicker: uppercase letter-spaced micro-header flanked by 1px beige rules.
+// Consumes the T theme via prop to stay decoupled from the App.jsx singleton.
+// Use when you want a section label that reads as a "plate on the astrolabe"
+// rather than a floating uppercase word.
+function Kicker({ T, children, accent, align = 'center', compact = false }) {
+  const color = accent || T.textLight;
+  const ruleColor = T.border;
+  return (
+    <div
+      role="heading"
+      aria-level={2}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: compact ? 10 : 14,
+        justifyContent: align === 'center' ? 'center' : 'flex-start',
+        margin: compact ? '0 0 8px' : '0 0 12px',
+      }}
+    >
+      {align === 'center' && <span style={{ flex: 1, height: 1, background: ruleColor, opacity: 0.6 }} />}
+      <span
+        style={{
+          fontSize: 10,
+          fontWeight: 700,
+          letterSpacing: 2,
+          textTransform: 'uppercase',
+          color,
+          fontFamily: T.sans,
+          whiteSpace: 'nowrap',
+        }}
+      >
+        {children}
+      </span>
+      <span style={{ flex: 1, height: 1, background: ruleColor, opacity: 0.6 }} />
+    </div>
+  );
+}
+
+// Screw: tiny brass dot positioned absolute in a corner. Parent must be
+// position: relative. Signature astrolabe detail — four of these in the
+// corners of a card read as a bezel.
+function Screw({ T, top, right, bottom, left, size = 4 }) {
+  const pos = {};
+  if (top !== undefined) pos.top = top;
+  if (right !== undefined) pos.right = right;
+  if (bottom !== undefined) pos.bottom = bottom;
+  if (left !== undefined) pos.left = left;
+  return (
+    <span
+      aria-hidden="true"
+      style={{
+        position: 'absolute',
+        ...pos,
+        width: size,
+        height: size,
+        borderRadius: '50%',
+        background: T.textMuted,
+        opacity: 0.5,
+        pointerEvents: 'none',
+      }}
+    />
+  );
+}
+
 // Canonical order used to build combo-mode keys so lookups are deterministic
 // regardless of draw order. Positions of the legacy dims (pitch, rhythm,
 // dynamics, articulation, phrase, register, pickingHand) are preserved so
@@ -2239,13 +2306,20 @@ function ChallengeCard({
     <div style={{
       background: T.bgCard,
       border: `1px solid ${T.border}`,
-      borderRadius: 12,
+      borderRadius: 20,
       padding: '28px 24px',
-      boxShadow: `0 2px 12px rgba(181, 132, 84, 0.06), 0 12px 32px rgba(181, 132, 84, 0.04)`,
+      boxShadow: `0 24px 48px -12px rgba(44, 40, 37, 0.08), 0 2px 12px rgba(181, 132, 84, 0.04)`,
       position: 'relative',
       overflow: 'hidden',
       animation: entering ? 'forgeCardEnter 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both' : undefined,
     }}>
+      {/* Brass screws — signature astrolabe detail from CompactDroneWheel.
+          Four tiny dots in the corners read as the card's bezel. */}
+      <Screw T={T} top={12} left={12} />
+      <Screw T={T} top={12} right={12} />
+      <Screw T={T} bottom={12} left={12} />
+      <Screw T={T} bottom={12} right={12} />
+
       {/* Phase E: Mood overlay banner. Sits above the key/scale as the
           emotional "ground" that colors every card this round. Null when
           no mood is picked. */}
@@ -3990,16 +4064,11 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
               pin specific values to isolate a skill focus. Filters by the
               active instrument so only guitar presets show in guitar mode
               and vice versa. */}
-          <div style={{ marginBottom: 18 }}>
-            <div style={{
-              fontSize: 10, fontWeight: 600, color: T.textLight, letterSpacing: 1.2,
-              textTransform: 'uppercase', marginBottom: 8,
-            }}>
-              Drill Day Presets
-            </div>
+          <div style={{ marginBottom: 28 }}>
+            <Kicker T={T}>Drill Day Presets</Kicker>
             <div style={{
               fontSize: 11, color: T.textLight, fontStyle: 'italic',
-              fontFamily: T.sans, marginBottom: 10, lineHeight: 1.4,
+              fontFamily: T.sans, marginBottom: 10, lineHeight: 1.4, textAlign: 'center',
             }}>
               One-click lock sets. Tap a preset to pin its values; tap the matching preset again to clear.
             </div>
@@ -4056,13 +4125,8 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
           </div>
 
           {/* Timer duration */}
-          <div style={{ marginBottom: 18 }}>
-            <div style={{
-              fontSize: 10, fontWeight: 600, color: T.textLight, letterSpacing: 1.2,
-              textTransform: 'uppercase', marginBottom: 8,
-            }}>
-              Round Duration
-            </div>
+          <div style={{ marginBottom: 28 }}>
+            <Kicker T={T}>Round Duration</Kicker>
             <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
               {[
                 { s: 0, l: '∞' }, { s: 90, l: '1:30' }, { s: 120, l: '2:00' },
@@ -4091,13 +4155,8 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
           </div>
 
           {/* Session card count */}
-          <div style={{ marginBottom: 18 }}>
-            <div style={{
-              fontSize: 10, fontWeight: 600, color: T.textLight, letterSpacing: 1.2,
-              textTransform: 'uppercase', marginBottom: 8,
-            }}>
-              Cards per Session
-            </div>
+          <div style={{ marginBottom: 28 }}>
+            <Kicker T={T}>Cards per Session</Kicker>
             <div style={{ display: 'flex', gap: 6 }}>
               {[1, 3, 5].map(n => (
                 <button
@@ -4126,13 +4185,8 @@ export function PracticeForge({ theme: T, metro, onBack, defaultTier = 2 }) {
               a qualitative dimension from the random pool. Greyed-out + struck-
               through means excluded. Can't disable below mode's maxConstraints. */}
           <div>
-            <div style={{
-              fontSize: 10, fontWeight: 600, color: T.textLight, letterSpacing: 1.2,
-              textTransform: 'uppercase', marginBottom: 8,
-            }}>
-              Draw Pool ({MODE_LABELS[mode]}, {instrument})
-            </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+            <Kicker T={T}>Draw Pool · {MODE_LABELS[mode]} · {instrument}</Kicker>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, justifyContent: 'center' }}>
               {(() => {
                 const qualInPool = DIMENSIONS.filter(d =>
                   d.type === 'qualitative' && activeDimensions.includes(d.id)

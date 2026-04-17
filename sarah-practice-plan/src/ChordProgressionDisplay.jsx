@@ -156,18 +156,21 @@ export function ChordProgressionDisplay({
               {i > 0 && (
                 <span style={{ color: T.textLight, fontFamily: T.sans, fontSize: 13, opacity: 0.6, paddingTop: 9 }}>→</span>
               )}
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
                 <span style={{
-                  padding: '5px 12px', borderRadius: 6,
+                  padding: '9px 16px', borderRadius: 10,
                   border: `1.5px solid ${cc}`,
-                  color: cc, background: `${cc}10`,
-                  fontFamily: T.serif, fontWeight: 600, fontSize: 17,
+                  color: cc, background: `${cc}1c`,
+                  fontFamily: T.serif, fontWeight: 600, fontSize: 19,
                   lineHeight: 1, letterSpacing: 0.3,
+                  boxShadow: `0 1px 4px ${cc}18`,
+                  minWidth: 44, textAlign: 'center',
                 }}>{c.name}</span>
                 {roman && (
                   <span style={{
-                    fontFamily: T.sans, fontSize: 9, fontWeight: 600,
-                    color: T.textLight, letterSpacing: 0.5,
+                    fontFamily: T.sans, fontSize: 9, fontWeight: 700,
+                    color: cc, letterSpacing: 0.8, opacity: 0.75,
+                    textTransform: 'uppercase',
                   }}>{roman}</span>
                 )}
               </div>
